@@ -586,6 +586,12 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
        $window.dispatchEvent(new Event("resize"));
      }, 100);
   }
+  
+  $scope.time_format = function (timestamp) {
+  //  console.log(timestamp)
+    return  timestamp.toFixed(2);
+  };
+
 
   $scope.refreshDashboard=function(length){
     $scope.callGraph();

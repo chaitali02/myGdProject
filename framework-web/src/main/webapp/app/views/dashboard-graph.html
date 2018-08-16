@@ -157,12 +157,16 @@
                             <chart-bar ratio="0.5" />
                             <!--<chart-legend show-legend="true"/>
                             <chart-donut expand="true" width="30" show-label="false" title="Donut Title"/> -->
-                            <chart-axes values-x="" />
+                            <chart-axes values-x="">
                             <!-- <chart-size chart-height="33%" chart-width=""/> -->
                             <chart-axis>
                               <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{datacol.vizpodDetails.datax.id}}">
-                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5" />
+                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5"   />
                               </chart-axis-x>
+                              <chart-axis-Y>
+                                <chart-axis-y-tick tick-format-function="time_format"/>
+                              </chart-axis-Y>
+
                             </chart-axis>
                             <!-- <chart- group-values="data 1,data 2"/> -->
                             <!--  <chart-legend show-legend="false" legend-position="right"/> -->
@@ -191,7 +195,7 @@
                         <div ng-if="datacol.vizpodDetails.type == 'network-graph'  && !inprogressdata">
                              <h1>Network Graph</h1>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata">
+                        <div  ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0">
                           <div class="{{datacol.vizpodDetails.id}}" heat-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id"  objdetail="datacol">
                           </div>
                      </div>

@@ -123,10 +123,13 @@
           var keynameY = $scope.column.keys[1].attributeName;
           var keynameX = $scope.column.keys[0].attributeName
           var columnname;
+          $scope.valueColName;
           if ($scope.column.values[0].ref.type == "formula") {
-            columnname = $scope.column.values[0].ref.name
+            columnname = $scope.column.values[0].ref.name;
+            $scope.valueColName=$scope.column.values[0].ref.name;
           } else {
-            columnname = $scope.column.values[0].attributeName
+            columnname = $scope.column.values[0].attributeName;
+            $scope.valueColName=$scope.column.values[0].attributeName
           }
 
           var reA = /[^a-zA-Z]/g;
@@ -266,14 +269,15 @@
           
           };
           var ctx = document.getElementById('heatmap').getContext('2d');
-          var newChart = new Chart(ctx).HeatMap(data1, options);
-          console.log(newChart)
+          $scope.newChart = new Chart(ctx).HeatMap(data1, options);
+          console.log( $scope.newChart)
+          $(".heatmapid").append($scope.newChart.generateLegend())
         }); //End Watch
       } ,//End link
       template: `
         <div style="transform: rotate(90deg);transform-origin: left bottom 0;margin-left: -15px;">
           <div>
-            {{column.keys[1].attributeName}}
+           {{column.keys[1].attributeName}}
           </div>
         </div>
         <div style="margin-top: -20px;">
@@ -282,6 +286,9 @@
         <div style="text-align:center;">
           {{column.keys[0].attributeName}}
         </div>
+        <div style="text-align:center; margin-top:10px;" class="heatmapid">
+        </div>
+        
       `
     }; //End Return
   });
