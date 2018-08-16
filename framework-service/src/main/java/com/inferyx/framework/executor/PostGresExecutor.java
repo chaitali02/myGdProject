@@ -581,4 +581,11 @@ public class PostGresExecutor implements IExecutor {
 		return sparkExecutor.create(rowObjList, attributes, tableName, clientContext);
 	}
 
+	@Override
+	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
+			int numBuckets, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

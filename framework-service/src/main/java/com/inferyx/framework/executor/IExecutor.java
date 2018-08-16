@@ -570,4 +570,19 @@ public interface IExecutor {
 	 */
 	ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param locationDatapod
+	 * @param locationTableName
+	 * @param sql
+	 * @param key
+	 * @param numBuckets
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException;
 }
