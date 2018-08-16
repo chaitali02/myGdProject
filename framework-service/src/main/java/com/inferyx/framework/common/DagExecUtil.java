@@ -294,7 +294,7 @@ public class DagExecUtil {
 		ExecParams taskExecParams = new ExecParams();
 		
 		taskExecParams.setRefKeyList(new ArrayList<>());
-		taskExecParams.setParamSetHolder(execParams.getParamSetHolder());
+		taskExecParams.setCurrParamSet(execParams.getCurrParamSet());
 		taskExecParams.setParamListHolder(execParams.getParamListHolder());
 		taskExecParams.setExecutionContext(new ExecutionContext());
 		taskExecParams.setOtherParams(execParams.getOtherParams());

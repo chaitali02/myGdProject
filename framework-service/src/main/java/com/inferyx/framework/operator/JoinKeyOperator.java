@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
@@ -37,6 +38,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
@@ -46,9 +48,9 @@ public class JoinKeyOperator {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected FormulaOperator formulaOperator;
 	@Autowired protected RegisterService registerService;
-	@Autowired 
-	MetadataServiceImpl metadataServiceImpl;
+	@Autowired MetadataServiceImpl metadataServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
+	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
 			, java.util.Map<String, MetaIdentifier> refKeyMap
@@ -82,13 +84,26 @@ public class JoinKeyOperator {
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
-				if (StringUtils.isBlank(sourceAttr.getValue()))
+				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
-				else
-					operandValue.add(sourceAttr.getValue());
+				} else {
+					String value = sourceAttr.getValue();
+					if(value != null) {
+						boolean isNumber = Helper.isNumber(value);			
+						if(!isNumber) {
+							value = "'"+value+"'";
+						}
+					}
+					operandValue.add(value);
+				}
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
-				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.dataset) {
 				MetaIdentifier filterSourceMI = sourceAttr.getRef();				

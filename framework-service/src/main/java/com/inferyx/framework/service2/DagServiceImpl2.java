@@ -295,7 +295,7 @@ public class DagServiceImpl2 {
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					execParams.setParamSetHolder(paramSetHolder);
+					execParams.setCurrParamSet(paramSetHolder);
 					// Create object
 					dagExec = createDAGExec(dag, execParams);
 					dagExec.setExecParams(execParams); // Set execParams in DAGExec
@@ -607,7 +607,7 @@ public class DagServiceImpl2 {
 					StringBuilder builder = null;
 					if (indvTask.getOperators().get(0).getOperatorParams() != null
 							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
-							&& execParams.getParamSetHolder() == null) {
+							&& execParams.getCurrParamSet() == null) {
 						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
 								.getOperatorParams().get(MetaType.paramset.toString());
 						List<ParamSetHolder> paramSetHolders = new ArrayList<>();
@@ -617,7 +617,7 @@ public class DagServiceImpl2 {
 						}
 						if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
 							execParams.setParamInfo(paramSetHolders);
-							execParams.setParamSetHolder(paramSetHolders.get(0));
+							execParams.setCurrParamSet(paramSetHolders.get(0));
 						}
 					}
 					if (indvTask.getOperators().get(0).getOperatorParams() != null

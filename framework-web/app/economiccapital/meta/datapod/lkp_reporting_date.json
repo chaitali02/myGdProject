@@ -1,7 +1,7 @@
 {
-  "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-  "version": "1534300708",
-  "name": "portfolio_loss_histogram",
+  "uuid": "057f383b-6ff0-4268-b05c-aebe62cf1285",
+  "version": "1534380647",
+  "name": "lkp_reporting_date",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Aug 14 22:38:28 EDT 2018",
+  "createdOn": "Wed Aug 15 20:50:47 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -40,28 +40,17 @@
   "attributes": [
     {
       "attributeId": 0,
-      "name": "bucket",
+      "name": "reporting_date",
       "type": "string",
-      "desc": "bucket",
+      "desc": "reporting_date",
       "key": "",
       "partition": "N",
-      "dispName": "bucket",
+      "dispName": "reporting_date",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 1,
-      "name": "frequency",
-      "type": "integer",
-      "desc": "frequency",
-      "key": "",
-      "partition": "N",
-      "dispName": "frequency",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
       "name": "version",
       "type": "integer",
       "desc": "version",

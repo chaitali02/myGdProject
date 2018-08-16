@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -945,5 +948,21 @@ public class Helper {
 		}		
 	}
 	
+
 	
+	public static boolean isNumber(String str) {
+		return NumberUtils.isCreatable(str);
+	}
+	
+	public static boolean isDate(String str) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		try {
+			dateFormat.parse(str);
+			return true;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+//				e.printStackTrace();
+			return false;
+		}
+	}
 }

@@ -883,7 +883,7 @@ public class RuleServiceImpl extends RuleTemplate {
 							MetaIdentifier ref = paramSetHolder.getRef();
 							ref.setType(MetaType.paramset);
 							paramSetHolder.setRef(ref);
-							execParams.setParamSetHolder(paramSetHolder);
+							execParams.setCurrParamSet(paramSetHolder);
 							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);		
 						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);

@@ -457,7 +457,7 @@ public class ParamSetServiceImpl {
 									MetaIdentifier ref) throws JsonProcessingException {		
 		ParamSetHolder paramSetHolder = null;
 		if (execParams != null) {
-			paramSetHolder = execParams.getParamSetHolder();
+			paramSetHolder = execParams.getCurrParamSet();
 		}
 		
 		if (paramSetHolder == null) {

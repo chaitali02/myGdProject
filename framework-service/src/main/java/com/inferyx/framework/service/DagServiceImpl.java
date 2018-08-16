@@ -458,7 +458,7 @@ public class DagServiceImpl {
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					execParams.setParamSetHolder(paramSetHolder);
+					execParams.setCurrParamSet(paramSetHolder);
 					// Create object
 					dagExec = createDAGExec(dag, execParams);
 					dagExec.setExecParams(execParams); // Set execParams in DAGExec
@@ -1039,7 +1039,7 @@ public class DagServiceImpl {
 					StringBuilder builder = null;
 					if (indvTask.getOperators().get(0).getOperatorParams() != null
 							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
-							&& taskExecParams.getParamSetHolder() == null) {
+							&& taskExecParams.getCurrParamSet() == null) {
 						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
 								.getOperatorParams().get(MetaType.paramset.toString());
 						List<ParamSetHolder> paramSetHolders = new ArrayList<>();
@@ -1049,12 +1049,12 @@ public class DagServiceImpl {
 						}
 						if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
 							taskExecParams.setParamInfo(paramSetHolders);
-							taskExecParams.setParamSetHolder(paramSetHolders.get(0));
+							taskExecParams.setCurrParamSet(paramSetHolders.get(0));
 						}
 					}
 					if (indvTask.getOperators().get(0).getOperatorParams() != null
-							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
-							&& taskExecParams.getParamListHolder() == null) {
+							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())) {
+//							&& taskExecParams.getParamListHolder() == null) {
 						List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
 						List<ParamListHolder> paramListHolders = new ArrayList<>();
 						ObjectMapper mapper = new ObjectMapper();

@@ -1,6 +1,6 @@
 {
   "uuid": "95f1c6c7-118f-4cae-8eab-873a828def14",
-  "version": "1534046769",
+  "version": "1534279960",
   "name": "viz_portfolio_var_heatmap",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 00:06:09 EDT 2018",
+  "createdOn": "Tue Aug 14 16:52:40 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,26 +31,38 @@
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
+      "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
       "version": null,
-      "name": "ds_portfolio_var_heatmap"
+      "name": "ds_portfolio_var_heatmap2"
     },
     "value": null
   },
-  "type": "data-grid",
+  "type": "heat-map",
   "limit": null,
   "keys": [
     {
       "ref": {
         "type": "dataset",
-        "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
         "version": null,
-        "name": "ds_portfolio_var_heatmap"
+        "name": "ds_portfolio_var_heatmap2"
       },
-      "attributeId": 3,
+      "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": "reporting_date"
+      "attributeName": "portfolio_lgd_bucket"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap2"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "portfolio_pd_bucket"
     }
   ],
   "dimension": [],
@@ -61,38 +73,14 @@
     {
       "ref": {
         "type": "dataset",
-        "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
         "version": null,
-        "name": "ds_portfolio_var_heatmap"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "portfolio_pd_bucket"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
-        "version": null,
-        "name": "ds_portfolio_var_heatmap"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "portfolio_lgd_bucket"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
-        "version": null,
-        "name": "ds_portfolio_var_heatmap"
+        "name": "ds_portfolio_var_heatmap2"
       },
       "attributeId": 2,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_var_heatmap"
+      "attributeName": "fm_portfolio_var_heatmap"
     }
   ]
 }

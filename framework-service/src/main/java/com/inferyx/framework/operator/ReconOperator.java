@@ -161,7 +161,7 @@ public class ReconOperator {
 			      + "targetattributename" + " AS targetAttributeName" + COMMA		      
 			      + "targetvalue" + " AS targetValue" + COMMA
 			      
-			      + caseWrapper(generateCheck(sourceVal, targetVal), " status") + COMMA
+			      + caseWrapper(generateCheck(), " status") + COMMA
 			      + SINGLE_QUOTE + reconExec.getVersion() + SINGLE_QUOTE + " AS version"
 			      
 			      + FROM
@@ -285,7 +285,7 @@ public class ReconOperator {
 		return BLANK;
 	}
 	
-	public String generateCheck(String sourceVal, String targetVal) {
+	public String generateCheck() {
 		return "sourceValue" + "=" + "targetValue";
 	}
 	

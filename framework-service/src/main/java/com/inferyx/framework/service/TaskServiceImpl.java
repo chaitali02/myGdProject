@@ -646,7 +646,7 @@ public class TaskServiceImpl implements Callable<String> {
 						List<ParamSetHolder> paramInfo = new ArrayList<>();
 						paramInfo.add(execParams2.getParamInfo().get(i));
 						execParams3.setParamInfo(paramInfo);
-						execParams3.setParamSetHolder(execParams2.getParamInfo().get(i));
+						execParams3.setCurrParamSet(execParams2.getParamInfo().get(i));
 					} else if(execParams2 != null && execParams2.getParamListInfo() != null) {
 						List<ParamListHolder> paramListInfo = new ArrayList<>();
 						paramListInfo.add(execParams2.getParamListInfo().get(i));
@@ -812,7 +812,7 @@ public class TaskServiceImpl implements Callable<String> {
 		execParamsTemp.setParamInfo(paramInfoList);
 		execParamsTemp.setParamListHolder(execParams.getParamListHolder());
 		execParamsTemp.setParamListInfo(execParams.getParamListInfo());
-		execParamsTemp.setParamSetHolder(execParams.getParamSetHolder());
+		execParamsTemp.setCurrParamSet(execParams.getCurrParamSet());
 		execParamsTemp.setRefKeyList(execParams.getRefKeyList());
 		execParamsTemp.setStageInfo(execParams.getStageInfo());
 		return execParamsTemp;
