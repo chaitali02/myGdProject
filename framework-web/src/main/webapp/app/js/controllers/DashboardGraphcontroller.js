@@ -901,13 +901,25 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       d3.event.preventDefault();
     
 };
+  
 
+  $scope.setDefault=function(inProgess,isDataError){
+   
+    for(var i=0;i<$scope.sectionRows.length;i++){
+      for(var j=0;j<$scope.sectionRows[i].columns.length;j++){
+        $scope.sectionRows[i].columns[j].isDataError=isDataError;
+        $scope.sectionRows[i].columns[j].isInprogess=inProgess;
+        $scope.sectionRows[i].columns[j].vizpodDetails.datapoints=[];
+      }
+    }
+  }
   $scope.getVizpodResut=function(data){
     $scope.isDataError=false;
     $scope.vizpodResutsArray=[];
     $scope.vizpodtrack=[]
      $scope.isUserNotification=true;
      $scope.inprogressdata=true
+     $scope.setDefault($scope.inprogressdata,$scope.isDataError);
     for(var i=0;i<$scope.dashboarddata.sectionInfo.length;i++){
       var vizpodResuts={};
       if($scope.dashboarddata.sectionInfo[i].vizpodInfo.type !='network-graph'){
@@ -965,6 +977,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
               $scope.inprogressdata=false
               $scope.isUserNotification=false;
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError=false;
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess=false;
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg="";
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=result.data;
               if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type =="data-grid"){
@@ -975,8 +988,9 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
               //return { state: "fulfilled", value: result };
           })
           .catch(function (result) {
-            console.log(result)
+           // console.log(result)
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError=true;
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess=false;
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=[];
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg="Some Error Occurred";
               $scope.inprogressdata=false;
