@@ -238,8 +238,8 @@
           
           // Array[String] - the colors used for the active color scheme.
           // Any number of colors is allowed.
-          colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)','rgba(0, 128, 0, 0.8)','rgba(0, 0, 255, 0.8)'],
-          
+          //  colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)','rgba(0, 128, 0, 0.8)','rgba(0, 0, 255, 0.8)'],
+          colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)'],
           // Boolean - whether boxes change color on hover.
           colorHighlight: true, 
           
@@ -271,7 +271,17 @@
         }); //End Watch
       } ,//End link
       template: `
-      <canvas id="heatmap" width="400" height="200"></canvas>
+        <div style="transform: rotate(90deg);transform-origin: left bottom 0;margin-left: -15px;">
+          <div>
+            {{column.keys[1].attributeName}}
+          </div>
+        </div>
+        <div style="margin-top: -20px;">
+          <canvas id="heatmap" width="400" height="200"></canvas>
+        </div>
+        <div style="text-align:center;">
+          {{column.keys[0].attributeName}}
+        </div>
       `
     }; //End Return
   });
