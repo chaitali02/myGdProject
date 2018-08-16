@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
 import { CommonService } from '../../metadata/services/common.service';
 import { DependsOn } from '../dependsOn';
-
+import { ParamlistService } from '../../metadata/services/paramlist.service';
 
 @Component({
   selector: 'app-paramlist',
@@ -15,7 +15,11 @@ import { DependsOn } from '../dependsOn';
   styleUrls: ['./paramlist.component.css']
 })
 export class ParamlistComponent implements OnInit {
-
+  allTemplateList: any[];
+  isTemplateInfoRequired: boolean = false;
+  selectedTemplate: {};
+  isUseTemplate: boolean = false;
+  isTableDisable: boolean = false;
   defaultDistValue: any;
   distributionListOptions: any[];
   showParamlist: any;
@@ -49,11 +53,14 @@ export class ParamlistComponent implements OnInit {
   params: any;
   ref: any;
   paramtableArray: any;
+  templateFlg : any;
+  template : any;
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,private _paramlistService : ParamlistService) {
     this.showParamlist = true;
     this.paramlist = {};
     this.paramlist["active"] = true;
+    this.template = {};
     this.isSubmitEnable = true;
     this.paramtableArray = null;
     this.types = [{ 'value': 'date', 'label': 'date' },
@@ -97,6 +104,67 @@ export class ParamlistComponent implements OnInit {
     }
   }
 
+  onChangeIsTemplate(event){
+    if (event === true) {
+      this.templateFlg = 'Y';
+    
+    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg,"paramlist","")
+    .subscribe(response => {this.onSuccessgetAllLatestParamListByTemplate(response)},
+    error => console.log("Error :: " + error));
+    }
+    else 
+      this.templateFlg = 'N';
+  }
+
+  onSuccessgetAllLatestParamListByTemplate(response){
+    console.log(response)
+    var temp = []
+    for (const i in response) {
+      let ver = {};
+      ver["label"] = response[i]['name'];
+      ver["value"] = {};
+      ver["value"]["label"] = response[i]['name'];
+      ver["value"]["uuid"] = response[i]['uuid'];
+      ver["value"]["version"] = response[i]['version'];
+      ver["value"]["params"] = response[i]['params'];
+      temp[i] = ver;
+    }
+    this.allTemplateList = temp;
+    console.log(JSON.stringify(this.template.params));
+
+    var arrayTemp = [];
+    for (const i in this.template.params) {
+      let paramtableObj = {};
+      paramtableObj["paramName"] = this.template.params[i].paramName;
+      paramtableObj["paramType"] = this.template.params[i].paramType;
+      //paramtableObj["paramValue"] = this.template.params[i].paramValue;
+      
+      if (this.typeSimple.indexOf(this.template.params[i].paramType) != -1) {
+        paramtableObj["paramValue"] = this.template.params[i].paramValue.value;
+      }
+      else if (this.template.params[i].paramType == "distribution") {
+        let value1Temp: DependsOn = new DependsOn();
+        value1Temp.label = this.template.params[i].paramValue.ref.name;
+        value1Temp.uuid = this.template.params[i].paramValue.ref.uuid;
+
+        paramtableObj["paramValue"] = value1Temp;
+      }
+      else if (this.template.params[i].paramValue == null) {
+        paramtableObj["paramValue"] = "";
+      }
+      arrayTemp[i] = paramtableObj;
+    }
+    this.paramtableArray = arrayTemp;
+  }
+
+  onChangeTemplate(){    
+    this.templateFlg = 'Y';
+    
+    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg,"paramlist","")
+    .subscribe(response => {this.onSuccessgetAllLatestParamListByTemplate(response)},
+    error => console.log("Error :: " + error));    
+  }
+
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'paramlist')
       .subscribe(
@@ -107,19 +175,20 @@ export class ParamlistComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-
     this.paramlist = response
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
-
     this.createdBy = this.paramlist.createdBy.ref.name
     this.published = response['published'];
     if (this.published === 'Y') { this.published = true; } else { this.published = false; }
     this.active = response['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
+
+    this.templateFlg = response['templateFlg'];
+    
     this.tags = response['tags'];
     this.paramlist.published = response["published"] == 'Y' ? true : false
     this.paramlist.active = response["active"] == 'Y' ? true : false
@@ -128,24 +197,23 @@ export class ParamlistComponent implements OnInit {
     var arrayTemp = [];
     for (const i in response.params) {
       let paramtableObj = {};
-      paramtableObj["name"] = response.params[i].paramName;
-      paramtableObj["type"] = response.params[i].paramType;
+      paramtableObj["paramName"] = response.params[i].paramName;
+      paramtableObj["paramType"] = response.params[i].paramType;
 
       if (this.typeSimple.indexOf(response.params[i].paramType) != -1) {
-        paramtableObj["value1"] = response.params[i].paramValue.value;
+        paramtableObj["paramValue"] = response.params[i].paramValue.value;
       }
       else if (response.params[i].paramType == "distribution") {
         let value1Temp: DependsOn = new DependsOn();
         value1Temp.label = response.params[i].paramValue.ref.name;
         value1Temp.uuid = response.params[i].paramValue.ref.uuid;
 
-        paramtableObj["value1"] = value1Temp;
+        paramtableObj["paramValue"] = value1Temp;
       }
       else if (response.params[i].paramValue == null) {
-        paramtableObj["value1"] = "";
+        paramtableObj["paramValue"] = "";
       }
       arrayTemp[i] = paramtableObj;
-
     }
     this.paramtableArray = arrayTemp;
 
@@ -226,8 +294,6 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray.splice(this.paramtableArray.length, 0, attrinfo);
   }
 
- 
-
   removeAttribute(){  
     var newDataList=[];
     this.selectAllAttributeRow=false
@@ -239,12 +305,6 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray = newDataList;
     console.log(JSON.stringify(this.paramtableArray))
   }
-
-
-
-
-
-
 
   checkAllAttributeRow() {
     if (!this.selectAllAttributeRow) {
@@ -261,7 +321,7 @@ export class ParamlistComponent implements OnInit {
   onVersionChange(){ 
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'paramlist')
     .subscribe(
-    response =>{//console.log(response)},
+    response =>{
       this.onSuccessgetOneByUuidAndVersion(response)},
     error => console.log("Error :: " + error)); 
   }
@@ -286,22 +346,22 @@ export class ParamlistComponent implements OnInit {
     for (var i = 0; i < this.paramtableArray.length; i++) {
       var attributemap = {};
       attributemap["paramId"] = i;
-      attributemap["paramName"] = this.paramtableArray[i].name
-      attributemap["paramType"] = this.paramtableArray[i].type
+      attributemap["paramName"] = this.paramtableArray[i].paramName
+      attributemap["paramType"] = this.paramtableArray[i].paramType
       let paramValue = {};
-      if (this.typeSimple.indexOf(this.paramtableArray[i].type) != -1) {
+      if (this.typeSimple.indexOf(this.paramtableArray[i].paramType) != -1) {
         let paramRef = {};
         paramRef["type"] = "simple"
         paramValue["ref"] = paramRef;
-        paramValue["value"] = this.paramtableArray[i].value1;
+        paramValue["value"] = this.paramtableArray[i].paramValue;
         attributemap["paramValue"] = paramValue;
         paramInfoArray[i] = attributemap;
       }
-      else if (this.paramtableArray[i].type == 'distribution') {
+      else if (this.paramtableArray[i].paramType == 'distribution') {
         var paramRef = {};
-        paramRef["type"] = this.paramtableArray[i].type;
-        if (this.paramtableArray[i].value1 != null) {
-          paramRef["uuid"] = this.paramtableArray[i].value1.uuid;
+        paramRef["type"] = this.paramtableArray[i].paramType;
+        if (this.paramtableArray[i].paramValue != null) {
+          paramRef["uuid"] = this.paramtableArray[i].paramValue.uuid;
         }
         paramValue["ref"] = paramRef;
         attributemap["paramValue"] = paramValue;
@@ -329,7 +389,6 @@ export class ParamlistComponent implements OnInit {
       this.goBack()
     }, 1000);
   }
-
 
   public goBack() {
     //this._location.back();

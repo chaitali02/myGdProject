@@ -128,7 +128,27 @@
                   </div>
                 </div>
               </div>
-       
+              
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangeIsTemplate($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="templateFlg" name="templateFlg"
+                      [checked]="templateFlg" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Use Template</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                    <p-dropdown [options]="allTemplateList" [(ngModel)]="template" name="template" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'true'||mode == 'false'" (onChange)="onChangeTemplate()"
+                        placeholder="Select">
+                    </p-dropdown>
+                </div>
+            </div>
+
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
@@ -148,14 +168,13 @@
                     <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true'"></button>
                   </div>
                   <div class="form-body" style="padding-top:50px;">
-                    <div>
-                        
+                    <div>      
                       <table class=" row-border hover table  table-striped table-bordered">
                         <thead>
                           <tr>
                             <th style="width:5%;text-align: center; Vertical-align: middle;">
                               <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
-                                (click)="checkAllAttributeRow()" />
+                                (click)="checkAllAttributeRow()"/>
                             </th>
                             <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
                             <th style="text-align: center;width:15%;">Name</th>
@@ -164,47 +183,46 @@
                           </tr>
                         </thead>
                         <tbody>
-                          
-                          <tr *ngFor="let data1 of paramtableArray;let i=index">
+                          <tr *ngFor="let data1 of paramtableArray; let i=index">                                   
                             <td style="text-align:center;Vertical-align:middle;">
                               <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data1.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'" />
                             </td>
                             <td style="width:10%;">
                               <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
-                              <td>
-                                <input type="text" class="form-control" [(ngModel)]="data1.name" name="name+{{i}}" [disabled]="mode == 'true'" class="form-control">
-                              </td>
-                              <td>
-                                <p-dropdown [options]="types" 
-                                [(ngModel)]="data1.type" 
-                                name="type+{{i}}"
-                                [disabled]="mode == 'true'" 
-                                [style]="{'width':'100%','padding':'3px'}"
-                                [filter]="true" 
-                                placeholder="Select" >
-                                </p-dropdown>
-                              </td>
+                            </td>
+                            <td>
+                              <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="mode == 'true'" class="form-control">
+                            </td>
+                            <td>
+                              <p-dropdown [options]="types" 
+                              [(ngModel)]="data1.paramType" 
+                              name="type+{{i}}"
+                              [disabled]="mode == 'true'" 
+                              [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" 
+                              placeholder="Select" >
+                              </p-dropdown>
+                            </td>
+                              
+                            <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
+                              <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="mode">
+                            </td>
 
-                              <td *ngIf="typeSimple.indexOf(data1.type) != -1">
-                                <input type="text" class="form-control" [(ngModel)]="data1.value1" name="value1+{{i}}" [disabled]="mode">
-                              </td>
-                             
-                              <td *ngIf="data1.type == 'distribution'">
-                                <p-dropdown [options]="distributionListOptions" 
-                                [(ngModel)]="data1.value1" 
-                                name="value1+{{i}}"
-                                [disabled]="mode == 'true'" 
-                                [style]="{'width':'100%'}"
-                                [filter]="true" dataKey="uuid"
-                                placeholder="Select">
-                                </p-dropdown>
-                               
-                              </td>
+                            <td *ngIf="data1.paramType == 'distribution'">
+                              <p-dropdown [options]="distributionListOptions" 
+                              [(ngModel)]="data1.paramValue" 
+                              name="value1+{{i}}"
+                              [disabled]="mode == 'true'" 
+                              [style]="{'width':'100%'}"
+                              [filter]="true" dataKey="uuid"
+                              placeholder="Select">
+                              </p-dropdown>                               
+                            </td>
 
-                               <td *ngIf="!(typeSimple.indexOf(data1.type) != -1) && !(data1.type == 'distribution')" >
-                                         {{"NA"}}                    
+                            <td *ngIf="(typeSimple.indexOf(data1.paramType) == -1) && !(data1.paramType == 'distribution')" >
+                                        {{"NA"}}            
                             </td>      
-                          </tr>
+                          </tr>                         
                         </tbody>
                       </table>
                     </div>
