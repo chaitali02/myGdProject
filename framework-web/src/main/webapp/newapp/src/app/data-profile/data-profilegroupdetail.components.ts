@@ -169,13 +169,14 @@ export class DataProfileGroupDetailComponent {
     profileJson["uuid"] = this.dataprofilegroup.uuid
     profileJson["name"] = this.dataprofilegroup.name
     profileJson["desc"] = this.dataprofilegroup.desc
-    let tagArray = [];
+    var tagArray = [];
     if (this.dataprofilegroup.tags != null) {
       for (var counttag = 0; counttag < this.dataprofilegroup.tags.length; counttag++) {
-        tagArray[counttag] = this.dataprofilegroup.tags[counttag];
+        tagArray[counttag] = this.dataprofilegroup.tags[counttag].value;
+
       }
     }
-    profileJson["tags"] = tagArray;
+    profileJson['tags'] = tagArray;
     profileJson["active"] = this.dataprofilegroup.active == true ? 'Y' : "N"
     profileJson["published"] = this.dataprofilegroup.published == true ? 'Y' : "N"
     let ruleInfo = [];

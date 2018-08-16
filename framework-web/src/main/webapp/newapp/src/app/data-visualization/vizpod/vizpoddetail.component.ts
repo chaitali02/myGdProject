@@ -385,13 +385,14 @@ export class VizpodDetailComponent {
         vizpodjson["uuid"]=this.vizpoddata.uuid;
         vizpodjson["name"]=this.vizpoddata.name;
         vizpodjson["desc"]=this.vizpoddata.desc;
-        let tagArray=[];
+        var tagArray=[];
         if(this.vizpoddata.tags !=null){
-          for(var counttag=0;counttag<this.vizpoddata.tags.length;counttag++){
-               tagArray[counttag]=this.vizpoddata.tags[counttag];
-          }
-        }
-        vizpodjson["tags"]=tagArray;
+         for(var counttag=0;counttag<this.vizpoddata.tags.length;counttag++){
+          tagArray[counttag]=this.vizpoddata.tags[counttag].value;
+      
+         }
+         }
+         vizpodjson['tags'] = tagArray;
         vizpodjson["active"]=this.vizpoddata.active == true ?'Y' :"N"
         vizpodjson["published"]=this.vizpoddata.published == true ?'Y' :"N"
         let  dependsOn = {};

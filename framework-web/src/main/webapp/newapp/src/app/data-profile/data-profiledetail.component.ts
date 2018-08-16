@@ -213,13 +213,14 @@ import{ DependsOn } from './dependsOn'
       profileJson["uuid"]=this.dataprofile.uuid
       profileJson["name"]=this.dataprofile.name
       profileJson["desc"]=this.dataprofile.desc
-      let tagArray=[];
+      var tagArray=[];
       if(this.dataprofile.tags !=null){
-        for(var counttag=0;counttag<this.dataprofile.tags.length;counttag++){
-             tagArray[counttag]=this.dataprofile.tags[counttag];
-        }
-      }
-      profileJson["tags"]=tagArray;
+       for(var counttag=0;counttag<this.dataprofile.tags.length;counttag++){
+        tagArray[counttag]=this.dataprofile.tags[counttag].value;
+    
+       }
+       }
+       profileJson['tags'] = tagArray;
       let dependsOn={};
       let ref={}
       ref["type"]=this.source

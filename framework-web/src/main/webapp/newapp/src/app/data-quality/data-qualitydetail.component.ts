@@ -364,18 +364,20 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
     } 
     
     dagSubmit(){
+      debugger
       this.isSubmit="true"
       let dqJson={};
       dqJson["uuid"]=this.dqdata.uuid;
       dqJson["name"]=this.dqdata.name;
       dqJson["desc"]=this.dqdata.desc;
-      let tagArray=[];
-      if(this.dqdata.tags !=null){
-        for(var counttag=0;counttag<this.dqdata.tags.length;counttag++){
-             tagArray[counttag]=this.dqdata.tags[counttag];
-        }
+      var tagArray = [];
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
       }
-      dqJson["tags"]=tagArray;
+    }
+    dqJson['tags'] = tagArray;
       dqJson["active"]=this.dqdata.active == true ?'Y' :"N"
       dqJson["published"]=this.dqdata.published == true ?'Y' :"N"
       let  dependsOn = {};

@@ -11,7 +11,7 @@
                   <i class="fa fa-gift"></i>{{vizpoddata.name}}
                 </div>
                 <div class="tools"> 
-                    <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+                    <a title="Edit" (click)="enableEdit(uuid,version)"   data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
                         <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                     </a>
                     <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
@@ -87,7 +87,7 @@
                         <div class="form-group taginput">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
                             <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                                <tag-input [(ngModel)]="vizpoddata.tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                                <tag-input [(ngModel)]="vizpoddata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                             </div>
                         </div>
 

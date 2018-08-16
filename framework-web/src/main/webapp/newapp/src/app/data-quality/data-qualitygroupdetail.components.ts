@@ -161,19 +161,21 @@ import{ Version } from './../metadata/domain/version'
       }
 
     submit(){
+      debugger
       this.isSubmitEnable=true;
       this.IsProgerssShow="true";
       let dqgroupJson={}
       dqgroupJson["uuid"]=this.datadqgroup.uuid
       dqgroupJson["name"]=this.datadqgroup.name
       dqgroupJson["desc"]=this.datadqgroup.desc
-      let tagArray=[];
-      if(this.datadqgroup.tags !=null){
-        for(var counttag=0;counttag<this.datadqgroup.tags.length;counttag++){
-             tagArray[counttag]=this.datadqgroup.tags[counttag];
+      var tagArray = [];
+      if (this.datadqgroup.tags != null) {
+        for (var counttag = 0; counttag < this.datadqgroup.tags.length; counttag++) {
+          tagArray[counttag] = this.datadqgroup.tags[counttag].value;
+  
         }
       }
-      dqgroupJson["tags"]=tagArray;
+      dqgroupJson['tags'] = tagArray;
       dqgroupJson["active"]=this.datadqgroup.active == true ?'Y' :"N"
       dqgroupJson["published"]=this.datadqgroup.published == true ?'Y' :"N"
       let ruleInfo=[];
