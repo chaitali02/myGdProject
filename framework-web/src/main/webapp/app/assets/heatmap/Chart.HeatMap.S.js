@@ -2390,14 +2390,14 @@ var ColorManager = function(){
     
     // String - template for legend generation
     legendTemplate : '<div class="<%= name.toLowerCase() %>-legend">'+
-            '<span class="<%= name.toLowerCase() %>-legend-text">'+
+            '<span class="<%= name.toLowerCase() %>-legend-text" >'+
             '<%= min %>'+
             '</span>'+
-            '<% for (var i = min; i <= max; i += (max-min)/6){ %>'+ // change 6 to number of divisions required
-            '<span class="<%= name.toLowerCase() %>-legend-box" style="background-color: <%= colorManager.getColor(i).color %>;">&nbsp; </span>'+
+            '<% for (var i = min; i <= max; i += (max-min)/7){ %>'+ // change 6 to number of divisions required
+            '<span class="<%= name.toLowerCase() %>-legend-box" style="padding-left:5px;background-color: <%= colorManager.getColor(i).color %>;">&nbsp; </span>'+
             '<% } %>'+
             '<span class="<%= name.toLowerCase() %>-legend-text">'+
-            '<%= max %>'+
+            '<%=  max %>'+
             '</span>'+
             '</div>'
 

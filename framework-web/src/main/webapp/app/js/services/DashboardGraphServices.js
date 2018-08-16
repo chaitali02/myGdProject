@@ -197,7 +197,7 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 		}
 		return deferred.promise;
 	};
-	this.getVizpodResults = function (uuid, version, data) {
+	this.getVizpodResults = function (uuid, version, data,vizpodResuts) {
 		var deferred = $q.defer();
 		//  if(data == null){
 		//    DahsboardFactory.findVizpodResults(uuid,version).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
@@ -218,13 +218,15 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 		var onSuccess = function (response) {
 			deferred.resolve({
 				success: true,
-				data: response
+				data: response,
+				vizpodResuts:vizpodResuts
 			})
 		}
 		var onError = function (response) {
 			deferred.reject({
 				success: false,
-				data: response
+				data: response,
+				vizpodResuts:vizpodResuts
 			});
 		}
 		//}

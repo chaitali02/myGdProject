@@ -118,8 +118,8 @@
               </div> -->
               <!--Start C3 Graph Code-->
               <div ng-repeat="row in sectionRows">
-                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show">
-                  <div class="portlet light bordered">
+                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" style="min-height:440px;">
+                  <div class="portlet light bordered"  style="min-height:420px;">
                     <div class="portlet-title">
                       <div class="caption">
                         <span class="caption-subject font-dark bold ">{{datacol.name}}</span>
@@ -140,13 +140,13 @@
                     </div>
                     <div class="portlet-body">
                       <div>
-                        <div ng-show="datacol.isDataError">
+                        <div class ="centercontent" style="min-height:300px" ng-show="datacol.isDataError">
                           <h3 style="font-size:14px;color:red;">{{datacol.errormsg}}</h3>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length == 0 && !datacol.isDataError" ng-show="!inprogressdata">
+                        <div  class ="centercontent" style="min-height:300px" ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length == 0 && !datacol.isDataError" ng-show="!datacol.isInprogess">
                           <h3 style="font-size:14px;color:blue;">No data available</h3>
                         </div>
-                        <div class="spinner centercontent" ng-show="inprogressdata">
+                        <div class="spinner centercontent" style="min-height:300px" ng-show="datacol.isInprogess">
                           <div class="bounce1"></div>
                           <div class="bounce2"></div>
                           <div class="bounce3"></div>
@@ -157,12 +157,16 @@
                             <chart-bar ratio="0.5" />
                             <!--<chart-legend show-legend="true"/>
                             <chart-donut expand="true" width="30" show-label="false" title="Donut Title"/> -->
-                            <chart-axes values-x="" />
+                            <chart-axes values-x="">
                             <!-- <chart-size chart-height="33%" chart-width=""/> -->
                             <chart-axis>
                               <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{datacol.vizpodDetails.datax.id}}">
-                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5" />
+                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5"   />
                               </chart-axis-x>
+                              <chart-axis-Y>
+                                <chart-axis-y-tick tick-format-function="time_format"/>
+                              </chart-axis-Y>
+
                             </chart-axis>
                             <!-- <chart- group-values="data 1,data 2"/> -->
                             <!--  <chart-legend show-legend="false" legend-position="right"/> -->
@@ -191,7 +195,7 @@
                         <div ng-if="datacol.vizpodDetails.type == 'network-graph'  && !inprogressdata">
                              <h1>Network Graph</h1>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata">
+                        <div  ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0">
                           <div class="{{datacol.vizpodDetails.id}}" heat-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id"  objdetail="datacol">
                           </div>
                      </div>
