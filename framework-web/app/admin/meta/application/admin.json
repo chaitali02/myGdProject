@@ -13,10 +13,5 @@
             "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
         }
     },
-     "paramList" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a"
-        }
-    }
+     "paramList" : {}
 }

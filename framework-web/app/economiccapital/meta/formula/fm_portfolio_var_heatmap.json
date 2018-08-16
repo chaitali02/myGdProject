@@ -1,6 +1,6 @@
 {
-  "uuid": "2d60806b-9dce-45d3-81bc-0e43da7602a0",
-  "version": "1534046153",
+  "uuid": "81e9307a-787f-47a9-b590-33dd2db0f013",
+  "version": "1534280678",
   "name": "fm_portfolio_var_heatmap",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 23:55:53 EDT 2018",
+  "createdOn": "Tue Aug 14 17:04:38 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,10 +29,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "dataset",
-      "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+      "type": "relation",
+      "uuid": "c70d8be7-f10b-494d-b6c6-0590975a9a74",
       "version": null,
-      "name": "ds_portfolio_var_heatmap_stage"
+      "name": "rel_portfolio_var_heatmap"
     },
     "value": null
   },
@@ -63,6 +63,90 @@
     },
     {
       "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "CASE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap_stage"
+      },
+      "attributeId": 0,
+      "value": null,
+      "attributeName": "pd",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "IS NULL",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ELSE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
         "type": "dataset",
         "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
         "version": null,
@@ -71,6 +155,18 @@
       "attributeId": 2,
       "value": null,
       "attributeName": "es_allocation",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "END",
+      "attributeName": null,
       "attributeType": null
     },
     {

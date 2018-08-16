@@ -13,6 +13,7 @@ CREATE TABLE  `portfolio_loss_summary` (
 `portfolio_es_percentage` decimal(10,0) DEFAULT NULL,
 `portfolio_val_percentage` decimal(10,0) DEFAULT NULL,
 `portfolio_el_percentage` decimal(10,0) DEFAULT NULL,
+`portfolio_ec_percentage` decimal(10,0) DEFAULT NULL,
 `reporting_date` varchar(45) DEFAULT NULL,
 `version` int(11) DEFAULT NULL
 );

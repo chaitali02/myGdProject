@@ -586,6 +586,12 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
        $window.dispatchEvent(new Event("resize"));
      }, 100);
   }
+  
+  $scope.time_format = function (timestamp) {
+  //  console.log(timestamp)
+    return  timestamp.toFixed(2);
+  };
+
 
   $scope.refreshDashboard=function(length){
     $scope.callGraph();
@@ -619,7 +625,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
         ref.uuid=$scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref=ref;
         filterList.attrId=$scope.filterAttribureIdValues[i].datapodattrId
-        filterList.value="'"+$scope.selectedAttributeValue[i].value+"'";
+        filterList.value=$scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
         $scope.filterListarray[count]=filterList;
         count=count+1;
       }

@@ -1,7 +1,7 @@
 {
-  "uuid": "19b74b75-69b2-46b9-9749-c63ad3c0a5c0",
-  "version": "1534084277",
-  "name": "viz_portfolio_var_pd_heatmap",
+  "uuid": "d08bce3c-2c73-481c-8809-4e2c24b9596c",
+  "version": "1534280419",
+  "name": "viz_portfolio_total_var",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 10:31:17 EDT 2018",
+  "createdOn": "Tue Aug 14 17:00:19 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -47,10 +47,10 @@
         "version": null,
         "name": "ds_portfolio_var_heatmap2"
       },
-      "attributeId": 0,
+      "attributeId": 3,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_pd_bucket"
+      "attributeName": "reporting_date"
     }
   ],
   "dimension": [],

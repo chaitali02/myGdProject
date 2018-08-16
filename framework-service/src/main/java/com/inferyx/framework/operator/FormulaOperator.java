@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AggregateFunc;
 import com.inferyx.framework.domain.DataSet;
@@ -61,9 +62,14 @@ public class FormulaOperator {
 			builder.append(" ");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getParamSetHolder() != null || execParams.getParamListHolder() != null)) {
-				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
 				builder.append(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
 				String value = null;

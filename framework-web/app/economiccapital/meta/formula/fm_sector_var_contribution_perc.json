@@ -1,8 +1,7 @@
 {
-  "id": "5b70441bfb641121fe701523",
-  "uuid": "81e9307a-787f-47a9-b590-33dd2db0f013",
-  "version": "1534084123",
-  "name": "fm_portfolio_var_heatmap2",
+  "uuid": "bd2f37d9-46dd-4bb1-892f-acd1718f8127",
+  "version": "1534304388",
+  "name": "fm_sector_var_contribution_perc",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 10:28:43 EDT 2018",
+  "createdOn": "Tue Aug 14 23:39:48 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,13 +30,37 @@
   "dependsOn": {
     "ref": {
       "type": "relation",
-      "uuid": "c70d8be7-f10b-494d-b6c6-0590975a9a74",
+      "uuid": "9547b33a-4453-449b-b056-a63460389a03",
       "version": null,
-      "name": "rel_portfolio_var_heatmap"
+      "name": "rel_customer_var_contribution"
     },
     "value": null
   },
   "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39rtc",
+        "version": null,
+        "name": "round(double a)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
     {
       "ref": {
         "type": "function",
@@ -64,94 +87,10 @@
     },
     {
       "ref": {
-        "type": "simple",
-        "uuid": null,
+        "type": "datapod",
+        "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
         "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "CASE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
-        "version": null,
-        "name": "ds_portfolio_var_heatmap_stage"
-      },
-      "attributeId": 0,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "IS NULL",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "0",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "ELSE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
-        "version": null,
-        "name": "ds_portfolio_var_heatmap_stage"
+        "name": "customer_es_allocation"
       },
       "attributeId": 2,
       "value": null,
@@ -166,7 +105,79 @@
         "name": null
       },
       "attributeId": null,
-      "value": "END",
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "/",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "FIRST (",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+        "version": null,
+        "name": "portfolio_loss_aggr_es"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "value_at_risk",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "*",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "100 , 2",
       "attributeName": null,
       "attributeType": null
     },

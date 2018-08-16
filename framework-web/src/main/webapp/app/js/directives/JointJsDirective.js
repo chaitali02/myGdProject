@@ -1832,6 +1832,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                }
                if(status && status=='InProgress'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
              }
              iconMenu.resetItems(iconMenuItems);
@@ -3029,8 +3030,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){ 
                 var paramList={};
-                paramList.uuid=paramListInfo[i].ref.uuid;
-                paramList.type=paramListInfo[i].ref.type;
+                if(paramList.type=paramListInfo[i].ref !=null){
+                  paramList.uuid=paramListInfo[i].ref.uuid;
+                  paramList.type=paramListInfo[i].ref.type;
+                }
                 paramList.paramId=paramListInfo[i].paramId;
                 paramList.paramType=paramListInfo[i].paramType.toLowerCase();
                 paramList.paramName=paramListInfo[i].paramName;

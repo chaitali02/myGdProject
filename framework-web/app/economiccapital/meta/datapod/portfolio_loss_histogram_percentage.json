@@ -1,6 +1,6 @@
 {
   "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
-  "version": "1533871383",
+  "version": "1534300729",
   "name": "portfolio_loss_histogram_percentage",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 23:23:03 EDT 2018",
+  "createdOn": "Tue Aug 14 22:38:49 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -63,7 +63,7 @@
     {
       "attributeId": 2,
       "name": "version",
-      "type": "string",
+      "type": "integer",
       "desc": "version",
       "key": "",
       "partition": "N",

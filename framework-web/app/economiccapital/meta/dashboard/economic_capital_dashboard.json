@@ -1,6 +1,6 @@
 {
   "uuid": "e44b33be-8cef-468e-8faa-1d5e61c0173a",
-  "version": "1534084337",
+  "version": "1534380946",
   "name": "Economic Capital Dashboard",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 10:32:17 EDT 2018",
+  "createdOn": "Wed Aug 15 20:55:46 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -75,7 +75,7 @@
     },
     {
       "sectionId": null,
-      "name": "Portfolio Loss Distribution Histogram %",
+      "name": "viz_portfolio_var_lgd_heatmap",
       "vizpodInfo": {
         "ref": {
           "type": "vizpod",
@@ -135,41 +135,26 @@
     },
     {
       "sectionId": null,
-      "name": "Portfolio VaR PD",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "19b74b75-69b2-46b9-9749-c63ad3c0a5c0",
-          "version": null,
-          "name": "viz_portfolio_var_pd_heatmap"
-        },
-        "value": null
-      },
-      "rowNo": 4,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Portfolio VaR LGD",
+      "name": "Portfolio Total VaR",
       "vizpodInfo": {
         "ref": {
           "type": "vizpod",
           "uuid": "d08bce3c-2c73-481c-8809-4e2c24b9596c",
           "version": null,
-          "name": "viz_portfolio_var_lgd_heatmap"
+          "name": "viz_portfolio_total_var"
         },
         "value": null
       },
       "rowNo": 4,
-      "colNo": 3
+      "colNo": 2
     }
   ],
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "uuid": "057f383b-6ff0-4268-b05c-aebe62cf1285",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "lkp_reporting_date"
     },
     "value": null
   },
@@ -177,12 +162,12 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+        "uuid": "057f383b-6ff0-4268-b05c-aebe62cf1285",
         "version": null,
-        "name": "customer_portfolio"
+        "name": "lkp_reporting_date"
       },
       "value": null,
-      "attrId": "9",
+      "attrId": "0",
       "attrName": "reporting_date",
       "attrType": null
     }
