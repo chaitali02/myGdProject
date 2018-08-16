@@ -2045,7 +2045,7 @@
 
 // http://www.w3.org/TR/css3-color/
 var cssColorParser = function(){
-
+  debugger
   var kCSSColorTable = {
     "rebeccapurple": [102, 51, 153], 
     "transparent": [0,0,0,0], "aliceblue": [240,248,255,1],
@@ -2285,6 +2285,7 @@ var ColorManager = function(){
   }
 
   function cssColorToArray(color){
+	  console.log(cssColorParser(color))
     return cssColorParser(color);
   }
  

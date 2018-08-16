@@ -1149,7 +1149,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
     }
     
     $scope.resize=function(){
-      $scope.zoomSize =10;
+      $scope.zoomSize =7;
     }
      
      window.navigateTo = function(url){
@@ -1828,6 +1828,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                }
                
                if(status && status=='Failed'){
+                iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
                if(status && status=='InProgress'){

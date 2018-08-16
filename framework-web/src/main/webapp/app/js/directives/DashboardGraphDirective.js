@@ -242,7 +242,7 @@
           // Array[String] - the colors used for the active color scheme.
           // Any number of colors is allowed.
           //  colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)','rgba(0, 128, 0, 0.8)','rgba(0, 0, 255, 0.8)'],
-          colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)'],
+          colors: ['rgba(255, 255, 255, 0.8)','rgba(255, 192, 203, 0.8)','rgba(255, 0, 0, 0.8)'],
           // Boolean - whether boxes change color on hover.
           colorHighlight: true, 
           
