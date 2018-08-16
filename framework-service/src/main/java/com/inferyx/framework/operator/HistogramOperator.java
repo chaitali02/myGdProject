@@ -8,10 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.rdd.DoubleRDDFunctions;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoder;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
@@ -20,7 +17,6 @@ import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.util.StatCounter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +39,6 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
-import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -54,10 +49,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 import scala.Tuple2;
-import scala.collection.JavaConverters;
-import scala.collection.Seq;
-import scala.concurrent.JavaConversions;
-import scala.reflect.ClassTag;
 
 /**
  * @author Ganesh
@@ -113,24 +104,20 @@ public class HistogramOperator implements IOperator {
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
 		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
+		ParamListHolder keyInfo = paramSetServiceImpl.getParamByName(execParams, "key");
 		HashMap<String, String> otherParams = execParams.getOtherParams();
 		
 		int numBuckets = Integer.parseInt(numBucketsInfo.getParamValue().getValue());
+		String key = keyInfo.getParamValue().getValue();
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 
-		StructField[] fieldArray = new StructField[3];
+		StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
 		StructType schema = new StructType(fieldArray);	
-		if(locationDatapod.getAttributes().size() > 3) {
-			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must 3");
+		if(locationDatapod.getAttributes().size() > 4) {
+			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
 		} else {
-//			StructField bucketField = new StructField("bucket", (DataType)sparkExecutor.getDataType("string"), true, Metadata.empty());
-//			fieldArray[0] = bucketField;
-//			StructField frequencyField = new StructField("frequency", (DataType)sparkExecutor.getDataType("long"), true, Metadata.empty());
-//			fieldArray[1] = frequencyField;
-//			StructField versionField = new StructField("version", (DataType)sparkExecutor.getDataType("integer"), true, Metadata.empty());
-//			fieldArray[2] = versionField;
 			int count = 0;
 			for(Attribute attribute : locationDatapod.getAttributes()) {
 				StructField field = new StructField(attribute.getName(), (DataType)sparkExecutor.getDataType(attribute.getType()), true, Metadata.empty());
@@ -165,10 +152,10 @@ public class HistogramOperator implements IOperator {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<ds.length; i++) {
 			if(i<ds.length-1) {
-				String bucket = ds[i]+" - "+ds[i+1];
+				String bucket = ds[i]+"  -  "+ds[i+1];
 				int frequency = (int) ls[i];
 				int version = Integer.parseInt(Helper.getVersion());
-				rowList.add(RowFactory.create(bucket, frequency, version));
+				rowList.add(RowFactory.create(key, bucket, frequency, version));
 			}
 		}
 		
@@ -278,8 +265,6 @@ public class HistogramOperator implements IOperator {
 		String execVersion = execIdentifier.getVersion();
 		String execUuid = execIdentifier.getUuid();
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		
-//		List<Attribute> attributes = locationDatapod.getAttributes();
 		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
