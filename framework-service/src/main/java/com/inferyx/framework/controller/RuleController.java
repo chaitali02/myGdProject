@@ -93,7 +93,7 @@ public class RuleController {
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					execParams.setParamSetHolder(paramSetHolder);
+					execParams.setCurrParamSet(paramSetHolder);
 				}
 			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {

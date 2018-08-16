@@ -62,7 +62,7 @@
                   "paramInfo": null,
                   "filterInfo": null,
                   "stageInfo": null,
-                  "paramSetHolder": null,
+                  "currParamSet": null,
                   "paramListHolder": null,
                   "paramListInfo": [
                     {
@@ -293,7 +293,7 @@
                   "paramInfo": null,
                   "filterInfo": null,
                   "stageInfo": null,
-                  "paramSetHolder": null,
+                  "currParamSet": null,
                   "paramListHolder": null,
                   "paramListInfo": [
                     {

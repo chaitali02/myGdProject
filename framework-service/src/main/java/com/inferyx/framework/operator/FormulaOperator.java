@@ -62,7 +62,7 @@ public class FormulaOperator {
 			builder.append(" ");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getParamSetHolder() != null || execParams.getParamListHolder() != null)) {
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
 				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				if(value != null) {
 					boolean isNumber = Helper.isNumber(value);			

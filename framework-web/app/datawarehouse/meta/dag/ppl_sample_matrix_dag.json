@@ -27,7 +27,7 @@
                                     "paramInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
-                                    "paramSetHolder" : null,
+                                    "currParamSet" : null,
                                     "paramListInfo" : [ 
                                         {
                                             "ref" : {
