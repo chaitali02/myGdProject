@@ -478,4 +478,11 @@ public class OracleExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
+			int numBuckets, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

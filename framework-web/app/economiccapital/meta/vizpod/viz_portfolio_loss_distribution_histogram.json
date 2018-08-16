@@ -47,7 +47,7 @@
         "version": null,
         "name": "portfolio_loss_histogram"
       },
-      "attributeId": 0,
+      "attributeId": 1,
       "function": null,
       "value": null,
       "attributeName": "bucket"
@@ -65,7 +65,7 @@
         "version": null,
         "name": "portfolio_loss_histogram"
       },
-      "attributeId": 1,
+      "attributeId": 2,
       "function": null,
       "value": null,
       "attributeName": "frequency"

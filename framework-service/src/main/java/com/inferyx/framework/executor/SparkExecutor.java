@@ -62,6 +62,7 @@ import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
+import org.apache.spark.rdd.DoubleRDDFunctions;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
@@ -123,6 +124,7 @@ import com.inferyx.framework.writer.IWriter;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
+import scala.Tuple2;
 
 @Component
 public class SparkExecutor<T> implements IExecutor {
@@ -2554,5 +2556,48 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setCountRows(df.count());
 		rsHolder.setTableName(tableName);
 		return rsHolder;
+	}
+	
+	@Override
+	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException {
+		StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
+		StructType schema = new StructType(fieldArray);	
+		if(locationDatapod.getAttributes().size() > 4) {
+			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
+		} else {
+			int count = 0;
+			for(Attribute attribute : locationDatapod.getAttributes()) {
+				StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+				fieldArray[count] = field;
+				count++;
+			}
+		}
+		
+
+		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
+		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
+		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
+		double[] ds = histogramTuples._1();
+		long[] ls = histogramTuples._2();
+		List<Row> rowList = new ArrayList<>();
+		for(int i=0; i<ds.length; i++) {
+			if(i<ds.length-1) {
+				String bucket = ds[i]+" - "+ds[i+1];
+				int frequency = (int) ls[i];
+				int version = Integer.parseInt(Helper.getVersion());
+				rowList.add(RowFactory.create(key, bucket, frequency, version));
+			}
+		}
+		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
+		df.printSchema();
+		df.show(false);
+		ResultSetHolder rsHolder2 = new ResultSetHolder();
+		rsHolder2.setCountRows(df.count());
+		rsHolder2.setDataFrame(df);
+		rsHolder2.setTableName(locationTableName);
+		rsHolder2.setType(ResultType.dataframe);
+		
+		return rsHolder2;
 	}
 }

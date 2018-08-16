@@ -40,6 +40,17 @@
   "attributes": [
     {
       "attributeId": 0,
+      "name": "reporting_date",
+      "type": "string",
+      "desc": "reporting_date",
+      "key": "",
+      "partition": "N",
+      "dispName": "reporting_date",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
       "name": "bucket",
       "type": "string",
       "desc": "bucket",
@@ -50,7 +61,7 @@
       "expr": null
     },
     {
-      "attributeId": 1,
+      "attributeId": 2,
       "name": "frequency",
       "type": "integer",
       "desc": "frequency",
@@ -61,7 +72,7 @@
       "expr": null
     },
     {
-      "attributeId": 2,
+      "attributeId": 3,
       "name": "version",
       "type": "integer",
       "desc": "version",

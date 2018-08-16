@@ -31,402 +31,354 @@
   "yPos": 250,
   "templateFlg": "N",
   "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
+  "stages": [ 
         {
-          "taskId": "58567e70-9af7-4233-9708-d76f545514eb",
-          "dependsOn": [],
-          "name": "Calculate Histogram",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
+            "stageId" : "stage_0",
+            "dependsOn" : [],
+            "tasks" : [ 
                 {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
-                    "version": null,
-                    "name": "Histogram"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceAttr",
-                      "paramType": "attribute",
-                      "paramValue": null,
-                      "attributeInfo": [
+                    "taskId" : "13c0d737-42cd-4298-9783-b1c7c47d8c9a",
+                    "dependsOn" : [],
+                    "name" : "Calculate Histogram",
+                    "operators" : [ 
                         {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-                            "version": null,
-                            "name": "portfolio_loss_simulation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "portfolio_loss",
-                          "attrType": null
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
+                                        "name" : "Histogram"
+                                    }
+                                }
+                            ],
+                            "operatorParams" : {
+                                "EXEC_PARAMS" : {
+                                    "paramListInfo" : [ 
+                                        {
+                                            "paramId" : "0",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "datapod",
+                                                        "uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887"
+                                                    },
+                                                    "attrId" : "1"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "paramId" : "1",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "simple"
+                                                },
+                                                "value" : "10"
+                                            }
+                                        }, 
+                                        {
+                                            "paramId" : "2",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "datapod",
+                                                    "uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "paramId" : "3",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "simple"
+                                                },
+                                                "value" : "03/31/2018"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
                         }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "numBuckets",
-                      "paramType": "integer",
-                      "paramValue": {
-                        "ref": {
-                          "type": "simple",
-                          "uuid": null,
-                          "version": null,
-                          "name": null
-                        },
-                        "value": "5"
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 340,
-          "yPos": 140,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "7dbefa02-8617-43f4-90b2-5011959f68fc",
-          "dependsOn": [],
-          "name": "Calculate Histogram %",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
+                    ],
+                    "xPos" : 360.0,
+                    "yPos" : 130.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
                 {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
-                    "version": null,
-                    "name": "Histogram"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceAttr",
-                      "paramType": "attribute",
-                      "paramValue": null,
-                      "attributeInfo": [
+                    "taskId" : "7dd74077-5c5c-47f3-9d5e-553c7f75c129",
+                    "dependsOn" : [],
+                    "name" : "Calculate Histogram %",
+                    "operators" : [ 
                         {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
-                            "version": null,
-                            "name": "ds_portfolio_loss_percentage"
-                          },
-                          "value": null,
-                          "attrId": "0",
-                          "attrName": "portfolio_loss_percentage",
-                          "attrType": null
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
+                                        "name" : "Histogram"
+                                    }
+                                }
+                            ],
+                            "operatorParams" : {
+                                "EXEC_PARAMS" : {
+                                    "paramListInfo" : [ 
+                                        {
+                                            "paramId" : "0",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "2c114ff3-7cb3-4413-a690-69cac75c439c"
+                                                    },
+                                                    "attrId" : "0"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "paramId" : "1",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "simple"
+                                                },
+                                                "value" : "10"
+                                            }
+                                        }, 
+                                        {
+                                            "paramId" : "2",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "datapod",
+                                                    "uuid" : "cc33d6f6-e44b-4f99-90e5-313c9db447af"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "paramId" : "3",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                                                "version" : "1533897886",
+                                                "name" : "paramlist_histogram"
+                                            },
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "simple"
+                                                },
+                                                "value" : "03/31/2018"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
                         }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "numBuckets",
-                      "paramType": "integer",
-                      "paramValue": {
-                        "ref": {
-                          "type": "simple",
-                          "uuid": null,
-                          "version": null,
-                          "name": null
-                        },
-                        "value": "10"
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-                        "version": "1533897886",
-                        "name": "paramlist_histogram"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 340,
-          "yPos": 360,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "85c2eba4-b74b-4e9c-bb95-7d54e2674471",
-          "dependsOn": [],
-          "name": "Transpose VaR Contribution",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
+                    ],
+                    "xPos" : 360.0,
+                    "yPos" : 390.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
                 {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                    "version": null,
-                    "name": "Transpose"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceDatapod",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
+                    "taskId" : "85c2eba4-b74b-4e9c-bb95-7d54e2674471",
+                    "dependsOn" : [],
+                    "name" : "Transpose VaR Contribution",
+                    "operators" : [ 
                         {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "0",
-                          "attrName": "customer_var_contribution_top1_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "customer_var_contribution_top5_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "customer_var_contribution_top10_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "customer_var_contribution_top50_perc",
-                          "attrType": "string"
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                                        "name" : "Transpose"
+                                    }
+                                }
+                            ],
+                            "operatorParams" : {
+                                "EXEC_PARAMS" : {
+                                    "refKeyList" : null,
+                                    "paramInfo" : null,
+                                    "filterInfo" : null,
+                                    "stageInfo" : null,
+                                    "currParamSet" : null,
+                                    "paramListHolder" : null,
+                                    "paramListInfo" : [ 
+                                        {
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                                                "version" : "1525530897",
+                                                "name" : "paramlist_transpose"
+                                            },
+                                            "value" : null,
+                                            "paramId" : "0",
+                                            "paramName" : "sourceDatapod",
+                                            "paramType" : "attributes",
+                                            "paramValue" : null,
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                                                        "version" : null,
+                                                        "name" : "ds_customer_var_contribution_topn_perc"
+                                                    },
+                                                    "value" : null,
+                                                    "attrId" : "0",
+                                                    "attrName" : "customer_var_contribution_top1_perc",
+                                                    "attrType" : "string"
+                                                }, 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                                                        "version" : null,
+                                                        "name" : "ds_customer_var_contribution_topn_perc"
+                                                    },
+                                                    "value" : null,
+                                                    "attrId" : "1",
+                                                    "attrName" : "customer_var_contribution_top5_perc",
+                                                    "attrType" : "string"
+                                                }, 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                                                        "version" : null,
+                                                        "name" : "ds_customer_var_contribution_topn_perc"
+                                                    },
+                                                    "value" : null,
+                                                    "attrId" : "2",
+                                                    "attrName" : "customer_var_contribution_top10_perc",
+                                                    "attrType" : "string"
+                                                }, 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                                                        "version" : null,
+                                                        "name" : "ds_customer_var_contribution_topn_perc"
+                                                    },
+                                                    "value" : null,
+                                                    "attrId" : "3",
+                                                    "attrName" : "customer_var_contribution_top50_perc",
+                                                    "attrType" : "string"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                                                "version" : "1525530897",
+                                                "name" : "paramlist_transpose"
+                                            },
+                                            "value" : null,
+                                            "paramId" : "1",
+                                            "paramName" : "key",
+                                            "paramType" : "attributes",
+                                            "paramValue" : null,
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "dataset",
+                                                        "uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                                                        "version" : null,
+                                                        "name" : "ds_customer_var_contribution_topn_perc"
+                                                    },
+                                                    "value" : null,
+                                                    "attrId" : "4",
+                                                    "attrName" : "reporting_date",
+                                                    "attrType" : "string"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                                                "version" : "1525530897",
+                                                "name" : "paramlist_transpose"
+                                            },
+                                            "value" : null,
+                                            "paramId" : "2",
+                                            "paramName" : "saveLocation",
+                                            "paramType" : "datapod",
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "datapod",
+                                                    "uuid" : "9b8485f7-2099-4163-9ca5-a241e952c631",
+                                                    "version" : null,
+                                                    "name" : null
+                                                },
+                                                "value" : null
+                                            },
+                                            "attributeInfo" : null
+                                        }
+                                    ],
+                                    "internalVarMap" : null,
+                                    "otherParams" : null,
+                                    "executionContext" : null,
+                                    "graphFilter" : null
+                                }
+                            }
                         }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "key",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "reporting_date",
-                          "attrType": "string"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
+                    ],
+                    "xPos" : 470.0,
+                    "yPos" : 250.0,
+                    "active" : "Y",
+                    "statusList" : []
                 }
-              }
-            }
-          ],
-          "xPos": 470,
-          "yPos": 250,
-          "active": "Y",
-          "statusList": []
+            ],
+            "name" : "new stage",
+            "xPos" : 190.0,
+            "yPos" : 250.0,
+            "active" : "Y",
+            "statusList" : []
         }
-      ],
-      "name": "new stage",
-      "xPos": 190,
-      "yPos": 250,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
+    ],
   "statusList": [],
   "paramList": null
 }
