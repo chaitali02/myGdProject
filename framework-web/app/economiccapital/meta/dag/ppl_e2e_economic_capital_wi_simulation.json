@@ -1,6 +1,6 @@
 {
   "uuid": "19507389-765b-4df3-a717-ab514337192a",
-  "version": "1534080503",
+  "version": "1534530420",
   "name": "ppl_e2e_economic_capital_wi_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 09:28:23 EDT 2018",
+  "createdOn": "Fri Aug 17 14:27:00 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -278,7 +278,7 @@
                       "paramValue": {
                         "ref": {
                           "type": "distribution",
-                          "uuid": "c5bfcdab-6435-4848-9214-6a878a865319",
+                          "uuid": "e6104187-625b-49e4-806b-12c93a3b2279",
                           "version": null,
                           "name": null
                         },
@@ -360,14 +360,58 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data_for_attribute"
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
                       },
                       "value": null,
-                      "paramId": "4",
+                      "paramId": "0",
                       "paramName": "min",
                       "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "-4"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "max",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "4"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "mean",
+                      "paramType": "double",
                       "paramValue": {
                         "ref": {
                           "type": "simple",
@@ -382,35 +426,13 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data_for_attribute"
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
                       },
                       "value": null,
-                      "paramId": "5",
-                      "paramName": "max",
-                      "paramType": "integer",
-                      "paramValue": {
-                        "ref": {
-                          "type": "simple",
-                          "uuid": null,
-                          "version": null,
-                          "name": null
-                        },
-                        "value": "1"
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "72ac4a5d-bd99-4208-b9ad-6fa4551b9c98",
-                        "version": "1524238919",
-                        "name": "paramlist_uniform_real_distribution"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "lower",
+                      "paramId": "3",
+                      "paramName": "seed",
                       "paramType": "double",
                       "paramValue": {
                         "ref": {
@@ -419,29 +441,7 @@
                           "version": null,
                           "name": null
                         },
-                        "value": "1526.11"
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "72ac4a5d-bd99-4208-b9ad-6fa4551b9c98",
-                        "version": "1524238919",
-                        "name": "paramlist_uniform_real_distribution"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "upper",
-                      "paramType": "double",
-                      "paramValue": {
-                        "ref": {
-                          "type": "simple",
-                          "uuid": null,
-                          "version": null,
-                          "name": null
-                        },
-                        "value": "6352.12"
+                        "value": "4526"
                       },
                       "attributeInfo": null
                     }

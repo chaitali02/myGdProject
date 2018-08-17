@@ -80,28 +80,6 @@
             "paramType" : "attribute",
             "paramValue" : null,
             "paramRef" : null
-        },
-        {
-            "paramId" : "4",
-            "paramName" : "min",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "0"
-            }
-        },
-        {
-            "paramId" : "5",
-            "paramName" : "max",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "1"
-            }
         }
     ]
 }
