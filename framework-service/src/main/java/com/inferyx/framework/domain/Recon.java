@@ -23,6 +23,24 @@ public class Recon extends BaseRule {
 	private MetaIdentifierHolder targetFunc;
 	private List<AttributeRefHolder> sourceFilter;
 	private List<AttributeRefHolder> targetFilter;
+	private String sourceDistinct ="N";
+	private String targetDistinct="N";
+
+	public String getSourceDistinct() {
+		return sourceDistinct;
+	}
+
+	public void setSourceDistinct(String sourceDistinct) {
+		this.sourceDistinct = sourceDistinct;
+	}
+
+	public String getTargetDistinct() {
+		return targetDistinct;
+	}
+
+	public void setTargetDistinct(String targetDistinct) {
+		this.targetDistinct = targetDistinct;
+	}
 
 	public AttributeRefHolder getSourceAttr() {
 		return sourceAttr;

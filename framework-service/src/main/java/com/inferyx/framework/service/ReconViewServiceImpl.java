@@ -153,7 +153,9 @@ public class ReconViewServiceImpl {
 		reconView.setSourceAttr(resolvedRule.getSourceAttr());
 		reconView.setTargetAttr(resolvedRule.getTargetAttr());
 		reconView.setSourceFunc(resolvedRule.getSourceFunc());
-	    reconView.setTargetFunc(resolvedRule.getTargetFunc());
+		reconView.setTargetFunc(resolvedRule.getTargetFunc());
+		reconView.setSourceDistinct(resolvedRule.getSourceDistinct());	   
+		reconView.setTargetDistinct(resolvedRule.getTargetDistinct());
 		
 		if(resolvedRule.getSourceFilter() != null) {
 		List<AttributeRefHolder> sourceFilter = resolvedRule.getSourceFilter();
@@ -209,6 +211,8 @@ public class ReconViewServiceImpl {
 			recon.setName(reconView.getName());
 		if (StringUtils.isNotBlank(reconView.getDesc()))
 			recon.setDesc(reconView.getDesc());
+		recon.setSourceDistinct(reconView.getSourceDistinct());
+		recon.setTargetDistinct(reconView.getTargetDistinct());
 		Filter sourcefilter = null;
 		Filter sourcefilterdet = null;		
 		Filter targetfilter = null;
