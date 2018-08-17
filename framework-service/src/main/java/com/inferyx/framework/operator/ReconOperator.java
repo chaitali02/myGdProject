@@ -128,6 +128,9 @@ public class ReconOperator {
 				}
 			}
 			
+			String sourceDistinct = recon.getSourceDistinct();
+			String targetDistinct = recon.getTargetDistinct();
+			
 			/*Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
 			Object targetObj = daoRegister.getRefObject(recon.getTargetAttr().getRef());
 			
@@ -143,8 +146,8 @@ public class ReconOperator {
 			Function sourceFun = (Function) daoRegister.getRefObject(recon.getSourceFunc().getRef());
 			Function targetFun = (Function) daoRegister.getRefObject(recon.getTargetFunc().getRef());
 			
-			String sourceVal = generateVal(sourceFun, sourceAttrName);
-			String targetVal = generateVal(targetFun, targetAttrName);
+			String sourceVal = generateVal(sourceFun, sourceAttrName, sourceDistinct);
+			String targetVal = generateVal(targetFun, targetAttrName, targetDistinct);
 			
 			sql = SELECT 
 			      + "sourcedatapoduuid" + " AS sourceDatapodUuid" + COMMA 
@@ -289,12 +292,13 @@ public class ReconOperator {
 		return "sourceValue" + "=" + "targetValue";
 	}
 	
-	public String generateVal(Function function, String attrName) throws Exception {
+	public String generateVal(Function function, String attrName, String distinctFlg) throws Exception {
 		StringBuilder val = new StringBuilder();
 			if(function.getCategory().equalsIgnoreCase(FunctionCategory.AGGREGATE.toString())) {
 				val
 				.append(functionOperator.generateSql(function, null, null))
 				.append(BRACKET_OPEN)
+				.append(distinctFlg != null && distinctFlg.equalsIgnoreCase("Y") ? " DISTINCT " : "")
 				.append(attrName)
 				.append(BRACKET_CLOSE);
 			}else
