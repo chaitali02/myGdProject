@@ -46,6 +46,7 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { DataScienceResultService } from '../metadata/services/dataScienceResult.service';
 import { AlgorithmService } from '../metadata/services/algorithm.service';
+import { ParamlistService } from '../metadata/services/paramlist.service';
 
 //import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
@@ -99,6 +100,7 @@ import { AlgorithmService } from '../metadata/services/algorithm.service';
         CommonListService,
         DataScienceResultService,
         AlgorithmService,
+        ParamlistService
 
     ]
 })
