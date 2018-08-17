@@ -294,6 +294,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       error => console.log("Error :: " + error)); 
     }
     onSuccessgetOneByUuidAndVersion(response){
+      debugger
       this.breadcrumbDataFrom[2].caption=response.dqdata.name
       this.dqdata=response.dqdata;
       this.dataqualitycompare=response.dqdata;
@@ -302,7 +303,17 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       this.createdBy=response.dqdata.createdBy.ref.name
       this.dqdata.published=response.dqdata["published"] == 'Y' ? true : false
       this.dqdata.active=response.dqdata["active"] == 'Y' ? true : false
-      this.tags = response.dqdata['tags'];
+      var tags = [];
+			if (response.dqdata.tags != null) {
+				for (var i = 0; i < response.dqdata.tags.length; i++) {
+					var tag = {};
+                    tag['value'] = response.dqdata.tags[i];
+                    tag['display'] = response.dqdata.tags[i];
+					tags[i] = tag
+					
+                }//End For
+                this.tags = tags;
+			}//En
       const version: Version = new Version();
       this.uuid=response.uuid;
       version.label = response.dqdata['version'];
@@ -370,14 +381,14 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       dqJson["uuid"]=this.dqdata.uuid;
       dqJson["name"]=this.dqdata.name;
       dqJson["desc"]=this.dqdata.desc;
-      var tagArray = [];
-    if (this.tags != null) {
-      for (var counttag = 0; counttag < this.tags.length; counttag++) {
-        tagArray[counttag] = this.tags[counttag].value;
-
-      }
-    }
-    dqJson['tags'] = tagArray;
+      var tagArray=[];
+      if(this.tags !=null){
+       for(var counttag=0;counttag<this.tags.length;counttag++){
+        tagArray[counttag]=this.tags[counttag].value;
+    
+       }
+       }
+       dqJson['tags'] = tagArray;
       dqJson["active"]=this.dqdata.active == true ?'Y' :"N"
       dqJson["published"]=this.dqdata.published == true ?'Y' :"N"
       let  dependsOn = {};

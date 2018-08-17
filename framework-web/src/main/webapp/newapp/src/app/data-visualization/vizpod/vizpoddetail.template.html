@@ -87,7 +87,8 @@
                         <div class="form-group taginput">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
                             <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                                <tag-input [(ngModel)]="vizpoddata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                                {{vizpoddata.tags|json}}
+                                <tag-input [(ngModel)]="vizpoddata.tags"  name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                             </div>
                         </div>
 

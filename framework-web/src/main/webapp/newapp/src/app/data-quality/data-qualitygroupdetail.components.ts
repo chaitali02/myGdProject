@@ -109,9 +109,21 @@ import{ Version } from './../metadata/domain/version'
       error => console.log("Error :: " + error)); 
     }
     onSuccessgetOneByUuidAndVersion(response){
+      debugger
       this.breadcrumbDataFrom[2].caption=response.name;
       this.datadqgroup=response;
       this.createdBy=response.createdBy.ref.name
+      var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+           tag['value'] = response.tags[i];
+           tag['display'] = response.tags[i];
+					tags[i] = tag
+					
+                }//End For
+        this.datadqgroup.tags = tags;
+			}//End If
       this.datadqgroup.published=response["published"] == 'Y' ? true : false
       this.datadqgroup.active=response["active"] == 'Y' ? true : false
       const version: Version = new Version();

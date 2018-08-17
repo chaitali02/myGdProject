@@ -161,11 +161,23 @@ export class DatasetComponent implements OnInit {
   }
     
   onSuccessgetOneByUuidAndVersion(response){
+    debugger
     this.dataset=response;
     this.datasetCompare=response;
     this.uuid=response.uuid;
-    
-    this.createdBy=response.createdBy.ref.name;
+   this.createdBy=response.createdBy.ref.name;
+       
+   var tags = [];
+   if (response.tags != null) {
+     for (var i = 0; i < response.tags.length; i++) {
+       var tag = {};
+                 tag['value'] = response.tags[i];
+                 tag['display'] = response.tags[i];
+       tags[i] = tag
+       
+             }//End For
+             this.dataset.tags = tags;
+   }//End If
     this.dataset.published=response["published"] == 'Y' ? true : false
     this.dataset.active=response["active"] == 'Y' ? true : false
     const version: Version = new Version();
@@ -629,6 +641,7 @@ export class DatasetComponent implements OnInit {
     }
 
     submitDataset(){
+      debugger
       this.isSubmitEnable=true;
       let datasetJson={};
       datasetJson["uuid"]=this.dataset.uuid
@@ -644,12 +657,12 @@ export class DatasetComponent implements OnInit {
       
       var tagArray=[];
       if(this.dataset.tags !=null){
-        for(var counttag=0;counttag<this.dataset.tags.length;counttag++){
-          tagArray[counttag]=this.dataset.tags[counttag];
-        }
-      }
-      
-      datasetJson["tags"]=tagArray;
+       for(var counttag=0;counttag<this.dataset.tags.length;counttag++){
+        tagArray[counttag]=this.dataset.tags[counttag].value;
+    
+       }
+       }
+       datasetJson['tags'] = tagArray;
       datasetJson["desc"]=this.dataset.desc
       let dependsOn={};
       let ref={}

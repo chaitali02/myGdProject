@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import{ Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import{ DependsOn } from './dependsOn'
+import { debug } from 'util';
 
 @Component({
   selector: 'app-filter',
@@ -118,6 +119,7 @@ export class FilterComponent {
     ) 
   }
   onSuccessgetOneByUuidAndVersion(response){
+    debugger
     this.filterData=response
     const version: Version = new Version();
     this.uuid=response.uuid
@@ -125,11 +127,22 @@ export class FilterComponent {
     version.uuid = response['uuid'];
     this.selectedVersion=version
     this.createdBy=this.filterData.createdBy.ref.name
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
+
     this.published = response['published'];
     if(this.published === 'Y') { this.published = true; } else { this.published = false; }
     this.active = response['active'];
     if(this.active === 'Y') { this.active = true; } else { this.active = false; }
-    this.tags = response['tags'];
     this.depends=response["dependsOn"]["ref"]["type"];
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
@@ -273,19 +286,20 @@ OnSuccesgetAllLatest(response1){
     }
   }
   submitFilter(){
+    debugger
     this.isSubmitEnable=true;
     let filterJson={};
     filterJson["uuid"]=this.filterData.uuid
     filterJson["name"]=this.filterData.name
-   //let tagArray=[];
-    var tagArray=[];
-	  if(this.tags !=null){
-	     for(var counttag=0;counttag<this.tags.length;counttag++){
-	     	tagArray[counttag]=this.tags[counttag];
+    var tagArray = [];
 
-	     }
-	 }
-	 filterJson["tags"]=tagArray;
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
+      }
+    }
+    filterJson['tags'] = tagArray;
    //filterJson["tags"]=tagstemp
    filterJson["desc"]=this.filterData.desc
    let dependsOn={};

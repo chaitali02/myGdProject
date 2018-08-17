@@ -249,6 +249,19 @@ export class VizpodDetailComponent {
        this.selectedVersion=version;
        this.vizpoddata.published=response["published"] == 'Y' ? true : false
        this.vizpoddata.active=response["active"] == 'Y' ? true : false;
+       
+       var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+                    tag['value'] = response.tags[i];
+                    tag['display'] = response.tags[i];
+					tags[i] = tag
+					
+                }//End For
+                this.vizpoddata.tags = tags;
+			}//End If
+
        this.source=response["source"]["ref"].type
        let dependOnTemp: DependsOn = new DependsOn();
        dependOnTemp.label = response["source"]["ref"]["name"];
@@ -380,6 +393,7 @@ export class VizpodDetailComponent {
         }
     }
     submit(){
+        debugger
         this.isSubmitEnable=true
         let vizpodjson={}
         vizpodjson["uuid"]=this.vizpoddata.uuid;

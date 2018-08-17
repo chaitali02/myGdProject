@@ -113,6 +113,18 @@ export class DataProfileGroupDetailComponent {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.dataprofilegroup = response;
     this.createdBy = response.createdBy.ref.name
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.dataprofilegroup.tags = tags;
+    }//End If
+
     this.dataprofilegroup.published = response["published"] == 'Y' ? true : false
     this.dataprofilegroup.active = response["active"] == 'Y' ? true : false
     const version: Version = new Version();

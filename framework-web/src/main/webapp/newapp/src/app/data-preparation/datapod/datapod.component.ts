@@ -152,6 +152,7 @@ export class DatapodComponent {
   }
 
   onSuccessgetOneByUuidAndVersion(response){
+    
     this.breadcrumbDataFrom[2].caption=response.datapoddata.name;
     this.uuid=response.datapoddata.uuid
     this.datapodjson=response.datapoddata;
@@ -160,6 +161,18 @@ export class DatapodComponent {
     version.uuid = response.datapoddata['uuid'];
     this.selectedVersion=version
     this.createdBy = response.datapoddata['createdBy']['ref']['name'];
+    var tags = [];
+    if (response.datapoddata.tags != null) {
+      for (var i = 0; i < response.datapoddata.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.datapoddata.tags[i];
+        tag['display'] = response.datapoddata.tags[i];
+        tags[i] = tag
+        
+              }//End For
+              this.datapodjson.tags = tags;
+    }//End If
+
     this.attributes = response.attributes;
     this.locations = response.datapoddata;
     this.detasource_uuid = response.datapoddata['datasource']['ref']['uuid'];
@@ -242,12 +255,13 @@ export class DatapodComponent {
     datapod["published"]=this.published==true ?"Y":"N";
     datapod["cache"]=this.cache==true ?"Y":"N";
     var tagArray=[];
-    if(this.tags !=null){
-      for(var counttag=0;counttag<this.tags.length;counttag++){
-        tagArray[counttag]=this.tags[counttag].value;
-      }
-    }
-    datapod["tags"]=tagArray;
+    if(this.datapodjson.tags !=null){
+     for(var counttag=0;counttag<this.datapodjson.tags.length;counttag++){
+      tagArray[counttag]=this.datapodjson.tags[counttag].value;
+  
+     }
+     }
+     datapod['tags'] = tagArray;
     let datasource={}
     let ref={};
     ref["type"]="datasource";

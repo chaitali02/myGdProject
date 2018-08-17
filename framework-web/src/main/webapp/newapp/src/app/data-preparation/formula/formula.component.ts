@@ -490,12 +490,14 @@ export class FormulaComponent {
     formulaSubmitJson["name"] = this.formulajson.name
 
     var tagArray = [];
+
     if (this.formulajson.tags != null) {
       for (var counttag = 0; counttag < this.formulajson.tags.length; counttag++) {
-        tagArray[counttag] = this.formulajson.tags[counttag];
+        tagArray[counttag] = this.formulajson.tags[counttag].value;
+
       }
     }
-    formulaSubmitJson["tags"] = tagArray;
+    formulaSubmitJson['tags'] = tagArray;
     formulaSubmitJson["desc"] = this.formulajson.desc
     let dependsOn = {};
     let ref = {}
