@@ -8,4 +8,5 @@ CREATE  TABLE IF NOT EXISTS `industry_factor_simulation`(
   `factor3` double, 
   `factor4` double,
   `reporting_date` string,
-  `version` int);
+  `version` int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

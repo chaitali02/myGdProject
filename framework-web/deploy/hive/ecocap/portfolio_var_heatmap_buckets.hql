@@ -7,4 +7,3 @@ CREATE  TABLE IF NOT EXISTS `portfolio_var_heatmap_buckets`(
   `version` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/portfolio_var_heatmap_buckets.csv' OVERWRITE INTO TABLE ecocap.portfolio_var_heatmap_buckets;
