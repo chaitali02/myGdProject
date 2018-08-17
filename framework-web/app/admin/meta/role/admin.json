@@ -5561,6 +5561,96 @@
 		            "name" : "ReportAdd"
 				},
 				"value" : null
+		},				
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d8e1c322-a340-4f0f-94e7-93f235ce61e2",
+		 			"version" : null,
+		            "name" : "ReportexecView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a6d0b2c5-7548-4c6c-a1f5-bac950212a47",
+		 			"version" : null,
+		            "name" : "ReportexecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bdf5bf83-b99e-42f0-88f1-9e43af0e6048",
+		 			"version" : null,
+		            "name" : "ReportexecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "90feecdc-8b94-4f8d-a7b8-ce7239e80507",
+		 			"version" : null,
+		            "name" : "ReportexecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "74c89d76-6f74-406e-b46b-f7a6f6bbce97",
+		 			"version" : null,
+		            "name" : "ReportexecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b259ec92-3ae5-40d2-9a75-74948a75eede",
+		 			"version" : null,
+		            "name" : "ReportexecExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "cb8dcf11-a3a3-4cdf-954e-1585c36eaa1e",
+		 			"version" : null,
+		            "name" : "ReportexecEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "31e29054-e71c-4e60-9c64-e250a6139c5a",
+		 			"version" : null,
+		            "name" : "ReportexecDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "34fee67f-9dcd-4370-8259-5c7b9116ff85",
+		 			"version" : null,
+		            "name" : "ReportexecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "52241b1a-b4a9-4182-b251-69ef1b24d294",
+		 			"version" : null,
+		            "name" : "ReportexecAdd"
+				},
+				"value" : null
 		}
 		
     ]
