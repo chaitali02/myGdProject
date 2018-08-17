@@ -5471,7 +5471,97 @@
 		            "name" : "GraphExecView"
 				},
 				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0fc66075-4be4-4ed6-bf6e-ac40cb072013",
+		 			"version" : null,
+		            "name" : "ReportView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9dd7c114-dd3f-431e-846c-965ca9ce25ac",
+		 			"version" : null,
+		            "name" : "ReportUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3f4a23b9-c636-4282-8601-0d7c59f3cdc8",
+		 			"version" : null,
+		            "name" : "ReportRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b0d13537-7031-4b1c-b0b7-e9fbcea5e342",
+		 			"version" : null,
+		            "name" : "ReportPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3045af05-4548-4fad-b5b4-9e89e8e6d04e",
+		 			"version" : null,
+		            "name" : "ReportExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "339d343e-0a41-44ac-8e2e-c0c4c42af37e",
+		 			"version" : null,
+		            "name" : "ReportExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d989f3bf-1c0d-4aba-aabd-f012c672445a",
+		 			"version" : null,
+		            "name" : "ReportEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f064d010-0158-4f15-935f-47327a8929c3",
+		 			"version" : null,
+		            "name" : "ReportDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2f6ce146-b9e6-4919-ae49-3cd086cde9ef",
+		 			"version" : null,
+		            "name" : "ReportClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2780d2f8-1eff-4ac0-830b-e0895a9a34f6",
+		 			"version" : null,
+		            "name" : "ReportAdd"
+				},
+				"value" : null
 		}
-
+		
     ]
 }
