@@ -281,7 +281,7 @@
           </div>
         </div>
         <div style="margin-top: -20px;">
-          <canvas id="heatmap" width="400" height="200"></canvas>
+          <canvas id="heatmap" width="280" height="180"></canvas>
         </div>
         <div style="text-align:center;">
           {{column.keys[0].attributeName}}
