@@ -152,12 +152,12 @@
                           <div class="bounce3"></div>
                         </div>
                         
-                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.isDataError !=ture">
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.isDataError !=ture">
                           <c3chart chartGroup="chart" bindto-id="{{datacol.vizpodDetails.id}}" chart-data="datacol.vizpodDetails.datapoints" chart-columns="datacol.vizpodDetails.datacolumns" chart-x="datacol.vizpodDetails.datax" enable-zoom="true" callback-function="handleCallbackGroup">
                             <chart-bar ratio="0.5" />
                             <!--<chart-legend show-legend="true"/>
                             <chart-donut expand="true" width="30" show-label="false" title="Donut Title"/> -->
-                            <chart-axes values-x="">
+                            <chart-axes values-x="" >
                             <!-- <chart-size chart-height="33%" chart-width=""/> -->
                             <chart-axis>
                               <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{datacol.vizpodDetails.datax.id}}">
@@ -168,6 +168,36 @@
                               </chart-axis-Y>
 
                             </chart-axis>
+                            <!-- <chart- group-values="data 1,data 2"/> -->
+                            <!--  <chart-legend show-legend="false" legend-position="right"/> -->
+                            <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/>
+                          </c3chart>
+                        </div>
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type =='bar-line-chart'  && datacol.isDataError !=ture">
+                          
+                          <c3chart chartGroup="chart" bindto-id="{{datacol.vizpodDetails.id}}" chart-data="datacol.vizpodDetails.datapoints" chart-columns="datacol.vizpodDetails.datacolumns" chart-x="datacol.vizpodDetails.datax" enable-zoom="true" callback-function="handleCallbackGroup">
+                            <chart-bar ratio="0.5" />
+                            <!--<chart-legend show-legend="true"/>
+                            <chart-donut expand="true" width="30" show-label="false" title="Donut Title"/> -->
+                            <chart-axes values-x="" y="{{datacol.vizpodDetails.columnNameY1}}" y2="{{datacol.vizpodDetails.columnNameY2}}">
+                            <!-- <chart-size chart-height="33%" chart-width=""/> -->
+                            <chart-axis>
+                              <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{datacol.vizpodDetails.datax.id}}">
+                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5"   />
+                              </chart-axis-x>
+                             
+                              <chart-axis-Y axis-id="y" >
+                                <chart-axis-y-tick id="y1" tick-format-function="time_format"/>
+                                
+                              </chart-axis-Y>
+                              <chart-axis-Y axis-id="y2">
+                                <chart-axis-y-tick id="y2" tick-format-function="time_format"/>
+                              </chart-axis-Y>
+                            </chart-axis>
+                            
+                             
+                            
+                           
                             <!-- <chart- group-values="data 1,data 2"/> -->
                             <!--  <chart-legend show-legend="false" legend-position="right"/> -->
                             <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/>
