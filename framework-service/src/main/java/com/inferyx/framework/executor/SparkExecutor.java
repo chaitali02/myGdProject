@@ -272,7 +272,15 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 					df = sparkSession.sql(sql);
-			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+			} /*else if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ")").load();
+			}*/ else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
 						.option("spark.executor.extraClassPath", datasource.getDriver())
@@ -2575,6 +2583,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 
 		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
+		rsHolder.getDataFrame().show(false);
 		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
 		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
 		double[] ds = histogramTuples._1();

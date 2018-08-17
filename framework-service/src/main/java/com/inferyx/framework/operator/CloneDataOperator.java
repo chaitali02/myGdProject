@@ -313,7 +313,8 @@ public class CloneDataOperator implements IOperator {
 		StringBuilder sb = new StringBuilder();
 		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
+				|| datasource.getType().equalsIgnoreCase("livy-spark")) {
 			return sb.append("(").append(ConstantsUtil.SELECT).append(" * FROM ").append(sourceSql).append(" LIMIT ")
 				.append("(" + numRecords + "- (" + numIterations + " * " + countData + "))").append(")").toString();
 		} else {
