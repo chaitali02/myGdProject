@@ -95,6 +95,8 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroup;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -279,6 +281,8 @@ public class Helper {
 				case lov : return "iLovDao";
 				case graphpod : return "iGraphpodDao";
 				case graphExec : return "iGraphpodExecDao";
+				case report : return "iReportDao";
+				case reportExec : return "iReportExecDao";
 				default:
 					return null;
 			}
@@ -390,7 +394,8 @@ public class Helper {
 		case lov : return Lov.class;
 		case graphpod : return Graphpod.class;
 		case graphExec : return GraphExec.class;
-
+		case report : return Report.class;
+		case reportExec : return ReportExec.class;
 
 		default:
 			return null;
@@ -478,6 +483,8 @@ public class Helper {
 //				case "gendatavallist" : return MetaType.GenDataValList;
 				case "graphpod" : return MetaType.graphpod;
 				case "graphexec" : return MetaType.graphExec;
+				case "report" : return MetaType.report;
+				case "reportexec" : return MetaType.reportExec;
 				default : return null;
 			}
 		}
@@ -839,6 +846,7 @@ public class Helper {
 		case simulate : return MetaType.simulateExec;
 		case predict : return MetaType.predictExec;
 		case operator : return MetaType.operatorExec;
+		case report : return MetaType.reportExec;
 		default : return null;
 		}
 	}
@@ -866,6 +874,7 @@ public class Helper {
 		case simulateExec : return MetaType.simulate;
 		case predictExec : return MetaType.predict;
 		case operatorExec : return MetaType.operator;
+		case reportExec : return MetaType.report;
 		default : return null;
 		}
 	}

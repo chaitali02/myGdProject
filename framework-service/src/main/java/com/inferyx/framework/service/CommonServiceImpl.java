@@ -126,6 +126,8 @@ import com.inferyx.framework.dao.IReconExecDao;
 import com.inferyx.framework.dao.IReconGroupDao;
 import com.inferyx.framework.dao.IReconGroupExecDao;
 import com.inferyx.framework.dao.IRelationDao;
+import com.inferyx.framework.dao.IReportDao;
+import com.inferyx.framework.dao.IReportExecDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
@@ -441,6 +443,27 @@ public class CommonServiceImpl <T> {
 	DatasetOperator datasetOperator;
 	@Autowired
 	RuleOperator ruleOperator;
+	@Autowired
+	IReportDao iReportDao;
+	@Autowired
+	IReportExecDao iReportExecDao;
+	
+
+	public IReportExecDao getiReportExecDao() {
+		return iReportExecDao;
+	}
+
+	public void setiReportExecDao(IReportExecDao iReportExecDao) {
+		this.iReportExecDao = iReportExecDao;
+	}
+
+	public IReportDao getiReportDao() {
+		return iReportDao;
+	}
+
+	public void setiReportDao(IReportDao iReportDao) {
+		this.iReportDao = iReportDao;
+	}
 	
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
@@ -2031,6 +2054,7 @@ public class CommonServiceImpl <T> {
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
 				
 			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
+			System.out.println("Class : "+iDao.getClass().getMethod("save",  Object.class).getName());
 			objDet = (BaseEntity)(iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
 			registerGraph.updateGraph((Object) objDet, metaType);			
 				
