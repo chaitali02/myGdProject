@@ -126,6 +126,7 @@ export class RelationComponent implements OnInit {
     error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response){
+    debugger
     this.relationData=response;
     this.createdBy=response.createdBy.ref.name;
     this.relationData.published=response["published"] == 'Y' ? true : false
@@ -135,8 +136,17 @@ export class RelationComponent implements OnInit {
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion=version
-    // this.selectVersion.version= response['version'];
-    // this.selectVersion.uuid=response['uuid']
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.relationData.tags = tags;
+    }//End If
     this.breadcrumbDataFrom[2].caption=this.relationData.name;
     this.depends=response["dependsOn"]["ref"]["type"];
     //this.dependsOn=response["dependsOn"]["ref"]
@@ -384,7 +394,7 @@ removeRow(){
   }
  this.relationTableArray = newDataList;
 }
-submitRelation(){
+submitRelation(){debugger
   this.isSubmitEnable=true;
 	var relationjson={}
 	relationjson["uuid"]=this.relationData.uuid;
@@ -395,14 +405,14 @@ submitRelation(){
 relationjson["active"]=this.relationData.active == true ?'Y' :"N"
 relationjson["published"]=this.relationData.published == true ?'Y' :"N"
 
-	 var tagArray=[];
-	 if(this.relationData.tags !=null){
-	     for(var counttag=0;counttag<this.relationData.tags.length;counttag++){
-	     	tagArray[counttag]=this.relationData.tags[counttag];
+var tagArray = [];
+if (this.relationData.tags != null) {
+  for (var counttag = 0; counttag < this.relationData.tags.length; counttag++) {
+    tagArray[counttag] = this.relationData.tags[counttag].value;
 
-	     }
-	 }
-	 relationjson["tags"]=tagArray;
+  }
+}
+relationjson['tags'] = tagArray
 	 var dependsOn={};
 	 var ref={};
 	 ref["type"]=this.depends;

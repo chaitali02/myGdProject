@@ -125,8 +125,7 @@ export class AlgorithmComponent implements OnInit {
   }
 
 
-  onSuccessgetOneByUuidAndVersion(response) {
-
+  onSuccessgetOneByUuidAndVersion(response) {debugger
     this.algorithm = response;
     this.uuid = response.uuid;
     const version: Version = new Version();
@@ -137,6 +136,18 @@ export class AlgorithmComponent implements OnInit {
     this.savePmml = response["savePmml"] == 'Y' ? true : false
     this.algorithm.published = response["published"] == 'Y' ? true : false
     this.algorithm.active = response["active"] == 'Y' ? true : false
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.algorithm.tags = tags;
+    }//End If
+
     this.libraryType = response.libraryType
     this.trainClass = response.trainClass
     this.modelClass = response.modelClass
@@ -146,31 +157,24 @@ export class AlgorithmComponent implements OnInit {
       paramListWoH.label = response["paramListWoH"]["ref"]["name"];
       this.paramListWoH = paramListWoH;
     }
-
     if (response.paramListWH !== null) {
-
       let paramListWH: DependsOn = new DependsOn();
       paramListWH.uuid = response["paramListWH"]["ref"]["uuid"];
       paramListWH.label = response["paramListWH"]["ref"]["name"];
       this.paramListWH = paramListWH;
     }
-
     var summaryMethodsArray = [];
     if (response.summaryMethods !== null) {
-      {
-        for (var i = 0; i < response.summaryMethods.length; i++) {
-          var summaryMethods = {};
-          summaryMethods['text'] = response.summaryMethods[i];
-          summaryMethodsArray[i] = summaryMethods;
-
-        }
+      for (var i = 0; i < response.summaryMethods.length; i++) {
+        var summaryMethods = {};
+        summaryMethods['text'] = response.summaryMethods[i];
+        summaryMethods['display'] = response.summaryMethods[i];
+        summaryMethodsArray[i] = summaryMethods;
       }
       this.summaryMethods = summaryMethodsArray;
     }
 
-
-    this.breadcrumbDataFrom[2].caption = this.algorithm.name;
-
+ this.breadcrumbDataFrom[2].caption = this.algorithm.name;
     console.log('Data is' + response);
 
   }
@@ -251,29 +255,24 @@ export class AlgorithmComponent implements OnInit {
     }
   }
 
-
-
-
-
-  submitAlgorithm() {
-    
+ submitAlgorithm() {
+debugger
     var upd_tag = 'N'
     this.isSubmitEnable = true;
     let algoJson = {};
     algoJson["uuid"] = this.algorithm.uuid;
     algoJson["name"] = this.algorithm.name;
-    var tagArray=[];
-   if(this.algorithm.tags !=null){
-    for(var counttag=0;counttag<this.algorithm.tags.length;counttag++){
-     tagArray[counttag]=this.algorithm.tags[counttag].value;
- 
+    var tagArray = [];
+    if (this.algorithm.tags != null) {
+      for (var counttag = 0; counttag < this.algorithm.tags.length; counttag++) {
+        tagArray[counttag] = this.algorithm.tags[counttag].value;
+
+      }
     }
-    }
-    algoJson['tags'] = tagArray;
-  algoJson["summaryMethods"] = summaryMethods;
+    algoJson['tags'] = tagArray
+    algoJson["summaryMethods"] = summaryMethods;
     algoJson["desc"] = this.algorithm.desc;
     algoJson["savePmml"] = this.algorithm.savePmml == true ? 'Y' : "N"
-
     algoJson["active"] = this.algorithm.active == true ? 'Y' : "N"
     algoJson["published"] = this.algorithm.published == true ? 'Y' : "N"
     algoJson["type"] = this.algorithm.type;
@@ -281,8 +280,6 @@ export class AlgorithmComponent implements OnInit {
     algoJson["trainClass"] = this.trainClass;
     algoJson["modelClass"] = this.modelClass;
     algoJson["labelRequired"] = this.labelRequired;
-
-
 
     let paramListWHParam = {};
     let paramListWHParamRef = {};
@@ -309,8 +306,8 @@ export class AlgorithmComponent implements OnInit {
 
       }
     }
-  algoJson["summaryMethods"] = summaryMethods;
-  console.log(JSON.stringify(algoJson));
+    algoJson["summaryMethods"] = summaryMethods;
+    console.log(JSON.stringify(algoJson));
     this._algorithmService.submit(algoJson, 'algorithm', upd_tag).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)

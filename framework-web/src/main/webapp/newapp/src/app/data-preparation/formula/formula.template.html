@@ -80,7 +80,7 @@
               <div class="form-group taginput">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                  <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' [disable]="mode == 'true'" style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                 </div>
               </div>
 

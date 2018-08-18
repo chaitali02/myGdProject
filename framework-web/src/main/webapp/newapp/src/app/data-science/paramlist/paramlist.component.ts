@@ -175,6 +175,7 @@ export class ParamlistComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
+    debugger
     this.paramlist = response
     const version: Version = new Version();
     this.uuid = response.uuid;
@@ -189,7 +190,18 @@ export class ParamlistComponent implements OnInit {
 
     this.templateFlg = response['templateFlg'];
     
-    this.tags = response['tags'];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
+
     this.paramlist.published = response["published"] == 'Y' ? true : false
     this.paramlist.active = response["active"] == 'Y' ? true : false
 
@@ -327,17 +339,20 @@ export class ParamlistComponent implements OnInit {
   }
 
   submitParamlist() {
+    debugger
     this.isSubmitEnable = true;
     let paramlistJson = {};
     paramlistJson["uuid"] = this.paramlist.uuid
     paramlistJson["name"] = this.paramlist.name
+   
     var tagArray = [];
-    if (this.paramlist.tags != null) {
-      for (var counttag = 0; counttag < this.paramlist.tags.length; counttag++) {
-        tagArray[counttag] = this.paramlist.tags[counttag];
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
       }
     }
-    paramlistJson["tags"] = tagArray;
+    paramlistJson['tags'] = tagArray
     paramlistJson["desc"] = this.paramlist.desc
     paramlistJson["active"] = this.paramlist.active == true ? 'Y' : "N"
     paramlistJson["published"] = this.paramlist.published == true ? 'Y' : "N"

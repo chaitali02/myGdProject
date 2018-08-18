@@ -12,6 +12,7 @@ import { Version } from '../../metadata/domain/version';
 import { DependsOn } from './dependsOn';
 import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { DatasetService } from '../../metadata/services/dataset.service';
+import { decode } from '@angular/router/src/url_tree';
 
 @Component({
   selector: 'app-modelList',
@@ -222,6 +223,7 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
+    debugger
     this.breadcrumbDataFrom[2].caption = response.name;
     this.model = response;
     this.uuid = response.uuid;
@@ -234,7 +236,18 @@ export class ModelComponent implements OnInit {
     this.model.published = response["published"] == 'Y' ? true : false
     this.model.active = response["active"] == 'Y' ? true : false
     this.type = response.type;
-    this.tags = response['tags'];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
+
     //this.source=response["source"]["ref"].type
     //this.dependsOn = response.dependsOn.ref.type;
     //this.dependsOnName = response.dependsOn.ref.name;
@@ -446,18 +459,24 @@ export class ModelComponent implements OnInit {
     this.router.navigate(['app/dataScience/model', uuid, version, 'true']);
   }
   submit() {
+    debugger
     this.isSubmit = "true"
     this.modelJson = {};
     this.modelJson["uuid"] = this.uuid;
     this.modelJson["name"] = this.model.name;
     this.modelJson["desc"] = this.model.desc;
-    let tagArray = [];
+    
+    var tagArray = [];
     if (this.model.tags != null) {
-      for (var counttag = 0; counttag < this.model.tags.length; counttag++) {
-        tagArray[counttag] = this.model.tags[counttag];
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
       }
     }
-    this.modelJson["tags"] = tagArray;
+    this.modelJson['tags'] = tagArray
+
+    var functionInfoArray = [];
+
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
 

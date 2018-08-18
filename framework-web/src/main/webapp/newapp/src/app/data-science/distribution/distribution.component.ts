@@ -10,6 +10,7 @@ import { DistributionService } from '../../metadata/services/distribution.servic
 
 import { Version } from '../../metadata/domain/version';
 import { DependsOn } from '../dependsOn';
+import { debug } from 'util';
 
 
 @Component({
@@ -135,6 +136,18 @@ export class DistributionComponent implements OnInit {
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.createdBy = response.createdBy.ref.name;
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.distribution.tags = tags;
+    }//End If
+
     this.distribution.published = response["published"] == 'Y' ? true : false
     this.distribution.active = response["active"] == 'Y' ? true : false
     // this.distribution.paramList = response.paramList.ref.name
@@ -198,17 +211,20 @@ export class DistributionComponent implements OnInit {
     let distributionJson = {};
     distributionJson["uuid"] = this.distribution.uuid;
     distributionJson["name"] = this.distribution.name;
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
+    // //let tagArray=[];
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
     // }
-    distributionJson["tags"] = tagstemp;
+    var tagArray = [];
+    if (this.distribution.tags != null) {
+      for (var counttag = 0; counttag < this.distribution.tags.length; counttag++) {
+        tagArray[counttag] = this.distribution.tags[counttag].value;
+
+      }
+    }
+    distributionJson['tags'] = tagArray
+   // distributionJson["tags"] = tagstemp;
     distributionJson["desc"] = this.distribution.desc;
     distributionJson["active"] = this.distribution.active == true ? "Y" : "N";
     distributionJson["published"] = this.distribution.published == true ? "Y" : "N";

@@ -85,7 +85,7 @@ export class ParamsetComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response){
-    
+    debugger
     this.breadcrumbDataFrom[2].caption=response.name;
     this.paramset=response;   
     const version: Version = new Version();
@@ -98,7 +98,17 @@ export class ParamsetComponent implements OnInit {
     if(this.published === 'Y') { this.published = true; } else { this.published = false; }
     this.active = response['active'];
     if(this.active === 'Y') { this.active = true; } else { this.active = false; }
-    this.tags = response['tags']; 
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
     this.paramset.published=response["published"] == 'Y' ? true : false
     this.paramset.active=response["active"] == 'Y' ? true : false
     
@@ -258,17 +268,21 @@ export class ParamsetComponent implements OnInit {
   }
 
   submitParamset(){
+    debugger
     this.isSubmitEnable=true;
     let paramsetJson={};
     paramsetJson["uuid"]=this.paramset.uuid
     paramsetJson["name"]=this.paramset.name
-    let tagArray=[];
-    if(this.paramset.tags !=null){
-        for(var counttag=0;counttag<this.paramset.tags.length;counttag++){
-            tagArray[counttag]=this.paramset.tags[counttag];
-        }   
+  
+    var tagArray = [];
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
+      }
     }
-    paramsetJson["tags"]=tagArray;
+    paramsetJson['tags'] = tagArray
+    
     paramsetJson["desc"]=this.paramset.desc;
     paramsetJson["active"]=this.paramset.active == true ?'Y' :"N"
     paramsetJson["published"]=this.paramset.published == true ?'Y' :"N"
