@@ -282,7 +282,7 @@
           </div>
         </div>
         <div   style="margin-top: -20px;">
-          <canvas id="heatmap" width="280" height="180"></canvas>
+          <canvas id="heatmap" width="300" height="140"></canvas>
         </div>
         </div>
         <div style="text-align:center;">
@@ -296,7 +296,7 @@
         <div class="row">
         
         <div  class="col-md-11">
-          <canvas id="heatmap" width="280" height="180"></canvas>
+          <canvas id="heatmap" width="300" height="140"></canvas>
         </div>
         <div class="col-md-1" style="transform: rotate(90deg);transform-origin:left bottom 0;margin-top:10%;">
           <div>

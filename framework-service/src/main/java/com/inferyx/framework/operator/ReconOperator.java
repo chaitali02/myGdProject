@@ -131,15 +131,15 @@ public class ReconOperator {
 			String sourceDistinct = recon.getSourceDistinct();
 			String targetDistinct = recon.getTargetDistinct();
 			
-			/*Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
+			Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
 			Object targetObj = daoRegister.getRefObject(recon.getTargetAttr().getRef());
 			
 			Datapod sourceDp = getDatapod(sourceObj, recon, "source");
-			Datapod targetDp = getDatapod(targetObj, recon, "target");*/
+			Datapod targetDp = getDatapod(targetObj, recon, "target");
 			
-			Datapod sourceDp = (Datapod) daoRegister.getRefObject(recon.getSourceAttr().getRef());
+			/*Datapod sourceDp = (Datapod) daoRegister.getRefObject(recon.getSourceAttr().getRef());
 			Datapod targetDp = (Datapod) daoRegister.getRefObject(recon.getTargetAttr().getRef());
-			
+			*/
 			String sourceAttrName = sourceDp.getAttributeName(Integer.parseInt(recon.getSourceAttr().getAttrId()));
 			String targetAttrName = targetDp.getAttributeName(Integer.parseInt(recon.getTargetAttr().getAttrId()));
 			
@@ -183,7 +183,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
-			      + generateFilter("source", sourceDp, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
+			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
 			      + "sourceDatapodUuid" + COMMA
 			      + "sourceDatapodVersion" + COMMA
@@ -208,7 +208,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
-			      + generateFilter("target", targetDp, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
+			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
 			      + "targetDatapodUuid" + COMMA
 			      + "targetDatapodVersion" + COMMA
@@ -247,8 +247,7 @@ public class ReconOperator {
 		return sql;
 	}
 	
-	/********************** UNUSED **********************/
-	/*public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
+	public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
 		Datapod datapod = null;
 		if(object instanceof Relation) {
 			Relation relation = (Relation) object;
@@ -272,17 +271,26 @@ public class ReconOperator {
 			datapod = (Datapod) object;
 		}
 		return datapod;
-	}*/
+	}
 
-	public String generateFilter(String tableName, Datapod datapod, List<AttributeRefHolder> filterAttrRefHolder,
+	public String generateFilter(String tableName, Object object, List<AttributeRefHolder> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String objectName = null;
+		if(object instanceof Datapod) {				
+			Datapod datapod = (Datapod) object;
+			objectName = datapod.getName();
+		}
+		else if(object instanceof DataSet ) {
+			DataSet dataset = (DataSet) object;
+			objectName = dataset.getName();
+		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
 			String result = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams);
-			if(result.contains(datapod.getName()))
-				result = result.replace(datapod.getName()+".", tableName+".");
+			if(result.contains(objectName))
+				result = result.replace(objectName+".", tableName+".");
 			return result;
 		}
 		return BLANK;
