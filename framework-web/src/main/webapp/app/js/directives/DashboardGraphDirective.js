@@ -298,7 +298,7 @@
         <div  class="col-md-11">
           <canvas id="heatmap" width="300" height="140"></canvas>
         </div>
-        <div class="col-md-1" style="transform: rotate(90deg);transform-origin:left bottom 0;margin-top:10%;">
+        <div class="col-md-1" style="transform: rotate(90deg);transform-origin:left bottom 0;">
           <div>
            {{column.keys[1].attributeName}}
           </div>
