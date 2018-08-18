@@ -6,7 +6,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.rule.versions = []
   $scope.originalCompare = null;
   $scope.showForm = true;
-  $scope.SourceTypes = ["datapod"];
+  $scope.SourceTypes = ["datapod","dataset"];
   $scope.selectSourceType=$scope.SourceTypes[0];
   $scope.selectTargetType=$scope.SourceTypes[0];
   $scope.logicalOperator = ["AND","OR"];
