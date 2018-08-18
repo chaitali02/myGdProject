@@ -2979,7 +2979,34 @@ public class CommonServiceImpl <T> {
 		}else
 			return false;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	public Datasource getDatasourceByDatapod(Datapod datapod) throws JsonProcessingException {
+		Datasource datasource = null;
+		if (datapod == null || datapod.getDatasource() == null) {
+			logger.error("no datasource configured with this datapod. So aborting ... ");
+			return null;
+		}
+		datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		return datasource;
+	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
 	public Datasource getDatasourceByApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = null;
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();

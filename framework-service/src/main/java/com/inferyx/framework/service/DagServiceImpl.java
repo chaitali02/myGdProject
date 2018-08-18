@@ -1072,6 +1072,7 @@ public class DagServiceImpl {
 							.convertRefKeyListToMap(taskExecParams.getRefKeyList());
 					
 					BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask, i);
+					baseExec.setExecParams(taskExecParams);
 
 					try {
 						// If conditions with parse goes here - START
