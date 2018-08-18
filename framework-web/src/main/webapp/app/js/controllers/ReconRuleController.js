@@ -734,6 +734,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     jsonObj.desc = $scope.reconruledata.desc;
     jsonObj.active = $scope.reconruledata.active;
     jsonObj.published = $scope.reconruledata.published;
+    jsonObj.sourceDistinct=$scope.reconruledata.sourceDistinct;
+    jsonObj.targetDistinct=$scope.reconruledata.targetDistinct;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

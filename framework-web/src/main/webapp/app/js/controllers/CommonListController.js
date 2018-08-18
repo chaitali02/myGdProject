@@ -814,15 +814,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.getDetailForUpload = function (data,index) {
     console.log(data.index)
+  debugger
     $scope.setActivity(data.uuid, data.version, $scope.select, "uplode");
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid
     var version = data.version
-    $scope.uploadDetail={
-      uuid:data.uuid,
-      index:data.index
-    }
-  
+    $scope.uploadDetail=data;
     $(":file").jfilestyle('clear')
     $("#csv_file").val("");
     $('#fileupload').modal({
@@ -835,7 +832,17 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     console.log(data)
     $scope.isFileNameValid=data.valid;
     $scope.isFileSubmitDisable=!data.valid;
-}
+  }
+  $scope.getGridOptionsDataIndex=function(id){
+    var index=-1;
+    for(var i=0;i<$scope.gridOptions.data.length;i++){
+      if(id == $scope.gridOptions.data[i].id){
+       index=i;
+       break;
+      }
+    }
+    return index;
+  } 
 
   $scope.uploadFile = function () {
     if($scope.isFileSubmitDisable){
@@ -851,11 +858,27 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
-    $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
+    if(!$scope.searchtext){
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
+    }
+    else{
+      var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+      if(index!=-1){
+        $scope.gridOptions.data[index].isupload=true;
+      }
+    }
     CommonService.uploadFile($scope.uploaaduuid, fd, "datapod",$scope.fileUpladDesc || "").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.fileUpladDesc="";
-      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      if(!$scope.searchtext){
+        $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      }
+      else{
+        var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+        if(index!=-1){
+          $scope.gridOptions.data[index].isupload=false;
+        }
+      }
       $scope,uploadDetail=null;
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
@@ -866,7 +889,15 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     var onError = function (response) {
       $('#fileupload').modal('hide');
-      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      if(!$scope.searchtext){
+        $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      }
+      else{
+        var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+        if(index!=-1){
+          $scope.gridOptions.data[index].isupload=false;
+        }
+      }
       $scope,uploadDetail=null;
     }
   }

@@ -1,8 +1,8 @@
 {
-    "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f8",
-    "version" : "1525519035",
-    "name" : "paramlist_generate_data_for_attribute",
-    "desc" : "Generate Data AttrRef Paramlist",
+    "uuid" : "72ac4a5d-bd99-4208-b9ad-6fa4551b9d77",
+    "version" : "1524238919",
+    "name" : "paramlist_normal_sparkml_distribution",
+    "desc" : null,
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -11,7 +11,7 @@
         },
         "value" : null
     },
-    "createdOn" : ISODate("2018-05-19T02:10:18.729Z"),
+    "createdOn" : ISODate("2018-08-18T00:59:23.303Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
@@ -45,41 +45,36 @@
     "params" : [ 
         {
             "paramId" : "0",
-            "paramName" : "distribution",
-            "paramType" : "distribution",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "distribution",
-                    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
-                }
-            },
-            "paramRef" : null
-        }, 
-        {
-            "paramId" : "1",
-            "paramName" : "numIterations",
-            "paramType" : "integer",
+            "paramName" : "size",
+            "paramType" : "long",
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
                 },
                 "value" : "1000"
-            },
-            "paramRef" : null
+            }
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "numPartitions",
+            "paramType" : "integer",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "1"
+            }
         }, 
         {
             "paramId" : "2",
-            "paramName" : "saveLocation",
-            "paramType" : "datapod",
-            "paramValue" : null,
-            "paramRef" : null
-        }, 
-        {
-            "paramId" : "3",
-            "paramName" : "attrRef",
-            "paramType" : "attribute",
-            "paramValue" : null,
-            "paramRef" : null
+            "paramName" : "seed",
+            "paramType" : "long",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "6352"
+            }
         }
     ]
 }

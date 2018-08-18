@@ -172,7 +172,7 @@
               dataset.data=[];
               dataset.label= $scope.data[i][keynameY];
               if($scope.data[i][columnname] !=0){
-                dataset.data[0]=$scope.data[i][columnname].toFixed(2);
+                dataset.data[0]=parseFloat($scope.data[i][columnname].toFixed(2));
               }else{
                 dataset.data[0]=$scope.data[i][columnname];
               }
@@ -190,7 +190,7 @@
                 dataset.data=[];
                 dataset.label= $scope.data[i][keynameY];
                 if($scope.data[i][columnname] != 0){
-                  dataset.data[0]=$scope.data[i][columnname].toFixed(2);
+                  dataset.data[0]=parseFloat($scope.data[i][columnname].toFixed(2));
                 }
                 else{
                   dataset.data[0]=$scope.data[i][columnname];
@@ -199,7 +199,7 @@
               }else{
                 data1.datasets[indexY].label=$scope.data[i][keynameY];
                 if($scope.data[i][columnname] !=0){
-                  data1.datasets[indexY].data[data1.datasets[indexY].data.length]=$scope.data[i][columnname].toFixed(2);
+                  data1.datasets[indexY].data[data1.datasets[indexY].data.length]=parseFloat($scope.data[i][columnname].toFixed(2));
                 }
                 else{
                   data1.datasets[indexY].data[data1.datasets[indexY].data.length]=$scope.data[i][columnname];
@@ -209,7 +209,7 @@
 
 
           }
-          //console.log(JSON.stringify(data1));
+          console.log(JSON.stringify(data1));
           data1.datasets.sort(sortAlphaNum('label'))
           var options={
           // String - background color for graph
@@ -281,7 +281,7 @@
           </div>
         </div>
         <div style="margin-top: -20px;">
-          <canvas id="heatmap" width="400" height="200"></canvas>
+          <canvas id="heatmap" width="280" height="180"></canvas>
         </div>
         <div style="text-align:center;">
           {{column.keys[0].attributeName}}

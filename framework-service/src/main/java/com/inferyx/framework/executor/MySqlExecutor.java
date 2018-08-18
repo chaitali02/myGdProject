@@ -617,7 +617,7 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
 			int numBuckets, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method histogram.");
+		return sparkExecutor.histogram(locationDatapod, locationTableName, sql, key, numBuckets, clientContext);
 	}
 }

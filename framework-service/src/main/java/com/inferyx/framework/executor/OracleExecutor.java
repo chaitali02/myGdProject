@@ -62,6 +62,8 @@ public class OracleExecutor implements IExecutor {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ConnectionFactory  connectionFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	static final Logger logger = Logger.getLogger(OracleExecutor.class);
 	@Override
@@ -481,8 +483,8 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
 			int numBuckets, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method histogram.");
+		return sparkExecutor.histogram(locationDatapod, locationTableName, sql, key, numBuckets, clientContext);
 	}
 
 }

@@ -591,6 +591,10 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
   //  console.log(timestamp)
     return  timestamp.toFixed(2);
   };
+  $scope.time_formatY2 = function (timestamp) {
+      console.log(timestamp)
+      return "$"
+    };
 
 
   $scope.refreshDashboard=function(length){
@@ -689,24 +693,29 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       datax.id=$scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName//x value
       $scope.sectionRows[i].columns[j].vizpodDetails.datax=datax;
       var datacolumnsarray=[];
+      var columnName=[]
       for(var k=0;k<$scope.sectionRows[i].columns[j].vizpodInfo.values.length;k++){
         var datacolumnsjson={};
         if($scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="datapod" || $scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type == "dataset"){
           datacolumnsjson.id=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
           datacolumnsjson.name=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
+          columnName[k]=datacolumnsjson.name
         }//End If Inside For
         else{
           datacolumnsjson.id=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.name+"";
           datacolumnsjson.name=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.name+"";
+          columnName[k]=datacolumnsjson.name
         }
-
+       
         datacolumnsjson.type=$scope.sectionRows[i].columns[j].vizpodInfo.type.split("-")[0];
 
         if(k==0 && $scope.sectionRows[i].columns[j].vizpodInfo.type == "bar-line-chart"){
         datacolumnsjson.type="line"
+        
         }
-        else if( k >1 && $scope.sectionRows[i].columns[j].vizpodInfo.type == "bar-line-chart" ){
+        else if( k >=1 && $scope.sectionRows[i].columns[j].vizpodInfo.type == "bar-line-chart" ){
           datacolumnsjson.type="bar"
+          
         }
        
         if(colorcount <=16){
@@ -720,7 +729,9 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
         $scope.sectionRows[i].columns[j].vizpodDetails.datacolumns=datacolumnsarray
         //console.log(JSON.stringify($scope.sectionRows[i].columns[j].vizpodDetails.datacolumns));
       }//End For K
-
+        $scope.sectionRows[i].columns[j].vizpodDetails.columnNameY2=columnName[0];
+        columnName.splice(0,1);
+        $scope.sectionRows[i].columns[j].vizpodDetails.columnNameY1=columnName.toString();
         if($scope.sectionRows[i].columns[j].vizpodInfo.type=="data-grid"){
           var keyvalueData=null;
           $scope.sectionRows[i].columns[j].gridOptions={}
