@@ -163,7 +163,7 @@
             }
             return index;
           }
-          console.log(JSON.stringify($scope.data));
+        //  console.log(JSON.stringify($scope.data));
           var countX=0;
           for(var i=0;i< $scope.data.length;i++){
             if(i== 0){
@@ -209,7 +209,7 @@
 
 
           }
-          console.log(JSON.stringify(data1));
+         // console.log(JSON.stringify(data1));
           data1.datasets.sort(sortAlphaNum('label'))
           var options={
           // String - background color for graph

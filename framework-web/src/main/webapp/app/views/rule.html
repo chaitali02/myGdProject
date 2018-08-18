@@ -561,7 +561,7 @@
                                   <div ng-show="data.isSourceAtributeParamList">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <select select2 ng-model="data.sourceparamlist" ng-show="data.isSourceAtributeParamList" ng-disabled="{{mode}}" class="form-control"
-                                        ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attrId" ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index)"></select>
+                                        ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attributeId" ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index)"></select>
                                     </span>
                                   </div>
                                 </td>
