@@ -980,6 +980,16 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     //    //$scope.datamessage="Some Error Occurred";
 
     // });
+    
+    $scope.convertResultTwoDisit=function(data,columnName){
+      if(data.length >0){
+        for(var i=0;i<data.length;i++){
+          data[i][columnName]=parseFloat(data[i][columnName].toFixed(2));
+        }
+      }
+     
+      return data;
+    }
 
     $q.all($scope.vizpodResutsArray.map(function (value) {
       return $q.resolve(value)
@@ -990,7 +1000,12 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError=false;
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess=false;
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg="";
-              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=result.data;
+            //  console.log($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo)
+              if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart"){
+                $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=$scope.convertResultTwoDisit(result.data,$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
+              }else{
+                $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=result.data;
+              }
               if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type =="data-grid"){
                 $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].gridOptions.data=result.data;
               }

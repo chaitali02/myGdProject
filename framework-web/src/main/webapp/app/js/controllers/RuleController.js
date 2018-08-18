@@ -1051,7 +1051,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       // RuleService.getAllLatestFunction("function", "N").then(function (response) {
       //   onSuccessExpression(response.data)
       // });
-      var onSuccessExpression = function (response) {
+      var onSuccressGetFunction = function (response) {
         $scope.ruleLodeFunction = response
       }
     } else if (type == "paramlist") {
@@ -1066,7 +1066,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.getOneByUuidParamList = function () {
-    $scope.ruleLodeParamList=null;
+   // $scope.ruleLodeParamList=null;
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
       RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
       then(function (response) { onSuccessParamList(response.data)});
@@ -1084,6 +1084,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           
         }
         $scope.ruleLodeParamList = paramsArray
+        console.log($scope.ruleLodeParamList)
         if($scope.allparamlistParams &&  $scope.allparamlistParams.length >0)
         $scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.ruleLodeParamList);
       }
@@ -1127,6 +1128,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.onChangeAttributeParamlist = function (data, index) {
+    debugger
     $scope.attributeTableArray[index].name = data.paramName
   }
 
