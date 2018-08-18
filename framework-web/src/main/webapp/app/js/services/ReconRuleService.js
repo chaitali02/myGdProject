@@ -285,7 +285,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 							obj.caption = "integer";
 						}
 					}
-					else if (response.sourcefilter.filterInfo[i].operand[0].ref.type == "datapod") {
+					else if (response.sourcefilter.filterInfo[i].operand[0].ref.type == "datapod" || response.sourcefilter.filterInfo[i].operand[0].ref.type == "dataset") {
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -359,7 +359,28 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						rhsdatapodAttribute.dname =response.sourcefilter.filterInfo[i].operand[1].ref.name + "." +response.sourcefilter.filterInfo[i].operand[1].attributeName;
 						rhsdatapodAttribute.attributeId =response.sourcefilter.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
-					}
+                    }
+                    else if (response.sourcefilter.filterInfo[i].operand[1].ref.type == "dataset" && response.sourcefilter.dependsOn.ref.uuid == response.sourcefilter.filterInfo[i].operand[1].ref.uuid) {
+                        var rhsdatapodAttribute = {}
+						var obj = {}
+						obj.text = "datapod"
+						obj.caption = "attribute"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsSimple = false;
+						filterInfo.isrhsFormula = false
+                        filterInfo.isrhsDatapod = true;
+                        filterInfo.isrhsDataset = false;
+                        filterInfo.isrhsParamlist = false;
+                        filterInfo.isrhsFunction = false;
+						rhsdatapodAttribute.uuid =response.sourcefilter.filterInfo[i].operand[1].ref.uuid;
+						rhsdatapodAttribute.datapodname =response.sourcefilter.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.name =response.sourcefilter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname =response.sourcefilter.filterInfo[i].operand[1].ref.name + "." +response.sourcefilter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.attributeId =response.sourcefilter.filterInfo[i].operand[1].attributeId;
+						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+
+                    }
+                   
 					else if (response.sourcefilter.filterInfo[i].operand[1].ref.type == "formula") {
 						var rhsformula = {}
 						var obj = {}
@@ -392,7 +413,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						rhsfunction.name =response.sourcefilter.filterInfo[i].operand[1].ref.name;
 						filterInfo.rhsfunction = rhsfunction;
                     }
-                    else if (response.sourcefilter.filterInfo[i].operand[1].ref.type == "dataset") {
+                    else if (response.sourcefilter.filterInfo[i].operand[1].ref.type == "dataset" && response.sourcefilter.dependsOn.ref.uuid != response.sourcefilter.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdataset = {}
 						var obj = {}
 						obj.text = "dataset"
@@ -469,7 +490,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 							obj.caption = "integer";
 						}
 					}
-					else if (response.targetfilter.filterInfo[i].operand[0].ref.type == "datapod") {
+					else if (response.targetfilter.filterInfo[i].operand[0].ref.type == "datapod" || response.targetfilter.filterInfo[i].operand[0].ref.type == "dataset") {
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -524,7 +545,26 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						filterInfo.rhsvalue = response.targetfilter.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 						}
 					}
-					else if (response.targetfilter.filterInfo[i].operand[1].ref.type == "datapod") {
+					else if (response.targetfilter.filterInfo[i].operand[1].ref.type == "datapod" ) {
+						var rhsdatapodAttribute = {}
+						var obj = {}
+						obj.text = "datapod"
+						obj.caption = "attribute"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsSimple = false;
+						filterInfo.isrhsFormula = false
+                        filterInfo.isrhsDatapod = true;
+                        filterInfo.isrhsDataset = false;
+                        filterInfo.isrhsParamlist = false;
+                        filterInfo.isrhsFunction = false;
+						rhsdatapodAttribute.uuid =response.targetfilter.filterInfo[i].operand[1].ref.uuid;
+						rhsdatapodAttribute.datapodname =response.targetfilter.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.name =response.targetfilter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname =response.targetfilter.filterInfo[i].operand[1].ref.name + "." +response.targetfilter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.attributeId =response.targetfilter.filterInfo[i].operand[1].attributeId;
+						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+                    }
+                    else if (response.targetfilter.filterInfo[i].operand[1].ref.type == "dataset" && response.targetfilter.dependsOn.ref.uuid == response.targetfilter.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -575,7 +615,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						rhsfunction.name =response.targetfilter.filterInfo[i].operand[1].ref.name;
 						filterInfo.rhsfunction = rhsfunction;
 					}
-                    else if (response.targetfilter.filterInfo[i].operand[1].ref.type == "dataset") {
+                    else if (response.targetfilter.filterInfo[i].operand[1].ref.type == "dataset" && response.targetfilter.dependsOn.ref.uuid != response.targetfilter.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdataset = {}
 						var obj = {}
 						obj.text = "dataset"

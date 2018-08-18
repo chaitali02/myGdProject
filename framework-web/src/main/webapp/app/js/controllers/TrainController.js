@@ -547,7 +547,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.getParamSetByAlgorithm=function(){
-    TrainService.getParamListByModel($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version,$scope.trainData.useHyperParams).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
+    TrainService.getParamSetByAlgorithm($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version,$scope.trainData.useHyperParams).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
       var onSuccessGetParamSetByAlgorithm = function (response) {
         $scope.allparamset = response
         $scope.isShowExecutionparam = true;
