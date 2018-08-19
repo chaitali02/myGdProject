@@ -40,14 +40,15 @@ public class ImpalaReader implements IReader {
 			throws IOException {
 		ResultSetHolder rsHolder = null;
 		try {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			String dbName = dataSource.getDbname();		
+//			Datasource execDatasource = commonServiceImpl.getDatasourceByApp();
+			Datasource tableDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																				datapod.getDatasource().getRef().getVersion(), 
+																				datapod.getDatasource().getRef().getType().toString());
+			IExecutor exec = execFactory.getExecutor(tableDatasource.getType());
+			String dbName = tableDatasource.getDbname();		
 			rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());			
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
+		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}		

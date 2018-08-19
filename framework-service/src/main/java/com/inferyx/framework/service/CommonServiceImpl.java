@@ -3022,6 +3022,27 @@ public class CommonServiceImpl <T> {
 		return application;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	public String[] getAllDSSessionParams() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource_2 = getDatasourceByApp();
+		String sessionParameters = datasource_2.getSessionParameters();
+		if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+			return sessionParameters.split(",");
+		}
+		return null;
+	}
+	
 	public String getSessionParametresPropertyValue(String property, String defaultValue) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource_2 = getDatasourceByApp();
 		String sessionParameters = datasource_2.getSessionParameters();
