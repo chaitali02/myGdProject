@@ -1726,7 +1726,6 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
