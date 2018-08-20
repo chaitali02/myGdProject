@@ -2,7 +2,40 @@
  *
  */
 InferyxApp=angular.module('InferyxApp');
-InferyxApp.factory('graphService',function(dagMetaDataService){
+InferyxApp.factory('setDataFactory',function(dagMetaDataService){
+  var factory={};
+  isObjectEmpty = function(execParam){
+    for(var prop in execParam) {
+      if(execParam.hasOwnProperty(prop))
+          return false;
+  }
+  return true;
+  }
+  factory.setEXEC_PARAMS=function(operators){
+    if(operators[0].operatorParams !=null && !isObjectEmpty(operators[0].operatorParams.EXEC_PARAMS)){
+      if(operators[0].operatorParams.EXEC_PARAMS.paramListInfo !=null){
+        var data=operators[0].operatorParams.EXEC_PARAMS.paramListInfo;
+        for(var i=0;i<operators[0].operatorParams.EXEC_PARAMS.paramListInfo.length;i++){
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].paramName;
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].paramType;
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].ref.name;
+          if(operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo !=null && operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo.length >0){
+            
+            for(var j=0;j<operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo.length;j++){
+              delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo[j].ref.name;
+              delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo[j].attrName;
+            }
+          }
+
+        }
+      }
+    }
+    console.log(operators);
+    return operators;
+  }
+  return factory;
+});
+InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
 
     var factory={}
     factory.convertDagToGraph=function(dag,isTemplate,addMode){
@@ -247,7 +280,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
             "active":val.attributes.attrs[".body"].active ==true?"Y":"N",
             "xPos" : val.attributes.position.x,
             "yPos" : val.attributes.position.y,
-            "operators" : val.attributes['model-data'].operators || {}
+            "operators" : setDataFactory.setEXEC_PARAMS(val.attributes['model-data'].operators) || {}
             // "properties":val.properties ? val.properties : {}
           };
           }
@@ -327,5 +360,10 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
        console.log("*******DAG JSON*******",JSON.stringify(inArrayFormat[0].stages));
        return inArrayFormat;
     }
+
+   
    return factory;
 });
+
+
+

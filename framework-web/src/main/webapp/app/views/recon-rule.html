@@ -368,9 +368,10 @@
                                                                         <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                                                             <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
                                                                                 <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
+                                                                                <!-- ng-pattern="/([\']+[a-zA-Z0-9\-_%,]*[']+$)/" -->
                                                                                 <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                 required disable-validation-message="" uib-tooltip="{{myform2['rhsvalue_'+$index].$valid ? '' : 'enter values into single quotes and seprated by comma'}}"
-                                                                                ng-pattern="/([\']+[a-zA-Z0-9\-_%,]*[']+$)/" tooltip-placement="left">
+                                                                                ng-pattern="/[a-zA-Z0-9\-_%,]$)/" tooltip-placement="left">
                                                                             </span>
                                                                             <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                                                                                 <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
