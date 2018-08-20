@@ -2054,7 +2054,6 @@ public class CommonServiceImpl <T> {
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
 				
 			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			System.out.println("Class : "+iDao.getClass().getMethod("save",  Object.class).getName());
 			objDet = (BaseEntity)(iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
 			registerGraph.updateGraph((Object) objDet, metaType);			
 				
@@ -3819,7 +3818,7 @@ public class CommonServiceImpl <T> {
 			arrayTwo.addAll(lov.getValue());
 			if (!arrayOne.equals(lov.getValue())) {
 				boolean boolAddAll = arrayOne.addAll(arrayTwo);
-				System.out.println(boolAddAll);
+//				System.out.println(boolAddAll);
 				hs.addAll(arrayOne);
 				arrayOne.clear();
 				arrayOne.addAll(hs);
