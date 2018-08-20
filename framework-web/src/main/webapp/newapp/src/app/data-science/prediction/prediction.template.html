@@ -93,16 +93,11 @@
                                         <div class="form-group" *ngIf="mode">
                                             <label class="col-md-3 control-label">Version </label>
                                             <div class="col-md-6">
-                                              <p-dropdown [options]="VersionList"          
-                                              [(ngModel)]="selectedVersion"
-                                              name="selectedVersion"
-                                              [style]="{'width':'100%','padding':'3px'}"
-                                              [filter]="true"
-                                              [disabled]="mode == 'false'"
-                                              (onChange)="onVersionChange()">
-                                              </p-dropdown>
+                                                <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                                                </p-dropdown>
                                             </div>
-                                          </div>
+                                        </div>
                                         <div class="form-group" *ngIf="mode">
                                             <label class="col-md-3 control-label">CreatedBy</label>
                                             <div class="col-md-6" *ngIf="locations!=''">
@@ -208,7 +203,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Label</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <p-dropdown [options]="allsourceLabel" [(ngModel)]="selectLabel" name="selectLabel" dataKey="label" [style]="{'width':'100%','padding':'3px'}"
-                                                    [filter]="true" [disabled]="mode == 'true'" placeholder= "Select">
+                                                    [filter]="true" [disabled]="mode == 'true'" placeholder="Select">
                                                 </p-dropdown>
 
                                             </div>
@@ -255,7 +250,7 @@
                                                                     <td>
                                                                         <p-dropdown [options]="allTargetAttribute" [(ngModel)]="featureMapTableArray[i].targetFeature" name="sourceattribute+{{i}}"
                                                                             dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                                                                            [filter]="true" placeholder = "Select">
+                                                                            [filter]="true" placeholder="Select">
                                                                         </p-dropdown>
                                                                     </td>
                                                                 </tr>

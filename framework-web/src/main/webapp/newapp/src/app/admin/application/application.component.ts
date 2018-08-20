@@ -110,6 +110,19 @@ export class ApplicationComponent implements OnInit {
     this.application = response;
     this.createdBy = response.createdBy.ref.name;
     this.uuid = response.uuid;
+
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
+
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
@@ -191,6 +204,15 @@ export class ApplicationComponent implements OnInit {
     applicationJson["desc"] = this.application.desc
     applicationJson["active"] = this.application.active == true ? 'Y' : "N"
     applicationJson["published"] = this.application.published == true ? 'Y' : "N"
+
+    var tagArray = [];
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
+      }
+    }
+    applicationJson['tags'] = tagArray
     let datasource = {}
     let ref = {};
     ref["type"] = "datasource";

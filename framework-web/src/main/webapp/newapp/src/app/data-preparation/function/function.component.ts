@@ -289,7 +289,7 @@ export class FunctionComponent implements OnInit {
       }
     }
     functionJson['tags'] = tagArray
-    
+
     var functionInfoArray = [];
     if (this.functionTableArray != null) {
       if (this.functionTableArray.length > 0) {
