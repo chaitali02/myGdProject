@@ -1,4 +1,4 @@
-DROP TABLE framework.account_status_type;
+DROP TABLE IF EXISTS framework.account_status_type;
    
 CREATE TABLE framework.account_status_type
 (

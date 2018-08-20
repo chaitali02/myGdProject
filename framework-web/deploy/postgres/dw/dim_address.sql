@@ -1,4 +1,4 @@
-DROP TABLE framework.dim_address;
+DROP TABLE IF EXISTS framework.dim_address;
 
 CREATE TABLE framework.dim_address
 (

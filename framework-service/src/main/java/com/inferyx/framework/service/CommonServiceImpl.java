@@ -126,6 +126,8 @@ import com.inferyx.framework.dao.IReconExecDao;
 import com.inferyx.framework.dao.IReconGroupDao;
 import com.inferyx.framework.dao.IReconGroupExecDao;
 import com.inferyx.framework.dao.IRelationDao;
+import com.inferyx.framework.dao.IReportDao;
+import com.inferyx.framework.dao.IReportExecDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
@@ -441,6 +443,27 @@ public class CommonServiceImpl <T> {
 	DatasetOperator datasetOperator;
 	@Autowired
 	RuleOperator ruleOperator;
+	@Autowired
+	IReportDao iReportDao;
+	@Autowired
+	IReportExecDao iReportExecDao;
+	
+
+	public IReportExecDao getiReportExecDao() {
+		return iReportExecDao;
+	}
+
+	public void setiReportExecDao(IReportExecDao iReportExecDao) {
+		this.iReportExecDao = iReportExecDao;
+	}
+
+	public IReportDao getiReportDao() {
+		return iReportDao;
+	}
+
+	public void setiReportDao(IReportDao iReportDao) {
+		this.iReportDao = iReportDao;
+	}
 	
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
@@ -2031,6 +2054,7 @@ public class CommonServiceImpl <T> {
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
 				
 			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
+			System.out.println("Class : "+iDao.getClass().getMethod("save",  Object.class).getName());
 			objDet = (BaseEntity)(iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
 			registerGraph.updateGraph((Object) objDet, metaType);			
 				
@@ -2979,7 +3003,34 @@ public class CommonServiceImpl <T> {
 		}else
 			return false;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	public Datasource getDatasourceByDatapod(Datapod datapod) throws JsonProcessingException {
+		Datasource datasource = null;
+		if (datapod == null || datapod.getDatasource() == null) {
+			logger.error("no datasource configured with this datapod. So aborting ... ");
+			return null;
+		}
+		datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		return datasource;
+	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
 	public Datasource getDatasourceByApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = null;
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
@@ -2993,6 +3044,27 @@ public class CommonServiceImpl <T> {
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
 		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(), holder.getRef().getVersion(), "application");
 		return application;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	public String[] getAllDSSessionParams() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource_2 = getDatasourceByApp();
+		String sessionParameters = datasource_2.getSessionParameters();
+		if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+			return sessionParameters.split(",");
+		}
+		return null;
 	}
 	
 	public String getSessionParametresPropertyValue(String property, String defaultValue) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {

@@ -40,17 +40,18 @@ public class OracleReader implements IReader {
 	
 	@Override
 	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource)
-			throws IOException {
+			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		ResultSetHolder rsHolder = null;
 		try {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor executor = execFactory.getExecutor(datasource.getType());
-			String databaseName = dataSource.getDbname();
+			Datasource execDatasource = commonServiceImpl.getDatasourceByApp();
+			Datasource tableDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																				datapod.getDatasource().getRef().getVersion(), 
+																				datapod.getDatasource().getRef().getType().toString());
+			IExecutor executor = execFactory.getExecutor(execDatasource.getType());
+			String databaseName = tableDatasource.getDbname();
 			rsHolder = executor.executeSql("SELECT * FROM "+databaseName+"."+datapod.getName());
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
+		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}

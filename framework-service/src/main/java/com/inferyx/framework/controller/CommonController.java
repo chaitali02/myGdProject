@@ -78,7 +78,8 @@ public class CommonController<T> {
 	public Object getOneByUuidAndVersion(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version, @RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString())|| type.equalsIgnoreCase(MetaType.reconview.toString()))
+		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString())
+				|| type.equalsIgnoreCase(MetaType.reconview.toString()) || type.equalsIgnoreCase(MetaType.reportview.toString()))
 			if(StringUtils.isBlank(version))
 				return (T) registerService.getLatestByUuid(uuid, type);
 			else
@@ -168,7 +169,8 @@ public class CommonController<T> {
 		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString())
 				|| type.equalsIgnoreCase(MetaType.ruleview.toString())
 				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
-				|| type.equalsIgnoreCase(MetaType.reconview.toString())) {
+				|| type.equalsIgnoreCase(MetaType.reconview.toString())
+				|| type.equalsIgnoreCase(MetaType.reportview.toString())) {
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
 			 

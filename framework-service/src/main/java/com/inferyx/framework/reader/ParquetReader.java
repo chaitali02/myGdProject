@@ -56,7 +56,8 @@ public class ParquetReader implements IReader
 	static final Logger logger = Logger.getLogger(ParquetReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException {
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) 
+			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		String tableName="";
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {

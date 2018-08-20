@@ -1,4 +1,4 @@
-DROP TABLE framework.dim_transaction_type;
+DROP TABLE IF EXISTS framework.dim_transaction_type;
 
 CREATE TABLE framework.dim_transaction_type
 (

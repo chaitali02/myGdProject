@@ -541,10 +541,12 @@ public class DataStoreServiceImpl {
 			if (dp == null) {
 				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
 			}
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			datasource = commonServiceImpl.getDatasourceByDatapod(dp);
+			dsType = datasource.getType();
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
 			} else {
@@ -569,9 +571,9 @@ public class DataStoreServiceImpl {
 			if(ruleName.toLowerCase().contains("rule_"))
 				ruleName = ruleName.replace("rule_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
 			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
@@ -585,9 +587,9 @@ public class DataStoreServiceImpl {
 			if(reconName.toLowerCase().contains("recon_"))
 				reconName = reconName.replace("recon_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
 			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
@@ -601,9 +603,9 @@ public class DataStoreServiceImpl {
 			if(operatorName.toLowerCase().contains("operator_"))
 				operatorName = operatorName.replace("operator_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
 			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
