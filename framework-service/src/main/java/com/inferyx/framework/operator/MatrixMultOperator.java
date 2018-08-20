@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -161,7 +162,7 @@ public class MatrixMultOperator implements IOperator {
 //		StructType schema = createSchema(locationDatapod.getAttributes());
 //		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_df");
 		
-		sparkExecutor.mattrix(locationDatapod, operation, lhsTableName, rhsTableName, lhsSql, rhsSql, saveTableName, baseExec, otherParams, runMode);
+		ResultSetHolder rsHolder = exec.mattrix(locationDatapod, operation, lhsTableName, rhsTableName, lhsSql, rhsSql, saveTableName, baseExec, otherParams, runMode);
 		
 		// Save result
 		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
@@ -169,7 +170,15 @@ public class MatrixMultOperator implements IOperator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		String sql = "SELECT * FROM " + saveTableName+"_df";
-		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		ResultSetHolder rsHolder2 = null;
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
+				|| datasource.getType().equalsIgnoreCase("livy-spark")) {
+			rsHolder2 = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		} else {
+			rsHolder2 = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod);
+		}
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
@@ -180,7 +189,7 @@ public class MatrixMultOperator implements IOperator {
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, baseExec.getUuid(), execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, rsHolder2.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);

@@ -928,51 +928,53 @@ public class SparkExecutor<T> implements IExecutor {
 		Datasource datasource = null;
 		try {
 			datasource = commonServiceImpl.getDatasourceByApp();
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
-			e.printStackTrace();
-		}
-		IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
-		IReader iReader;
-		try {
-			iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-
-		ConnectionHolder conHolder = connection.getConnection();
-		Object obj = conHolder.getStmtObject();
-		if (obj instanceof SparkSession && !execContext.equals(ExecContext.livy_spark)) {
-			ResultSetHolder rsHolder = iReader.read(datapod, dataStore, hdfsInfo, obj, datasource);
-			Dataset<Row> df = rsHolder.getDataFrame();
-			
-			tableName = rsHolder.getTableName();
-			String[] tablenameList = ((SparkSession) obj).sqlContext().tableNames();
-			boolean tableFound = false;
-			if (tablenameList != null && tablenameList.length > 0) {
-				for (String tname : tablenameList) {
-					if (tname.equals(tableName)) {
-						tableFound = true;
-						break;
+		
+			IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
+			IReader iReader;
+			try {
+				iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+					| SecurityException | NullPointerException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+	
+			ConnectionHolder conHolder = connection.getConnection();
+			Object obj = conHolder.getStmtObject();
+			if (obj instanceof SparkSession && !execContext.equals(ExecContext.livy_spark)) {
+				ResultSetHolder rsHolder = iReader.read(datapod, dataStore, hdfsInfo, obj, datasource);
+				Dataset<Row> df = rsHolder.getDataFrame();
+				
+				tableName = rsHolder.getTableName();
+				String[] tablenameList = ((SparkSession) obj).sqlContext().tableNames();
+				boolean tableFound = false;
+				if (tablenameList != null && tablenameList.length > 0) {
+					for (String tname : tablenameList) {
+						if (tname.equals(tableName)) {
+							tableFound = true;
+							break;
+						}
 					}
 				}
+				if (!tableFound) {
+					df.persist(StorageLevel.MEMORY_AND_DISK());
+					// df.cache();
+					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+					// sparkSession.registerDataFrameAsTable(df, tableName);
+					df.createOrReplaceGlobalTempView(tableName);
+					sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+					// hiveContext.registerDataFrameAsTable(df, tableName);
+					logger.info("datapodRegister: Registering datapod " + tableName);
+					// hiveContext.registerDataFrameAsTable(df, tableName);
+					
+					df.show(true);
+				}
 			}
-			if (!tableFound) {
-				df.persist(StorageLevel.MEMORY_AND_DISK());
-				// df.cache();
-				SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-				// sparkSession.registerDataFrameAsTable(df, tableName);
-				df.createOrReplaceGlobalTempView(tableName);
-				sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
-				// hiveContext.registerDataFrameAsTable(df, tableName);
-				logger.info("datapodRegister: Registering datapod " + tableName);
-				// hiveContext.registerDataFrameAsTable(df, tableName);
-				
-				df.show(true);
-			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -2617,6 +2619,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder2;
 	}
 	
+	@Override
 	public ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName, 
 			String lhsSql, String rhsSql, String saveTableName,
 			BaseExec baseExec, Map<String, String> otherParams, RunMode runMode) throws AnalysisException, IOException {
@@ -2687,12 +2690,9 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @return
 	 */
 	public StructType createSchema(List<Attribute> attributes){
-
         List<StructField> fields  = new ArrayList<StructField>();
-        for(Attribute attr  : attributes){         
-
-                fields.add(DataTypes.createStructField(attr.getName(),(DataType)getDataType(attr.getType()), true));            
-
+        for(Attribute attr  : attributes){     
+                fields.add(DataTypes.createStructField(attr.getName(),(DataType)getDataType(attr.getType()), true));  
         }
         return DataTypes.createStructType(fields);
     }

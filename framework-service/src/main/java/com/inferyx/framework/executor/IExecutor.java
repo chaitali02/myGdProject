@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
@@ -28,6 +29,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -43,6 +45,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.RunMode;
 
 public interface IExecutor {
 
@@ -585,4 +588,25 @@ public interface IExecutor {
 	 * @throws IOException 
 	 */
 	ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param locationDatapod
+	 * @param operation
+	 * @param lhsTableName
+	 * @param rhsTableName
+	 * @param lhsSql
+	 * @param rhsSql
+	 * @param saveTableName
+	 * @param baseExec
+	 * @param otherParams
+	 * @param runMode
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName,
+			String lhsSql, String rhsSql, String saveTableName, BaseExec baseExec, Map<String, String> otherParams,
+			RunMode runMode) throws AnalysisException, IOException;
 }
