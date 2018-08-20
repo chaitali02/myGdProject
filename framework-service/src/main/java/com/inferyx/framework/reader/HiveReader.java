@@ -40,17 +40,17 @@ public class HiveReader implements IReader {
 	static final Logger logger=Logger.getLogger(HiveReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException {
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		
 		ResultSetHolder rsHolder = null;
 		try {
 			// Removing execDatasource as only table datasource is needed to determine table name and also execute 
 			// sql so that it can point to the correct database  
-//			Datasource execDatasource = commonServiceImpl.getDatasourceByApp();
+			Datasource execDatasource = commonServiceImpl.getDatasourceByApp();
 			Datasource tableDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
 																				datapod.getDatasource().getRef().getVersion(), 
 																				datapod.getDatasource().getRef().getType().toString());
-			IExecutor exec = execFactory.getExecutor(tableDatasource.getType());
+			IExecutor exec = execFactory.getExecutor(execDatasource.getType());
 			String dbName = tableDatasource.getDbname();		
 			rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
