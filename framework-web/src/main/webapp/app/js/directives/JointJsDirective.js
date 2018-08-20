@@ -3216,8 +3216,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           for(var i=0;i<$scope.paramListHolder.length;i++){
             var paramList={};
             paramList.paramId=$scope.paramListHolder[i].paramId;
-          //  paramList.paramName=$scope.paramListHolder[i].paramName;
-          //  paramList.paramType=$scope.paramListHolder[i].paramType;
+            paramList.paramName=$scope.paramListHolder[i].paramName;
+            paramList.paramType=$scope.paramListHolder[i].paramType;
             paramList.ref=$scope.paramListHolder[i].ref;
             if($scope.paramListHolder[i].paramType =='attribute'){
               var attributeInfoArray=[];
@@ -3225,7 +3225,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               var attributeInfoRef={}
               attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
               attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
-            //  attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+              attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
               attributeInfo.ref=attributeInfoRef;
               attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
               attributeInfoArray[0]=attributeInfo
@@ -3239,12 +3239,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 var attributeInfoRef={}
                 attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
                 attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
-               // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+                attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
                 attributeInfo.ref=attributeInfoRef;
                 attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
                 attributeInfo.attrType=$scope.paramListHolder[i].attributeInfoTag[j].attrType;
-
-             ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+                attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
                 attributeInfoArray[j]=attributeInfo
               }
               paramList.attributeInfo=attributeInfoArray;
@@ -3286,6 +3285,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
         console.log(JSON.stringify(execParams))
         $scope.popupModel.modelData.operators[0].operatorParams=execParams;
+        console.log(JSON.stringify( $scope.popupModel.modelData.operators[0].operatorParams))
       }
     },//End of link Fn
     templateUrl: 'views/jointgraph.html',
