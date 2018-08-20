@@ -163,7 +163,7 @@
             }
             return index;
           }
-          console.log(JSON.stringify($scope.data));
+        //  console.log(JSON.stringify($scope.data));
           var countX=0;
           for(var i=0;i< $scope.data.length;i++){
             if(i== 0){
@@ -209,7 +209,7 @@
 
 
           }
-          console.log(JSON.stringify(data1));
+         // console.log(JSON.stringify(data1));
           data1.datasets.sort(sortAlphaNum('label'))
           var options={
           // String - background color for graph
@@ -275,17 +275,36 @@
         }); //End Watch
       } ,//End link
       template: `
+        <!--
         <div style="transform: rotate(90deg);transform-origin: left bottom 0;margin-left: -15px;">
           <div>
            {{column.keys[1].attributeName}}
           </div>
         </div>
-        <div style="margin-top: -20px;">
-          <canvas id="heatmap" width="280" height="180"></canvas>
+        <div   style="margin-top: -20px;">
+          <canvas id="heatmap" width="300" height="140"></canvas>
+        </div>
         </div>
         <div style="text-align:center;">
           {{column.keys[0].attributeName}}
         </div>
+        <div style="text-align:center; margin-top:10px;" class="heatmapid">
+        -->
+        <div style="text-align:center;">
+        {{column.keys[0].attributeName}}
+      </div>
+        <div class="row">
+        
+        <div  class="col-md-11">
+          <canvas id="heatmap" width="300" height="140"></canvas>
+        </div>
+        <div class="col-md-1" style="transform: rotate(90deg);transform-origin:left bottom 0;">
+          <div>
+           {{column.keys[1].attributeName}}
+          </div>
+        </div>
+        </div>
+       
         <div style="text-align:center; margin-top:10px;" class="heatmapid">
         </div>
         

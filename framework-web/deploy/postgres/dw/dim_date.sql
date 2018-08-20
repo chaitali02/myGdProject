@@ -1,4 +1,4 @@
-DROP TABLE framework.dim_date;
+DROP TABLE IF EXISTS framework.dim_date;
 
 CREATE TABLE framework.dim_date
 (

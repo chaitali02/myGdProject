@@ -1,4 +1,4 @@
-DROP TABLE framework.dim_customer;
+DROP TABLE IF EXISTS framework.dim_customer;
 
 CREATE TABLE framework.dim_customer
 (

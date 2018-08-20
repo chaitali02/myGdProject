@@ -89,9 +89,10 @@ public class HiveExecutor implements IExecutor{
 			Statement stmt = (Statement) conHolder.getStmtObject();
 			ResultSet rs = null;
 			try {
+				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
+					stmt.execute(sessionParam);
+				}
 				if(sql.toUpperCase().contains("INSERT")) {
-					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
-					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
 					long result = stmt.executeUpdate(sql);
 					//long result = stmt.executeLargeUpdate(sql); Need to check for the large volume of data. 
 					rsHolder.setCountRows(result);
@@ -100,8 +101,6 @@ public class HiveExecutor implements IExecutor{
 					else 
 						logger.info("Unsuccessfull insertion operation.");
 				} else if(sql.toUpperCase().contains("LOAD DATA")) {
-					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
-					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
 					stmt.executeUpdate(sql);
 				} else {
 					rs = stmt.executeQuery(sql);
