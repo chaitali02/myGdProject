@@ -132,8 +132,16 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       });
     }
   }
-
   $scope.setStatus = function (row, status) {
+    $scope.selectDetail=row;
+    $scope.selectDetail.status=status;
+    $('#killmodal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.okKill = function () {
     var api = false;
     switch ($scope.newType) {
       case 'dqexec':
@@ -167,13 +175,14 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if (!api) {
       return
     }
+    $('#killmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
     notify.content = $scope.newType == "dagexec" ? "Pipeline Killed Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Killed Successfully" : "Rule Killed Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.put(url + '' + api + '/setStatus?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&status=' + status).then(function (response) {
+    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.status).then(function (response) {
       console.log(response);
     });
   }

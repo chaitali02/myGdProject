@@ -1833,7 +1833,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                
                if(status && status=='Failed'){
                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
-                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                
                }
                if(status && status=='InProgress'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
