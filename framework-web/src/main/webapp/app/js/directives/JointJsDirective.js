@@ -2398,7 +2398,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var status = jointElement.find('.status');
          var startTime = status.attr("inprogress");
          var statusList=status.attr("statusList");
-         if(statusList.length >0)
+         if(statusList && statusList.length >0)
          startTime=getStatsListObject(JSON.parse(statusList),"InProgress");
          var endTime = status.attr("completed");
          $scope.popoverData = {};
