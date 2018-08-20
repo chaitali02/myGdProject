@@ -22,7 +22,7 @@ public enum MetaType {
 	meta, dashboardview, Import, export, message, log, downloadExec, uploadExec, predict, predictExec, simulate,
 	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, 
 	appConfig, /*operatortype,*/ operatorExec, operator ,comment, commentView, tag, lov, GenerateData, Transpose, 
-	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec;
+	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec, reportview;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,

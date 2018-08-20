@@ -24,6 +24,7 @@ public class Report extends BaseEntity {
 	private String headerAline; 
 	private String footer; 
 	private String footerAline;
+	private List<AttributeRefHolder> filterInfo;
 	private MetaIdentifierHolder dependsOn; 
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	
@@ -63,6 +64,12 @@ public class Report extends BaseEntity {
 	}
 	public void setFooterAline(String footerAline) {
 		this.footerAline = footerAline;
+	}
+	public List<AttributeRefHolder> getFilterInfo() {
+		return filterInfo;
+	}
+	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+		this.filterInfo = filterInfo;
 	}
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;
