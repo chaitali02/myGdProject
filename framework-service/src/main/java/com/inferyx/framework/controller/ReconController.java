@@ -61,7 +61,8 @@ public class ReconController {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
-	public ReconExec execute(@RequestParam("uuid") String reconUuid, @RequestParam("version") String reconVersion,
+	public ReconExec execute(@RequestParam("uuid") String reconUuid, 
+			@RequestParam("version") String reconVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {

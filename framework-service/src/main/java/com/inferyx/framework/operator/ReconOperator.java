@@ -16,42 +16,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.FunctionCategory;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
-import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 /**
@@ -71,7 +58,7 @@ public class ReconOperator {
 	@Autowired
 	FilterOperator filterOperator;
 	@Autowired
-	private MessageServiceImpl messageServiceImpl;
+	private DatasetOperator datasetOperator;
 
 	static final Logger LOGGER = Logger.getLogger(ReconOperator.class);
 
@@ -110,56 +97,56 @@ public class ReconOperator {
 	private String SINGLE_QUOTE = "\'";
 	private String WHERE_1_1 = " WHERE (1=1)";
 	private String CROSS_JOIN = " CROSS JOIN ";
+	
+	private String SOURCE_UUID_ALIAS = "";
+	private String SOURCE_VERSION_ALIAS = "";
+	private String SOURCE_NAME_ALIAS = "";
+	
+	private String TARGET_UUID_ALIAS = "";
+	private String TARGET_VERSION_ALIAS = "";
+	private String TARGET_NAME_ALIAS = "";
+	
+	private String SOURCE_UUID = null;
+	private String SOURCE_VERSION = null;
+	private String SOURCE_NAME = null;
+	private String SOURCE_ATTR_NAME = null;
+	
+	private String TARGET_UUID = null;
+	private String TARGET_VERSION = null;
+	private String TARGET_NAME = null;
+	private String TARGET_ATTR_NAME = null;
 
 	public String generateSql(Recon recon, ReconExec reconExec, List<String> datapodList, DagExec dagExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		String sql = "";
-		try {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			String datasourceName = datasource.getType();
-			if (runMode.equals(RunMode.ONLINE)) {
-				if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-					datasourceName = ExecContext.MYSQL.toString();
-				} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-					datasourceName = ExecContext.ORACLE.toString();
-				} else {
-					datasourceName = ExecContext.spark.toString();
-				}
-			}
-			
+		try {			
 			String sourceDistinct = recon.getSourceDistinct();
 			String targetDistinct = recon.getTargetDistinct();
 			
 			Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
 			Object targetObj = daoRegister.getRefObject(recon.getTargetAttr().getRef());
 			
-			Datapod sourceDp = getDatapod(sourceObj, recon, "source");
-			Datapod targetDp = getDatapod(targetObj, recon, "target");
-			
-			/*Datapod sourceDp = (Datapod) daoRegister.getRefObject(recon.getSourceAttr().getRef());
-			Datapod targetDp = (Datapod) daoRegister.getRefObject(recon.getTargetAttr().getRef());
-			*/
-			String sourceAttrName = sourceDp.getAttributeName(Integer.parseInt(recon.getSourceAttr().getAttrId()));
-			String targetAttrName = targetDp.getAttributeName(Integer.parseInt(recon.getTargetAttr().getAttrId()));
+			resolveSource(sourceObj, recon);
+			resolveTarget(targetObj, recon);
 			
 			Function sourceFun = (Function) daoRegister.getRefObject(recon.getSourceFunc().getRef());
 			Function targetFun = (Function) daoRegister.getRefObject(recon.getTargetFunc().getRef());
 			
-			String sourceVal = generateVal(sourceFun, sourceAttrName, sourceDistinct);
-			String targetVal = generateVal(targetFun, targetAttrName, targetDistinct);
+			String sourceVal = generateVal(sourceFun, SOURCE_ATTR_NAME, sourceDistinct);
+			String targetVal = generateVal(targetFun, TARGET_ATTR_NAME, targetDistinct);
 			
 			sql = SELECT 
-			      + "sourcedatapoduuid" + " AS sourceDatapodUuid" + COMMA 
-			      + "sourcedatapodversion" + " AS sourceDatapodVersion" + COMMA
-			      + "sourcedatapodname" + " AS sourceDatapodName" + COMMA 
+			      + SOURCE_UUID_ALIAS.toLowerCase() + " AS " + SOURCE_UUID_ALIAS + COMMA 
+			      + SOURCE_VERSION_ALIAS.toLowerCase() + " AS " + SOURCE_VERSION_ALIAS + COMMA
+			      + SOURCE_NAME_ALIAS.toLowerCase() + " AS " + SOURCE_NAME_ALIAS + COMMA 
 			      + "sourceattributeid" + " AS sourceAttributeId" + COMMA
 			      + "sourceattributename" + " AS sourceAttributeName" + COMMA
 			      + "sourcevalue" + " AS sourceValue" + COMMA
 			      
-			      + "targetdatapoduuid" + " AS targetDatapodUuid" + COMMA 
-			      + "targetdatapodversion" + " AS targetDatapodVersion" + COMMA
-			      + "targetdatapodname" + " AS targetDatapodName" + COMMA 
+			      + TARGET_UUID_ALIAS.toLowerCase() + " AS " + TARGET_UUID_ALIAS + COMMA 
+			      + TARGET_VERSION_ALIAS.toLowerCase() + " AS " + TARGET_VERSION_ALIAS + COMMA
+			      + TARGET_NAME_ALIAS.toLowerCase() + " AS " + TARGET_NAME_ALIAS + COMMA 
 			      + "targetattributeid" + " AS targetAttributeId" + COMMA
 			      + "targetattributename" + " AS targetAttributeName" + COMMA		      
 			      + "targetvalue" + " AS targetValue" + COMMA
@@ -172,22 +159,22 @@ public class ReconOperator {
 			      
 			      + BRACKET_OPEN
 			      + SELECT
-			      + SINGLE_QUOTE + sourceDp.getUuid()  + SINGLE_QUOTE + " AS sourceDatapodUuid" + COMMA 
-			      + SINGLE_QUOTE + sourceDp.getVersion()  + SINGLE_QUOTE + " AS sourceDatapodVersion" + COMMA
-			      + SINGLE_QUOTE + sourceDp.getName() + SINGLE_QUOTE + " AS sourceDatapodName" + COMMA 
+			      + SINGLE_QUOTE + SOURCE_UUID  + SINGLE_QUOTE + " AS " + SOURCE_UUID_ALIAS + COMMA 
+			      + SINGLE_QUOTE + SOURCE_VERSION  + SINGLE_QUOTE + " AS " + SOURCE_VERSION_ALIAS + COMMA
+			      + SINGLE_QUOTE + SOURCE_NAME + SINGLE_QUOTE + " AS " + SOURCE_NAME_ALIAS + COMMA 
 			      + SINGLE_QUOTE + recon.getSourceAttr().getAttrId() + SINGLE_QUOTE + " AS sourceAttributeId" + COMMA
-			      + SINGLE_QUOTE + sourceAttrName + SINGLE_QUOTE + " AS sourceAttributeName" + COMMA
+			      + SINGLE_QUOTE + SOURCE_ATTR_NAME + SINGLE_QUOTE + " AS sourceAttributeName" + COMMA
 			      + sourceVal + " AS sourceValue"
 			      + FROM
-			      + getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
+			      + generateFrom(sourceObj, datapodList, dagExec, reconExec.getExecParams(), refKeyMap, otherParams, usedRefKeySet, runMode)//getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
 			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
-			      + "sourceDatapodUuid" + COMMA
-			      + "sourceDatapodVersion" + COMMA
-			      + "sourceDatapodName" + COMMA
+			      + SOURCE_UUID_ALIAS + COMMA
+			      + SOURCE_VERSION_ALIAS + COMMA
+			      + SOURCE_NAME_ALIAS + COMMA
 			      + "sourceAttributeId" + COMMA
 			      + "sourceAttributeName"		      
 			      + BRACKET_CLOSE
@@ -197,22 +184,22 @@ public class ReconOperator {
 			      
 			      + BRACKET_OPEN
 			      + SELECT
-			      + SINGLE_QUOTE + targetDp.getUuid()  + SINGLE_QUOTE + " AS targetDatapodUuid" + COMMA 
-			      + SINGLE_QUOTE + targetDp.getVersion()  + SINGLE_QUOTE + " AS targetDatapodVersion" + COMMA
-			      + SINGLE_QUOTE + targetDp.getName() + SINGLE_QUOTE + " AS targetDatapodName" + COMMA 
+			      + SINGLE_QUOTE + TARGET_UUID  + SINGLE_QUOTE + " AS " + TARGET_UUID_ALIAS + COMMA 
+			      + SINGLE_QUOTE + TARGET_VERSION  + SINGLE_QUOTE + " AS " + TARGET_VERSION_ALIAS + COMMA
+			      + SINGLE_QUOTE + TARGET_NAME + SINGLE_QUOTE + " AS " + TARGET_NAME_ALIAS + COMMA 
 			      + SINGLE_QUOTE + recon.getTargetAttr().getAttrId() + SINGLE_QUOTE + " AS targetAttributeId" + COMMA
-			      + SINGLE_QUOTE + targetAttrName + SINGLE_QUOTE + " AS targetAttributeName" + COMMA		      
+			      + SINGLE_QUOTE + TARGET_ATTR_NAME + SINGLE_QUOTE + " AS targetAttributeName" + COMMA		      
 			      + targetVal + " AS targetValue" 
 			      + FROM
-			      + getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
+			      + generateFrom(targetObj, datapodList, dagExec, null, refKeyMap, otherParams, usedRefKeySet, runMode)//getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
 			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
-			      + "targetDatapodUuid" + COMMA
-			      + "targetDatapodVersion" + COMMA
-			      + "targetDatapodName" + COMMA
+			      + TARGET_UUID_ALIAS + COMMA
+			      + TARGET_VERSION_ALIAS + COMMA
+			      + TARGET_NAME_ALIAS + COMMA
 			      + "targetAttributeId" + COMMA
 			      + "targetAttributeName"
 			      + BRACKET_CLOSE
@@ -247,7 +234,90 @@ public class ReconOperator {
 		return sql;
 	}
 	
-	public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
+	public void resolveSource(Object sourceObj, Recon recon) {
+		if(sourceObj instanceof DataSet) {
+			DataSet sourceDs = (DataSet) sourceObj;
+			SOURCE_UUID = sourceDs.getUuid();
+			SOURCE_VERSION = sourceDs.getVersion();
+			SOURCE_NAME = sourceDs.getName();
+			SOURCE_UUID_ALIAS = "sourceDatasetUuid";
+			SOURCE_VERSION_ALIAS = "sourceDatasetVersion";
+			SOURCE_NAME_ALIAS = "sourceDatasetName";
+			for(AttributeSource attributeSource : sourceDs.getAttributeInfo()) {
+				if(attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getSourceAttr().getAttrId())) {
+					SOURCE_ATTR_NAME = attributeSource.getAttrSourceName();
+					break;
+				} else {
+					SOURCE_ATTR_NAME = "";
+				}
+			}
+		} else if(sourceObj instanceof Datapod) {
+			Datapod sourceDp = (Datapod) sourceObj;
+			SOURCE_UUID = sourceDp.getUuid();
+			SOURCE_VERSION = sourceDp.getVersion();
+			SOURCE_NAME = sourceDp.getName();
+			SOURCE_UUID_ALIAS = "sourceDatapodUuid";
+			SOURCE_VERSION_ALIAS = "sourceDatapodVersion";
+			SOURCE_NAME_ALIAS = "sourceDatapodName";
+			for(Attribute attribute : sourceDp.getAttributes()) {
+				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getSourceAttr().getAttrId()))) {
+					SOURCE_ATTR_NAME = attribute.getName();
+					break;
+				} else {
+					SOURCE_ATTR_NAME = "";
+				}
+			}
+		}	
+	}
+	
+	public void resolveTarget(Object targetObj, Recon recon) {
+		if(targetObj instanceof DataSet) {
+			DataSet targetDs = (DataSet) targetObj;
+			TARGET_UUID = targetDs.getUuid();
+			TARGET_VERSION = targetDs.getVersion();
+			TARGET_NAME = targetDs.getName();
+			TARGET_UUID_ALIAS = "targetDatasetUuid";
+			TARGET_VERSION_ALIAS = "targetDatasetVersion";
+			TARGET_NAME_ALIAS = "targetDatasetName";
+			for(AttributeSource attributeSource : targetDs.getAttributeInfo()) {
+				if(attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getTargetAttr().getAttrId())) {
+					TARGET_ATTR_NAME = attributeSource.getAttrSourceName();
+					break;
+				} else {
+					TARGET_ATTR_NAME = "";
+				}
+			}
+		} else if(targetObj instanceof Datapod) {
+			Datapod targetDp = (Datapod) targetObj;
+			TARGET_UUID = targetDp.getUuid();
+			TARGET_VERSION = targetDp.getVersion();
+			TARGET_NAME = targetDp.getName();
+			TARGET_UUID_ALIAS = "targetDatapodUuid";
+			TARGET_VERSION_ALIAS = "targetDatapodVersion";
+			TARGET_NAME_ALIAS = "targetDatapodName";
+			for(Attribute attribute : targetDp.getAttributes()) {
+				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getSourceAttr().getAttrId()))) {
+					TARGET_ATTR_NAME = attribute.getName();
+					break;
+				} else {
+					TARGET_ATTR_NAME = "";
+				}
+			}
+		}	
+	}
+	
+	public String generateFrom(Object obj, List<String> datapodList, DagExec dagExec, ExecParams execParams, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+		if(obj instanceof DataSet) {
+			return "( " + datasetOperator.generateSql((DataSet)obj, refKeyMap, otherParams, usedRefKeySet, execParams, runMode) +" )";
+		} else if(obj instanceof Datapod) {
+			return getTableName((Datapod)obj, datapodList, dagExec, otherParams, runMode);
+		}
+		return null;
+	}
+
+	/********************** UNUSED **********************/
+	/*public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
 		Datapod datapod = null;
 		if(object instanceof Relation) {
 			Relation relation = (Relation) object;
@@ -271,7 +341,7 @@ public class ReconOperator {
 			datapod = (Datapod) object;
 		}
 		return datapod;
-	}
+	}*/
 
 	public String generateFilter(String tableName, Object object, List<AttributeRefHolder> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
@@ -288,10 +358,10 @@ public class ReconOperator {
 			objectName = dataset.getName();
 		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
-			String result = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams);
-			if(result.contains(objectName))
-				result = result.replace(objectName+".", tableName+".");
-			return result;
+			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams);
+			if(filter.contains(objectName))
+				filter = filter.replace(objectName+".", tableName+".");
+			return filter;
 		}
 		return BLANK;
 	}
