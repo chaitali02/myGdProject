@@ -991,6 +991,34 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       return data;
     }
 
+    function ConvertTwoDisit(data,propName) {
+      if(data.length >0 && data[0][propName].indexOf("-") !=-1){
+        for(var i=0;i<data.length;i++){
+          a=data[i][propName].split('-')[0];
+          b=data[i][propName].split('-')[1]
+          data[i][propName]=parseFloat(a).toFixed(2) +"-"+parseFloat(b).toFixed(2);
+         // console.log(data[i][propName])
+        }
+      }
+      console.log(data)
+      return data;
+    }
+    var reA = /[^a-zA-Z]/g;
+    var reN = /[^0-9]/g;
+    function sortAlphaNum(propName) {
+      return function(a,b){
+        var aA = a[propName].replace(reA, "");
+        var bA = b[propName].replace(reA, "");
+        if(aA === bA) {
+          var aN = parseFloat(a[propName].replace(reN, ""), 10);
+          var bN = parseFloat(b[propName].replace(reN, ""), 10);
+          return aN === bN ? 0 : aN > bN ? 1 : -1;
+        } else {
+          return aA > bA ? 1 : -1;
+        }
+      }
+    }
+
     $q.all($scope.vizpodResutsArray.map(function (value) {
       return $q.resolve(value)
           .then(function (result) {
@@ -1004,6 +1032,12 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
               if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart"){
                 $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=$scope.convertResultTwoDisit(result.data,$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
               }else{
+                if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart"){
+                ConvertTwoDisit(result.data,$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
+                  
+                  result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
+                 
+                } 
                 $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=result.data;
               }
               if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type =="data-grid"){
