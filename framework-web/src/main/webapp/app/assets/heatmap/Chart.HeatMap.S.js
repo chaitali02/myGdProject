@@ -2396,7 +2396,7 @@ var ColorManager = function(){
             '<% for (var i = min; i <= max; i += (max-min)/7){ %>'+ // change 6 to number of divisions required
             '<span class="<%= name.toLowerCase() %>-legend-box" style="padding-left:5px;background-color: <%= colorManager.getColor(i).color %>;">&nbsp; </span>'+
             '<% } %>'+
-            '<span class="<%= name.toLowerCase() %>-legend-text">'+
+            '<span class="<%= name.toLowerCase() %>-legend-text" style="padding-left:7px;">'+
             '<%=  max %>'+
             '</span>'+
             '</div>'

@@ -11,6 +11,8 @@
 package com.inferyx.framework.reader;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.DataStore;
@@ -19,5 +21,5 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ResultSetHolder;
 
 public interface IReader {
-	ResultSetHolder read(Datapod dp, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException;
+	ResultSetHolder read(Datapod dp, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException;
 }

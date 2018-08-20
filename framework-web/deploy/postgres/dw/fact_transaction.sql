@@ -1,4 +1,4 @@
-DROP TABLE framework.fact_transaction;
+DROP TABLE IF EXISTS framework.fact_transaction;
 
 CREATE TABLE framework.fact_transaction
 (

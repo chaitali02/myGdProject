@@ -1,4 +1,4 @@
-DROP TABLE framework.dim_branch;
+DROP TABLE IF EXISTS framework.dim_branch;
 
 CREATE TABLE framework.dim_branch
 (
