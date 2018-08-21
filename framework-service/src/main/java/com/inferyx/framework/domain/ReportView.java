@@ -10,23 +10,25 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection="report")
-public class Report extends BaseEntity {
-
+/**
+ * @author Ganesh
+ *
+ */
+public class ReportView extends BaseEntity {
 	private String title;
 	private String titleAlign; 
 	private String header; 
 	private String headerAlign; 
 	private String footer; 
 	private String footerAlign;
-	private List<AttributeRefHolder> filterInfo;
-	private MetaIdentifierHolder dependsOn; 
-	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
+	private String sourceChg;	
+	private List<AttributeSource> attributeInfo;
+	private String srcChg;
+	private Filter filter;	
+	private String filterChg;
+	private MetaIdentifierHolder dependsOn;
 	/**
 	 * @Ganesh
 	 *
@@ -126,34 +128,18 @@ public class Report extends BaseEntity {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the filterInfo
+	 * @return the sourceChg
 	 */
-	public List<AttributeRefHolder> getFilterInfo() {
-		return filterInfo;
+	public String getSourceChg() {
+		return sourceChg;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param filterInfo the filterInfo to set
+	 * @param sourceChg the sourceChg to set
 	 */
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
-		this.filterInfo = filterInfo;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the dependsOn
-	 */
-	public MetaIdentifierHolder getDependsOn() {
-		return dependsOn;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param dependsOn the dependsOn to set
-	 */
-	public void setDependsOn(MetaIdentifierHolder dependsOn) {
-		this.dependsOn = dependsOn;
+	public void setSourceChg(String sourceChg) {
+		this.sourceChg = sourceChg;
 	}
 	/**
 	 * @Ganesh
@@ -170,5 +156,69 @@ public class Report extends BaseEntity {
 	 */
 	public void setAttributeInfo(List<AttributeSource> attributeInfo) {
 		this.attributeInfo = attributeInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the srcChg
+	 */
+	public String getSrcChg() {
+		return srcChg;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param srcChg the srcChg to set
+	 */
+	public void setSrcChg(String srcChg) {
+		this.srcChg = srcChg;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the filter
+	 */
+	public Filter getFilter() {
+		return filter;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param filter the filter to set
+	 */
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the filterChg
+	 */
+	public String getFilterChg() {
+		return filterChg;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param filterChg the filterChg to set
+	 */
+	public void setFilterChg(String filterChg) {
+		this.filterChg = filterChg;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dependsOn
+	 */
+	public MetaIdentifierHolder getDependsOn() {
+		return dependsOn;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param dependsOn the dependsOn to set
+	 */
+	public void setDependsOn(MetaIdentifierHolder dependsOn) {
+		this.dependsOn = dependsOn;
 	}
 }
