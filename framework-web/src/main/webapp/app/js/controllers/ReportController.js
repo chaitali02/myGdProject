@@ -115,7 +115,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 
   $scope.edit = function (data) {
     var state=dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
-    setTimeout(function () { $state.go(state, { 'id': data.uuid, 'mode': 'false' }); }, 100);
+    setTimeout(function () { $state.go(state, { 'id': data.uuid,'version': data.version ,'mode': 'false' }); }, 100);
   }
 
   $scope.createCopy = function (data) {
@@ -482,7 +482,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		}
 	
 	
-		ReportSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version,CF_META_TYPES.reportview).then(function (response) { onSuccessResult(response.data) });
+		ReportSerivce.getOneByUuidAndVersion($stateParams.id,$stateParams.version,CF_META_TYPES.reportview).then(function (response) { onSuccessResult(response.data) });
     var onSuccessResult = function (response) {
       $scope.report = response.report;
       $scope.selectSourceType = response.report.dependsOn.ref.type
@@ -490,7 +490,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
       var defaultversion = {};
       defaultversion.version = response.report.version;
       defaultversion.uuid = response.report.uuid;
-      $scope.reportversion.defaultVersion = defaultversion;
+      $scope.reportVersion.defaultVersion = defaultversion;
       $scope.tags = response.tags
       $scope.getParamByApp();
       ReportSerivce.getAllLatest(response.report.dependsOn.ref.type).then(function (response) { onSuccess(response.data) });
@@ -1074,7 +1074,6 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
     reportJson.title = $scope.report.title;
     reportJson.header = $scope.report.header;
     reportJson.footer = $scope.report.footer;
-    reportJson.titleAlign = $scope.report.titleAlign;
     reportJson.headerAlign = $scope.report.headerAlign;
     reportJson.footerAlign = $scope.report.footerAlign;
 		reportJson.srcChg = "y";

@@ -199,6 +199,11 @@ public class ReportViewServiceImpl {
 		reportView.setActive(resolvedReport.getActive());
 		reportView.setCreatedOn(resolvedReport.getCreatedOn());
 		reportView.setPublished(resolvedReport.getPublished());
+		reportView.setTitle(resolvedReport.getTitle());
+		reportView.setHeader(resolvedReport.getHeader());
+		reportView.setHeaderAlign(resolvedReport.getHeaderAlign());
+		reportView.setFooter(resolvedReport.getFooter());
+		reportView.setFooterAlign(resolvedReport.getFooterAlign());
 		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
 		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
 		Filter resolvedFilter = null;
@@ -310,13 +315,14 @@ public class ReportViewServiceImpl {
 		
 		Filter filter = null;
 		if (reportView.getFilter() != null) {
-			filter = reportView.getFilter();
+			filter = new Filter();
 			filter.setDependsOn(reportView.getDependsOn());
 			filter.setName(reportView.getName());
 			filter.setDesc(reportView.getDesc());
 			filter.setTags(reportView.getTags());
+			filter.setFilterInfo(reportView.getFilter().getFilterInfo());
 			if (reportView.getFilterChg().equalsIgnoreCase("Y") && filter != null) 
-				filter = (Filter) commonServiceImpl.save(MetaType.filter.toString(), filter);			
+				commonServiceImpl.save(MetaType.filter.toString(), filter);			
 		}
 		
 		if (filter != null) {

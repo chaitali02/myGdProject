@@ -191,16 +191,7 @@
                                                 disabled="disabled" required="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">Title Align
-                                            <span class="required" aria-required="true"> * </span>
-                                        </label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.titleAlign" ng-options="r for r in alignType" required>
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
+                                 
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Header
                                             <span class="required" aria-required="true"> * </span>
@@ -438,15 +429,15 @@
                                                     </select>
                                                 </span>
                                             </div>
-                                            <div ng-if="tabledata.isrhsreport">
+                                            <div ng-if="tabledata.isrhsDataset">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
                                                     <div class="col-md-11" style="padding: 0px;">
-                                                        <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsreport.name" title="{{tabledata.rhsreport.dname}}"
+                                                        <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name" title="{{tabledata.rhsdataset.dname}}"
                                                             required disable-validation-message="">
                                                     </div>
                                                     <div class="col-md-1" style="padding:7px 0px 0px 5px;">
-                                                        <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsreport')"></span>
+                                                        <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
                                                     </div>
                                                 </span>
                                             </div>
