@@ -22,7 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IReportDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -43,6 +46,8 @@ public class ReportViewServiceImpl {
 	IReportDao iReportDao;
 	@Autowired
 	GraphRegister<?> registerGraph;
+	@Autowired
+	FilterServiceImpl filterServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ReportViewServiceImpl.class);
 	
@@ -62,7 +67,198 @@ public class ReportViewServiceImpl {
 		reportView.setPublished(resolvedReport.getPublished());
 		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
 		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		Filter resolvedFilter = null;
+		if(filterInfo != null)		{
+			for (int i = 0; i < filterInfo.size(); i++) {
+				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), report.getVersion(), MetaType.filter.toString());
+				resolvedFilter = filterServiceImpl.resolveName(filter);
+			}
+		}
+		reportView.setFilter(resolvedFilter);
+		reportView.setDependsOn(dependsOn);
+		if (resolvedReport.getAttributeInfo() != null) {
+
+			List<AttributeSource> reportSourceAttribute = resolvedReport.getAttributeInfo();
+			List<AttributeSource> attrRef = new ArrayList<AttributeSource>();
+
+			for (int i = 0; i < reportSourceAttribute.size(); i++) {
+				AttributeSource ref = new AttributeSource();
+				MetaIdentifier SourceAttr = new MetaIdentifier();
+				AttributeRefHolder sourceAttr = new AttributeRefHolder();
+				SourceAttr = reportSourceAttribute.get(i).getSourceAttr().getRef();
+				sourceAttr.setRef(SourceAttr);
+				if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) || reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)) {
+					int attrId = Integer.parseInt(reportSourceAttribute.get(i).getSourceAttr().getAttrId());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+					sourceAttr.setAttrId(Integer.toString(attrId));
+				} else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.simple)) {
+					sourceAttr.setValue(reportSourceAttribute.get(i).getSourceAttr().getValue());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				} else {
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				}
+				attrRef.add(ref);
+			}
+			reportView.setAttributeInfo(attrRef);
+		}
+		return reportView;
+	}
+	
+	public ReportView findLatestByUuid(String uuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JsonProcessingException {
+		ReportView reportView = new ReportView();
+		Report report = (Report) commonServiceImpl.getLatestByUuid(uuid, MetaType.report.toString());
+		Report resolvedReport = (Report) commonServiceImpl.resolveName(report, MetaType.report);
+		reportView.setUuid(resolvedReport.getUuid());
+		reportView.setVersion(resolvedReport.getVersion());
+		reportView.setName(resolvedReport.getName());
+		reportView.setDesc(resolvedReport.getDesc());
+		reportView.setAppInfo(resolvedReport.getAppInfo());
+		reportView.setCreatedBy(resolvedReport.getCreatedBy());
+		reportView.setTags(resolvedReport.getTags());
+		reportView.setActive(resolvedReport.getActive());
+		reportView.setCreatedOn(resolvedReport.getCreatedOn());
+		reportView.setPublished(resolvedReport.getPublished());
+		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
+		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		Filter resolvedFilter = null;
+		if(filterInfo != null) {
+		for (int i = 0; i < filterInfo.size(); i++) {
+			Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), report.getVersion(), MetaType.filter.toString());
+			resolvedFilter = filterServiceImpl.resolveName(filter);
+		}
+		}
 		
+		reportView.setFilter(resolvedFilter);
+		reportView.setDependsOn(dependsOn);
+		if (resolvedReport.getAttributeInfo() != null) {
+			List<AttributeSource> reportSourceAttribute = resolvedReport.getAttributeInfo();
+			List<AttributeSource> attrRef = new ArrayList<AttributeSource>();
+
+			for (int i = 0; i < reportSourceAttribute.size(); i++) {
+				AttributeSource ref = new AttributeSource();
+				MetaIdentifier SourceAttr = new MetaIdentifier();
+				AttributeRefHolder sourceAttr = new AttributeRefHolder();
+				SourceAttr = reportSourceAttribute.get(i).getSourceAttr().getRef();
+				sourceAttr.setRef(SourceAttr);
+				if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) || reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)) {
+					int attrId = Integer.parseInt(reportSourceAttribute.get(i).getSourceAttr().getAttrId());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+					sourceAttr.setAttrId(Integer.toString(attrId));
+				} else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.simple)) {
+					sourceAttr.setValue(reportSourceAttribute.get(i).getSourceAttr().getValue());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				} else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.formula))	{
+					String formulaUuid = reportSourceAttribute.get(i).getSourceAttr().getRef().getUuid();
+					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(formulaUuid, MetaType.formula.toString());
+					reportSourceAttribute.get(i).getSourceAttr().getRef().setName(formula.getName());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				} 
+				else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.expression))	{
+					String expressionUuid = reportSourceAttribute.get(i).getSourceAttr().getRef().getUuid();
+					Expression expression = (Expression) commonServiceImpl.getLatestByUuid(expressionUuid, MetaType.expression.toString());
+					reportSourceAttribute.get(i).getSourceAttr().getRef().setName(expression.getName());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				} 
+				else {
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				}
+				attrRef.add(ref);
+			}
+			reportView.setAttributeInfo(attrRef);
+		}
+		return reportView;
+	}
+
+	public ReportView findOneByUuidAndVersion(String uuid, String version) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JsonProcessingException {
+		ReportView reportView = new ReportView();	
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.report.toString());
+		Report resolvedReport = (Report) commonServiceImpl.resolveName(report, MetaType.report);
+		reportView.setUuid(resolvedReport.getUuid());
+		reportView.setVersion(resolvedReport.getVersion());
+		reportView.setName(resolvedReport.getName());
+		reportView.setDesc(resolvedReport.getDesc());
+		reportView.setAppInfo(resolvedReport.getAppInfo());
+		reportView.setCreatedBy(resolvedReport.getCreatedBy());
+		reportView.setTags(resolvedReport.getTags());
+		reportView.setActive(resolvedReport.getActive());
+		reportView.setCreatedOn(resolvedReport.getCreatedOn());
+		reportView.setPublished(resolvedReport.getPublished());
+		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
+		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		Filter resolvedFilter = null;
+		if(filterInfo != null)		{
+			for (int i = 0; i < filterInfo.size(); i++) {
+				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), report.getVersion(), MetaType.filter.toString());
+				resolvedFilter = filterServiceImpl.resolveName(filter);
+			}
+		}
+		reportView.setFilter(resolvedFilter);
+		reportView.setDependsOn(dependsOn);
+		if (resolvedReport.getAttributeInfo() != null) {
+			List<AttributeSource> reportSourceAttribute = resolvedReport.getAttributeInfo();
+			List<AttributeSource> attrRef = new ArrayList<AttributeSource>();
+
+			for (int i = 0; i < reportSourceAttribute.size(); i++) {
+				AttributeSource ref = new AttributeSource();
+				MetaIdentifier SourceAttr = new MetaIdentifier();
+				AttributeRefHolder sourceAttr = new AttributeRefHolder();
+				SourceAttr = reportSourceAttribute.get(i).getSourceAttr().getRef();
+				sourceAttr.setRef(SourceAttr);
+				if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) 
+						|| reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)
+						|| reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
+					int attrId = Integer.parseInt(reportSourceAttribute.get(i).getSourceAttr().getAttrId());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+					sourceAttr.setAttrId(Integer.toString(attrId));
+					sourceAttr.setAttrType(reportSourceAttribute.get(i).getSourceAttr().getAttrType());
+				} else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.simple)) {
+					sourceAttr.setValue(reportSourceAttribute.get(i).getSourceAttr().getValue());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				}else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.formula)){
+					String formulaUuid = reportSourceAttribute.get(i).getSourceAttr().getRef().getUuid();
+					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(formulaUuid, MetaType.formula.toString());
+					reportSourceAttribute.get(i).getSourceAttr().getRef().setName(formula.getName());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				}  
+				else if (reportSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.expression))	{
+					String expressionUuid = reportSourceAttribute.get(i).getSourceAttr().getRef().getUuid();
+					Expression expression = (Expression) commonServiceImpl.getLatestByUuid(expressionUuid, MetaType.expression.toString());
+					reportSourceAttribute.get(i).getSourceAttr().getRef().setName(expression.getName());
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				} 
+				else {
+					ref.setAttrSourceId(reportSourceAttribute.get(i).getAttrSourceId());
+					ref.setAttrSourceName(reportSourceAttribute.get(i).getAttrSourceName());
+					ref.setSourceAttr(sourceAttr);
+				}
+				attrRef.add(ref);
+			}
+			reportView.setAttributeInfo(attrRef);
+		}
 		return reportView;
 	}
 
