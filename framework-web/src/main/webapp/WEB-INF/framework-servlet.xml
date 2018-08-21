@@ -305,6 +305,7 @@
 	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
 	<bean id="uploadExecServiceImpl" class="com.inferyx.framework.service.UploadExecServiceImpl"/>
 	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
+	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>

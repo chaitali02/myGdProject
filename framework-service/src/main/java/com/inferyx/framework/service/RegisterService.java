@@ -91,6 +91,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.ReportView;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -216,6 +217,8 @@ public class RegisterService {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
 	private ReconExecServiceImpl reconExecServiceImpl;
+	@Autowired
+	private ReportViewServiceImpl reportViewServiceImpl;
 
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -988,7 +991,10 @@ public class RegisterService {
 			case "reconview":
 				ReconView reconViewOptr = mapper.convertValue(operator, ReconView.class);
 				baseEntity = reconViewServiceImpl.save(reconViewOptr);
-				
+				break;
+			case "reportview" :
+				ReportView reportView = mapper.convertValue(operator, ReportView.class);
+				baseEntity = reportViewServiceImpl.save(reportView);
 				break;
 			}
 		}

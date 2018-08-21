@@ -214,54 +214,35 @@ public class ReconViewServiceImpl {
 		recon.setSourceDistinct(reconView.getSourceDistinct());
 		recon.setTargetDistinct(reconView.getTargetDistinct());
 		Filter sourcefilter = null;
-		Filter sourcefilterdet = null;		
+//		Filter sourcefilterdet = null;		
 		Filter targetfilter = null;
-		Filter targetfilterdet = null;
+//		Filter targetfilterdet = null;
 		
-		
-		
-		if(reconView.getSourceFunc()!=null)
-		{
-		MetaIdentifierHolder sourceFunc = reconView.getSourceFunc();
-		sourceFunc.getRef().setVersion(null);
-		recon.setSourceFunc(sourceFunc);
+		if(reconView.getSourceFunc()!=null) {
+			MetaIdentifierHolder sourceFunc = reconView.getSourceFunc();
+			sourceFunc.getRef().setVersion(null);
+			recon.setSourceFunc(sourceFunc);
 		}
-		
-		
 		
 		if(reconView.getTargetFunc()!=null) {
-		MetaIdentifierHolder targetFunc = reconView.getTargetFunc();
-		targetFunc.getRef().setVersion(null);
-		recon.setTargetFunc(targetFunc);
+			MetaIdentifierHolder targetFunc = reconView.getTargetFunc();
+			targetFunc.getRef().setVersion(null);
+			recon.setTargetFunc(targetFunc);
+		}		
+		
+		if(reconView.getSourceAttr()!=null) {		
+			sourceFilterdepndsOn.setRef(reconView.getSourceAttr().getRef());
+			sourceAttr.setAttrId(reconView.getSourceAttr().getAttrId());
+			sourceAttr.setRef(reconView.getSourceAttr().getRef());
+			recon.setSourceAttr(sourceAttr);
 		}
-		
-		
-		
-		
-		if(reconView.getSourceAttr()!=null) {
-		
-		sourceFilterdepndsOn.setRef(reconView.getSourceAttr().getRef());
-		sourceAttr.setAttrId(reconView.getSourceAttr().getAttrId());
-		sourceAttr.setRef(reconView.getSourceAttr().getRef());
-		recon.setSourceAttr(sourceAttr);
-		}
-		
-		
-		
-		
-		
-	
 
 		if(reconView.getTargetAttr()!=null) {
-		targetFilterdepndsOn.setRef(reconView.getTargetAttr().getRef());
-		targetAttr.setAttrId(reconView.getTargetAttr().getAttrId());
-		targetAttr.setRef(reconView.getTargetAttr().getRef());
-		recon.setTargetAttr(targetAttr);
+			targetFilterdepndsOn.setRef(reconView.getTargetAttr().getRef());
+			targetAttr.setAttrId(reconView.getTargetAttr().getAttrId());
+			targetAttr.setRef(reconView.getTargetAttr().getRef());
+			recon.setTargetAttr(targetAttr);
 		}
-		
-		
-		
-		
 		
 		if (reconView.getSourcefilter() != null) {
 			sourcefilter = reconView.getSourcefilter();
@@ -286,7 +267,6 @@ public class ReconViewServiceImpl {
 			sourcefilterList.add(filterInfo);
 			recon.setSourceFilter(sourcefilterList);	
 		}
-		
 		
 		if (reconView.getTargetfilter() != null) {
 			targetfilter = reconView.getTargetfilter();
