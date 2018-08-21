@@ -288,10 +288,6 @@ public class ReportViewServiceImpl {
 			report.setTitle(reportView.getTitle());
 		}
 		
-		if(reportView.getTitleAlign() != null) {
-			report.setTitleAlign(reportView.getTitleAlign());
-		}
-		
 		if(reportView.getHeader() != null) {
 			report.setHeader(reportView.getHeader());
 		}

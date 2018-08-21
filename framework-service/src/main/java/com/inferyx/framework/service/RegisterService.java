@@ -1595,6 +1595,10 @@ public class RegisterService {
 				ParamSet paramSet = paramSetServiceImpl.findOneById(id);
 				result = ow.writeValueAsString(paramSetServiceImpl.resolveName(paramSet));
 				break;*/
+			case "reportview":
+				ReportView reportView = reportViewServiceImpl.findOneById(id);
+				result = ow.writeValueAsString(commonServiceImpl.resolveName(reportView, MetaType.reportview));
+				break;
 			}
 		}
 
@@ -1802,6 +1806,9 @@ public class RegisterService {
 				ParamSet paramset = paramSetServiceImpl.findOneByUuidAndVersion(uuid, version);
 				result = ow.writeValueAsString(paramSetServiceImpl.resolveName(paramset));
 				break;*/
+			case "reportview":
+				result = ow.writeValueAsString(reportViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
 			}
 		}
 		return result;
@@ -2019,6 +2026,9 @@ public class RegisterService {
 				MapExec mapExec = mapExecServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(mapExecServiceImpl.resolveName(mapExec));
 				break;*/
+			case "reportview":
+				result = ow.writeValueAsString(reportViewServiceImpl.findLatestByUuid(uuid));
+				break;
 			}
 
 		}

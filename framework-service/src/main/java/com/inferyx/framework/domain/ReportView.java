@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class ReportView extends BaseEntity {
 	private String title;
-	private String titleAlign; 
 	private String header; 
 	private String headerAlign; 
 	private String footer; 
@@ -44,22 +43,6 @@ public class ReportView extends BaseEntity {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the titleAlign
-	 */
-	public String getTitleAlign() {
-		return titleAlign;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param titleAlign the titleAlign to set
-	 */
-	public void setTitleAlign(String titleAlign) {
-		this.titleAlign = titleAlign;
 	}
 	/**
 	 * @Ganesh
