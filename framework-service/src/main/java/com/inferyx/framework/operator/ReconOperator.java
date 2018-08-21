@@ -240,9 +240,9 @@ public class ReconOperator {
 			SOURCE_UUID = sourceDs.getUuid();
 			SOURCE_VERSION = sourceDs.getVersion();
 			SOURCE_NAME = sourceDs.getName();
-			SOURCE_UUID_ALIAS = "sourceDatasetUuid";
-			SOURCE_VERSION_ALIAS = "sourceDatasetVersion";
-			SOURCE_NAME_ALIAS = "sourceDatasetName";
+			SOURCE_UUID_ALIAS = "sourceUuid";
+			SOURCE_VERSION_ALIAS = "sourceVersion";
+			SOURCE_NAME_ALIAS = "sourceName";
 			for(AttributeSource attributeSource : sourceDs.getAttributeInfo()) {
 				if(attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getSourceAttr().getAttrId())) {
 					SOURCE_ATTR_NAME = attributeSource.getAttrSourceName();
@@ -256,9 +256,9 @@ public class ReconOperator {
 			SOURCE_UUID = sourceDp.getUuid();
 			SOURCE_VERSION = sourceDp.getVersion();
 			SOURCE_NAME = sourceDp.getName();
-			SOURCE_UUID_ALIAS = "sourceDatapodUuid";
-			SOURCE_VERSION_ALIAS = "sourceDatapodVersion";
-			SOURCE_NAME_ALIAS = "sourceDatapodName";
+			SOURCE_UUID_ALIAS = "sourceUuid";
+			SOURCE_VERSION_ALIAS = "sourceVersion";
+			SOURCE_NAME_ALIAS = "sourceName";
 			for(Attribute attribute : sourceDp.getAttributes()) {
 				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getSourceAttr().getAttrId()))) {
 					SOURCE_ATTR_NAME = attribute.getName();
@@ -276,9 +276,9 @@ public class ReconOperator {
 			TARGET_UUID = targetDs.getUuid();
 			TARGET_VERSION = targetDs.getVersion();
 			TARGET_NAME = targetDs.getName();
-			TARGET_UUID_ALIAS = "targetDatasetUuid";
-			TARGET_VERSION_ALIAS = "targetDatasetVersion";
-			TARGET_NAME_ALIAS = "targetDatasetName";
+			TARGET_UUID_ALIAS = "targetUuid";
+			TARGET_VERSION_ALIAS = "targetVersion";
+			TARGET_NAME_ALIAS = "targetName";
 			for(AttributeSource attributeSource : targetDs.getAttributeInfo()) {
 				if(attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getTargetAttr().getAttrId())) {
 					TARGET_ATTR_NAME = attributeSource.getAttrSourceName();
@@ -292,9 +292,9 @@ public class ReconOperator {
 			TARGET_UUID = targetDp.getUuid();
 			TARGET_VERSION = targetDp.getVersion();
 			TARGET_NAME = targetDp.getName();
-			TARGET_UUID_ALIAS = "targetDatapodUuid";
-			TARGET_VERSION_ALIAS = "targetDatapodVersion";
-			TARGET_NAME_ALIAS = "targetDatapodName";
+			TARGET_UUID_ALIAS = "targetUuid";
+			TARGET_VERSION_ALIAS = "targetVersion";
+			TARGET_NAME_ALIAS = "targetName";
 			for(Attribute attribute : targetDp.getAttributes()) {
 				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getSourceAttr().getAttrId()))) {
 					TARGET_ATTR_NAME = attribute.getName();
