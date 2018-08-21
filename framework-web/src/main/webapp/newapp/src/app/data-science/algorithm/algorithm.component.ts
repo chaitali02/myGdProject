@@ -148,6 +148,7 @@ export class AlgorithmComponent implements OnInit {
       this.algorithm.tags = tags;
     }//End If
 
+
     this.libraryType = response.libraryType
     this.trainClass = response.trainClass
     this.modelClass = response.modelClass
@@ -163,16 +164,32 @@ export class AlgorithmComponent implements OnInit {
       paramListWH.label = response["paramListWH"]["ref"]["name"];
       this.paramListWH = paramListWH;
     }
-    var summaryMethodsArray = [];
-    if (response.summaryMethods !== null) {
+    // var summaryMethodsArray = [];
+    // if (response.summaryMethods !== null) {
+    //   for (var i = 0; i < response.summaryMethods.length; i++) {
+    //     var summaryMethods = {};
+    //     summaryMethods['text'] = response.summaryMethods[i];
+    //     summaryMethods['display'] = response.summaryMethods[i];
+    //     summaryMethodsArray[i] = summaryMethods;
+    //   }
+    //   this.summaryMethods = summaryMethodsArray;
+    // }
+    var summaryMethods = [];
+    if (response.summaryMethods != null) {
       for (var i = 0; i < response.summaryMethods.length; i++) {
-        var summaryMethods = {};
-        summaryMethods['text'] = response.summaryMethods[i];
-        summaryMethods['display'] = response.summaryMethods[i];
-        summaryMethodsArray[i] = summaryMethods;
-      }
-      this.summaryMethods = summaryMethodsArray;
-    }
+        var summaryMethod = {};
+        summaryMethod['value'] = response.summaryMethods[i];
+        summaryMethod['display'] = response.summaryMethods[i];
+        summaryMethods[i] = summaryMethod
+
+      }//End For
+      this.summaryMethods = summaryMethods;
+    }//End If
+
+
+
+
+
 
  this.breadcrumbDataFrom[2].caption = this.algorithm.name;
     console.log('Data is' + response);

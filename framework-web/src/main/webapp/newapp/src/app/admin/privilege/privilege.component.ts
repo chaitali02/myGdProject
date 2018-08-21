@@ -110,6 +110,17 @@ export class PrivilegeComponent implements OnInit {
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.privilege.tags = tags;
+    }//End If
     this.createdBy = response.createdBy.ref.name;
     this.privilege.published = response["published"] == 'Y' ? true : false
     this.privilege.active = response["active"] == 'Y' ? true : false
@@ -187,11 +198,21 @@ export class PrivilegeComponent implements OnInit {
     let privilegeJson = {}
     privilegeJson["name"] = this.privilege.name;
     privilegeJson["uuid"] = this.privilege.uuid;
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
+    // }
+    // privilegeJson["tags"] = tagstemp
+
+
+    var tagArray = [];
+    if (this.privilege.tags != null) {
+      for (var counttag = 0; counttag < this.privilege.tags.length; counttag++) {
+        tagArray[counttag] = this.privilege.tags[counttag].value;
+
+      }
     }
-    privilegeJson["tags"] = tagstemp
+    privilegeJson['tags'] = tagArray
     privilegeJson["desc"] = this.privilege.desc;
     privilegeJson["active"] = this.privilege.active == true ? 'Y' : "N"
     privilegeJson["published"] = this.privilege.published == true ? 'Y' : "N"

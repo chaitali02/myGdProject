@@ -222,7 +222,6 @@ export class LoadComponent {
     }
   }
   submitLoad() {
-    debugger
     this.isSubmitEnable = true;
     let loadJson = {};
     loadJson["uuid"] = this.loadData.uuid

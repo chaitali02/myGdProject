@@ -198,11 +198,11 @@ export class OperatorComponent implements OnInit {
     let operatorJson = {};
     operatorJson["uuid"] = this.operator.uuid;
     operatorJson["name"] = this.operator.name;
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
+    // //let tagArray=[];
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
+    // }
     var tagArray = [];
     if (this.operator.tags != null) {
       for (var counttag = 0; counttag < this.operator.tags.length; counttag++) {

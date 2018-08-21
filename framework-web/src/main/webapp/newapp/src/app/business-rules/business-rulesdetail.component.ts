@@ -549,7 +549,6 @@ export class BusinessRulesDetailComponent {
     }
 
     onSuccessgetOneByUuidAndVersion(response) {
-        debugger
         this.breadcrumbDataFrom[2].caption = response.dqdata.name
         this.dqdata = response.dqdata;
         this.dataqualitycompare = response.dqdata;
@@ -561,14 +560,14 @@ export class BusinessRulesDetailComponent {
         this.dqdata.active = response.dqdata["active"] == 'Y' ? true : false
         var tags = [];
         if (response.dqdata.tags != null) {
-          for (var i = 0; i < response.dqdata.tags.length; i++) {
-            var tag = {};
-            tag['value'] = response.dqdata.tags[i];
-            tag['display'] = response.dqdata.tags[i];
-            tags[i] = tag
-    
-          }//End For
-          this.tags = tags;
+            for (var i = 0; i < response.dqdata.tags.length; i++) {
+                var tag = {};
+                tag['value'] = response.dqdata.tags[i];
+                tag['display'] = response.dqdata.tags[i];
+                tags[i] = tag
+
+            }//End For
+            this.tags = tags;
         }//End If
         const version: Version = new Version();
         this.uuid = response.uuid
@@ -607,26 +606,25 @@ export class BusinessRulesDetailComponent {
         }
         this.VersionList = temp
     }
-    
-    onVersionChange(){
-        this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
-      }
+
+    onVersionChange() {
+        this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
+    }
     ruleSubmit() {
-        debugger
         this.isSubmit = "true"
         let dqJson = {};
         dqJson["uuid"] = this.dqdata.uuid;
         dqJson["name"] = this.dqdata.name;
         dqJson["desc"] = this.dqdata.desc;
-       
-    var tagArray = [];
-    if (this.tags != null) {
-      for (var counttag = 0; counttag < this.tags.length; counttag++) {
-        tagArray[counttag] = this.tags[counttag].value;
 
-      }
-    }
-    dqJson['tags'] = tagArray
+        var tagArray = [];
+        if (this.tags != null) {
+            for (var counttag = 0; counttag < this.tags.length; counttag++) {
+                tagArray[counttag] = this.tags[counttag].value;
+
+            }
+        }
+        dqJson['tags'] = tagArray
         dqJson["active"] = this.dqdata.active == true ? 'Y' : "N"
         dqJson["published"] = this.dqdata.published == true ? 'Y' : "N"
         let source = {};

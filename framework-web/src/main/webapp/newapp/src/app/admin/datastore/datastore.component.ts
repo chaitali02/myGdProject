@@ -117,6 +117,7 @@ export class DatastoreComponent implements OnInit {
   }
   
   onSuccessgetOneByUuidAndVersion(response){
+    debugger
     this.breadcrumbDataFrom[2].caption=response.name;
     this.datastore=response;
     const version: Version = new Version();
@@ -130,7 +131,17 @@ export class DatastoreComponent implements OnInit {
     
     this.breadcrumbDataFrom[2].caption=this.datastore.name;
 
-    this.tags = response
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.datastore.tags = tags;
+    }//End I
     this.meta=response["metaId"]["ref"]["type"];
     this.metaId["uuid"]=response["metaId"]["ref"]["uuid"]
     this.metaId["name"]=response["metaId"]["ref"]["name"]
@@ -225,21 +236,31 @@ export class DatastoreComponent implements OnInit {
   }
   
   submitDatastore(){
+    debugger
         this.isSubmitEnable=true;
         let datastoreJson={};
         datastoreJson["uuid"]=this.datastore.uuid
         datastoreJson["name"]=this.datastore.name
-       //let tagArray=[];
-       const tagstemp = [];
-       for (const t in this.tags) {
-        //tagstemp.push(this.tags[t]["value"]);
-       }
-      // if(this.tags.length > 0){
-      //   for(let counttag=0;counttag < this.tags.length;counttag++){
-      //     tagArray[counttag]=this.tags[counttag]["value"];
-      //   }
-      // }
-      datastoreJson["tags"]=tagstemp
+      //  //let tagArray=[];
+      //  const tagstemp = [];
+      //  for (const t in this.tags) {
+      //   //tagstemp.push(this.tags[t]["value"]);
+      //  }
+      // // if(this.tags.length > 0){
+      // //   for(let counttag=0;counttag < this.tags.length;counttag++){
+      // //     tagArray[counttag]=this.tags[counttag]["value"];
+      // //   }
+      // // }
+      // datastoreJson["tags"]=tagstemp
+
+    var tagArray = [];
+    if (this.datastore.tags != null) {
+      for (var counttag = 0; counttag < this.datastore.tags.length; counttag++) {
+        tagArray[counttag] = this.datastore.tags[counttag].value;
+
+      }
+    }
+    datastoreJson['tags'] = tagArray
       datastoreJson["desc"]=this.datastore.desc
        let metaId={};
        let refMetaId={}

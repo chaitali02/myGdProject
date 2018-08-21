@@ -151,6 +151,17 @@ export class UserComponent implements OnInit {
         this.version = response['version'];
       
        // this.groupInfoTags = response.groupInfo;
+       var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.user.tags = tags;
+    }//End If
         let groupInfoNew = [];
         
         for(const i in response.groupInfo)
@@ -281,16 +292,25 @@ export class UserComponent implements OnInit {
           userJson["uuid"]=this.user.uuid;
           userJson["name"]=this.user.name;
          //let tagArray=[];
-         const tagstemp = [];
-         for (const t in this.tags) {
-          tagstemp.push(this.tags[t]["value"]);
-         }
-        // if(this.tags.length > 0){
-        //   for(let counttag=0;counttag < this.tags.length;counttag++){
-        //     tagArray[counttag]=this.tags[counttag]["value"];
-        //   }
-        // }
-        userJson["tags"]=tagstemp;
+        //  const tagstemp = [];
+        //  for (const t in this.tags) {
+        //   tagstemp.push(this.tags[t]["value"]);
+        //  }
+        // // if(this.tags.length > 0){
+        // //   for(let counttag=0;counttag < this.tags.length;counttag++){
+        // //     tagArray[counttag]=this.tags[counttag]["value"];
+        // //   }
+        // // }
+        // userJson["tags"]=tagstemp;
+        var tagArray = [];
+        if (this.user.tags != null) {
+          for (var counttag = 0; counttag < this.user.tags.length; counttag++) {
+            tagArray[counttag] = this.user.tags[counttag].value;
+    
+          }
+        }
+        userJson['tags'] = tagArray
+    
         userJson["desc"]=this.user.desc;
 
          let groupInfoArrayNew=[]; 

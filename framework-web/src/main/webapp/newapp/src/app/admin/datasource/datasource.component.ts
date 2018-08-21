@@ -104,8 +104,12 @@ export class DatasourceComponent implements OnInit {
 
   onSuccessgetOneByUuidAndVersion(response) {
     debugger
-    this.breadcrumbDataFrom[2].caption = response.name;
+    this.datasource = response;
     this.uuid = response.uuid;
+   const version: Version = new Version();
+    version.label = response['version'];
+    version.uuid = response['uuid'];
+    this.selectedVersion = version
     var tags = [];
     if (response.tags != null) {
       for (var i = 0; i < response.tags.length; i++) {
@@ -117,16 +121,12 @@ export class DatasourceComponent implements OnInit {
       }//End For
       this.datasource.tags = tags;
     }//End If
-    const version: Version = new Version();
-    version.label = response['version'];
-    version.uuid = response['uuid'];
-    this.selectedVersion = version
-    this.datasource = response;
     this.createdBy = response.createdBy.ref.name;
     this.version = response['version'];
     this.datasource.published = response["published"] == 'Y' ? true : false
     this.datasource.active = response["active"] == 'Y' ? true : false
     this.datasource.type = response["type"]
+    this.breadcrumbDataFrom[2].caption = response.name;
 
     // this.published = response['published'];
     // if(this.published === 'Y') { this.published = true; } else { this.published = false; }

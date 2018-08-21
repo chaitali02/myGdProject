@@ -137,7 +137,6 @@ export class ExpressionComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-
     this.expression = response;
     this.createdBy = response.createdBy.ref.name;
     var tags = [];
@@ -351,7 +350,7 @@ export class ExpressionComponent implements OnInit {
     )
   }
   OnSuccesgetAllAttributeBySource(response2, defaultValue, index, type) {
-    // debugger
+    //   
     let temp = []
     for (const n in response2) {
       let allname1 = {};
@@ -549,7 +548,6 @@ export class ExpressionComponent implements OnInit {
     this.expressionTableArray = newDataList;
   }
   submitExpression() {
-
     this.isSubmitEnable = true;
     var expressionjson = {}
     expressionjson["uuid"] = this.expression.uuid;
