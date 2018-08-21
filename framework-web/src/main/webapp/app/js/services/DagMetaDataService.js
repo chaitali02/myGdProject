@@ -1760,6 +1760,35 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'report':{
+      name : 'report',
+      caption:'Report',
+      execType:'reportExec',
+      metaType:'report',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'reportlist',
+      joblistState : '',
+      detailState :'reportdetail',
+      childMenu:[],
+      allowInChildMenu : false,
+
+    },
+    'reportexec':{
+      name : 'report',
+      caption:'Report Exec',
+      execType:'reportExec',
+      metaType:'reportExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistreportexec',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];

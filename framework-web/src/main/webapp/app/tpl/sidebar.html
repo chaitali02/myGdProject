@@ -50,7 +50,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="datavisualizationsubmenu in Datavisualization.submenu | orderBy:'caption'" ng-click="deInitTabs()">
+                <li class="nav-item" data-ng-repeat="datavisualizationsubmenu in Datavisualization.submenu " ng-click="deInitTabs()">
                     <a ui-sref="{{datavisualizationsubmenu.name}}" class="nav-link">
                         <span class="title">{{datavisualizationsubmenu.caption}}</span>
                        <span class="badge badge-success">{{metaStats[datavisualizationsubmenu.type].count}}</span>

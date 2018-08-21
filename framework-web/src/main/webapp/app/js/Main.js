@@ -462,6 +462,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "submenu": [
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
+            { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
         ]
     }
     $scope.Admindata = {
@@ -1085,6 +1086,43 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             '   js/controllers/VizpodController.js',
                             'js/services/VizpodService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        .state('reportlist', {
+            url: "/reportList",
+            templateUrl: "views/report-list.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            // 'js/services/ReportServices.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('reportdetail', {
+            url: "/Report?id&mode&returnBack&version",
+            templateUrl: "views/report.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            'js/services/ReportService.js'
                         ]
                     });
                 }]
