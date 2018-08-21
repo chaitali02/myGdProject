@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -18,10 +17,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.dao.IReportDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -29,6 +28,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportView;
+import com.inferyx.framework.register.GraphRegister;
 
 /**
  * @author Ganesh
@@ -37,6 +37,13 @@ import com.inferyx.framework.domain.ReportView;
 public class ReportViewServiceImpl {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	SecurityServiceImpl securityServiceImpl;
+	@Autowired
+	IReportDao iReportDao;
+	@Autowired
+	GraphRegister<?> registerGraph;
+	
 	static final Logger logger = Logger.getLogger(ReportViewServiceImpl.class);
 	
 	public ReportView findOneById(String id) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -59,7 +66,7 @@ public class ReportViewServiceImpl {
 		return reportView;
 	}
 
-	public Report save(ReportView reportView) throws JSONException, ParseException, JsonProcessingException {
+	public Report save(ReportView reportView) throws Exception {
 		if(reportView == null) 
 			return null;
 		
@@ -116,8 +123,8 @@ public class ReportViewServiceImpl {
 			filter.setName(reportView.getName());
 			filter.setDesc(reportView.getDesc());
 			filter.setTags(reportView.getTags());
-			if (reportView.getFilterChg().equalsIgnoreCase("y") && filter != null) 
-		         commonServiceImpl.save(MetaType.filter.toString(), filter);			
+			if (reportView.getFilterChg().equalsIgnoreCase("Y") && filter != null) 
+				filter = (Filter) commonServiceImpl.save(MetaType.filter.toString(), filter);			
 		}
 		
 		if (filter != null) {
@@ -128,7 +135,18 @@ public class ReportViewServiceImpl {
 			filterList.add(filterInfo);
 			report.setFilterInfo(filterList);
 		}
-		
-		return report;
+		report.setPublished(reportView.getPublished());
+		return save(report);
+	}
+	
+	public Report save(Report report) throws Exception {
+		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
+		List<MetaIdentifierHolder> miHolderList = new ArrayList<MetaIdentifierHolder>();
+		miHolderList.add(meta);
+		report.setAppInfo(miHolderList);
+		report.setBaseEntity();
+		Report reportDet = iReportDao.save(report);
+		registerGraph.updateGraph((Object) reportDet, MetaType.report);
+		return reportDet;
 	}
 }
