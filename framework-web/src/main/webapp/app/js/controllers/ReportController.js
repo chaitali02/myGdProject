@@ -109,7 +109,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 
 
   $scope.view = function (data) {
-   
+    var state=dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
+    setTimeout(function () { $state.go(state, { 'id': data.uuid,'version': data.version ,'mode': 'true' }); }, 100);
   }
 
 
