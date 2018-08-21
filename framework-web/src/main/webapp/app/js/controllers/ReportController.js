@@ -114,7 +114,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 
 
   $scope.edit = function (data) {
-    setTimeout(function () { $state.go(dagMetaDataService.detailState, { 'id': data.uuid, 'mode': 'false' }); }, 100);
+    var state=dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
+    setTimeout(function () { $state.go(state, { 'id': data.uuid, 'mode': 'false' }); }, 100);
   }
 
   $scope.createCopy = function (data) {
@@ -1065,17 +1066,17 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
 		var reportJson = {}
-		reportJson.uuid = $scope.dataset.uuid
-		reportJson.name = $scope.dataset.name;
-		reportJson.desc = $scope.dataset.desc
-		reportJson.active = $scope.dataset.active;
-    reportJson.published = $scope.dataset.published;
-    reportJson.title = $scope.dataset.title;
-    reportJson.header = $scope.dataset.header;
-    reportJson.footer = $scope.dataset.footer;
-    reportJson.titleAlign = $scope.dataset.titleAlign;
-    reportJson.headerAlign = $scope.dataset.headerAlign;
-    reportJson.footerAlign = $scope.dataset.footerAlign;
+		reportJson.uuid = $scope.report.uuid
+		reportJson.name = $scope.report.name;
+		reportJson.desc = $scope.report.desc
+		reportJson.active = $scope.report.active;
+    reportJson.published = $scope.report.published;
+    reportJson.title = $scope.report.title;
+    reportJson.header = $scope.report.header;
+    reportJson.footer = $scope.report.footer;
+    reportJson.titleAlign = $scope.report.titleAlign;
+    reportJson.headerAlign = $scope.report.headerAlign;
+    reportJson.footerAlign = $scope.report.footerAlign;
 		reportJson.srcChg = "y";
 
 		if ($scope.reposrtCompare == null) {
@@ -1288,12 +1289,11 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
-			$scope.changemodelvalue();
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = 'Report Saved Successfully'
 			$scope.$emit('notify', notify);
-			$scope.okdatasetsave();
+			$scope.close();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
@@ -1305,11 +1305,10 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		return false;
 	}
 
-	$scope.okdatasetsave = function () {
-		$('#datasetsave').css("dispaly", "none");
+	$scope.close = function () {
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			setTimeout(function () { $state.go('metadata', { 'type': 'dataset' }); }, 2000);
+			setTimeout(function () { $state.go('reportlist'); }, 2000);
 
 		}
 	}

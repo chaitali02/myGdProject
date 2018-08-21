@@ -51,7 +51,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.findOneByUuidAndVersion = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=datasetview",
+			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=reportview",
 			method: "GET",
 
 		}).then(function (response) { return response })
@@ -80,7 +80,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.Submit = function (data, type, upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=datasetview&upd_tag=" + upd_tag,
+			url: url + "common/submit?action=edit&type="+type+"&upd_tag=" + upd_tag,
 
 			headers: {
 				'Accept': '*/*',
