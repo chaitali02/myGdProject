@@ -219,7 +219,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
       });
       return {cells:cells,links:links};
     }
-    factory.convertGraphToDag=function(cells){
+    factory.convertGraphToDag=function(cells,isEXEC_PARAMS){
       //var getJointGrapObject = JSON.parse($scope.graph.content);
       var dag = {};
       var stages = {};
@@ -280,7 +280,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
             "active":val.attributes.attrs[".body"].active ==true?"Y":"N",
             "xPos" : val.attributes.position.x,
             "yPos" : val.attributes.position.y,
-            "operators" : setDataFactory.setEXEC_PARAMS(val.attributes['model-data'].operators) || {}
+            "operators" : isEXEC_PARAMS == true ?setDataFactory.setEXEC_PARAMS(val.attributes['model-data'].operators):val.attributes['model-data'].operators || {}
             // "properties":val.properties ? val.properties : {}
           };
           }

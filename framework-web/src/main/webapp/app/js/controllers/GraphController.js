@@ -365,7 +365,7 @@ angular.module('InferyxApp')
         var options = {}
         options.execution = $scope.checkboxModelexecution;
         var cells = window.getAllCell();
-        var inArrayFormat = graphService.convertGraphToDag(cells);
+        var inArrayFormat = graphService.convertGraphToDag(cells,true);
         var dagJson = {};
         dagJson.uuid = $scope.dagdata.uuid;
         dagJson.name = $scope.pipelineName;
@@ -483,7 +483,7 @@ angular.module('InferyxApp')
           }, 0);
         }
         if ($scope.isGraphRenderEdit == true) {
-          console.log($scope.graph.getCells());
+        //  console.log($scope.graph.getCells());
           //$scope.graph.addCells($scope.graph.getCells())
         }
         if ($scope.continueCount >= 3) {
@@ -497,7 +497,7 @@ angular.module('InferyxApp')
       $scope.countBack = function () {
         if ($scope.graph) {
           var cells = $scope.graph.getCells();
-          var inArrayFormat = graphService.convertGraphToDag(cells);
+          var inArrayFormat = graphService.convertGraphToDag(cells,false);
           $scope.dagdata.stages = inArrayFormat[0].stages;
           $scope.dagdata.xPos = inArrayFormat[0].xPos;
           $scope.dagdata.yPos = inArrayFormat[0].yPos;
