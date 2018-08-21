@@ -103,10 +103,9 @@ export class DatasourceComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.datasource = response;
     this.uuid = response.uuid;
-   const version: Version = new Version();
+    const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
@@ -174,7 +173,6 @@ export class DatasourceComponent implements OnInit {
   }
 
   submitDatasource() {
-    debugger
     this.isSubmitEnable = true;
     let datasourceJson = {};
     datasourceJson["name"] = this.datasource.name;

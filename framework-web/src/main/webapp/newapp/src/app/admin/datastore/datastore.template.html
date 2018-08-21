@@ -13,11 +13,11 @@
             <i class="fa fa-gift"></i>{{datastore.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
+            <a title="Edit" (click)="enableEdit(uuid,version)" disabled='true' data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
               *ngIf="mode">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
+            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" disabled='true' data-placement="top" tooltip style="height:16px;"
               *ngIf="mode">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>

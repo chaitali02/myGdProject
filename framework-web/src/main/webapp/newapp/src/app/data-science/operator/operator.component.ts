@@ -40,8 +40,8 @@ export class OperatorComponent implements OnInit {
   VersionList: SelectItem[] = [];
   msgs: any;
   paramList: DependsOn;
-  operatortypesOption:{ 'value': String, 'label': String }[];
-  operatorType :any;
+  operatortypesOption: { 'value': String, 'label': String }[];
+  operatorType: any;
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _OperatorService: OperatorService) {
     this.operator = true;
@@ -94,7 +94,6 @@ export class OperatorComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('operator', this.id)
       .subscribe(
@@ -104,10 +103,7 @@ export class OperatorComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
-
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.operator = response
     this.uuid = response.uuid;
     const version: Version = new Version();
@@ -128,7 +124,7 @@ export class OperatorComponent implements OnInit {
       }//End For
       this.operator.tags = tags;
     }//End If
-    
+
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["paramList"]["ref"]["name"];
     dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
@@ -175,7 +171,6 @@ export class OperatorComponent implements OnInit {
     }
   }
 
-
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'operator')
       .subscribe(
@@ -185,15 +180,12 @@ export class OperatorComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
-
   public goBack() {
     // this._location.back();
     this.router.navigate(['app/list/operator']);
   }
 
   submitoperator() {
-    debugger
     this.isSubmitEnable = true;
     let operatorJson = {};
     operatorJson["uuid"] = this.operator.uuid;

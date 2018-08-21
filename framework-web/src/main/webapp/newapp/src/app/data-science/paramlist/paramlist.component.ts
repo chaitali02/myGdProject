@@ -53,10 +53,10 @@ export class ParamlistComponent implements OnInit {
   params: any;
   ref: any;
   paramtableArray: any;
-  templateFlg : any;
-  template : any;
+  templateFlg: any;
+  template: any;
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,private _paramlistService : ParamlistService) {
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _paramlistService: ParamlistService) {
     this.showParamlist = true;
     this.paramlist = {};
     this.paramlist["active"] = true;
@@ -104,19 +104,19 @@ export class ParamlistComponent implements OnInit {
     }
   }
 
-  onChangeIsTemplate(event){
+  onChangeIsTemplate(event) {
     if (event === true) {
       this.templateFlg = 'Y';
-    
-    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg,"paramlist","")
-    .subscribe(response => {this.onSuccessgetAllLatestParamListByTemplate(response)},
-    error => console.log("Error :: " + error));
+
+      this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg, "paramlist", "")
+        .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response) },
+        error => console.log("Error :: " + error));
     }
-    else 
+    else
       this.templateFlg = 'N';
   }
 
-  onSuccessgetAllLatestParamListByTemplate(response){
+  onSuccessgetAllLatestParamListByTemplate(response) {
     console.log(response)
     var temp = []
     for (const i in response) {
@@ -138,7 +138,7 @@ export class ParamlistComponent implements OnInit {
       paramtableObj["paramName"] = this.template.params[i].paramName;
       paramtableObj["paramType"] = this.template.params[i].paramType;
       //paramtableObj["paramValue"] = this.template.params[i].paramValue;
-      
+
       if (this.typeSimple.indexOf(this.template.params[i].paramType) != -1) {
         paramtableObj["paramValue"] = this.template.params[i].paramValue.value;
       }
@@ -157,12 +157,12 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray = arrayTemp;
   }
 
-  onChangeTemplate(){    
+  onChangeTemplate() {
     this.templateFlg = 'Y';
-    
-    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg,"paramlist","")
-    .subscribe(response => {this.onSuccessgetAllLatestParamListByTemplate(response)},
-    error => console.log("Error :: " + error));    
+
+    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg, "paramlist", "")
+      .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response) },
+      error => console.log("Error :: " + error));
   }
 
   getOneByUuidAndVersion(id, version) {
@@ -175,7 +175,6 @@ export class ParamlistComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.paramlist = response
     const version: Version = new Version();
     this.uuid = response.uuid;
@@ -189,7 +188,7 @@ export class ParamlistComponent implements OnInit {
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
 
     this.templateFlg = response['templateFlg'];
-    
+
     var tags = [];
     if (response.tags != null) {
       for (var i = 0; i < response.tags.length; i++) {
@@ -306,11 +305,11 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray.splice(this.paramtableArray.length, 0, attrinfo);
   }
 
-  removeAttribute(){  
-    var newDataList=[];
-    this.selectAllAttributeRow=false
+  removeAttribute() {
+    var newDataList = [];
+    this.selectAllAttributeRow = false
     this.paramtableArray.forEach(selected => {
-      if(!selected.selected){
+      if (!selected.selected) {
         newDataList.push(selected);
       }
     });
@@ -330,21 +329,21 @@ export class ParamlistComponent implements OnInit {
     });
   }
 
-  onVersionChange(){ 
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'paramlist')
-    .subscribe(
-    response =>{
-      this.onSuccessgetOneByUuidAndVersion(response)},
-    error => console.log("Error :: " + error)); 
+  onVersionChange() {
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'paramlist')
+      .subscribe(
+      response => {
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
 
   submitParamlist() {
-    debugger
     this.isSubmitEnable = true;
     let paramlistJson = {};
     paramlistJson["uuid"] = this.paramlist.uuid
     paramlistJson["name"] = this.paramlist.name
-   
+
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {

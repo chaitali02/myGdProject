@@ -55,8 +55,6 @@ export class PredictionComponent implements OnInit {
   isSubmit: any
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
-
-
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _predictService: PredictionService) {
     this.prediction = {};
     this.prediction["active"] = true;
@@ -171,10 +169,10 @@ export class PredictionComponent implements OnInit {
   onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
     this.selectLabel = null;
-    for(const i in this.featureMapTableArray){
-    this.featureMapTableArray[i].targetFeature= null;
+    for (const i in this.featureMapTableArray) {
+      this.featureMapTableArray[i].targetFeature = null;
     }
-  } 
+  }
 
   onSuccessgetAllLatestSource(response) {
     let temp = []
@@ -187,7 +185,7 @@ export class PredictionComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
-  //  this.getAttribute()
+    //  this.getAttribute()
   }
   public get value(): string {
     return
@@ -333,7 +331,7 @@ export class PredictionComponent implements OnInit {
   }
   getTrainByModel(defaultValue) {
     {
-      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version , 'train')
+      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version, 'train')
         .subscribe(
         response => {
           this.onSuccessTrainByModel(response)
@@ -470,7 +468,7 @@ export class PredictionComponent implements OnInit {
     //        tagArray[counttag]=this.dqdata.tags[counttag];
     //   }
     // }
- 
+
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {

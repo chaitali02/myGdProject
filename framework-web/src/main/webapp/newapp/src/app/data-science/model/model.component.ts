@@ -184,9 +184,12 @@ export class ModelComponent implements OnInit {
   }
   public goBack() {
     this._location.back();
+    this.router.navigate(['app/list/model']);
+
+
   }
   changeScript() {
-    
+
     this.checkboxCustom = this.type == "SPARK" ? false : true
 
   }
@@ -223,7 +226,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.breadcrumbDataFrom[2].caption = response.name;
     this.model = response;
     this.uuid = response.uuid;
@@ -444,12 +446,13 @@ export class ModelComponent implements OnInit {
     console.log(JSON.stringify(response));
     console.log(JSON.stringify(this.scriptCode));
   }
-  onVersionChange(){ 
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'model')
-    .subscribe(
-    response =>{//console.log(response)},
-      this.onSuccessgetOneByUuidAndVersion(response)},
-    error => console.log("Error :: " + error)); 
+  onVersionChange() {
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'model')
+      .subscribe(
+      response => {//console.log(response)},
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/model', uuid, version, 'false']);
@@ -459,40 +462,30 @@ export class ModelComponent implements OnInit {
     this.router.navigate(['app/dataScience/model', uuid, version, 'true']);
   }
   submit() {
-    debugger
     this.isSubmit = "true"
     this.modelJson = {};
     this.modelJson["uuid"] = this.uuid;
     this.modelJson["name"] = this.model.name;
     this.modelJson["desc"] = this.model.desc;
-    
     var tagArray = [];
-    if (this.model.tags != null) {
+    if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
         tagArray[counttag] = this.tags[counttag].value;
 
       }
     }
     this.modelJson['tags'] = tagArray
-
     var functionInfoArray = [];
-
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
-
     this.modelJson["type"] = this.type;
     if (this.model.type == "SPARK") {
       this.customFlag = false
     }
     this.modelJson["customFlag"] = this.customFlag == true ? "Y" : "N";
-
-
     if (!this.checkboxCustom) {
       this.modelJson.type = "SPARK"
       this.modelJson.customFlag = false
-
-
-
       let dependsOn1 = {};
       let ref = {};
       ref["type"] = this.dependsType;
@@ -500,9 +493,7 @@ export class ModelComponent implements OnInit {
       ref["name"] = this.dependsOn.label;
       dependsOn1["ref"] = ref;
       this.modelJson["dependsOn"] = dependsOn1;
-
       this.modelJson["label"] = this.model.label;
-
       let featuresArray1 = [];
       for (let i = 0; i < this.featuresArray.length; i++) {
         let featureObj = {};
@@ -512,7 +503,6 @@ export class ModelComponent implements OnInit {
         featureObj["desc"] = this.featuresArray[i].desc;
         featureObj["minVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].minVal;
         featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].maxVal;
-
         if (this.dependsType == "formula") {
           // if(this.featuresArray[i].param == !null){
           let paramListInfo = {};

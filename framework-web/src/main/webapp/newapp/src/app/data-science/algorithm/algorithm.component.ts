@@ -125,7 +125,7 @@ export class AlgorithmComponent implements OnInit {
   }
 
 
-  onSuccessgetOneByUuidAndVersion(response) {debugger
+  onSuccessgetOneByUuidAndVersion(response) {
     this.algorithm = response;
     this.uuid = response.uuid;
     const version: Version = new Version();
@@ -164,16 +164,7 @@ export class AlgorithmComponent implements OnInit {
       paramListWH.label = response["paramListWH"]["ref"]["name"];
       this.paramListWH = paramListWH;
     }
-    // var summaryMethodsArray = [];
-    // if (response.summaryMethods !== null) {
-    //   for (var i = 0; i < response.summaryMethods.length; i++) {
-    //     var summaryMethods = {};
-    //     summaryMethods['text'] = response.summaryMethods[i];
-    //     summaryMethods['display'] = response.summaryMethods[i];
-    //     summaryMethodsArray[i] = summaryMethods;
-    //   }
-    //   this.summaryMethods = summaryMethodsArray;
-    // }
+
     var summaryMethods = [];
     if (response.summaryMethods != null) {
       for (var i = 0; i < response.summaryMethods.length; i++) {
@@ -185,13 +176,7 @@ export class AlgorithmComponent implements OnInit {
       }//End For
       this.summaryMethods = summaryMethods;
     }//End If
-
-
-
-
-
-
- this.breadcrumbDataFrom[2].caption = this.algorithm.name;
+    this.breadcrumbDataFrom[2].caption = this.algorithm.name;
     console.log('Data is' + response);
 
   }
@@ -272,8 +257,7 @@ export class AlgorithmComponent implements OnInit {
     }
   }
 
- submitAlgorithm() {
-debugger
+  submitAlgorithm() {
     var upd_tag = 'N'
     this.isSubmitEnable = true;
     let algoJson = {};
