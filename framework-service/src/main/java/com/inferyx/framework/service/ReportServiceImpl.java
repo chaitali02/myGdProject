@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -85,7 +89,9 @@ public class ReportServiceImpl {
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
-	HDFSInfo hdfsInfo;
+	private HDFSInfo hdfsInfo;
+	@Autowired
+	private WorkbookUtil workbookUtil;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -294,9 +300,11 @@ public class ReportServiceImpl {
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, HttpServletResponse response, RunMode runMode) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
-		DataStore datastore = datastoreServiceImpl.findDataStoreByMeta(reportExecUuid, reportExecVersion);
+		
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion, MetaType.reportExec.toString());
+		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reportExec.getResult().getRef().getUuid(), reportExec.getResult().getRef().getVersion());
 		if (datastore == null) {
-			logger.error("Datastore is not available for this datapod");
+			logger.error("Datastore is not available.");
 			throw new Exception("Datastore is not available.");
 		}
 
@@ -309,7 +317,7 @@ public class ReportServiceImpl {
 	    DownloadExec downloadExec = new DownloadExec();
 		
 	    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-	    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".pdf";
+	    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
 	    String fileLocation = downloadPath + "/" + filename;
 	    
 		downloadExec.setBaseEntity();
@@ -317,16 +325,16 @@ public class ReportServiceImpl {
 		downloadExec.setDependsOn(datastore.getMetaId());
 		try {
 			FileOutputStream fileOut = null;
-			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(data);
-			response.setContentType("application/xml charset=utf-16");
+			Workbook workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+			response.setContentType("application/pdf");
 			response.setHeader("Content-disposition", "attachment");
-			response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".pdf");
+			response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".xls");
 			ServletOutputStream os = response.getOutputStream();
 			workbook.write(os);
 
 			fileOut = new FileOutputStream(fileLocation);
 			workbook.write(fileOut);
-			os.write(workbook.getBytes());
+			workbook.write(os);
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 			fileOut.close();
 

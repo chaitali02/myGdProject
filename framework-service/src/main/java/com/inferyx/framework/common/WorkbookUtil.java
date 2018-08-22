@@ -11,6 +11,9 @@
 package com.inferyx.framework.common;
 
 import java.awt.Font;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +22,34 @@ import java.util.Set;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFHeader;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.service.CommonServiceImpl;
+
+@Component
 public class WorkbookUtil {
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl; 
+	@Autowired
+	FilterOperator filterOperator;
 
 	@SuppressWarnings("deprecation")
 	public static HSSFWorkbook getWorkbook(Map<String, LinkedHashMap<String, String>> resultMap) {
@@ -141,5 +166,80 @@ public class WorkbookUtil {
 			hssfSheet.autoSizeColumn(2);
 			hssfSheet.autoSizeColumn(3);
 			return workBook;
+	}
+	
+	public Workbook getWorkbookForReport(List<Map<String, Object>> resultList, ReportExec reportExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
+		
+		Workbook workBook = new HSSFWorkbook();
+
+		CellStyle headerStyle = workBook.createCellStyle();
+		Sheet hssfSheet = workBook.createSheet("report");
+
+		hssfSheet.addMergedRegion(new CellRangeAddress(0, 1, 0, report.getAttributeInfo().size()-1));
+		
+		org.apache.poi.ss.usermodel.Font headerFont = workBook.createFont();
+		headerFont.setBold(true);//setBoldweight((short) Font.LAYOUT_LEFT_TO_RIGHT);
+
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
+		headerStyle.setFont(headerFont);
+
+		Row title = hssfSheet.createRow((short)1);
+		Cell titleCell = title.createCell((short)4);
+		titleCell.setCellStyle(headerStyle);
+		titleCell.setCellValue(new HSSFRichTextString(report.getTitle()));
+		
+		
+		String filterObtained = null;
+		ExecParams execParams = reportExec.getExecParams();
+		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
+			filterObtained = filterOperator.generateSql(execParams.getFilterInfo(), null, execParams.getOtherParams(), new HashSet<>(), execParams);
+			
+			Row filter = hssfSheet.createRow(3);
+			Cell filterCell = filter.createCell(3);
+			filterCell.setCellStyle(headerStyle);
+			filterCell.setCellValue(filterObtained);
+		}		
+
+		Row columns = hssfSheet.createRow(7);		
+		Set<String> columnNames = resultList.get(0).keySet();
+		int cellNo = 0;
+		for (String column : columnNames) {
+			Cell cell0 = columns.createCell(cellNo);
+			cell0.setCellStyle(headerStyle);
+			cell0.setCellValue(column);
+			cellNo++;
+		}
+		
+		for (int i = 0; i < resultList.size(); i++) {
+			Row nextrow = hssfSheet.createRow(8 + i);
+			columnNames = resultList.get(i).keySet();
+			int cellNum = 0;
+			for (String column : columnNames) {
+				String value = "";
+				try {
+					value = resultList.get(i).get(column).toString();
+				}catch (Exception e) {
+					value = "null";
+				}
+				nextrow.createCell(cellNum).setCellValue(value);
+				cellNum++;
+			}
+			hssfSheet.autoSizeColumn(i);
+		}
+//		headerFont = workBook.createFont();
+//		headerFont.setBold(true);//setBoldweight((short) Font.BOLD);
+//
+//		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+//		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
+//		headerStyle.setFont(headerFont);
+//		hssfSheet.autoSizeColumn(0);
+//		hssfSheet.autoSizeColumn(1);
+//		hssfSheet.autoSizeColumn(2);
+//		hssfSheet.autoSizeColumn(3);
+		return workBook;
 	}
 }

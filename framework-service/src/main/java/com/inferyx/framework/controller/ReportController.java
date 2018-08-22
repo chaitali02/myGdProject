@@ -73,6 +73,7 @@ public class ReportController {
 				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode,
 				HttpServletResponse response) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
-		    return reportServiceImpl.download(reportExecUuid, reportExecVersion, response, runMode);
+		    reportServiceImpl.download(reportExecUuid, reportExecVersion, response, runMode);
+		    return null;
 	   }
 }

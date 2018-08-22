@@ -76,7 +76,9 @@ public class DatapodController {
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
 		    RunMode runMode = Helper.getExecutionMode(mode);
-		    return datapodServiceImpl.download(datapodUUID, datapodVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
+    	    response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
+    	    return null;
+		
 	   }
 	 
 	 @RequestMapping(value="/getDatapodSample", method=RequestMethod.GET)
