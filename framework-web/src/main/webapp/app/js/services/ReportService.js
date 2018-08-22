@@ -138,7 +138,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.findReportSample = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "dataset/getReportSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=100",
+			url: url + "report/getReportSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=100",
 			method: "GET",
 		}).then(function (response) { return response })
 	}
@@ -158,10 +158,38 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.findAttributeValues = function (uuid, attributeId, type) {
+		var url = $location.absUrl().split("app")[0]
+		if (type == "datapod") {
+			url = url + "datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
+		}
+		else {
+			url = url + "dataset/getAttributeValues?action=view&uuid=" + uuid + "&attributeId=" + attributeId;
+		}
+		return $http({
+			method: 'GET',
+			url: url,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactory, ReportFactory) {
+	this.getAttributeValues = function (uuid, attributeId, type) {
+		var deferred = $q.defer();
+
+		ReportFactory.findAttributeValues(uuid,attributeId,type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
 	this.reportExecute = function (uuid,version,data) {
 		var deferred = $q.defer();
 		ReportFactory.findExecute(uuid,version,data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
