@@ -72,6 +72,8 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.IBatchDao;
+import com.inferyx.framework.dao.IBatchExecDao;
 import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
@@ -447,7 +449,27 @@ public class CommonServiceImpl <T> {
 	IReportDao iReportDao;
 	@Autowired
 	IReportExecDao iReportExecDao;
+	@Autowired
+	IBatchDao iBatchDao;
+	@Autowired
+	IBatchExecDao iBatchExecDao;
+
 	
+	public IBatchDao getiBatchDao() {
+		return iBatchDao;
+	}
+
+	public void setiBatchDao(IBatchDao iBatchDao) {
+		this.iBatchDao = iBatchDao;
+	}
+
+	public IBatchExecDao getiBatchExecDao() {
+		return iBatchExecDao;
+	}
+
+	public void setiBatchExecDao(IBatchExecDao iBatchExecDao) {
+		this.iBatchExecDao = iBatchExecDao;
+	}
 
 	public IReportExecDao getiReportExecDao() {
 		return iReportExecDao;

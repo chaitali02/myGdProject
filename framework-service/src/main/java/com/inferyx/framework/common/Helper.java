@@ -38,6 +38,8 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Batch;
+import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
@@ -283,6 +285,8 @@ public class Helper {
 				case graphExec : return "iGraphpodExecDao";
 				case report : return "iReportDao";
 				case reportExec : return "iReportExecDao";
+				case batch : return "iBatchDao";
+				case batchExec : return "iBatchExecDao";
 				default:
 					return null;
 			}
@@ -396,7 +400,8 @@ public class Helper {
 		case graphExec : return GraphExec.class;
 		case report : return Report.class;
 		case reportExec : return ReportExec.class;
-
+		case batch : return Batch.class;
+		case batchExec : return BatchExec.class;
 		default:
 			return null;
 		}
@@ -485,6 +490,8 @@ public class Helper {
 				case "graphexec" : return MetaType.graphExec;
 				case "report" : return MetaType.report;
 				case "reportexec" : return MetaType.reportExec;
+				case "batch" : return MetaType.batch;
+				case "batchexec" : return MetaType.batchExec;
 				default : return null;
 			}
 		}
@@ -847,6 +854,7 @@ public class Helper {
 		case predict : return MetaType.predictExec;
 		case operator : return MetaType.operatorExec;
 		case report : return MetaType.reportExec;
+		case batch : return MetaType.batchExec;
 		default : return null;
 		}
 	}
@@ -875,6 +883,7 @@ public class Helper {
 		case predictExec : return MetaType.predict;
 		case operatorExec : return MetaType.operator;
 		case reportExec : return MetaType.report;
+		case batchExec : return MetaType.batch;
 		default : return null;
 		}
 	}

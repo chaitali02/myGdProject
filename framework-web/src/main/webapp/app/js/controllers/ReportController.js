@@ -529,6 +529,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
     }
 			console.log(JSON.stringify($scope.filterListarray));
 			if($scope.filterListarray.length >0){
+				$scope.vizpodbody={};
 				$scope.vizpodbody.filterInfo=$scope.filterListarray;
 			}else{
 				$scope.vizpodbody=null;
