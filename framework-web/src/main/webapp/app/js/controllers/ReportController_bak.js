@@ -280,7 +280,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 
 });//End ReportListController
 
-DatavisualizationModule.controller('ReportDetailController', function (dagMetaDataService,$location,$http,$rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER,CF_META_TYPES){
+DatavisualizationModule.controller('ReportDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER,CF_META_TYPES){
   $rootScope.isCommentVeiwPrivlage = true;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -331,9 +331,9 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 	$scope.showgraph = false
 	$scope.showGraphDiv = false
 	$scope.graphDataStatus = false
-//	$scope.logicalOperator = ["AND","OR"];
+	$scope.logicalOperator = ["AND","OR"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
-//	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
@@ -349,19 +349,19 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
   
-	// $scope.lhsType = [
-	// 	{ "text": "string", "caption": "string" },
-	// 	{ "text": "string", "caption": "integer" },
-	// 	{ "text": "datapod", "caption": "attribute" },
-	// 	{ "text": "formula", "caption": "formula" }];
-	// $scope.rhsType = [
-	// 	{ "text": "string", "caption": "string", "disabled": false },
-	// 	{ "text": "string", "caption": "integer", "disabled": false },
-	// 	{ "text": "datapod", "caption": "attribute", "disabled": false },
-	// 	{ "text": "formula", "caption": "formula", "disabled": false },
-	// 	{ "text": "dataset", "caption": "dataset", "disabled": false },
-	// 	{ "text": "paramlist", "caption": "paramlist", "disabled": false },
-  //   { "text": "function", "caption": "function", "disabled": false }]
+	$scope.lhsType = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "string", "caption": "integer" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "formula", "caption": "formula" }];
+	$scope.rhsType = [
+		{ "text": "string", "caption": "string", "disabled": false },
+		{ "text": "string", "caption": "integer", "disabled": false },
+		{ "text": "datapod", "caption": "attribute", "disabled": false },
+		{ "text": "formula", "caption": "formula", "disabled": false },
+		{ "text": "dataset", "caption": "dataset", "disabled": false },
+		{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+    { "text": "function", "caption": "function", "disabled": false }]
     
 	/*Start showPage*/
 	$scope.showPage = function () {
@@ -373,15 +373,20 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
-		var state=dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
-    setTimeout(function () { $state.go(state, { 'id': uuid,'version':version ,'mode': 'false' }); }, 100);
+		$state.go('metaListdataset', {
+			id: uuid,
+			version: version,
+			mode: 'false'
+		});
 	}
-
 	$scope.showView = function (uuid, version) {
 		if (!$scope.isEdit) {
 			$scope.showPage()
-			var state=dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
-    	setTimeout(function () { $state.go(state, { 'id': uuid,'version':version ,'mode': 'false' }); }, 100);
+			$state.go('metaListdataset', {
+				id: uuid,
+				version: version,
+				mode: 'true'
+			});
 		}
   }
   
@@ -419,43 +424,11 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 
 	$scope.defalutType = ["Simple", 'Formula', 'Expression'];
 	$scope.filterTableArray = [];
+	$scope.isSourceDatapoLost = true;
 	$scope.tags = null;
-	$scope.pagination = {
-		currentPage: 1,
-		pageSize: 10,
-		paginationPageSizes: [10, 25, 50, 75, 100],
-		maxSize: 5,
-	}
-  $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
-	$scope.gridOptions = {
-		rowHeight: 40,
-		enableGridMenu: true,
-		useExternalPagination: true,
-		exporterMenuPdf: true,
-		exporterPdfOrientation: 'landscape',
-		exporterPdfPageSize: 'A4',
-		exporterPdfDefaultStyle: { fontSize: 9 },
-		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
-	}
-	$scope.gridOptions.columnDefs = [];
-	$scope.gridOptions.onRegisterApi = function (gridApi) {
-		$scope.gridApi = gridApi;
-		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-	};
+	$scope.datasetHasChanged = true;
+	$scope.checkalljoin = false
 
-	$scope.getGridStyle = function () {
-		var style = {
-			'margin-top': '10px',
-			'margin-bottom': '10px',
-		}
-		if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 50) + 'px';
-		}
-		else {
-			style['height'] = "100px";
-		}
-		return style;
-	}
 
 
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
@@ -470,83 +443,17 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData = false
 	}/*End ShowGraph*/
-	
-  $scope.getSample=function(data){
-		ReportSerivce.getReportSample(data).then(function (response) { onSuccessGetSample(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetSample = function (response) {
-			$scope.gridOptions.columnDefs = [];
-			$scope.isDataInpogress = false;
-			$scope.tableclass = "";
-			$scope.spinner = false;
-			for (var j = 0; j < data.attributeInfo.length; j++) {
-				var attribute = {};
-				attribute.name = data.attributeInfo[j].attrSourceName;
-				attribute.displayName = data.attributeInfo[j].attrSourceName;
-				attribute.width = attribute.displayName.split('').length + 2 + "%";
-				$scope.gridOptions.columnDefs.push(attribute)
-			}
-			$scope.originalData = response;
-			$scope.gridOptions.data=response;
-			// if ($scope.originalData.length > 0) {
-			// 	//$scope.getResults($scope.originalData);
-
-			// }
-			$scope.spinner = false;
-		}
-		var onError = function (response) {
-			$scope.isDataInpogress = true;
-			$scope.isDataError = true;
-			$scope.msgclass = "errorMsg";
-			$scope.datamessage = "Some Error Occurred";
-			$scope.spinner = false;
-		}
-	}
-	$scope.reportExecute=function(data){
-		ReportSerivce.reportExecute(data.uuid,data.version,null).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
-		var onSuccessReportExecute = function (response) {
-			$scope.reportExec=response;
-			$scope.getSample(response);
-		}
-		var onError = function (response) {
-			$scope.isDataInpogress = true;
-			$scope.isDataError = true;
-			$scope.msgclass = "errorMsg";
-			$scope.datamessage = "Some Error Occurred";
-			$scope.spinner = false;
-		}
-	}
-
-	$scope.showSampleTable = function (data) {
-		$scope.isShowSimpleData = true
-		$scope.isDataInpogress = true
-		$scope.isDataError = false;
-		$scope.tableclass = "centercontent";
-		$scope.showForm = false;
-		$scope.showGraphDiv = false;
-		$scope.spinner = true;
-		$scope.reportExecute(data);
-	}
-
-	$scope.refreshData = function () {
-		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-		//$scope.getResults(data)
-	};
-
-
-
 
 	$scope.selectType = function () {
 		ReportSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			$scope.allSource = response;
 			$scope.attributeTableArray = null;
-			$scope.filterAttributeTags = null;
 			$scope.addAttribute();
 			ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
-				$scope.allattribute = response;
 			}
 		}
   }
@@ -556,9 +463,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		var onSuccessGetDatapodByRelation = function (response) {
 			$scope.sourcedatapodattribute = response;
 			$scope.lhsdatapodattributefilter = response;
-			$scope.allattribute = response;
 			$scope.attributeTableArray = null;
-			$scope.filterAttributeTags = null;
 			$scope.addAttribute();
 		}
 	}
@@ -578,7 +483,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		}
 	
 	
-		ReportSerivce.getOneByUuidAndVersion($stateParams.id,$stateParams.version,CF_META_TYPES.report).then(function (response) { onSuccessResult(response.data) });
+		ReportSerivce.getOneByUuidAndVersion($stateParams.id,$stateParams.version,CF_META_TYPES.reportview).then(function (response) { onSuccessResult(response.data) });
     var onSuccessResult = function (response) {
       $scope.report = response.report;
       $scope.selectSourceType = response.report.dependsOn.ref.type
@@ -613,8 +518,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
       ReportSerivce.getAllAttributeBySource($scope.report.dependsOn.ref.uuid, $scope.report.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
       var onSuccessGetDatapodByRelation = function (response) {
         $scope.sourcedatapodattribute = response;
-				$scope.lhsdatapodattributefilter = response;
-				$scope.allattribute = response;
+        $scope.lhsdatapodattributefilter = response;
       }
 
       CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
@@ -623,11 +527,9 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
         $scope.allFunction = response;
       }
 
-			$scope.attributeTableArray = response.sourceAttributes;
-			$scope.filterAttributeTags = response.filterInfo;
-    //  $scope.filterTableArray = response.filterInfo;
-			//$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
-			
+      $scope.attributeTableArray = response.sourceAttributes
+      $scope.filterTableArray = response.filterInfo;
+      $scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
     }//End onSuccessResult
   }//End If
   
@@ -637,7 +539,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		$scope.allSource = null;
 		$scope.selectSourceType = null;
 		$scope.myform.$dirty = false;
-		ReportSerivce.getOneByUuidAndVersion($scope.reportVersion.defaultVersion.uuid, $scope.reportVersion.defaultVersion.version,CF_META_TYPES.report).then(function (response) { onSuccessResult(response.data) });
+		ReportSerivce.getOneByUuidAndVersion($scope.reportVersion.defaultVersion.uuid, $scope.reportVersion.defaultVersion.version,CF_META_TYPES.reportview).then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
 			$scope.report = response.report;
 			$scope.selectSourceType = response.report.dependsOn.ref.type
@@ -669,98 +571,96 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
-				$scope.allattribute = response;
 			}
 			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) }); var onSuccessFuntion = function (response) {
 				$scope.allSourceFunction = response
 				$scope.allFunction = response;
 			}
-			$scope.attributeTableArray = response.sourceAttributes;
-			$scope.filterAttributeTags = response.filterInfo;
-		//	$scope.filterTableArray = response.filterInfo;
-		//	$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
+			$scope.attributeTableArray = response.sourceAttributes
+			$scope.filterTableArray = response.filterInfo;
+			$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
 
     }//End onSuccessResult
     
 	}/* End selectVersion*/
 
-	// $scope.SearchAttribute = function (index, type, propertyType) {
-	// 	$scope.selectAttr = $scope.filterTableArray[index][propertyType]
-	// 	$scope.searchAttr = {};
-	// 	$scope.searchAttr.type = type;
-	// 	$scope.searchAttr.propertyType = propertyType;
-	// 	$scope.searchAttr.index = index;
-	// 	ReportSerivce.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
-	// 	$scope.searchAttrIndex = index;
-	// 	var onSuccessGetAllLatest = function (response) {
-	// 		$scope.allSearchType = response;
-	// 		var temp;
-	// 		if ($scope.selectSourceType == "dataset") {
-	// 			temp = $scope.allSearchType.options.filter(function (el) {
-	// 				return el.uuid !== $scope.allSource.defaultoption.uuid;
-	// 			});
-	// 			$scope.allSearchType.options = temp;
-	// 			$scope.allSearchType.defaultoption = temp[0]
-	// 		}
-	// 		if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
-	// 			var defaultoption = {};
-	// 			defaultoption.uuid = $scope.selectAttr.uuid;
-	// 			defaultoption.name = "";
-	// 			$scope.allSearchType.defaultoption = defaultoption;
-	// 		}
-	// 		$('#searchAttr').modal({
-	// 			backdrop: 'static',
-	// 			keyboard: false
-	// 		});
-	// 		ReportSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, type).then(function (response) { onSuccessAttributeBySource(response.data) });
-	// 		var onSuccessAttributeBySource = function (response) {
-	// 			$scope.allAttr = response;
-	// 			if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
-	// 				var defaultoption = {};
-	// 				defaultoption.uuid = $scope.selectAttr.uuid;
-	// 				defaultoption.name = "";
-	// 				$scope.allSearchType.defaultoption = defaultoption;
-	// 			} else {
-	// 				$scope.selectAttr = $scope.allAttr[0]
-	// 			}
+	$scope.SearchAttribute = function (index, type, propertyType) {
+		$scope.selectAttr = $scope.filterTableArray[index][propertyType]
+		$scope.searchAttr = {};
+		$scope.searchAttr.type = type;
+		$scope.searchAttr.propertyType = propertyType;
+		$scope.searchAttr.index = index;
+		ReportSerivce.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+		$scope.searchAttrIndex = index;
+		var onSuccessGetAllLatest = function (response) {
+			$scope.allSearchType = response;
+			var temp;
+			if ($scope.selectSourceType == "dataset") {
+				temp = $scope.allSearchType.options.filter(function (el) {
+					return el.uuid !== $scope.allSource.defaultoption.uuid;
+				});
+				$scope.allSearchType.options = temp;
+				$scope.allSearchType.defaultoption = temp[0]
+			}
+			if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.selectAttr.uuid;
+				defaultoption.name = "";
+				$scope.allSearchType.defaultoption = defaultoption;
+			}
+			$('#searchAttr').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			ReportSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, type).then(function (response) { onSuccessAttributeBySource(response.data) });
+			var onSuccessAttributeBySource = function (response) {
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+					var defaultoption = {};
+					defaultoption.uuid = $scope.selectAttr.uuid;
+					defaultoption.name = "";
+					$scope.allSearchType.defaultoption = defaultoption;
+				} else {
+					$scope.selectAttr = $scope.allAttr[0]
+				}
 
-	// 		}
-	// 	}
-	// }
+			}
+		}
+	}
 
-	// $scope.onChangeSearchAttr = function () {
-	// 	ReportSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, $scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
-	// 	var onSuccessAttributeBySource = function (response) {
-	// 		$scope.allAttr = response;
-	// 	}
-	// }
+	$scope.onChangeSearchAttr = function () {
+		ReportSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, $scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allAttr = response;
+		}
+	}
 
-	// $scope.SubmitSearchAttr = function () {
-	// 	$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType] = $scope.selectAttr;
-	// 	$('#searchAttr').modal('hide')
-	// }
-  
-	// $scope.onChangeOperator = function (index) {
-	// 	if ($scope.reposrtCompare != null) {
-	// 		$scope.reposrtCompare.filterChg = "y"
-	// 	}
-	// 	if ($scope.filterTableArray[index].operator == 'BETWEEN') {
-	// 		$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
-	// 		$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-	// 	} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
-	// 		$scope.filterTableArray[index].rhstype = $scope.rhsType[4];
-	// 		$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-	// 	} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
-	// 		$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
-	// 		$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-	// 	}
-	// 	else {
-	// 		$scope.filterTableArray[index].rhstype = $scope.rhsType[0];
-	// 		$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-	// 	}
-	// }
+	$scope.SubmitSearchAttr = function () {
+		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType] = $scope.selectAttr;
+		$('#searchAttr').modal('hide')
+	}
 
-	/*$scope.checkAllFilterRow = function () {
+	$scope.onChangeOperator = function (index) {
+		if ($scope.reposrtCompare != null) {
+			$scope.reposrtCompare.filterChg = "y"
+		}
+		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else {
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+	}
+
+	$scope.checkAllFilterRow = function () {
 		if (!$scope.selectedAllFitlerRow) {
 			$scope.selectedAllFitlerRow = true;
 		}
@@ -913,7 +813,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 			$scope.getParamByApp();
 		}
 
-	}*/
+	}
    
 
 	$scope.getParamByApp=function(){
@@ -941,39 +841,30 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 
 
 
-	// $scope.onChangeSimple = function () {
-	// 	if ($scope.reposrtCompare != null) {
-	// 		$scope.reposrtCompare.filterChg = "y"
-	// 	}
-	// }
-
-	// $scope.onChangeAttribute = function () {
-	// 	if ($scope.reposrtCompare != null) {
-	// 		$scope.reposrtCompare.filterChg = "y"
-	// 	}
-	// }
-
-	// $scope.onChangeFromula = function () {
-	// 	if ($scope.reposrtCompare != null) {
-	// 		$scope.reposrtCompare.filterChg = "y"
-	// 	}
-	// }
-
-	// $scope.onChangeRhsParamList=function(){
-	// 	if ($scope.reposrtCompare != null) {
-	// 		$scope.reposrtCompare.filterChg = "y"
-	// 	}
-  // }
-  $scope.loadAttribute = function (query) {
-		return $timeout(function () {
-			return $filter('filter')($scope.allattribute, query);
-		});
-	};
-
-	$scope.clear = function () {
-		$scope.filterAttributeTags = null;
+	$scope.onChangeSimple = function () {
+		if ($scope.reposrtCompare != null) {
+			$scope.reposrtCompare.filterChg = "y"
+		}
 	}
 
+	$scope.onChangeAttribute = function () {
+		if ($scope.reposrtCompare != null) {
+			$scope.reposrtCompare.filterChg = "y"
+		}
+	}
+
+	$scope.onChangeFromula = function () {
+		if ($scope.reposrtCompare != null) {
+			$scope.reposrtCompare.filterChg = "y"
+		}
+	}
+
+	$scope.onChangeRhsParamList=function(){
+		if ($scope.reposrtCompare != null) {
+			$scope.reposrtCompare.filterChg = "y"
+		}
+  }
+  
   $scope.checkAllAttributeRow = function () {
 		angular.forEach($scope.attributeTableArray, function (attribute) {
 			attribute.selected = $scope.selectAllAttributeRow;
@@ -1186,14 +1077,17 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
     reportJson.footer = $scope.report.footer;
     reportJson.headerAlign = $scope.report.headerAlign;
     reportJson.footerAlign = $scope.report.footerAlign;
-	//	reportJson.srcChg = "y";
+		reportJson.srcChg = "y";
 
-		// if ($scope.reposrtCompare == null) {
-		// 	reportJson.srcChg = "y";
-		// 	reportJson.sourceChg = "y";
-		// 	reportJson.filterChg = "y";
-		// }
-		
+		if ($scope.reposrtCompare == null) {
+			reportJson.srcChg = "y";
+			reportJson.sourceChg = "y";
+			reportJson.filterChg = "y";
+		}
+		else {
+			reportJson.mapInfo = uuid = $scope.reposrtCompare.mapInfo
+		}
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -1213,29 +1107,29 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		dependsOn.ref = ref;
 		reportJson.dependsOn = dependsOn;
     
-    // if ($scope.reposrtCompare != null && $scope.reposrtCompare.dependsOn.ref.uuid != $scope.allSource.defaultoption.uuid) {
-		// 	reportJson.sourceChg = "y";
-		// }
-		// else {
-		// 	reportJson.sourceChg = "n";
-    // }
+    if ($scope.reposrtCompare != null && $scope.reposrtCompare.dependsOn.ref.uuid != $scope.allSource.defaultoption.uuid) {
+			reportJson.sourceChg = "y";
+		}
+		else {
+			reportJson.sourceChg = "n";
+    }
 
 		//filterInfo
-		// var filterInfoArray = [];
-		// var filter = {}
-		// if ($scope.reposrtCompare != null && $scope.reposrtCompare.filter != null) {
-		// 	filter.uuid = $scope.reposrtCompare.filter.uuid;
-		// 	filter.name = $scope.reposrtCompare.filter.name;
-		// 	filter.version = $scope.reposrtCompare.filter.version;
-		// 	filter.createdBy = $scope.reposrtCompare.filter.createdBy;
-		// 	filter.createdOn = $scope.reposrtCompare.filter.createdOn;
-		// 	filter.active = $scope.reposrtCompare.filter.active;
-		// 	filter.tags = $scope.reposrtCompare.filter.tags;
-		// 	filter.desc = $scope.reposrtCompare.filter.desc;
-		// 	filter.dependsOn = $scope.reposrtCompare.filter.dependsOn;
-    // }
+		var filterInfoArray = [];
+		var filter = {}
+		if ($scope.reposrtCompare != null && $scope.reposrtCompare.filter != null) {
+			filter.uuid = $scope.reposrtCompare.filter.uuid;
+			filter.name = $scope.reposrtCompare.filter.name;
+			filter.version = $scope.reposrtCompare.filter.version;
+			filter.createdBy = $scope.reposrtCompare.filter.createdBy;
+			filter.createdOn = $scope.reposrtCompare.filter.createdOn;
+			filter.active = $scope.reposrtCompare.filter.active;
+			filter.tags = $scope.reposrtCompare.filter.tags;
+			filter.desc = $scope.reposrtCompare.filter.desc;
+			filter.dependsOn = $scope.reposrtCompare.filter.dependsOn;
+    }
     
-		/*if ($scope.filterTableArray.length > 0) {
+		if ($scope.filterTableArray.length > 0) {
 			for (var i = 0; i < $scope.filterTableArray.length; i++) {
 				if ($scope.reposrtCompare != null && $scope.reposrtCompare.filter != null && $scope.reposrtCompare.filter.filterInfo.length == $scope.filterTableArray.length) {
 					if ($scope.reposrtCompare.filterChg == "y") {
@@ -1329,20 +1223,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		else {
 			reportJson.filter = null;
 			reportJson.filterChg = "y";
-		}*/
-		var filterInfoArray = [];
-		if ($scope.filterAttributeTags != null) {
-			for (var i = 0; i < $scope.filterAttributeTags.length; i++) {
-				var filterInfo = {}
-				var ref = {};
-				ref.type = $scope.filterAttributeTags[i].type;
-				ref.uuid = $scope.filterAttributeTags[i].uuid;
-				filterInfo.ref = ref;
-				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
-				filterInfoArray[i] = filterInfo;
-			}
 		}
-		reportJson.filterInfo = filterInfoArray;
 		var sourceAttributesArray = [];
 		for (var l = 0; l < $scope.attributeTableArray.length; l++) {
 			attributeinfo = {}
@@ -1404,7 +1285,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 		}
 		reportJson.attributeInfo = sourceAttributesArray
 		console.log(JSON.stringify(reportJson))
-		ReportSerivce.submit(reportJson, 'report', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ReportSerivce.submit(reportJson, 'reportview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
@@ -1431,45 +1312,7 @@ DatavisualizationModule.controller('ReportDetailController', function (dagMetaDa
 
 		}
 	}
-	$scope.downloadFile = function (data) {
-		if($scope.gridOptions.data.length  == 0){
-			return false;
-		}
-		var uuid = data.uuid;
-		var version = data.version;
-		var url = $location.absUrl().split("app")[0]
-		$http({
-			method: 'GET',
-			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version,
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			headers = headers();
-			var filename = headers['x-filename'];
-			var contentType = headers['content-type'];
 
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", uuid + ".xls");
-
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			console.log(data);
-		});
-	};
 	
 
 
