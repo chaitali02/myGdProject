@@ -151,9 +151,7 @@ public class ReportServiceImpl {
 	}
 	
 	public ReportExec execute(String reportUuid, String reportVersion, ExecParams execParams, ReportExec reportExec, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-		Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
-		HashMap<String, String> otherParams = execParams.getOtherParams();
-		Set<MetaIdentifierHolder> usedRefKeySet = new HashSet<>();
+		
 		try {
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportUuid, reportVersion, MetaType.report.toString());
 			
