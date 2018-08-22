@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -187,7 +188,8 @@ public class ReportServiceImpl {
 				if(execContext.equals(ExecContext.FILE)
 						|| execContext.equals(ExecContext.livy_spark)
 						|| execContext.equals(ExecContext.spark))
-					exec.executeRegisterAndPersist(reportExec.getExec(), tableName, filePath, null, "overwrite", appUuid);
+					//exec.executeRegisterAndPersist(reportExec.getExec(), tableName, filePath, null, "overwrite", appUuid);
+					exec.executeAndRegister(reportExec.getExec(), tableName, appUuid);
 				else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, null, reportExec.getExec());
 					exec.executeSql(sql, appUuid);
@@ -267,5 +269,13 @@ public class ReportServiceImpl {
 	protected void persistDatastore(ReportExec reportExec, String tableName, String filePath, MetaIdentifierHolder resultRef, MetaIdentifier metaId, long countRows, RunMode runMode) throws Exception {
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, tableName, metaId, reportExec.getRef(MetaType.reportExec), reportExec.getAppInfo(), reportExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
+	}
+
+	public List<Map<String, Object>> getReportSample(String reportExecUuid, String reportExecVersion, int rows,
+			ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion, MetaType.reportExec.toString());
+		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reportExec.getResult().getRef().getUuid(), reportExec.getResult().getRef().getVersion());
+		
+		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
 	}
 }

@@ -10,6 +10,13 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +51,17 @@ public class ReportController {
 		ReportExec reportExec = reportServiceImpl.create(reportUuid, reportVersion, execParams, null, runMode);
 		reportExec = reportServiceImpl.parse(reportExec.getUuid(), reportExec.getVersion(), null, null, null, runMode);
 		return reportServiceImpl.execute(reportUuid, reportVersion, execParams, reportExec, runMode);
+	}
+	
+	@RequestMapping(value = "/getReportSample", method = RequestMethod.GET)
+	public List<Map<String, Object>> getReportSample(@RequestParam(value= "uuid") String reportExecUuid, 
+			@RequestParam(value= "version") String reportExecVersion,
+			@RequestParam(value ="rows", defaultValue="100") int rows, 
+			@RequestBody (required = false) ExecParams execParams,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		 	RunMode runMode = Helper.getExecutionMode(mode);
+		 	return reportServiceImpl.getReportSample(reportExecUuid, reportExecVersion, rows, execParams, runMode);
 	}
 }
