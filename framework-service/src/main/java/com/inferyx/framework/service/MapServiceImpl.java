@@ -83,8 +83,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	IMapExecDao iMapExecDao;
 	@Autowired
-	private SQLContext sqlContext;
-	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
 	RelationServiceImpl relationServiceImpl;
