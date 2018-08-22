@@ -160,11 +160,11 @@ public class ReportOperator implements IOperator {
 
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if (execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
+		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
 			return filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
 		}
 		return ConstantsUtil.BLANK;
-	}
+	} 
 
 	private String generateGroupBy(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {

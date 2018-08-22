@@ -51,7 +51,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.findOneByUuidAndVersion = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=report",
+			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=reportview",
 			method: "GET",
 
 		}).then(function (response) { return response })
@@ -135,65 +135,10 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findReportSample = function (uuid, version) {
-		var url = $location.absUrl().split("app")[0]
-		return $http({
-			url: url + "dataset/getReportSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=100",
-			method: "GET",
-		}).then(function (response) { return response })
-	}
-
-	factory.findExecute = function (uuid, version, data) {
-		var url = $location.absUrl().split("app")[0]
-		return $http({
-			method: 'POST',
-			url: url + "report/execute?action=execute&uuid="+uuid+"&version="+version+"&type=report",
-			headers: {
-				'Accept': '*/*',
-				'content-Type': "application/json",
-			},
-			data: JSON.stringify(data),
-		}).
-			then(function (response, status, headers) {
-				return response;
-			})
-	}
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactory, ReportFactory) {
-	this.reportExecute = function (uuid,version,data) {
-		var deferred = $q.defer();
-		ReportFactory.findExecute(uuid,version,data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
-		var onSuccess = function (response) {
-			deferred.resolve({
-				data: response
-			});
-		}
-		var onError = function (response) {
-			deferred.reject({
-				data: response
-			})
-		}
-		return deferred.promise;
-	}
-	this.getReportSample = function (data) {
-		var deferred = $q.defer();
-		ReportFactory.findReportSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
-		var onSuccess = function (response) {
-
-			deferred.resolve({
-				data: response
-			});
-		}
-		var onError = function (response) {
-			deferred.reject({
-				data: response
-			})
-		}
-		return deferred.promise;
-	}
-
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {
@@ -209,7 +154,6 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-					attributedetail.id=response[j].ref.uuid+"_"+j;
 					attributes.push(attributedetail)
 				}
 
@@ -233,7 +177,6 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-					attributedetail.id=response[j].ref.uuid+"_"+j;
 					attributes.push(attributedetail)
 				}
 
@@ -257,7 +200,6 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
-					attributedetail.id=response[j].ref.uuid+"_"+j;
 					attributes.push(attributedetail)
 				}
 
@@ -279,7 +221,6 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					attributedetail.name = response[j].paramName;
 					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
 					attributedetail.attributeId = response[j].paramId;
-					attributedetail.id=response[j].ref.uuid+"_"+j;
 					attributes.push(attributedetail);
 				}
 				deferred.resolve({
@@ -433,19 +374,6 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 			}
 			reportViewJson.tags = tags;
 			var filterInfoArray = [];
-			if(response.filterInfo !=null){
-				for (var i = 0; i < response.filterInfo.length; i++) {
-					var filterinfo = {};
-					filterinfo.uuid = response.filterInfo[i].ref.uuid;
-					filterinfo.type = response.filterInfo[i].ref.type;
-					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-					filterinfo.attributeId = response.filterInfo[i].attrId;
-					filterinfo.id = response.filterInfo[i].ref.uuid+"_"+i;
-					filterInfoArray[i] = filterinfo;
-				}
-		    }
-			reportViewJson.filterInfo = filterInfoArray
-			/*var filterInfoArray = [];
 			if (response.filter != null) {
 				for (i = 0; i < response.filter.filterInfo.length; i++) {
 					var filterInfo = {};
@@ -643,7 +571,7 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					filterInfoArray[i] = filterInfo
 				}
 			}
-			reportViewJson.filterInfo = filterInfoArray*/
+			reportViewJson.filterInfo = filterInfoArray
 			var sourceAttributesArray = [];
 			for (var n = 0; n < response.attributeInfo.length; n++) {
 				var attributeInfo = {};
