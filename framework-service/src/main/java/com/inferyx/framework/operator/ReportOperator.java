@@ -149,7 +149,7 @@ public class ReportOperator implements IOperator {
 			builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 		} else if (report.getDependsOn().getRef().getType() == MetaType.dataset) {
             DataSet dataset = (DataSet) daoRegister.getRefObject(report.getDependsOn().getRef()); 
-            builder.append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+            builder.append("( ").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(" ) ").append(dataset.getName());
         }
 		return builder.toString();
 	}

@@ -529,6 +529,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
     }
 			console.log(JSON.stringify($scope.filterListarray));
 			if($scope.filterListarray.length >0){
+				$scope.vizpodbody={};
 				$scope.vizpodbody.filterInfo=$scope.filterListarray;
 			}else{
 				$scope.vizpodbody=null;
@@ -1532,7 +1533,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();
-			var filename = headers['x-filename'];
+			var filename = headers['filename'];
 			var contentType = headers['content-type'];
 
 			var linkElement = document.createElement('a');
@@ -1543,7 +1544,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 				var url = window.URL.createObjectURL(blob);
 
 				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", uuid + ".xls");
+				linkElement.setAttribute("download",filename);
 
 				var clickEvent = new MouseEvent("click", {
 					"view": window,
