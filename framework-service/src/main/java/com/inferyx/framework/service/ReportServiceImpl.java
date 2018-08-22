@@ -270,4 +270,10 @@ public class ReportServiceImpl {
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, tableName, metaId, reportExec.getRef(MetaType.reportExec), reportExec.getAppInfo(), reportExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 	}
+
+	public List<Map<String, Object>> getReportSample(String reportUuid, String reportVersion, int rows,
+			ExecParams execParams, RunMode runMode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
