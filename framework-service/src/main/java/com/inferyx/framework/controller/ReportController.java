@@ -16,6 +16,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,4 +66,13 @@ public class ReportController {
 		 	RunMode runMode = Helper.getExecutionMode(mode);
 		 	return reportServiceImpl.getReportSample(reportExecUuid, reportExecVersion, rows, execParams, runMode);
 	}
+	
+	@RequestMapping(value="/download",method=RequestMethod.GET)
+	public HttpServletResponse  download(@RequestParam(value= "uuid") String reportExecUuid, 
+	    		@RequestParam(value= "version") String reportExecVersion,
+				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode,
+				HttpServletResponse response) throws Exception {
+		    RunMode runMode = Helper.getExecutionMode(mode);
+		    return reportServiceImpl.download(reportExecUuid, reportExecVersion, response, runMode);
+	   }
 }

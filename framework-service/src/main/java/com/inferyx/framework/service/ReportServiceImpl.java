@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -20,8 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +37,10 @@ import com.amazonaws.services.cognitosync.model.Dataset;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
+import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
@@ -40,6 +48,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -73,6 +82,10 @@ public class ReportServiceImpl {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private DataStoreServiceImpl datastoreServiceImpl;
+	@Autowired
+	HDFSInfo hdfsInfo;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -277,5 +290,52 @@ public class ReportServiceImpl {
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reportExec.getResult().getRef().getUuid(), reportExec.getResult().getRef().getVersion());
 		
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
+	}
+	
+	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, HttpServletResponse response, RunMode runMode) throws Exception {
+		datastoreServiceImpl.setRunMode(runMode);
+		DataStore datastore = datastoreServiceImpl.findDataStoreByMeta(reportExecUuid, reportExecVersion);
+		if (datastore == null) {
+			logger.error("Datastore is not available for this datapod");
+			throw new Exception("Datastore is not available.");
+		}
+
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		String tableName = datastoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+		String sql = "SELECT * FROM " + tableName;
+		List<Map<String, Object>> data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());		
+
+	    DownloadExec downloadExec = new DownloadExec();
+		
+	    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
+	    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".pdf";
+	    String fileLocation = downloadPath + "/" + filename;
+	    
+		downloadExec.setBaseEntity();
+		downloadExec.setLocation(fileLocation);
+		downloadExec.setDependsOn(datastore.getMetaId());
+		try {
+			FileOutputStream fileOut = null;
+			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(data);
+			response.setContentType("application/xml charset=utf-16");
+			response.setHeader("Content-disposition", "attachment");
+			response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".pdf");
+			ServletOutputStream os = response.getOutputStream();
+			workbook.write(os);
+
+			fileOut = new FileOutputStream(fileLocation);
+			workbook.write(fileOut);
+			os.write(workbook.getBytes());
+			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
+			fileOut.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error("Can not download file.");
+			response.setStatus(300);
+        	throw new FileNotFoundException("Can not download file.");
+		}
+		return response;
 	}
 }
