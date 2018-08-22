@@ -5425,8 +5425,7 @@
 		            "name" : "GraphExecDelete"
 				},
 				"value" : null
-		},
-		
+		},		
 		{
 			"ref" : {
 					"type" : "privilege",
@@ -5649,6 +5648,186 @@
 		 			"uuid" : "52241b1a-b4a9-4182-b251-69ef1b24d294",
 		 			"version" : null,
 		            "name" : "ReportexecAdd"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bd4abb83-05fa-4b86-980c-f9f49209e884",
+		 			"version" : null,
+		            "name" : "BatchView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "70fd0783-4502-4fa1-b3ff-62cbbd473de7",
+		 			"version" : null,
+		            "name" : "BatchUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8cca7197-c7c0-4f3f-b3fe-892d7687af2f",
+		 			"version" : null,
+		            "name" : "BatchRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "589cecf6-b407-45e4-9c1f-65c57ded8cd2",
+		 			"version" : null,
+		            "name" : "BatchPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "cabd6cb8-d918-4d90-b5d0-78c79a95c703",
+		 			"version" : null,
+		            "name" : "BatchExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8b090399-defe-48c3-b2c2-2e1e6400937d",
+		 			"version" : null,
+		            "name" : "BatchExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "211b958f-8d7c-4408-b1cb-082d0659e45b",
+		 			"version" : null,
+		            "name" : "BatchEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "e142d035-d331-4bdf-8818-755ff2fd0213",
+		 			"version" : null,
+		            "name" : "BatchDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a13e9ff2-f382-4f01-9f48-152e2a18abec",
+		 			"version" : null,
+		            "name" : "BatchClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "04f22e07-d59c-4180-9d23-b2dcff00d4af",
+		 			"version" : null,
+		            "name" : "BatchAdd"
+				},
+				"value" : null
+		},				
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "527452de-d228-4612-b1b8-e5db4a5107e2",
+		 			"version" : null,
+		            "name" : "BatchexecView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "4266170d-318f-40bd-ab2e-e1c899c2766e",
+		 			"version" : null,
+		            "name" : "BatchexecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "42220ff9-0fa2-4758-af9c-2db8c65b7f6b",
+		 			"version" : null,
+		            "name" : "BatchexecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "92950a7a-33ec-42a1-a81b-d5eac0111c85",
+		 			"version" : null,
+		            "name" : "BatchexecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a33b27b3-11d2-43e3-9f24-8a5ca198c41e",
+		 			"version" : null,
+		            "name" : "BatchexecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "e598fd95-469e-4852-8a38-70a6d75649c7",
+		 			"version" : null,
+		            "name" : "BatchexecExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a41d5a83-61a9-4770-b4fa-4bb24f14a831",
+		 			"version" : null,
+		            "name" : "BatchexecEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "89a7deff-3aed-4353-837b-317c2489c14b",
+		 			"version" : null,
+		            "name" : "BatchexecDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f255c689-de20-4d41-8d05-eed78884a950",
+		 			"version" : null,
+		            "name" : "BatchexecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "7abdd78f-ddf5-417a-8f6c-bbe11c22f3e6",
+		 			"version" : null,
+		            "name" : "BatchexecAdd"
 				},
 				"value" : null
 		}
