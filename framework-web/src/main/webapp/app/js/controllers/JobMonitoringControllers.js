@@ -147,6 +147,10 @@
         	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
             metajson.icon = "fa fa-bar"
             metajson.state = dagMetaDataService.elementDefs[type].joblistState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            case "reportExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-line-chart"
+            metajson.state = dagMetaDataService.elementDefs[type].joblistState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
             break;
             
         }

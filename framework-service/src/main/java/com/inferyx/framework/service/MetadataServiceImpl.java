@@ -86,6 +86,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.RuleExec;
@@ -500,6 +501,11 @@ public class MetadataServiceImpl {
 				GraphExec graphExec = new GraphExec();
 				graphExec = (GraphExec) metaObject;
 				execStatus = (List<Status>) graphExec.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.reportExec.toString())){
+				ReportExec reportExec = new ReportExec();
+				reportExec = (ReportExec) metaObject;
+				execStatus = (List<Status>) reportExec.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			

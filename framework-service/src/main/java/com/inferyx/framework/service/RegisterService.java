@@ -91,6 +91,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportView;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
@@ -4018,6 +4019,13 @@ public class RegisterService {
 		if (graphExec != null) {
 			countHolder.add(addToCount(MetaType.graphExec.toString(), graphExecCount,
 					graphExec.getCreatedBy().getRef().getName(), graphExec.getCreatedOn()));
+		}
+		int reprotExecCount = commonServiceImpl.findAllLatest(MetaType.reportExec).size();
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getLatest(MetaType.reportExec.toString());
+		
+		if (reportExec != null) {
+			countHolder.add(addToCount(MetaType.reportExec.toString(), reprotExecCount,
+					reportExec.getCreatedBy().getRef().getName(), reportExec.getCreatedOn()));
 		}
 
 		return countHolder;

@@ -38,7 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
-      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec'];
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec','paramlistdag'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -317,6 +317,11 @@
               metajson.caption="Graphpod"
               metajson.icon='fa fa-bar-chart';
               metajson.state="listgraphpod"
+              break
+            case "report":
+              metajson.caption="Report"
+              metajson.icon='fa fa-bar-chart';
+              metajson.state="reportlist"
               break
             default:
               console.log(response[i].type)
