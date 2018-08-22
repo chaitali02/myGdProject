@@ -807,8 +807,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 				var blob = new Blob([data], {
 					type: contentType
 				});
+                console.log(blob)
 				var url = window.URL.createObjectURL(blob);
-
+                console.log(url)
 				linkElement.setAttribute('href', url);
 				linkElement.setAttribute("download", uuid + ".xls");
 
