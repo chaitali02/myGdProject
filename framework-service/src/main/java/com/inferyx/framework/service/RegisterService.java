@@ -52,6 +52,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -4026,6 +4027,13 @@ public class RegisterService {
 		if (reportExec != null) {
 			countHolder.add(addToCount(MetaType.reportExec.toString(), reprotExecCount,
 					reportExec.getCreatedBy().getRef().getName(), reportExec.getCreatedOn()));
+		}
+		
+		int batchExecCount = commonServiceImpl.findAllLatest(MetaType.batchExec).size();
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getLatest(MetaType.batchExec.toString());
+		if (batchExec != null) {
+			countHolder.add(addToCount(MetaType.batchExec.toString(), batchExecCount,
+					batchExec.getCreatedBy().getRef().getName(), batchExec.getCreatedOn()));
 		}
 
 		return countHolder;

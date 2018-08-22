@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
+import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -506,6 +507,11 @@ public class MetadataServiceImpl {
 				ReportExec reportExec = new ReportExec();
 				reportExec = (ReportExec) metaObject;
 				execStatus = (List<Status>) reportExec.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.batchExec.toString())){
+				BatchExec batchExec = new BatchExec();
+				batchExec = (BatchExec) metaObject;
+				execStatus = (List<Status>) batchExec.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
