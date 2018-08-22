@@ -547,13 +547,22 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false;
-			for (var j = 0; j < data.attributeInfo.length; j++) {
-				var attribute = {};
-				attribute.name = data.attributeInfo[j].attrSourceName;
-				attribute.displayName = data.attributeInfo[j].attrSourceName;
-				attribute.width = attribute.displayName.split('').length + 2 + "%";
-				$scope.gridOptions.columnDefs.push(attribute)
-			}
+			var columns = []; 
+			var count=0;
+			angular.forEach(response[0], function(value, key) {
+			 count=count+1;
+			})
+			angular.forEach(response[0],function (val,key) {
+				 var width;
+				 if(count >3){
+					 width = key.split('').length + 12 + "%"
+					}
+					else{
+					 width=(100/count)+"%";
+					}
+					columns.push({"name":key,"displayName":key.toLowerCase(),width:width,visible: true});
+			});
+			$scope.gridOptions.columnDefs=columns;
 			$scope.originalData = response;
 			$scope.gridOptions.data=response;
 			// if ($scope.originalData.length > 0) {

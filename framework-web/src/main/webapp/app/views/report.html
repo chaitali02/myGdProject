@@ -49,7 +49,7 @@
                                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             
-                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-show="isShowSimpleData" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'currentpage':'notcurrentpage'">
+                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-show="isShowSimpleData" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
                                 <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"

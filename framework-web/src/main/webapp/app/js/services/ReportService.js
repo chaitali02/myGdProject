@@ -138,7 +138,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.findReportSample = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "dataset/getReportSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=100",
+			url: url + "report/getReportSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=100",
 			method: "GET",
 		}).then(function (response) { return response })
 	}
