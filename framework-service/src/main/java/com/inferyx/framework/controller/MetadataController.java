@@ -1010,4 +1010,15 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListByDag(daguid, dagVersion, null);
 	}
+	
+	@RequestMapping(value = "/getExecListByBatchExec", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntityStatus> getBatchMetaInfoByBatchExec(
+			@RequestParam(value = "uuid") String uuid,
+			@RequestParam(value = "version") String version, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) 
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return metadataServiceImpl.getBatchMetaInfoByBatchExec(uuid, version);
+
+	}
 }

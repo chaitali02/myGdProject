@@ -1186,12 +1186,13 @@ public class DatapodServiceImpl {
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String tableName = null;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		String dsType = datasource.getType();
 		if(runMode.equals(RunMode.BATCH)) {
-			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				tableName = datasource.getDbname() + "." + datapod.getName();
 				return tableName;
 			} else {

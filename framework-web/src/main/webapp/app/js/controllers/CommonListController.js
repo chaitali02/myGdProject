@@ -134,7 +134,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   $scope.setStatus = function (row, status) {
     $scope.selectDetail=row;
-    $scope.selectDetail.status=status;
+    $scope.selectDetail.setStatus=status
     $('#killmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -182,7 +182,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.status).then(function (response) {
+    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.setStatus).then(function (response) {
       console.log(response);
     });
   }

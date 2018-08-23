@@ -17,17 +17,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "batch")
 public class Batch extends BaseEntity {
 
-	private List<MetaIdentifierHolder> metaInfo;
+	private List<MetaIdentifierHolder> metaList;
 
-	public Batch() {
+	public List<MetaIdentifierHolder> getMetaList() {
+		return metaList;
 	}
 
-	public List<MetaIdentifierHolder> getMetaInfo() {
-		return metaInfo;
-	}
-
-	public void setMetaInfo(List<MetaIdentifierHolder> metaInfo) {
-		this.metaInfo = metaInfo;
+	public void setMetaList(List<MetaIdentifierHolder> metaList) {
+		this.metaList = metaList;
 	}
 
 }

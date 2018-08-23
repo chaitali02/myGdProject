@@ -103,10 +103,11 @@ public class HistogramOperator implements IOperator {
 		String locationTableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		if(locationTableName == null || locationTableName.isEmpty()) {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+			/*if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {*/
+			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 			}  else {
 				locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
@@ -217,11 +218,12 @@ public class HistogramOperator implements IOperator {
 		String execVersion = execIdentifier.getVersion();
 		String execUuid = execIdentifier.getUuid();
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
-				|| datasource.getType().equalsIgnoreCase("livy-spark")) {
+				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
 			resultSetHolder = exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
 			resultSetHolder = sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);

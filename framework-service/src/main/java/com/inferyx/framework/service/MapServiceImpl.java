@@ -83,6 +83,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	IMapExecDao iMapExecDao;
 	@Autowired
+	private SQLContext sqlContext;
+	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
 	RelationServiceImpl relationServiceImpl;
@@ -753,10 +755,14 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				String mapTableName = null;
 				if(execParams != null) {
 					//String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
-					Datasource datasource = commonServiceImpl.getDatasourceByApp();
-					if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//					Datasource datasource = commonServiceImpl.getDatasourceByApp();
+					Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), 
+																					datapodKey.getVersion(), 
+																					MetaType.datapod.toString());
+					Datasource datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
+					if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 							&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
-							&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+							&&*/ !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 						mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
 					}  else {
 						mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
