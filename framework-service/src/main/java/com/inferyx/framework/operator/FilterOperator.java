@@ -25,6 +25,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
@@ -76,6 +78,13 @@ public class FilterOperator {
 				builder.append(" AND (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
 				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				usedRefKeySet.add(datapodRef);
+				break;
+			case dataset:
+				MetaIdentifier ref = filterIdentifier.getRef();
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dataset.toString());
+				builder.append(" AND (").append(generateDataSetFilterSql(dataSet, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
+				MetaIdentifier dataSetRef = new MetaIdentifier(MetaType.dataset, dataSet.getUuid(), dataSet.getVersion());
+				usedRefKeySet.add(dataSetRef);
 				break;
 			default:
 				builder.append("");
@@ -206,7 +215,6 @@ public class FilterOperator {
 		
 		return builder.toString();
 	}
-
 	
 	private String generateDatapodFilterSql(Datapod datapod, String attributeId, String value) {
 		if (!NumberUtils.isDigits(attributeId)) {
@@ -227,4 +235,29 @@ public class FilterOperator {
 		return String.format("%s = %s", datapod.sql(Integer.parseInt(attributeId)), value);
 	}
 
+	private String generateDataSetFilterSql(DataSet dataSet, String attributeId, String value) {
+		if (!NumberUtils.isDigits(attributeId)) {
+			return "";
+		}
+		
+		String attrName = null;
+		if(value != null) {
+			for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+				if(attributeSource.getAttrSourceId().equalsIgnoreCase(attributeId)) {
+					attrName = attributeSource.getAttrSourceName();
+				}
+			}
+			boolean isNumber = Helper.isNumber(value);			
+			if(!isNumber) {
+				if (value.contains(",")) {
+					value = value.substring(0, value.length()-1);
+					value = "'"+value+"'"+",";
+					return String.format("%s IN (%s)", dataSet.sql(attrName), value);
+				} else {				
+					value = "'"+value+"'";
+				}
+			}
+		}
+		return String.format("%s = %s", dataSet.sql(attrName), value);
+	}
 }
