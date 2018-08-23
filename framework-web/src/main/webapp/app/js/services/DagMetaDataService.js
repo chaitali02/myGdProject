@@ -43,7 +43,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'Terminating':{
       name : 'Terminating',
       caption:'Terminating',
-      color :'#d80027',
+      color :'#FFCCCC',//'#d80027',
       iconPath : 'assets/layouts/layout/img/new_status/Terminating.svg',
     },
     'OnHold':{

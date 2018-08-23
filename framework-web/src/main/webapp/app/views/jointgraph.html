@@ -445,7 +445,7 @@
                                 <div ng-if="listHolder.selectedParamValueType =='dataset'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control"  ng-disabled="isModelDisable" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
-                                        ng-options="r as r.name for r in allDataset track by r.uuid" required disable-validation-message="">
+                                        ng-options="r as r.name for r in allDataset |  orderBy:'name' track by r.uuid" required disable-validation-message="">
                                       </select>
                                       <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
                                       />
@@ -454,7 +454,7 @@
                                   <div ng-if="listHolder.selectedParamValueType =='rule'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
-                                        ng-options="r as r.name for r in allRule track by r.uuid" required disable-validation-message="">
+                                        ng-options="r as r.name for r in allRule |  orderBy:'name' track by r.uuid" required disable-validation-message="">
                                       </select>
                                       <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
                                       />
@@ -463,7 +463,7 @@
                                  <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false);">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" ng-change="onChangeDistribution(listHolder.selectedParamValue,$index)"
-                                      data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
+                                      data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution | orderBy:'name' track by r.uuid"
                                       required disable-validation-message="">
                                     </select>
                                     <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""/>
