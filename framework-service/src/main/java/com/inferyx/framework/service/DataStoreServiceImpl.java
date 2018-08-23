@@ -63,6 +63,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -613,7 +614,21 @@ public class DataStoreServiceImpl {
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource.getDbname() + "." + operatorName;
-		}
+		} else if (metaType == MetaType.report) {
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.report.toString());
+			String reportName = report.getName();
+			if(reportName.toLowerCase().contains("report"))
+				reportName = reportName.replace("report_", "");
+			
+			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				tableName = Helper.genTableName(filePath);
+			}else
+			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+					tableName = Helper.genTableName(filePath);
+				else
+					tableName = datasource.getDbname() + "." + reportName;
+		} 
 		return tableName;
 	}
 
