@@ -1815,6 +1815,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'jobmonitoringlist',
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistbatchexec',
+      resultState:'batchexecresult',
       childMenu:[],
       allowInChildMenu : false,
     },

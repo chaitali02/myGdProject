@@ -82,13 +82,63 @@ BatchModule.factory('BatchFactory', function ($http, $location) {
 			data: JSON.stringify(data),
 		}).success(function (response) { return response })
 	}
+	factory.findExecListByBatchExec = function (uuid, version, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getExecListByBatchExec?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
 
+		}).
+		then(function (response, status, headers) {
+			return response;
+		})
+	}
+    
 	return factory;
 })
 
 
 BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory) {
-
+    this.getExecListByBatchExec = function (uuid, version, type) {
+		var deferred = $q.defer();
+		BatchFactory.findExecListByBatchExec(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function(response) {
+			var results = []
+			for (var i = 0; i < response.length; i++) {
+			  var result = {};
+			  if (response[i].status != null) {
+				response[i].status.sort(sortFactory.sortByProperty("createdOn"));
+				var len = response[i].status.length - 1;
+			  }
+			  result.index=i;
+			  result.id = response[i].id;
+			  result.uuid = response[i].uuid;
+			  result.version = response[i].version;
+			  result.name = response[i].name;
+			  result.createdBy = response[i].createdBy;
+			  result.createdOn = response[i].createdOn;
+			  result.active = response[i].active;
+			  result.type = response[i].type;
+			  if(response[i].status !=null && response[i].status.length > 0){
+				if (response[i].status[len].stage == "NotStarted") {
+				  result.status = "Not Started"
+				} else if (response[i].status[len].stage == "InProgress") {
+				  result.status = "In Progress"
+				} else {
+				  result.status = response[i].status[len].stage;
+				}
+			  }
+			  else{
+				result.status="-NA-";
+			  }
+			  results[i] = result
+			}
+			deferred.resolve({
+			  data: results
+			})
+		  }
+		return deferred.promise;
+	}
 	this.getLatestByUuid = function (id, type) {
 		var deferred = $q.defer();
 		BatchFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
