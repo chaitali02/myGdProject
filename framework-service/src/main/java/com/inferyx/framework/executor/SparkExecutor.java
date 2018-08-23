@@ -624,7 +624,7 @@ public class SparkExecutor<T> implements IExecutor {
 		if (obj instanceof SparkSession) {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
-			rsHolder.getDataFrame().show(false);
+//			rsHolder.getDataFrame().show(false);
 			try {
 				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
