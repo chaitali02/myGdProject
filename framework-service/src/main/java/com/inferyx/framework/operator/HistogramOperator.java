@@ -107,7 +107,7 @@ public class HistogramOperator implements IOperator {
 					|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {*/
-			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			if (!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 			}  else {
 				locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
