@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
+import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -93,9 +96,9 @@ public class BatchServiceImpl {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
 		List<MetaIdentifierHolder> execList = new ArrayList<>();
-		for(MetaIdentifierHolder dagIM : batch.getMetaList()) {
-			switch(dagIM.getRef().getType()) {
-				case dag : execList.add(dagServiceImpl.submitDag(dagIM.getRef().getUuid(), dagIM.getRef().getVersion(), execParams, type, runMode));
+		for(MetaIdentifierHolder metaMI : batch.getMetaList()) {
+			switch(metaMI.getRef().getType()) {
+				case dag : execList.add(dagServiceImpl.submitDag(metaMI.getRef().getUuid(), metaMI.getRef().getVersion(), execParams, type, runMode));
 					break;
 			default:
 				break;
@@ -104,17 +107,43 @@ public class BatchServiceImpl {
 		}
 		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
 		batchExec.setExecList(execList);
-		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Completed);
-//		for(MetaIdentifierHolder exec : execList) {
-//			
-//		}
-//		int i =0;
-//		while(!execList.isEmpty() 
-//				&& ((BaseExec)commonServiceImpl.getOneByUuidAndVersion(execList.get(i).getRef().getUuid(), execList.get(i).getRef().getVersion(), execList.get(i).getRef().getType().toString())).getStatusList().get(0).getStage().equals(Status.Stage.Completed)) {
-//			
-//			i++;
-//		}
+		batchExec = checkCompleteStatus(batchExec);
 		return batchExec;
 	}
-
+	
+	public BatchExec checkCompleteStatus(BatchExec batchExec) throws Exception {
+		List<MetaIdentifierHolder> execList = batchExec.getExecList();
+		boolean areAllCompleted = false;
+		do {
+			for(int i=0; i<execList.size(); i++) {
+				MetaIdentifier execMI = execList.get(i).getRef();				
+				Status latestStatus = checkStatusByExec(execMI);
+				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
+					areAllCompleted = true;
+				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
+					areAllCompleted = true;
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
+					areAllCompleted = true;
+				} else {
+					areAllCompleted = false;
+				}				
+			}
+			if(areAllCompleted) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Completed);
+			}
+		} while(!areAllCompleted);
+		
+		return batchExec;
+	}
+	
+	public Status checkStatusByExec(MetaIdentifier execMI) throws JsonProcessingException {
+		
+		switch(execMI.getType()) {
+			case dagExec: 
+				DagExec baseExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(execMI.getUuid(), execMI.getVersion(), execMI.getType().toString());
+				return Helper.getLatestStatus(baseExec.getStatusList());
+				
+			default: return null;				
+		}
+	}
 }
