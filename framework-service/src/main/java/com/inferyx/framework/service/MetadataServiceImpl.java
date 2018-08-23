@@ -1931,4 +1931,43 @@ public class MetadataServiceImpl {
 		}
 		return plHolderList;
 	}
+
+	public List<BaseEntityStatus> getBatchMetaInfoByBatchExec(String batchExecUuid, String batchExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(batchExecUuid, batchExecVersion, MetaType.batchExec.toString());
+	
+		List<BaseEntityStatus> baseEntityStatusList = new ArrayList<>();
+		if(batchExec.getExecList() != null) {
+			for(MetaIdentifierHolder execList : batchExec.getExecList()) {
+				List<Status> execStatus = null;
+				MetaIdentifier ref = execList.getRef();			
+				Object metaObject =  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				
+				if (ref.getType().toString().equalsIgnoreCase(MetaType.dagExec.toString())) {
+					DagExec execObject = new DagExec();
+					execObject = (DagExec) metaObject;
+				    execStatus = (List<Status>) execObject.getStatusList();
+				}
+				
+				BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
+				BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
+				baseEntityTmp = resolveBaseEntity(baseEntityTmp);
+				baseEntityStatus.setId(baseEntityTmp.getId());
+				baseEntityStatus.setUuid(baseEntityTmp.getUuid());
+				baseEntityStatus.setVersion(baseEntityTmp.getVersion());
+				baseEntityStatus.setName(baseEntityTmp.getName());
+				baseEntityStatus.setDesc(baseEntityTmp.getDesc());
+				baseEntityStatus.setCreatedBy(baseEntityTmp.getCreatedBy());
+				baseEntityStatus.setCreatedOn(baseEntityTmp.getCreatedOn());
+				baseEntityStatus.setTags(baseEntityTmp.getTags());
+				baseEntityStatus.setActive(baseEntityTmp.getActive());
+				baseEntityStatus.setPublished(baseEntityTmp.getPublished());
+				baseEntityStatus.setAppInfo(baseEntityTmp.getAppInfo());
+				baseEntityStatus.setStatus(execStatus);
+				baseEntityStatus.setType(ref.getType().toString());
+				baseEntityStatusList.add(baseEntityStatus);				
+			}
+		}
+		
+		return baseEntityStatusList;
+	}
 }
