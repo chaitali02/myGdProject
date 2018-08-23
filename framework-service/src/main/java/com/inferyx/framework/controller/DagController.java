@@ -109,14 +109,14 @@ public class DagController {
 	}
 	
 	@RequestMapping(value="/execute", method=RequestMethod.POST)
-    public MetaIdentifierHolder execute(@RequestParam("uuid") String dagExecUuid, 
-    		@RequestParam("version") String dagExecVersion, 
+    public MetaIdentifierHolder execute(@RequestParam("uuid") String dagUuid, 
+    		@RequestParam("version") String dagVersion, 
     		@RequestParam(name="type", required=false, defaultValue="dag") String type, 
     		@RequestBody(required=false)ExecParams execParams,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return dagServiceImpl.submitDag(dagExecUuid, dagExecVersion, execParams, type, runMode);
+		return dagServiceImpl.submitDag(dagUuid, dagVersion, execParams, type, runMode);
 	}
 	/*
 	@RequestMapping(method=RequestMethod.POST)

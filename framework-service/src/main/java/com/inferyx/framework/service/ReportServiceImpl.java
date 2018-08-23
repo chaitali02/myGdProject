@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,23 +27,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.cognitosync.model.Dataset;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.WorkbookUtil;
-import com.inferyx.framework.domain.BaseRule;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -53,7 +44,6 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -89,8 +79,6 @@ public class ReportServiceImpl {
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
-	private HDFSInfo hdfsInfo;
-	@Autowired
 	private WorkbookUtil workbookUtil;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
@@ -99,10 +87,9 @@ public class ReportServiceImpl {
 		try {
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportUuid, reportVersion, MetaType.report.toString());
 			if (reportExec == null) {
-				MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.report, reportUuid, reportVersion));
 				reportExec = new ReportExec();
-				trainRef.setRef(new MetaIdentifier(MetaType.report, reportUuid, reportVersion));
-				reportExec.setDependsOn(trainRef);
+				reportExec.setDependsOn(dependsOn);
 				reportExec.setBaseEntity();
 			}
 			
