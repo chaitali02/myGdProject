@@ -1789,6 +1789,35 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'batch':{
+      name : 'batch',
+      caption:'Batch',
+      execType:'batchExec',
+      metaType:'batch',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'batchlist',
+      joblistState : '',
+      detailState :'batchdetail',
+      childMenu:[],
+      allowInChildMenu : false,
+
+    },
+    'batchexec':{
+      name : 'batch',
+      caption:'Batch Exec',
+      execType:'batchExec',
+      metaType:'batchExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistbatchexec',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
