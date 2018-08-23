@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-import java.awt.Font;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import java.util.Set;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -30,14 +27,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
@@ -51,7 +49,6 @@ public class WorkbookUtil {
 	@Autowired
 	FilterOperator filterOperator;
 
-	@SuppressWarnings("deprecation")
 	public static HSSFWorkbook getWorkbook(Map<String, LinkedHashMap<String, String>> resultMap) {
 		HSSFWorkbook wb = new HSSFWorkbook();
 
@@ -59,7 +56,7 @@ public class WorkbookUtil {
 		HSSFSheet sheet3 = wb.createSheet("main");
 
 		HSSFFont headerFont = wb.createFont();
-		headerFont.setBoldweight((short) Font.LAYOUT_LEFT_TO_RIGHT);
+		headerFont.setBold(true);
 
 		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
@@ -95,17 +92,17 @@ public class WorkbookUtil {
 				cellNum++;
 			}
 		}
-		headerFont = wb.createFont();
-		headerFont.setBoldweight((short) Font.BOLD);
-
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
-		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
-		headerStyle.setFont(headerFont);
-		sheet3.autoSizeColumn(0);
-		sheet3.autoSizeColumn(1);
-		sheet3.autoSizeColumn(2);
-		sheet3.autoSizeColumn(3);
+//		headerFont = wb.createFont();
+//		headerFont.setBold(true);
+//
+//		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+//		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
+//		headerStyle.setFont(headerFont);
+//		sheet3.autoSizeColumn(0);
+//		sheet3.autoSizeColumn(1);
+//		sheet3.autoSizeColumn(2);
+//		sheet3.autoSizeColumn(3);
 		return wb;
 	}
 
@@ -116,7 +113,7 @@ public class WorkbookUtil {
 			HSSFSheet hssfSheet = workBook.createSheet("Data");
 
 			HSSFFont headerFont = workBook.createFont();
-			headerFont.setBoldweight((short) Font.LAYOUT_LEFT_TO_RIGHT);
+			headerFont.setBold(true);
 
 			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 			headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
@@ -154,17 +151,17 @@ public class WorkbookUtil {
 					cellNum++;
 				}
 			}
-			headerFont = workBook.createFont();
-			headerFont.setBoldweight((short) Font.BOLD);
-
-			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
-			headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
-			headerStyle.setFont(headerFont);
-			hssfSheet.autoSizeColumn(0);
-			hssfSheet.autoSizeColumn(1);
-			hssfSheet.autoSizeColumn(2);
-			hssfSheet.autoSizeColumn(3);
+//			headerFont = workBook.createFont();
+//			headerFont.setBold(true);
+//
+//			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//			headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+//			headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
+//			headerStyle.setFont(headerFont);
+//			hssfSheet.autoSizeColumn(0);
+//			hssfSheet.autoSizeColumn(1);
+//			hssfSheet.autoSizeColumn(2);
+//			hssfSheet.autoSizeColumn(3);
 			return workBook;
 	}
 	
@@ -172,50 +169,82 @@ public class WorkbookUtil {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
 		
 		Workbook workBook = new HSSFWorkbook();
-
-		CellStyle headerStyle = workBook.createCellStyle();
 		Sheet hssfSheet = workBook.createSheet("report");
-
-		hssfSheet.addMergedRegion(new CellRangeAddress(0, 1, 0, report.getAttributeInfo().size()-1));
+//		hssfSheet.addMergedRegion(new CellRangeAddress(0, 1, 0, report.getAttributeInfo().size()-1));
 		
-		org.apache.poi.ss.usermodel.Font headerFont = workBook.createFont();
-		headerFont.setBold(true);//setBoldweight((short) Font.LAYOUT_LEFT_TO_RIGHT);
 
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
-		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
-		headerStyle.setFont(headerFont);
+	/******* adding title *******/
+		Font titleHeaderFont = workBook.createFont();
+		titleHeaderFont.setBold(true);
+//		titleHeaderFont.setFontHeight((short)1);
+		CellStyle titleHeaderStyle = workBook.createCellStyle();
+//		titleHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//		titleHeaderStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+		titleHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
+		titleHeaderStyle.setFont(titleHeaderFont);
+		titleHeaderStyle.setAlignment(CellStyle.ALIGN_CENTER);
 
 		Row title = hssfSheet.createRow((short)1);
-		Cell titleCell = title.createCell((short)4);
-		titleCell.setCellStyle(headerStyle);
+		Cell titleCell = title.createCell((short)0);
+		titleCell.setCellStyle(titleHeaderStyle);
 		titleCell.setCellValue(new HSSFRichTextString(report.getTitle()));
 		
-		
-		String filterObtained = null;
+	 /******* adding filter *******/
+		short filterRowNum = 3;
 		ExecParams execParams = reportExec.getExecParams();
 		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
-			filterObtained = filterOperator.generateSql(execParams.getFilterInfo(), null, execParams.getOtherParams(), new HashSet<>(), execParams);
+			Font filterHeaderFont = workBook.createFont();
+			filterHeaderFont.setBold(true);
+			CellStyle filterHeaderStyle = workBook.createCellStyle();
+			filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			filterHeaderStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+			filterHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
+			filterHeaderStyle.setFont(filterHeaderFont);
 			
-			Row filter = hssfSheet.createRow(3);
-			Cell filterCell = filter.createCell(3);
-			filterCell.setCellStyle(headerStyle);
-			filterCell.setCellValue(filterObtained);
+			Row filterTitle = hssfSheet.createRow(filterRowNum);
+			Cell filterTitleCell = filterTitle.createCell(0);
+			filterTitleCell.setCellStyle(filterHeaderStyle);
+			filterTitleCell.setCellValue("FILTER:");
+			filterRowNum++;
+			for(AttributeRefHolder attributeRef : execParams.getFilterInfo()) {
+				String lhsAttr = attributeRef.getAttrName();
+				String rhsAttr = attributeRef.getValue();
+				
+				Row filter = hssfSheet.createRow(filterRowNum);
+				Cell lhsAttrCell = filter.createCell(0);
+//				lhsAttrCell.setCellStyle(headerStyle);
+				lhsAttrCell.setCellValue(lhsAttr);
+				Cell rhsAttrCell = filter.createCell(1);
+//				rhsAttrCell.setCellStyle(headerStyle);
+				rhsAttrCell.setCellValue(rhsAttr);
+				filterRowNum++;
+			}
 		}		
 
-		Row columns = hssfSheet.createRow(7);		
-		Set<String> columnNames = resultList.get(0).keySet();
-		int cellNo = 0;
-		for (String column : columnNames) {
-			Cell cell0 = columns.createCell(cellNo);
-			cell0.setCellStyle(headerStyle);
-			cell0.setCellValue(column);
-			cellNo++;
+	/******* adding columns *******/
+		Font columnHeaderFont = workBook.createFont();
+		columnHeaderFont.setBold(true);
+		CellStyle columnHeaderStyle = workBook.createCellStyle();
+		columnHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		columnHeaderStyle.setFillForegroundColor(HSSFColor.ORANGE.index);
+		columnHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
+		columnHeaderStyle.setFont(columnHeaderFont);
+		short columnRowNum = filterRowNum;
+		if(filterRowNum != (short)3) {
+			columnRowNum = (short) (filterRowNum + 2);
 		}
-		
+		Row columns = hssfSheet.createRow(columnRowNum);		
+		String[] columnNames = resultList.get(0).keySet().toArray(new String[resultList.get(0).keySet().size()]);
+		for (int i = 0; i<columnNames.length; i++) {
+			Cell cell = columns.createCell(i);
+			cell.setCellStyle(columnHeaderStyle);
+			cell.setCellValue(columnNames[i]);
+		}
+	
+	/******* adding rows *******/
 		for (int i = 0; i < resultList.size(); i++) {
-			Row nextrow = hssfSheet.createRow(8 + i);
-			columnNames = resultList.get(i).keySet();
+			Row nextrow = hssfSheet.createRow((columnRowNum+1) + i);
+			columnNames = resultList.get(i).keySet().toArray(new String[resultList.get(0).keySet().size()]);
 			int cellNum = 0;
 			for (String column : columnNames) {
 				String value = "";
@@ -229,17 +258,6 @@ public class WorkbookUtil {
 			}
 			hssfSheet.autoSizeColumn(i);
 		}
-//		headerFont = workBook.createFont();
-//		headerFont.setBold(true);//setBoldweight((short) Font.BOLD);
-//
-//		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-//		headerStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
-//		headerStyle.setFillBackgroundColor(HSSFColor.RED.index);
-//		headerStyle.setFont(headerFont);
-//		hssfSheet.autoSizeColumn(0);
-//		hssfSheet.autoSizeColumn(1);
-//		hssfSheet.autoSizeColumn(2);
-//		hssfSheet.autoSizeColumn(3);
 		return workBook;
 	}
 }

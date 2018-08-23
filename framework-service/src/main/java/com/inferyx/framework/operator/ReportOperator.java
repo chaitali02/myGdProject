@@ -161,7 +161,8 @@ public class ReportOperator implements IOperator {
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+			String filter = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+			return filter;
 		}
 		return ConstantsUtil.BLANK;
 	} 
