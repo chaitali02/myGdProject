@@ -229,7 +229,7 @@ public class SparkExecutor<T> implements IExecutor {
 				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
 				df = sparkSession.createDataset(obj, Encoders.DOUBLE()).toDF(attributes.get(1).getName());
 			}
-			df.show();
+//			df.show();
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			String tempTableName = tableName;
 			if(tempTableName.contains(datasource.getDbname()+"."))
@@ -312,7 +312,7 @@ public class SparkExecutor<T> implements IExecutor {
 						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as postgres_table").load();
 			}
-			df.show(true);
+//			df.show(true);
 			rsHolder.setCountRows(df.count());
 			rsHolder.setDataFrame(df);
 			rsHolder.setType(ResultType.dataframe);
@@ -393,7 +393,7 @@ public class SparkExecutor<T> implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.createDataFrame(data, className);
-					df.show();
+//					df.show();
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 					long countRows = df.count();
@@ -547,7 +547,7 @@ public class SparkExecutor<T> implements IExecutor {
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
 		df.printSchema();
-		df.show(true);
+//		df.show(true);
 		registerTempTable(df, tableName);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
@@ -846,7 +846,7 @@ public class SparkExecutor<T> implements IExecutor {
 			df = rsHolder.getDataFrame();
 		}
 		
-		df.show(false);
+//		df.show(false);
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
 			strList.add(row.toString());
@@ -870,7 +870,7 @@ public class SparkExecutor<T> implements IExecutor {
 		ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, conHolder.getStmtObject(), datasource);
 		df = rsHolder.getDataFrame();		
 		
-		df.show(false);
+//		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
@@ -968,7 +968,7 @@ public class SparkExecutor<T> implements IExecutor {
 					logger.info("datapodRegister: Registering datapod " + tableName);
 					// hiveContext.registerDataFrameAsTable(df, tableName);
 					
-					df.show(true);
+//					df.show(true);
 				}
 			}
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
@@ -1030,7 +1030,7 @@ public class SparkExecutor<T> implements IExecutor {
 		// Execute SQL
 		logger.info("inside SparkExecutor for the quiery: " + sql);
 		Dataset<Row> df = sparkSession.sql(sql).coalesce(10);
-		df.show(Integer.parseInt(""+df.count()));
+//		df.show(Integer.parseInt(""+df.count()));
 		df.persist(StorageLevel.MEMORY_AND_DISK());
 		// df.cache();
 
@@ -1262,7 +1262,7 @@ public class SparkExecutor<T> implements IExecutor {
 			df = rsHolder.getDataFrame();
 		}
 		
-		df.show(false);
+//		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
@@ -1429,7 +1429,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		
-		df.show(false);
+//		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}
@@ -1451,7 +1451,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		df = sparkSession.sqlContext().sql(query);
-		df.show(false);
+//		df.show(false);
 		return tableName;
 	}
 	
@@ -1466,12 +1466,12 @@ public class SparkExecutor<T> implements IExecutor {
 			fieldArray = df.columns();
 
 		df.printSchema();
-		df.show(true);
+//		df.show(true);
 		
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.printSchema();
-		assembledDf.show(false);
+//		assembledDf.show(false);
 //		try {
 //			Thread.sleep(1000);
 //		} catch (InterruptedException e) {
@@ -1505,7 +1505,7 @@ public class SparkExecutor<T> implements IExecutor {
 			transformedDf = va.transform(df);
 		}
 		
-		transformedDf.show(false);
+//		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
 	}
@@ -1593,7 +1593,7 @@ public class SparkExecutor<T> implements IExecutor {
 			throws InterruptedException, ExecutionException, Exception {
 
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
-		df.show(false);
+//		df.show(false);
 		
 		
 		List<String> columnList = new ArrayList<>();
@@ -1622,7 +1622,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		
-		df.show(false);
+//		df.show(false);
 
 		List<String> columnList = new ArrayList<>();
 		//for(Attribute attribute : paramDp.getAttributes())
@@ -1644,11 +1644,11 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.show(true);
+//		df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		predictionDf.show(true);
+//		predictionDf.show(true);
 //		Evaluator evaluator = getEvaluatorByTrainClass("LogisticRegressor");
 //		RegressionEvaluator regressionEvaluator = (RegressionEvaluator) evaluator;
 //		regressionEvaluator.setMetricName(regressionEvaluator.getMetricName());
@@ -1694,7 +1694,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-		df.show(false);
+//		df.show(false);
 		List<String> partitionColList = new ArrayList<>();
 		if(datapod != null) {
 			for(Attribute attribute : datapod.getAttributes()) {
@@ -1895,7 +1895,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		df = df.withColumnRenamed(df.columns()[targetColIndex], targetColName);
 		df.printSchema();
-		df.show(true);
+//		df.show(true);
 		
 		try {
 			Thread.sleep(1000);
@@ -1919,7 +1919,7 @@ public class SparkExecutor<T> implements IExecutor {
 		for(Entry<String, String> entry : mappingList.entrySet()) {
 			df = df.withColumnRenamed(entry.getKey(), entry.getValue());
 		}
-		df.show(true);
+//		df.show(true);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}
@@ -1979,10 +1979,10 @@ public class SparkExecutor<T> implements IExecutor {
 			transformedDf = va.transform(df1);
 		}
 		
-		transformedDf.show(false);
+//		transformedDf.show(false);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictedDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, transformedDf);
-		predictedDf.show(true);
+//		predictedDf.show(true);
 
 		String targetTableName = null;
 		if(targetDp != null)
@@ -2015,7 +2015,7 @@ public class SparkExecutor<T> implements IExecutor {
 									  .option("treatEmptyValuesAsNulls", true)
 									  .option("nullValue", "0")
 									  .load(load.getSource().getValue());
-		df.show(false);
+//		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setTableName(targetTableName);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
@@ -2084,7 +2084,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.show(false);
+//		df.show(false);
 		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -2565,7 +2565,7 @@ public class SparkExecutor<T> implements IExecutor {
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
 		df.printSchema();
-		df.show(true);
+//		df.show(true);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);	
@@ -2608,7 +2608,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		df.printSchema();
-		df.show(false);
+//		df.show(false);
 		ResultSetHolder rsHolder2 = new ResultSetHolder();
 		rsHolder2.setCountRows(df.count());
 		rsHolder2.setDataFrame(df);
@@ -2628,7 +2628,7 @@ public class SparkExecutor<T> implements IExecutor {
 		rhsDf = rhsDf.dropDuplicates();
 		rhsDf = rhsDf.limit(2);
 		
-		rhsDf.show(false);
+//		rhsDf.show(false);
 		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
 			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
 		});
