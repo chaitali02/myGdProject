@@ -63,7 +63,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
-import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -431,9 +430,9 @@ public class DataStoreServiceImpl {
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
 				Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
 		String dsType = ds.getType();
-		if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				&& */!dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			String tableName = ds.getDbname() + "." + dp.getName();
 			return tableName;
 		} 
@@ -551,8 +550,8 @@ public class DataStoreServiceImpl {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
 			} else {
-				if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-						|| dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
+				if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+						||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
 					if (!filePath.contains(hdfsLocation)) {
 						filePath = String.format("%s%s", hdfsLocation, filePath);
 					}
@@ -577,8 +576,8 @@ public class DataStoreServiceImpl {
 			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource.getDbname() + "." + ruleName;
@@ -593,8 +592,8 @@ public class DataStoreServiceImpl {
 			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource.getDbname() + "." + reconName;
@@ -609,26 +608,12 @@ public class DataStoreServiceImpl {
 			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource.getDbname() + "." + operatorName;
-		} else if (metaType == MetaType.report) {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.report.toString());
-			String reportName = report.getName();
-			if(reportName.toLowerCase().contains("report"))
-				reportName = reportName.replace("report_", "");
-			
-			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
-					tableName = Helper.genTableName(filePath);
-				else
-					tableName = datasource.getDbname() + "." + reportName;
-		} 
+		}
 		return tableName;
 	}
 

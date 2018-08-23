@@ -1892,12 +1892,13 @@ public class ModelServiceImpl {
 	
 	public String genTableNameByMetaIdentifier(MetaIdentifier tabNameMI, Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String tableName = null;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		String dsType = datasource.getType();
 		if(runMode.equals(RunMode.BATCH)) {
-			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				tableName = datasource.getDbname() + "." + datapod.getName();
 				return tableName;
 			} else {
@@ -1962,9 +1963,9 @@ public class ModelServiceImpl {
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				String predictQuery = predictMLOperator.generateSql(predict, tableName);	
 				String sql = null;
-				if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+				if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 						&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-						&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+						&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 					tableName = getTableNameByMetaObject(target);
 					sql = helper.buildInsertQuery(datasource.getType(), tableName, target, predictQuery);
 				} else {
