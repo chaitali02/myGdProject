@@ -3002,7 +3002,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-        
+        .state('jobexecutorlistbatchexec', {
+            url: "/JobMonitoringList/batch?id&mode&returnBack",
+            templateUrl: "views/batch-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
         .state('commonlistpage', {
             url: "/list?type",
             templateUrl: "views/common-list.html",
