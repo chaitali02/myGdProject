@@ -211,6 +211,22 @@
                 </li>
             </ul>
         </li>
+          <!--Batch Menu-->
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-toggle">
+                  <i class="{{Batch.class}}"></i>
+                  <span class="title">{{Batch.caption}}</span>
+                  <span class="arrow"></span>
+              </a>
+              <ul class="sub-menu"><!-- ({action:'add'})" -->
+                  <li ng-disabled="batchsubmenu.caption == 'Create New' && (!privileges['batch'] || privileges['batch'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="batchsubmenu in Batch.submenu | orderBy:'caption'  | filter:searchtext" ng-click="deInitTabs()">
+                      <a ui-sref="{{batchsubmenu.name}}({type:batchsubmenu.type})" class="nav-link">
+                          <span class="title">{{batchsubmenu.caption}}</span>
+                           <span class="badge badge-success">{{metaStats[batchsubmenu.typeCount].count}}</span>
+                      </a>
+                  </li>
+              </ul>
+          </li>
       
         <!--Admind Menu-->
         <li class="nav-item" ng-show="role=='admin'">

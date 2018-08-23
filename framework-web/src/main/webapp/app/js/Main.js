@@ -16,6 +16,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "ReconModule",
     "DataQualityModule",
     "ProfileModule",
+    "BatchModule",
     "AdminModule",
     "JobMonitoringModule",
     "SystemMonitoringModule",
@@ -425,6 +426,16 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "listwf", "type": "dag", "uuid": "null", "caption": "List" ,"typeCount": "dag", },
             { "name": "paramlistdag", "type": "paramlist", "typeCount": "paramlistdag", "uuid": "null", "caption": "Parameter List" },
             { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results","typeCount": "dagexec", }
+        ]
+    };
+    $scope.Batch = {
+        "caption": "Batch",
+        "name": "batch",
+        "class": "fa fa-tasks",
+        "submenu": [
+            { "name": "batchdetail", "type": "createwf", "uuid": "null", "caption": "Create New" },
+            { "name": "batchlist", "type": "batch", "uuid": "null", "caption": "List" ,"typeCount": "batch", },
+            { "name": "batchexeclist", "type": "batchExec", "uuid": "null", "caption": "Results","typeCount": "batchexec", }
         ]
     };
     $scope.GraphAnalysis = {
@@ -2252,13 +2263,45 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })
 
+        .state('batchlist', {
+            url: "/Batch/List",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Batch' },
+            params: { type: "batch" }
+        })
+
+        .state('batchexeclist', {
+            url: "/Batch/ResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Batch' },
+            params: { type: 'batchexec', isExec: true }
+        })
+
         .state('algorithm', {
             url: "/Datascience/AlgorithmList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Data Science' },
             params: { type: 'algorithm' }
         })
-
+        
+        .state('batchdetail', {
+            url: "/BatchDetail?id&mode&returnBack&version",
+            templateUrl: "views/batch.html",
+            data: { pageTitle: 'Batch' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'Batch',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchController.js',
+                            'js/services/BatchService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('createalgorithm', {
             url: "/CreateAlgorithm?id&mode&returnBack&version",
             templateUrl: "views/algorithm.html",
