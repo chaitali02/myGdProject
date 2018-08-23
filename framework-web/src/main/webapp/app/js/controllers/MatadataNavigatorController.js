@@ -323,6 +323,11 @@
               metajson.icon='fa fa-bar-chart';
               metajson.state="reportlist"
               break
+            case "batch":
+              metajson.caption="Batch"
+              metajson.icon='fa fa-tasks';
+              metajson.state="batchlist"
+              break
             default:
               console.log(response[i].type)
                  

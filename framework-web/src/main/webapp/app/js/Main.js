@@ -2277,13 +2277,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'batchexec', isExec: true }
         })
 
-        .state('algorithm', {
-            url: "/Datascience/AlgorithmList",
-            templateUrl: "views/common-list.html",
-            data: { pageTitle: 'Data Science' },
-            params: { type: 'algorithm' }
-        })
-        
+      
         .state('batchdetail', {
             url: "/BatchDetail?id&mode&returnBack&version",
             templateUrl: "views/batch.html",
@@ -2302,6 +2296,33 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+
+        
+        .state('batchexecresult', {
+            url: "/BatchResult?id&mode&returnBack&version",
+            templateUrl: "views/batch-result.html",
+            data: { pageTitle: 'Batch' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'Batch',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchController.js',
+                            'js/services/BatchService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('algorithm', {
+            url: "/Datascience/AlgorithmList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Science' },
+            params: { type: 'algorithm' }
+        })
+        
         .state('createalgorithm', {
             url: "/CreateAlgorithm?id&mode&returnBack&version",
             templateUrl: "views/algorithm.html",
@@ -3002,7 +3023,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-        
+        .state('jobexecutorlistbatchexec', {
+            url: "/JobMonitoringList/batch?id&mode&returnBack",
+            templateUrl: "views/batch-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
         .state('commonlistpage', {
             url: "/list?type",
             templateUrl: "views/common-list.html",

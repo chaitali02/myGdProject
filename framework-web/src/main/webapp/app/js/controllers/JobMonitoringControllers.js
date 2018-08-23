@@ -152,6 +152,11 @@
             metajson.icon = "fa fa-line-chart"
             metajson.state = dagMetaDataService.elementDefs[type].joblistState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
             break;
+            case "batchExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption.split("Exec")[0];
+            metajson.icon = "fa fa-tasks"
+            metajson.state = dagMetaDataService.elementDefs[type].joblistState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            break;
             
         }
         metaarray[i] = metajson

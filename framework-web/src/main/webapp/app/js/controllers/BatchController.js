@@ -275,5 +275,117 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 });
 
 
+BatchModule.controller('ResultBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES,FileSaver,Blob) {
+  
+  $scope.autoRefreshCounter=05;
+  $scope.autoRefreshResult=false;
+  
+  var notify = {
+    type: 'success',
+    title: 'Success',
+    content: '',
+    timeout: 3000 //time in ms
+  };
 
+  $scope.getGridStyle = function () {
+    var style = {
+      'margin-top': '10px',
+      'margin-bottom': '10px',
+    }
+    if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+    } else {
+      style['height'] = "100px"
+    }
+    return style;
+  }
+
+  $scope.gridOptions = angular.copy(dagMetaDataService.gridOptionsJobExec);
+  $scope.gridOptions.data=[];
+  $scope.getExecListByBatchExec=function(){
+    BatchService.getExecListByBatchExec($stateParams.id,$stateParams.version,CF_META_TYPES.batchexec).then(function (response) { onSuccessGetExecListByBatchExec(response.data) });
+    var onSuccessGetExecListByBatchExec = function (response) {
+      $scope.gridOptions.data=response;
+      $scope.originalData=response;
+    }
+  }
+  $scope.getExecListByBatchExec();
+  $scope.refreshData = function () {
+		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+	};
+
+  $scope.refresh=function(){
+    $scope.getExecListByBatchExec();
+  }
+  $scope.action = function (data, mode, privilege) {
+    $rootScope.previousState = {};
+    $rootScope.previousState.name = dagMetaDataService.elementDefs['batchexec'].resultState;
+    $rootScope.previousState.params = {};
+    $rootScope.previousState.params.id = $stateParams.id;
+    $rootScope.previousState.params.version = $stateParams.version;
+    $rootScope.previousState.params.mode = true;
+    var stateName = dagMetaDataService.elementDefs[data.type.toLowerCase()].detailState;
+    if (stateName)
+      $state.go(stateName, {
+        id: data.uuid,
+        version: data.version,
+        returnBack : true,
+        mode: mode == 'view' ? true : false
+      });
+  }
+
+  $scope.getDetail = function (data) {
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj = {};
+    $scope.obj=data
+    $scope.msg = "Export"
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.submitOk=function(msg){
+   if(msg =="Export"){
+    $scope.okExport();
+   }
+  }
+
+  $scope.okExport = function () {
+    $('#confModal').modal('hide');
+    CommonService.getLatestByUuid($scope.obj.uuid,$scope.obj.type).then(function (response) {
+      onSuccessGetUuid(response.data)
+    });
+    var onSuccessGetUuid = function (response) {
+      var jsonobj = angular.toJson(response, true);
+      var data = new Blob([jsonobj], {
+        type: 'application/json;charset=utf-8'
+      });
+      FileSaver.saveAs(data, response.name + '.json');
+      $scope.message = "Batch Exec Downloaded Successfully";
+      notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.message
+      $scope.$emit('notify', notify);
+    }
+  }
+  var myVar;
+  $scope.autoRefreshOnChange=function () {
+    if($scope.autorefresh){
+        myVar = setInterval(function(){
+            $scope.getExecListByBatchExec();
+        }, $scope.autoRefreshCounter+"000");
+    }
+    else{
+        clearInterval(myVar);
+    }
+  }
+
+  $scope.$on('$destroy', function() {
+  // Make sure that the interval is destroyed too
+      clearInterval(myVar);
+  });
+  
+});
 
