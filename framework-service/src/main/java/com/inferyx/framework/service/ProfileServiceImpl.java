@@ -66,6 +66,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -415,8 +416,11 @@ public class ProfileServiceImpl extends RuleTemplate {
 		try {
 			limit = offset + limit;
 			offset = offset + 1;
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(profileExecUUID, profileExecVersion);
 			
+			ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecUUID,
+					profileExecVersion, MetaType.profileExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(profileExec.getResult().getRef().getUuid(),
+					profileExec.getResult().getRef().getVersion());
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 			/*dataStoreServiceImpl.setRunMode(runMode);

@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -378,7 +379,11 @@ public class LoadServiceImpl {
 		boolean requestIdExistFlag = false;
 
 		StringBuilder orderBy = new StringBuilder();
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(loadExecUUID, loadExecVersion);
+		
+		LoadExec loadExec = (LoadExec) commonServiceImpl.getOneByUuidAndVersion(loadExecUUID, loadExecVersion,
+				MetaType.loadExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(loadExec.getResult().getRef().getUuid(),
+				loadExec.getResult().getRef().getVersion());
 		dataStoreServiceImpl.setRunMode(runMode);
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
 				runMode);

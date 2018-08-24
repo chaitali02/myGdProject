@@ -927,8 +927,10 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
 		offset = offset + 1;
-		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecUUID, mapExecVersion, MetaType.mapExec.toString());
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExec.getResult().getRef().getUuid(), mapExec.getResult().getRef().getVersion());
+		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecUUID, mapExecVersion,
+				MetaType.mapExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(mapExec.getResult().getRef().getUuid(),
+				mapExec.getResult().getRef().getVersion());
 		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 		return data;
 	}

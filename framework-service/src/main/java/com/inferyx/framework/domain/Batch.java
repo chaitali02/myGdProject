@@ -18,6 +18,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Batch extends BaseEntity {
 
 	private List<MetaIdentifierHolder> metaList;
+	private String inParallel;
+
+	public String getInParallel() {
+		return inParallel;
+	}
+
+	public void setInParallel(String inParallel) {
+		this.inParallel = inParallel;
+	}
 
 	public List<MetaIdentifierHolder> getMetaList() {
 		return metaList;
