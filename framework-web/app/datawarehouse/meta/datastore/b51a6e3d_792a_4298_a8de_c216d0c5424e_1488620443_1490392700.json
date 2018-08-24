@@ -17,6 +17,7 @@
 	"numRows": {
 		"$numberLong": "2"
 	},
+        "runMode" : "BATCH",
 	"uuid": "a30f8cdb-081a-42aa-90b2-31e3991dac70",
 	"version": "1490392701",
 	"name": "b51a6e3d_792a_4298_a8de_c216d0c5424e_1488620443_1490392700",
@@ -27,6 +28,7 @@
 			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
+
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active": "Y",
 	"published": "N",
