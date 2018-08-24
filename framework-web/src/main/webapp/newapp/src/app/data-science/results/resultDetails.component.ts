@@ -113,7 +113,7 @@ export class ResultDetailsComponent {
     }
     else if (this.type == "training") {
       if (this.modelData.customFlag == 'N') {
-        this.downloadTrainData();
+        let a = this.downloadTrainData();
         return;
       }
       this.http.get(this.baseUrl + '/model/train/download?action=view&trainExecUUID=' + this.id + '&trainExecVersion=' + this.version + '&mode=" "',
@@ -123,7 +123,7 @@ export class ResultDetailsComponent {
     }
   }
 
-  private saveToFileSystem(response) {  
+  private saveToFileSystem(response) {  debugger
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
@@ -131,9 +131,11 @@ export class ResultDetailsComponent {
     saveAs(blob, filename);
   }
 
-  downloadTrainData() {
+  downloadTrainData() {debugger
     let filename = this.id+".txt";
-    const blob = new Blob([this.modelResult], { type: 'text/xml' });
+    console.log(JSON.stringify(this.modelResult));
+    console.log(this.modelResult);
+    const blob = new Blob([JSON.stringify(this.modelResult)], { type: 'text/xml' });
     saveAs(blob, filename);
   }
 
