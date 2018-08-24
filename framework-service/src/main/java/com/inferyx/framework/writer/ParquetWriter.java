@@ -58,7 +58,7 @@ public class ParquetWriter implements IWriter {
 				} 				
 			} 
 			df.printSchema();
-			df.show(true);
+//			df.show(true);
 			if(saveMode.equalsIgnoreCase("append"))	{
 				df.write().mode(SaveMode.Append).parquet(filePathUrl);
 			}else if(saveMode.equalsIgnoreCase("overwrite")) {
