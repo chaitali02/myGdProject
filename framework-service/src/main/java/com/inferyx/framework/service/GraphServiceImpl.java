@@ -205,6 +205,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		keywordList.add("edgeInfo");
 		keywordList.add("nodeProperties");
 		keywordList.add("edgeProperties");
+		keywordList.add("metaList");
 
 	}
 
@@ -917,9 +918,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-		/*	if (key.equalsIgnoreCase("nodeProperties")) {
+			if (key.equalsIgnoreCase("metaList")) {
 				System.out.println("assssssd");
-			}*/
+			}
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -1278,7 +1279,43 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 												edgeRowMap, attr, name, null);
 								}
 							}
-						} else if (key.equalsIgnoreCase("formulaInfo")) {
+						}
+						else if (key.equalsIgnoreCase("metaList")) {
+							// String attrN = childObj.optString("ref");
+							if (childObj != null && value.startsWith("{", 0)) {
+								String refN = childObj.optString("ref");
+								if (childObj != null && refN.startsWith("{", 0)) {
+									JSONObject jsonObjType = new JSONObject(refN);
+									
+									childType=jsonObjType.optString("type");
+									if (!childType.equals(MetaType.simple.toString())) {
+										/*
+										 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										 * null, null, null, null, null, childUuid, null, null); refName =
+										 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
+										 * baseEntityList.get(0).getName();
+										 */
+
+										baseEntityList = commonServiceImpl.getResolveNameByUuidandType(jsonObjType.optString("uuid"),
+												jsonObjType.optString("type"));
+										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
+									} else {
+										continue;
+										// refName = MetaType.simple.toString();
+									}
+									if (StringUtils.isBlank(refName)) {
+										refName = childType;
+									}
+									
+									
+									
+									if (refName != null && !refName.equals("null"))
+										createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
+												edgeRowMap, refName, name, null);
+								}
+							}
+						}else if (key.equalsIgnoreCase("formulaInfo")) {
 
 							if (childObj != null && value.startsWith("{", 0)) {
 								String name1 = childObj.optString("value");

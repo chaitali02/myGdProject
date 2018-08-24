@@ -83,10 +83,12 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
@@ -856,8 +858,11 @@ public class ModelServiceImpl {
 	}
 	
 	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
-		
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
+		ModelExec modelExec = (ModelExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.modelExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(modelExec.getResult().getRef().getUuid(),
+				modelExec.getResult().getRef().getVersion());
+
 		String location = datastore.getLocation();
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/bestModel/stages"))

@@ -1061,7 +1061,7 @@ public class DataStoreServiceImpl {
 			return iDataStoreDao.findAllVersion(uuid);
 	}
 
-	public DataStore findDatastoreByExec(String uuid, String version) throws JsonProcessingException {
+	public DataStore getDatastore(String uuid, String version) throws JsonProcessingException {
 		return (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 	}
 

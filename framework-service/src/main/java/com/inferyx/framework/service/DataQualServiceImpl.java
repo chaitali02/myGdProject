@@ -63,6 +63,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -599,9 +600,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		try {
 			limit = offset+limit;
 			offset = offset+1;			
-
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
-			
+			DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
+					dataQualExecVersion, MetaType.dqExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
+					dqExec.getResult().getRef().getVersion());
+	
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 			/*String appUuid = null;
@@ -956,8 +959,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	
 	
 	public List<Map<String, Object>> getDataQualSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) throws JsonProcessingException {
-		
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
+		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
+				dataQualExecVersion, MetaType.dqExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
+				dqExec.getResult().getRef().getVersion());
+
 		dataStoreServiceImpl.setRunMode(runMode);
 		String tableName = null;
 		List<Map<String, Object>> data = new ArrayList<>();
