@@ -1,0 +1,53 @@
+{
+  "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+  "version": "1534081141",
+  "name": "paramlist_app",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Aug 12 09:39:01 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+     {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "load_date",
+      "paramType": "string",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "03/31/2018"
+      },
+      "paramRef": null
+    }
+  ],
+  "paramListType": "dag",
+  "templateFlg": "Y",
+  "templateInfo": null
+}
