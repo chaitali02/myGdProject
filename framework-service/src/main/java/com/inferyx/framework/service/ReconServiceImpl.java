@@ -234,8 +234,10 @@ public class ReconServiceImpl extends RuleTemplate {
 		try {
 			limit = offset+limit;
 			offset = offset+1;
-			ReconExec reconExec=(ReconExec)commonServiceImpl.getOneByUuidAndVersion(reconExecUUID, reconExecVersion, MetaType.reconExec.toString());
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reconExec.getResult().getRef().getUuid(), reconExec.getResult().getRef().getVersion());
+			ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(reconExecUUID, reconExecVersion,
+					MetaType.reconExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(reconExec.getResult().getRef().getUuid(),
+					reconExec.getResult().getRef().getVersion());
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 			/*String appUuid = null;

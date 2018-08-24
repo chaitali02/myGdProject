@@ -54,6 +54,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -536,9 +537,11 @@ public class RuleServiceImpl extends RuleTemplate {
 		try {
 			limit = offset + limit;
 			offset = offset + 1;
+			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
+					MetaType.ruleExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
+					ruleExec.getResult().getRef().getVersion());
 
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(ruleExecUUID, ruleExecVersion);
-			
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 			/*boolean requestIdExistFlag = false;
