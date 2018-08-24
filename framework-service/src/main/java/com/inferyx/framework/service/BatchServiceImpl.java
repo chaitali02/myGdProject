@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Status.Stage;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -114,22 +115,26 @@ public class BatchServiceImpl {
 	public BatchExec checkCompleteStatus(BatchExec batchExec) throws Exception {
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
 		boolean areAllCompleted = false;
+		Stage setLatestStatus = Status.Stage.InProgress;
 		do {
 			for(int i=0; i<execList.size(); i++) {
 				MetaIdentifier execMI = execList.get(i).getRef();				
 				Status latestStatus = checkStatusByExec(execMI);
 				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
 					areAllCompleted = true;
+					setLatestStatus = Status.Stage.Completed;
 				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
 					areAllCompleted = true;
+					setLatestStatus = Status.Stage.Killed;
 				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
 					areAllCompleted = true;
+					setLatestStatus = Status.Stage.Failed;
 				} else {
 					areAllCompleted = false;
 				}				
 			}
 			if(areAllCompleted) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Completed);
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, setLatestStatus);
 			}
 		} while(!areAllCompleted);
 		
