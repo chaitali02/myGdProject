@@ -31,6 +31,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -170,12 +171,13 @@ public class WorkbookUtil {
 		
 		Workbook workBook = new HSSFWorkbook();
 		Sheet hssfSheet = workBook.createSheet("report");
-//		hssfSheet.addMergedRegion(new CellRangeAddress(0, 1, 0, report.getAttributeInfo().size()-1));
+		hssfSheet.addMergedRegion(new CellRangeAddress(1, 3,0, report.getAttributeInfo().size()-1));
 		
 
 	/******* adding title *******/
 		Font titleHeaderFont = workBook.createFont();
 		titleHeaderFont.setBold(true);
+		titleHeaderFont.setFontHeight((short)4);
 //		titleHeaderFont.setFontHeight((short)1);
 		CellStyle titleHeaderStyle = workBook.createCellStyle();
 //		titleHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -183,14 +185,22 @@ public class WorkbookUtil {
 		titleHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		titleHeaderStyle.setFont(titleHeaderFont);
 		titleHeaderStyle.setAlignment(CellStyle.ALIGN_CENTER);
-
+		
+		titleHeaderStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 		Row title = hssfSheet.createRow((short)1);
 		Cell titleCell = title.createCell((short)0);
 		titleCell.setCellStyle(titleHeaderStyle);
 		titleCell.setCellValue(new HSSFRichTextString(report.getTitle()));
 		
+		
+		
+		
 	 /******* adding filter *******/
-		short filterRowNum = 3;
+	
+		hssfSheet.addMergedRegion(new CellRangeAddress(6, 6,0, report.getAttributeInfo().size()-1));
+		
+		
+		short filterRowNum = 6;
 		ExecParams execParams = reportExec.getExecParams();
 		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
 			Font filterHeaderFont = workBook.createFont();
@@ -204,7 +214,7 @@ public class WorkbookUtil {
 			Row filterTitle = hssfSheet.createRow(filterRowNum);
 			Cell filterTitleCell = filterTitle.createCell(0);
 			filterTitleCell.setCellStyle(filterHeaderStyle);
-			filterTitleCell.setCellValue("FILTER:");
+			filterTitleCell.setCellValue("  FILTER          ");
 			filterRowNum++;
 			for(AttributeRefHolder attributeRef : execParams.getFilterInfo()) {
 				String lhsAttr = attributeRef.getAttrName();
@@ -229,6 +239,10 @@ public class WorkbookUtil {
 		columnHeaderStyle.setFillForegroundColor(HSSFColor.ORANGE.index);
 		columnHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		columnHeaderStyle.setFont(columnHeaderFont);
+		columnHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+		columnHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+		columnHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+		columnHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
 		short columnRowNum = filterRowNum;
 		if(filterRowNum != (short)3) {
 			columnRowNum = (short) (filterRowNum + 2);
@@ -238,10 +252,19 @@ public class WorkbookUtil {
 		for (int i = 0; i<columnNames.length; i++) {
 			Cell cell = columns.createCell(i);
 			cell.setCellStyle(columnHeaderStyle);
-			cell.setCellValue(columnNames[i]);
+			cell.setCellValue(columnNames[i]+"                     ");
 		}
 	
 	/******* adding rows *******/
+		Font columnFont = workBook.createFont();
+		CellStyle columnStyle = workBook.createCellStyle();
+	
+		columnStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		columnStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		columnStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		columnStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		
 		for (int i = 0; i < resultList.size(); i++) {
 			Row nextrow = hssfSheet.createRow((columnRowNum+1) + i);
 			columnNames = resultList.get(i).keySet().toArray(new String[resultList.get(0).keySet().size()]);
@@ -253,7 +276,9 @@ public class WorkbookUtil {
 				}catch (Exception e) {
 					value = "null";
 				}
-				nextrow.createCell(cellNum).setCellValue(value);
+				Cell cell = nextrow.createCell(cellNum);
+				cell.setCellValue(value);
+				cell.setCellStyle(columnStyle);
 				cellNum++;
 			}
 			hssfSheet.autoSizeColumn(i);
