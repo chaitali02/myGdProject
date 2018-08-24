@@ -2,9 +2,9 @@ import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http'
 import { SharedService } from '../../shared/shared.service';
-// import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/map';
 // impo  [x: string]: any;
-//import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/catch';
 // import 'rxjs/add/operator/promise';
 
 @Injectable()
@@ -247,14 +247,23 @@ saveAs(uuid:Number,version:String,type:String): Observable<any[]> {
     return Observable.throw(error.statusText);
 }
 
-executeWithParams(type, uuid, version, action){ 
+// submit(type:any,data:any): Observable<any[]> {
+//   let url ='/common/submit?action=edit&type='+type;
+//   return this._sharedService.postCall(url,data)
+//   .map((response: Response) => {
+//     return <any>response.text();
+// })
+//  .catch(this.handleError);
+// }
+
+executeWithParams(type, uuid, version, data): Observable<any[]>{ 
   let url
   if(type=='train'){
-    url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
-    let body=null
-    return this._sharedService.postCall(url,body)
+    url = "/model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+    let data1 = data;
+    return this._sharedService.postCall(url,data1)
     .map((response: Response) => {
-      return <any[]>response.json();
+      return <any>response["_body"];
   })
    .catch(this.handleError);
   }
