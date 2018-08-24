@@ -858,10 +858,10 @@ public class ModelServiceImpl {
 	}
 	
 	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
-		ModelExec modelExec = (ModelExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.modelExec.toString());
-		DataStore datastore = dataStoreServiceImpl.getDatastore(modelExec.getResult().getRef().getUuid(),
-				modelExec.getResult().getRef().getVersion());
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.trainExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(trainExec.getResult().getRef().getUuid(),
+				trainExec.getResult().getRef().getVersion());
 
 		String location = datastore.getLocation();
 		String title = "";
