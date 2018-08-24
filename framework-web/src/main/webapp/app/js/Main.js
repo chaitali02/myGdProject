@@ -2245,7 +2245,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
 
         .state('resultgraphwf', {
-            url: "/DataPipeline/Result?id&version&type&mode&dagid",
+            url: "/DataPipeline/Result?id&version&type&mode&dagid&returnBack",
             templateUrl: "views/data-pipeline-result.html",
             data: { pageTitle: 'Data Pipeline' },
             controller: "",

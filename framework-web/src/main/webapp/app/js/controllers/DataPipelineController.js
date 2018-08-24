@@ -78,8 +78,13 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
     else if ($scope.daggroupExecName || $scope.resultExecName) {
       $scope.$broadcast('closeSubTabs');
     }
-    else
+    else if ($stateParams.returnBack == "true" && $rootScope.previousState) {
+      //revertback
+      $state.go($rootScope.previousState.name, $rootScope.previousState.params);
+    }
+    else{
       $state.go('resultwf', { dagid: $stateParams.dagid });
+    }
   }
 
   $scope.reExecute = function (data) {

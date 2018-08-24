@@ -44,7 +44,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
     }
     return style;
   }
-
+  $scope.gridOptions={};
   $scope.gridOptions = angular.copy(dagMetaDataService.gridOptionsDefault);
   $scope.gridOptions.columnDefs.push({
     displayName: 'Status',

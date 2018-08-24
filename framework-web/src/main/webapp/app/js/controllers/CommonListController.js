@@ -171,6 +171,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'dagexec':
         api = 'dag';
         break;
+      case 'batchexec':
+        api = 'batch';
+        break;
     }
     if (!api) {
       return
@@ -267,6 +270,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         break;
       case 'recongroupExec':
         api = 'recon';
+        break;
+      case 'batchExec':
+        api = 'batch';
         break;
     }
     if (!api) {
