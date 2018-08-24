@@ -186,8 +186,6 @@ export class SimulationComponent implements OnInit {
       allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
       allAttributeintoObj["value"]["datapodname"] = response[i].datapodname;
       // allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
-
-
       allAttributeinto1[i] = allAttributeintoObj;
     }
     this.paramListHolder[index]["allAttributeinto"] = allAttributeinto1;

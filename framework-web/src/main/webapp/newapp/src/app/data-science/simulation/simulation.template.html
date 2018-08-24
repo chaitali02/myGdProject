@@ -355,15 +355,14 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <p-dialog header="Execution" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600"
-                                                    [resizable]="true" [baseZIndex]="1000">
+                                                <p-dialog header="Execution" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600" 
+                                                    [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'height':'300px'}">
                                                     <div class="row">
                                                         <div>
                                                             <div class="caption">
                                                                 <span class="caption-subject sbold ">Run Params</span>
                                                             </div>
-
-                                                            <div class="form-body" style="padding-top:50px;">
+                                                            <div class="form-body" style="padding-top:10px;">
                                                                 <table class=" row-border hover table  table-striped table-bordered">
                                                                     <!-- <table class=" row-border table table-striped table-bordered" style="height:200px;" cellspacing="20" cellpadding="20"> -->
                                                                     <thead>
@@ -379,137 +378,98 @@
                                                                     <tbody>
                                                                         <tr *ngFor="let data of paramListHolder;let i=index">
                                                                             <td>
-                                                                                <span class="form-group">
-                                                                                    <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
-                                                                                </span>
+                                                                                <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">                                                                        
                                                                             </td>
                                                                             <td>
-                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <input type="text" class="form-control" [(ngModel)]="data.paramName" name="paramName+{{i}}" title="{{data.paramName}}" [disabled]="true">
-                                                                                </span>
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.paramName" name="paramName+{{i}}" title="{{data.paramName}}" [disabled]="true">
                                                                             </td>
                                                                             <td>
-                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
-                                                                                </span>
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
                                                                             </td>
                                                                             <td>
                                                                                 <div *ngIf="['simple','distribution','list'].indexOf(data.selectedParamValueType)  !=-1">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
-                                                                                    </span>
+                                                                                    <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
                                                                                 </div>
                                                                                 <div *ngIf="['attribute','attributes','datapod','rule','dataset'].indexOf(data.selectedParamValueType) !=-1">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="attributeTypes" [(ngModel)]="data.selectedParamValueType" name="selectedParamValueType+{{i}}" [style]="{'width':'150px','padding':'3px'}"
-                                                                                            [filter]="true" placeholder="Select">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    <p-dropdown [options]="attributeTypes" [(ngModel)]="data.selectedParamValueType" name="selectedParamValueType+{{i}}" [style]="{'width':'150px','padding':'3px'}"
+                                                                                        [filter]="true" placeholder="Select">
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                             </td>
                                                                             <td>
                                                                                 <div *ngIf="data.selectedParamValueType =='simple'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <input type="text" class="form-control" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" title="{{data.paramValue}}"
+                                                                                    <input type="text" class="form-control" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" title="{{data.paramValue}}"
                                                                                             [disabled]="mode == 'true'">
-                                                                                    </span>
                                                                                 </div>
                                                                                 <div *ngIf="data.selectedParamValueType =='list'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-
-                                                                                        <p-dropdown [options]="data.allListInfo" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                                                                                    <p-dropdown [options]="data.allListInfo" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
                                                                                             [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="data.selectedParamValueType =='datapod'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="allDatapod" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
+                                                                                    <p-dropdown [options]="allDatapod" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select"
                                                                                             (click)="getAllLatest('datapod',i)">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="data.selectedParamValueType =='dataset'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="allDataset" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
+                                                                                    <p-dropdown [options]="allDataset" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select"
                                                                                             (click)="getAllLatest('dataset',i)">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="data.selectedParamValueType =='rule'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="allRule" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
+                                                                                    <p-dropdown [options]="allRule" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select"
                                                                                             (click)="getAllLatest('rule',i)">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="data.selectedParamValueType =='distribution'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="allDistribution" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                                                                                    <p-dropdown [options]="allDistribution" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
                                                                                             [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select"
                                                                                             (click)="getAllLatest('distribution',i)">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="['datapod','rule','dataset','distribution','simple','list'].indexOf(data.selectedParamValueType) ==-1">{{"NA"}}
                                                                                 </div>
                                                                             </td>
                                                                             <td>
                                                                                 <div *ngIf="data.paramType=='attribute'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <p-dropdown [options]="data.allAttributeinto" [(ngModel)]="data.attributeInfo" name="attributeInfo+{{i}}" [disabled]="mode == 'true'"
+                                                                                    <p-dropdown [options]="data.allAttributeinto" [(ngModel)]="data.attributeInfo" name="attributeInfo+{{i}}" [disabled]="mode == 'true'"
                                                                                             [style]="{'width':'150px','padding':'3px'}"
                                                                                             [filter]="true" placeholder="Select"
                                                                                             (click)="getAllAttribute(i)">
-                                                                                        </p-dropdown>
-                                                                                    </span>
+                                                                                    </p-dropdown>
                                                                                 </div>
                                                                                 <div *ngIf="data.paramType=='attributes'">
-                                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                        <!-- <p-dropdown [options]="data.allAttributeinto"
-                                                                                            [(ngModel)]="data.attributeInfo" 
-                                                                                            name="attributeInfo+{{i}}"
-                                                                                            [disabled]="mode == 'true'" 
-                                                                                            [style]="{'width':'150px','padding':'3px'}"
-                                                                                            [filter]="true" 
-                                                                                            placeholder="Select">
-                                                                                            </p-dropdown>  -->
-                                                                                        <p-multiSelect [options]="data.allattributeInfoTag" [(ngModel)]="data.attributeInfoTag" name="attributeInfoTag+{{i}}" [style]="{'width':'200px'}"
-                                                                                            (click)="onChangeAtrributes(i)">
-                                                                                        </p-multiSelect>
-                                                                                    </span>
+                                                                                    <p-multiSelect [options]="data.allattributeInfoTag" [(ngModel)]="data.attributeInfoTag" name="attributeInfoTag+{{i}}" [style]="{'width':'200px'}"
+                                                                                        (click)="onChangeAtrributes(i)">
+                                                                                    </p-multiSelect>
                                                                                 </div>
                                                                                 <div *ngIf="['attribute','attributes'].indexOf(data.paramType) == -1">{{"NA"}}
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
-
                                                                 </table>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <p-footer>
                                                         <div style="padding-top: 10px;">
-                                                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                                            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
                                                                 <a class="btn btn-primary" (click)="goBack()">Cancel</a>
                                                                 <input type="submit" class="btn btn-success" value="Submit" name="submit" (click)="executeWithExecParamList()">
                                                             </div>
                                                         </div>
                                                     </p-footer>
                                                 </p-dialog>
-
                                                 <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true'" name="checkboxModelexecution" binary="true"
                                                     (click)="onChangeRunImmediately()"></p-checkbox>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4" style="padding-top: 2%;">
@@ -525,14 +485,10 @@
                                             </div>
                                         </div>
                                     </form>
-                                </div>
-                                <!-- End Tab3-->
-                            </div>
-                            <!--End tab-content-->
-                        </div>
-                        <!--End form-body-->
-                    </div>
-                    <!--End form-wizard-->
+                                </div><!-- End Tab3-->
+                            </div> <!--End tab-content-->
+                        </div>  <!--End form-body-->
+                    </div><!--End form-wizard-->
                 </div>
             </div>
         </div>

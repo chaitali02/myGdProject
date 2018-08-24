@@ -18,6 +18,21 @@ import { retryWhen } from 'rxjs/operators/retryWhen';
   templateUrl: './training.template.html',
 })
 export class TrainingComponent implements OnInit {
+  execParams1: {};
+  execParams: any;
+  selectParamsetName: {};
+  paramsetArrayTable: any;
+  paramTableCol2: any;
+  selectAllAttributeRow: any;
+  types: { 'value': string; 'label': string; }[];
+  typeSimple: string[];
+  paramtableArray: any;
+  selectParamList: any;
+  selectParamlistName: any;
+  paramsetData: any[];
+  selectParamType: any;
+  paramlistData: any;
+  displayDialogBox: boolean;
   checkboxModelexecution: boolean;
   isTargetNameDisabled: boolean;
   selectTarget: any;
@@ -65,11 +80,26 @@ export class TrainingComponent implements OnInit {
   allsourceLabel: any[];
   sample: any
   msgs: any[];
-  att: any;
-
+  //att: any;
+  allType: any[];
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _trainingService: TrainingService) {
     this.train = {};
     this.train["active"] = true;
+    this.displayDialogBox = false;
+    this.selectParamType = null;
+    this.selectParamlistName = {};
+    this.selectParamlistName["uuid"] = " ";
+    this.selectParamsetName = {};
+    this.types = [{ 'value': 'date', 'label': 'date' },
+    { 'value': 'double', 'label': 'double' },
+    { 'value': 'integer', 'label': 'integer' },
+    { 'value': 'string', 'label': 'string' },
+    { 'value': 'list', 'label': 'list' },
+    { 'value': 'distribution', 'label': 'distribution' },
+    { 'value': 'attribute', 'label': 'attribute' },
+    { 'value': 'attributes', 'label': 'attribute[s]' },
+    { 'value': 'datapod', 'label': 'datapod' }]
+    this.typeSimple = ["string", "double", "date", "integer", "list"];
     this.train.trainPercent = 70;
     this.train.valPercent = 30;
     this.continueCount = 1;
@@ -90,9 +120,12 @@ export class TrainingComponent implements OnInit {
       "routeurl": null
     }
     ];
-
-
+    this.allType = [
+      { "label": "paramlist", "value": "paramlist" },
+      { "label": "paramset", "value": "paramset" }
+    ]
   }
+
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
@@ -148,8 +181,7 @@ export class TrainingComponent implements OnInit {
     this._commonService.getAllLatest(source)
       .subscribe(
       response => {
-        this.onSuccessgetAllLatestSource(response)
-
+        this.onSuccessgetAllLatestSource(response);
       },
       error => console.log("Error :: " + error));
   }
@@ -179,10 +211,10 @@ export class TrainingComponent implements OnInit {
   onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
     this.selectLabel = null;
-    for(const i in this.featureMapTableArray){
-    this.featureMapTableArray[i].targetFeature= null;
+    for (const i in this.featureMapTableArray) {
+      this.featureMapTableArray[i].targetFeature = null;
     }
-  } 
+  }
 
   onSuccessgetAllLatestSource(response) {
     let temp = []
@@ -258,6 +290,7 @@ export class TrainingComponent implements OnInit {
     this.createdBy = response.createdBy.ref.name;
     this.train.active = response["active"] == 'Y' ? true : false;
     this.train.published = response["published"] == 'Y' ? true : false;
+    this.train.useHyperParams = response["useHyperParams"] == 'Y' ? true : false;
     this.breadcrumbDataFrom[2].caption = response.name;
     this.trainPercent = response.trainPercent;
     this.valPercent = response.valPercent;
@@ -304,13 +337,11 @@ export class TrainingComponent implements OnInit {
     if (this.selectModel) {
       this.onChangeModel(false)
     }
-
   }
 
   onChangeSource() {
     this.getAttribute();
-
-  } 
+  }
   getAttribute() {
 
     this._commonService.getAllAttributeBySource(this.selectSource.uuid, this.selectSourceType).subscribe(
@@ -355,27 +386,23 @@ export class TrainingComponent implements OnInit {
 
   onChangeModel(Default) {
     {
-
       this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
         .subscribe(
         response => {
           this.onSuccessonChangeModel(response, Default)
-
         },
-
         error => console.log("Error :: " + error));
     }
     if (this.selectModel) {
       return false
     }
-
   }
 
   onSuccessonChangeModel(response, Default) {
     this.modeldata = response;
     if (Default) {
-     // this.checkboxModelexecution = false;
-     // this.isShowExecutionparam = false;
+      // this.checkboxModelexecution = false;
+      // this.isShowExecutionparam = false;
       var featureMapTableArray = [];
       for (var i = 0; i < response.features.length; i++) {
         var featureMap = {};
@@ -394,21 +421,20 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  onChangeTargeType() {
-    if (this.selectTargetType == 'datapod') {
-      this.isTargetNameDisabled = false;
-      this.getAllLatestTarget(this.selectTargetType);
+  // onChangeTargeType() {
+  //   if (this.selectTargetType == 'datapod') {
+  //     this.isTargetNameDisabled = false;
+  //     this.getAllLatestTarget(this.selectTargetType);
 
-    } else {
-      this.isTargetNameDisabled = true;
-      this.allTarget = [];
-    }
-  }
+  //   } else {
+  //     this.isTargetNameDisabled = true;
+  //     this.allTarget = [];
+  //   }
+  // }
 
   public goBack() {
     //this._location.back();
     this.router.navigate(['/app/list/train']);
-
   }
 
   enableEdit(uuid, version) {
@@ -428,47 +454,121 @@ export class TrainingComponent implements OnInit {
   }
 
   onChangeRunImmediately() {
-    if (this.checkboxModelexecution == true && this.modeldata.dependsOn.ref.type == "algorithm") {
-      this._trainingService.getParamSetByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version)
-        .subscribe(
-        response => {
-          this.onSuccessGetParamSetByAlgorithm(response)
-        },
-        error => console.log("Error :: " + error));
+    if (this.checkboxModelexecution == true) {
+      this.displayDialogBox = true;
     }
-    else {
-      this.isShowExecutionparam = false;
-      this.allparamset = null;
+    else if (this.checkboxModelexecution == false) {
+      this.selectParamType = null;
+      this.selectParamlistName = {};
+      this.selectParamsetName = {};
     }
   }
 
-
-
-  
-  onSuccessGetParamSetByAlgorithm(response) {
-    this.allparamset = response
-    this.isShowExecutionparam = true;
+  onChangeType() {
+    if (this.selectParamType == "paramlist") {
+      this.selectParamsetName = {};
+      this._trainingService.getParamListByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version || "", "paramlist", this.train.useHyperParams)
+        .subscribe(response => { this.onSuccessgetParamListByAlgorithm(response) },
+        error => console.log("Error ::" + error));
+    }
+    else if (this.selectParamType == "paramset") {
+      this.selectParamlistName = {};
+      this._trainingService.getParamSetByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version, this.train.useHyperParams)
+        .subscribe(response => { this.onSuccessgetParamSetByAlgorithm(response) },
+        error => console.log("Error ::" + error));
+    }
   }
 
-  selectAllRow() {
-    if (!this.selectallattribute) {
-      this.selectallattribute = true;
+  onSuccessgetParamListByAlgorithm(response) {
+    let paramlistArray = [];
+    for (const i in response) {
+      let paramlistObj = {}
+      paramlistObj["label"] = response[i].ref.name;
+      paramlistObj["value"] = {};
+      paramlistObj["value"]["uuid"] = response[i].ref.uuid;
+      paramlistObj["value"]["name"] = response[i].ref.name;
+      paramlistArray[i] = paramlistObj;
+    }
+    this.paramlistData = paramlistArray;
+  }
+
+  onSuccessgetParamSetByAlgorithm(response) {
+    let paramsetArray = [];
+    for (const i in response) {
+      let paramsetObj = {}
+      paramsetObj["label"] = response[i].name;
+      paramsetObj["value"] = {};
+      paramsetObj["value"]["uuid"] = response[i].uuid;
+      paramsetObj["value"]["name"] = response[i].name;
+      paramsetObj["value"]["version"] = response[i].version;
+      paramsetArray[i] = paramsetObj;
+    }
+    this.paramsetData = paramsetArray;
+    this.paramsetData.splice(0, 0, {
+      'label': 'USE DEFAULT VALUE',
+      'value': ''
+    });
+
+    this.paramTableCol2 = response[0].paramInfo[0].paramSetVal;
+    this.paramsetArrayTable = response[0].paramInfo;
+  }
+
+  onChangeParamlist() {
+    if (this.selectParamlistName.uuid !== " ") {
+      this._trainingService.getParamByParamList(this.selectParamlistName.uuid, "paramlist")
+        .subscribe(response => {
+          this.onSuccessgetParamByParamList(response),
+            error => console.log("Error ::" + error)
+        })
+    }
+  }
+
+  onSuccessgetParamByParamList(response) {
+    var arrayTemp = [];
+    for (const i in response) {
+      let paramtableObj = {};
+      paramtableObj["paramName"] = response[i].paramName;
+      paramtableObj["paramType"] = response[i].paramType;
+
+      if (this.typeSimple.indexOf(response[i].paramType) != -1) {
+        paramtableObj["paramValue"] = response[i].paramValue.value;
+      }
+      else if (response[i].paramType == "distribution") {
+        let value1Temp: DependsOn = new DependsOn();
+        value1Temp.label = response[i].paramValue.ref.name;
+        value1Temp.uuid = response[i].paramValue.ref.uuid;
+
+        paramtableObj["paramValue"] = value1Temp;
+      }
+      else if (response[i].paramValue == null) {
+        paramtableObj["paramValue"] = "";
+      }
+      arrayTemp[i] = paramtableObj;
+    }
+    this.paramtableArray = arrayTemp;
+  }
+
+  cancelDialogbox() {
+    this.displayDialogBox = false;
+  }
+
+  executeWithExecParamList() {
+    this.displayDialogBox = false;
+  }
+
+  checkAllAttributeRow() {
+    if (!this.selectAllAttributeRow) {
+      this.selectAllAttributeRow = true;
     }
     else {
-      this.selectallattribute = false;
+      this.selectAllAttributeRow = false;
     }
-    this.paramtable.forEach(stage => {
-
-      stage.selected = this.selectallattribute;
+    console.log(this.selectAllAttributeRow);
+    this.paramsetArrayTable.forEach(paramjson => {
+      paramjson.selected = this.selectAllAttributeRow;
+      console.log(JSON.stringify(paramjson))
     });
   }
-
-  // changeParamertLsitType() {
-  //   if (this.modeldata == null) {
-  //     this.isShowExecutionparam = false;
-  //     //this.allParameterList = null;
-  //   }
-  // }
 
   trainExecute(modeldetail) {
     let newDataList = [];
@@ -502,7 +602,6 @@ export class TrainingComponent implements OnInit {
         execParams = null
       }
     }
-   
   }
 
   onSelectparamSet() {
@@ -542,6 +641,7 @@ export class TrainingComponent implements OnInit {
     trainJson["desc"] = this.train.desc
     trainJson["active"] = this.train.active == true ? 'Y' : "N";
     trainJson["published"] = this.train.published == true ? 'Y' : "N";
+    trainJson["useHyperParams"] = this.train.useHyperParams == true ? 'Y' : "N";
     // let tagArray=[];
     // if(this.dqdata.tags !=null){
     //   for(var counttag=0;counttag<this.dqdata.tags.length;counttag++){
@@ -630,22 +730,84 @@ export class TrainingComponent implements OnInit {
     }
   }
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "train", "execute").subscribe(
-      response => {
-        this.showMassage('train Save and Submit Successfully', 'success', 'Success Message')
-        setTimeout(() => {
+    this.trainExecute1(response);
+  }
 
-          this.goBack()
-        }, 1000);
-      },
-      error => console.log('Error :: ' + error)
+  trainExecute1(response1) {
+    if (this.selectParamType == "paramlist") {
+      if (this.selectParamlistName) {
+        var execParams = {};
+        var paramListInfo = [];
+        var paramInfo = {};
+        var paramInfoRef = {};
+        paramInfoRef["uuid"] = this.selectParamlistName["uuid"];
+        paramInfoRef["type"] = "paramlist";
+        paramInfo["ref"] = paramInfoRef;
+        paramListInfo[0] = paramInfo;
+        execParams["paramListInfo"] = paramListInfo;
+      } else {
+        execParams = null;
+      }
+      this.paramlistData = null;
+      this.selectParamType = null;
+    }
+    else {
+      let newDataList = [];
+      //this.selectallattribute = false;
+      let execParams = {}
+      if (this.paramsetArrayTable) {
+        this.paramsetArrayTable.forEach(selected => {
+          if (selected.selected) {
+            newDataList.push(selected);
+          }
+        });
+        let paramInfoArray = [];
+        if (this.paramsetArrayTable && newDataList.length > 0) {debugger
+          let ref = {}
+          ref["uuid"] = this.selectParamsetName["uuid"];
+          ref["version"] = this.selectParamsetName["version"];
+          for (var i = 0; i < newDataList.length; i++) {
+            var paraminfo = {};
+            paraminfo["paramSetId"] = newDataList[i].paramSetId;
+            paraminfo["ref"] = ref;
+            paramInfoArray[i] = paraminfo;
+          }
+        }
+
+        if (paramInfoArray.length > 0) {
+          execParams["paramInfo"] = paramInfoArray;
+        }
+        else {
+          execParams = null;
+        }
+      }
+    }
+    this.execParams = execParams;
+    this._commonService.executeWithParams("train", response1.uuid, response1.version, this.execParams)
+    .subscribe(response => {
+      this.onSuccessExecute(response)},
+      error =>{ 
+        console.log('Error :: ' + error)
+        this.onError()}
     )
   }
 
-  showMassage(msg, msgtype, msgsumary) {
+  onSuccessExecute(response){
+    this.showMessage('Configuration Submited and Saved Successfully', 'success', 'Success Message')
+    setTimeout(() => {
+      this.goBack()
+    }, 1000);
+  }
+
+  showMessage(msg, msgtype, msgsumary) {
     this.isSubmit = "false";
     this.msgs = [];
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
+  }
+
+  onError(){
+    this.msgs = [];
+    this.msgs.push({ severity: 'failed', summary: 'failed message', detail: 'execution failed' });
   }
 }
 
