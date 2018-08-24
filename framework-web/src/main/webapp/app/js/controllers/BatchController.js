@@ -214,6 +214,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
     batchJson.published = $scope.batchDetail.published;
+    batchJson.inParallel= $scope.batchDetail.inParallel;
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
