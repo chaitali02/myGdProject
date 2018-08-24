@@ -13,7 +13,6 @@ import { DependsOn } from './dependsOn'
   styleUrls: ['./group.component.css']
 })
 export class GroupComponent implements OnInit {
-
   breadcrumbDataFrom: any;
   showGroup: any;
   group: any;
@@ -134,8 +133,17 @@ export class GroupComponent implements OnInit {
     this.createdBy = response.createdBy.ref.name;
     this.published = response["published"] == 'Y' ? true : false
     this.active = response["active"] == 'Y' ? true : false
-    this.version = response['version'];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
 
+      }//End For
+      this.group.tags = tags;
+    }
     let dependOnTemp1: DependsOn = new DependsOn();
     dependOnTemp1.uuid = response["roleId"]["ref"]["uuid"]
     dependOnTemp1.label = response["roleId"]["ref"]["name"]
@@ -265,29 +273,33 @@ export class GroupComponent implements OnInit {
     let groupJson = {};
     groupJson["uuid"] = this.group.uuid;
     groupJson["name"] = this.group.name;
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
+    // //let tagArray=[];
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
     // }
-    groupJson["tags"] = tagstemp;
-    groupJson["desc"] = this.group.desc;
+    // // if(this.tags.length > 0){
+    // //   for(let counttag=0;counttag < this.tags.length;counttag++){
+    // //     tagArray[counttag]=this.tags[counttag]["value"];
+    // //   }
+    // // }
+    // groupJson["tags"] = tagstemp;
+    var tagArray = [];
+    if (this.group.tags != null) {
+      for (var counttag = 0; counttag < this.group.tags.length; counttag++) {
+        tagArray[counttag] = this.group.tags[counttag].value;
 
+      }
+    }
+    groupJson['tags'] = tagArray
+    groupJson["desc"] = this.group.desc;
     let roleIdObj = {};
     let roleRef = {};
     roleRef["uuid"] = this.roleId.uuid;
     roleRef["type"] = "role";
     roleRef["name"] = this.roleId.name;
     roleIdObj["ref"] = roleRef;
-
     groupJson["roleId"] = roleIdObj;
-
-
     let appId1 = {};
     let appRef = {};
     appRef["uuid"] = this.appId.uuid;

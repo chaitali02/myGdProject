@@ -103,18 +103,29 @@ export class DatasourceComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.name;
+    this.datasource = response;
     this.uuid = response.uuid;
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
-    this.datasource = response;
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.datasource.tags = tags;
+    }//End If
     this.createdBy = response.createdBy.ref.name;
     this.version = response['version'];
     this.datasource.published = response["published"] == 'Y' ? true : false
     this.datasource.active = response["active"] == 'Y' ? true : false
     this.datasource.type = response["type"]
+    this.breadcrumbDataFrom[2].caption = response.name;
 
     // this.published = response['published'];
     // if(this.published === 'Y') { this.published = true; } else { this.published = false; }
@@ -165,16 +176,24 @@ export class DatasourceComponent implements OnInit {
     this.isSubmitEnable = true;
     let datasourceJson = {};
     datasourceJson["name"] = this.datasource.name;
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
     // }
-    datasourceJson["tags"] = tagstemp
+    // // if(this.tags.length > 0){
+    // //   for(let counttag=0;counttag < this.tags.length;counttag++){
+    // //     tagArray[counttag]=this.tags[counttag]["value"];
+    // //   }
+    // // }
+    // datasourceJson["tags"] = tagstemp
+    var tagArray = [];
+    if (this.datasource.tags != null) {
+      for (var counttag = 0; counttag < this.datasource.tags.length; counttag++) {
+        tagArray[counttag] = this.datasource.tags[counttag].value;
+
+      }
+    }
+    datasourceJson['tags'] = tagArray
     datasourceJson["desc"] = this.datasource.desc;
     datasourceJson["active"] = this.datasource.active == true ? 'Y' : "N"
     datasourceJson["published"] = this.datasource.published == true ? 'Y' : "N"

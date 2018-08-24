@@ -288,6 +288,18 @@ export class TrainingComponent implements OnInit {
     version.uuid = response["uuid"];
     this.selectedVersion = version;
     this.createdBy = response.createdBy.ref.name;
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
+
     this.train.active = response["active"] == 'Y' ? true : false;
     this.train.published = response["published"] == 'Y' ? true : false;
     this.train.useHyperParams = response["useHyperParams"] == 'Y' ? true : false;
@@ -651,10 +663,11 @@ export class TrainingComponent implements OnInit {
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
-        tagArray[counttag] = this.tags[counttag].text;
+        tagArray[counttag] = this.tags[counttag].value;
+
       }
     }
-    trainJson["tags"] = tagArray;
+    trainJson['tags'] = tagArray
     trainJson["valPercent"] = this.train.valPercent;
     trainJson["trainPercent"] = this.train.trainPercent;
     var dependsOn = {};

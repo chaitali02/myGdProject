@@ -182,33 +182,30 @@
               </div>
 
 
-              <div class="form-group"> 
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Summary Methods</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tag-input  [(ngModel)]="summaryMethods" 
-                    [disable]="mode == 'true'" name="summaryMethods" 
-                    [displayBy]="'text'" 
-                    theme='bootstrap' 
-                    style=" max-height: 65px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px">
-                 </tag-input>
-                  </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Summary Methods</label>
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tag-input [(ngModel)]="summaryMethods" [disable]="mode == 'true'" name="summaryMethods" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
                 </div>
+
+              </div>
 
 
               <div class="form-group">
                 <label class="col-md-3 control-label">Default Param List</label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWoH" name="paramListWoH" dataKey="uuid"
-                    placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}" [disabled]="mode == 'true'">
+                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWoH" name="paramListWoH" dataKey="uuid" placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Param List (Hyper Param)</label> 
+                <label class="col-md-3 control-label">Param List (Hyper Param)</label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWH" name="paramListWH" dataKey="uuid"
-                    placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}" [disabled]="mode == 'true'">
+                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWH" name="paramListWH" dataKey="uuid" placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
               </div>

@@ -113,6 +113,18 @@ export class DataProfileGroupDetailComponent {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.dataprofilegroup = response;
     this.createdBy = response.createdBy.ref.name
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.dataprofilegroup.tags = tags;
+    }//End If
+
     this.dataprofilegroup.published = response["published"] == 'Y' ? true : false
     this.dataprofilegroup.active = response["active"] == 'Y' ? true : false
     const version: Version = new Version();
@@ -169,13 +181,14 @@ export class DataProfileGroupDetailComponent {
     profileJson["uuid"] = this.dataprofilegroup.uuid
     profileJson["name"] = this.dataprofilegroup.name
     profileJson["desc"] = this.dataprofilegroup.desc
-    let tagArray = [];
+    var tagArray = [];
     if (this.dataprofilegroup.tags != null) {
       for (var counttag = 0; counttag < this.dataprofilegroup.tags.length; counttag++) {
-        tagArray[counttag] = this.dataprofilegroup.tags[counttag];
+        tagArray[counttag] = this.dataprofilegroup.tags[counttag].value;
+
       }
     }
-    profileJson["tags"] = tagArray;
+    profileJson['tags'] = tagArray;
     profileJson["active"] = this.dataprofilegroup.active == true ? 'Y' : "N"
     profileJson["published"] = this.dataprofilegroup.published == true ? 'Y' : "N"
     let ruleInfo = [];

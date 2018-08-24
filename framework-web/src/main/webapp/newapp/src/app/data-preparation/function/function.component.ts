@@ -129,6 +129,18 @@ export class FunctionComponent implements OnInit {
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.functionData.tags = tags;
+    }//End If
+
     this.breadcrumbDataFrom[2].caption = this.functionData.name;
     this.functionTableArray = response.functionInfo;
     for (let i = 0; i < this.functionTableArray.length; i++) {
@@ -263,31 +275,22 @@ export class FunctionComponent implements OnInit {
     functionJson["uuid"] = this.functionData.uuid
     functionJson["name"] = this.functionData.name
     functionJson["desc"] = this.functionData.desc
-    //functionJson["active"]=this.functionData.active == true ?'Y' :"N"
-    //functionJson["active"] = this.functionData.active;
     functionJson["published"] = this.functionData.published == true ? 'Y' : "N"
-    //functionJson["published"] = this.functionData.published;
     functionJson["functionInfo"] = this.functionData.functionInfo;
     functionJson["category"] = this.selectCatogory;
     functionJson["funcType"] = this.selectFunctionType;
     functionJson["inputReq"] = this.functionData.inputReq;
-    // var tagArray = [];
-    // if (this.tags != null) {
-    // 	for (var counttag = 0; counttag < this.tags.length; counttag++) {
-    // 		tagArray[counttag] = this.tags[counttag].text;
-    // 	}
-    // }
-    // functionJson.tags = tagArray;
+
     var tagArray = [];
     if (this.functionData.tags != null) {
       for (var counttag = 0; counttag < this.functionData.tags.length; counttag++) {
-        tagArray[counttag] = this.functionData.tags[counttag];
+        tagArray[counttag] = this.functionData.tags[counttag].value;
 
       }
     }
-    functionJson["tags"] = tagArray;
-    var functionInfoArray = [];
+    functionJson['tags'] = tagArray
 
+    var functionInfoArray = [];
     if (this.functionTableArray != null) {
       if (this.functionTableArray.length > 0) {
         for (let j = 0; j < this.functionTableArray.length; j++) {

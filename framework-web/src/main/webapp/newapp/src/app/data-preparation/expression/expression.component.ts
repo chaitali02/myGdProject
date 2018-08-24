@@ -3,9 +3,9 @@ import { AppConfig } from './../../app.config';
 import { CommonService } from './../../metadata/services/common.service';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import{ Version } from '../../shared/version'
+import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
-import{ DependsOn } from './dependsOn'
+import { DependsOn } from './dependsOn'
 @Component({
   selector: 'app-expression',
   templateUrl: './expression.template.html',
@@ -21,14 +21,14 @@ export class ExpressionComponent implements OnInit {
   matType: string[];
   expressionmetnotmat: {};
   rhsType: { "text": string; "caption": string; }[];
-  allFormula:  SelectItem[] = [];
+  allFormula: SelectItem[] = [];
   allAttribute: SelectItem[] = [];
   lhsType: { "text": string; "caption": string; }[];
   expressionTableArray: any[];
   selectVersion: any;
   versions: any[];
   showExpression: boolean;
-  breadcrumbDataFrom:any;
+  breadcrumbDataFrom: any;
   dependsOnType: { 'value': string; 'label': string; }[];
   tags: any;
   desc: any;
@@ -39,356 +39,371 @@ export class ExpressionComponent implements OnInit {
   mode: any;
   version: any;
   uuid: any;
-  expression : any;
+  expression: any;
   depends: any;
-  allName : any;
-  active : any;
-  published : any;
+  allName: any;
+  active: any;
+  published: any;
   logicalOperators: any;
   operators: any;
-  isSubmitEnable:any;
-  constructor(private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) { 
+  isSubmitEnable: any;
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showExpression = true;
     this.expression = {};
-    this.expression["active"]=true
-    this.isSubmitEnable=true;
-    this.expressionmetnotmat={}
-    this.expressionmetnotmat["metinfo"]={}
-    this.expressionmetnotmat["notmetinfo"]={}
-    this.dependsOn={'uuid':"","label":""}
-    this.operators=["=","<",">"];
-    this.logicalOperators=["","AND","OR"]
-    this.selectVersion={"version":""};
-    this.breadcrumbDataFrom=[{
-      "caption":"Data Preparation ",
-      "routeurl":"/app/list/expression"
+    this.tags = [];
+    this.expression["active"] = true
+    this.isSubmitEnable = true;
+    this.expressionmetnotmat = {}
+    this.expressionmetnotmat["metinfo"] = {}
+    this.expressionmetnotmat["notmetinfo"] = {}
+    this.dependsOn = { 'uuid': "", "label": "" }
+    this.operators = ["=", "<", ">"];
+    this.logicalOperators = ["", "AND", "OR"]
+    this.selectVersion = { "version": "" };
+    this.breadcrumbDataFrom = [{
+      "caption": "Data Preparation ",
+      "routeurl": "/app/list/expression"
     },
     {
-      "caption":"Expression",
-      "routeurl":"/app/list/expression"
+      "caption": "Expression",
+      "routeurl": "/app/list/expression"
     },
     {
-      "caption":"",
-      "routeurl":null
+      "caption": "",
+      "routeurl": null
     }
     ]
     this.dependsOnType = [
-      {'value': 'relation', 'label': 'relation'},
-      {'value': 'dataset', 'label': 'dataset'},
-      {'value': 'datapod', 'label': 'datapod'}
+      { 'value': 'relation', 'label': 'relation' },
+      { 'value': 'dataset', 'label': 'dataset' },
+      { 'value': 'datapod', 'label': 'datapod' }
     ];
-   this.lhsType=[
-      {"text":"string","caption":"string"},
-      {"text":"datapod","caption":"attribute"},
-      {"text":"formula","caption":"formula"}]
-      this.rhsType=[
-        {"text":"string","caption":"string"},
-        {"text":"datapod","caption":"attribute"},
-        {"text":"formula","caption":"formula"}]
-        this.matType=["string",'formula'];
-        this.activatedRoute.params.subscribe((params : Params) => {
-          this.id = params['id'];
-          this.version = params['version'];
-          this.mode = params['mode'];
-          if(this.mode !== undefined) {   
-            this.getOneByUuidAndVersion(this.id,this.version);
-            this.getAllVersionByUuid();
-            }
-            else{
-              this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"]=true
-              this.expressionmetnotmat["metinfo"]["ismetlhsSimple"]=true
-            }
-      })
-  }
-
-  ngOnInit() {
-    this.activatedRoute.params.subscribe((params : Params) => {
+    this.lhsType = [
+      { "text": "string", "caption": "string" },
+      { "text": "datapod", "caption": "attribute" },
+      { "text": "formula", "caption": "formula" }]
+    this.rhsType = [
+      { "text": "string", "caption": "string" },
+      { "text": "datapod", "caption": "attribute" },
+      { "text": "formula", "caption": "formula" }]
+    this.matType = ["string", 'formula'];
+    this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
-      if(this.mode !== undefined) {   
-        this.getOneByUuidAndVersion(this.id,this.version);
+      if (this.mode !== undefined) {
+        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
-        }
-        else{
-          this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"]=true
-          this.expressionmetnotmat["metinfo"]["ismetlhsSimple"]=true
-        }
-  })
+      }
+      else {
+        this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"] = true
+        this.expressionmetnotmat["metinfo"]["ismetlhsSimple"] = true
+      }
+    })
   }
 
-  getOneByUuidAndVersion(id,version){
-    this._commonService.getOneByUuidAndVersion(id,version,'expression')
-    .subscribe(
-    response =>{
-      this.onSuccessgetOneByUuidAndVersion(response)},
-    error => console.log("Error :: " + error)); 
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.id = params['id'];
+      this.version = params['version'];
+      this.mode = params['mode'];
+      if (this.mode !== undefined) {
+        this.getOneByUuidAndVersion(this.id, this.version);
+        this.getAllVersionByUuid();
+      }
+      else {
+        this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"] = true
+        this.expressionmetnotmat["metinfo"]["ismetlhsSimple"] = true
+      }
+    })
   }
 
-  getAllVersionByUuid(){
-    this._commonService.getAllVersionByUuid('expression',this.id)
-    .subscribe(
-    response =>{
-      this.OnSuccesgetAllVersionByUuid(response)},
-    error => console.log("Error :: " + error));
+  getOneByUuidAndVersion(id, version) {
+    this._commonService.getOneByUuidAndVersion(id, version, 'expression')
+      .subscribe(
+      response => {
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
-    
-  onSuccessgetOneByUuidAndVersion(response){
-    this.expression=response;
-    this.createdBy=response.createdBy.ref.name;
-    this.expression.published=response["published"] == 'Y' ? true : false
-    this.expression.active=response["active"] == 'Y' ? true : false
+
+  getAllVersionByUuid() {
+    this._commonService.getAllVersionByUuid('expression', this.id)
+      .subscribe(
+      response => {
+        this.OnSuccesgetAllVersionByUuid(response)
+      },
+      error => console.log("Error :: " + error));
+  }
+
+  onSuccessgetOneByUuidAndVersion(response) {
+    this.expression = response;
+    this.createdBy = response.createdBy.ref.name;
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.expression.tags = tags;
+    }//End If
+
+    this.expression.published = response["published"] == 'Y' ? true : false
+    this.expression.active = response["active"] == 'Y' ? true : false
     let version: Version = new Version();
-    this.uuid=response.uuid
+    this.uuid = response.uuid
     version.label = response['version'];
     version.uuid = response['uuid'];
-    this.selectedVersion=version
+    this.selectedVersion = version
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
-    this.dependsOn=dependOnTemp
-    this.breadcrumbDataFrom[2].caption=this.expression.name;
-    this.depends=response["dependsOn"]["ref"]["type"];
+    this.dependsOn = dependOnTemp
+    this.breadcrumbDataFrom[2].caption = this.expression.name;
+    this.depends = response["dependsOn"]["ref"]["type"];
     //this.dependsOn.uuid=response["dependsOn"]["ref"]["uuid"];
-    let expressionjson={};
-    expressionjson["expression"]=response;
-    let expressionListArray=[];
-    let expression={};
-    let metinfo={};
-    let notmetinfo={};
-      if(response.match.ref.type == "simple"){
-        metinfo["mettype"]="string";
-        metinfo["ismetlhsSimple"]=true;
-        metinfo["ismetFormula"]=false;
-        metinfo["metlhsvalue"]=response.match.value;
+    let expressionjson = {};
+    expressionjson["expression"] = response;
+    let expressionListArray = [];
+    let expression = {};
+    let metinfo = {};
+    let notmetinfo = {};
+    if (response.match.ref.type == "simple") {
+      metinfo["mettype"] = "string";
+      metinfo["ismetlhsSimple"] = true;
+      metinfo["ismetFormula"] = false;
+      metinfo["metlhsvalue"] = response.match.value;
+    }
+    else if (response.match.ref.type == "formula") {
+      let metformula = {};
+      metinfo["mettype"] = "formula";
+      metinfo["ismetFormula"] = true;
+      metinfo["ismetlhsSimple"] = false;
+      metformula["uuid"] = response.match.ref.uuid;
+      metformula["name"] = response.match.ref.name;
+      metinfo["metformula"] = metformula
+    }
+    if (response.noMatch.ref.type == "simple") {
+      notmetinfo["notmettype"] = "string";
+      notmetinfo["isnotmetlhsSimple"] = true;
+      notmetinfo["isnotmetFormula"] = false;
+      notmetinfo["notmetlhsvalue"] = response.noMatch.value;
+    }
+    else if (response.noMatch.ref.type == "formula") {
+      let notmetformula = {};
+      notmetinfo["notmettype"] = "formula";
+      notmetinfo["isnotmetFormula"] = true;
+      notmetinfo["isnotmetlhsSimple"] = false;
+      notmetformula["uuid"] = response.noMatch.ref.uuid;
+      notmetformula["name"] = response.noMatch.ref.name;
+      notmetinfo["notmetformula"] = notmetformula
+    }
+    expression["metinfo"] = metinfo;
+    expression["notmetinfo"] = notmetinfo;
+    this.expressionmetnotmat = expression
+    let exressionArray = [];
+    for (let i = 0; i < response.expressionInfo.length; i++) {
+      let expressioninfo = {};
+      expressioninfo["logicalOperator"] = response.expressionInfo[i].logicalOperator;
+      expressioninfo["operator"] = response.expressionInfo[i].operator;
+      if (response.expressionInfo[i].operand[0].ref.type == "simple") {
+        let obj = {}
+        obj["text"] = "string"
+        obj["caption"] = "string"
+        expressioninfo["lhstype"] = obj;
+        expressioninfo["islhsSimple"] = true;
+        expressioninfo["islhsDatapod"] = false;
+        expressioninfo["islhsFormula"] = false;
+        expressioninfo["lhsvalue"] = response.expressionInfo[i].operand[0].value;
       }
-      else if(response.match.ref.type == "formula"){
-        let metformula={};
-        metinfo["mettype"]="formula";
-        metinfo["ismetFormula"]=true;
-        metinfo["ismetlhsSimple"]=false;
-        metformula["uuid"]=response.match.ref.uuid;
-        metformula["name"]=response.match.ref.name;
-        metinfo["metformula"]=metformula
+      else if (response.expressionInfo[i].operand[0].ref.type == "datapod" || response.expressionInfo[i].operand[0].ref.type == "dataset") {
+        let lhsdatapodAttribute = {}
+        let obj = {}
+        obj["text"] = "datapod"
+        obj["caption"] = "attribute"
+        expressioninfo["lhstype"] = obj;
+        expressioninfo["islhsSimple"] = false;
+        expressioninfo["islhsFormula"] = false
+        expressioninfo["islhsDatapod"] = true;
+        lhsdatapodAttribute["label"] = response.expressionInfo[i].operand[0].ref.name + "." + response.expressionInfo[i].operand[0].attributeName;
+        lhsdatapodAttribute["id"] = response.expressionInfo[i].operand[0].ref.uuid + "_" + response.expressionInfo[i].operand[0].attributeId;
+        lhsdatapodAttribute["uuid"] = response.expressionInfo[i].operand[0].ref.uuid;
+        lhsdatapodAttribute["datapodname"] = response.expressionInfo[i].operand[0].ref.name;
+        lhsdatapodAttribute["name"] = response.expressionInfo[i].operand[0].attributeName;
+        lhsdatapodAttribute["dname"] = response.expressionInfo[i].operand[0].ref.name + "." + response.expressionInfo[i].operand[0].attributeName;
+        lhsdatapodAttribute["attributeId"] = response.expressionInfo[i].operand[0].attributeId;
+
+        expressioninfo["lhsdatapodAttribute"] = lhsdatapodAttribute;
       }
-      if(response.noMatch.ref.type == "simple"){
-        notmetinfo["notmettype"]="string";
-        notmetinfo["isnotmetlhsSimple"]=true;
-        notmetinfo["isnotmetFormula"]=false;
-        notmetinfo["notmetlhsvalue"]=response.noMatch.value;
+      else if (response.expressionInfo[i].operand[0].ref.type == "formula") {
+        let lhsformula = {}
+        let obj = {}
+        obj["text"] = "formula"
+        obj["caption"] = "formula"
+        expressioninfo["lhstype"] = obj;
+        expressioninfo["islhsFormula"] = true;
+        expressioninfo["islhsSimple"] = false;
+        expressioninfo["islhsDatapod"] = false;
+        lhsformula["uuid"] = response.expressionInfo[i].operand[0].ref.uuid;
+        lhsformula["name"] = response.expressionInfo[i].operand[0].ref.name;
+        lhsformula["label"] = response.expressionInfo[i].operand[0].ref.name;
+        expressioninfo["lhsformula"] = lhsformula;
       }
-          else if(response.noMatch.ref.type == "formula"){
-        let notmetformula={};
-            notmetinfo["notmettype"]="formula";
-            notmetinfo["isnotmetFormula"]=true;
-            notmetinfo["isnotmetlhsSimple"]=false;
-            notmetformula["uuid"]=response.noMatch.ref.uuid;
-            notmetformula["name"]=response.noMatch.ref.name;
-            notmetinfo["notmetformula"]=notmetformula
+      if (response.expressionInfo[i].operand[1].ref.type == "simple") {
+        let obj = {}
+        obj["text"] = "string"
+        obj["caption"] = "string"
+        expressioninfo["rhstype"] = obj;
+        expressioninfo["isrhsSimple"] = true;
+        expressioninfo["isrhsDatapod"] = false;
+        expressioninfo["isrhsFormula"] = false;
+        expressioninfo["rhsvalue"] = response.expressionInfo[i].operand[1].value;
       }
-         expression["metinfo"]=metinfo;
-         expression["notmetinfo"]=notmetinfo;
-         this.expressionmetnotmat=expression
-         let exressionArray=[];
-         for(let i=0;i<response.expressionInfo.length;i++){
-           let expressioninfo={};
-           expressioninfo["logicalOperator"]=response.expressionInfo[i].logicalOperator;
-           expressioninfo["operator"]=response.expressionInfo[i].operator;
-            if(response.expressionInfo[i].operand[0].ref.type == "simple"){
-             let obj={}
-            obj["text"]="string"
-            obj["caption"]="string"
-            expressioninfo["lhstype"]=obj;
-            expressioninfo["islhsSimple"]=true;
-            expressioninfo["islhsDatapod"]=false;
-            expressioninfo["islhsFormula"]=false;
-            expressioninfo["lhsvalue"]=response.expressionInfo[i].operand[0].value;
-          }
-          else if(response.expressionInfo[i].operand[0].ref.type == "datapod" || response.expressionInfo[i].operand[0].ref.type == "dataset"){
-            let lhsdatapodAttribute={}
-            let obj={}
-            obj["text"]="datapod"
-            obj["caption"]="attribute"
-            expressioninfo["lhstype"]=obj;
-            expressioninfo["islhsSimple"]=false;
-            expressioninfo["islhsFormula"]=false
-            expressioninfo["islhsDatapod"]=true;
-            lhsdatapodAttribute["label"]=response.expressionInfo[i].operand[0].ref.name+"."+response.expressionInfo[i].operand[0].attributeName;
-            lhsdatapodAttribute["id"]=response.expressionInfo[i].operand[0].ref.uuid+"_"+response.expressionInfo[i].operand[0].attributeId;
-            lhsdatapodAttribute["uuid"]=response.expressionInfo[i].operand[0].ref.uuid;
-            lhsdatapodAttribute["datapodname"]=response.expressionInfo[i].operand[0].ref.name;
-            lhsdatapodAttribute["name"]=response.expressionInfo[i].operand[0].attributeName;
-            lhsdatapodAttribute["dname"]=response.expressionInfo[i].operand[0].ref.name+"."+response.expressionInfo[i].operand[0].attributeName;
-            lhsdatapodAttribute["attributeId"]=response.expressionInfo[i].operand[0].attributeId;
-            
-            expressioninfo["lhsdatapodAttribute"]=lhsdatapodAttribute;
-          }
-          else if(response.expressionInfo[i].operand[0].ref.type == "formula"){
-            let lhsformula={}
-            let obj={}
-            obj["text"]="formula"
-            obj["caption"]="formula"
-            expressioninfo["lhstype"]=obj;
-            expressioninfo["islhsFormula"]=true;
-            expressioninfo["islhsSimple"]=false;
-            expressioninfo["islhsDatapod"]=false;
-            lhsformula["uuid"]=response.expressionInfo[i].operand[0].ref.uuid;
-            lhsformula["name"]=response.expressionInfo[i].operand[0].ref.name;
-            lhsformula["label"]=response.expressionInfo[i].operand[0].ref.name;
-            expressioninfo["lhsformula"]=lhsformula;
-          }
-            if(response.expressionInfo[i].operand[1].ref.type == "simple"){
-               let obj={}
-               obj["text"]="string"
-               obj["caption"]="string"
-               expressioninfo["rhstype"]=obj;
-               expressioninfo["isrhsSimple"]=true;
-               expressioninfo["isrhsDatapod"]=false;
-               expressioninfo["isrhsFormula"]=false;
-               expressioninfo["rhsvalue"]=response.expressionInfo[i].operand[1].value;
-             }
-             else if(response.expressionInfo[i].operand[1].ref.type == "datapod"  || response.expressionInfo[i].operand[1].ref.type == "dataset"){
-               let rhsdatapodAttribute={}
-               let obj={}
-               obj["text"]="datapod"
-               obj["caption"]="attribute"
-               expressioninfo["rhstype"]=obj;
-               expressioninfo["isrhsSimple"]=false;
-               expressioninfo["isrhsFormula"]=false
-               expressioninfo["isrhsDatapod"]=true;
-               rhsdatapodAttribute["id"]=response.expressionInfo[i].operand[1].ref.uuid+"_"+response.expressionInfo[i].operand[1].attributeId;
-               rhsdatapodAttribute["uuid"]=response.expressionInfo[i].operand[1].ref.uuid;
-               rhsdatapodAttribute["datapodname"]=response.expressionInfo[i].operand[1].ref.name;
-               rhsdatapodAttribute["name"]=response.expressionInfo[i].operand[1].attributeName;
-               rhsdatapodAttribute["dname"]=response.expressionInfo[i].operand[1].ref.name+"."+response.expressionInfo[i].operand[1].attributeName;
-               rhsdatapodAttribute["label"]=response.expressionInfo[i].operand[1].ref.name+"."+response.expressionInfo[i].operand[1].attributeName;
-               rhsdatapodAttribute["attributeId"]=response.expressionInfo[i].operand[1].attributeId;
-               expressioninfo["rhsdatapodAttribute"]=rhsdatapodAttribute;
-             }
-             else if(response.expressionInfo[i].operand[1].ref.type == "formula"){
-               let rhsformula={}
-               let obj={}
-               obj["text"]="formula"
-               obj["caption"]="formula"
-               expressioninfo["rhstype"]=obj;
-               expressioninfo["isrhsFormula"]=true;
-               expressioninfo["isrhsSimple"]=false;
-               expressioninfo["isrhsDatapod"]=false;
-               rhsformula["uuid"]=response.expressionInfo[i].operand[1].ref.uuid;
-               rhsformula["name"]=response.expressionInfo[i].operand[1].ref.name;
-               rhsformula["label"]=response.expressionInfo[i].operand[1].ref.name;
-               expressioninfo["rhsformula"]=rhsformula;
-             }
-           exressionArray[i]=expressioninfo
-         }
-         expressionjson["expression"]=expression;
-         expressionjson["expressioninfo"]=exressionArray;
-         this.expressionTableArray=exressionArray
-         
+      else if (response.expressionInfo[i].operand[1].ref.type == "datapod" || response.expressionInfo[i].operand[1].ref.type == "dataset") {
+        let rhsdatapodAttribute = {}
+        let obj = {}
+        obj["text"] = "datapod"
+        obj["caption"] = "attribute"
+        expressioninfo["rhstype"] = obj;
+        expressioninfo["isrhsSimple"] = false;
+        expressioninfo["isrhsFormula"] = false
+        expressioninfo["isrhsDatapod"] = true;
+        rhsdatapodAttribute["id"] = response.expressionInfo[i].operand[1].ref.uuid + "_" + response.expressionInfo[i].operand[1].attributeId;
+        rhsdatapodAttribute["uuid"] = response.expressionInfo[i].operand[1].ref.uuid;
+        rhsdatapodAttribute["datapodname"] = response.expressionInfo[i].operand[1].ref.name;
+        rhsdatapodAttribute["name"] = response.expressionInfo[i].operand[1].attributeName;
+        rhsdatapodAttribute["dname"] = response.expressionInfo[i].operand[1].ref.name + "." + response.expressionInfo[i].operand[1].attributeName;
+        rhsdatapodAttribute["label"] = response.expressionInfo[i].operand[1].ref.name + "." + response.expressionInfo[i].operand[1].attributeName;
+        rhsdatapodAttribute["attributeId"] = response.expressionInfo[i].operand[1].attributeId;
+        expressioninfo["rhsdatapodAttribute"] = rhsdatapodAttribute;
+      }
+      else if (response.expressionInfo[i].operand[1].ref.type == "formula") {
+        let rhsformula = {}
+        let obj = {}
+        obj["text"] = "formula"
+        obj["caption"] = "formula"
+        expressioninfo["rhstype"] = obj;
+        expressioninfo["isrhsFormula"] = true;
+        expressioninfo["isrhsSimple"] = false;
+        expressioninfo["isrhsDatapod"] = false;
+        rhsformula["uuid"] = response.expressionInfo[i].operand[1].ref.uuid;
+        rhsformula["name"] = response.expressionInfo[i].operand[1].ref.name;
+        rhsformula["label"] = response.expressionInfo[i].operand[1].ref.name;
+        expressioninfo["rhsformula"] = rhsformula;
+      }
+      exressionArray[i] = expressioninfo
+    }
+    expressionjson["expression"] = expression;
+    expressionjson["expressioninfo"] = exressionArray;
+    this.expressionTableArray = exressionArray
+
     this._commonService.getAllLatest(this.depends).subscribe(
-      response => { this.OnSuccesgetAllLatest(response,false)},
+      response => { this.OnSuccesgetAllLatest(response, false) },
       error => console.log('Error :: ' + error)
-    ) 
+    )
   }
   public goBack() {
-   // this._location.back();
-   this.router.navigate(['app/list/expression']);
-   }
+    // this._location.back();
+    this.router.navigate(['app/list/expression']);
+  }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver={};
-      ver["label"]=response[i]['version'];
-      ver["value"]={};
-      this.uuid=response.uuid;
-      ver["value"]["label"]=response[i]['version'];      
-      ver["value"]["uuid"]=response[i]['uuid']; 
+      let ver = {};
+      ver["label"] = response[i]['version'];
+      ver["value"] = {};
+      this.uuid = response.uuid;
+      ver["value"]["label"] = response[i]['version'];
+      ver["value"]["uuid"] = response[i]['uuid'];
       //allName["uuid"]=response[i]['uuid']
-      this.VersionList[i]=ver;
+      this.VersionList[i] = ver;
     }
   }
-  onVersionChange(){
-    this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+  onVersionChange() {
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
-  OnSuccesgetAllLatest(response1,defaultValue){
-    if(defaultValue ==true){
+  OnSuccesgetAllLatest(response1, defaultValue) {
+    if (defaultValue == true) {
       let dependsOn: DependsOn = new DependsOn();;
-      dependsOn["uuid"]=response1[0]["uuid"];
-      dependsOn["label"]=response1[0]["label"]
-      this.dependsOn=dependsOn;
+      dependsOn["uuid"] = response1[0]["uuid"];
+      dependsOn["label"] = response1[0]["label"]
+      this.dependsOn = dependsOn;
     }
-    let temp=[]
+    let temp = []
     for (const n in response1) {
-      let allname={};
-      allname["label"]=response1[n]['name'];
-      allname["value"]={};
-      allname["value"]["label"]=response1[n]['name'];      
-      allname["value"]["uuid"]=response1[n]['uuid'];
-      temp[n]=allname;
+      let allname = {};
+      allname["label"] = response1[n]['name'];
+      allname["value"] = {};
+      allname["value"]["label"] = response1[n]['name'];
+      allname["value"]["uuid"] = response1[n]['uuid'];
+      temp[n] = allname;
     }
     this.allNames = temp
-    this.getAllAttributeBySource(false,null,null);
+    this.getAllAttributeBySource(false, null, null);
   }
-  getAllAttributeBySource(defaultValue,index,type){
-    this._commonService.getAllAttributeBySource(this.dependsOn.uuid,this.depends).subscribe(
-      response => { this.OnSuccesgetAllAttributeBySource(response,defaultValue,index,type)},
+  getAllAttributeBySource(defaultValue, index, type) {
+    this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends).subscribe(
+      response => { this.OnSuccesgetAllAttributeBySource(response, defaultValue, index, type) },
       error => console.log('Error :: ' + error)
-    ) 
+    )
   }
-  OnSuccesgetAllAttributeBySource(response2,defaultValue,index,type){
-   // debugger
-    let temp=[]
+  OnSuccesgetAllAttributeBySource(response2, defaultValue, index, type) {
+    //   
+    let temp = []
     for (const n in response2) {
-      let allname1={};
-      allname1["label"]=response2[n]['dname'];
-      allname1["value"]={};
-      allname1["value"]["label"]=response2[n]['dname']; 
-      allname1["value"]["id"]=response2[n]['id'];      
-      temp[n]=allname1;
+      let allname1 = {};
+      allname1["label"] = response2[n]['dname'];
+      allname1["value"] = {};
+      allname1["value"]["label"] = response2[n]['dname'];
+      allname1["value"]["id"] = response2[n]['id'];
+      temp[n] = allname1;
     }
     this.allAttribute = temp;
-    if(defaultValue == true && index !=null){
-      let lhsdatapodAttribute={}
-      lhsdatapodAttribute["label"]= this.allAttribute[0]["label"];
-      lhsdatapodAttribute["id"]=this.allAttribute[0]["value"]['id'];
-      if(type == 'lhs'){
-      this.expressionTableArray[index].lhsdatapodAttribute=lhsdatapodAttribute;
-      }else{
-        this.expressionTableArray[index].rhsdatapodAttribute=lhsdatapodAttribute;
+    if (defaultValue == true && index != null) {
+      let lhsdatapodAttribute = {}
+      lhsdatapodAttribute["label"] = this.allAttribute[0]["label"];
+      lhsdatapodAttribute["id"] = this.allAttribute[0]["value"]['id'];
+      if (type == 'lhs') {
+        this.expressionTableArray[index].lhsdatapodAttribute = lhsdatapodAttribute;
+      } else {
+        this.expressionTableArray[index].rhsdatapodAttribute = lhsdatapodAttribute;
       }
     }
 
-   }
-  getAllFormula(defaultValue,index,type){
-    this._commonService.getFormulaByType(this.dependsOn.uuid,"formula").subscribe(
-      response => { this.onSuccessgetAllFormula(response,defaultValue,index,type)},
-      error => console.log('Error :: ' + error)
-    ) 
   }
-  onSuccessgetAllFormula(response,defaultValue,index,type){
-    let temp=[]
-    if(defaultValue == true){
-      let sourceformula={};
-      sourceformula["label"]=response[0].name;
-      sourceformula["uuid"]=response[0].uuid;
-      if(type =='lhs'){
-        this.expressionTableArray[index].lhsformula=sourceformula;
-      }else{
-        this.expressionTableArray[index].rhsformula=sourceformula;
+  getAllFormula(defaultValue, index, type) {
+    this._commonService.getFormulaByType(this.dependsOn.uuid, "formula").subscribe(
+      response => { this.onSuccessgetAllFormula(response, defaultValue, index, type) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+  onSuccessgetAllFormula(response, defaultValue, index, type) {
+    let temp = []
+    if (defaultValue == true) {
+      let sourceformula = {};
+      sourceformula["label"] = response[0].name;
+      sourceformula["uuid"] = response[0].uuid;
+      if (type == 'lhs') {
+        this.expressionTableArray[index].lhsformula = sourceformula;
+      } else {
+        this.expressionTableArray[index].rhsformula = sourceformula;
 
       }
     }
     for (const n in response) {
-      let allname1={};
-      allname1["label"]=response[n]['name'];
-      allname1["value"]={};
-      allname1["value"]["label"]=response[n]['name']; 
-      allname1["value"]["uuid"]=response[n]['uuid'];      
-      temp[n]=allname1;
+      let allname1 = {};
+      allname1["label"] = response[n]['name'];
+      allname1["value"] = {};
+      allname1["value"]["label"] = response[n]['name'];
+      allname1["value"]["uuid"] = response[n]['uuid'];
+      temp[n] = allname1;
     }
     this.allFormula = temp
   }
   onChangeActive(event) {
-    if(event === true) {
+    if (event === true) {
       this.expression.active = 'Y';
     }
     else {
@@ -396,7 +411,7 @@ export class ExpressionComponent implements OnInit {
     }
   }
   onChangePublish(event) {
-    if(event === true) {
+    if (event === true) {
       this.expression.published = 'Y';
     }
     else {
@@ -405,280 +420,282 @@ export class ExpressionComponent implements OnInit {
   }
   selectType() {
     this._commonService.getAllLatest(this.depends).subscribe(
-      response => { 
-        this.OnSuccesgetAllLatest(response,true)},
+      response => {
+        this.OnSuccesgetAllLatest(response, true)
+      },
       error => console.log('Error :: ' + error)
-    ) 
+    )
 
   }
-  changeType(){
-    this.getAllAttributeBySource(false,null,null)
-    this.getAllFormula(false,null,null)
+  changeType() {
+    this.getAllAttributeBySource(false, null, null)
+    this.getAllFormula(false, null, null)
   }
-selectmetlhsType(type){
+  selectmetlhsType(type) {
     //alert(type)
-     if(type == "string"){
-      this.expressionmetnotmat["metinfo"].ismetlhsSimple=true;
-      this.expressionmetnotmat["metinfo"].metlhsvalue="''"
-      this.expressionmetnotmat["metinfo"].ismetFormula=false;
-     }
-     else  if(type == "formula"){
-      this.expressionmetnotmat["metinfo"].ismetlhsSimple=false;
-      this.expressionmetnotmat["metinfo"].ismetFormula=true;
-      this.getAllFormula(false,null,null)
-  }
-  
-  }
-  selectnotmmetlhsType(type){
-    if(type == "string"){
-      this.expressionmetnotmat["notmetinfo"].isnotmetlhsSimple=true;
-      this.expressionmetnotmat["notmetinfo"].isnotmetFormula=false;
-       this.expressionmetnotmat["notmetinfo"].notmetlhsvalue="''"
-     }
-     else  if(type == "formula"){
-      this.expressionmetnotmat["notmetinfo"].isnotmetlhsSimple=false;
-      this.expressionmetnotmat["notmetinfo"].isnotmetFormula=true;
-  }
-  }
-  selectlhsType(type,index){
-	  if(type =="string"){
-		  this.expressionTableArray[index].islhsSimple=true;
-		  this.expressionTableArray[index].islhsDatapod=false;
-	      this.expressionTableArray[index].lhsvalue="''";
-		  this.expressionTableArray[index].islhsFormula=false;
-	  }
-	  else if(type == "datapod"){
+    if (type == "string") {
+      this.expressionmetnotmat["metinfo"].ismetlhsSimple = true;
+      this.expressionmetnotmat["metinfo"].metlhsvalue = "''"
+      this.expressionmetnotmat["metinfo"].ismetFormula = false;
+    }
+    else if (type == "formula") {
+      this.expressionmetnotmat["metinfo"].ismetlhsSimple = false;
+      this.expressionmetnotmat["metinfo"].ismetFormula = true;
+      this.getAllFormula(false, null, null)
+    }
 
-		  this.expressionTableArray[index].islhsSimple=false;
-		  this.expressionTableArray[index].islhsDatapod=true;
-      this.expressionTableArray[index].islhsFormula=false;
-      this.getAllAttributeBySource(true,index,"lhs");
-	  }
-	  else if(type == "formula"){
+  }
+  selectnotmmetlhsType(type) {
+    if (type == "string") {
+      this.expressionmetnotmat["notmetinfo"].isnotmetlhsSimple = true;
+      this.expressionmetnotmat["notmetinfo"].isnotmetFormula = false;
+      this.expressionmetnotmat["notmetinfo"].notmetlhsvalue = "''"
+    }
+    else if (type == "formula") {
+      this.expressionmetnotmat["notmetinfo"].isnotmetlhsSimple = false;
+      this.expressionmetnotmat["notmetinfo"].isnotmetFormula = true;
+    }
+  }
+  selectlhsType(type, index) {
+    if (type == "string") {
+      this.expressionTableArray[index].islhsSimple = true;
+      this.expressionTableArray[index].islhsDatapod = false;
+      this.expressionTableArray[index].lhsvalue = "''";
+      this.expressionTableArray[index].islhsFormula = false;
+    }
+    else if (type == "datapod") {
 
-		  this.expressionTableArray[index].islhsFormula=true;
-		  this.expressionTableArray[index].islhsSimple=false;
-      this.expressionTableArray[index].islhsDatapod=false;
+      this.expressionTableArray[index].islhsSimple = false;
+      this.expressionTableArray[index].islhsDatapod = true;
+      this.expressionTableArray[index].islhsFormula = false;
+      this.getAllAttributeBySource(true, index, "lhs");
+    }
+    else if (type == "formula") {
+
+      this.expressionTableArray[index].islhsFormula = true;
+      this.expressionTableArray[index].islhsSimple = false;
+      this.expressionTableArray[index].islhsDatapod = false;
       //this.expressionTableArray[index].sourceformula={}
-		  this.getAllFormula(true,index,'lhs')
-		 }
+      this.getAllFormula(true, index, 'lhs')
+    }
 
 
   }
-selectrhsType(type,index){
+  selectrhsType(type, index) {
 
-	 if(type =="string"){
-		  this.expressionTableArray[index].isrhsSimple=true;
-		  this.expressionTableArray[index].isrhsDatapod=false;
-		  this.expressionTableArray[index].isrhsFormula=false;
-		  this.expressionTableArray[index].rhsvalue="''";
-	  }
-	  else if(type == "datapod"){
+    if (type == "string") {
+      this.expressionTableArray[index].isrhsSimple = true;
+      this.expressionTableArray[index].isrhsDatapod = false;
+      this.expressionTableArray[index].isrhsFormula = false;
+      this.expressionTableArray[index].rhsvalue = "''";
+    }
+    else if (type == "datapod") {
 
-		  this.expressionTableArray[index].isrhsSimple=false;
-		  this.expressionTableArray[index].isrhsDatapod=true;
-      this.expressionTableArray[index].isrhsFormula=false;
-      this.expressionTableArray[index].sourceattribute={}
-      this.getAllAttributeBySource(true,index,'rhs');
-	  }
-	  else if(type == "formula"){
+      this.expressionTableArray[index].isrhsSimple = false;
+      this.expressionTableArray[index].isrhsDatapod = true;
+      this.expressionTableArray[index].isrhsFormula = false;
+      this.expressionTableArray[index].sourceattribute = {}
+      this.getAllAttributeBySource(true, index, 'rhs');
+    }
+    else if (type == "formula") {
 
-		  this.expressionTableArray[index].isrhsFormula=true;
-		  this.expressionTableArray[index].isrhsSimple=false;
-		  this.expressionTableArray[index].isrhsDatapod=false;
-		  //this.expressionTableArray[index].sourceformula={}
-      this.getAllFormula(true,index,'rhs')
-		 }
+      this.expressionTableArray[index].isrhsFormula = true;
+      this.expressionTableArray[index].isrhsSimple = false;
+      this.expressionTableArray[index].isrhsDatapod = false;
+      //this.expressionTableArray[index].sourceformula={}
+      this.getAllFormula(true, index, 'rhs')
+    }
 
- }
- selectAllRow(){
+  }
+  selectAllRow() {
     this.expressionTableArray.forEach(expression => {
       expression.selected = this.selectallrow;
     });
-}
-
-addRow(){
- if( this.expressionTableArray == null){
-
-   this.expressionTableArray=[];
- }
- var expessioninfo={}
- expessioninfo["islhsDatapod"]=false;
- expessioninfo["islhsFormula"]=false;
- expessioninfo["islhsSimple"]=true;
- expessioninfo["isrhsDatapod"]=false;
- expessioninfo["isrhsFormula"]=false;
- expessioninfo["isrhsSimple"]=true;
- expessioninfo["operator"]=this.operators[0]
- expessioninfo["lhstype"]=this.lhsType[0]
- expessioninfo["rhstype"]=this.rhsType[0]
- expessioninfo["rhsvalue"]="''";
- expessioninfo["lhsvalue"]="''";
- expessioninfo["logicalOperator"]=this.logicalOperators[0];
- this.expressionTableArray.splice(this.expressionTableArray.length, 0,expessioninfo);
-
-}
-removeRow(){
-  let newDataList=[];
-  this.selectallrow=false;
-  this.expressionTableArray.forEach(selected => {
-    if(!selected.selected){
-      newDataList.push(selected);
-    }
-  });
-  if(newDataList.length >0){
-   newDataList[0].logicalOperator="";
   }
- this.expressionTableArray = newDataList;
-}
-submitExpression(){
-  this.isSubmitEnable=true;
-	var expressionjson={}
-	expressionjson["uuid"]=this.expression.uuid;
-	expressionjson["name"]=this.expression.name;
-	//expressionjson["active"]=this.expression.active;
-	expressionjson["desc"]=this.expression.desc;
-	//expressionjson["published"]=this.expression.published;
-  expressionjson["active"]=this.expression.active == true ?'Y' :"N"
-  expressionjson["published"]=this.expression.published == true ?'Y' :"N"
-	 var tagArray=[];
-	 if(this.expression.tags !=null){
-	     for(var counttag=0;counttag<this.expression.tags.length;counttag++){
-	     	tagArray[counttag]=this.expression.tags[counttag].value;
 
-	     }
-	 }
-	 expressionjson["tags"]=tagArray;
-	 var dependsOn={};
-	 var ref={};
-	 ref["type"]=this.depends;
-	 ref["uuid"]=this.dependsOn.uuid;
-	 dependsOn["ref"]=ref;
-	 expressionjson["dependsOn"]=dependsOn
- 	 var met={};
-	 var metref={};
-	 if(this.expressionmetnotmat["metinfo"]["mettype"] == "string"){
+  addRow() {
+    if (this.expressionTableArray == null) {
 
-		 metref["type"]="simple";
-		 met["ref"]=metref;
-		 met["value"]=this.expressionmetnotmat["metinfo"]["metlhsvalue"]
-	 }
-	 else if(this.expressionmetnotmat["metinfo"]["mettype"] == "formula"){
+      this.expressionTableArray = [];
+    }
+    var expessioninfo = {}
+    expessioninfo["islhsDatapod"] = false;
+    expessioninfo["islhsFormula"] = false;
+    expessioninfo["islhsSimple"] = true;
+    expessioninfo["isrhsDatapod"] = false;
+    expessioninfo["isrhsFormula"] = false;
+    expessioninfo["isrhsSimple"] = true;
+    expessioninfo["operator"] = this.operators[0]
+    expessioninfo["lhstype"] = this.lhsType[0]
+    expessioninfo["rhstype"] = this.rhsType[0]
+    expessioninfo["rhsvalue"] = "''";
+    expessioninfo["lhsvalue"] = "''";
+    expessioninfo["logicalOperator"] = this.logicalOperators[0];
+    this.expressionTableArray.splice(this.expressionTableArray.length, 0, expessioninfo);
 
-		 metref["type"]="formula";
-		 metref["uuid"]=this.expressionmetnotmat["metinfo"]["metformula"].uuid
-		 met["ref"]=metref;
+  }
+  removeRow() {
+    let newDataList = [];
+    this.selectallrow = false;
+    this.expressionTableArray.forEach(selected => {
+      if (!selected.selected) {
+        newDataList.push(selected);
+      }
+    });
+    if (newDataList.length > 0) {
+      newDataList[0].logicalOperator = "";
+    }
+    this.expressionTableArray = newDataList;
+  }
+  submitExpression() {
+    this.isSubmitEnable = true;
+    var expressionjson = {}
+    expressionjson["uuid"] = this.expression.uuid;
+    expressionjson["name"] = this.expression.name;
+    //expressionjson["active"]=this.expression.active;
+    expressionjson["desc"] = this.expression.desc;
+    //expressionjson["published"]=this.expression.published;
+    expressionjson["active"] = this.expression.active == true ? 'Y' : "N"
+    expressionjson["published"] = this.expression.published == true ? 'Y' : "N"
+    var tagArray = [];
 
-	 }
-	 expressionjson["match"]=met
-	 var notMet={};
-	 var notMetref={};
-	 if(this.expressionmetnotmat["notmetinfo"]["notmettype"] == "string"){
+    if (this.expression.tags != null) {
+      for (var counttag = 0; counttag < this.expression.tags.length; counttag++) {
+        tagArray[counttag] = this.expression.tags[counttag].value;
 
-		 notMetref["type"]="simple";
-		 notMet["ref"]=notMetref;
-		 notMet["value"]=this.expressionmetnotmat["notmetinfo"]["notmetlhsvalue"]
-	 }
-	 else if(this.expressionmetnotmat["notmetinfo"]["notmettype"] == "formula"){
+      }
+    }
+    expressionjson['tags'] = tagArray;
+    var dependsOn = {};
+    var ref = {};
+    ref["type"] = this.depends;
+    ref["uuid"] = this.dependsOn.uuid;
+    dependsOn["ref"] = ref;
+    expressionjson["dependsOn"] = dependsOn
+    var met = {};
+    var metref = {};
+    if (this.expressionmetnotmat["metinfo"]["mettype"] == "string") {
 
-		 notMetref["type"]="formula";
-		 notMetref["uuid"]=this.expressionmetnotmat["notmetinfo"]["notmetformula"].uuid
-		 notMet["ref"]=notMetref;
+      metref["type"] = "simple";
+      met["ref"] = metref;
+      met["value"] = this.expressionmetnotmat["metinfo"]["metlhsvalue"]
+    }
+    else if (this.expressionmetnotmat["metinfo"]["mettype"] == "formula") {
 
-	 }
-	 expressionjson["noMatch"]=notMet
+      metref["type"] = "formula";
+      metref["uuid"] = this.expressionmetnotmat["metinfo"]["metformula"].uuid
+      met["ref"] = metref;
 
-	 var expressioninfoArray=[];
-	 if(this.expressionTableArray.length >0){
-	   for(var i=0;i<this.expressionTableArray.length;i++){
-		   var expressioninfo={};
-		   var operand=[]
-		   var lhsoperand={}
-		   var lhsref={}
-		   var rhsoperand={}
-		   var rhsref={};
-		   expressioninfo["logicalOperator"]=this.expressionTableArray[i].logicalOperator;
-		   expressioninfo["operator"]=this.expressionTableArray[i].operator;
-		   if(this.expressionTableArray[i].lhstype.text == "string"){
+    }
+    expressionjson["match"] = met
+    var notMet = {};
+    var notMetref = {};
+    if (this.expressionmetnotmat["notmetinfo"]["notmettype"] == "string") {
 
-			   lhsref["type"]="simple";
-			   lhsoperand["ref"]=lhsref;
-			   lhsoperand["value"]=this.expressionTableArray[i].lhsvalue;
-		   }
-		   else if(this.expressionTableArray[i].lhstype.text == "datapod"){
-			   if(this.depends == "dataset"){
-				   lhsref["type"]="dataset";
+      notMetref["type"] = "simple";
+      notMet["ref"] = notMetref;
+      notMet["value"] = this.expressionmetnotmat["notmetinfo"]["notmetlhsvalue"]
+    }
+    else if (this.expressionmetnotmat["notmetinfo"]["notmettype"] == "formula") {
 
-			   }
-			   else{
-				   lhsref["type"]="datapod";
-         }
-         let  uuid=this.expressionTableArray[i].lhsdatapodAttribute.id.split("_")[0]
-         var attrid=this.expressionTableArray[i].lhsdatapodAttribute.id.split("_")[1]
-			   lhsref["uuid"]=uuid
-         //this.expressionTableArray[i].lhsdatapodAttribute.uuid;
-			   lhsoperand["ref"]=lhsref;
-			   lhsoperand["attributeId"]=attrid
-		   }
-		   else if(this.expressionTableArray[i].lhstype.text =="formula"){
+      notMetref["type"] = "formula";
+      notMetref["uuid"] = this.expressionmetnotmat["notmetinfo"]["notmetformula"].uuid
+      notMet["ref"] = notMetref;
 
-			   lhsref["type"]="formula";
-			   lhsref["uuid"]=this.expressionTableArray[i].lhsformula.uuid;
-			   lhsoperand["ref"]=lhsref;
-		   }
-		   operand[0]=lhsoperand;
-		   if(this.expressionTableArray[i].rhstype.text == "string"){
+    }
+    expressionjson["noMatch"] = notMet
 
-			   rhsref["type"]="simple";
-			   rhsoperand["ref"]=rhsref;
-			   rhsoperand["value"]=this.expressionTableArray[i].rhsvalue;
-		   }
-		   else if(this.expressionTableArray[i].rhstype.text == "datapod"){
-			   if(this.depends == "dataset"){
-				   rhsref["type"]="dataset";
+    var expressioninfoArray = [];
+    if (this.expressionTableArray.length > 0) {
+      for (var i = 0; i < this.expressionTableArray.length; i++) {
+        var expressioninfo = {};
+        var operand = []
+        var lhsoperand = {}
+        var lhsref = {}
+        var rhsoperand = {}
+        var rhsref = {};
+        expressioninfo["logicalOperator"] = this.expressionTableArray[i].logicalOperator;
+        expressioninfo["operator"] = this.expressionTableArray[i].operator;
+        if (this.expressionTableArray[i].lhstype.text == "string") {
 
-			   }
-			   else{
-				   rhsref["type"]="datapod";
-			   }
-			   rhsref["uuid"]=this.expressionTableArray[i].rhsdatapodAttribute.uuid;
+          lhsref["type"] = "simple";
+          lhsoperand["ref"] = lhsref;
+          lhsoperand["value"] = this.expressionTableArray[i].lhsvalue;
+        }
+        else if (this.expressionTableArray[i].lhstype.text == "datapod") {
+          if (this.depends == "dataset") {
+            lhsref["type"] = "dataset";
 
-			   rhsoperand["ref"]=rhsref;
-			   rhsoperand["attributeId"]=this.expressionTableArray[i].rhsdatapodAttribute.attributeId;
-		   }
-		   else if(this.expressionTableArray[i].rhstype.text =="formula"){
+          }
+          else {
+            lhsref["type"] = "datapod";
+          }
+          let uuid = this.expressionTableArray[i].lhsdatapodAttribute.id.split("_")[0]
+          var attrid = this.expressionTableArray[i].lhsdatapodAttribute.id.split("_")[1]
+          lhsref["uuid"] = uuid
+          //this.expressionTableArray[i].lhsdatapodAttribute.uuid;
+          lhsoperand["ref"] = lhsref;
+          lhsoperand["attributeId"] = attrid
+        }
+        else if (this.expressionTableArray[i].lhstype.text == "formula") {
 
-			   rhsref["type"]="formula";
-			   rhsref["uuid"]=this.expressionTableArray[i].rhsformula.uuid;
-			   rhsoperand["ref"]=rhsref;
-		   }
-		   operand[1]=rhsoperand;
-		   expressioninfo["operand"]=operand;
-		   expressioninfoArray[i]=expressioninfo
-	   }
+          lhsref["type"] = "formula";
+          lhsref["uuid"] = this.expressionTableArray[i].lhsformula.uuid;
+          lhsoperand["ref"] = lhsref;
+        }
+        operand[0] = lhsoperand;
+        if (this.expressionTableArray[i].rhstype.text == "string") {
 
-	 }
-	expressionjson["expressionInfo"]=expressioninfoArray
-	 console.log(JSON.stringify(expressionjson))
+          rhsref["type"] = "simple";
+          rhsoperand["ref"] = rhsref;
+          rhsoperand["value"] = this.expressionTableArray[i].rhsvalue;
+        }
+        else if (this.expressionTableArray[i].rhstype.text == "datapod") {
+          if (this.depends == "dataset") {
+            rhsref["type"] = "dataset";
 
-this._commonService.submit("expression",expressionjson).subscribe(
-response => { this.OnSuccessubmit(response)},
-error => console.log('Error :: ' + error)
-)
-}
-OnSuccessubmit(response){
-  this.isSubmitEnable=true;
-  this.msgs = [];
-  this.msgs.push({severity:'success', summary:'Success Message', detail:'Expression Submitted Successfully'});
-  setTimeout(() => {
-    this.goBack()
+          }
+          else {
+            rhsref["type"] = "datapod";
+          }
+          rhsref["uuid"] = this.expressionTableArray[i].rhsdatapodAttribute.uuid;
+
+          rhsoperand["ref"] = rhsref;
+          rhsoperand["attributeId"] = this.expressionTableArray[i].rhsdatapodAttribute.attributeId;
+        }
+        else if (this.expressionTableArray[i].rhstype.text == "formula") {
+
+          rhsref["type"] = "formula";
+          rhsref["uuid"] = this.expressionTableArray[i].rhsformula.uuid;
+          rhsoperand["ref"] = rhsref;
+        }
+        operand[1] = rhsoperand;
+        expressioninfo["operand"] = operand;
+        expressioninfoArray[i] = expressioninfo
+      }
+
+    }
+    expressionjson["expressionInfo"] = expressioninfoArray
+    console.log(JSON.stringify(expressionjson))
+
+    this._commonService.submit("expression", expressionjson).subscribe(
+      response => { this.OnSuccessubmit(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+  OnSuccessubmit(response) {
+    this.isSubmitEnable = true;
+    this.msgs = [];
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Expression Submitted Successfully' });
+    setTimeout(() => {
+      this.goBack()
     }, 1000);
   }
   enableEdit(uuid, version) {
-  this.router.navigate(['app/dataPreparation/expression',uuid,version, 'false']);
+    this.router.navigate(['app/dataPreparation/expression', uuid, version, 'false']);
   }
   showview(uuid, version) {
-    this.router.navigate(['app/dataPreparation/expression',uuid,version, 'true']);
+    this.router.navigate(['app/dataPreparation/expression', uuid, version, 'true']);
   }
 
 }

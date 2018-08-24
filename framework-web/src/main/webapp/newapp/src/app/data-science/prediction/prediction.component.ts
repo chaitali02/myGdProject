@@ -55,8 +55,6 @@ export class PredictionComponent implements OnInit {
   isSubmit: any
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
-
-
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _predictService: PredictionService) {
     this.prediction = {};
     this.prediction["active"] = true;
@@ -171,10 +169,10 @@ export class PredictionComponent implements OnInit {
   onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
     this.selectLabel = null;
-    for(const i in this.featureMapTableArray){
-    this.featureMapTableArray[i].targetFeature= null;
+    for (const i in this.featureMapTableArray) {
+      this.featureMapTableArray[i].targetFeature = null;
     }
-  } 
+  }
 
   onSuccessgetAllLatestSource(response) {
     let temp = []
@@ -187,7 +185,7 @@ export class PredictionComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
-  //  this.getAttribute()
+    //  this.getAttribute()
   }
   public get value(): string {
     return
@@ -252,6 +250,17 @@ export class PredictionComponent implements OnInit {
     version.uuid = response["uuid"];
     this.selectedVersion = version;
     this.createdBy = response.createdBy.ref.name;
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
     this.prediction.active = response["active"] == 'Y' ? true : false;
     this.prediction.published = response["published"] == 'Y' ? true : false;
     this.breadcrumbDataFrom[2].caption = response.name;
@@ -322,7 +331,7 @@ export class PredictionComponent implements OnInit {
   }
   getTrainByModel(defaultValue) {
     {
-      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version , 'train')
+      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version, 'train')
         .subscribe(
         response => {
           this.onSuccessTrainByModel(response)
@@ -459,13 +468,15 @@ export class PredictionComponent implements OnInit {
     //        tagArray[counttag]=this.dqdata.tags[counttag];
     //   }
     // }
+
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
-        tagArray[counttag] = this.tags[counttag].text;
+        tagArray[counttag] = this.tags[counttag].value;
+
       }
     }
-    predictJson["tags"] = tagArray;
+    predictJson['tags'] = tagArray;
     var dependsOn = {};
     var ref = {};
     ref["type"] = "model";

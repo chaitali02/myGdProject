@@ -113,6 +113,18 @@ export class RoleComponent implements OnInit {
     this.role.published=response["published"] == 'Y' ? true : false
     this.role.active=response["active"] == 'Y' ? true : false
     this.version = response['version'];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.role.tags = tags;
+    }//End If
+
     
     this.breadcrumbDataFrom[2].caption=this.role.name;
 
@@ -213,17 +225,25 @@ export class RoleComponent implements OnInit {
     
     roleJson["uuid"]=this.role.uuid;
     roleJson["name"]=this.role.name;
-   //let tagArray=[];
-   const tagstemp = [];
-   for (const t in this.tags) {
-    tagstemp.push(this.tags[t]["value"]);
-   }
-  // if(this.tags.length > 0){
-  //   for(let counttag=0;counttag < this.tags.length;counttag++){
-  //     tagArray[counttag]=this.tags[counttag]["value"];
-  //   }
-  // }
-  roleJson["tags"]=tagstemp;
+  //  //let tagArray=[];
+  //  const tagstemp = [];
+  //  for (const t in this.tags) {
+  //   tagstemp.push(this.tags[t]["value"]);
+  //  }
+  // // if(this.tags.length > 0){
+  // //   for(let counttag=0;counttag < this.tags.length;counttag++){
+  // //     tagArray[counttag]=this.tags[counttag]["value"];
+  // //   }
+  // // }
+  // roleJson["tags"]=tagstemp;
+  var tagArray = [];
+  if (this.role.tags != null) {
+    for (var counttag = 0; counttag < this.role.tags.length; counttag++) {
+      tagArray[counttag] = this.role.tags[counttag].value;
+
+    }
+  }
+  roleJson['tags'] = tagArray
   roleJson["desc"]=this.role.desc;
 
     let privilegeInfoArrayNew=[]; 

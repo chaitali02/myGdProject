@@ -164,7 +164,17 @@ export class DataPiplineComponent {
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion=version
-    this.tags = response['tags'];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.tags = tags;
+    }//End If
     this.dagdata.published = response["published"] == 'Y' ? true : false
     this.dagdata.active = response["active"] == 'Y' ? true : false
   }
@@ -177,6 +187,14 @@ export class DataPiplineComponent {
     dagJson["desc"] = this.dagdata.desc;
     // dagJson["active"]=this.dagdata.active == true ?'Y' :"N"
     // dagJson["published"]=this.dagdata.published == true ?'Y' :"N"
+    var tagArray = [];
+    if (this.tags != null) {
+      for (var counttag = 0; counttag < this.tags.length; counttag++) {
+        tagArray[counttag] = this.tags[counttag].value;
+
+      }
+    }
+    dagJson['tags'] = tagArray
     dagJson["stages"] = temp["stages"];
     dagJson["xPos"] = temp["xPos"];
     dagJson["yPos"] = temp["yPos"];

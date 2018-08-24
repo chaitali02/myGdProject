@@ -40,8 +40,8 @@ export class OperatorComponent implements OnInit {
   VersionList: SelectItem[] = [];
   msgs: any;
   paramList: DependsOn;
-  operatortypesOption:{ 'value': String, 'label': String }[];
-  operatorType :any;
+  operatortypesOption: { 'value': String, 'label': String }[];
+  operatorType: any;
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _OperatorService: OperatorService) {
     this.operator = true;
@@ -94,7 +94,6 @@ export class OperatorComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('operator', this.id)
       .subscribe(
@@ -103,8 +102,6 @@ export class OperatorComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
-
-
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.operator = response
@@ -116,7 +113,18 @@ export class OperatorComponent implements OnInit {
     this.createdBy = response.createdBy.ref.name;
     this.operator.published = response["published"] == 'Y' ? true : false
     this.operator.active = response["active"] == 'Y' ? true : false
-    //this.operatorType=response["operatorType"];
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.operator.tags = tags;
+    }//End If
+
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["paramList"]["ref"]["name"];
     dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
@@ -163,7 +171,6 @@ export class OperatorComponent implements OnInit {
     }
   }
 
-
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'operator')
       .subscribe(
@@ -173,30 +180,29 @@ export class OperatorComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
-
   public goBack() {
     // this._location.back();
     this.router.navigate(['app/list/operator']);
   }
 
   submitoperator() {
-    
     this.isSubmitEnable = true;
     let operatorJson = {};
     operatorJson["uuid"] = this.operator.uuid;
     operatorJson["name"] = this.operator.name;
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
+    // //let tagArray=[];
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
     // }
-    operatorJson["tags"] = tagstemp;
+    var tagArray = [];
+    if (this.operator.tags != null) {
+      for (var counttag = 0; counttag < this.operator.tags.length; counttag++) {
+        tagArray[counttag] = this.operator.tags[counttag].value;
+
+      }
+    }
+    operatorJson['tags'] = tagArray
     operatorJson["desc"] = this.operator.desc;
     operatorJson["active"] = this.operator.active == true ? "Y" : "N";
     operatorJson["published"] = this.operator.published == true ? "Y" : "N";

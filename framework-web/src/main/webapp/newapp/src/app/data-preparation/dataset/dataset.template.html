@@ -188,8 +188,8 @@
                       <thead>
                         <tr>
                           <th style="width:5%;text-align: center; Vertical-align: middle;">
-                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll"
-                              name="checkAll" (click)="checkAllFilterRow()" />
+                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
+                              (click)="checkAllFilterRow()" />
                           </th>
                           <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
                           <th style="text-align: center;width:35%;">LHS Attribute</th>
@@ -201,8 +201,8 @@
                         <tr *ngFor="let data of filterTableArray;let i=index">
 
                           <td style="text-align:center;Vertical-align:middle;">
-                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedFilter+{{i}}"
-                              [disabled]="mode == 'true'" />
+                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedFilter+{{i}}" [disabled]="mode == 'true'"
+                            />
                           </td>
                           <td>
                             <select class="form-control" [(ngModel)]="data.logicalOperator" name="logicalOperator" [disabled]="i === 0 || mode == 'true'">
@@ -247,8 +247,8 @@
                         <thead>
                           <tr>
                             <th style="width:5%;text-align: center; Vertical-align: middle;">
-                              <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow"
-                                name="selectAllAttributeRow" (click)="checkAllAttributeRow()" />
+                              <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
+                                (click)="checkAllAttributeRow()" />
                             </th>
                             <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
                             <th style="text-align: center;width:15%;">Name</th>
@@ -259,8 +259,8 @@
                         <tbody>
                           <tr *ngFor="let data of attributeTableArray;let i=index">
                             <td style="text-align:center;Vertical-align:middle;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}"
-                                [disabled]="mode == 'true'" />
+                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"
+                              />
                             </td>
                             <td style="width:10%;">
                               <input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">

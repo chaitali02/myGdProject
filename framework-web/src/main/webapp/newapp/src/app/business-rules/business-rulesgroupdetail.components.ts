@@ -119,6 +119,17 @@ export class BusinessRulesGroupDetailComponent {
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
+    var tags = [];
+    if (response.tags != null) {
+      for (var i = 0; i < response.tags.length; i++) {
+        var tag = {};
+        tag['value'] = response.tags[i];
+        tag['display'] = response.tags[i];
+        tags[i] = tag
+
+      }//End For
+      this.datarulegroup.tags = tags;
+    }//End If
     let tmp = [];
     for (let i = 0; i < response.ruleInfo.length; i++) {
       let ruleinfo = {};
@@ -153,9 +164,9 @@ export class BusinessRulesGroupDetailComponent {
     //this._location.back();
     this.router.navigate(['app/list/rulegroup']);
   }
-  
-  onVersionChange(){
-    this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+
+  onVersionChange() {
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
   submit() {
     this.isSubmitEnable = true;
@@ -164,13 +175,15 @@ export class BusinessRulesGroupDetailComponent {
     rulegroupJson["uuid"] = this.datarulegroup.uuid
     rulegroupJson["name"] = this.datarulegroup.name
     rulegroupJson["desc"] = this.datarulegroup.desc
-    let tagArray = [];
+
+    var tagArray = [];
     if (this.datarulegroup.tags != null) {
       for (var counttag = 0; counttag < this.datarulegroup.tags.length; counttag++) {
-        tagArray[counttag] = this.datarulegroup.tags[counttag];
+        tagArray[counttag] = this.datarulegroup.tags[counttag].value;
+
       }
     }
-    rulegroupJson["tags"] = tagArray;
+    rulegroupJson['tags'] = tagArray
     rulegroupJson["active"] = this.datarulegroup.active == true ? 'Y' : "N"
     rulegroupJson["published"] = this.datarulegroup.published == true ? 'Y' : "N"
     let ruleInfo = [];
