@@ -3993,6 +3993,9 @@ public class CommonServiceImpl <T> {
 		}
 		List<ParamListHolder> paramHolderList = null;
 		Application application = (Application) getOneByUuidAndVersion(appInfo.getRef().getUuid(), appInfo.getRef().getVersion(), appInfo.getRef().getType().toString());
+		if (application.getParamList() == null || application.getParamList().getRef() == null) {
+			return null;
+		}
 		ParamList paramList = (ParamList) getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString());
 		ParamListHolder paramListHolder = null;
 		if (paramList != null && paramList.getParams() != null && !paramList.getParams().isEmpty()) {

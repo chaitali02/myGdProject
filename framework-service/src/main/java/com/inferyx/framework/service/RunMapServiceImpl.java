@@ -361,8 +361,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 			logger.info("Running SQL : " + sql);
 			ResultSetHolder rsHolder = null;
-			if(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
+			if(/*datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					||*/ datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
 				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), appUuid);
 			else
 				rsHolder = exec.executeSql(sql);
@@ -371,8 +371,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 					&& datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 				rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " WHERE rownum<= " + 100 );
 			else if(rsHolder.getType().equals(ResultType.resultset) &&
-					(!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
+					(/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							||*/ !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
 					rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " LIMIT " + 100 );
 			
 			logger.info("After map execution before reading result ");

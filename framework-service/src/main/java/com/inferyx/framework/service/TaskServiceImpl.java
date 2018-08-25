@@ -578,11 +578,12 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorInfo().get(0).getRef().getUuid(), operator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.load.toString());
 				LoadExec loadExec = (LoadExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
-				Datasource datasource = commonServiceImpl.getDatasourceByApp();
-				if(!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-						&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					MetaIdentifier targetMI = load.getTarget().getRef();
-					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
+//				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				MetaIdentifier targetMI = load.getTarget().getRef();
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
+				Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+				if(/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+						&&*/ !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					datapodTableName = datasource.getDbname()+"."+datapod.getName();
 				}
 				
