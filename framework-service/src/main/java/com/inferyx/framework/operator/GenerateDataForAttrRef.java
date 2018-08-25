@@ -117,8 +117,9 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 //		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
 //		int numRepetitions = 0;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 		
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
@@ -137,6 +138,9 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																								locationDatapod.getDatasource().getRef().getVersion(), 
+																								locationDatapod.getDatasource().getRef().getType().toString());
 		
 		MetaIdentifier attrIdentifier = attrInfo.getAttributeInfo().get(0).getRef();
 		Object attrDp = commonServiceImpl.getOneByUuidAndVersion(attrIdentifier.getUuid(), attrIdentifier.getVersion(), attrIdentifier.getType().toString());
@@ -169,12 +173,12 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 //						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		String rangeSql = generateRangeSql(attributeList, attrTableName, attrTableNameSql, attributeName, execVersion, numIterations, maxRand, minRand);
 		ResultSetHolder resultSetHolder = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
-			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
+			String sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
 			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
 		}
 		

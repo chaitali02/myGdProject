@@ -104,8 +104,8 @@ public class GenerateDataForValList extends GenerateDataOperator {
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
 //		int numRepetitions = 0;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 		
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
@@ -125,6 +125,9 @@ public class GenerateDataForValList extends GenerateDataOperator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																								locationDatapod.getDatasource().getRef().getVersion(), 
+																								locationDatapod.getDatasource().getRef().getType().toString());
 
 		// Get the attribute 
 		String attributeName = "id";
@@ -139,12 +142,12 @@ public class GenerateDataForValList extends GenerateDataOperator {
 				+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 				+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		ResultSetHolder resultSetHolder = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
-			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, appDatasource.getType());
 		}  else {
-			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
+			String sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
 			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
 		}
 		

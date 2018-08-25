@@ -192,7 +192,7 @@ public class GenerateDataOperator implements IOperator {
 																					locationDatapod.getDatasource().getRef().getType().toString());
 		//ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		ResultSetHolder rsHolder = exec.create(rowObjList, attributes, tableName, commonServiceImpl.getApp().getUuid());
-		if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| appDatasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
