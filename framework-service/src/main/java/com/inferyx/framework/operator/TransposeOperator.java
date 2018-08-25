@@ -182,8 +182,12 @@ public class TransposeOperator implements IOperator {
 		//MetaIdentifier sourceDatapodIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
 		//Datapod sourceDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDatapodIdentifier.getUuid(), sourceDatapodIdentifier.getVersion(), sourceDatapodIdentifier.getType().toString());
 		
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																					locationDatapod.getDatasource().getRef().getVersion(), 
+																					locationDatapod.getDatasource().getRef().getType().toString());
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 		
 		//String sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(sourceDatapod.getUuid(), sourceDatapod.getVersion()), runMode);
 		
@@ -290,12 +294,12 @@ public class TransposeOperator implements IOperator {
 		
 		logger.info("Transpose sql --> " + sql);
 		ResultSetHolder resultSetHolder = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+		if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
-			String query = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, sql);
+			String query = helper.buildInsertQuery(locationDpDatasource.getType(), tableName, locationDatapod, sql);
 			resultSetHolder = exec.executeRegisterAndPersist(query, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		}
 		
