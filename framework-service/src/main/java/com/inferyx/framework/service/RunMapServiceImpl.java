@@ -338,8 +338,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			logger.info("Before map execution ");
 			String sql = mapExec.getExec();
-			if (!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			if (/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					&&*/ !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
 				logger.info("Datapod: "+datapodKey.getUUID());
 				if(sql.startsWith("."))
@@ -361,8 +361,12 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 			logger.info("Running SQL : " + sql);
 			ResultSetHolder rsHolder = null;
+			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDatapod.getDatasource().getRef().getUuid(), 
+																								targetDatapod.getDatasource().getRef().getVersion(), 
+																								targetDatapod.getDatasource().getRef().getType().toString());
 			if(/*datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					||*/ datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
+					||*/ targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
 				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), appUuid);
 			else
 				rsHolder = exec.executeSql(sql);
@@ -381,7 +385,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
 			logger.info("Before map persist ");
 			dataStoreServiceImpl.setRunMode(runMode);
-			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
+//			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
 			map.getTarget().getRef().setVersion(targetDatapod.getVersion());
 			countRows = rsHolder.getCountRows();
 			dataStoreServiceImpl.create(filePath, mapTableName
