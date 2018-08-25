@@ -117,7 +117,10 @@ public class DataSourceFactory {
 
 	public IWriter getDatapodWriter(Datapod datapod, MetadataUtil daoRegister) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// MetaType dataSourceType = dp.getDatasource().getRef().getType();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																		datapod.getDatasource().getRef().getVersion(), 
+																		datapod.getDatasource().getRef().getType().toString());
 		String dataSourceType = datasource.getType();
 		switch (dataSourceType.toUpperCase()) {
 		case "HIVE":// HiveWriter hr = new HiveWriter();
