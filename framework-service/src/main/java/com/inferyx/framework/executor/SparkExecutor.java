@@ -835,7 +835,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod.");
 			throw new Exception("Datastore is not available for this datapod.");
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader();
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -1251,7 +1251,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod");
 			throw new Exception();
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader();
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
