@@ -26,7 +26,10 @@ public class HiveWriter implements IWriter {
 	public void write(ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
 		try {
 
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																							datapod.getDatasource().getRef().getVersion(), 
+																							datapod.getDatasource().getRef().getType().toString());
 			String tableName = datasource.getDbname().concat(".").concat(datapod.getName());
 			logger.info("Table Name: " + tableName);
 

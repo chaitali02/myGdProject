@@ -169,9 +169,9 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 //						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		String rangeSql = generateRangeSql(attributeList, attrTableName, attrTableNameSql, attributeName, execVersion, numIterations, maxRand, minRand);
 		ResultSetHolder resultSetHolder = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
 			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
