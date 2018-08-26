@@ -1378,8 +1378,9 @@ public class DataStoreServiceImpl {
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+//							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+					data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 				} else {
 					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 						if (runMode.equals(RunMode.ONLINE))
@@ -1413,15 +1414,15 @@ public class DataStoreServiceImpl {
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-								data = exec.executeAndFetch(
-										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
-												+ tableName +") AS tab) AS tab1",
-												appUuid);
+//								data = exec.executeAndFetch(
+//										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
+//												+ tableName +") AS tab) AS tab1",
+//												appUuid);
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 							} else {
 								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 									if (runMode.equals(RunMode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-												appUuid);
+										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 									else
 										data = exec.executeAndFetch(
 												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
