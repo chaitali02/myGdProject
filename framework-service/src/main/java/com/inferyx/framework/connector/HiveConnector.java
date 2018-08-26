@@ -35,7 +35,7 @@ public class HiveConnector implements IConnector {
 	SecurityServiceImpl securityServiceImpl;
 
 	@Override
-	public ConnectionHolder getConnection() {
+	public ConnectionHolder getConnection() throws IOException {
 		ConnectionHolder conholder = new ConnectionHolder();
 		try {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -54,6 +54,7 @@ public class HiveConnector implements IConnector {
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
 				| ParseException | IOException e) {
 			e.printStackTrace();
+			throw new IOException(e);
 		}
 		return conholder;
 	}

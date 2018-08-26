@@ -547,7 +547,7 @@ public class MySqlExecutor implements IExecutor {
 				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
 				df = sparkSession.createDataset(obj, Encoders.DOUBLE()).toDF(attributes.get(1).getName());
 			}
-			df.show();
+//			df.show();
 			df.createOrReplaceTempView(tableName+"_vw");
 			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tableName+"_vw");
 			resultSetHolder.setCountRows(df.count());

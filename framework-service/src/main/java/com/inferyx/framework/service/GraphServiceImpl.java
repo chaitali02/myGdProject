@@ -1692,8 +1692,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Get the graphFrame and parse
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
 
-		graph.edges().show(false);
-		graph.vertices().show(false);
+//		graph.edges().show(false);
+//		graph.vertices().show(false);
 
 	/*	Dataset<Row> edgeProperties=graph.edges().toJSON().select("edgeProperties");
 		edgeProperties.createTempView("V1").show();
@@ -1745,7 +1745,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		} else if (degree.equalsIgnoreCase("-2")) {
 			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
 		}
-		motifs.show(false);
+//		motifs.show(false);
 		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
 
@@ -1866,14 +1866,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
 				"relationwithChild.edgeIndex", "relationwithChild.eHpropertyId", "relationwithChild.edgeSource")
 				.distinct();
-		edge_dataset.show(false);
+//		edge_dataset.show(false);
 
 		if (edgefilter.length() > 0 && restSource != null)
 			edge_dataset = edge_dataset.filter(restSource + "(" + edgefilter.toString() + ")");
 		else if (edgefilter.length() > 0)
 			edge_dataset = edge_dataset.filter("(" + edgefilter.toString() + ")");
 
-		edge_dataset.show(false);
+//		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
@@ -1884,18 +1884,18 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
-		node_dataset.show(false);
+//		node_dataset.show(false);
 		if (nodefilter.length() > 0)
 			node_dataset = node_dataset.filter(nodefilter.toString());
 
-		node_dataset.show(false);
+//		node_dataset.show(false);
 
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
-		result_datset.show(false);
+//		result_datset.show(false);
 		if (execParams != null)
 			// result_datset = result_datset.filter(sb.toString());
-			result_datset.show(false);
+//			result_datset.show(false);
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
 

@@ -300,7 +300,7 @@ public class TransposeOperator implements IOperator {
 			resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
 			String query = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, sql);
-			resultSetHolder = exec.executeAndPersist(query, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+			resultSetHolder = exec.executeSql(query);
 		}
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());

@@ -258,7 +258,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 */
 	public ResultSetHolder createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
 		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
-		dataset.show(false);
+//		dataset.show(false);
 		dataset.createOrReplaceTempView(tableName);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setCountRows(dataset.count());
@@ -1795,7 +1795,7 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trainingDf);
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				trainedDataSet.show(false);
+//				trainedDataSet.show(false);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2069,8 +2069,8 @@ public class SparkExecutor<T> implements IExecutor {
 		GraphFrame graphFrame = new GraphFrame(nodeRsHolder.getDataFrame(), edgeRsHolder.getDataFrame());
 		String graphExecKey = graphExec.getDependsOn().getRef().getUuid()+"_"+graphExec.getDependsOn().getRef().getVersion()+"_"+graphExec.getVersion();
 		graphpodMap.put(graphExecKey, graphFrame);
-		graphFrame.vertices().show();
-		graphFrame.edges().show();
+//		graphFrame.vertices().show();
+//		graphFrame.edges().show();
 		return graphExecKey;
 	}
 
@@ -2145,7 +2145,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			trainedDataSet.show(false);
+//			trainedDataSet.show(false);
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
@@ -2433,7 +2433,7 @@ public class SparkExecutor<T> implements IExecutor {
 //		outPutMap.put("r2adj", r2adj);		
 		
 		Dataset<Row> residuals = summary.residuals();		
-		residuals.show(false);
+//		residuals.show(false);
 		int size = (Integer.parseInt(""+residuals.count()) > 20) ? 20 : Integer.parseInt(""+residuals.count());
 		Object[] residualVals = new Object[size];
 		Row[] rows = (Row[]) residuals.head(size);
@@ -2516,7 +2516,7 @@ public class SparkExecutor<T> implements IExecutor {
 		outPutMap.put("clusterSizes", clusterSizes);
 		
 		Dataset<Row> cluster = summary.cluster();		
-		cluster.show(false);
+//		cluster.show(false);
 		int size = (Integer.parseInt(""+cluster.count()) > 20) ? 20 : Integer.parseInt(""+cluster.count());
 		Object[] clusterVals = new Object[size];
 		Row[] rows = (Row[]) cluster.head(size);
@@ -2591,7 +2591,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 
 		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
-		rsHolder.getDataFrame().show(false);
+//		rsHolder.getDataFrame().show(false);
 		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
 		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
 		double[] ds = histogramTuples._1();
