@@ -393,8 +393,9 @@ public class LoadServiceImpl {
 		if (requestId == null || requestId.equals("null") || requestId.isEmpty()) {
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-						+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+//				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+//						+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+				data = exec.executeAndFetch("SELECT * FROM " + tableName + " AS tab limit " + limit, null);
 			else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 				data = exec.executeAndFetch("SELECT * FROM " + tableName + " AS tab WHERE rownum <= " + limit, null);
 			else
@@ -429,10 +430,12 @@ public class LoadServiceImpl {
 					} else {
 						if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 								|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-							data = exec.executeAndFetch(
-									"SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-											+ tableName + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1",
-									null);
+//							data = exec.executeAndFetch(
+//									"SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
+//											+ tableName + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1",
+//									null);
+							data = exec.executeAndFetch("SELECT * FROM (SELECT * FROM " + tableName
+									+ " AS tab ORDER BY " + orderBy.toString() + ") AS tab1 limit " + limit, null);
 						else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 							data = exec.executeAndFetch("SELECT * FROM (SELECT * FROM " + tableName
 									+ " AS tab ORDER BY " + orderBy.toString() + ") AS tab1 WHERE rownum <= " + limit,
