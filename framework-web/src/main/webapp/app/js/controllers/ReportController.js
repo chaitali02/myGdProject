@@ -500,7 +500,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
           //console.log(JSON.stringify($scope.filterAttribureIdValues))
         }
       },function(response){
-				$('#attrFilter').modal("hide");
+			//	$('#attrFilter').modal("hide");
 				$scope.isDataInpogress = true;
 				$scope.isDataError = true;
 				$scope.msgclass = "errorMsg";
@@ -511,7 +511,12 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 	}//End getFilterValue
 	
   $scope.applyFilter=function(index){
-	
+		$scope.isShowSimpleData = true
+		$scope.isDataInpogress = true
+		$scope.isDataError = false;
+		$scope.tableclass = "centercontent";
+		$scope.showForm = false;
+		$scope.showGraphDiv = false;
     var count=0;
     $scope.filterListarray=[];
      for(var i=0;i<$scope.selectedAttributeValue.length;i++){
@@ -534,11 +539,18 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 			}else{
 				$scope.vizpodbody=null;
 			}
-			$('#attrFilter').modal("hide");
+		//$('#attrFilter').modal("hide");
 			$scope.reportExecute($scope.report,$scope.vizpodbody);		
 	}
 	$scope.CancleFitler=function(){
-		$scope.reportExecute($scope.report,null);		
+		$scope.isShowSimpleData = true
+		$scope.isDataInpogress = true
+		$scope.isDataError = false;
+		$scope.tableclass = "centercontent";
+		$scope.showForm = false;
+		$scope.showGraphDiv = false;
+		$scope.reportExecute($scope.report,null);	
+
 	}
 
   $scope.getSample=function(data){
@@ -603,17 +615,18 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 		$scope.tableclass = "centercontent";
 		$scope.showForm = false;
 		$scope.showGraphDiv = false;
-	
+	  $scope.reportExecute(data,null);
 		if($scope.report.filterInfo.length >0){
 			$scope.getFilterValue($scope.report);
-			$('#attrFilter').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-		}else{
-			$scope.spinner = true;
-			$scope.reportExecute(data,null);
-	  }
+			// $('#attrFilter').modal({
+			// 	backdrop: 'static',
+			// 	keyboard: false
+			// });
+		 }
+		 //else{
+		// 	$scope.spinner = true;
+			
+	  // }
 	}
 
 	$scope.refreshData = function () {

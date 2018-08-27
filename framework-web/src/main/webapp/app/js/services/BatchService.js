@@ -120,15 +120,16 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			  result.active = response[i].active;
 			  result.type = response[i].type;
 			  result.startTime;
-			  if(response[i].status !=null && response[i].status.length > 1){
-				for(var j=0;j<response[i].status.length;j++){
-					if(response[i].status[j].stage == "InProgress"){
-						result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+			  response[i].statusList=response[i].status;
+			  if(response[i].statusList !=null && response[i].statusList.length > 1){
+				for(var j=0;j<response[i].statusList.length;j++){
+					if(response[i].statusList[j].stage == "NotStarted"){
+						result.startTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
 						break;
 					}
 				}
 				if(response[i].status[len].stage == "Completed"){
-					result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+					result.endTime=$filter('date')(new Date(response[i].statusList[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
 					var date1 = new Date(result.startTime)
          			var date2 = new Date(result.endTime)
 					result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
