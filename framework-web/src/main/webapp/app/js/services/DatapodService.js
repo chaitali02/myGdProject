@@ -233,7 +233,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
-
+				attribute.length = response.attributes[i].length;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -309,6 +309,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
+				attribute.length = response.attributes[i].length;
 				//console.log(response.attributes[i].key);
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";

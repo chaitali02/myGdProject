@@ -3,22 +3,22 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   var obj = {};
    $rootScope.loginUser = JSON.parse(localStorage.userdetail).name;
    obj.compareMetaDataStatusDefs={
-    'NoChange':{
+    'NOCHANGE':{
       name : 'NoChange',
       caption:'No Change',
       color :'#9CBB62',
     },
-    'Modified':{
+    'MODIFIED':{
       name : 'Modified',
       caption:'Modified',
       color :'#5083C3',
     },
-    'Delete':{
+    'DELETE':{
       name : 'Delete',
       caption:'Delete',
       color :'#C34E4E',
     },
-    'New':{
+    'NEW':{
       name : 'New',
       caption:'New',
       color :'#4FACC5',

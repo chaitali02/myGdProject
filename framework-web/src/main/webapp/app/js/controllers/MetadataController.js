@@ -162,7 +162,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		}
 		],
 		columnDefs: [{
-			name: 'lmAtrribute',
+			name: 'lmAttribute',
 			displayName: 'Atrribute',
 			superCol: 'localMeta'
 		}, {
@@ -197,7 +197,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			enableColumnMenu: false,
 			cellClass: 'text-center',
       		headerCellClass: 'text-center',
-			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
 
@@ -214,7 +214,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			'margin-bottom': '10px',
 		}
 		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
-			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 50 : 450) + 50) + 'px';
+			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 50 : 400) + 70) + 'px';
 		}
 		else {
 		
@@ -352,7 +352,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		{
 			name: 'dispName',
 			displayName: 'Display Name',
-			width: '19%',
+			width: '18%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		},
@@ -360,18 +360,25 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		{
 			name: 'name',
 			displayName: 'Name',
-			width: '19%',
+			width: '14%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		},
 		//, displayName: 'Name', cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.name"  title="{{row.entity.name}}" ng-disabled="row.entity.isAttributeEnable ||{{grid.appScope.mode}}"class="form-control">'},
 		{
 			name: 'type',
-			width: '18%',
+			width: '16%',
 			enableCellEdit: false,
 			displayName: 'Type',
 			cellTemplate: ' <select select2 style="margin:10px;" ng-model="row.entity.type" ng-options="x for x in grid.appScope.type"  ng-disabled="{{grid.appScope.mode}}" class="form-control"></select>',
 			cellClass: 'customPadding',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'length',
+			displayName: 'Length',
+			width: '10%',
+			cellTemplate: ' <input type="number" min="1" style="margin: 7px 0px 0px 3px;height: 72%;width: 90%;" ng-model="row.entity.length" ng-disabled="{{grid.appScope.mode}}"></input>',
 			headerCellClass: 'text-center'
 		},
 		{
@@ -630,7 +637,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		$scope.getResults(data);
 	};
 	$scope.refreshCompareMetaData = function (searchtext) {
-		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,$scope.searchtextCompareMetadata, undefined);
+		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
 		
 	};
 
@@ -641,51 +648,22 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		$scope.isShowDatastore=false;
 		$scope.showGraphDiv = false
 		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
 		MetadataDatapodSerivce.compareMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessCompareMetadata(response.data) }, function (response) { onError(response.data) })
 		var onSuccessCompareMetadata = function (response) {
 			$scope.gridOptions.columnDefs.data = [];
 			$scope.gridOptionsCompareMetaData.data=response;
 			$scope.originalCompareMetaData=response;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+			$scope.gridOptionsCompareMetaData.tableclass = "";
 		}
 
 		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
 		}
-		$scope.gridOptionsCompareMetaData.data=[{
-			lmAtrribute: 'attr1',
-			lmType: 'string',
-			lmLength: '10',
-			smAttribute: 'attr1',
-			smType: 'string',
-			smLength: '10',
-			status: 'NoChange'
-		}, {
-			lmAtrribute: 'attr2',
-			lmType: 'string',
-			lmLength: '10',
-			smAttribute: 'attr2',
-			smType: 'string',
-			smLength: '10',
-			status: 'Modified'
-		},
-		{
-			lmAtrribute: 'attr3',
-			lmType: 'string',
-			lmLength: '10',
-			smAttribute: 'attr3',
-			smType: 'string',
-			smLength: '10',
-			status: 'Delete'
-		}, {
-			lmAtrribute: 'attr4',
-			lmType: 'string',
-			lmLength: '10',
-			smAttribute: 'attr4',
-			smType: 'string',
-			smLength: '10',
-			status: 'New'
-		}]
-		$scope.originalCompareMetaData=$scope.gridOptionsCompareMetaData.data;
-		
 	}
 
 	$scope.convertUppdercase = function (value) {
@@ -841,6 +819,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			attributes.desc = $scope.gridOptionsDatapod.data[datapodattr].desc;
 			attributes.dispName = $scope.gridOptionsDatapod.data[datapodattr].dispName;
 			attributes.active = $scope.gridOptionsDatapod.data[datapodattr].active;
+			attributes.length = $scope.gridOptionsDatapod.data[datapodattr].length;
 			if ($scope.gridOptionsDatapod.data[datapodattr].key == "Y") {
 				attributes.key = count;
 				count = count + 1;

@@ -99,22 +99,31 @@
           </div>
         </div>
         <div class="portlet-body">
-        <div ng-if="isShowCompareMetaData">
-            <div class="row">
-              <div class="col-md-6 col-sm-6">
-                
+        <div  class =" {{gridOptionsCompareMetaData.tableclass}}" ng-if="isShowCompareMetaData">
+            <div class="spinner" ng-show="gridOptionsCompareMetaData.isDataInpogress">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-              <div class="col-md-6 col-sm-6">
-                <div id="" class="dataTables_filter" style="float:right;">
-                  <label>Search:</label>
-                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshCompareMetaData(searchtextCompareMetadata)" ng-model="$parent.searchtextCompareMetadata"
-                    aria-controls="datastoredatatable">
+              <div ng-if="gridOptionsCompareMetaData.isDataError">
+                <h3 style="font-size:14px;color:red">Some Error Occurred</h3>
+              </div>
+              <div ng-if="!gridOptionsCompareMetaData.isDataInpogress && !gridOptionsCompareMetaData.isDataError">
+                <div class="row" >
+                  <div class="col-md-6 col-sm-6">
+                  </div>
+                  <div class="col-md-6 col-sm-6">
+                    <div id="" class="dataTables_filter" style="float:right;">
+                      <label>Search:</label>
+                      <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshCompareMetaData($parent.searchtextCompareMetadata)" ng-model="$parent.searchtextCompareMetadata"
+                        aria-controls="datastoredatatable">
+                    </div>
+                  </div>
+                </div>
+                <div ui-grid="gridOptionsCompareMetaData" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleCompareMetaData()">
+                  <div class="nodatawatermark" ng-show="!gridOptionsCompareMetaData.data.length">No data available</div>
                 </div>
               </div>
-              </div>
-            <div ui-grid="gridOptionsCompareMetaData" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleCompareMetaData()">
-              <div class="nodatawatermark" ng-show="!gridOptionsCompareMetaData.data.length">No data available</div>
-            </div>
           </div>
 
           <div ng-if="isShowDatastore">
