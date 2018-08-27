@@ -2724,7 +2724,7 @@ public class SparkExecutor<T> implements IExecutor {
 			for(Attribute attribute : datapod.getAttributes()) {
 				CompareMetaData comparison = new CompareMetaData();
 				comparison.setLmAttribute(attribute.getName());
-				comparison.setLmLength(attribute.getLength().toString());
+				comparison.setLmLength(attribute.getLength() != null ? attribute.getLength().toString():" ");
 				comparison.setLmType(attribute.getType());
 				comparison.setSmAttribute("");
 				comparison.setSmLength("");
@@ -2739,18 +2739,19 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public CompareMetaData compareAttr(Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
+		String len = attribute.getLength() != null ? attribute.getLength().toString():" ";
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
-			String status = null;
+			String status = null;			
 			if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();
 			}
-			if(!attribute.getLength().toString().equalsIgnoreCase("")){
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
 				status = Compare.MODIFIED.toString();
 			}
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attribute.getLength().toString());
+			comparison.setLmLength(len);
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute(dType._1());
 			comparison.setSmLength("");
@@ -2758,7 +2759,7 @@ public class SparkExecutor<T> implements IExecutor {
 			comparison.setStatus(status);
 		} else if(!smAttrList.contains(attribute.getName())) {
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attribute.getLength().toString());
+			comparison.setLmLength(len);
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute("");
 			comparison.setSmLength("");
