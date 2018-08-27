@@ -361,7 +361,11 @@ $scope.privileges = privilegeSvc.privileges["dashboard"] || [];
         }
         dashbardjson.title=response[i].name;
         dashbardjson.desc=response[i].desc;
-				dashbardjson.createdOn=new Date(response[i].createdOn.split("IST")[0]+response[i].createdOn.split("IST")[1]).toLocaleDateString('en-US')//response[i].createdOn
+        var d=response[i].createdOn;
+        var dat =d.split(" ");
+        dat.splice(dat.length-2,1);
+        dashbardjson.createdOn=new Date(dat.join().replace(/,/g," ")).toLocaleDateString('en-US');
+			//	dashbardjson.createdOn=new Date(response[i].createdOn.split("IST")[0]+response[i].createdOn.split("IST")[1]).toLocaleDateString('en-US')//response[i].createdOn
 				dashbardjson.sectionInfo=response[i].sectionInfo;
 				dashbardarray[i]=dashbardjson;
 			}//End For
