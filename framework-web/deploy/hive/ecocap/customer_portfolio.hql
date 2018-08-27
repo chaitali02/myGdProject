@@ -13,5 +13,4 @@ CREATE  TABLE IF NOT EXISTS `customer_portfolio`(
   `def_point` double, 
   `reporting_date` string, 
   `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-TBLPROPERTIES ("skip.header.line.count"="1");
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

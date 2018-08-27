@@ -279,17 +279,21 @@ public class ReportServiceImpl {
 
 	public List<Map<String, Object>> getReportSample(String reportExecUuid, String reportExecVersion, int rows,
 			ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion, MetaType.reportExec.toString());
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reportExec.getResult().getRef().getUuid(), reportExec.getResult().getRef().getVersion());
-		
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
+				MetaType.reportExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+				reportExec.getResult().getRef().getVersion());
+	
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
 	}
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, HttpServletResponse response, RunMode runMode) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
 		
-		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion, MetaType.reportExec.toString());
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reportExec.getResult().getRef().getUuid(), reportExec.getResult().getRef().getVersion());
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
+				MetaType.reportExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+				reportExec.getResult().getRef().getVersion());
 		if (datastore == null) {
 			logger.error("Datastore is not available.");
 			throw new Exception("Datastore is not available.");

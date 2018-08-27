@@ -93,6 +93,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.HistogramUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -127,10 +128,10 @@ import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
+import scala.Tuple2;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
-import scala.Tuple2;
 
 @Component
 public class SparkExecutor<T> implements IExecutor {
@@ -171,6 +172,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
 	@Autowired
 	private MatrixToRddConverter matrixToRddConverter;
+	@Autowired
+	private HistogramUtil histogramUtil;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -258,7 +261,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 */
 	public ResultSetHolder createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
 		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
-		dataset.show(false);
+//		dataset.show(false);
 		dataset.createOrReplaceTempView(tableName);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setCountRows(dataset.count());
@@ -835,7 +838,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod.");
 			throw new Exception("Datastore is not available for this datapod.");
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader();
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -1251,7 +1254,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod");
 			throw new Exception();
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader();
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -1795,7 +1798,7 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trainingDf);
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				trainedDataSet.show(false);
+//				trainedDataSet.show(false);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2069,8 +2072,8 @@ public class SparkExecutor<T> implements IExecutor {
 		GraphFrame graphFrame = new GraphFrame(nodeRsHolder.getDataFrame(), edgeRsHolder.getDataFrame());
 		String graphExecKey = graphExec.getDependsOn().getRef().getUuid()+"_"+graphExec.getDependsOn().getRef().getVersion()+"_"+graphExec.getVersion();
 		graphpodMap.put(graphExecKey, graphFrame);
-		graphFrame.vertices().show();
-		graphFrame.edges().show();
+//		graphFrame.vertices().show();
+//		graphFrame.edges().show();
 		return graphExecKey;
 	}
 
@@ -2145,7 +2148,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			trainedDataSet.show(false);
+//			trainedDataSet.show(false);
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
@@ -2433,7 +2436,7 @@ public class SparkExecutor<T> implements IExecutor {
 //		outPutMap.put("r2adj", r2adj);		
 		
 		Dataset<Row> residuals = summary.residuals();		
-		residuals.show(false);
+//		residuals.show(false);
 		int size = (Integer.parseInt(""+residuals.count()) > 20) ? 20 : Integer.parseInt(""+residuals.count());
 		Object[] residualVals = new Object[size];
 		Row[] rows = (Row[]) residuals.head(size);
@@ -2516,7 +2519,7 @@ public class SparkExecutor<T> implements IExecutor {
 		outPutMap.put("clusterSizes", clusterSizes);
 		
 		Dataset<Row> cluster = summary.cluster();		
-		cluster.show(false);
+//		cluster.show(false);
 		int size = (Integer.parseInt(""+cluster.count()) > 20) ? 20 : Integer.parseInt(""+cluster.count());
 		Object[] clusterVals = new Object[size];
 		Row[] rows = (Row[]) cluster.head(size);
@@ -2591,9 +2594,10 @@ public class SparkExecutor<T> implements IExecutor {
 		
 
 		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
-		rsHolder.getDataFrame().show(false);
-		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
-		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
+//		rsHolder.getDataFrame().show(false);
+		Tuple2<double[], long[]> histogramTuples = histogramUtil.fetchHistogramTuples(rsHolder.getDataFrame(), numBuckets);
+		/*DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
+		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);*/
 		double[] ds = histogramTuples._1();
 		long[] ls = histogramTuples._2();
 		List<Row> rowList = new ArrayList<>();

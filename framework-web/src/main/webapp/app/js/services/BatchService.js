@@ -98,7 +98,7 @@ BatchModule.factory('BatchFactory', function ($http, $location) {
 })
 
 
-BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory) {
+BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$filter) {
     this.getExecListByBatchExec = function (uuid, version, type) {
 		var deferred = $q.defer();
 		BatchFactory.findExecListByBatchExec(uuid, version, type).then(function (response) { onSuccess(response.data) });
@@ -119,6 +119,23 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory) {
 			  result.createdOn = response[i].createdOn;
 			  result.active = response[i].active;
 			  result.type = response[i].type;
+			  result.startTime;
+			  if(response[i].status !=null && response[i].status.length > 1){
+				for(var j=0;j<response[i].status.length;j++){
+					if(response[i].status[j].stage == "InProgress"){
+						result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+						break;
+					}
+				}
+				if(response[i].status[len].stage == "Completed"){
+					result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+					var date1 = new Date(result.startTime)
+         			var date2 = new Date(result.endTime)
+					result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
+         			
+				}
+
+			  }
 			  if(response[i].status !=null && response[i].status.length > 0){
 				if (response[i].status[len].stage == "NotStarted") {
 				  result.status = "Not Started"

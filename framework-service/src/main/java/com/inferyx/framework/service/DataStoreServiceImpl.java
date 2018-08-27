@@ -711,7 +711,8 @@ public class DataStoreServiceImpl {
 						tn = requestMap.get(requestId);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else 
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -727,8 +728,9 @@ public class DataStoreServiceImpl {
 					} else {
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
+//							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
+//									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else {
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -751,7 +753,8 @@ public class DataStoreServiceImpl {
 						requestMap.put(requestId, tn);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+//							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else {
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -770,8 +773,9 @@ public class DataStoreServiceImpl {
 			} else {
 				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
-							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
+//							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+					data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 				} else {
 					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -1061,7 +1065,7 @@ public class DataStoreServiceImpl {
 			return iDataStoreDao.findAllVersion(uuid);
 	}
 
-	public DataStore findDatastoreByExec(String uuid, String version) throws JsonProcessingException {
+	public DataStore getDatastore(String uuid, String version) throws JsonProcessingException {
 		return (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 	}
 
@@ -1374,8 +1378,9 @@ public class DataStoreServiceImpl {
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+//							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+					data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 				} else {
 					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 						if (runMode.equals(RunMode.ONLINE))
@@ -1409,15 +1414,15 @@ public class DataStoreServiceImpl {
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-								data = exec.executeAndFetch(
-										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
-												+ tableName +") AS tab) AS tab1",
-												appUuid);
+//								data = exec.executeAndFetch(
+//										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
+//												+ tableName +") AS tab) AS tab1",
+//												appUuid);
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 							} else {
 								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 									if (runMode.equals(RunMode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-												appUuid);
+										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 									else
 										data = exec.executeAndFetch(
 												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);

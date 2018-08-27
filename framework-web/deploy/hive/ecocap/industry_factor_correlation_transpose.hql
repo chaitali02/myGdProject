@@ -7,5 +7,4 @@ CREATE  TABLE IF NOT EXISTS `industry_factor_correlation_transpose`(
   `factor_y` string, 
   `factor_value` double, 
   `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-TBLPROPERTIES ("skip.header.line.count"="1");
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

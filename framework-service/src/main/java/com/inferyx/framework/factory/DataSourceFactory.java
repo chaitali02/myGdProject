@@ -92,7 +92,12 @@ public class DataSourceFactory {
 //
 //		Datasource ds = (Datasource) commonActivity
 //				.getRefObject(new MetaIdentifier(MetaType.datasource, dataSourceUUID, dataSourceVersion));
-		Datasource ds = commonServiceImpl.getDatasourceByApp();
+//		Datasource ds = commonServiceImpl.getDatasourceByApp();
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), 
+																			dp.getDatasource().getRef().getVersion(), 
+																			dp.getDatasource().getRef().getType().toString());
+		
+		
 		String dataSourceType = ds.getType();
 
 		switch (dataSourceType.toUpperCase()) {
@@ -117,7 +122,10 @@ public class DataSourceFactory {
 
 	public IWriter getDatapodWriter(Datapod datapod, MetadataUtil daoRegister) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// MetaType dataSourceType = dp.getDatasource().getRef().getType();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																		datapod.getDatasource().getRef().getVersion(), 
+																		datapod.getDatasource().getRef().getType().toString());
 		String dataSourceType = datasource.getType();
 		switch (dataSourceType.toUpperCase()) {
 		case "HIVE":// HiveWriter hr = new HiveWriter();
@@ -145,6 +153,7 @@ public class DataSourceFactory {
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		
 		String dataSourceType = datasource.getType();
 
 		switch (dataSourceType.toUpperCase()) {

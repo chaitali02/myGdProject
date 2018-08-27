@@ -106,8 +106,9 @@ public class BatchServiceImpl {
 			}
 			
 		}
-		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+		
 		batchExec.setExecList(execList);
+		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
 		batchExec = checkCompleteStatus(batchExec);
 		return batchExec;
 	}

@@ -18,4 +18,4 @@ if [[ $hostname = "" || $collection = "" || $uuid = "" ]] ; then
 fi
 
 echo Updating datasource in datapod collection
-mongo --host $hostname framework --eval "printjson(db.${collection}.updateMany( {}, {\$set: {\"datasource\":{ \"ref\" : { \"uuid\" : \"${uuid}\" } } }}, {multi:true}))"
+mongo --host $hostname framework --eval "printjson(db.${collection}.updateMany( {}, {\$set: {\"datasource\":{ \"ref\" : { \"type\" : \"datasource\" , \"uuid\" : \"${uuid}\" } } }}, {multi:true}))"

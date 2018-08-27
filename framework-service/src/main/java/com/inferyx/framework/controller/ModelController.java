@@ -199,12 +199,12 @@ public class ModelController {
 	}*/
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public void download(@RequestParam(value = "modelExecUUID") String ruleExecUUID,
-			@RequestParam(value = "modelExecVersion") String ruleExecVersion,
+	public void download(@RequestParam(value = "modelExecUUID") String trainExecUuid,
+			@RequestParam(value = "modelExecVersion") String trainExecVersion,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = modelServiceImpl.download(ruleExecUUID, ruleExecVersion, response, runMode);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, response, runMode);
 	}
 	
 	@RequestMapping(value = "/predict/execute", method = RequestMethod.POST)

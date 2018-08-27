@@ -214,6 +214,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
     batchJson.published = $scope.batchDetail.published;
+    batchJson.inParallel= $scope.batchDetail.inParallel;
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -275,18 +277,18 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 });
 
 
-BatchModule.controller('ResultBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES,FileSaver,Blob) {
+BatchModule.controller('ResultBatchController', function( $location,$http,uiGridConstants,$state,$timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES,FileSaver,Blob) {
   
   $scope.autoRefreshCounter=05;
   $scope.autoRefreshResult=false;
-  
+  $scope.path = dagMetaDataService.statusDefs
   var notify = {
     type: 'success',
     title: 'Success',
     content: '',
     timeout: 3000 //time in ms
   };
-
+ 
   $scope.getGridStyle = function () {
     var style = {
       'margin-top': '10px',
@@ -300,8 +302,129 @@ BatchModule.controller('ResultBatchController', function($state, $timeout, $filt
     return style;
   }
 
-  $scope.gridOptions = angular.copy(dagMetaDataService.gridOptionsJobExec);
+  $scope.gridOptions ={
+    // paginationPageSizes: [10, 25, 50, 75],
+    // paginationPageSize: 10,
+    // enableFiltering: true,
+    enableGridMenu: true,
+    rowHeight: 40,
+    exporterSuppressCtiolumns: [ 'action' ],
+    exporterMenuPdf: true,
+    exporterPdfOrientation: 'landscape',
+    exporterPdfPageSize: 'A4',
+    exporterPdfDefaultStyle: {fontSize: 9},
+    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+    columnDefs: [
+      {
+        displayName: 'UUID',
+        name: 'uuid',
+        visible: false,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Name',
+        name: 'name',
+        minWidth: 220,
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Version',
+        name: 'version',
+        visible: false,
+        maxWidth:110,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.DESC,
+         // priority: 0,
+        },
+      },
+      {
+        displayName: 'Created By',
+        name: 'createdBy.ref.name',
+        visible: false,
+        cellClass: 'text-center',
+        maxWidth:100,
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Created On',
+        visible: false,
+        name: 'createdOn',
+        minWidth: 160,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+
+      }
+    ]
+  };
+  $scope.gridOptions .columnDefs.push(
+    {
+      displayName: 'Start Time',
+      name: 'startTime',
+      cellClass: 'text-center',
+      headerCellClass: 'text-center',
+      maxWidth: 190,
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.startTime}}</div></div>'
+    }
+  )
+  $scope.gridOptions .columnDefs.push(
+    {
+      displayName: 'End Time',
+      name: 'endtime',
+      cellClass: 'text-center',
+      headerCellClass: 'text-center',
+      maxWidth: 190,
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.endTime}}</div></div>'
+    }
+  )
+  $scope.gridOptions .columnDefs.push(
+    {
+      displayName: 'Duration',
+      name: 'duration',
+      cellClass: 'text-center',
+      headerCellClass: 'text-center',
+      maxWidth: 110,
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.duration}}</div></div>'
+    }
+  )
+  $scope.gridOptions.columnDefs.push(
+{
+      displayName: 'Status',
+      name: 'status',
+      cellClass: 'text-center',
+      headerCellClass: 'text-center',
+      maxWidth: 100,
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+    }
+  );
+  $scope.gridOptions.columnDefs.push({
+    displayName: 'Action',
+    name: 'action',
+    cellClass: 'text-center',
+    headerCellClass: 'text-center',
+    maxWidth: 100,
+    cellTemplate: [
+      '<div class="ui-grid-cell-contents">',
+      '  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
+      '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+      '    <i class="fa fa-angle-down"></i></button>',
+      '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
+      '       <li><a ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'In Progress\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.action(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+      '       <li><a ng-disabled="[\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
+      '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
+      '    </ul>',
+      '  </div>',
+      '</div>'
+    ].join('')
+  });
+
   $scope.gridOptions.data=[];
+  $scope.gridOptions.onRegisterApi = function (gridApi) {
+    $scope.gridApi = gridApi;
+    $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+  };
   $scope.getExecListByBatchExec=function(){
     BatchService.getExecListByBatchExec($stateParams.id,$stateParams.version,CF_META_TYPES.batchexec).then(function (response) { onSuccessGetExecListByBatchExec(response.data) });
     var onSuccessGetExecListByBatchExec = function (response) {
@@ -324,22 +447,27 @@ BatchModule.controller('ResultBatchController', function($state, $timeout, $filt
     $rootScope.previousState.params.id = $stateParams.id;
     $rootScope.previousState.params.version = $stateParams.version;
     $rootScope.previousState.params.mode = true;
-    var stateName = dagMetaDataService.elementDefs[data.type.toLowerCase()].detailState;
+    var stateName = dagMetaDataService.elementDefs[data.type.toLowerCase()].resultState;
     if (stateName)
       $state.go(stateName, {
         id: data.uuid,
         version: data.version,
+        type:data.type.toLowerCase(),
         returnBack : true,
         mode: mode == 'view' ? true : false
       });
   }
+  
+  $scope.close=function(){
+    var stateName ="batchexeclist"; 
+    $state.go(stateName);
+  }
 
   $scope.getDetail = function (data) {
-    var uuid = data.uuid;
-    var version = data.version;
     $scope.obj = {};
     $scope.obj=data
     $scope.msg = "Export"
+    $scope.type= dagMetaDataService.elementDefs[data.type.toLowerCase().split("exec")[0]].caption
     $('#confModal').modal({
       backdrop: 'static',
       keyboard: false
@@ -349,6 +477,12 @@ BatchModule.controller('ResultBatchController', function($state, $timeout, $filt
   $scope.submitOk=function(msg){
    if(msg =="Export"){
     $scope.okExport();
+   }
+   if(msg ="Killed"){
+    $scope.okKill();
+   }
+   if(msg=="Restart"){
+    $scope.okRestart();
    }
   }
 
@@ -370,6 +504,126 @@ BatchModule.controller('ResultBatchController', function($state, $timeout, $filt
       $scope.$emit('notify', notify);
     }
   }
+
+  $scope.setStatus = function (row, status) {
+    $scope.obj=row
+    $scope.msg = "Killed"
+    $scope.type= dagMetaDataService.elementDefs[data.type.toLowerCase().split("exec")[0]].caption
+    $scope.obj.setStatus=status
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.okKill = function () {
+    var api = false;
+    switch ($scope.obj.type.toLowerCase()) {
+      case 'dqexec':
+        api = 'dataqual';
+        break;
+      case 'dqgroupExec':
+        api = 'dataqual';
+        break;
+      case 'profileExec':
+        api = 'profile';
+        break;
+      case 'profilegroupExec':
+        api = 'profile';
+        break;
+      case 'ruleExec':
+        api = 'rule';
+        break;
+      case 'rulegroupExec':
+        api = 'rule';
+        break;
+      case 'reconExec':
+        api = 'recon';
+        break;
+      case 'recongroupExec':
+        api = 'recon';
+        break;
+      case 'dagexec':
+        api = 'dag';
+        break;
+      case 'batchexec':
+        api = 'batch';
+        break;
+    }
+    if (!api) {
+      return
+    }
+    $('#confModal').modal('hide');
+    notify.type = 'success',
+    notify.title = 'Success',
+    notify.content ="Pipeline Killed Successfully"
+    $scope.$emit('notify', notify);
+
+    var url = $location.absUrl().split("app")[0];
+    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.obj.uuid + '&version=' +  $scope.obj.version + '&type='+$scope.obj.type+'&status=' +  $scope.obj.setStatus).then(function (response) {
+      console.log(response);
+    });
+  }
+
+  $scope.restartExec = function (row, status) {
+    $scope.obj=row;
+    $scope.msg = "Restart"
+    $scope.type= dagMetaDataService.elementDefs[$scope.obj.type.toLowerCase().split("exec")[0]].caption
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+
+   $scope.okRestart=function(){
+    var api = false;
+    switch ($scope.obj.type.toLowerCase()) {
+      case 'dqexec':
+        api = 'dataqual';
+        break;
+      case 'dqgroupExec':
+        api = 'dataqual';
+        break;
+      case 'profileExec':
+        api = 'profile';
+        break;
+      case 'profilegroupExec':
+        api = 'profile';
+        break;
+      case 'ruleExec':
+        api = 'rule';
+        break;
+      case 'rulegroupExec':
+        api = 'rule';
+        break;
+      case 'dagexec':
+        api = 'dag';
+        break;
+      case 'reconExec':
+        api = 'recon';
+        break;
+      case 'recongroupExec':
+        api = 'recon';
+        break;
+      case 'batchExec':
+        api = 'batch';
+        break;
+    }
+    if (!api) {
+      return
+    }
+    $('#confModal').modal('hide');
+    notify.type = 'success',
+    notify.title = 'Success',
+    notify.content = "Pipeline Restarted Successfully";
+    $scope.$emit('notify', notify);
+
+    var url = $location.absUrl().split("app")[0];
+    $http.post(url + '' + api + '/restart?uuid=' + $scope.obj.uuid + '&version=' + $scope.obj.version + '&type='+$scope.obj.type+'&action=execute').then(function (response) {
+      //console.log(response);
+    });
+   }
   var myVar;
   $scope.autoRefreshOnChange=function () {
     if($scope.autorefresh){
@@ -385,6 +639,7 @@ BatchModule.controller('ResultBatchController', function($state, $timeout, $filt
   $scope.$on('$destroy', function() {
   // Make sure that the interval is destroyed too
       clearInterval(myVar);
+      $scope.gridOptions=null;
   });
   
 });

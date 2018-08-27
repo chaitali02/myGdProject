@@ -429,7 +429,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         ]
     };
     $scope.Batch = {
-        "caption": "Batch",
+        "caption": " Batch Scheduler",
         "name": "batch",
         "class": "fa fa-tasks",
         "submenu": [
@@ -667,7 +667,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         }
         $rootScope.reOpen=false;
         localStorage.reOpen=false;
-        $state.go('datadiscovery');
+        $state.go('datadiscovery',{}, {reload: true});
     };
 
     $scope.cancelLogut = function () {
@@ -679,7 +679,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             $rootScope.reOpen=false;
             localStorage.reOpen=false;
             if ($sessionStorage.fromStateName){
-                $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+              //  $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
             }else{
                 $state.go('datadiscovery');
             }
@@ -861,12 +861,12 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
     $scope.OepnWelcomeWindow=function(){
         $rootScope.reOpen=true;
         localStorage.reOpen=true;
-        if ($sessionStorage.fromStateName){
-            $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
-        }
-        else{
-            $state.go('/home');
-        }
+        // if ($sessionStorage.fromStateName){
+        //     $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+        // }
+        // else{
+        //     $state.go('/home');
+        // }
            $('#myModal').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -2245,7 +2245,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
 
         .state('resultgraphwf', {
-            url: "/DataPipeline/Result?id&version&type&mode&dagid",
+            url: "/DataPipeline/Result?id&version&type&mode&dagid&returnBack",
             templateUrl: "views/data-pipeline-result.html",
             data: { pageTitle: 'Data Pipeline' },
             controller: "",
@@ -2266,14 +2266,14 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('batchlist', {
             url: "/Batch/List",
             templateUrl: "views/common-list.html",
-            data: { pageTitle: 'Batch' },
+            data: { pageTitle: ' Batch Scheduler' },
             params: { type: "batch" }
         })
 
         .state('batchexeclist', {
             url: "/Batch/ResultList",
             templateUrl: "views/common-list.html",
-            data: { pageTitle: 'Batch' },
+            data: { pageTitle: ' Batch Scheduler' },
             params: { type: 'batchexec', isExec: true }
         })
 
@@ -2281,7 +2281,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('batchdetail', {
             url: "/BatchDetail?id&mode&returnBack&version",
             templateUrl: "views/batch.html",
-            data: { pageTitle: 'Batch' },
+            data: { pageTitle: ' Batch Scheduler' },
             controller: "",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -2301,7 +2301,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('batchexecresult', {
             url: "/BatchResult?id&mode&returnBack&version",
             templateUrl: "views/batch-result.html",
-            data: { pageTitle: 'Batch' },
+            data: { pageTitle: ' Batch Scheduler' },
             controller: "",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {

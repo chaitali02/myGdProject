@@ -5,5 +5,4 @@ CREATE  TABLE IF NOT EXISTS `portfolio_var_heatmap_buckets`(
   `portfolio_pd_bucket` string, 
   `portfolio_lgd_bucket` string, 
   `version` string)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-TBLPROPERTIES ("skip.header.line.count"="1");
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

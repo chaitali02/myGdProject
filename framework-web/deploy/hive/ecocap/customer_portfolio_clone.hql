@@ -14,7 +14,3 @@ CREATE  TABLE IF NOT EXISTS `customer_portfolio_clone`(
   `reporting_date` string, 
   `version` int);
 
-
-
-
-

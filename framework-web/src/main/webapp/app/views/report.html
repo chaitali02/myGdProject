@@ -128,18 +128,19 @@
                                 </div> -->
                             </div>
                         </div>
+                        <div class="form-body graph-body" ng-if="showGraphDiv">
+                            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                            <div class="spinner" id="graphloader">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="report.uuid" version="reportVersion.defaultVersion.version">
+                            </div>
+                        </div>
                         <div class="form-body" data-ng-show="showForm">
                     
-                            <div class="form-body graph-body" ng-if="showGraphDiv">
-                                <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-                                <div class="spinner" id="graphloader">
-                                    <div class="bounce1"></div>
-                                    <div class="bounce2"></div>
-                                    <div class="bounce3"></div>
-                                </div>
-                                <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="report.uuid" version="reportVersion.defaultVersion.version">
-                                </div>
-                            </div>
+                           
 
                             <div class="form-body" data-ng-show="showForm">
                                 <div class="form-body">

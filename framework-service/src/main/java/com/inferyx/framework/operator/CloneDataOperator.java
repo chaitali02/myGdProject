@@ -293,9 +293,9 @@ public class CloneDataOperator implements IOperator {
 		StringBuilder sb = new StringBuilder(crossJoinSql).append(ConstantsUtil.UNION_ALL).append(genUnionQuery(sourceSql, numRecords, numIterations, countData));
 
 		ResultSetHolder rsHolder = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			rsHolder = exec.executeAndPersist(sb.toString(), filePath, locationDatapod,
 				SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {

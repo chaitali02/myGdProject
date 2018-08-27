@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.datascience.distribution.Math3RandDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
@@ -63,6 +64,8 @@ public class GenerateDataOperator implements IOperator {
 	private RandomDistributionFactory randomDistributionFactory;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	Engine engine;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -183,15 +186,18 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		List<Attribute> attributes = locationDatapod.getAttributes();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																					locationDatapod.getDatasource().getRef().getVersion(), 
+																					locationDatapod.getDatasource().getRef().getType().toString());
 		//ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		ResultSetHolder rsHolder = exec.create(rowObjList, attributes, tableName, commonServiceImpl.getApp().getUuid());
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+				|| appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| appDatasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
-			rsHolder = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod);
+			rsHolder = sparkExecutor.persistDataframe(rsHolder, locationDpDatasource, locationDatapod);
 		}
 		rowObjList = null;
 //		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
@@ -288,8 +294,11 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		// Get exec
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																					locationDatapod.getDatasource().getRef().getVersion(), 
+																					locationDatapod.getDatasource().getRef().getType().toString());
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 																																		
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
@@ -304,10 +313,10 @@ public class GenerateDataOperator implements IOperator {
 			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo(), execParams);
 			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo(), execParams);
 			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
-			if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+			if(!appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
-				sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
+				sparkExecutor.persistDataframe(resultSetHolder, appDatasource, locationDatapod);
 			} 
 			// Save result
 			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(execType), runMode);
