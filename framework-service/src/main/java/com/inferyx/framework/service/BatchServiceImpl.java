@@ -191,14 +191,20 @@ public class BatchServiceImpl {
 
 	public BatchExec restart(String execUuid, String execVersion, RunMode runMode) throws Exception {
 		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
-		for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
-			switch(execHolder.getRef().getType()) {
-				case dagExec: dagServiceImpl.restart(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), runMode);
-					break;
-					
-				default: return null;	
-			}
+		try {
+			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
+				switch(execHolder.getRef().getType()) {
+					case dagExec: dagServiceImpl.restart(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), runMode);
+						break;
+						
+					default:	
+				}
+			}		
+			return checkBatchStatus(batchExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			checkBatchStatus(batchExec);
+			throw new RuntimeException(e);
 		}		
-		return checkBatchStatus(batchExec);
 	}
 }
