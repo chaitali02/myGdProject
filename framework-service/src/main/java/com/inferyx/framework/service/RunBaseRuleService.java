@@ -515,7 +515,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			
 			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
 				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
+						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.FILE.toString());
 				appUuid = commonServiceImpl.getApp().getUuid();
 			} else {
 				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
