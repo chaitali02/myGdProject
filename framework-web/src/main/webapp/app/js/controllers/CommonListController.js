@@ -181,7 +181,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $('#killmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
-    notify.content = $scope.newType == "dagexec" ? "Pipeline Killed Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Killed Successfully" : "Rule Killed Successfully"
+    notify.content = $scope.newType == "dagexec" ? "Pipeline "+$scope.selectDetail.setStatus+" Successfully" :$scope.newType == "batchexec" ? "Batch "+$scope.selectDetail.setStatus+" Successfully": $scope.newType.indexOf("group") != -1 ? "Rule Group "+$scope.selectDetail.setStatus+" Successfully" : "Rule "+$scope.selectDetail.setStatus+" Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
@@ -281,7 +281,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $('#restartmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
-    notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
+    notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType == "batchexec" ? "Batch Restarted Successfully": $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
