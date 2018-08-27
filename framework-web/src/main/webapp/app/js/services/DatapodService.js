@@ -95,11 +95,34 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+	factory.findCompareMetadata = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
 
 	return factory;
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
+	this.compareMetadata = function (uuid,version,type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findCompareMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
 	this.getResultByDatastore = function (uuid,version) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findResultByDatastore(uuid,version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
