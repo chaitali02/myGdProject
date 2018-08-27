@@ -2717,14 +2717,14 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			for(Attribute attribute : datapod.getAttributes()) {
 				for(Tuple2<String, String> dType : dTypes) {						
-					comparisonResult.add(compareAttr(attribute, dType, lmAttrList, smAttrList));					
+					comparisonResult = compareAttr(comparisonResult, attribute, dType, lmAttrList, smAttrList);					
 				}
 			}
 		} else {
 			for(Attribute attribute : datapod.getAttributes()) {
 				CompareMetaData comparison = new CompareMetaData();
 				comparison.setLmAttribute(attribute.getName());
-				comparison.setLmLength(attribute.getLength().toString());
+				comparison.setLmLength(/*attribute.getLength().toString()*/"");
 				comparison.setLmType(attribute.getType());
 				comparison.setSmAttribute("");
 				comparison.setSmLength("");
@@ -2737,7 +2737,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return comparisonResult;
 	}
 	
-	public CompareMetaData compareAttr(Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
+	public List<CompareMetaData> compareAttr(List<CompareMetaData> comparisonResult, Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
 			String status = null;
@@ -2746,24 +2746,26 @@ public class SparkExecutor<T> implements IExecutor {
 			} else {
 				status = Compare.MODIFIED.toString();
 			}
-			if(!attribute.getLength().toString().equalsIgnoreCase("")){
-				status = Compare.MODIFIED.toString();
-			}
+//			if(!attribute.getLength().toString().equalsIgnoreCase("")){
+//				status = Compare.MODIFIED.toString();
+//			}
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attribute.getLength().toString());
+			comparison.setLmLength(/*attribute.getLength().toString()*/"");
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute(dType._1());
 			comparison.setSmLength("");
 			comparison.setSmType(dType._2());
 			comparison.setStatus(status);
+			comparisonResult.add(comparison);
 		} else if(!smAttrList.contains(attribute.getName())) {
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attribute.getLength().toString());
+			comparison.setLmLength(/*attribute.getLength().toString()*/"");
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute("");
 			comparison.setSmLength("");
 			comparison.setSmType("");
 			comparison.setStatus(Compare.DELETED.toString());
+			comparisonResult.add(comparison);
 		} else if(!lmAttrList.contains(dType._1())) {
 			comparison.setLmAttribute("");
 			comparison.setLmLength("");
@@ -2772,7 +2774,8 @@ public class SparkExecutor<T> implements IExecutor {
 			comparison.setSmLength("");
 			comparison.setSmType(dType._2());
 			comparison.setStatus(Compare.NEW.toString());
+			comparisonResult.add(comparison);
 		}
-		return comparison;
+		return comparisonResult;
 	}
 }
