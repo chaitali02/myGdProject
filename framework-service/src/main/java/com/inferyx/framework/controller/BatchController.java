@@ -45,4 +45,32 @@ public class BatchController {
 		BatchExec batchExec = batchServiceImpl.create(batchUuid, batchVersion, execParams, null, runMode);
 		return batchServiceImpl.execute(batchUuid, batchVersion, batchExec, execParams, type, runMode);
 	}
+	
+	@RequestMapping(value = "/setStatus", method = RequestMethod.PUT)
+	public boolean kill(@RequestParam(value = "uuid") String execUuid,
+						@RequestParam(value = "version") String execVersion,
+						@RequestParam(value = "type", required = false) String type,
+						@RequestParam(value = "action", required = false) String action) {
+		try {
+			batchServiceImpl.kill(execUuid, execVersion);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	@RequestMapping(value = "/restart", method = RequestMethod.POST)
+	public boolean restart(@RequestParam(value = "uuid") String execUuid,
+						@RequestParam(value = "version") String execVersion,
+						@RequestParam(value = "type", required = false) String type,
+						@RequestParam(value = "action", required = false) String action, 
+						@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) {
+		try {
+			RunMode runMode = Helper.getExecutionMode(mode);
+			batchServiceImpl.restart(execUuid, execVersion, runMode);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }
