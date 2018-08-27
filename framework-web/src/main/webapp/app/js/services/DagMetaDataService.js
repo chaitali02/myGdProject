@@ -2,7 +2,29 @@ InferyxApp=angular.module('InferyxApp');
 InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConstants){
   var obj = {};
    $rootScope.loginUser = JSON.parse(localStorage.userdetail).name;
-
+   obj.compareMetaDataStatusDefs={
+    'NOCHANGE':{
+      name : 'NoChange',
+      caption:'No Change',
+      color :'#9CBB62',
+    },
+    'MODIFIED':{
+      name : 'Modified',
+      caption:'Modified',
+      color :'#5083C3',
+    },
+    'DELETE':{
+      name : 'Delete',
+      caption:'Delete',
+      color :'#C34E4E',
+    },
+    'NEW':{
+      name : 'New',
+      caption:'New',
+      color :'#4FACC5',
+    },
+   
+  }
   obj.statusDefs={
     'NotStarted':{
       name : 'NotStarted',

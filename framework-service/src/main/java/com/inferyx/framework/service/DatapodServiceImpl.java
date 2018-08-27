@@ -1213,7 +1213,13 @@ public class DatapodServiceImpl {
 		MetaIdentifier dsMI = datapod.getDatasource().getRef();
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		String tableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
-		return sparkExecutor.compareMetadata(datapod, datasource, tableName);
+		
+		String smTableName = null;
+		try {
+			smTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return sparkExecutor.compareMetadata(datapod, datasource, smTableName);
 	}
 }

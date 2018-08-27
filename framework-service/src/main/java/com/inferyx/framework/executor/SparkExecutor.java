@@ -2701,37 +2701,79 @@ public class SparkExecutor<T> implements IExecutor {
         return DataTypes.createStructType(fields);
     }
 
-	public List<CompareMetaData> compareMetadata(Datapod datapod, Datasource datasource, String tableName) throws IOException {
-		String sql = "SELECT * FROM " + tableName + " LIMIT 2";
-		Dataset<Row> df = executeSql(sql).getDataFrame(); 
-		df.logicalPlan().allAttributes().attrs();
+	public List<CompareMetaData> compareMetadata(Datapod datapod, Datasource datasource, String smTableName) throws IOException {
 		List<CompareMetaData> comparisonResult = new ArrayList<>();
-		Tuple2<String, String>[] dTypes = df.dtypes();
-		for(Attribute attribute : datapod.getAttributes()) {
-			for(Tuple2<String, String> dType : dTypes) {
-				if(attribute.getName().equalsIgnoreCase(dType._1())) {	
-					String status = null;
-					if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
-						status = Compare.NOCHANGE.toString();
-					} else {
-						status = Compare.MODIFIED.toString();
-					}
-//					if(!attribute.getLength().toString().equalsIgnoreCase("")){
-//						status = Compare.MODIFIED.toString();
-//					}
-					CompareMetaData comparison = new CompareMetaData();
-					comparison.setLmAttribute(attribute.getName());
-					comparison.setLmLength("-");
-					comparison.setLmType(attribute.getType());
-					comparison.setSmAttribute(dType._1());
-					comparison.setSmLength("-");
-					comparison.setSmType(dType._2());
-					comparison.setStatus(status);
-					
-					comparisonResult.add(comparison);
+		
+		if(smTableName != null) {
+			String sql = "SELECT * FROM " + smTableName + " LIMIT 2";
+			Dataset<Row> df = executeSql(sql).getDataFrame(); 
+			Tuple2<String, String>[] dTypes = df.dtypes();
+			
+			List<String> lmAttrList = new ArrayList<>();
+			List<String> smAttrList =  Arrays.asList(df.columns());
+			for(Attribute attribute : datapod.getAttributes()) {
+				lmAttrList.add(attribute.getName());
+			}
+			
+			for(Attribute attribute : datapod.getAttributes()) {
+				for(Tuple2<String, String> dType : dTypes) {						
+					comparisonResult.add(compareAttr(attribute, dType, lmAttrList, smAttrList));					
 				}
+			}
+		} else {
+			for(Attribute attribute : datapod.getAttributes()) {
+				CompareMetaData comparison = new CompareMetaData();
+				comparison.setLmAttribute(attribute.getName());
+				comparison.setLmLength(attribute.getLength() != null ? attribute.getLength().toString():" ");
+				comparison.setLmType(attribute.getType());
+				comparison.setSmAttribute("");
+				comparison.setSmLength("");
+				comparison.setSmType("");
+				comparison.setStatus("");
+				
+				comparisonResult.add(comparison);
 			}
 		}
 		return comparisonResult;
+	}
+	
+	public CompareMetaData compareAttr(Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
+		CompareMetaData comparison = new CompareMetaData();
+		String len = attribute.getLength() != null ? attribute.getLength().toString():" ";
+		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
+			String status = null;			
+			if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
+				status = Compare.NOCHANGE.toString();
+			} else {
+				status = Compare.MODIFIED.toString();
+			}
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
+				status = Compare.MODIFIED.toString();
+			}
+			comparison.setLmAttribute(attribute.getName());
+			comparison.setLmLength(len);
+			comparison.setLmType(attribute.getType());
+			comparison.setSmAttribute(dType._1());
+			comparison.setSmLength("");
+			comparison.setSmType(dType._2());
+			comparison.setStatus(status);
+		} else if(!smAttrList.contains(attribute.getName())) {
+			comparison.setLmAttribute(attribute.getName());
+			comparison.setLmLength(len);
+			comparison.setLmType(attribute.getType());
+			comparison.setSmAttribute("");
+			comparison.setSmLength("");
+			comparison.setSmType("");
+			comparison.setStatus(Compare.DELETED.toString());
+		} else if(!lmAttrList.contains(dType._1())) {
+			comparison.setLmAttribute("");
+			comparison.setLmLength("");
+			comparison.setLmType("");
+			comparison.setSmAttribute(dType._1());
+			comparison.setSmLength("");
+			comparison.setSmType(dType._2());
+			comparison.setStatus(Compare.NEW.toString());
+		}
+		return comparison;
 	}
 }
