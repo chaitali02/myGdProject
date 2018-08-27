@@ -243,6 +243,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
    $scope.okRestart=function(){
     var api = false;
+    
     switch ($scope.newType) {
       case 'dqexec':
         api = 'dataqual';
@@ -271,7 +272,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'recongroupExec':
         api = 'recon';
         break;
-      case 'batchExec':
+      case 'batchexec':
         api = 'batch';
         break;
     }

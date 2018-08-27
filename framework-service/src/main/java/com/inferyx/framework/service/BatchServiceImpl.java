@@ -43,6 +43,8 @@ public class BatchServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private DagServiceImpl dagServiceImpl;
+	@Autowired
+	private DagExecServiceImpl dagExecServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(BatchServiceImpl.class);
 	
@@ -89,7 +91,6 @@ public class BatchServiceImpl {
 
 	public BatchExec execute(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
-		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
 		List<MetaIdentifierHolder> execList = new ArrayList<>();
 		for(MetaIdentifierHolder metaMI : batch.getMetaList()) {
 			switch(metaMI.getRef().getType()) {
@@ -102,22 +103,33 @@ public class BatchServiceImpl {
 		}
 		
 		batchExec.setExecList(execList);
-		batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
-		batchExec = checkCompleteStatus(batchExec);
+		batchExec = checkBatchStatus(batchExec);
 		return batchExec;
 	}
 	
-	public BatchExec checkCompleteStatus(BatchExec batchExec) throws Exception {
+	public BatchExec checkBatchStatus(BatchExec batchExec) throws Exception {
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
 		boolean areAllCompleted = false;
-		Stage batchStatus = Status.Stage.InProgress;
+		Stage batchStatus = Helper.getLatestStatus(batchExec.getStatusList()).getStage();
 		boolean isKilled = false;
 		boolean isFailed = false;
 		boolean isCompleted = false;
+		boolean isAnyOneTerminating = false;
+		boolean isAnyOneInProgress = false;
+		
 		do {
 			for(int i=0; i<execList.size(); i++) {
 				MetaIdentifier execMI = execList.get(i).getRef();				
 				Status latestStatus = checkStatusByExec(execMI);
+				
+				if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
+					isAnyOneInProgress = true;
+				}
+				
+				if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
+					isAnyOneTerminating = true;
+				}
+				
 				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
 					areAllCompleted = true;
 					isCompleted = true;
@@ -131,6 +143,15 @@ public class BatchServiceImpl {
 					areAllCompleted = false;
 				}				
 			}
+			
+			if(isAnyOneInProgress && Helper.getLatestStatus(batchExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+			}
+			
+			if(isAnyOneTerminating) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+			}
+			
 			if(areAllCompleted) {
 				if(isFailed) {
 					batchStatus = Status.Stage.Failed;
@@ -146,8 +167,7 @@ public class BatchServiceImpl {
 		return batchExec;
 	}
 	
-	public Status checkStatusByExec(MetaIdentifier execMI) throws JsonProcessingException {
-		
+	public Status checkStatusByExec(MetaIdentifier execMI) throws JsonProcessingException {		
 		switch(execMI.getType()) {
 			case dagExec: 
 				DagExec baseExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(execMI.getUuid(), execMI.getVersion(), execMI.getType().toString());
@@ -155,5 +175,36 @@ public class BatchServiceImpl {
 				
 			default: return null;				
 		}
+	}
+
+	public BatchExec kill(String execUuid, String execVersion) throws Exception {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
+		for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
+			switch(execHolder.getRef().getType()) {
+				case dagExec: dagExecServiceImpl.kill(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), null, null);
+					break;
+				default: return null;	
+			}
+		}		
+		return checkBatchStatus(batchExec);
+	}
+
+	public BatchExec restart(String execUuid, String execVersion, RunMode runMode) throws Exception {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
+		try {
+			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
+				switch(execHolder.getRef().getType()) {
+					case dagExec: dagServiceImpl.restart(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), runMode);
+						break;
+						
+					default:	
+				}
+			}		
+			return checkBatchStatus(batchExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			checkBatchStatus(batchExec);
+			throw new RuntimeException(e);
+		}		
 	}
 }
