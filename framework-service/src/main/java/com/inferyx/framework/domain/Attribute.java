@@ -21,8 +21,27 @@ public class Attribute {
     private String partition;
     private String dispName;
 	private String active = "Y";
+	private Integer length;
     
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the length
+	 */
+	public Integer getLength() {
+		return length;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param length the length to set
+	 */
+	public void setLength(Integer length) {
+		this.length = length;
+	}
 
 	public String getActive() {
 		return active;
@@ -131,18 +150,18 @@ public class Attribute {
     /**
      * 
      * @return
-     *     The expr
+     *     The expression
      */
-    public Expression getExpr() {
+    public Expression getExpression() {
         return expression;
     }
 
     /**
      * 
      * @param expression
-     *     The expr
+     *     The expression
      */
-    public void setExpr(Expression expression) {
+    public void setExpression(Expression expression) {
         this.expression = expression;
     }
 

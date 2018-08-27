@@ -10,23 +10,17 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.DagExec;
@@ -116,26 +110,36 @@ public class BatchServiceImpl {
 	public BatchExec checkCompleteStatus(BatchExec batchExec) throws Exception {
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
 		boolean areAllCompleted = false;
-		Stage setLatestStatus = Status.Stage.InProgress;
+		Stage batchStatus = Status.Stage.InProgress;
+		boolean isKilled = false;
+		boolean isFailed = false;
+		boolean isCompleted = false;
 		do {
 			for(int i=0; i<execList.size(); i++) {
 				MetaIdentifier execMI = execList.get(i).getRef();				
 				Status latestStatus = checkStatusByExec(execMI);
 				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
 					areAllCompleted = true;
-					setLatestStatus = Status.Stage.Completed;
+					isCompleted = true;
 				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
 					areAllCompleted = true;
-					setLatestStatus = Status.Stage.Killed;
+					isKilled = true;
 				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
 					areAllCompleted = true;
-					setLatestStatus = Status.Stage.Failed;
+					isFailed = true;
 				} else {
 					areAllCompleted = false;
 				}				
 			}
 			if(areAllCompleted) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, setLatestStatus);
+				if(isFailed) {
+					batchStatus = Status.Stage.Failed;
+				} else if(isKilled) {
+					batchStatus = Status.Stage.Killed;
+				} else if(isCompleted) {
+					batchStatus = Status.Stage.Completed;
+				}
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, batchStatus);
 			}
 		} while(!areAllCompleted);
 		
