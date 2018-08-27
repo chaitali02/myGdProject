@@ -184,7 +184,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
-			data = exec.fetchResults(datastore, null, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
+			data = exec.fetchResults(datastore, datapod, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;

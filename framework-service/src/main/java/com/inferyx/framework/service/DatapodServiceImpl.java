@@ -64,6 +64,7 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
@@ -82,6 +83,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
@@ -138,6 +140,8 @@ public class DatapodServiceImpl {
 	private MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -1202,5 +1206,14 @@ public class DatapodServiceImpl {
 			tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
 		}		
 		return tableName;
+	}
+
+	public List<CompareMetaData> compareMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = datapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		String tableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		return sparkExecutor.compareMetadata(datapod, datasource, tableName);
 	}
 }

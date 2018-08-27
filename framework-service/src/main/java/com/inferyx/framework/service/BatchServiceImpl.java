@@ -144,7 +144,7 @@ public class BatchServiceImpl {
 				}				
 			}
 			
-			if(isAnyOneInProgress && Helper.getLatestStatus(batchExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
+			if(isAnyOneInProgress) {
 				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
 			}
 			
@@ -183,7 +183,7 @@ public class BatchServiceImpl {
 			switch(execHolder.getRef().getType()) {
 				case dagExec: dagExecServiceImpl.kill(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), null, null);
 					break;
-				default: return null;	
+				default: 
 			}
 		}		
 		return checkBatchStatus(batchExec);

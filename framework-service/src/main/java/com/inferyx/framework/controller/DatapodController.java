@@ -10,16 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -148,5 +144,15 @@ public class DatapodController {
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping(value = "/compareMetadata", method = RequestMethod.GET)
+	public List<CompareMetaData> compareMetadata(@RequestParam(value = "uuid") String datapodUuid,
+					@RequestParam(value = "version")String datapodVersion,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.compareMetadata(datapodUuid, datapodVersion, runMode);
 	}
 }

@@ -65,7 +65,6 @@ import org.apache.spark.ml.tuning.ParamGridBuilder;
 import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
 import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
-import org.apache.spark.rdd.DoubleRDDFunctions;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
@@ -101,6 +100,7 @@ import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -116,6 +116,7 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -2699,4 +2700,38 @@ public class SparkExecutor<T> implements IExecutor {
         }
         return DataTypes.createStructType(fields);
     }
+
+	public List<CompareMetaData> compareMetadata(Datapod datapod, Datasource datasource, String tableName) throws IOException {
+		String sql = "SELECT * FROM " + tableName + " LIMIT 2";
+		Dataset<Row> df = executeSql(sql).getDataFrame(); 
+		df.logicalPlan().allAttributes().attrs();
+		List<CompareMetaData> comparisonResult = new ArrayList<>();
+		Tuple2<String, String>[] dTypes = df.dtypes();
+		for(Attribute attribute : datapod.getAttributes()) {
+			for(Tuple2<String, String> dType : dTypes) {
+				if(attribute.getName().equalsIgnoreCase(dType._1())) {	
+					String status = null;
+					if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
+						status = Compare.NOCHANGE.toString();
+					} else {
+						status = Compare.MODIFIED.toString();
+					}
+//					if(!attribute.getLength().toString().equalsIgnoreCase("")){
+//						status = Compare.MODIFIED.toString();
+//					}
+					CompareMetaData comparison = new CompareMetaData();
+					comparison.setLmAttribute(attribute.getName());
+					comparison.setLmLength("-");
+					comparison.setLmType(attribute.getType());
+					comparison.setSmAttribute(dType._1());
+					comparison.setSmLength("-");
+					comparison.setSmType(dType._2());
+					comparison.setStatus(status);
+					
+					comparisonResult.add(comparison);
+				}
+			}
+		}
+		return comparisonResult;
+	}
 }
