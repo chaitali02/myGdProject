@@ -2702,8 +2702,7 @@ public class SparkExecutor<T> implements IExecutor {
     }
 
 	public List<CompareMetaData> compareMetadata(Datapod datapod, Datasource datasource, String smTableName) throws IOException {
-		List<CompareMetaData> comparisonResult = new ArrayList<>();
-		
+		Map<String, CompareMetaData> comparisonResultMap = new LinkedHashMap<>();
 		if(smTableName != null) {
 			String sql = "SELECT * FROM " + smTableName + " LIMIT 2";
 			Dataset<Row> df = executeSql(sql).getDataFrame(); 
@@ -2717,55 +2716,56 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			for(Attribute attribute : datapod.getAttributes()) {
 				for(Tuple2<String, String> dType : dTypes) {						
-					comparisonResult = compareAttr(comparisonResult, attribute, dType, lmAttrList, smAttrList);					
+					comparisonResultMap = compareAttr(comparisonResultMap, attribute, dType, lmAttrList, smAttrList);					
 				}
 			}
 		} else {
 			for(Attribute attribute : datapod.getAttributes()) {
 				CompareMetaData comparison = new CompareMetaData();
 				comparison.setLmAttribute(attribute.getName());
-				comparison.setLmLength(/*attribute.getLength().toString()*/"");
+				comparison.setLmLength(attribute.getLength() != null ? attribute.getLength().toString() : " ");
 				comparison.setLmType(attribute.getType());
 				comparison.setSmAttribute("");
 				comparison.setSmLength("");
 				comparison.setSmType("");
-				comparison.setStatus("");
-				
-				comparisonResult.add(comparison);
+				comparison.setStatus("");				
+
+				comparisonResultMap.put(attribute.getName(), comparison);
 			}
 		}
-		return comparisonResult;
+		return Arrays.asList(comparisonResultMap.values().toArray(new CompareMetaData[comparisonResultMap.values().size()]));
 	}
 	
-	public List<CompareMetaData> compareAttr(List<CompareMetaData> comparisonResult, Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
+	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
+		String attrLength = attribute.getLength() != null ? attribute.getLength().toString():" ";
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
-			String status = null;
+			String status = null;			
 			if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();
 			}
-//			if(!attribute.getLength().toString().equalsIgnoreCase("")){
-//				status = Compare.MODIFIED.toString();
-//			}
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
+				status = Compare.MODIFIED.toString();
+			}
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(/*attribute.getLength().toString()*/"");
+			comparison.setLmLength(attrLength);
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute(dType._1());
 			comparison.setSmLength("");
 			comparison.setSmType(dType._2());
 			comparison.setStatus(status);
-			comparisonResult.add(comparison);
+			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!smAttrList.contains(attribute.getName())) {
 			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(/*attribute.getLength().toString()*/"");
+			comparison.setLmLength(attrLength);
 			comparison.setLmType(attribute.getType());
 			comparison.setSmAttribute("");
 			comparison.setSmLength("");
 			comparison.setSmType("");
 			comparison.setStatus(Compare.DELETED.toString());
-			comparisonResult.add(comparison);
+			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!lmAttrList.contains(dType._1())) {
 			comparison.setLmAttribute("");
 			comparison.setLmLength("");
@@ -2774,8 +2774,8 @@ public class SparkExecutor<T> implements IExecutor {
 			comparison.setSmLength("");
 			comparison.setSmType(dType._2());
 			comparison.setStatus(Compare.NEW.toString());
-			comparisonResult.add(comparison);
+			comparisonResultMap.put(dType._1(), comparison);
 		}
-		return comparisonResult;
+		return comparisonResultMap;
 	}
 }

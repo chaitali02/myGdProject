@@ -95,11 +95,34 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+	factory.findCompareMetadata = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
 
 	return factory;
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
+	this.compareMetadata = function (uuid,version,type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findCompareMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
 	this.getResultByDatastore = function (uuid,version) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findResultByDatastore(uuid,version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -210,7 +233,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
-
+				attribute.length = response.attributes[i].length;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -286,6 +309,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
+				attribute.length = response.attributes[i].length;
 				//console.log(response.attributes[i].key);
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
