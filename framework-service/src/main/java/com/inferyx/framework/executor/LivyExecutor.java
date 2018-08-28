@@ -554,7 +554,7 @@ public class LivyExecutor implements IExecutor {
 			} else {
 				status = Compare.MODIFIED.toString();
 			}
-			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_SIZE"))){
 				status = Compare.MODIFIED.toString();
 			}			
 			

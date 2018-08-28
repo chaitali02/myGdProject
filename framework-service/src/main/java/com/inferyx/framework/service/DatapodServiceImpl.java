@@ -1270,8 +1270,8 @@ public class DatapodServiceImpl {
 		
 		if(!attributes.isEmpty()) {
 			targetDatapod.setAttributes(attributes);
-			//targetDatapod.setId(null);
-			//targetDatapod.setVersion(null);
+			targetDatapod.setId(null);
+			targetDatapod.setVersion(null);
 			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(MetaType.datapod.toString(), targetDatapod);
 			return (Datapod) commonServiceImpl.getOneByUuidAndVersion(baseEntity.getUuid(), baseEntity.getVersion(), MetaType.datapod.toString());
 		} else {
