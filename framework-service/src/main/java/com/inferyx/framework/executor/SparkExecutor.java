@@ -2701,33 +2701,41 @@ public class SparkExecutor<T> implements IExecutor {
         return DataTypes.createStructType(fields);
     }
 
-	public List<CompareMetaData> compareMetadata(Datapod datapod, Datasource datasource, String smTableName) throws IOException {
+	/**
+	 * 
+	 * @param targetDatapod
+	 * @param datasource
+	 * @param sourceTableName
+	 * @return List<CompareMetaData>
+	 */
+	
+	public List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName) throws IOException {
 		Map<String, CompareMetaData> comparisonResultMap = new LinkedHashMap<>();
-		if(smTableName != null) {
-			String sql = "SELECT * FROM " + smTableName + " LIMIT 2";
+		if(sourceTableName != null) {
+			String sql = "SELECT * FROM " + sourceTableName + " LIMIT 2";
 			Dataset<Row> df = executeSql(sql).getDataFrame(); 
 			Tuple2<String, String>[] dTypes = df.dtypes();
 			
-			List<String> lmAttrList = new ArrayList<>();
-			List<String> smAttrList =  Arrays.asList(df.columns());
-			for(Attribute attribute : datapod.getAttributes()) {
-				lmAttrList.add(attribute.getName());
+			List<String> sourceAttrList = Arrays.asList(df.columns());
+			List<String> targetAttrList = new ArrayList<>();
+			for(Attribute attribute : targetDatapod.getAttributes()) {
+				targetAttrList.add(attribute.getName());
 			}
 			
-			for(Attribute attribute : datapod.getAttributes()) {
+			for(Attribute attribute : targetDatapod.getAttributes()) {
 				for(Tuple2<String, String> dType : dTypes) {						
-					comparisonResultMap = compareAttr(comparisonResultMap, attribute, dType, lmAttrList, smAttrList);					
+					comparisonResultMap = compareAttr(comparisonResultMap, attribute, dType, sourceAttrList, targetAttrList);					
 				}
 			}
 		} else {
-			for(Attribute attribute : datapod.getAttributes()) {
+			for(Attribute attribute : targetDatapod.getAttributes()) {
 				CompareMetaData comparison = new CompareMetaData();
-				comparison.setSourceAttribute(attribute.getName());
-				comparison.setSourceLength(attribute.getLength() != null ? attribute.getLength().toString() : " ");
-				comparison.setSourceType(attribute.getType());
-				comparison.setTargetAttribute("");
-				comparison.setTargetLength("");
-				comparison.setTargetType("");
+				comparison.setSourceAttribute("");
+				comparison.setSourceLength("");
+				comparison.setSourceType("");
+				comparison.setTargetAttribute(attribute.getName());
+				comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
+				comparison.setTargetType(attribute.getType());
 				comparison.setStatus("");				
 
 				comparisonResultMap.put(attribute.getName(), comparison);
@@ -2736,9 +2744,9 @@ public class SparkExecutor<T> implements IExecutor {
 		return Arrays.asList(comparisonResultMap.values().toArray(new CompareMetaData[comparisonResultMap.values().size()]));
 	}
 	
-	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Tuple2<String, String> dType, List<String> lmAttrList, List<String> smAttrList) {
+	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Tuple2<String, String> dType, List<String> sourceAttrList, List<String> targetAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
-		String attrLength = attribute.getLength() != null ? attribute.getLength().toString():" ";
+		String attrLength = attribute.getLength() != null ? attribute.getLength().toString():"";
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
 			String status = null;			
 			if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
@@ -2748,32 +2756,39 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
 				status = Compare.MODIFIED.toString();
-			}
-			comparison.setSourceAttribute(attribute.getName());
-			comparison.setSourceLength(attrLength);
-			comparison.setSourceType(attribute.getType());
-			comparison.setTargetAttribute(dType._1());
-			comparison.setTargetLength("");
-			comparison.setTargetType(dType._2());
+			}			
+			
+			comparison.setSourceAttribute(dType._1());
+			comparison.setSourceLength("");
+			comparison.setSourceType(dType._2());
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
 			comparison.setStatus(status);
 			comparisonResultMap.put(attribute.getName(), comparison);
-		} else if(!smAttrList.contains(attribute.getName())) {
-			comparison.setSourceAttribute(attribute.getName());
-			comparison.setSourceLength(attrLength);
-			comparison.setSourceType(attribute.getType());
-			comparison.setTargetAttribute("");
-			comparison.setTargetLength("");
-			comparison.setTargetType("");
-			comparison.setStatus(Compare.DELETED.toString());
-			comparisonResultMap.put(attribute.getName(), comparison);
-		} else if(!lmAttrList.contains(dType._1())) {
+		} else if(!sourceAttrList.contains(dType._1())) {
 			comparison.setSourceAttribute("");
 			comparison.setSourceLength("");
 			comparison.setSourceType("");
-			comparison.setTargetAttribute(dType._1());
-			comparison.setTargetLength("");
-			comparison.setTargetType(dType._2());
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
 			comparison.setStatus(Compare.NEW.toString());
+			comparisonResultMap.put(attribute.getName(), comparison);
+		} else if(!targetAttrList.contains(attribute.getName())) {
+			comparison.setSourceAttribute(dType._1());
+			comparison.setSourceLength("");
+			comparison.setSourceType(dType._2());
+			
+			comparison.setTargetAttribute("");
+			comparison.setTargetLength("");
+			comparison.setTargetType("");
+			
+			comparison.setStatus(Compare.DELETED.toString());
 			comparisonResultMap.put(dType._1(), comparison);
 		}
 		return comparisonResultMap;

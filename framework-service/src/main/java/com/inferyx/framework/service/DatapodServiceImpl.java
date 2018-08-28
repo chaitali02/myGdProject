@@ -1209,17 +1209,17 @@ public class DatapodServiceImpl {
 	}
 
 	public List<CompareMetaData> compareMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
-		MetaIdentifier dsMI = datapod.getDatasource().getRef();
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
-		String smTableName = null;
+		String sourceTableName = null;
 		try {
-			smTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return sparkExecutor.compareMetadata(datapod, datasource, smTableName);
+		return sparkExecutor.compareMetadata(targetDatapod, datasource, sourceTableName);
 	}
 }
