@@ -813,6 +813,7 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
         return temp.replace(/([A-Z][a-z])/g, " $1");
     }
     $rootScope.genericClose = function (e, type) {
+        debugger
         if ($stateParams.returnBack == "true" && $rootScope.previousState) {
             //revertback
             e.preventDefault();
