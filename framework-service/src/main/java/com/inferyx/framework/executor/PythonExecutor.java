@@ -45,6 +45,7 @@ import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -496,6 +497,13 @@ public class PythonExecutor implements IExecutor {
 	public ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName,
 			String lhsSql, String rhsSql, String saveTableName, BaseExec baseExec, Map<String, String> otherParams,
 			RunMode runMode) throws AnalysisException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
+			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
