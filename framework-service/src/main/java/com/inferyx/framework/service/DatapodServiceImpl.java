@@ -84,7 +84,6 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
@@ -141,8 +140,6 @@ public class DatapodServiceImpl {
 	private MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
-	@Autowired
-	private SparkExecutor<?> sparkExecutor;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -1221,7 +1218,7 @@ public class DatapodServiceImpl {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return sparkExecutor.compareMetadata(targetDatapod, datasource, sourceTableName);
+		return exec.compareMetadata(targetDatapod, datasource, sourceTableName);
 	}
 
 	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {
@@ -1237,7 +1234,7 @@ public class DatapodServiceImpl {
 			// TODO: handle exception
 		}
 		
-		List<CompareMetaData> comparisonResult = sparkExecutor.compareMetadata(targetDatapod, datasource, sourceTableName);
+		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, datasource, sourceTableName);
 		List<Attribute> attributes = new ArrayList<>();
 		int i = 0;
 		for(CompareMetaData compareMetaData : comparisonResult) {
