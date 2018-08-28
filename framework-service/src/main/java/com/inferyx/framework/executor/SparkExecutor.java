@@ -2722,12 +2722,12 @@ public class SparkExecutor<T> implements IExecutor {
 		} else {
 			for(Attribute attribute : datapod.getAttributes()) {
 				CompareMetaData comparison = new CompareMetaData();
-				comparison.setLmAttribute(attribute.getName());
-				comparison.setLmLength(attribute.getLength() != null ? attribute.getLength().toString() : " ");
-				comparison.setLmType(attribute.getType());
-				comparison.setSmAttribute("");
-				comparison.setSmLength("");
-				comparison.setSmType("");
+				comparison.setSourceAttribute(attribute.getName());
+				comparison.setSourceLength(attribute.getLength() != null ? attribute.getLength().toString() : " ");
+				comparison.setSourceType(attribute.getType());
+				comparison.setTargetAttribute("");
+				comparison.setTargetLength("");
+				comparison.setTargetType("");
 				comparison.setStatus("");				
 
 				comparisonResultMap.put(attribute.getName(), comparison);
@@ -2749,30 +2749,30 @@ public class SparkExecutor<T> implements IExecutor {
 			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
 				status = Compare.MODIFIED.toString();
 			}
-			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attrLength);
-			comparison.setLmType(attribute.getType());
-			comparison.setSmAttribute(dType._1());
-			comparison.setSmLength("");
-			comparison.setSmType(dType._2());
+			comparison.setSourceAttribute(attribute.getName());
+			comparison.setSourceLength(attrLength);
+			comparison.setSourceType(attribute.getType());
+			comparison.setTargetAttribute(dType._1());
+			comparison.setTargetLength("");
+			comparison.setTargetType(dType._2());
 			comparison.setStatus(status);
 			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!smAttrList.contains(attribute.getName())) {
-			comparison.setLmAttribute(attribute.getName());
-			comparison.setLmLength(attrLength);
-			comparison.setLmType(attribute.getType());
-			comparison.setSmAttribute("");
-			comparison.setSmLength("");
-			comparison.setSmType("");
+			comparison.setSourceAttribute(attribute.getName());
+			comparison.setSourceLength(attrLength);
+			comparison.setSourceType(attribute.getType());
+			comparison.setTargetAttribute("");
+			comparison.setTargetLength("");
+			comparison.setTargetType("");
 			comparison.setStatus(Compare.DELETED.toString());
 			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!lmAttrList.contains(dType._1())) {
-			comparison.setLmAttribute("");
-			comparison.setLmLength("");
-			comparison.setLmType("");
-			comparison.setSmAttribute(dType._1());
-			comparison.setSmLength("");
-			comparison.setSmType(dType._2());
+			comparison.setSourceAttribute("");
+			comparison.setSourceLength("");
+			comparison.setSourceType("");
+			comparison.setTargetAttribute(dType._1());
+			comparison.setTargetLength("");
+			comparison.setTargetType(dType._2());
 			comparison.setStatus(Compare.NEW.toString());
 			comparisonResultMap.put(dType._1(), comparison);
 		}

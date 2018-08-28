@@ -15,12 +15,12 @@ package com.inferyx.framework.domain;
  *
  */
 public class CompareMetaData {
-	private String lmAttribute;
-	private String lmType;
-	private String lmLength;
-	private String smAttribute;
-	private String smType;
-	private String smLength;
+	private String sourceAttribute;
+	private String sourceType;
+	private String sourceLength;
+	private String targetAttribute;
+	private String targetType;
+	private String targetLength;
 	private String status;
 	
 	/**
@@ -36,23 +36,23 @@ public class CompareMetaData {
 	/**
 	 * @Ganesh
 	 *
-	 * @param lmAttribute
-	 * @param lmType
-	 * @param lmLength
-	 * @param smAttribute
-	 * @param smType
-	 * @param smLength
+	 * @param sourceAttribute
+	 * @param sourceType
+	 * @param sourceLength
+	 * @param targetAttribute
+	 * @param targetType
+	 * @param targetLength
 	 * @param status
 	 */
-	public CompareMetaData(String lmAttribute, String lmType, String lmLength, String smAttribute, String smType,
-			String smLength, String status) {
+	public CompareMetaData(String sourceAttribute, String sourceType, String sourceLength, String targetAttribute, String targetType,
+			String targetLength, String status) {
 		super();
-		this.lmAttribute = lmAttribute;
-		this.lmType = lmType;
-		this.lmLength = lmLength;
-		this.smAttribute = smAttribute;
-		this.smType = smType;
-		this.smLength = smLength;
+		this.sourceAttribute = sourceAttribute;
+		this.sourceType = sourceType;
+		this.sourceLength = sourceLength;
+		this.targetAttribute = targetAttribute;
+		this.targetType = targetType;
+		this.targetLength = targetLength;
 		this.status = status;
 	}
 
@@ -61,98 +61,98 @@ public class CompareMetaData {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the lmAttribute
+	 * @return the sourceAttribute
 	 */
-	public String getLmAttribute() {
-		return lmAttribute;
+	public String getSourceAttribute() {
+		return sourceAttribute;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param lmAttribute the lmAttribute to set
+	 * @param sourceAttribute the sourceAttribute to set
 	 */
-	public void setLmAttribute(String lmAttribute) {
-		this.lmAttribute = lmAttribute;
+	public void setSourceAttribute(String sourceAttribute) {
+		this.sourceAttribute = sourceAttribute;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @return the lmType
+	 * @return the sourceType
 	 */
-	public String getLmType() {
-		return lmType;
+	public String getSourceType() {
+		return sourceType;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param lmType the lmType to set
+	 * @param sourceType the sourceType to set
 	 */
-	public void setLmType(String lmType) {
-		this.lmType = lmType;
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @return the lmLength
+	 * @return the sourceLength
 	 */
-	public String getLmLength() {
-		return lmLength;
+	public String getSourceLength() {
+		return sourceLength;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param lmLength the lmLength to set
+	 * @param sourceLength the sourceLength to set
 	 */
-	public void setLmLength(String lmLength) {
-		this.lmLength = lmLength;
+	public void setSourceLength(String sourceLength) {
+		this.sourceLength = sourceLength;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @return the smAttribute
+	 * @return the targetAttribute
 	 */
-	public String getSmAttribute() {
-		return smAttribute;
+	public String getTargetAttribute() {
+		return targetAttribute;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param smAttribute the smAttribute to set
+	 * @param targetAttribute the targetAttribute to set
 	 */
-	public void setSmAttribute(String smAttribute) {
-		this.smAttribute = smAttribute;
+	public void setTargetAttribute(String targetAttribute) {
+		this.targetAttribute = targetAttribute;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @return the smType
+	 * @return the targetType
 	 */
-	public String getSmType() {
-		return smType;
+	public String getTargetType() {
+		return targetType;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param smType the smType to set
+	 * @param targetType the targetType to set
 	 */
-	public void setSmType(String smType) {
-		this.smType = smType;
+	public void setTargetType(String targetType) {
+		this.targetType = targetType;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @return the smLength
+	 * @return the targetLength
 	 */
-	public String getSmLength() {
-		return smLength;
+	public String getTargetLength() {
+		return targetLength;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param smLength the smLength to set
+	 * @param targetLength the targetLength to set
 	 */
-	public void setSmLength(String smLength) {
-		this.smLength = smLength;
+	public void setTargetLength(String targetLength) {
+		this.targetLength = targetLength;
 	}
 	/**
 	 * @Ganesh
