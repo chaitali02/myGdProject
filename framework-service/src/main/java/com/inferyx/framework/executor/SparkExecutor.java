@@ -2733,11 +2733,12 @@ public class SparkExecutor<T> implements IExecutor {
 				comparison.setSourceAttribute("");
 				comparison.setSourceLength("");
 				comparison.setSourceType("");
+				
 				comparison.setTargetAttribute(attribute.getName());
 				comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
 				comparison.setTargetType(attribute.getType());
-				comparison.setStatus("");				
-
+				
+				comparison.setStatus("");	
 				comparisonResultMap.put(attribute.getName(), comparison);
 			}
 		}
@@ -2768,7 +2769,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			comparison.setStatus(status);
 			comparisonResultMap.put(attribute.getName(), comparison);
-		} else if(!sourceAttrList.contains(dType._1())) {
+		} else if(!sourceAttrList.contains(attribute.getName())) {
 			comparison.setSourceAttribute("");
 			comparison.setSourceLength("");
 			comparison.setSourceType("");
@@ -2779,7 +2780,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			comparison.setStatus(Compare.NEW.toString());
 			comparisonResultMap.put(attribute.getName(), comparison);
-		} else if(!targetAttrList.contains(attribute.getName())) {
+		} else if(!targetAttrList.contains(dType._1())) {
 			comparison.setSourceAttribute(dType._1());
 			comparison.setSourceLength("");
 			comparison.setSourceType(dType._2());
