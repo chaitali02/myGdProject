@@ -12,7 +12,16 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -34,6 +43,8 @@ import org.springframework.stereotype.Component;
 import com.inferyx.framework.client.LivyClientImpl;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -55,7 +66,9 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.livyjob.ExecRegAndPersistJob;
 import com.inferyx.framework.livyjob.ExecuteAndRegisterJob;
@@ -75,6 +88,8 @@ public class LivyExecutor implements IExecutor {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	HDFSInfo hdfsInfo;
+	@Autowired 
+	protected ConnectionFactory connectionFactory;
 	
 	
 	static final Logger logger = Logger.getLogger(LivyExecutor.class);
@@ -470,8 +485,112 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+			throws IOException {	
+		Map<String, CompareMetaData> comparisonResultMap = new LinkedHashMap<>();
+		try {			
+			if(sourceTableName != null) {				
+				if(sourceTableName.contains(datasource.getDbname())) {
+					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
+				}
+				IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
+				ConnectionHolder connectionHolder = connector.getConnection();
+				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+				
+				DatabaseMetaData dbMetaData = con.getMetaData();
+				ResultSet rs = dbMetaData.getColumns(null, null, sourceTableName, null);
+				
+				List<String> sourceAttrList = new ArrayList<>();
+				List<String> targetAttrList = new ArrayList<>();
+				List<Map<String, String>> sourceColDetails = new ArrayList<>();
+				while(rs.next()) {					
+					sourceAttrList.add(rs.getString("COLUMN_NAME"));
+					
+					Map<String, String> sourceAttrDetails = new HashMap<>();
+					sourceAttrDetails.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
+					sourceAttrDetails.put("TYPE_NAME", rs.getString("TYPE_NAME"));
+					sourceAttrDetails.put("COLUMN_SIZE", rs.getString("COLUMN_SIZE"));
+					sourceColDetails.add(sourceAttrDetails);
+				}
+				
+				
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					targetAttrList.add(attribute.getName());
+				}
+				
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					for(Map<String, String> sourceAttrDetails : sourceColDetails) {	
+						comparisonResultMap = compareAttr(comparisonResultMap, attribute, sourceAttrDetails, sourceAttrList, targetAttrList);					
+					}
+				}
+			} else {
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					CompareMetaData comparison = new CompareMetaData();
+					comparison.setSourceAttribute("");
+					comparison.setSourceLength("");
+					comparison.setSourceType("");
+					
+					comparison.setTargetAttribute(attribute.getName());
+					comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
+					comparison.setTargetType(attribute.getType());
+					
+					comparison.setStatus("");	
+					comparisonResultMap.put(attribute.getName(), comparison);
+				}
+			}
+			return Arrays.asList(comparisonResultMap.values().toArray(new CompareMetaData[comparisonResultMap.values().size()]));			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Map<String, String> sourceAttrDetails, List<String> sourceAttrList, List<String> targetAttrList) {
+		CompareMetaData comparison = new CompareMetaData();
+		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
+		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
+			String status = null;			
+			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().contains(attribute.getType().toLowerCase())) {
+				status = Compare.NOCHANGE.toString();
+			} else {
+				status = Compare.MODIFIED.toString();
+			}
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_SIZE"))){
+				status = Compare.MODIFIED.toString();
+			}			
+			
+			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
+			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
+			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
+			comparison.setStatus(status);
+			comparisonResultMap.put(attribute.getName(), comparison);
+		} else if(!sourceAttrList.contains(attribute.getName())) {
+			comparison.setSourceAttribute("");
+			comparison.setSourceLength("");
+			comparison.setSourceType("");
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
+			comparison.setStatus(Compare.NEW.toString());
+			comparisonResultMap.put(attribute.getName(), comparison);
+		} else if(!targetAttrList.contains(sourceAttrDetails.get("COLUMN_NAME"))) {
+			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
+			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
+			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			
+			comparison.setTargetAttribute("");
+			comparison.setTargetLength("");
+			comparison.setTargetType("");
+			
+			comparison.setStatus(Compare.DELETED.toString());
+			comparisonResultMap.put(sourceAttrDetails.get("COLUMN_NAME"), comparison);
+		}
+		return comparisonResultMap;
 	}
 }

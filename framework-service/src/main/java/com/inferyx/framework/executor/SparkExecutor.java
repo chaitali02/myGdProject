@@ -2757,9 +2757,9 @@ public class SparkExecutor<T> implements IExecutor {
 			} else {
 				status = Compare.MODIFIED.toString();
 			}
-			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
-				status = Compare.MODIFIED.toString();
-			}			
+//			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase("")){
+//				status = Compare.MODIFIED.toString();
+//			}			
 			
 			comparison.setSourceAttribute(dType._1());
 			comparison.setSourceLength("");
