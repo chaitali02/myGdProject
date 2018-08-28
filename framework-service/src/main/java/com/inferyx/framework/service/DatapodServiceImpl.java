@@ -1242,7 +1242,9 @@ public class DatapodServiceImpl {
 			if(propertyName != null && !propertyName.isEmpty()) {
 				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
 				if(containsProperty) {
-					attributes.add(getAttributeByName(propertyName, targetDatapod.getAttributes()));
+					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
+					attribute.setAttributeId(i);
+					attributes.add(attribute);
 				} else {
 					Attribute attribute = new Attribute();
 					attribute.setName(propertyName);
