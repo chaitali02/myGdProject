@@ -122,40 +122,13 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
+	@Autowired
+	ExecutorServiceImpl executorServiceImpl;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 
 	static final Logger logger = Logger.getLogger(DataQualServiceImpl.class);
 	
-	/*public DataQual findLatest() {
-		return resolveName(iDataQualDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}
-	
-	public DataQual findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDataQualDao.findOneById(appUuid, id);
-		}
-		return iDataQualDao.findOne(id);
-	}
-
-	public DataQual save(DataQual dataQual) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		dataQual.setAppInfo(metaIdentifierHolderList);
-		dataQual.setBaseEntity();
-		*//**** Insert Target Datapod - START ****//*
-		MetaIdentifier targetDPMeta = new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null);
-		dataQual.getTarget().setRef(targetDPMeta);
-		*//**** Insert Target Datapod - END ****//*
-		DataQual dq=iDataQualDao.save(dataQual);
-		registerGraph.updateGraph((Object) dq, MetaType.dq);
-		return dq;
-	}*/
-		
-
 	public DataQual save(DQView dqView) throws Exception {
 		DataQual dq = new DataQual();		
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -223,13 +196,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}
 		return iDataQualDao.findAll(appUuid);
 	}
-
-	/*public DataQual update(DataQual dataQual) throws IOException {
-		dataQual.exportBaseProperty();
-		DataQual dataqual=iDataQualDao.save(dataQual);
-		registerService.createGraph();
-		return dataqual;
-	}*/
 
 	public boolean isExists(String id) {
 		return iDataQualDao.exists(id);
@@ -314,52 +280,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return result;
 	}
 
-	/*public List<DataQual> resolveName(List<DataQual> dataQual) {
-		List<DataQual> dataQualList = new ArrayList<>();
-		for (DataQual dq : dataQual) {
-			String createdByRefUuid = dq.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dq.getCreatedBy().getRef().setName(user.getName());
-			dataQualList.add(dq);
-		}
-		return dataQualList;
-	}
-
-	public DataQual resolveName(DataQual dataQual) {
-		String createdByRefUuid = dataQual.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		dataQual.getCreatedBy().getRef().setName(user.getName());
-		String datapodUuid = dataQual.getAttribute().getRef().getUuid();
-		Datapod datapod = datapodServiceImpl.findLatestByUuid(datapodUuid);
-		if (datapod != null) {
-			dataQual.getAttribute().getRef().setName(datapod.getName());
-			int attrId = Integer.parseInt(dataQual.getAttribute().getAttrId());
-			String attrName = datapod.getAttributes().get(attrId).getName();
-			dataQual.getAttribute().setAttrName(attrName);
-		}
-		if (dataQual.getRefIntegrityCheck().getRef() != null) {
-			String uuid = dataQual.getRefIntegrityCheck().getRef().getUuid();
-			Datapod datapod1 = datapodServiceImpl.findLatestByUuid(uuid);
-			dataQual.getRefIntegrityCheck().getRef().setName(datapod1.getName());
-			int attrId = Integer.parseInt(dataQual.getRefIntegrityCheck().getAttrId());
-			String attrName1 = datapod1.getAttributes().get(attrId).getName();
-			dataQual.getRefIntegrityCheck().setAttrName(attrName1);
-		}
-		return dataQual;
-	}*/
-
-	/*public List<DataQual> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		List<DataQual> dqList;
-		if (appUuid != null) {
-			dqList = iDataQualDao.findAllVersion(appUuid, uuid);
-		} else {
-			dqList = iDataQualDao.findAllVersion(uuid);
-		}
-		return resolveName(dqList);
-	}*/
-
 	public DataQualExec create(String dataQualUUID, String dataQualVersion,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
 		try {
@@ -429,168 +349,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	
 	
 	
-	/*public DataQualExec create(String DataQualUUID, String DataQualVersion,
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		return create(DataQualUUID, DataQualVersion, null, refKeyMap, datapodList, dagExec);
-	}
-
-	public DataQualExec create(String dataQualUUID, String dataQualVersion, DataQualExec dataQualExec,
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		DataQual dataQual = null;
-		MetaIdentifierHolder dataQualRef = new MetaIdentifierHolder();
-		MetaIdentifier dataQualExecRef = null;
-
-		if (StringUtils.isBlank(dataQualVersion)) {
-			dataQual = iDataQualDao.findLatestByUuid(dataQualUUID, new Sort(Sort.Direction.DESC, "version"));
-			dataQualVersion = dataQual.getVersion();
-		} else {
-			dataQual = iDataQualDao.findOneByUuidAndVersion(dataQualUUID, dataQualVersion);
-		}
-
-		if (dataQualExec == null) {
-			dataQualExec = new DataQualExec();
-			dataQualRef.setRef(new MetaIdentifier(MetaType.dq, dataQualUUID, dataQualVersion));
-			dataQualExec.setDependsOn(dataQualRef);
-			dataQualExec.setBaseEntity();
-		}
-
-		dataQualExec.setAppInfo(dataQual.getAppInfo());
-		dataQualExec.setName(dataQual.getName());
-		dataQualExecRef = new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion());
-		
-		try {
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-			List<Status> statusList = dataQualExec.getStatusList();
-			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
-				return dataQualExec;
-			}
-			
-			logger.info("Before setting notstarted : " + dataQualExec.getUuid());
-			synchronized (dataQualExec.getUuid()) {
-				dataQualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.NotStarted);
-			}
-			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet));
-			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-
-			synchronized (dataQualExec.getUuid()) {
-				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(dataQualExecRef);
-				dataQualExec1.setExec(dataQualExec.getExec());
-				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
-				iDataQualExecDao.save(dataQualExec1);
-			}
-		} catch (Exception e) {
-			logger.error(e);
-			dataQualExec = ((DataQualExec) daoRegister.getRefObject(Helper.getMetaIdentifier(dataQualExec, MetaType.dqExec)));
-			List<Status> statusList = dataQualExec.getStatusList();
-			logger.info("Dataqual exec failed : " + dataQualExec.getUuid());
-			synchronized (dataQualExec.getUuid()) {
-				dataQualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
-			}
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
-		return dataQualExec;
-	}
-
-	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
-			DataQualGroupExec dataqualGroupExec) {
-		execute(dataqualUUID, dataqualVersion, null, dataqualExec, dataqualGroupExec, null);
-		return dataqualExec;
-	}
-
-	public DataQualExec execute(String dataqualUUID, String dataqualVersion,
-			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask> taskList) {
-		logger.info("Inside execute DQExec : " + dataqualExec.getUuid() + ":"+dataqualExec.getName());
-		RunDataQualServiceImpl runDataqualServiceImpl = new RunDataQualServiceImpl();
-
-		Datapod targetDatapod = (Datapod) daoRegister
-				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
-		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-				targetDatapod.getVersion());
-		
-
-		List<Status> statusList = dataqualExec.getStatusList();
-		if (Helper.getLatestStatus(statusList) != null 
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
-			return dataqualExec;
-		}
-		
-		try {
-			synchronized (dataqualExec.getUuid()) {
-				dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec, Status.Stage.InProgress);
-			}
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-		
-		runDataqualServiceImpl.setHdfsInfo(hdfsInfo);
-		runDataqualServiceImpl.setiDataQualDao(iDataQualDao);
-		runDataqualServiceImpl.setDqExec(dataqualExec);
-		runDataqualServiceImpl.setDataqualExecServiceImpl(dataQualExecServiceImpl);
-		runDataqualServiceImpl.setDatapodKey(targetDatapodKey); 
-		runDataqualServiceImpl.setDqOperator(dqOperator);
-		runDataqualServiceImpl.setDqUUID(dataqualUUID);
-		runDataqualServiceImpl.setDqVersion(dataqualVersion);
-		runDataqualServiceImpl.setHiveContext(hiveContext);
-		runDataqualServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
-		runDataqualServiceImpl.setDatasourceFactory(datasourceFactory);
-		runDataqualServiceImpl.setDaoRegister(daoRegister);
-		runDataqualServiceImpl.setExecFactory(execFactory);
-		runDataqualServiceImpl.setDataqualGroupExec(dataqualGroupExec);
-		runDataqualServiceImpl.setName(MetaType.dqExec+"_"+dataqualExec.getUuid()+"_"+dataqualExec.getVersion());
-		
-		try {
-			
-			if (metaExecutor != null) {
-				FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runDataqualServiceImpl);
-				metaExecutor.execute(futureTask);
-				taskList.add(futureTask);
-				taskThreadMap.put(MetaType.dqExec+"_"+dataqualExec.getUuid()+"_"+dataqualExec.getVersion(), futureTask);
-				logger.info(" taskThreadMap : " + taskThreadMap);
-				String outputThreadName = futureTask.get(); 
-				if(outputThreadName ==null){ 
-					throw new Exception("sql not generated");
-				}
-                logger.info("Thread " + outputThreadName + " completed ");
-				
-			} else {
-				runDataqualServiceImpl.execute();
-				runDataqualServiceImpl = null;
-			}
-		} catch (Exception e) {
-			Status failedStatus = new Status(Status.Stage.Failed, new Date());
-			logger.info("Dataqual exec failed : " + dataqualExec.getUuid());
-			try {
-				synchronized (dataqualExec.getUuid()) {
-					dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec, Status.Stage.Failed);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-			// throw new RuntimeException();
-		} finally {
-			
-			statusList = dataqualExec.getStatusList();
-			try {
-				
-				synchronized (dataqualExec.getUuid()) {
-					dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec, Status.Stage.Completed);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return dataqualExec;
-	}
-*/	
 	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
 		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 	}
@@ -607,108 +365,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
-			/*String appUuid = null;
-			boolean requestIdExistFlag = false;
-			StringBuilder orderBy = new StringBuilder();
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
-			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			ExecContext execContext = null;
-			IExecutor exec = null;
-			String sql= null;
-			if (runMode.equals(Mode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
-			exec = execFactory.getExecutor(execContext.toString());
-			appUuid = commonServiceImpl.getApp().getUuid();
-			if(requestId == null || requestId.equals("null") || requestId.isEmpty())	{
-				if(datasource.getType().toLowerCase().toLowerCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY version DESC) AS rownum, * FROM " + tableName + ") AS tab WHERE rownum >= " +offset+ " AND rownum <= " + limit, appUuid);
-				}else {
-					if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-						if(runMode.equals(Mode.ONLINE))
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-						else	
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-					else
-						data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-				}
-			} else {
-				List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
-				List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));		
-				
-				for(int i=0; i<sortList.size(); i++) 
-						orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));			
-				if (requestId != null) {
-					String tabName = null;
-					for(Map.Entry<String, String> entry : requestMap.entrySet()) {
-						String id = entry.getKey();
-						if(id.equals(requestId)) {
-							requestIdExistFlag = true;
-						}					
-					}
-					if(requestIdExistFlag) {						
-						tabName = requestMap.get(requestId);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM "+tabName+" WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-						} else {
-							if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-								if(runMode.equals(Mode.ONLINE))
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								else	
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-							else{
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-							}
-						}
-					}else { 
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-								data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-										+tableName+" ORDER BY "+ orderBy.toString() +") AS tab) AS tab1", appUuid);
-							}else {
-								if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-									if(runMode.equals(Mode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-									else	
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-								else{
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								}
-							}
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-						}else {
-							if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-								if(runMode.equals(Mode.ONLINE))
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								else	
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-							else{
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-							}
-						}
-					}
-				}
-			}*/
 		}catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -723,78 +379,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return data;
 	}
 
-	/*public DataQual getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iDataQualDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iDataQualDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}
-
-	public MetaIdentifierHolder saveAs(DataQual dq) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		DataQual dqNew = new DataQual();
-		dqNew.setName(dq.getName()+"_copy");
-		dqNew.setActive(dq.getActive());		
-		dqNew.setDesc(dq.getDesc());		
-		dqNew.setTags(dq.getTags());	
-		dqNew.setTarget(dq.getTarget());
-		dqNew.setAttribute(dq.getAttribute());
-		dqNew.setDependsOn(dq.getDependsOn());
-		dqNew.setDuplicateKeyCheck(dq.getDuplicateKeyCheck());
-		dqNew.setNullCheck(dq.getNullCheck());
-		dqNew.setValueCheck(dq.getValueCheck());
-		dqNew.setRangeCheck(dq.getRangeCheck());
-		dqNew.setDataTypeCheck(dq.getDataTypeCheck());
-		dqNew.setDateFormatCheck(dq.getDateFormatCheck());
-		dqNew.setCustomFormatCheck(dq.getCustomFormatCheck());
-		dqNew.setLengthCheck(dq.getLengthCheck());
-		dqNew.setRefIntegrityCheck(dq.getRefIntegrityCheck());
-		dqNew.setPublished(dq.getPublished());
-		//dqNew.setStdDevCheck(dq.getStdDevCheck());
-		dqNew.setFilterInfo(dq.getFilterInfo());
-		save(dqNew);
-		ref.setType(MetaType.dq);
-		ref.setUuid(dqNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}
-
-	public List<BaseEntity> findList(List<? extends BaseEntity> dqList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dq : dqList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dq.getId();
-			String uuid = dq.getUuid();
-			String version = dq.getVersion();
-			String name = dq.getName();
-			String desc = dq.getDesc();
-			String published=dq.getPublished();
-			MetaIdentifierHolder createdBy = dq.getCreatedBy();
-			String createdOn = dq.getCreatedOn();
-			String[] tags = dq.getTags();
-			String active = dq.getActive();
-			List<MetaIdentifierHolder> appInfo = dq.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
-
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		DataQualExec dataQualExec = iDataQualExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
@@ -807,11 +391,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	public void restart(String type,String uuid,String version, ExecParams execParams, RunMode runMode) throws Exception{
 		//DataQualExec dataQualExec= dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.dqExec.toString());
-//		try {
-//			dataQualExec = create(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec, null, null, null);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
 		try {
 			HashMap<String, String> otherParams = null;
 			if(execParams != null) 
@@ -892,28 +471,6 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		
 		List<Map<String, Object>> results =getDQResults(dataQualExecUUID,dataQualExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec,dataQualExecUUID,dataQualExecVersion)));
-	/*	
-		try {
-			FileOutputStream fileOut = null;
-			response.setContentType("application/xml charset=utf-16");
-			response.setHeader("Content-type", "application/xml");
-			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
-
-			String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-			response.addHeader("Content-Disposition", "attachment; filename=" + dataQualExecUUID + ".xlsx");
-			ServletOutputStream os = response.getOutputStream();
-			workbook.write(os);
-
-			fileOut = new FileOutputStream(downloadPath + "/" + dataQualExecUUID + "_" + dataQualExecVersion + ".xlsx");
-			workbook.write(fileOut);
-			os.write(workbook.getBytes());
-			os.close();
-			fileOut.close();
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			logger.info("exception caught while download file");
-		}*/
 		return response;
 
 	}
@@ -985,22 +542,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
-		if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-				|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-				|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-				|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-			data = exec
-					.executeAndFetch(getSummarySql(tableName), appUuid);
-		} else {
-			if (datasource.getType().toLowerCase().contains("oracle"))
-				if (runMode.equals(RunMode.ONLINE))
-					data = exec.executeAndFetch(getSummarySql(tableName), appUuid);
-				else
-					data = exec.executeAndFetch(getSummarySql(tableName), appUuid);
-			else {
-				data = exec.executeAndFetch(getSummarySql(tableName), appUuid);
-			}
-		}
+		data = exec.executeAndFetch(getSummarySql(tableName), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
 			// TODO Auto-generated catch block

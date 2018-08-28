@@ -79,6 +79,8 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	Engine engine;
 	@Autowired
 	Helper helper;
+	@Autowired
+	ExecutorServiceImpl executorServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(RuleTemplate.class);
 
@@ -232,6 +234,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setConnFactory(connFactory);
 		runBaseRuleService.setEngine(engine);
 		runBaseRuleService.setHelper(helper);
+		runBaseRuleService.setExecutorServiceImpl(executorServiceImpl);
 		runBaseRuleService.setExecParams(execParams);
 
 		if (metaExecutor == null) {

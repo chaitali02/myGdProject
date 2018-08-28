@@ -70,9 +70,29 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Engine engine;
 	protected Helper helper;
 	protected ExecParams execParams;
+	protected ExecutorServiceImpl executorServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
+	
+	/**
+	 * @return the executorServiceImpl
+	 */
+	public ExecutorServiceImpl getExecutorServiceImpl() {
+		return executorServiceImpl;
+	}
+
+
+
+	/**
+	 * @param executorServiceImpl the executorServiceImpl to set
+	 */
+	public void setExecutorServiceImpl(ExecutorServiceImpl executorServiceImpl) {
+		this.executorServiceImpl = executorServiceImpl;
+	}
+
+
+
 	/**
 	 * @return the connFactory
 	 */
@@ -424,6 +444,9 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		try {
 			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
 			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
+			if (datasource.getType().equals(ExecContext.FILE.toString())) {
+				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -513,13 +536,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			ExecContext execContext = null;
 			String appUuid = null;
 			
-			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.FILE.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
+			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			exec = execFactory.getExecutor(execContext.toString());
 			
 			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext);
@@ -534,11 +551,9 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			/***** Replace internalVarMap - END *****/
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				if(execContext.equals(ExecContext.FILE)
-						/*|| execContext.equals(ExecContext.livy_spark)
-						|| execContext.equals(ExecContext.spark)*/)
+				if(execContext.equals(ExecContext.FILE)) {
 					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", appUuid);
-				else {
+				} else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
 					exec.executeSql(sql, appUuid);
 				}

@@ -735,7 +735,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 							|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 									? helper.getExecutorContext(engine.getExecEngine())
 									: helper.getExecutorContext(ExecContext.spark.toString());
-					appUuid = commonServiceImpl.getApp().getUuid();
+//					appUuid = commonServiceImpl.getApp().getUuid();
 				} else {
 					execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
 				}
