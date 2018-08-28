@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -154,5 +155,15 @@ public class DatapodController {
 					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.compareMetadata(datapodUuid, datapodVersion, runMode);
+	}
+	
+	@RequestMapping(value = "/synchronizeMetadata", method = RequestMethod.GET)
+	public Datapod synchronizeMetadata(@RequestParam(value = "uuid") String datapodUuid,
+					@RequestParam(value = "version")String datapodVersion,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.synchronizeMetadata(datapodUuid, datapodVersion, runMode);
 	}
 }
