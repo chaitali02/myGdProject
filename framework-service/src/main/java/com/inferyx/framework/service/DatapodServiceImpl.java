@@ -64,6 +64,7 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -1221,5 +1222,78 @@ public class DatapodServiceImpl {
 			// TODO: handle exception
 		}
 		return sparkExecutor.compareMetadata(targetDatapod, datasource, sourceTableName);
+	}
+
+	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		String sourceTableName = null;
+		try {
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		List<CompareMetaData> comparisonResult = sparkExecutor.compareMetadata(targetDatapod, datasource, sourceTableName);
+		List<Attribute> attributes = new ArrayList<>();
+		int i = 0;
+		for(CompareMetaData compareMetaData : comparisonResult) {
+			String propertyName = compareMetaData.getSourceAttribute();
+			if(propertyName != null && !propertyName.isEmpty()) {
+				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
+				if(containsProperty) {
+					attributes.add(getAttributeByName(propertyName, targetDatapod.getAttributes()));
+				} else {
+					Attribute attribute = new Attribute();
+					attribute.setName(propertyName);
+					attribute.setDesc(propertyName);
+					attribute.setName(propertyName);
+					String attrType = compareMetaData.getSourceType().toLowerCase();
+					if(attrType.contains("type")) {
+						attrType = attrType.replaceAll("type", "");
+					}
+					attribute.setType(attrType);
+					attribute.setPartition("N");
+					attribute.setAttributeId(i);
+					attribute.setActive("Y");
+					
+					attributes.add(attribute);
+				}
+				i++;
+			}
+		}
+		
+		if(!attributes.isEmpty()) {
+			targetDatapod.setAttributes(attributes);
+			targetDatapod.setId(null);
+			targetDatapod.setVersion(null);
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(MetaType.datapod.toString(), targetDatapod);
+			return (Datapod) commonServiceImpl.getOneByUuidAndVersion(baseEntity.getUuid(), baseEntity.getVersion(), MetaType.datapod.toString());
+		} else {
+			return targetDatapod;
+		}
+	}
+	
+	public Attribute getAttributeByName(String attributeName, List<Attribute> attributes) {
+		for(Attribute attribute : attributes) {
+			if(attributeName.equalsIgnoreCase(attribute.getName())) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+	
+	public boolean isPropertyInAttributeList(String propertyName, List<Attribute> attributes) {
+		boolean containsProperty = false;
+		for(Attribute attribute : attributes) {
+			if(propertyName.equalsIgnoreCase(attribute.getName())) {
+				containsProperty = true;
+				break;
+			}
+		}
+		return containsProperty;
 	}
 }
