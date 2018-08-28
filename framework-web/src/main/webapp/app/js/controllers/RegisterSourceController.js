@@ -30,18 +30,19 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         displayName: 'Name',
         name: 'name',
         minWidth: 250,
-        cellClass: 'text-center',
-        headerCellClass: 'text-center'
+        cellClass: 'text-right',
+        headerCellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.ASC,
+          // priority: 0,
+        },
       },
       {
         displayName: 'Desc',
         name: 'desc',
         cellClass: 'text-center',
         headerCellClass: 'text-center',
-        sort: {
-          direction: uiGridConstants.DESC,
-          // priority: 0,
-        },
+       
       },
       {
         displayName: 'Registered On',

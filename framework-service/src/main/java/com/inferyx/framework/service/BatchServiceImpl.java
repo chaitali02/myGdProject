@@ -103,6 +103,7 @@ public class BatchServiceImpl {
 		}
 		
 		batchExec.setExecList(execList);
+		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
 		batchExec = checkBatchStatus(batchExec);
 		return batchExec;
 	}

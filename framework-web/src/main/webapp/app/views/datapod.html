@@ -56,7 +56,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare MetaData':datapoddata.name}}
+            <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare Metadata':datapoddata.name}}
           </div>
           <div class="tools">
             <a title="Compare" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowCompareMetaData==true? 'currentpage':'notcurrentpage'"
@@ -71,7 +71,7 @@
             ng-hide="isAdd" data-ng-click="showDatastrores(datapoddata)" style="height:16px;">
               <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-show="isShowSimpleData">
+            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-class="isDownloadDatapod==true? 'currentpage':'notcurrentpage'" ng-disabled="isDownloadDatapod">
               <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"

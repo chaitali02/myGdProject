@@ -335,10 +335,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
         maxWidth:110,
         cellClass: 'text-center',
         headerCellClass: 'text-center',
-        sort: {
-          direction: uiGridConstants.DESC,
-         // priority: 0,
-        },
+       
       },
       {
         displayName: 'Created By',
@@ -366,6 +363,10 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
       cellClass: 'text-center',
       headerCellClass: 'text-center',
       maxWidth: 190,
+      sort: {
+        direction: uiGridConstants.ASC,
+       // priority: 0,
+      },
       cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.startTime}}</div></div>'
     }
   )

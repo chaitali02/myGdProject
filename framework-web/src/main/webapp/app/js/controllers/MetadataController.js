@@ -150,11 +150,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		enableSelectAll: true,
 		headerTemplate: 'views/header-template.html',
 		superColDefs: [{
-			name: 'localMeta',
-			displayName: 'Local Meta'
+			name: 'source',
+			displayName: 'Source'
 		}, {
-			name: 'SourceMeta',
-			displayName:'Source Meta'
+			name: 'target',
+			displayName:'Target'
 		},
 		 {
 			name: 'status',
@@ -162,42 +162,41 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		}
 		],
 		columnDefs: [{
-			name: 'lmAttribute',
+			name: 'sourceAttribute',
 			displayName: 'Atrribute',
-			superCol: 'localMeta'
+			superCol: 'source'
 		}, {
-			name: 'lmType',
+			name: 'sourceType',
 			displayName: 'Type',
-			superCol: 'localMeta'
+			superCol: 'source'
 		}, {
-			name: 'lmLength',
+			name: 'sourceLength',
 			displayName: 'Length',
-			superCol: 'localMeta'
+			superCol: 'source'
   
 		},
 		{
-			name: 'smAttribute',
+			name: 'targetAttribute',
 			displayName: 'Atrribute',
-			superCol: 'SourceMeta'
+			superCol: 'target'
 		}, {
-			name: 'smType',
+			name: 'targetType',
 			displayName: 'Type',
-			superCol: 'SourceMeta'
+			superCol: 'target'
 		},
 		{
-			name: 'smLength',
+			name: 'targetLength',
 			displayName: 'Length',
-			superCol: 'SourceMeta'
+			superCol: 'target'
   
 		},
 		{
 			name: 'status',
 			displayName: '',
-			superCol: 'Status',
+			superCol: 'status',
 			enableColumnMenu: false,
 			cellClass: 'text-center',
-      		headerCellClass: 'text-center',
-			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
 
@@ -502,11 +501,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 	}
 
 	$scope.showDatastrores=function(data){
+		if($scope.isShowDatastore)
+		  return false;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false;
 		$scope.showGraphDiv = false;
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=true;
 		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatastoreByDatapode = function (response) {
 			$scope.isShowDatastore=true;
@@ -910,14 +912,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		});
 	};
 	$scope.downloadFile = function (data) {
+		if($scope.isDownloadDatapod)
+		  return false;
 		var uuid = data.uuid;
 		var version = data.version;
+		$scope.isDownloadDatapod=true;
 		var url = $location.absUrl().split("app")[0]
 		$http({
 			method: 'GET',
 			url: url + "datapod/download?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
+			$scope.isDownloadDatapod=false;
 			headers = headers();
 			var filename = headers['x-filename'];
 			var contentType = headers['content-type'];

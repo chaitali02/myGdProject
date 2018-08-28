@@ -580,13 +580,13 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		if (hidemode == 'yes') {
 
 			if ($scope.stageName == "dvvizpod") {
-				setTimeout(function () { $state.go('vizpodlist'); }, 2000);
+				setTimeout(function () { $state.go('vizpodlist'); }, 100);
 			}
 			else if ($scope.stageName != "dvvizpod" && typeof $scope.stageParams.id != "undefined") {
-				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); }, 2000);
+				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); },100);
 			}
 			else {
-				setTimeout(function () { $state.go("vizpodlist"); }, 2000);
+				setTimeout(function () { $state.go("vizpodlist"); }, 100);
 			}
 		}
 	}//End
