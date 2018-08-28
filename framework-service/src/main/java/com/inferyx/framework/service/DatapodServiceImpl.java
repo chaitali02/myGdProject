@@ -1244,19 +1244,21 @@ public class DatapodServiceImpl {
 				String attrType = compareMetaData.getSourceType().toLowerCase();
 				if(attrType.contains("type")) {
 					attrType = attrType.replaceAll("type", "");
-				}
+				} 
 				
+				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
 					attribute.setAttributeId(i);
-					attribute.setLength(compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength()));
+					attribute.setLength(length);
 					attribute.setType(attrType);
 					attributes.add(attribute);
 				} else {
 					Attribute attribute = new Attribute();
 					attribute.setName(propertyName);
 					attribute.setDesc(propertyName);
-					attribute.setName(propertyName);
+					attribute.setDispName(propertyName);
+					attribute.setLength(length);
 					attribute.setType(attrType);
 					attribute.setPartition("N");
 					attribute.setAttributeId(i);
