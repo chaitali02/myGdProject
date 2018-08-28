@@ -681,7 +681,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
 		var onSuccessSynchronizeMetadata = function (response) {
 			$scope.datapoddata=response;
-			$scope.showCompareMetaData(data)
+			$scope.showCompareMetaData($scope.datapoddata)
 		}
 		var onError = function (response) {
 			$scope.gridOptionsCompareMetaData.isDataError=true;

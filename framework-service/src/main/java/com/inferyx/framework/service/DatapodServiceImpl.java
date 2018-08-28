@@ -1241,19 +1241,22 @@ public class DatapodServiceImpl {
 			String propertyName = compareMetaData.getSourceAttribute();
 			if(propertyName != null && !propertyName.isEmpty()) {
 				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
+				String attrType = compareMetaData.getSourceType().toLowerCase();
+				if(attrType.contains("type")) {
+					attrType = attrType.replaceAll("type", "");
+				}
+				
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
 					attribute.setAttributeId(i);
+					attribute.setLength(compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength()));
+					attribute.setType(attrType);
 					attributes.add(attribute);
 				} else {
 					Attribute attribute = new Attribute();
 					attribute.setName(propertyName);
 					attribute.setDesc(propertyName);
 					attribute.setName(propertyName);
-					String attrType = compareMetaData.getSourceType().toLowerCase();
-					if(attrType.contains("type")) {
-						attrType = attrType.replaceAll("type", "");
-					}
 					attribute.setType(attrType);
 					attribute.setPartition("N");
 					attribute.setAttributeId(i);
@@ -1267,8 +1270,8 @@ public class DatapodServiceImpl {
 		
 		if(!attributes.isEmpty()) {
 			targetDatapod.setAttributes(attributes);
-			targetDatapod.setId(null);
-			targetDatapod.setVersion(null);
+			//targetDatapod.setId(null);
+			//targetDatapod.setVersion(null);
 			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(MetaType.datapod.toString(), targetDatapod);
 			return (Datapod) commonServiceImpl.getOneByUuidAndVersion(baseEntity.getUuid(), baseEntity.getVersion(), MetaType.datapod.toString());
 		} else {

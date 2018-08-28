@@ -93,7 +93,7 @@
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(datapoddata) : broadcastRefreshData()"
+            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata) :broadcastRefreshData()"
               data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
