@@ -667,7 +667,27 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
 		}
 	}
-
+	
+	$scope.synchronousMetadata=function(data){
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessSynchronizeMetadata = function (response) {
+			$scope.datapoddata=response;
+			$scope.showCompareMetaData(data)
+		}
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		//var resultvalue=value.split(/[\_]?/);
