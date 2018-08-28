@@ -657,6 +657,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		var onSuccessCompareMetadata = function (response) {
 			$scope.gridOptions.columnDefs.data = [];
 			$scope.gridOptionsCompareMetaData.data=response;
+			var count=0;
+			for(var i=0;i<response.length;i++){
+				if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+			}
+			if(response.length == count){
+				$scope.isMetaSysn=true;
+			}else{
+				$scope.isMetaSysn=false;
+			}
+
 			$scope.originalCompareMetaData=response;
 			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
 			$scope.gridOptionsCompareMetaData.tableclass = "";
@@ -667,7 +679,27 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
 		}
 	}
-
+	
+	$scope.synchronousMetadata=function(data){
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessSynchronizeMetadata = function (response) {
+			$scope.datapoddata=response;
+			$scope.showCompareMetaData($scope.datapoddata)
+		}
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		//var resultvalue=value.split(/[\_]?/);

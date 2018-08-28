@@ -6,22 +6,22 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'NOCHANGE':{
       name : 'NoChange',
       caption:'No Change',
-      color :'#9CBB62',
+      color :'#36c6d3',//'#9CBB62',
     },
     'MODIFIED':{
       name : 'Modified',
       caption:'Modified',
-      color :'#5083C3',
+      color :'#F1C40F',//'#5083C3',
     },
     'DELETED':{
       name : 'Deleted',
       caption:'Deleted',
-      color :'#C34E4E',
+      color :'#ed6b75',//'#C34E4E',
     },
     'NEW':{
       name : 'New',
       caption:'New',
-      color :'#4FACC5',
+      color :'#006df0',//'#4FACC5',
     },
    
   }
