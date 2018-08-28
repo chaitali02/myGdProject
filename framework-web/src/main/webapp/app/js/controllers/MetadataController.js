@@ -657,6 +657,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		var onSuccessCompareMetadata = function (response) {
 			$scope.gridOptions.columnDefs.data = [];
 			$scope.gridOptionsCompareMetaData.data=response;
+			var count=0;
+			for(var i=0;i<response.length;i++){
+				if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+			}
+			if(response.length == count){
+				$scope.isMetaSysn=true;
+			}else{
+				$scope.isMetaSysn=false;
+			}
+
 			$scope.originalCompareMetaData=response;
 			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
 			$scope.gridOptionsCompareMetaData.tableclass = "";
