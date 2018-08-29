@@ -21,6 +21,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
@@ -51,6 +52,7 @@ public class CSVRegister extends DataSourceRegister {
 			MetaIdentifierHolder dagExec = datapodServiceImpl.createAndLoad(filepath+registryList.get(i).getName()+".csv", runMode);
 			if(dagExec != null) {
 				registryList.get(i).setStatus("Registered");
+				registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
 				Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName());
 				registryList.get(i).setRegisteredOn(dp.getCreatedOn());
 				registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());

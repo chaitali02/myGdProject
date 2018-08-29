@@ -436,10 +436,11 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @throws JsonProcessingException 
 	 */
 	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) throws JsonProcessingException {
-		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || execContext.equals(ExecContext.FILE) 
+		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || datapodKey.getType().equals(MetaType.rule) || execContext.equals(ExecContext.FILE) 
 				/*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 		}
+
 		Datapod dp = null;
 		try {
 			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());

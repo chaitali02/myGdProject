@@ -43,7 +43,7 @@ public class BatchController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		BatchExec batchExec = batchServiceImpl.create(batchUuid, batchVersion, execParams, null, runMode);
-		return batchServiceImpl.execute(batchUuid, batchVersion, batchExec, execParams, type, runMode);
+		return batchServiceImpl.submitBatch(batchUuid, batchVersion, batchExec, execParams, type, runMode);
 	}
 	
 	@RequestMapping(value = "/setStatus", method = RequestMethod.PUT)
@@ -70,6 +70,7 @@ public class BatchController {
 			batchServiceImpl.restart(execUuid, execVersion, runMode);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

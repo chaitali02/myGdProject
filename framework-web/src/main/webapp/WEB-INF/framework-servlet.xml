@@ -96,12 +96,21 @@
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
+	<bean id="batchExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="queueCapacity" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="taskThreadMap2" name="taskThreadList2" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="dagDependeeMap2" name="dagDependeeMap2" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="batchThreadMap" name="batchThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
