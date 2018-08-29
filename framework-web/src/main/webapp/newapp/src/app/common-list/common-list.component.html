@@ -15,7 +15,7 @@
   </div>
   <div class="portlet-body">
     <form class="form-horizontal">
-      <div class="row" *ngIf="isExec=='true' && isJobExec==false && DagExec==false" >
+      <div class="row" *ngIf="isExec=='true' && isJobExec==false && DagExec==false">
         <div class="col-md-12">
           <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
@@ -28,7 +28,6 @@
                   <input type="radio" ng-control="selectedType" (change)="onChange(types[1].value)" name="selectedType" [value]="types[1].value"> {{types[1].caption}}
                 </label>
               </div>
-
             </div>
           </div>
         </div>
@@ -118,7 +117,6 @@
             </div>
           </div>
           <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
-
           </div>
         </div>
       </div>
@@ -329,9 +327,8 @@
   </div>
 </div>
 
-
 <div class="col-md-6 col-sm-6 col-xs-12">
-  <p-dialog header="Execution" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600"
+  <p-dialog header="Execution" [(visible)]="displayDialogBoxSimulation" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600"
     [resizable]="true" [baseZIndex]="1000">
 
     <div class="caption">
@@ -463,3 +460,120 @@
     </div>
   </p-dialog>
 </div>
+
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+  <p-dialog header="Run Params" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="600" [minWidth]="300"
+    [resizable]="true" [draggable]="false" [contentStyle]="{'height':'400px','overflow-y': 'auto','overflow-x': 'hidden'}">
+
+    <div class="row">
+
+      <div class="form-body" style="padding-top:10px">
+        
+        <!-- <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate"> -->
+        <div class="form-group">
+          <label class="control-label col-md-4 col-sm-4 col-xs-12 col-lg-4" style="text-align:right">Type</label>
+          <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+            <p-dropdown [options]="paramType" [(ngModel)]="selectParamType" name="selectParamType" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
+              [filter]="true" (onChange)="onChangeType()" placeholder="Select">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="selectParamType == 'paramlist' || selectParamType == null">
+          <label class="control-label col-md-4 col-sm-4 col-xs-12 col-lg-4" style="text-align:right">Name</label>
+          <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+            <p-dropdown [options]="paramlistData" [(ngModel)]="selectParamlistName" name="selectParamlistName" [style]="{'width':'100%','padding':'3px'}"
+              [filter]="true" (click)="onChangeParamlist()" placeholder="Select">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="selectParamType == 'paramset'">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3" style="text-align:right">Name11</label>
+          <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+            <p-dropdown [options]="paramsetData" [(ngModel)]="selectParamsetName" name="selectParamsetName" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
+              [filter]="true">
+            </p-dropdown>
+          </div>
+        </div>
+        <div *ngIf="selectParamlistName.name">
+          <table class=" row-border hover table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th style="width:5%;">ID</th>
+                <th style="width:30%;">Name</th>
+                <th style="width:20%;">Type</th>
+                <th style="width:20%;">Default Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data1 of paramtableArray; let i=index">
+                <!-- <td style="text-align:center;Vertical-align:middle;">
+                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data1.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'" />
+                                  </td> -->
+                <td style="width:10%;">
+                  <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
+                </td>
+                <td>
+                  <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="true" class="form-control">
+                </td>
+                <td>
+                  <input type="text" class="form-control" [(ngModel)]="data1.paramType" name="type+{{i}}" [disabled]="true" class="form-control">
+                </td>
+
+                <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
+                  <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="true">
+                </td>
+
+                <td *ngIf="data1.paramType == 'distribution'">
+                  <p-dropdown [options]="distributionListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="true" [style]="{'width':'100%'}"
+                    [filter]="true" dataKey="uuid" placeholder="Select">
+                  </p-dropdown>
+                </td>
+
+                <td *ngIf="(typeSimple.indexOf(data1.paramType) == -1) && !(data1.paramType == 'distribution')">
+                  {{"NA"}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="selectParamsetName.name">
+          <table class=" row-border hover table  table-striped table-bordered">
+            <thead>
+              <tr>
+                <th style="width:5%;text-align: center; Vertical-align: middle;">
+                  <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
+                    (click)="checkAllAttributeRow()" />
+                </th>
+                <th style="text-align: center; Vertical-align: middle;width:5%;">ID</th>
+                <th *ngFor="let data of paramTableCol2" style="text-align: center; Vertical-align: middle;width:10%">{{data.paramName}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tabledata of paramsetArrayTable;let i=index">
+                <td style="text-align:center;Vertical-align:middle;">
+                  <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedAttr+{{i}}" />
+                </td>
+                <td style="width:5%;">
+                  <input style="text-align:center;" type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true"
+                    class="form-control">
+                </td>
+                <td *ngFor="let tablecol of tabledata.paramSetVal; let j=index">
+                  <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{i}}+{{j}}" [disabled]="true">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+    <p-footer>
+      <a class="btn btn-primary" (click)="cancelDialogbox()">Cancel</a>
+      <input type="submit" class="btn btn-success" value="Submit" name="submit" (click)="executeWithExecParamListTraining()">
+    </p-footer>
+  </p-dialog>
+  <!-- <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true'" name="checkboxModelexecution" binary="true"
+      (onChange)="onChangeRunImmediately()"></p-checkbox> -->
+</div>
+
