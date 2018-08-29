@@ -2749,10 +2749,16 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Tuple2<String, String> dType, List<String> sourceAttrList, List<String> targetAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
-		String attrLength = attribute.getLength() != null ? attribute.getLength().toString():"";
+		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
+		
+		String dataType = dType._2().toLowerCase();
+		if(dataType.contains("type")) {
+			dataType = dataType.replaceAll("type", "");
+		} 
+		
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
-			String status = null;			
-			if(dType._2().toLowerCase().contains(attribute.getType().toLowerCase())) {
+			String status = null;
+			if(dataType.toLowerCase().contains(attribute.getType().toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();
@@ -2763,7 +2769,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			comparison.setSourceAttribute(dType._1());
 			comparison.setSourceLength("");
-			comparison.setSourceType(dType._2());
+			comparison.setSourceType(dataType);
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
@@ -2785,7 +2791,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(!targetAttrList.contains(dType._1())) {
 			comparison.setSourceAttribute(dType._1());
 			comparison.setSourceLength("");
-			comparison.setSourceType(dType._2());
+			comparison.setSourceType(dataType);
 			
 			comparison.setTargetAttribute("");
 			comparison.setTargetLength("");

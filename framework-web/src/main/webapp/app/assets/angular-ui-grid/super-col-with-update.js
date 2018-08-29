@@ -1,12 +1,14 @@
 (function() {
   "use strict";
-  angular.module("ui.grid").directive('superColWidthUpdate', ['$timeout', function ($timeout) {
+  angular.module("ui.grid").directive('superColWidthUpdate', ['$timeout','$window', function ($timeout,$window) {
     return {
       'restrict': 'A',
           'link': function (scope, element) {
           var _colId = scope.col.colDef.superCol,
               _el = jQuery(element);
+             
           _el.on('resize', function () {
+              console.log("resize")
               _updateSuperColWidth();
           });
           var _updateSuperColWidth = function () {

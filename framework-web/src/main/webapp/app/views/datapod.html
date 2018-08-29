@@ -104,7 +104,7 @@
           </div>
         </div>
         <div class="portlet-body">
-          <div class=" {{gridOptionsCompareMetaData.tableclass}}" ng-if="isShowCompareMetaData">
+          <div class=" {{gridOptionsCompareMetaData.tableclass}}" ng-if="isShowCompareMetaData && isResizeCompareMetadata">
             <div class="spinner" ng-show="gridOptionsCompareMetaData.isDataInpogress">
               <div class="bounce1"></div>
               <div class="bounce2"></div>
@@ -122,7 +122,7 @@
                     <label>Search:</label>
                     <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshCompareMetaData($parent.searchtextCompareMetadata)"
                       ng-model="$parent.searchtextCompareMetadata" aria-controls="datastoredatatable">
-                    <a class="btn btn-primary" ng-disabled="isMetaSysn" ng-class="isMetaSysn || selectSourceType =='file' ? 'currentpage':'notcurrentpage'"  ng-click="synchronousMetadata(datapoddata)" style="line-height:1;padding: 6px 5px;border: none;">Meta Sync..</a>
+                    <a class="btn btn-primary fa fa-random " tooltip-placement="left" uib-tooltip="Meta Sync" ng-disabled="isMetaSysn" ng-class="isMetaSysn || selectSourceType =='file' ? 'currentpage':'notcurrentpage'"  ng-click="synchronousMetadata(datapoddata)" style="line-height:1;padding: 6px 5px;border: none;"></a>
                   </div>
                 </div>
               </div>
