@@ -994,17 +994,18 @@ public class SparkExecutor<T> implements IExecutor {
 		List<Attribute> attributes = new ArrayList<Attribute>();
 		int i = 0;
 		while (iter.hasNext()) {
-			StructField sf = iter.next();
-			Attribute attr1 = new Attribute();
-			attr1.setAttributeId(i++);
-			attr1.setType(sf.dataType().typeName());
-			attr1.setName(sf.name());
-			attr1.setDesc(sf.name());
-			attr1.setDispName(sf.name());
-			attr1.setActive("Y");
-			attr1.setLength(null);
-			attributes.add(attr1);
-
+			StructField sf = iter.next();			
+			if(!sf.dataType().typeName().equalsIgnoreCase("version")) {
+				Attribute attr1 = new Attribute();
+				attr1.setAttributeId(i++);
+				attr1.setType(sf.dataType().typeName());
+				attr1.setName(sf.name());
+				attr1.setDesc(sf.name());
+				attr1.setDispName(sf.name());
+				attr1.setActive("Y");
+				attr1.setLength(null);
+				attributes.add(attr1);
+			}
 		}
 		if (flag) {
 			Attribute attr2 = new Attribute();
