@@ -14,13 +14,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.DagExec;
@@ -45,6 +51,12 @@ public class BatchServiceImpl {
 	private DagServiceImpl dagServiceImpl;
 	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
+	@Autowired
+	private ThreadPoolTaskExecutor batchExecutor;
+	@Resource(name="batchThreadMap")
+	ConcurrentHashMap<String, FutureTask<String>> batchThreadMap;
+	@Autowired
+	private SessionHelper sessionHelper;
 	
 	static final Logger logger = Logger.getLogger(BatchServiceImpl.class);
 	
@@ -86,6 +98,38 @@ public class BatchServiceImpl {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable batch.");
 			throw new RuntimeException((message != null) ? message : "Can not create executable batch.");
 		}			
+		return batchExec;
+	}
+	
+	public BatchExec submitBatch(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
+		
+		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
+		
+		//Check if DAG is ready for execution
+		Status.Stage stg = Helper.getLatestStatus(batchExec.getStatusList()).getStage();		
+		if (stg.equals(Status.Stage.InProgress) || stg.equals(Status.Stage.Completed) || stg.equals(Status.Stage.OnHold)) {
+			logger.info("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
+			throw new Exception("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
+		}
+					
+		// Populate ParseRunDagServiceImpl		
+		runBatchServiceImpl.setBatchExec(batchExec);
+		runBatchServiceImpl.setBatchUuid(batchUuid);
+		runBatchServiceImpl.setBatchVersion(batchVersion);
+		runBatchServiceImpl.setExecParams(execParams);
+		runBatchServiceImpl.setRunMode(runMode);
+		runBatchServiceImpl.setType(type);
+		runBatchServiceImpl.setBatchServiceImpl(this);
+		runBatchServiceImpl.setCommonServiceImpl(commonServiceImpl);
+		runBatchServiceImpl.setDagServiceImpl(dagServiceImpl);
+		runBatchServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+		
+		FutureTask<String> futureTask = new FutureTask<String>(runBatchServiceImpl);
+		batchExecutor.execute(futureTask);
+		logger.info("Thread watch : BatchExec : " + batchExec.getUuid() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+		batchThreadMap.put("Batch_" + batchExec.getUuid(), futureTask);
+		Thread.sleep(1000);
+		
 		return batchExec;
 	}
 
@@ -173,6 +217,10 @@ public class BatchServiceImpl {
 			case dagExec: 
 				DagExec baseExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(execMI.getUuid(), execMI.getVersion(), execMI.getType().toString());
 				return Helper.getLatestStatus(baseExec.getStatusList());
+			
+			case batchExec: 	
+				BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execMI.getUuid(), execMI.getVersion(), execMI.getType().toString());
+				return Helper.getLatestStatus(batchExec.getStatusList());
 				
 			default: return null;				
 		}
@@ -182,30 +230,121 @@ public class BatchServiceImpl {
 		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
 		for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
 			switch(execHolder.getRef().getType()) {
-				case dagExec: dagExecServiceImpl.kill(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), null, null);
+				case dagExec: 
+					try {
+						dagExecServiceImpl.kill(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), null, null);
+					} catch (Exception e) {
+						e.printStackTrace();
+//							checkBatchStatus(batchExec);
+						throw new RuntimeException(e);
+					}
 					break;
+					
 				default: 
 			}
 		}		
-		return checkBatchStatus(batchExec);
+		return checkIndvExecKillStatus(batchExec);
+	}
+	
+	private BatchExec checkIndvExecKillStatus(BatchExec batchExec) throws Exception {
+		boolean areAllExecKilled = false;
+		boolean isAnyoneFailed = false;
+		do {			
+			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
+				Status latestStatus = checkStatusByExec(execHolder.getRef());
+				
+				if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
+					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
+					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
+					
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
+					areAllExecKilled = true;
+					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
+					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
+					
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
+					areAllExecKilled = true;
+					isAnyoneFailed = true;
+				} else if(latestStatus.getStage().equals(Status.Stage.NotStarted) || latestStatus.getStage().equals(Status.Stage.InProgress)) {
+					kill(batchExec.getUuid(), batchExec.getVersion());
+					areAllExecKilled = false;
+				}
+			}
+		} while(!areAllExecKilled);	
+		
+		if(areAllExecKilled) {
+			if(isAnyoneFailed) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+			} else {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Killed);
+			}
+		}
+		return batchExec;
 	}
 
 	public BatchExec restart(String execUuid, String execVersion, RunMode runMode) throws Exception {
-		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
-		try {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());		
+		for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
+			switch(execHolder.getRef().getType()) {
+				case dagExec:
+					try {
+						dagServiceImpl.restart(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), runMode);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+					
+				default:	
+			}
+		}	
+		return checkIndvExecRestartStatus(batchExec, runMode);
+	}
+	
+	private BatchExec checkIndvExecRestartStatus(BatchExec batchExec, RunMode runMode) throws Exception {
+		boolean areAllExecRestarted = false;
+		boolean isAnyoneFailed = false;
+		
+		do {
 			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
-				switch(execHolder.getRef().getType()) {
-					case dagExec: dagServiceImpl.restart(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), runMode);
-						break;
-						
-					default:	
+				Status latestStatus = checkStatusByExec(execHolder.getRef());
+				
+				if(latestStatus.getStage().equals(Status.Stage.Killed)) {
+					try {
+						restart(batchExec.getUuid(), batchExec.getVersion(), runMode);
+					} catch (Exception e) {
+						e.printStackTrace();
+						areAllExecRestarted = false;
+						isAnyoneFailed = true;
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
+					areAllExecRestarted = true;
+
+					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
+					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
+					
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.Killed)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
+					areAllExecRestarted = true;
+					isAnyoneFailed = true;
 				}
-			}		
-			return checkBatchStatus(batchExec);
-		} catch (Exception e) {
-			e.printStackTrace();
-			checkBatchStatus(batchExec);
-			throw new RuntimeException(e);
-		}		
+			}
+		} while(!areAllExecRestarted);
+		
+		if(areAllExecRestarted) {
+			if(isAnyoneFailed) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+			} else {
+				batchExec = checkBatchStatus(batchExec);
+			}			
+		}
+		return batchExec;
 	}
 }
