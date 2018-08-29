@@ -1088,7 +1088,7 @@ export class CommonListComponent {
 
   onChangeParamlist() {
     if (this.selectParamlistName["uuid"] !== " ") {
-      this._commonService.getParamByParamList(this.selectParamlistName["uuid"], "paramlist")
+      this._commonListService.getParamByParamList(this.selectParamlistName["uuid"], "paramlist")
         .subscribe(response => {
           this.onSuccessgetParamByParamList(response),
             error => console.log("Error ::" + error)
