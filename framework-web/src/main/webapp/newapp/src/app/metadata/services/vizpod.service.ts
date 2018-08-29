@@ -69,6 +69,16 @@ export class VizpodService{
     })
   }
 
+  submit(data :any,type :any,upd_tag :any){
+    let url ='common/submit?action=edit&type='+type+"&upd_tag="+upd_tag;
+    return this._sharedService.postCall(url,data)
+    .map((response: Response) => {
+      return <any>response.text();
+})
+   .catch(this.handleError);
+
+  }
+
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
 }
