@@ -3503,12 +3503,19 @@ public class RegisterService {
 		List<Registry> registryList = new ArrayList<Registry>();
 		List<Datapod> datapodList = null;
 		int i = 1;
+		String compareStatus = null;
 		for (Entry<String, String> tableWithPath : tablesWithPath.entrySet()) {
 			datapodList = datapodServiceImpl.searchDatapodByName(tableWithPath.getKey(), datasourceUuid);
 			if (datapodList.size() > 0){
 				for (Datapod datapod : datapodList) {
 					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
 						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+							try {
+								 compareStatus=datapodServiceImpl.compareMetadataPriority(datapod.getUuid(), datapod.getVersion(), RunMode.BATCH);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							Registry registry = new Registry();
 							registry.setId(Integer.toString(i));
 							registry.setName(tableWithPath.getKey());
@@ -3517,6 +3524,7 @@ public class RegisterService {
 							registry.setDesc(datapod.getDesc());
 							registry.setRegisteredOn(datapod.getCreatedOn());
 							registry.setStatus("Registered");
+							registry.setCompareStatus(compareStatus);
 							registryList.add(registry);
 							break;
 						} else {

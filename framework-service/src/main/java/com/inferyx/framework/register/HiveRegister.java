@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -103,10 +104,12 @@ public class HiveRegister extends DataSourceRegister {
 					logger.info("Column type is : " + rs.getString("TYPE_NAME"));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
+					Integer colSize = rs.getInt("COLUMN_SIZE");
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(colType);
+					attr.setLength(colSize);
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -121,6 +124,7 @@ public class HiveRegister extends DataSourceRegister {
 				if (registryList.get(i).getName().equals(tableName)) {
 					registryList.get(i).setRegisteredOn(savedDp.getCreatedOn());
 					registryList.get(i).setStatus("Registered");
+					registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
 				}
 
 				MetaIdentifierHolder holder = new MetaIdentifierHolder();

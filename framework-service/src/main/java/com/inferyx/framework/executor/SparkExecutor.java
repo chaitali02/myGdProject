@@ -1002,6 +1002,7 @@ public class SparkExecutor<T> implements IExecutor {
 			attr1.setDesc(sf.name());
 			attr1.setDispName(sf.name());
 			attr1.setActive("Y");
+			attr1.setLength(null);
 			attributes.add(attr1);
 
 		}
@@ -1013,6 +1014,7 @@ public class SparkExecutor<T> implements IExecutor {
 			attr2.setDesc("version");
 			attr2.setDispName("version");
 			attr2.setActive("Y");
+			attr2.setLength(null);
 			attributes.add(attr2);
 		}
 		if (writeToParquet) {

@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +83,7 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -406,9 +409,10 @@ public class DatapodServiceImpl {
 		// Check if datapod exists
 		String fileName = Helper.getFileName(csvFileName);
 		Datapod dp = null;
-		dp = findOneByName(fileName);
+		Datapod dp1 = findOneByName(fileName);
 		// Create datapod and relation if it does not exist
 		if (dp == null) {
+		
 			/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
 					.option("header", "true").load(csvFileName);		
 			df.printSchema();
@@ -447,6 +451,9 @@ public class DatapodServiceImpl {
 			// Create datapod
 //			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
 			dp = new Datapod();
+			if(dp1 !=null) {
+				dp.setUuid(dp1.getUuid());
+			}
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 //			for(Datasource datasource : datasourceList) {
 				MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
@@ -1299,5 +1306,60 @@ public class DatapodServiceImpl {
 			}
 		}
 		return containsProperty;
+	}
+	
+	public String compareMetadataPriority(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		String sourceTableName = null;
+		try {
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		 List<CompareMetaData> result= exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String status = null;
+		Integer modifyCount = 1, deletCount = 1, newCount = 1, noChangeCount = 1;
+		for (CompareMetaData meta : result) {
+			if (meta.getStatus().equalsIgnoreCase(Compare.MODIFIED.toString())) {
+				map.put(meta.getStatus(), modifyCount);
+				modifyCount++;
+			}
+
+			if (meta.getStatus().equalsIgnoreCase(Compare.DELETED.toString())) {
+				map.put(meta.getStatus(), deletCount);
+				deletCount++;
+			}
+			if (meta.getStatus().equalsIgnoreCase(Compare.NEW.toString())) {
+				map.put(meta.getStatus(), newCount);
+				newCount++;
+			}
+			if (meta.getStatus().equalsIgnoreCase(Compare.NOCHANGE.toString())) {
+				map.put(meta.getStatus(), noChangeCount);
+				noChangeCount++;
+
+			}
+		}
+		
+	
+		 if(map.keySet().contains(Compare.NEW.toString())) {
+         	status=Compare.NEW.toString();
+         }
+		 else if(map.keySet().contains(Compare.DELETED.toString())){
+	         	status=Compare.DELETED.toString();
+	         	
+	         }
+	         else if(map.keySet().contains(Compare.MODIFIED.toString())){
+	         	status=Compare.MODIFIED.toString();
+	         }
+	         else {
+	         	status=Compare.NOCHANGE.toString();
+	         }
+
+		 return status;
 	}
 }

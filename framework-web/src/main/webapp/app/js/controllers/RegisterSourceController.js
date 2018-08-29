@@ -1,9 +1,10 @@
 /****/
 AdminModule = angular.module('AdminModule');
-AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants) {
+AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService) {
   $scope.isSearchDisable = true;
   $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
+  $scope.path = dagMetaDataService.compareMetaDataStatusDefs
   $scope.searchButtonText = "Register";
   $scope.gridOptions = {
     paginationPageSizes: null,
@@ -62,6 +63,13 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status}}</span></div>'
+      },
+      {
+        displayName: 'Compare Status',
+        name: 'compareStatus',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.compareStatus].color}} !important" ng-style="">{{grid.appScope.path[row.entity.compareStatus].caption}}</div></div>'
       },
 
     ]
@@ -142,6 +150,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     }
   }
   $scope.searchSource=function(){
+    $scope.gridOptions.data=[];
     $scope.isSearchDisable=true;
     $scope.searchButtonText = "Register";
     $scope.isDataSourceInpogress = true;
@@ -256,6 +265,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
           $scope.gridOptions.data[id].selected= false;
           $scope.gridOptions.data[id].isDisabled=true;
           $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+          $scope.gridOptions.data[id].compareStatus=response[i].compareStatus
         }
         else{
           var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
@@ -266,6 +276,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
             $scope.gridOptions.data[index].selected= false;
             $scope.gridOptions.data[index].isDisabled=true;
             $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
+            $scope.gridOptions.data[index].compareStatus=response[i].compareStatus
         }
         }
         //$scope.gridOptions.data.splice(i,1);
