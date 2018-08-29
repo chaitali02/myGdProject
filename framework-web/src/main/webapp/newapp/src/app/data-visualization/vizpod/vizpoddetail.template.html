@@ -175,7 +175,7 @@
 
             <div class="form-group">
               <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
-              <div class="col-md-6">
+              <div class="col-md-6">{{allAttributes | json}}
                 <ul class="tagitdd" style="height:100px;" [ngClass]="(mode =='true')?'disabled-ul':'default'">
                   <li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" *ngFor=" let item of allAttributes">
                     <span class="tagit-label" dnd-draggable [dragEnabled]="true" [dragData]="item">{{item.itemName}}</span>

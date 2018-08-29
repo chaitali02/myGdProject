@@ -178,6 +178,7 @@ export class VizpodDetailComponent {
     }
 
     OnSuccesgetAllAttributeBySource(response) {
+        debugger
         let attribute = []
         for (const n in response) {
             let allname = {};
@@ -187,7 +188,7 @@ export class VizpodDetailComponent {
             allname["type"] = "datapod"
             allname["uuid"] = response[n]['uuid'];
             allname["class"] = "tagit-choice-default-dd";
-            allname["attrId"] = response[n]['attributeId'];
+            allname["attributeId"] = response[n]['attributeId'];
             allname["attrName"] = response[n]['name'];
             attribute[n] = allname
         }
@@ -195,7 +196,7 @@ export class VizpodDetailComponent {
         this.getAllFormula();
         this.getAllExpression();
         this.dropdownList = attribute;
-
+        console.log(JSON.stringify(attribute));
 
     }
     getAllExpression() {
@@ -452,7 +453,7 @@ export class VizpodDetailComponent {
         dependsOn["ref"] = ref;
         vizpodjson["source"] = dependsOn;
         vizpodjson["type"] = this.vizpodtype;
-        vizpodjson["limit"]=this.limit;
+        vizpodjson["limit"]=null;
 
         let attributeInfoArray = [];
         if (this.filterAttributeTags != null) {
@@ -462,7 +463,7 @@ export class VizpodDetailComponent {
         		ref['type'] = "datapod";
         		ref['uuid'] = this.filterAttributeTags[i].uuid;
         		attributeInfo['ref'] = ref;
-        		attributeInfo['attributeId '] = this.filterAttributeTags[i].attrId;
+        		attributeInfo['attributeId '] = this.filterAttributeTags[i].attributeId.toString();
         		attributeInfoArray[i] = attributeInfo;
         	}
         }
@@ -479,7 +480,7 @@ export class VizpodDetailComponent {
                 ref["uuid"] = this.keylist[i].uuid
                 ref["type"] = this.keylist[i].type;
                 keyjson["ref"] = ref;
-                keyjson["attributeId"] = this.keylist[i].attrId.toString();
+                keyjson["attributeId"] = this.keylist[i].attributeId.toString();
                 key[i] = keyjson;
             }
         }
@@ -492,7 +493,7 @@ export class VizpodDetailComponent {
                 ref["uuid"] = this.grouplist[i].uuid
                 ref["type"] = this.grouplist[i].type;
                 groupjson["ref"] = ref;
-                groupjson["attributeId"] = this.grouplist[i].attrId.toString();
+                groupjson["attributeId"] = this.grouplist[i].attributeId.toString();
                 group[i] = groupjson;
             }
         }
@@ -506,17 +507,27 @@ export class VizpodDetailComponent {
                 ref["type"] = this.valuelist[i].type;
                 valuejson["ref"] = ref;
                 if (this.valuelist[i].type == "datapod") {
-                    valuejson["attributeId"] = this.valuelist[i].attrId.toString();
+                    valuejson["attributeId"] = this.valuelist[i].attributeId.toString();
                 }
                 value[i] = valuejson;
             }
         }
         vizpodjson["values"] = value
-        console.log(vizpodjson)
+        vizpodjson['filterInfo'] = [],
+		vizpodjson['dimension'] = [],
+        console.log(JSON.stringify(vizpodjson));
         this._vizpodService.submit(vizpodjson,'vizpod',upd_tag).subscribe(           
          response => { this.OnSuccessubmit(response) },
             error => console.log('Error :: ' + error)
         )
+
+        // algoJson["summaryMethods"] = summaryMethods;
+        // console.log(JSON.stringify(algoJson));
+        // this._algorithmService.submit(algoJson, 'algorithm', upd_tag).subscribe(
+        //   response => { this.OnSuccessubmit(response) },
+        //   error => console.log('Error :: ' + error)
+        // )
+
     }
     OnSuccessubmit(response) {
         this.msgs = [];
