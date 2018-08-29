@@ -471,6 +471,31 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData = false
 	}/*End ShowGraph*/
+	
+	$scope.openFilterPopup=function(){
+		if($scope.filterAttribureIdValues == null){
+			$scope.getFilterValue($scope.report);
+		}
+		$('#attrFilter').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+  $scope.onTagRemove =function(e){
+		console.log(e);
+		console.log(JSON.stringify($scope.filterTag));
+		$scope.selectedAttributeValue[e.index]=null;
+		var noSelect={"id":null,"value":"-select-"}
+		setTimeout(function(){ 
+			$scope.selectedAttributeValue[e.index]=noSelect;
+			$scope.applyFilter();
+		}, 100);	
+
+		// for(var i=e.index;i<$scope.filterTag.length;i++){
+		// 	$scope.filterTag[i].index=$scope.filterTag[i].index-1;
+		// }
+		
+	}
 
 	$scope.getFilterValue=function(data){
     $scope.filterAttribureIdValues=[]
@@ -492,7 +517,9 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
           filterAttribureIdvalueJSON.datapoduuid=data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.type=data.filterInfo[i].ref.type;
           filterAttribureIdvalueJSON.datapodattrId=data.filterInfo[i].attrId;
-          filterAttribureIdvalueJSON.dname=data.filterInfo[i].ref.name+"."+data.filterInfo[i].attrName;
+					filterAttribureIdvalueJSON.dname=data.filterInfo[i].ref.name+"."+data.filterInfo[i].attrName;
+					filterAttribureIdvalueJSON.name=data.filterInfo[i].ref.name
+					filterAttribureIdvalueJSON.attrName=data.filterInfo[i].attrName;
           filterAttribureIdvalueJSON.values=result[i].data
           filterAttribureIdvalueJSON.values.splice(0,0,defaultvalue)
           $scope.selectedAttributeValue[i]=defaultvalue
@@ -500,7 +527,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
           //console.log(JSON.stringify($scope.filterAttribureIdValues))
         }
       },function(response){
-			//	$('#attrFilter').modal("hide");
+				$('#attrFilter').modal("hide");
 				$scope.isDataInpogress = true;
 				$scope.isDataError = true;
 				$scope.msgclass = "errorMsg";
@@ -511,6 +538,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 	}//End getFilterValue
 	
   $scope.applyFilter=function(index){
+		console.log(JSON.stringify($scope.selectedAttributeValue));
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
 		$scope.isDataError = false;
@@ -518,17 +546,23 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 		$scope.showForm = false;
 		$scope.showGraphDiv = false;
     var count=0;
-    $scope.filterListarray=[];
+		$scope.filterListarray=[];
+		$scope.filterTag=[];
      for(var i=0;i<$scope.selectedAttributeValue.length;i++){
       var filterList={};
-      var ref={};
+			var ref={};
+			var filterTag={};
       if($scope.selectedAttributeValue[i].value !="-select-"){
         ref.type=$scope.filterAttribureIdValues[i].type;
         ref.uuid=$scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref=ref;
-        filterList.attrId=$scope.filterAttribureIdValues[i].datapodattrId
+				filterList.attrId=$scope.filterAttribureIdValues[i].datapodattrId
+				filterTag.text=$scope.filterAttribureIdValues[i].attrName+"-"+$scope.selectedAttributeValue[i].value;
+				filterTag.index=i;
+				filterTag.value=$scope.selectedAttributeValue[i].value;
         filterList.value=$scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
-        $scope.filterListarray[count]=filterList;
+				$scope.filterListarray[count]=filterList;
+				$scope.filterTag[count]=filterTag;
         count=count+1;
       }
     }
@@ -539,17 +573,17 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 			}else{
 				$scope.vizpodbody=null;
 			}
-		//$('#attrFilter').modal("hide");
+		  $('#attrFilter').modal("hide");
 			$scope.reportExecute($scope.report,$scope.vizpodbody);		
 	}
 	$scope.CancleFitler=function(){
-		$scope.isShowSimpleData = true
-		$scope.isDataInpogress = true
-		$scope.isDataError = false;
-		$scope.tableclass = "centercontent";
-		$scope.showForm = false;
-		$scope.showGraphDiv = false;
-		$scope.reportExecute($scope.report,null);	
+		// $scope.isShowSimpleData = true
+		// $scope.isDataInpogress = true
+		// $scope.isDataError = false;
+		// $scope.tableclass = "centercontent";
+		// $scope.showForm = false;
+		// $scope.showGraphDiv = false;
+		// $scope.reportExecute($scope.report,null);	
 
 	}
 
@@ -617,7 +651,7 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 		$scope.showGraphDiv = false;
 	  $scope.reportExecute(data,null);
 		if($scope.report.filterInfo.length >0){
-			$scope.getFilterValue($scope.report);
+			//$scope.getFilterValue($scope.report);
 			// $('#attrFilter').modal({
 			// 	backdrop: 'static',
 			// 	keyboard: false
