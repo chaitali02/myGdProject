@@ -3,7 +3,7 @@
 
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location, $timeout, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService, CommonService,uiGridConstants) {
+MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService, CommonService,uiGridConstants) {
 
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -63,6 +63,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['datapod'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.isResizeCompareMetadata=true;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datapod'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -150,50 +151,50 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		enableSelectAll: true,
 		headerTemplate: 'views/header-template.html',
 		superColDefs: [{
-			name: 'source',
+			name: 'sourceParant',
 			displayName: 'Source'
 		}, {
-			name: 'target',
+			name: 'targetParant',
 			displayName:'Target'
 		},
 		 {
-			name: 'status',
+			name: 'statusParant',
 			displayName:'Status'
 		}
 		],
 		columnDefs: [{
 			name: 'sourceAttribute',
 			displayName: 'Atrribute',
-			superCol: 'source'
+			superCol: 'sourceParant'
 		}, {
 			name: 'sourceType',
 			displayName: 'Type',
-			superCol: 'source'
+			superCol: 'sourceParant'
 		}, {
 			name: 'sourceLength',
 			displayName: 'Length',
-			superCol: 'source'
+			superCol: 'sourceParant'
   
 		},
 		{
 			name: 'targetAttribute',
 			displayName: 'Atrribute',
-			superCol: 'target'
+			superCol: 'targetParant'
 		}, {
 			name: 'targetType',
 			displayName: 'Type',
-			superCol: 'target'
+			superCol: 'targetParant'
 		},
 		{
 			name: 'targetLength',
 			displayName: 'Length',
-			superCol: 'target'
+			superCol: 'targetParant'
   
 		},
 		{
 			name: 'status',
 			displayName: '',
-			superCol: 'status',
+			superCol: 'statusParant',
 			enableColumnMenu: false,
 			cellClass: 'text-center',
 			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
@@ -205,12 +206,19 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		$scope.gridApiCompareMetaData = gridApi;
 		$scope.filteredRowsCompareMetaData = $scope.gridApiCompareMetaData.core.getVisibleRows($scope.gridApiCompareMetaData.grid);
 	};
-
+	$window.addEventListener('resize', function(e) {
+		$scope.isResizeCompareMetadata=false
+		$timeout(function() {
+		   $scope.isResizeCompareMetadata=true;
+		  },10);
+	  });
+	  
 	$scope.getGridStyleCompareMetaData = function () {
 		
 		var style = {
 			'margin-top': '10px',
 			'margin-bottom': '10px',
+			'width':'100%;'
 		}
 		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
 			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 50 : 400) + 70) + 'px';

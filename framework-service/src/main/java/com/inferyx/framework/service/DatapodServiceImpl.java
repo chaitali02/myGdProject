@@ -1241,17 +1241,17 @@ public class DatapodServiceImpl {
 			String propertyName = compareMetaData.getSourceAttribute();
 			if(propertyName != null && !propertyName.isEmpty()) {
 				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
-				String attrType = compareMetaData.getSourceType().toLowerCase();
-				if(attrType.contains("type")) {
-					attrType = attrType.replaceAll("type", "");
-				} 
-				
+//				String attrType = compareMetaData.getSourceType().toLowerCase();
+//				if(attrType.contains("type")) {
+//					attrType = attrType.replaceAll("type", "");
+//				} 
+//				
 				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
 					attribute.setAttributeId(i);
 					attribute.setLength(length);
-					attribute.setType(attrType);
+					attribute.setType(compareMetaData.getSourceType());
 					attributes.add(attribute);
 				} else {
 					Attribute attribute = new Attribute();
@@ -1259,7 +1259,7 @@ public class DatapodServiceImpl {
 					attribute.setDesc(propertyName);
 					attribute.setDispName(propertyName);
 					attribute.setLength(length);
-					attribute.setType(attrType);
+					attribute.setType(compareMetaData.getSourceType());
 					attribute.setPartition("N");
 					attribute.setAttributeId(i);
 					attribute.setActive("Y");
