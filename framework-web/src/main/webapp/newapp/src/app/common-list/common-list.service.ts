@@ -370,4 +370,12 @@ export class CommonListService {
         return <any>response.json();
     })
     }
+    getParamByParamList(uuid: any, type:any) : Observable<any>{
+      let url = "metadata/getParamByParamList?action=view&uuid=" + uuid + "&type="+type ;
+      return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+        })
+        .catch(this.handleError);
+    }
 }
