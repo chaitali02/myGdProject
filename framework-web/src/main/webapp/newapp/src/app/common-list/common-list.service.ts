@@ -349,4 +349,25 @@ export class CommonListService {
   // .catch(this.handleError);
   }
 
+  getParamListByTrain(executeId,executeVersion,type): Observable<any> {
+  
+      this.url = this.baseUrl+ 'metadata/getParamListByTrain?action=view&' + '&uuid=' + executeId +'&version='+ executeVersion + '&type=' + type;
+ 
+    return this.http         
+    .get( this.url, {headers: this.headers})
+    .map((response: Response) => {
+      return <any>response.json();
+  })
+  }
+
+  getParamSetByTrain(executeId,executeVersion,type): Observable<any> {
+    
+        this.url = this.baseUrl+ 'metadata/getParamSetByTrain?action=view&' + '&trainUuid=' + executeId +'&trainVersion='+ executeVersion + '&type=' + type;
+   
+      return this.http         
+      .get( this.url, {headers: this.headers})
+      .map((response: Response) => {
+        return <any>response.json();
+    })
+    }
 }
