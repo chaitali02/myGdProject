@@ -1122,11 +1122,12 @@ public class DatapodServiceImpl {
 		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
 		if (ds == null) {
 			logger.error("Datastore is not available for this datapod");
-			throw new Exception();
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
+			throw new RuntimeException("Datastore is not available for this datapod");
 		}
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(), null,
-				0, limit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+				0, rowLimit, response, rowLimit, null, null, null, runMode);
+		response = commonServiceImpl.download(uuid, version, format, offset, rowLimit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
 		
 		/*
 		String downloadPath = Helper.getPropertyValue("framework.file.download.path");
@@ -1308,19 +1309,22 @@ public class DatapodServiceImpl {
 		return containsProperty;
 	}
 	
-	public String compareMetadataPriority(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
-		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+	public String getMetaStatsByDatapod(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString());
 		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
-		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(),
+				dsMI.getType().toString());
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		
+
 		String sourceTableName = null;
 		try {
-			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion),
+					runMode);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		 List<CompareMetaData> result= exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		List<CompareMetaData> result = exec.compareMetadata(targetDatapod, datasource, sourceTableName);
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		String status = null;
 		Integer modifyCount = 1, deletCount = 1, newCount = 1, noChangeCount = 1;
@@ -1344,22 +1348,18 @@ public class DatapodServiceImpl {
 
 			}
 		}
-		
-	
-		 if(map.keySet().contains(Compare.NEW.toString())) {
-         	status=Compare.NEW.toString();
-         }
-		 else if(map.keySet().contains(Compare.DELETED.toString())){
-	         	status=Compare.DELETED.toString();
-	         	
-	         }
-	         else if(map.keySet().contains(Compare.MODIFIED.toString())){
-	         	status=Compare.MODIFIED.toString();
-	         }
-	         else {
-	         	status=Compare.NOCHANGE.toString();
-	         }
 
-		 return status;
+		if (map.keySet().contains(Compare.NEW.toString())) {
+			status = Compare.NEW.toString();
+		} else if (map.keySet().contains(Compare.DELETED.toString())) {
+			status = Compare.DELETED.toString();
+
+		} else if (map.keySet().contains(Compare.MODIFIED.toString())) {
+			status = Compare.MODIFIED.toString();
+		} else {
+			status = Compare.NOCHANGE.toString();
+		}
+
+		return status;
 	}
 }

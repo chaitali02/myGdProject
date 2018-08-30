@@ -70,8 +70,6 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	@Autowired
 	private SessionHelper sessionHelper;
 	@Autowired
-	private RunBaseRuleService baseRuleService;
-	@Autowired
 	private DatapodRegister datapodRegister;
 	@Autowired
 	ConnectionFactory connFactory;

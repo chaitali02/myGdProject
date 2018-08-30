@@ -305,43 +305,32 @@ public class ModelController {
 	}
 	
 	@RequestMapping(value = "/predict/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "predictExecUUID") String predictExecUUID,
+	public HttpServletResponse predictDownload(@RequestParam(value = "predictExecUUID") String predictExecUUID,
 			@RequestParam(value = "predictExecVersion") String predictExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", defaultValue = "predictExec") String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, download, offset, limit, response, rows,
-				sortBy,type, order, requestId, runMode);
+		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, null, 0, rows, response, rows, null,
+				type, null, null, runMode);
 		return null;
 	}
+
 	@RequestMapping(value = "/simulate/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "simulateExecUUID") String simulateExecUUID,
+	public HttpServletResponse simulateDownload(@RequestParam(value = "simulateExecUUID") String simulateExecUUID,
 			@RequestParam(value = "simulateExecVersion") String simulateExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", defaultValue = "simulateExec") String type,
 			@RequestParam(value = "action", required = false) String action,
-			/*@RequestParam(value = "requestId", required = false) String requestId,*/
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, download, offset, limit, response, rows,
-				sortBy,type, order, "1", runMode);
+		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, null, 0, rows, response, rows,
+				null, type, null, "1", runMode);
 		return null;
 	}
 	

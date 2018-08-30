@@ -195,23 +195,20 @@ public class ProfileController {
 			return true;
 	}	
 
-	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "profileExecUUID") String profileExecUUID, 
-	    		@RequestParam(value= "profileExecVersion") String profileExecVersion,
-	    		@RequestParam(value = "format", defaultValue="excel")String format,
-				@RequestParam(value ="rows",defaultValue="1000") int rows,
-				@RequestParam(value = "download", defaultValue="Y") String download,@RequestParam(value="offset", defaultValue="0") int offset, 
-				@RequestParam(value="limit", defaultValue="200") int limit,
-				@RequestParam(value="sortBy", required=false) String sortBy,@RequestParam(value="order", required=false) String order,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value="requestId",required = false) String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
-	    		{
-			RunMode runMode = Helper.getExecutionMode(mode);
-			profileServiceImpl.download(profileExecUUID, profileExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
-	    	return null;
-	   }
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "profileExecUUID") String profileExecUUID,
+			@RequestParam(value = "profileExecVersion") String profileExecVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		profileServiceImpl.download(profileExecUUID, profileExecVersion, format, null, 0, rows, response, rows, null,
+				null, null, runMode);
+		return null;
+	}
 	
 	@RequestMapping(value = "/getProfileResults", method = RequestMethod.GET/*, params = { "datapodUuid", "datapodVersion",
 			"attributeId", "profileAttrType", "numDays", "startDate", "endDate", "type", "action", "mode" }*/)

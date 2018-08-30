@@ -113,20 +113,14 @@ public class ReconController {
 	public HttpServletResponse download(@RequestParam(value = "reconExecUUID") String reconExecUUID,
 			@RequestParam(value = "reconExecVersion") String reconExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, download, offset, limit, response, rows,
-				sortBy, order, requestId, runMode);
+		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, null, 0, rows, response, rows,
+				null, null, null, runMode);
 		return null;
 	}
 

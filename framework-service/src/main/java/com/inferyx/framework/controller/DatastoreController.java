@@ -61,26 +61,21 @@ public class DatastoreController {
 		offset = offset+1;
 		return dataStoreServiceImpl.getResultByDatastore(datastoreUuid, datastoreVersion, requestId, offset, limit, sortBy, order);
 	}
-	
-	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "uuid") String datastoreUUID, 
-	    		@RequestParam(value= "version") String datastoreVersion,
-	    		@RequestParam(value = "format", defaultValue="excel")String format,
-				@RequestParam(value ="rows",defaultValue="1000") int rows,
-				@RequestParam(value="offset", defaultValue="0") int offset, 
-				@RequestParam(value="limit", defaultValue="200") int limit,
-				@RequestParam(value="sortBy", required=false) String sortBy,
-				@RequestParam(value="order", required=false) String order,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value="requestId",required = false) String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
-	    		{
-		    RunMode runMode = Helper.getExecutionMode(mode);
-    	    response = dataStoreServiceImpl.download(datastoreUUID, datastoreVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
-    	    return null;
-		
-	   }
-	
+
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "uuid") String datastoreUUID,
+			@RequestParam(value = "version") String datastoreVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "1000") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		response = dataStoreServiceImpl.download(datastoreUUID, datastoreVersion, format, 0, rows, response, rows, null,
+				null, null, runMode);
+		return null;
+
+	}
 	
 }
