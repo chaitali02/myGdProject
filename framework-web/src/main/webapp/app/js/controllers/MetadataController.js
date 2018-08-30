@@ -3,7 +3,9 @@
 
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService, CommonService,uiGridConstants) {
+MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout,$http,$filter,$rootScope,$state,$sessionStorage, 
+	 $scope, $stateParams,$cookieStore, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,commentService,
+	 CommonService,CF_DOWNLOAD,CF_SAMPLE) {
 
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -38,7 +40,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.path = dagMetaDataService.compareMetaDataStatusDefs
+	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
+	$scope.download={};
+	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+	$scope.download.formates=CF_DOWNLOAD.formate;
+	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
+	$scope.sample={};
+	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrow;
+	$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
+	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
 	$scope.mode = ""
 	$scope.dataLoading = false;
@@ -84,7 +96,16 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		maxSize: 5,
 	}
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
-
+    $scope.gridOptions = {
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
 
 	/*Start showPage*/
 	$scope.showPage = function () {
@@ -503,8 +524,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	$scope.onSelectDataStore=function(data,index){
 		$scope.isDisabledDSRB();
-		$scope.isDatastoreResult=true;
+		$scope.sample.data=null;
 		$scope.datastoreDetail=data
+		$scope.sample.data=data;
+		//$scope.sample.type="datastore";
 		$scope.getResultByDatastore(data);
 	}
 
@@ -522,23 +545,23 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isShowDatastore=true;
 			$scope.originalDataDatastore=response;
 			$scope.gridOptionsDataStrore.data=response;
-			
 			console.log(response)
-			
-
 		}
 	
 	}
 	
 	$scope.getResultByDatastore = function (data) {
+		//$('#SampleModel').modal("hide");
 		$scope.isDataError = false;
 		$scope.isDataInpogress = true
 		$scope.tableclass = "centercontent";
 		$scope.showFrom = false;
 		$scope.showGraphDiv = false;
 		$scope.spinner = true;
-		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
+		$scope.isDatastoreResult=true;
+		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetResultByDatastore = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
 			$scope.isEnableDSRB(data);
 			$scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
@@ -579,16 +602,19 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowDatastore=false;
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
-		MetadataDatapodSerivce.getDatapodSample(data).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
+		$scope.isDownloadDatapod=false;
+	//	$('#SampleModel').modal("hide");
+		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;	
 			$scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
-			for (var j = 0; j < data.attributes.length; j++) {
+			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
-				attribute.name = data.attributes[j].name;
-				attribute.displayName = data.attributes[j].dispName;
+				attribute.name =data.attributes[j].name;
+				attribute.displayName =data.attributes[j].dispName;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
@@ -609,6 +635,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.spinner = false;
 		}
 	}
+
+	
 
 	$scope.selectPage = function (pageNo) {
 		$scope.pagination.currentPage = pageNo;
@@ -915,69 +943,50 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
 		});
 	}
-    $scope.downloadFileByDatastore = function (data) {
-		var uuid = data.uuid;
-		var version = data.version;
-		var url = $location.absUrl().split("app")[0]
-		$http({
-			method: 'GET',
-			url: url + "datastore/download?action=view&uuid=" + uuid + "&version=" + version + "&limit=100",
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			headers = headers();
-			var filename = headers['x-filename'];
-			var contentType = headers['content-type'];
-
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", uuid + ".xls");
-
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			console.log(data);
+	$scope.downloadFileByDatastore = function (data) {
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datastore";
+		$('#downloadSample').modal({
+			backdrop: 'static',
+			keyboard: false
 		});
 	};
+
 	$scope.downloadFile = function (data) {
 		if($scope.isDownloadDatapod)
 		  return false;
-		var uuid = data.uuid;
-		var version = data.version;
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datapod";
+		$('#downloadSample').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
+
+    $scope.submitDownload =function(){
 		$scope.isDownloadDatapod=true;
+		$('#downloadSample').modal("hide");
 		var url = $location.absUrl().split("app")[0]
 		$http({
 			method: 'GET',
-			url: url + "datapod/download?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&formate="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
+			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
 			$scope.isDownloadDatapod=false;
 			headers = headers();
-			var filename = headers['x-filename'];
+			var filename = headers['filename'];
 			var contentType = headers['content-type'];
-
 			var linkElement = document.createElement('a');
 			try {
 				var blob = new Blob([data], {
 					type: contentType
 				});
-                console.log(blob)
 				var url = window.URL.createObjectURL(blob);
-                console.log(url)
 				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", uuid + ".xls");
+				linkElement.setAttribute("download",filename);
 
 				var clickEvent = new MouseEvent("click", {
 					"view": window,
@@ -989,10 +998,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				console.log(ex);
 			}
 		}).error(function (data) {
+			$scope.isDownloadDatapod=false;
 			console.log(data);
+			$('#downloadSample').modal("hide");
 		});
-	};
-
+	}
 })/* End MetadataDatapodController*/
 
 

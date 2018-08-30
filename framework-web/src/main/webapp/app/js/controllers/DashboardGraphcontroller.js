@@ -1011,6 +1011,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     var reN = /[^0-9]/g;
     function sortAlphaNum(propName) {
       return function(a,b){
+      
         var aA = a[propName].replace(reA, "");
         var bA = b[propName].replace(reA, "");
         if(aA === bA) {

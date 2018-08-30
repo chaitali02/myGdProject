@@ -66,17 +66,17 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findDatapodSample = function (uuid, version) {
+	factory.findDatapodSample = function (uuid, version,rows) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion="+version+"&rows="+rows,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.findResultByDatastore = function (uuid, version) {
+	factory.findResultByDatastore = function (uuid, version,limit) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit=100",
+			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit="+limit,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
@@ -145,9 +145,9 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		return deferred.promise;
 	}
 
-	this.getResultByDatastore = function (uuid,version) {
+	this.getResultByDatastore = function (uuid,version,limit) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findResultByDatastore(uuid,version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findResultByDatastore(uuid,version,limit).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -177,9 +177,9 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		return deferred.promise;
 	}
 
-	this.getDatapodSample = function (data) {
+	this.getDatapodSample = function (data,rows) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findDatapodSample(data.uuid,data.version,rows).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			//console.log(response)
 			deferred.resolve({
