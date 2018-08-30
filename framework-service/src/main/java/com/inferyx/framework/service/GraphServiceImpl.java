@@ -918,9 +918,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-			if (key.equalsIgnoreCase("metaList")) {
-				System.out.println("assssssd");
-			}
+//			if (key.equalsIgnoreCase("metaList")) {
+//				System.out.println("assssssd");
+//			}
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);

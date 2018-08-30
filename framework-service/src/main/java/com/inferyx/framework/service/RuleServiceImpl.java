@@ -11,7 +11,6 @@
 package com.inferyx.framework.service;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.livy.shaded.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -43,7 +40,6 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
@@ -54,15 +50,12 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
-import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.RuleView;
@@ -107,8 +100,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	/*
 	 * @Autowired private IRuleGroupExecDao iRuleGroupExecDao;
 	 */
-	@Autowired
-	private ExecutorFactory execFactory;
 	/*
 	 * @Autowired private ParamSetServiceImpl paramSetServiceImpl;
 	 */
