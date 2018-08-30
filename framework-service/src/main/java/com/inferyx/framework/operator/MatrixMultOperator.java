@@ -115,6 +115,9 @@ public class MatrixMultOperator implements IOperator {
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationInfo.getParamValue().getRef().getUuid(), 
 																			locationInfo.getParamValue().getRef().getVersion(), 
 																			locationInfo.getParamValue().getRef().getType().toString());
+		Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																							locationDatapod.getDatasource().getRef().getVersion(), 
+																							locationDatapod.getDatasource().getRef().getType().toString());
 		List<AttributeRefHolder> lhsKeyAttrList = lhsKeyAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsKeyAttrList = rhsKeyAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
@@ -171,10 +174,10 @@ public class MatrixMultOperator implements IOperator {
 		
 		String sql = "SELECT * FROM " + saveTableName+"_df";
 		ResultSetHolder rsHolder2 = null;
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+		if(targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
-				|| datasource.getType().equalsIgnoreCase("livy-spark")) {
+				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
 			rsHolder2 = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
 			rsHolder2 = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod);

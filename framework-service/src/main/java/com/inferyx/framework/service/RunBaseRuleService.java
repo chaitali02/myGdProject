@@ -552,7 +552,10 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			/***** Replace internalVarMap - END *****/
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				if(execContext.equals(ExecContext.FILE)) {
+				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+						datapod.getDatasource().getRef().getVersion(), 
+						datapod.getDatasource().getRef().getType().toString());
+				if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
 					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", appUuid);
 				} else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
