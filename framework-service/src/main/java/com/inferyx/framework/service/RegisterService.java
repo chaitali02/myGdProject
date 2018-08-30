@@ -107,6 +107,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -3536,6 +3537,7 @@ public class RegisterService {
 							registry.setDesc(null);
 							registry.setRegisteredOn(null);
 							registry.setStatus("UnRegistered");
+							registry.setCompareStatus(Compare.NEW.toString());
 							registryList.add(registry);
 						}
 					}
