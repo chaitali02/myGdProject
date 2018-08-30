@@ -102,7 +102,7 @@ public class BatchServiceImpl {
 	}
 	
 	public BatchExec submitBatch(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
-		
+		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
 		
 		//Check if DAG is ready for execution
@@ -124,16 +124,21 @@ public class BatchServiceImpl {
 		runBatchServiceImpl.setDagServiceImpl(dagServiceImpl);
 		runBatchServiceImpl.setSessionContext(sessionHelper.getSessionContext());
 		
-		FutureTask<String> futureTask = new FutureTask<String>(runBatchServiceImpl);
-		batchExecutor.execute(futureTask);
-		logger.info("Thread watch : BatchExec : " + batchExec.getUuid() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-		batchThreadMap.put("Batch_" + batchExec.getUuid(), futureTask);
-		Thread.sleep(1000);
+		if(batch.getInParallel() != null && !batch.getInParallel().isEmpty() && batch.getInParallel().equalsIgnoreCase("true")) {
+			FutureTask<String> futureTask = new FutureTask<String>(runBatchServiceImpl);
+			batchExecutor.execute(futureTask);
+			logger.info("Thread watch : BatchExec : " + batchExec.getUuid() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			batchThreadMap.put("Batch_" + batchExec.getUuid(), futureTask);
+			Thread.sleep(1000);
+		} else {
+			runBatchServiceImpl.execute();
+		}
 		
 		return batchExec;
 	}
 
-	public BatchExec execute(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
+	/********************** UNUSED **********************/
+/*	public BatchExec execute(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		List<MetaIdentifierHolder> execList = new ArrayList<>();
 		for(MetaIdentifierHolder metaMI : batch.getMetaList()) {
@@ -150,7 +155,7 @@ public class BatchServiceImpl {
 		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
 		batchExec = checkBatchStatus(batchExec);
 		return batchExec;
-	}
+	}*/
 	
 	public BatchExec checkBatchStatus(BatchExec batchExec) throws Exception {
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
@@ -235,8 +240,6 @@ public class BatchServiceImpl {
 						dagExecServiceImpl.kill(execHolder.getRef().getUuid(), execHolder.getRef().getVersion(), null, null);
 					} catch (Exception e) {
 						e.printStackTrace();
-//							checkBatchStatus(batchExec);
-						throw new RuntimeException(e);
 					}
 					break;
 					
@@ -246,7 +249,38 @@ public class BatchServiceImpl {
 		return checkIndvExecKillStatus(batchExec);
 	}
 	
-	private BatchExec checkIndvExecKillStatus(BatchExec batchExec) throws Exception {
+	public BatchExec submitKill(String execUuid, String execVersion) throws Exception {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
+		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
+		runBatchServiceImpl.setBatchExec(batchExec);
+		runBatchServiceImpl.setDagExecServiceImpl(dagExecServiceImpl);
+		runBatchServiceImpl.setBatchServiceImpl(this);
+		runBatchServiceImpl.setCommonServiceImpl(commonServiceImpl);
+		runBatchServiceImpl.setDagServiceImpl(dagServiceImpl);
+		runBatchServiceImpl.setSessionContext(sessionHelper.getSessionContext());		
+		runBatchServiceImpl.kill();
+		Thread.sleep(1000);
+		
+		return batchExec;
+	}
+	
+	public BatchExec submitRestart(String execUuid, String execVersion, RunMode runMode) throws Exception {
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
+		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
+		runBatchServiceImpl.setBatchExec(batchExec);
+		runBatchServiceImpl.setDagExecServiceImpl(dagExecServiceImpl);
+		runBatchServiceImpl.setBatchServiceImpl(this);
+		runBatchServiceImpl.setCommonServiceImpl(commonServiceImpl);
+		runBatchServiceImpl.setDagServiceImpl(dagServiceImpl);
+		runBatchServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+		runBatchServiceImpl.setRunMode(runMode);
+		runBatchServiceImpl.restart();
+		Thread.sleep(1000);
+		
+		return batchExec;
+	}
+	
+	public BatchExec checkIndvExecKillStatus(BatchExec batchExec) throws Exception {
 		boolean areAllExecKilled = false;
 		boolean isAnyoneFailed = false;
 		do {			
@@ -306,7 +340,7 @@ public class BatchServiceImpl {
 		return checkIndvExecRestartStatus(batchExec, runMode);
 	}
 	
-	private BatchExec checkIndvExecRestartStatus(BatchExec batchExec, RunMode runMode) throws Exception {
+	public BatchExec checkIndvExecRestartStatus(BatchExec batchExec, RunMode runMode) throws Exception {
 		boolean areAllExecRestarted = false;
 		boolean isAnyoneFailed = false;
 		
