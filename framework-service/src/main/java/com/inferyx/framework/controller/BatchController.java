@@ -52,7 +52,7 @@ public class BatchController {
 						@RequestParam(value = "type", required = false) String type,
 						@RequestParam(value = "action", required = false) String action) {
 		try {
-			batchServiceImpl.kill(execUuid, execVersion);
+			batchServiceImpl.submitKill(execUuid, execVersion);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -67,7 +67,7 @@ public class BatchController {
 						@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-			batchServiceImpl.restart(execUuid, execVersion, runMode);
+			batchServiceImpl.submitRestart(execUuid, execVersion, runMode);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

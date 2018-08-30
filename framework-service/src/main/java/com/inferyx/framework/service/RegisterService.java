@@ -3511,7 +3511,7 @@ public class RegisterService {
 					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
 						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
 							try {
-								 compareStatus=datapodServiceImpl.compareMetadataPriority(datapod.getUuid(), datapod.getVersion(), RunMode.BATCH);
+								 compareStatus=datapodServiceImpl.getMetaStatsByDatapod(datapod.getUuid(), datapod.getVersion(), RunMode.BATCH);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
