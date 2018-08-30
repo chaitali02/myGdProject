@@ -57,8 +57,8 @@ public class DatapodController {
 	   }
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "datapodUUID") String datapodUUID,
-			@RequestParam(value = "datapodVersion") String datapodVersion,
+	public HttpServletResponse download(@RequestParam(value = "uuid") String datapodUUID,
+			@RequestParam(value = "version") String datapodVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,

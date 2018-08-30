@@ -100,8 +100,8 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
             'responseError': function (rejection) {
                 if (rejection.status == 500) {
                     notify.type = 'error',
-                        notify.title = 'Some Error Occured',
-                        notify.content = "Please try to reload or contact administrator"//"Dashboard Deleted Successfully"
+                    notify.title = 'Some Error Occured',
+                    notify.content = "Please try to reload or contact administrator"//"Dashboard Deleted Successfully"
                     $rootScope.$emit('notify', notify);
                 }
                 else if (rejection.status != 200 && rejection.status != 500 && rejection.status != 419) {
@@ -109,6 +109,13 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                     notify.title = 'Info';
                     try {
                         notify.content = rejection.data.message;
+                        if(rejection.data instanceof ArrayBuffer){
+                            var decodedString = String.fromCharCode.apply(null, new Uint8Array(rejection.data));
+                            var obj = JSON.parse(decodedString);
+                            var message = obj['message'];
+                            notify.content = message;
+                        }
+                        
                     } catch (e) {
                         notify.content = "Error Code" + rejection.status
                     } finally {
@@ -813,7 +820,6 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
         return temp.replace(/([A-Z][a-z])/g, " $1");
     }
     $rootScope.genericClose = function (e, type) {
-        debugger
         if ($stateParams.returnBack == "true" && $rootScope.previousState) {
             //revertback
             e.preventDefault();

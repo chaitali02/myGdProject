@@ -120,6 +120,8 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			  result.active = response[i].active;
 			  result.type = response[i].type;
 			  result.startTime;
+			  result.endTime="-NA-";
+			  result.duration="-NA-"
 			  response[i].statusList=response[i].status;
 			  if(response[i].statusList !=null && response[i].statusList.length > 1){
 				for(var j=0;j<response[i].statusList.length;j++){

@@ -496,7 +496,31 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 		// }
 		
 	}
-
+	// var reA = /[^a-zA-Z]/g;
+	// var reN = /[^0-9]/g;
+	// function sortAlphaNum(propName) {
+	// 	return function(a,b){
+	// 		if(isNaN(a[propName])){
+	// 			var aA = a[propName].replace(reA, "");
+	// 			var bA =b[propName].replace(reA, "");	
+	// 		}else{
+	// 			var aA = parseFloat(a[propName]).toFixed(2).replace(reA, "");
+	// 			var bA =parseFloat(b[propName]).toFixed(2).replace(reA, "");	
+	// 		}
+	// 		if(aA === bA) {
+	// 		  if(isNaN(a[propName])){
+	// 				var aN = parseFloat(a[propName].replace(reN, ""), 10);
+	// 				var bN = parseFloat(b[propName].replace(reN, ""), 10);
+	// 			}else{	
+	// 				var aN = parseFloat(a[propName].toFixed(2).replace(reN, ""), 10);
+	// 				var bN = parseFloat(b[propName].toFixed(2).replace(reN, ""), 10);
+	// 			}
+	// 			return aN === bN ? 0 : aN > bN ? 1 : -1;
+	// 		} else {
+	// 			return aA > bA ? 1 : -1;
+	// 		}
+	// 	}
+	// }
 	$scope.getFilterValue=function(data){
     $scope.filterAttribureIdValues=[]
     $scope.selectedAttributeValue=[]
@@ -520,7 +544,10 @@ DatavisualizationModule.controller('ReportDetailController', function ( $q,dagMe
 					filterAttribureIdvalueJSON.dname=data.filterInfo[i].ref.name+"."+data.filterInfo[i].attrName;
 					filterAttribureIdvalueJSON.name=data.filterInfo[i].ref.name
 					filterAttribureIdvalueJSON.attrName=data.filterInfo[i].attrName;
-          filterAttribureIdvalueJSON.values=result[i].data
+					
+					// if(result[i].data.length >0)
+					// result[i].data.sort(sortAlphaNum('value'));
+					filterAttribureIdvalueJSON.values=result[i].data
           filterAttribureIdvalueJSON.values.splice(0,0,defaultvalue)
           $scope.selectedAttributeValue[i]=defaultvalue
           $scope.filterAttribureIdValues[i]=filterAttribureIdvalueJSON
