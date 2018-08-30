@@ -994,16 +994,18 @@ public class SparkExecutor<T> implements IExecutor {
 		List<Attribute> attributes = new ArrayList<Attribute>();
 		int i = 0;
 		while (iter.hasNext()) {
-			StructField sf = iter.next();
-			Attribute attr1 = new Attribute();
-			attr1.setAttributeId(i++);
-			attr1.setType(sf.dataType().typeName());
-			attr1.setName(sf.name());
-			attr1.setDesc(sf.name());
-			attr1.setDispName(sf.name());
-			attr1.setActive("Y");
-			attributes.add(attr1);
-
+			StructField sf = iter.next();			
+			if(!sf.dataType().typeName().equalsIgnoreCase("version")) {
+				Attribute attr1 = new Attribute();
+				attr1.setAttributeId(i++);
+				attr1.setType(sf.dataType().typeName());
+				attr1.setName(sf.name());
+				attr1.setDesc(sf.name());
+				attr1.setDispName(sf.name());
+				attr1.setActive("Y");
+				attr1.setLength(null);
+				attributes.add(attr1);
+			}
 		}
 		if (flag) {
 			Attribute attr2 = new Attribute();
@@ -1013,6 +1015,7 @@ public class SparkExecutor<T> implements IExecutor {
 			attr2.setDesc("version");
 			attr2.setDispName("version");
 			attr2.setActive("Y");
+			attr2.setLength(null);
 			attributes.add(attr2);
 		}
 		if (writeToParquet) {
@@ -2756,6 +2759,12 @@ public class SparkExecutor<T> implements IExecutor {
 			dataType = dataType.replaceAll("type", "");
 		} 
 		
+		String sourceAttrLength = null;
+		if(dataType.contains("(")) {
+			sourceAttrLength = dataType.substring(dataType.indexOf("("));
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
 		if(attribute.getName().equalsIgnoreCase(dType._1())) {	
 			String status = null;
 			if(dataType.toLowerCase().contains(attribute.getType().toLowerCase())) {
@@ -2768,7 +2777,7 @@ public class SparkExecutor<T> implements IExecutor {
 //			}			
 			
 			comparison.setSourceAttribute(dType._1());
-			comparison.setSourceLength("");
+			comparison.setSourceLength(sourceAttrLength != null ? sourceAttrLength : "");
 			comparison.setSourceType(dataType);
 			
 			comparison.setTargetAttribute(attribute.getName());
@@ -2790,7 +2799,7 @@ public class SparkExecutor<T> implements IExecutor {
 			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!targetAttrList.contains(dType._1())) {
 			comparison.setSourceAttribute(dType._1());
-			comparison.setSourceLength("");
+			comparison.setSourceLength(sourceAttrLength != null ? sourceAttrLength : "");
 			comparison.setSourceType(dataType);
 			
 			comparison.setTargetAttribute("");

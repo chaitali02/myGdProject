@@ -121,6 +121,7 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 		  			resultjson.dese=response[i].dese;
 					resultjson.registeredOn=response[i].registeredOn;
 					resultjson.registeredBy=response[i].registeredBy;
+					resultjson.compareStatus=response[i].compareStatus;
 		  			if(response[i].status == "UnRegistered"){
 
 		  				resultjson.status="Not Registered"
@@ -193,15 +194,19 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	  			resultjson.dese=response[i].dese;
 				resultjson.registeredOn=response[i].registeredOn;
 				resultjson.registeredBy=response[i].registeredBy;
+				resultjson.compareStatus=response[i].compareStatus;
 				
 	  			if(response[i].status == "UnRegistered"){
 					resultjson.isDisabled=false;
 	  				resultjson.status="Not Registered"
 	  			}
 	  			else{
-					resultjson.isDisabled=true;
+					resultjson.isDisabled=false;
 	  				resultjson.status=response[i].status
 				}	
+				if(resultjson.compareStatus == "NOCHANGE"){
+					resultjson.isDisabled=true;
+				}
 					resultjson.selected=false;
 					result[i]=resultjson
 

@@ -865,9 +865,7 @@ public class DagServiceImpl {
 						.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter)) {
 					mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					MetaIdentifier mapIdentifier = commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys);
-					logger.info("During create taskexec : After populateRefKeys " );
 					Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapIdentifier.getUuid(), mapIdentifier.getVersion(), mapIdentifier.getType().toString());
-					logger.info("During create taskexec : Beginning map traversal : " + map.getName());
 
 					// Setting the Version for Map Object
 					sourceRef = map.getSource().getRef();
@@ -875,14 +873,12 @@ public class DagServiceImpl {
 					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
 					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
 
-					logger.info("During create taskexec : Beginning attrMap traversal : " );
 					for (AttributeMap attrMap : map.getAttributeMap()) {
 						targetAttrRef = attrMap.getTargetAttr().getRef();
 						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
 						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					}
-					logger.info("During create taskexec : After attrMap traversal : " );
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
 					loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
