@@ -1309,14 +1309,13 @@ public class DatapodServiceImpl {
 		return containsProperty;
 	}
 	
-	public String getMetaStatsByDatapod(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+	public String getMetaStatsByDatapodName(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
 				MetaType.datapod.toString());
 		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(),
 				dsMI.getType().toString());
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
 		String sourceTableName = null;
 		try {
 			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion),
@@ -1328,33 +1327,31 @@ public class DatapodServiceImpl {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		String status = null;
 		Integer modifyCount = 1, deletCount = 1, newCount = 1, noChangeCount = 1;
-		for (CompareMetaData meta : result) {
+		for (CompareMetaData meta : result) 
+		{
 			if (meta.getStatus().equalsIgnoreCase(Compare.MODIFIED.toString())) {
 				map.put(meta.getStatus(), modifyCount);
 				modifyCount++;
+				return meta.getStatus();
 			}
-
 			if (meta.getStatus().equalsIgnoreCase(Compare.DELETED.toString())) {
 				map.put(meta.getStatus(), deletCount);
 				deletCount++;
+				return meta.getStatus();
 			}
 			if (meta.getStatus().equalsIgnoreCase(Compare.NEW.toString())) {
 				map.put(meta.getStatus(), newCount);
 				newCount++;
+				return meta.getStatus();
 			}
 			if (meta.getStatus().equalsIgnoreCase(Compare.NOCHANGE.toString())) {
 				map.put(meta.getStatus(), noChangeCount);
 				noChangeCount++;
-
 			}
 		}
 
-		if (map.keySet().contains(Compare.NEW.toString())) {
-			status = Compare.NEW.toString();
-		} else if (map.keySet().contains(Compare.DELETED.toString())) {
-			status = Compare.DELETED.toString();
-
-		} else if (map.keySet().contains(Compare.MODIFIED.toString())) {
+		if (map.keySet().contains(Compare.NEW.toString()) || map.keySet().contains(Compare.DELETED.toString())
+				|| map.keySet().contains(Compare.MODIFIED.toString())) {
 			status = Compare.MODIFIED.toString();
 		} else {
 			status = Compare.NOCHANGE.toString();
