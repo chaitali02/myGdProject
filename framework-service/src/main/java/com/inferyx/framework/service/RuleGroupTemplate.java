@@ -51,7 +51,7 @@ import com.inferyx.framework.operator.IParsable;
 public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 	
 	@Autowired
-	protected CommonServiceImpl commonServiceImpl;
+	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -78,14 +78,14 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 	/**
 	 * @return the commonServiceImpl
 	 */
-	public CommonServiceImpl getCommonServiceImpl() {
+	public CommonServiceImpl<?> getCommonServiceImpl() {
 		return commonServiceImpl;
 	}
 
 	/**
 	 * @param commonServiceImpl the commonServiceImpl to set
 	 */
-	public void setCommonServiceImpl(CommonServiceImpl commonServiceImpl) {
+	public void setCommonServiceImpl(CommonServiceImpl<?> commonServiceImpl) {
 		this.commonServiceImpl = commonServiceImpl;
 	}
 

@@ -27,7 +27,6 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;

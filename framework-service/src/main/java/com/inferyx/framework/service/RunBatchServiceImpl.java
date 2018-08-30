@@ -40,10 +40,29 @@ public class RunBatchServiceImpl implements Callable<String> {
 	private String type;
 	private RunMode runMode;
 	private BatchExec batchExec;
-	protected SessionContext sessionContext;
+	private SessionContext sessionContext;
+	private DagExecServiceImpl dagExecServiceImpl;
 	
 	static Logger logger = Logger.getLogger(RunBatchServiceImpl.class);
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dagExecServiceImpl
+	 */
+	public DagExecServiceImpl getDagExecServiceImpl() {
+		return dagExecServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param dagExecServiceImpl the dagExecServiceImpl to set
+	 */
+	public void setDagExecServiceImpl(DagExecServiceImpl dagExecServiceImpl) {
+		this.dagExecServiceImpl = dagExecServiceImpl;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -266,4 +285,13 @@ public class RunBatchServiceImpl implements Callable<String> {
 		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
 		return batchExec;
 	}
+	
+	public BatchExec restart() throws Exception {		
+		return batchServiceImpl.restart(batchExec.getUuid(), batchExec.getVersion(), runMode);
+	}
+	
+	public BatchExec kill() throws Exception {		
+		return batchServiceImpl.kill(batchExec.getUuid(), batchExec.getVersion());
+	}
+	
 }
