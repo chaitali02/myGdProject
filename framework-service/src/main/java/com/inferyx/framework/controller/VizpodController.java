@@ -145,25 +145,20 @@ public class VizpodController {
 //	return resultHolder;
 //}
 
-
-
-@RequestMapping(value="/download",method=RequestMethod.GET)
-public HttpServletResponse  download(@RequestParam(value= "vizpodUUID") String vizpodUUID, 
-    		@RequestParam(value= "vizpodVersion") String vizpodVersion,
-    		@RequestParam(value = "format", defaultValue="excel")String format,
-    		@RequestBody(required = false) ExecParams execParams, 
-			@RequestParam(value ="rows",defaultValue="1000") int rows,
-			@RequestParam(value = "download", defaultValue="Y") String download,@RequestParam(value="offset", defaultValue="0") int offset, 
-			@RequestParam(value="limit", defaultValue="200") int limit,
-			@RequestParam(value="sortBy", required=false) String sortBy,@RequestParam(value="order", required=false) String order,
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "vizpodUUID") String vizpodUUID,
+			@RequestParam(value = "vizpodVersion") String vizpodVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestBody(required = false) ExecParams execParams,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value="requestId",required = false) String requestId, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
-    		{
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		vizpodServiceImpl.download(vizpodUUID, vizpodVersion,format,execParams,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
-    	return null;
-   }
+		vizpodServiceImpl.download(vizpodUUID, vizpodVersion, format, execParams, null, 0, rows, response, rows, null,
+				null, null, runMode);
+		return null;
+	}
  
 }
