@@ -549,7 +549,7 @@
                                             <label class="col-md-3 control-label" title="{{data.dname}}">{{data.attrName}}</label>
                                             <div class="col-md-6">
                                                     <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
-                                                    ng-change="onChange()" ng-options="c as c.value for c in data.values track by c.value" >
+                                                    ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value" >
                                                 </select>
                                             </div>
                                         </div>

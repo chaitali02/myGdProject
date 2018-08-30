@@ -98,10 +98,11 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
               },
         
             'responseError': function (rejection) {
+                
                 if (rejection.status == 500) {
                     notify.type = 'error',
-                        notify.title = 'Some Error Occured',
-                        notify.content = "Please try to reload or contact administrator"//"Dashboard Deleted Successfully"
+                    notify.title = 'Some Error Occured',
+                    notify.content = "Please try to reload or contact administrator"//"Dashboard Deleted Successfully"
                     $rootScope.$emit('notify', notify);
                 }
                 else if (rejection.status != 200 && rejection.status != 500 && rejection.status != 419) {

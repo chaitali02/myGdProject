@@ -1,5 +1,5 @@
 InferyxApp=angular.module('InferyxApp');
-//CF:CONSTANT_FOR
+//CF:CONSTANT_FLAG
 InferyxApp.constant('CF_META_TYPES',{
     activity : "activity",algorithm : "algorithm",application : "application",condition : "condition",
     dag : "dag",dagexec : "dagExec",dashboard : "dashboard",dq : "dq",dqexec : "dqExec",
@@ -57,6 +57,17 @@ unpublish:"Unpublish",restore:"Restore",export:"Export"
 InferyxApp.constant('CF_LOV_TYPES',{
 	tag:"TAG"
 });
+
+InferyxApp.constant('CF_SAMPLE',{
+    framework_sample_maxrows:"100000",
+});
+
+InferyxApp.constant('CF_DOWNLOAD',{
+    framework_download_maxrow:"100000",
+    limit_to:6,
+    formate:["excel"],
+});
+
 
 InferyxApp.constant("CF_FILTER",{
 	operator :[{"caption":"EQUAL TO (=)","value":"="},
