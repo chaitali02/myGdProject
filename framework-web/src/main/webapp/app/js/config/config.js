@@ -59,11 +59,14 @@ InferyxApp.constant('CF_LOV_TYPES',{
 });
 
 InferyxApp.constant('CF_SAMPLE',{
-    framework_sample_maxrows:"100000",
+    framework_sample_maxrows:100000,
+    framework_sample_minrows:100,
+    limit_to:6,
 });
 
 InferyxApp.constant('CF_DOWNLOAD',{
-    framework_download_maxrow:"100000",
+    framework_download_maxrow:100000,
+    framework_download_minrows:100,
     limit_to:6,
     formate:["excel"],
 });
