@@ -942,7 +942,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		}*/		
 		
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rowLimit >= maxRows) {
+		if(rowLimit > maxRows) {
 			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
 			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);

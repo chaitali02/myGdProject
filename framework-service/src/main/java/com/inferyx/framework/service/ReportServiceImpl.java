@@ -283,7 +283,14 @@ public class ReportServiceImpl {
 				MetaType.reportExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 				reportExec.getResult().getRef().getVersion());
-	
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "....Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("....Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+		}
+		
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
 	}
 	
