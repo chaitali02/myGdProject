@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 //import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.codehaus.jettison.json.JSONException;
@@ -225,8 +224,6 @@ public class GraphRegister<T> {
 	GraphServiceImpl graphServiceImpl;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	JavaSparkContext javaSparkContext;
 	/*@Autowired
     private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
@@ -631,20 +628,6 @@ public class GraphRegister<T> {
 	 */
 	public void setiUploadDao(IUploadDao iUploadDao) {
 		this.iUploadDao = iUploadDao;
-	}
-
-	/**
-	 * @return the javaSparkContext
-	 */
-	public JavaSparkContext getJavaSparkContext() {
-		return javaSparkContext;
-	}
-
-	/**
-	 * @param javaSparkContext the javaSparkContext to set
-	 */
-	public void setJavaSparkContext(JavaSparkContext javaSparkContext) {
-		this.javaSparkContext = javaSparkContext;
 	}
 
 	/**

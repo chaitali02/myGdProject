@@ -29,13 +29,10 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.StructType;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -61,7 +58,6 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.GraphFilter;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
-import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -90,10 +86,6 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	IVertexDao iVertexDao;
 	@Autowired
 	IEdgeDao iEdgeDao;
-	@Autowired
-	JavaSparkContext javaSparkContext;
-	// @Autowired
-	// HiveContext hiveContext;
 	@Autowired
 	LogServiceImpl logServiceImpl;
 	@Autowired
