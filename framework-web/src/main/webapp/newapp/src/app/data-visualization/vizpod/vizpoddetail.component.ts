@@ -272,6 +272,7 @@ export class VizpodDetailComponent {
             error => console.log("Error :: " + error));
     }
     onSuccessGetOneByUuidAndVersion(response) {
+        debugger
         this.breadcrumbDataFrom[2].caption = response.name;
         this.vizpoddata = response;
         this.uuid = response.uuid;
@@ -296,6 +297,19 @@ export class VizpodDetailComponent {
             }//End For
             this.vizpoddata.tags = tags;
         }//End If
+        let tmp = [];
+        for (let i = 0; i < response.detailAttr.length; i++) {
+            let filterAttributeTags = {};
+            filterAttributeTags["id"] = response.detailAttr[i]["ref"]["uuid"] + "_" + response.detailAttr[i].attributeId;
+            filterAttributeTags["itemName"] = response.detailAttr[i]["ref"]["name"] + "." + response.detailAttr[i]["attrName"];
+            filterAttributeTags["uuid"] = response.detailAttr[i]["ref"]["uuid"];
+            filterAttributeTags["attributeId"] = response.detailAttr[i]["ref"]["attributeId"];
+            tmp[i] = filterAttributeTags;
+        }
+
+
+
+
         this.filterAttributeTags = response.detailAttr;
 
         this.source = response["source"]["ref"].type
@@ -316,7 +330,7 @@ export class VizpodDetailComponent {
     indexOfByMultiplaValue(array, data) {
         let result = -1;
         for (let i = 0; i < array.length; i++) {
-            if (array[i].uuid == data.uuid && array[i].attrId == data.attrId) {
+            if (array[i].uuid == data.uuid && array[i].attributeId== data.attrId) {
                 result = i;
                 break
             }
@@ -480,8 +494,7 @@ export class VizpodDetailComponent {
                 ref["uuid"] = this.keylist[i].uuid
                 ref["type"] = this.keylist[i].type;
                 keyjson["ref"] = ref;
-                keyjson["attributeId"] = this.keylist[i].attributeId.toString();
-                key[i] = keyjson;
+                keyjson["attributeId"] = this.keylist[i].attributeId;
             }
         }
         vizpodjson["keys"] = key
@@ -493,7 +506,7 @@ export class VizpodDetailComponent {
                 ref["uuid"] = this.grouplist[i].uuid
                 ref["type"] = this.grouplist[i].type;
                 groupjson["ref"] = ref;
-                groupjson["attributeId"] = this.grouplist[i].attributeId.toString();
+                groupjson["attributeId"] = this.grouplist[i].attributeId;
                 group[i] = groupjson;
             }
         }
@@ -507,7 +520,7 @@ export class VizpodDetailComponent {
                 ref["type"] = this.valuelist[i].type;
                 valuejson["ref"] = ref;
                 if (this.valuelist[i].type == "datapod") {
-                    valuejson["attributeId"] = this.valuelist[i].attributeId.toString();
+                    valuejson["attributeId"] = this.valuelist[i].attributeId;
                 }
                 value[i] = valuejson;
             }
