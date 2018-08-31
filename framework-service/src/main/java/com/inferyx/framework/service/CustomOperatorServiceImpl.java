@@ -12,24 +12,17 @@ package com.inferyx.framework.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SaveMode;
-import org.python.antlr.ast.operatorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -40,7 +33,6 @@ import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -95,8 +87,6 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	SparkContext sparkContext;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired

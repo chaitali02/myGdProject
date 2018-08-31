@@ -179,7 +179,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
 			String sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
-			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
+			resultSetHolder = exec.executeSql(sql);
 		}
 		
 		// save result
@@ -266,7 +266,12 @@ public List<String> getColumnNameList(Object source, ParamListHolder holder ){
 					+" FROM "
 					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
+		} else {
+			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
+					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+					+" FROM "
+					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
+					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		}
-		return null;
 	}
 }

@@ -12,6 +12,8 @@ package com.inferyx.framework.connector;
 
 import java.io.IOException;
 
+import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,9 +28,22 @@ public class SparkConnector implements IConnector{
 	SparkInfo sparkInfo;
 	/*@Autowired
 	HiveContext hiveContext;*/
-	@Autowired
-	SparkSession sparkSession;
-
+//	@Autowired @Lazy
+	private SparkSession sparkSession;
+	
+	private SparkSession getSparkSession() throws IOException {
+		if (this.sparkSession == null) {
+			synchronized (this) {
+				if (this.sparkSession == null) {
+					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
+					SparkContext sparkContext = new SparkContext(sparkConf);
+					this.sparkSession = new SparkSession(sparkContext);
+				}
+			}
+		} 
+		return this.sparkSession;
+	}
+	
 	@Override
 	public ConnectionHolder getConnection() throws IOException {
 		ConnectionHolder conHolder = new ConnectionHolder();
@@ -37,7 +52,7 @@ public class SparkConnector implements IConnector{
 		SparkContext sparkContext = new SparkContext(sparkConf);
 		HiveContext hiveContext = new HiveContext(sparkContext);*/
 		conHolder.setType(ExecContext.spark.toString());
-		conHolder.setStmtObject(sparkSession);
+		conHolder.setStmtObject(getSparkSession());
 		return conHolder;
 	}
 

@@ -164,9 +164,9 @@
 		mongo-template-ref="mongoTemplate" />
 
 	<!-- Initialize spark context -->
-	<bean id="sparkContext" class="org.apache.spark.SparkContext">
+	<!-- <bean id="sparkContext" class="org.apache.spark.SparkContext">
 		<constructor-arg value="#{sparkInfo.getSparkConfiguration()}" />
-	</bean>
+	</bean> -->
 
 	<bean id="dbConfiguration"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -182,19 +182,19 @@
 	</bean>
 
 	<!-- Initialize Hive Context scope="request" -->
-	<bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
+	<!-- <bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize Spark Session scope="request" -->
-	<bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
+	<!-- <bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize SQL Context scope="request" -->
-	<bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
+	<!-- <bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<bean id="parser" class="com.inferyx.framework.parser.DagParser">
 	</bean>
@@ -240,18 +240,21 @@
 		<!-- <constructor-arg ref="miUtil"/> <constructor-arg ref="dataSourceFactory"/> 
 			<constructor-arg ref="connFactory"/> <constructor-arg ref="hdfsInfo" /> -->
 	</bean>
+	
+	<bean id="sparkConnector" class="com.inferyx.framework.connector.SparkConnector">
+	</bean>
 
 	<bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
-		<constructor-arg ref="sparkSession" />
+		<constructor-arg ref="sparkConnector" />
 	</bean>
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
 	
-	<bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
+	<!-- <bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 
 	<bean id="graphFlag" class="com.inferyx.framework.common.GraphInfo">
 		<property name="mode" value="${framework.graph.enabled}"></property>
@@ -387,7 +390,7 @@
 
 	<bean id="registerGraph" class="com.inferyx.framework.register.GraphRegister">
 		<property name="graphFlag" ref="graphFlag" />
-		<property name="javaSparkContext" ref="javaSparkContext" />
+		<!-- <property name="javaSparkContext" ref="javaSparkContext" /> -->
 		<!-- <property name="hiveContext" ref="hiveContext" /> -->
 	</bean>
 	

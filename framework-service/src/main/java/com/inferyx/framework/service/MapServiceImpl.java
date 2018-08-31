@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.SQLContext;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -41,7 +40,6 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -82,8 +80,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	IMapDao iMapDao;
 	@Autowired
 	IMapExecDao iMapExecDao;
-	@Autowired
-	private SQLContext sqlContext;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired

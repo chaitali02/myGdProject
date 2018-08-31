@@ -13,20 +13,12 @@ package com.inferyx.framework.service;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.storage.StorageLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.controller.CommonController;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -38,8 +30,6 @@ public class SparkServiceImpl implements java.io.Serializable {
 
 	/*@Autowired
 	private HiveContext hiveContext;*/
-	@Autowired
-	SparkSession sparkSession;
 	@Autowired
 	SparkExecutor executor;
 	@Autowired

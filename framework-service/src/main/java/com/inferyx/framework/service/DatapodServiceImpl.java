@@ -1340,17 +1340,14 @@ public class DatapodServiceImpl {
 			if (meta.getStatus().equalsIgnoreCase(Compare.MODIFIED.toString())) {
 				map.put(meta.getStatus(), modifyCount);
 				modifyCount++;
-				return meta.getStatus();
 			}
 			if (meta.getStatus().equalsIgnoreCase(Compare.DELETED.toString())) {
 				map.put(meta.getStatus(), deletCount);
 				deletCount++;
-				return meta.getStatus();
 			}
 			if (meta.getStatus().equalsIgnoreCase(Compare.NEW.toString())) {
 				map.put(meta.getStatus(), newCount);
 				newCount++;
-				return meta.getStatus();
 			}
 			if (meta.getStatus().equalsIgnoreCase(Compare.NOCHANGE.toString())) {
 				map.put(meta.getStatus(), noChangeCount);
