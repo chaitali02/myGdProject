@@ -173,19 +173,20 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <div class="col-md-10 col-sm-10">
-                                                <!-- <div class="col-md-1 col-sm-1" style="margin-left:-3px;">
-                                                    <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
-                                                </div> -->
-                                                <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input>
-                                                <!-- <div class="chip" ng-repeat=" filterdata in filterTag">
-                                                     {{filterdata.text}}
-                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index)">&times;</span>
-                                                  </div> -->
-                                            </div>
-                                            <div class="col-md-1 col-sm-1" style="margin-left:-22px;">
+                                            <div class="col-md-1 col-sm-1" style="margin-left:-3px;">
                                                 <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
                                             </div>
+                                            <div class="col-md-10 col-sm-10">
+                                                
+                                                <!-- <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input> -->
+                                                <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                     {{filterdata.text}}
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index)">&times;</span>
+                                                  </div>
+                                            </div>
+                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:-22px;">
+                                                <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">

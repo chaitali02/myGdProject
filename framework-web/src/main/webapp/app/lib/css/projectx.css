@@ -1062,7 +1062,7 @@ transition: right 1m
 }
 
 /*filter Chips*/
-/* .chip {
+.chip {
   display: inline-block;
   padding: 0 25px;
   height: 42px;
@@ -1086,4 +1086,4 @@ transition: right 1m
 
 .chipclosebtn:hover {
   color: #000;
-} */
+}
