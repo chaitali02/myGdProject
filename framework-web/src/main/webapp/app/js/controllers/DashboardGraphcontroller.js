@@ -401,6 +401,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.vizpodbody = {};
   $scope.filterListarray = [];
   $scope.hideIcon = true
+  var notify = {
+    type: 'info',
+    title: 'Info',
+    content: '',
+    timeout: 3000 //time in ms
+ };
   $scope.sectionRows = [];
   $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.download={};
@@ -431,6 +437,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
     }
   }
+  
   $scope.filteredRows = [];
   $scope.getGridStyleDetail = function () {
     var style = {

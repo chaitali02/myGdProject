@@ -508,6 +508,12 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
     };
     
     $scope.downloadMoldeResult = function() {
+     if($stateParams.type =="train"){
+	     if($scope.modelData.customFlag =="N"){
+	         $scope.downloadTrainData();
+	     return ;
+       } 
+	  }
         $('#downloadSample').modal({
           backdrop: 'static',
           keyboard: false

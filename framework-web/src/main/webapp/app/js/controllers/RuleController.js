@@ -2169,6 +2169,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
 		var uuid = $scope.download.data.uuid;
 		var version = $scope.download.data.version;
 		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
       url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows,
@@ -2176,7 +2177,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     }).success(function (data, status, headers) {
       headers = headers();
       $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-			$('#downloadSample').modal("hide"); 
+			
       var filename = headers['filename'];
       var contentType = headers['content-type'];
       var linkElement = document.createElement('a');

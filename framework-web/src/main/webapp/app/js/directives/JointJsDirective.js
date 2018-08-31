@@ -235,13 +235,14 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
          }
        }
        $scope.submitDownload=function(){
+    	  $('#downloadSampleCommon').modal("hide"); 
         $http({
           method: 'GET',
           url: $scope.download.url+"&rows="+$scope.download.rows,
           responseType: 'arraybuffer'
         }).success(function(data, status, headers) {
           headers = headers(); 
-          $('#downloadSampleCommon').modal("hide"); 
+        
           $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
           var filename = headers['filename'];
           var contentType = headers['content-type']; 
