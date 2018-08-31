@@ -406,7 +406,14 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	public HttpServletResponse download(String uuid, String version, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
-
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit >= maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
+		
 		List<Map<String, Object>> results =getOperatorResults(uuid,version,rowLimit);
 		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
 	

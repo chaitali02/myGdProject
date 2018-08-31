@@ -750,6 +750,14 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	public HttpServletResponse download(String execUUID, String execVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy,String type, String order, String requestId,
 			RunMode runMode) throws Exception {
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit >= maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
+		
 		if(type.equalsIgnoreCase(MetaType.predictExec.toString())) {
 			List<Map<String, Object>> results =getPredictResults(execUUID, execVersion, rowLimit);
 			response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.predict,execUUID,execVersion)));

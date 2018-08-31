@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -792,6 +793,13 @@ public class RuleServiceImpl extends RuleTemplate {
 	public HttpServletResponse download(String ruleExecUUID, String ruleExecVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit >= maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
 		
 		List<Map<String, Object>> results =getRuleResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(ruleExecUUID, ruleExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec,ruleExecUUID,ruleExecVersion)));

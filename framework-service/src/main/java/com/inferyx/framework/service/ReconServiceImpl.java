@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
@@ -221,6 +222,13 @@ public class ReconServiceImpl extends RuleTemplate {
 	public HttpServletResponse download(String reconExecUUID, String reconExecVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit >= maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
 		
 		List<Map<String, Object>> results =getReconResults(reconExecUUID,reconExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(reconExecUUID, reconExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec,reconExecUUID,reconExecVersion)));
