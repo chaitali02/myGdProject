@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
@@ -83,12 +82,10 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
@@ -140,8 +137,6 @@ public class ModelServiceImpl {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	SparkContext sparkContext;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
