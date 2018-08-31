@@ -180,7 +180,7 @@
                                                 <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input>
                                                 <!-- <div class="chip" ng-repeat=" filterdata in filterTag">
                                                      {{filterdata.text}}
-                                                    <span class="chipclosebtn" onclick="this.parentElement.style.display='none'">&times;</span>
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index)">&times;</span>
                                                   </div> -->
                                             </div>
                                             <div class="col-md-1 col-sm-1" style="margin-left:-22px;">

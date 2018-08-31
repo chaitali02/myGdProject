@@ -487,6 +487,18 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 			keyboard: false
 		});
 	}
+
+	$scope.onChipsRemove=function(index){
+		$scope.filterTag.splice(index,1);
+		$scope.selectedAttributeValue[index] = null;
+			var noSelect = { "id": null, "value": "-select-" }
+			setTimeout(function () {
+				$scope.selectedAttributeValue[index] = noSelect;
+				$scope.applyFilter();
+			}, 100);
+
+	}
+
 	$scope.onTagRemove = function (e) {
 		console.log(e);
 		console.log(JSON.stringify($scope.filterTag));
