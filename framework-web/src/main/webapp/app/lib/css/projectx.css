@@ -1060,3 +1060,30 @@ transition: right 1m
  .ui-select-bootstrap .ui-select-choices-row>span{
   padding: 3px 4px !important;
 }
+
+/*filter Chips*/
+/* .chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 42px;
+  font-size: 15px;
+  line-height: 40px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+  margin-bottom: 10px;
+}
+
+
+
+.chipclosebtn {
+  padding-left: 10px;
+  color: #888;
+  font-weight: bold;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.chipclosebtn:hover {
+  color: #000;
+} */

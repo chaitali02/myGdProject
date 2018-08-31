@@ -1318,7 +1318,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 });
 
 
-DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService,privilegeSvc) {
+DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService,privilegeSvc,CF_DOWNLOAD) {
 
   $scope.select = $stateParams.type;
   $scope.type = {
@@ -1341,6 +1341,12 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.bigCurrentPage = 1;
   $scope.testgrid = false;
   $scope.filteredRows = [];
+  $scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
   var notify = {
     type: 'success',
     title: 'Success',
@@ -1686,19 +1692,19 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     }
     $scope.refreshRuleGroupExecFunction();
   }
-  $scope.downloadFile = function (data) {
-    if($scope.isD3RuleEexecGraphShow){
-      return false;
-    }
-    var uuid = data.uuid;
-    var version = data.version;
-    var url = $location.absUrl().split("app")[0]
+
+  $scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
     $http({
       method: 'GET',
-      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version,
+      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version+"&rows="+$scope.download.rows,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();
+      $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			$('#downloadSample').modal("hide"); 
       var filename = headers['filename'];
       var contentType = headers['content-type'];
 
@@ -1723,5 +1729,19 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     }).error(function (data) {
       console.log(data);
     });
+	}
+
+
+  $scope.downloadFile = function (data) {
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
+    $scope.download.data=data;
+    $('#downloadSample').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+
+   
   };
 }); //End DQRuleResultController

@@ -256,13 +256,19 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
 });
 
 
-DatascienceModule.controller('ResultModelController', function($filter, $state, $location,$http,$stateParams,dagMetaDataService, $rootScope, $scope, ModelService) {
+DatascienceModule.controller('ResultModelController', function($filter, $state, $location,$http,$stateParams,dagMetaDataService, $rootScope, $scope, ModelService,CF_DOWNLOAD) {
   //  $scope.toClipboard = ngClipboard.toClipboard;
     $scope.isShowPMML=false;
     $scope.caption = dagMetaDataService.elementDefs[$stateParams.type].caption;
     $scope.type=$stateParams.type
     $scope.autoRefreshCounterResult=05;
     $scope.autoRefreshResult=false;
+    $scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
     $scope.pagination={
         currentPage:1,
         pageSize:10,
@@ -500,16 +506,23 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             console.log();
         });
     };
-
+    
     $scope.downloadMoldeResult = function() {
+        $('#downloadSample').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+    }
+
+    $scope.submitDownload = function() {
         var baseurl = $location.absUrl().split("app")[0];
         var url;
        
         if($stateParams.type =="predict"){
-            url=baseurl+"model/predict/download?action=view&predictExecUUID="+$scope.modelDetail.uuid+"&predictExecVersion="+$scope.modelDetail.version+"&mode=BATCH";
+            url=baseurl+"model/predict/download?action=view&predictExecUUID="+$scope.modelDetail.uuid+"&predictExecVersion="+$scope.modelDetail.version+"&mode=BATCH"+"&rows="+$scope.download.rows;
         }
         else if($stateParams.type =="simulate"){
-            url=baseurl+"model/simulate/download?action=view&simulateExecUUID="+$scope.modelDetail.uuid+"&simulateExecVersion="+$scope.modelDetail.version+"&mode=''";
+            url=baseurl+"model/simulate/download?action=view&simulateExecUUID="+$scope.modelDetail.uuid+"&simulateExecVersion="+$scope.modelDetail.version+"&mode=''"+"&rows="+$scope.download.rows;
         }
         else if($stateParams.type =="train"){
             if($scope.modelData.customFlag =="N"){
@@ -518,15 +531,15 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             } 
             url=baseurl+"model/train/download?action=view&trainExecUUID="+$scope.modelDetail.uuid+"&trainExecVersion="+$scope.modelDetail.version+"&mode=''";
         }
+        $('#downloadSample').modal("hide");
         $http({method : 'GET',
             url : url,
             responseType : 'arraybuffer'
             }).success(
             function(data, status, headers) {
+                $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
                 headers = headers();
-
                console.log(typeof(data))
- 
                 var filename = headers['filename'];
                 var contentType = headers['content-type'];
                 var linkElement = document.createElement('a');
@@ -536,7 +549,6 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
                     });
                     var url = window.URL.createObjectURL(blob);
                     linkElement.setAttribute('href', url);
-                    //linkElement.setAttribute("download", $scope.modelDetail.uuid+".xls");
                     linkElement.setAttribute("download",filename);
                     var clickEvent = new MouseEvent(
                         "click", {
@@ -552,16 +564,17 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             console.log();
         });
     };
+
     $scope.downloadTrainData=function(){
-        
         var linkElement = document.createElement('a');
         try {
-            var blob = new Blob([ $scope.modelresult ], {
+            var jsonobj = angular.toJson($scope.modelresult, true);
+            var blob = new Blob([ jsonobj ], {
                 type: "text/xml"
             });
             var url = window.URL.createObjectURL(blob);
             linkElement.setAttribute('href', url);
-            linkElement.setAttribute("download", $scope.modelDetail.uuid+".txt");
+            linkElement.setAttribute("download", $scope.modelDetail.uuid+".json");
             var clickEvent = new MouseEvent(
                 "click", {
                     "view" : window,

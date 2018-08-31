@@ -631,7 +631,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 });
 
-ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService,privilegeSvc) {
+ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService,privilegeSvc,CF_DOWNLOAD) {
 	$scope.select = $stateParams.type;
 	$scope.type = { text: $scope.select == 'profilegroupexec' ? 'profilegroup' : 'profile' };
 	$scope.showprogress = false;
@@ -641,6 +641,12 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.isD3RuleEexecGraphShow = false;
 	$scope.isD3RGEexecGraphShow = false;
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
+	$scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
 	// ui grid
 	var notify = {
 		type: 'success',
@@ -864,23 +870,22 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.toggleZoom = function () {
 		$scope.showZoom = !$scope.showZoom;
 	}
-
-	$scope.downloadFile = function (data) {
-        if($scope.isD3RuleEexecGraphShow){
-			return false;
-		}
-		var uuid = data.uuid;
-		var version = data.version;
-		var url = $location.absUrl().split("app")[0]
+   
+	$scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide");
 		$http({
 			method: 'GET',
-			url: url + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version,
+			url: url + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version+"&rows="+$scope.download.rows,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
+			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+		 
 			headers = headers();
 			var filename = headers['filename'];
 			var contentType = headers['content-type'];
-
 			var linkElement = document.createElement('a');
 			try {
 				var blob = new Blob([data], {
@@ -901,6 +906,18 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		}).error(function (data) {
 			console.log(data);
 		});
+	}
+	
+	$scope.downloadFilePofile = function (data) {
+        if($scope.isD3RuleEexecGraphShow){
+			return false;
+		}
+		$scope.download.data=data;
+        $('#downloadSample').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+
 	};
 
 });
