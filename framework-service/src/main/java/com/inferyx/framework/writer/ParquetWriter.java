@@ -18,7 +18,6 @@ import java.util.List;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,6 @@ public class ParquetWriter implements IWriter {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ExecutorFactory execFactory;
-	@Autowired
-	SparkSession sparkSession;
 	
 	@Override
 	public void write(ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode) throws IOException {

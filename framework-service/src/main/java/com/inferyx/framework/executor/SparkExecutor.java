@@ -142,8 +142,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	SQLContext sqlContext;
-	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
@@ -152,8 +150,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	SparkContext sparkContext;
-	@Autowired
 	ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
 	private ConnectionFactory connFactory;
@@ -161,8 +157,6 @@ public class SparkExecutor<T> implements IExecutor {
 	Engine engine;
 	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
-	private SparkSession sparkSession;
 	@Autowired
 	private MetadataUtil daoRegister;
 	@Autowired
@@ -261,6 +255,14 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @throws AnalysisException
 	 */
 	public ResultSetHolder createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = null;
+		try {
+			sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
 //		dataset.show(false);
 		dataset.createOrReplaceTempView(tableName);
@@ -424,6 +426,7 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
+		SparkSession sparkSession;
 		if (obj instanceof SparkSession) {
 			sparkSession = (SparkSession) conHolder.getStmtObject();
 			// dfTemp.registerTempTable("temp");
@@ -894,6 +897,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv")
 												.option("dateFormat", "dd-MM-yyyy")
 												.option("inferSchema", "false")
@@ -985,6 +990,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public List<Attribute> fetchAttributeList(String csvFileName, String parquetDir, boolean flag,
 			boolean writeToParquet, String clientContext) throws Exception {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
 				.option("header", "true").load(csvFileName);
 		df.printSchema();
@@ -1034,6 +1041,8 @@ public class SparkExecutor<T> implements IExecutor {
 		String columnHeaderStr = null;
 		StringBuilder columnName = new StringBuilder();
 
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		// Execute SQL
 		logger.info("inside SparkExecutor for the quiery: " + sql);
 		Dataset<Row> df = sparkSession.sql(sql).coalesce(10);
@@ -1376,6 +1385,14 @@ public class SparkExecutor<T> implements IExecutor {
 */
 	@Override
 	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = null;
+		try {
+			sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		StructField[] fieldArray = new StructField[features.size()+1];
 		int count = 0;
 		
@@ -1444,6 +1461,14 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		Dataset<Row> df = null;
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = null;
+		try {
+			sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		df = sparkSession.sqlContext().range(0, numIterations);
 		df.createOrReplaceTempView(tableName);
 		
@@ -1466,6 +1491,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
 		if(isDistribution)
 			df = df.withColumnRenamed(df.columns()[1], fieldArray[0]);
@@ -1494,6 +1521,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
 		VectorAssembler va = new VectorAssembler();
 		Dataset<Row> transformedDf = null;
@@ -1651,6 +1680,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
@@ -1687,7 +1718,7 @@ public class SparkExecutor<T> implements IExecutor {
 //			dfTask.show(true);
 //			dfTask.cache();
 
-			sqlContext.registerDataFrameAsTable(predictionDf, "tempPredictResult");
+			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
 //			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 //			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			ResultSetHolder rsHolder = new ResultSetHolder();
@@ -1735,6 +1766,8 @@ public class SparkExecutor<T> implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
@@ -1899,6 +1932,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext) throws IOException {
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
 		df = df.withColumnRenamed(df.columns()[targetColIndex], targetColName);
 		df.printSchema();
@@ -1920,6 +1955,8 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		/*
 		 * map: key=oldColName, value=newColName
 		 */
@@ -1966,6 +2003,8 @@ public class SparkExecutor<T> implements IExecutor {
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
 		String sql = "SELECT * FROM " + tableName /*+ " LIMIT 100"*/;
 		Dataset<Row> df1 = executeSql(sql, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
 		VectorAssembler va = new VectorAssembler();
 		Dataset<Row> transformedDf = null;
@@ -1994,7 +2033,7 @@ public class SparkExecutor<T> implements IExecutor {
 		String targetTableName = null;
 		if(targetDp != null)
 			targetTableName = modelServiceImpl.getTableNameByMetaObject(targetDp);
-		sqlContext.registerDataFrameAsTable(predictedDf, "tempPredictResult");
+		sparkSession.sqlContext().registerDataFrameAsTable(predictedDf, "tempPredictResult");
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setType(ResultType.dataframe);
 		rsHolder.setDataFrame(predictedDf);
@@ -2014,6 +2053,8 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName, Datapod datapod) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> df = sparkSession.read()
 									  .format("com.databricks.spark.csv")
 									  .option("dateFormat", "dd-MM-yyyy")
@@ -2091,6 +2132,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(false);
 		df.printSchema();
 		try {
@@ -2584,6 +2627,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException {
 		StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		StructType schema = new StructType(fieldArray);	
 		if(locationDatapod.getAttributes().size() > 4) {
 			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");

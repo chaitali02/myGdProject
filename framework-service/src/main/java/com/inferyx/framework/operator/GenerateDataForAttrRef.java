@@ -179,7 +179,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
 			String sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
-			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
+			resultSetHolder = exec.executeSql(sql);
 		}
 		
 		// save result

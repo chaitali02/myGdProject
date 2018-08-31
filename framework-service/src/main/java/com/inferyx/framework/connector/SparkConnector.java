@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.SparkInfo;
@@ -26,7 +27,7 @@ public class SparkConnector implements IConnector{
 	SparkInfo sparkInfo;
 	/*@Autowired
 	HiveContext hiveContext;*/
-	@Autowired
+	@Autowired @Lazy
 	SparkSession sparkSession;
 
 	@Override
