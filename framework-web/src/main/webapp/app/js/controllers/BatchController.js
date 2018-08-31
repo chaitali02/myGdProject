@@ -1,7 +1,7 @@
 BatchModule = angular.module('BatchModule');
 
 BatchModule.controller('DetailBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES) {
-  
+ 
   $scope.select = 'batch';
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
@@ -44,6 +44,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.batch.versions = []
   $scope.isDependencyShow = false;
   $scope.privileges = [];
+  $scope.scheduleTableArray;
   $scope.privileges = privilegeSvc.privileges[CF_META_TYPES.batch] || [];
   $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
   $scope.$on('privilegesUpdated',function (e,data) {
@@ -109,7 +110,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       });
    }
   }
- 
+  $scope.addRow=function(){
+    $scope.scheduleTableArray=[{}]
+  }
+
   $scope.getAllLatest=function(type){
     BatchService.getAllLatest(type).then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {

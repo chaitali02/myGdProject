@@ -25,7 +25,8 @@
     </div>
     <br>
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div  options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="batchDetail" comment-panel-directive></div>
+    <div options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="batchDetail"
+      comment-panel-directive></div>
 
     <div class="portlet light bordered" id="form_wizard_1">
       <div class="portlet-title">
@@ -35,24 +36,22 @@
         </div>
         <div class="actions">
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-            data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
+            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(batchDetail.uuid,batchDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
-            data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
-            data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
+          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
+            tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
           </a>
           <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
             title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()"title="Close" data-toggle="tooltip" data-placement="top"
+          <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
             tooltip>
             <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
@@ -69,18 +68,19 @@
           </div>
           <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="batchDetail.uuid" version="batch.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit()" ng-show="showForm" prevent-enter-submit>
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit()" ng-show="showForm"
+          prevent-enter-submit>
           <div class="form-wizard">
-            
+
             <div class="form-body">
-             
+
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="control-label col-md-3">UUID </label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" ng-model="batchDetail.uuid" ng-disabled="true">
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label class="control-label col-md-3">Name
                   <span class="required" aria-required="true"> * </span>
@@ -89,7 +89,7 @@
                   <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="batchDetail.name" required="">
                 </div>
               </div>
-              
+
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="col-md-3 control-label">Version</label>
                 <div class="col-md-6">
@@ -99,14 +99,14 @@
                   </select>
                 </div>
               </div>
-              
+
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="control-label col-md-3">Created By</label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" ng-model="batchDetail.createdBy.ref.name" ng-disabled="true">
                 </div>
               </div>
-              
+
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="control-label col-md-3">Created On</label>
                 <div class="col-md-6">
@@ -118,11 +118,11 @@
                 <label class="control-label col-md-3">Tag</label>
                 <div class="col-md-6">
                   <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                    add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                     </auto-complete>
-                </tags-input>
+                  </tags-input>
                 </div>
               </div>
 
@@ -137,14 +137,13 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6">
                   <div class="btn-group" ng-init="batchDetail.active='Y'">
-                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uib-btn-radio="'Y'">Yes</label>
-                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uib-btn-radio="'N'" uncheckable>No</label>
+                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'"
+                      uncheckable>No</label>
                   </div>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -177,8 +176,8 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <tags-input class="tag-scroll" min-length="1" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true"
-                    ng-focus="onTagFocuse()" required="">
+                  <tags-input class="tag-scroll" min-length="1" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
+                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" required="">
                     <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                       load-on-empty="true" required="">
                     </auto-complete>
@@ -189,7 +188,7 @@
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label class="col-md-3 control-label">Run Immediately ?</label>
                 <div class="col-md-9">
@@ -216,6 +215,89 @@
                     <div class="bounce3"></div>
                   </span>
                 </div>
+              </div>
+            </div>
+
+            <div class="x_title">
+              <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
+              <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addRow()" ng-disabled="{{mode}}"></button>
+              <h4>
+                <strong>Details</strong>
+              </h4>
+              <hr>
+            </div>
+            <div>
+              <div class="">
+                <table class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center; Vertical-align: middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllAttributeRow" ng-change="checkAllAttributeRow()"
+                            ng-disabled="{{mode}}" />
+                        </span>
+                      </th>
+                      <th style="width:20%;text-align: center">Name</th>
+                      <th style="width:20%;text-align: center">Start Time</th>
+                      <th style="width:20%;text-align: center">End Time</th>
+                      <th style="width:20%;text-align: center">Frequency Type</th>
+                      <th style="width:20%;text-align: center">Frequency Detail</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody >
+                    <tr ng-repeat="data in scheduleTableArray">
+                      <td style="text-align: center; Vertical-align: middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input class="form-control" ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
+                          />
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                          <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}"  disable-validation-message=""
+                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                            <div class="col-md-8 col-sm-9 col-xs-9">
+                                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                  <div class="input-group date">
+                                    <span style="padding-right: 5px; text-align: right;" class="form-control">{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}}</span>
+                                    <span class="input-group-addon">
+                                      <i class="fa fa-calendar"></i>
+                                    </span>
+                                  </div>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                  <datetimepicker data-ng-model="searchForm.startdate" data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                    data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                </ul>
+                              </div>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                          <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}"  disable-validation-message=""
+                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                            ng-disabled="{{mode}}" class="form-control" ></select>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                          <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}"  disable-validation-message=""
+                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
