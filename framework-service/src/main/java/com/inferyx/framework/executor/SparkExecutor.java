@@ -1732,7 +1732,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df.show(false);
+		df.show(false);
 		List<String> partitionColList = new ArrayList<>();
 		if(targetDatapod != null) {
 			for(Attribute attribute : targetDatapod.getAttributes()) {
