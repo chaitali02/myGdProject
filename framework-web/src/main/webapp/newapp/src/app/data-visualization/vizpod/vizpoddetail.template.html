@@ -153,7 +153,7 @@
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
                 {{filterAttributeTags | json}}
-                <angular2-multiselect [data]="dropdownList" [(ngModel)]="filterAttributeTags" [settings]="dropdownSettings"
+                <angular2-multiselect [data]="dropdownList" [(ngModel)]="vizpoddata.detailAttr" [settings]="dropdownSettings"
                   name="attributeInfo">
                 </angular2-multiselect>
               </div>
