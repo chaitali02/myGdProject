@@ -14,7 +14,6 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 			var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
 		});  
 	}
 	else if($stateParams.mode =='false'){
@@ -67,8 +66,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
 		});
-	};
-    $scope.getLovByType();
+  };
+  
+  $scope.getLovByType();
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -301,7 +301,8 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
     }
     return style;
   }
-
+  $scope.batchexecDetail={};
+  $scope.batchexecDetail.name=$stateParams.name
   $scope.gridOptions ={
     // paginationPageSizes: [10, 25, 50, 75],
     // paginationPageSize: 10,

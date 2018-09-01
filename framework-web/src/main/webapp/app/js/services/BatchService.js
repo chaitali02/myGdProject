@@ -119,7 +119,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			  result.createdOn = response[i].createdOn;
 			  result.active = response[i].active;
 			  result.type = response[i].type;
-			  result.startTime;
+			  result.startTime="-NA-";
 			  result.endTime="-NA-";
 			  result.duration="-NA-"
 			  response[i].statusList=response[i].status;
