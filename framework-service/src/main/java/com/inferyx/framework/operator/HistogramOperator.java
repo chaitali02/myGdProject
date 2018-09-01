@@ -115,6 +115,7 @@ public class HistogramOperator implements IOperator {
 			execParams.getOtherParams().put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", locationTableName);
 		}
 		
+		
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());		
 		
