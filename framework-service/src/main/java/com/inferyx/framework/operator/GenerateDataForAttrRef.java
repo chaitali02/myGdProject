@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -178,7 +179,12 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
-			String sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
+			String sql = null;
+			if(exec instanceof SparkExecutor<?> && !locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				sql = rangeSql;
+			} else {
+				sql = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, rangeSql);
+			}
 			resultSetHolder = exec.executeSql(sql);
 		}
 		

@@ -197,6 +197,7 @@ public class GenerateDataOperator implements IOperator {
 				|| appDatasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
 			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
+			rsHolder.setTableName(tableName);
 			rsHolder = sparkExecutor.persistDataframe(rsHolder, locationDpDatasource, locationDatapod);
 		}
 		rowObjList = null;
