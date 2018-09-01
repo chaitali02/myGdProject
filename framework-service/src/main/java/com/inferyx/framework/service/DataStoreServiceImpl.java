@@ -640,6 +640,12 @@ public class DataStoreServiceImpl {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
 			throw new RuntimeException("Datastore is not available for this datapod");
 		}
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+		}
 		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(),ds.getVersion(),null,0,rows,null,rows,null,null,null, runMode);
 		return results;
 
@@ -1491,6 +1497,14 @@ public class DataStoreServiceImpl {
 			logger.error("Datastore is not available for this datapod");
 			throw new Exception();
 		}
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
+		
 		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(), ds.getVersion(), null,
 				0, limit, response, rowLimit, null, null, null, runMode);
 		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));

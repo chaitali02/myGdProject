@@ -1125,6 +1125,14 @@ public class DatapodServiceImpl {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
 			throw new RuntimeException("Datastore is not available for this datapod");
 		}
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+		}
+		
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
 		response = commonServiceImpl.download(uuid, version, format, offset, rowLimit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));

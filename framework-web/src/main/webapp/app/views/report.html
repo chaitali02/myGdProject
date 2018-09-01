@@ -173,13 +173,20 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <div class="col-md-10 col-sm-10">
-                                                <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input>
-
-                                            </div>
-                                            <div class="col-md-1 col-sm-1" style="margin-left:-22px;">
+                                            <div class="col-md-1 col-sm-1" style="margin-left:-3px;">
                                                 <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
                                             </div>
+                                            <div class="col-md-10 col-sm-10">
+                                                
+                                                <!-- <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input> -->
+                                                <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                     {{filterdata.text}}
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index)">&times;</span>
+                                                  </div>
+                                            </div>
+                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:-22px;">
+                                                <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
@@ -211,9 +218,6 @@
                             </div>
                         </div>
                         <div class="form-body" data-ng-show="showForm">
-
-
-
                             <div class="form-body" data-ng-show="showForm">
                                 <div class="form-body">
                                     <div class="form-group" ng-show="report.uuid">
@@ -574,4 +578,48 @@
                 </div>
             </div>
         </div>
+
+            
+    <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content" style="resize: both;overflow: auto;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Download Param</h4>
+            </div>
+            <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+                <div class="modal-body" style="padding-top:0px">
+                <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                    <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Rows</label>
+                            <div class="col-md-8">
+                            <input type="number" limit-to="{{download.limit_to}}" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
+                                required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Formate</label>
+                            <div class="col-md-8">
+                            <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                            </select>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <!--End Model Body-->
+                <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                <button type="submit" class="btn green">Submit</button>
+                </div>
+            </form>
+            </div>
+        </div>
     </div>
+</div>

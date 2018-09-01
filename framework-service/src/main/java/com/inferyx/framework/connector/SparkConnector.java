@@ -20,12 +20,16 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.SparkInfo;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.register.UDFRegister;
 
 @Component
 public class SparkConnector implements IConnector{
 	
 	@Autowired
 	SparkInfo sparkInfo;
+	@Autowired
+	UDFRegister registerUDF;
+	
 	/*@Autowired
 	HiveContext hiveContext;*/
 //	@Autowired @Lazy
@@ -37,7 +41,8 @@ public class SparkConnector implements IConnector{
 				if (this.sparkSession == null) {
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
 					SparkContext sparkContext = new SparkContext(sparkConf);
-					this.sparkSession = new SparkSession(sparkContext);
+					this.sparkSession = new SparkSession(sparkContext).builder().enableHiveSupport().getOrCreate();
+					registerUDF.register(sparkSession);
 				}
 			}
 		} 

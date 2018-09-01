@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IFilterDao;
@@ -87,6 +88,14 @@ public class DatasetServiceImpl {
 	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+		}
+		
 		DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(datasetUUID, datasetVersion, MetaType.dataset.toString());
 		List<Map<String, Object>> data = new ArrayList<>();	
 		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode);

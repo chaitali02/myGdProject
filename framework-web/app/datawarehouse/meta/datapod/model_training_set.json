@@ -70,7 +70,7 @@
     ],
     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
     "version" : "1520328505",
-    "name" : "test_model",
+    "name" : "model_training_set",
     "createdBy" : {
         "ref" : {
             "type" : "user",

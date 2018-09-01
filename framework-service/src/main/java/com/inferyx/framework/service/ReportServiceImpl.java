@@ -283,13 +283,22 @@ public class ReportServiceImpl {
 				MetaType.reportExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 				reportExec.getResult().getRef().getVersion());
-	
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+		}
+		
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
 	}
 	
-	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, HttpServletResponse response, RunMode runMode) throws Exception {
-		datastoreServiceImpl.setRunMode(runMode);
+	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
+			RunMode runMode) throws Exception {
 		
+		datastoreServiceImpl.setRunMode(runMode);		
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
@@ -298,12 +307,17 @@ public class ReportServiceImpl {
 			logger.error("Datastore is not available.");
 			throw new Exception("Datastore is not available.");
 		}
-
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		String tableName = datastoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-		String sql = "SELECT * FROM " + tableName;
-		List<Map<String, Object>> data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());		
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if (rowLimit > maxRows) {
+			logger.error("Number of rows " + rowLimit + " exceeded. Max row allow " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Number of rows " + rowLimit + " exceeded. Max row allow " + maxRows);
+			throw new RuntimeException("Number of rows " + rowLimit + " exceeded. Max row allow " + maxRows);
+		}
+		
+		List<Map<String, Object>> data = datastoreServiceImpl.getDatapodResults(datastore.getUuid(), datastore.getVersion(), null,
+				0, rowLimit, response, rowLimit, null, null, null, runMode);		
 
 	    DownloadExec downloadExec = new DownloadExec();
 		

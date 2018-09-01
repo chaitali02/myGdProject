@@ -68,12 +68,18 @@ public class ReportController {
 	}
 	
 	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "uuid") String reportExecUuid, 
+	public HttpServletResponse  download(
+			 	@RequestParam(value= "uuid") String reportExecUuid, 
 	    		@RequestParam(value= "version") String reportExecVersion,
-				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode,
+				@RequestParam(value = "format", defaultValue = "excel") String format,
+				@RequestParam(value = "rows", defaultValue = "200") int rows,
+				@RequestParam(value = "type", required = false) String type,
+				@RequestParam(value = "action", required = false) String action,
+				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
 				HttpServletResponse response) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
-		    reportServiceImpl.download(reportExecUuid, reportExecVersion, response, runMode);
+		    reportServiceImpl.download(reportExecUuid, reportExecVersion, format, 0, rows, response, rows, null, null,
+					null, runMode);
 		    return null;
 	   }
 }

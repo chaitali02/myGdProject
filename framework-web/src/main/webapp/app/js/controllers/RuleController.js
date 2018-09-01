@@ -1752,7 +1752,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 });
 
 
-RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc) {
+RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc,CF_DOWNLOAD) {
   $scope.select = $stateParams.type;
   $scope.type = {
     text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
@@ -1776,6 +1776,12 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   $scope.isdisabled = true
   $scope.isD3RuleEexecGraphShow = false;
   $scope.isD3RGEexecGraphShow = false;
+  $scope.download={};
+  $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+  $scope.download.formates=CF_DOWNLOAD.formate;
+  $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+  $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+  $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
   $scope.filteredRows = [];
   var notify = {
     type: 'success',
@@ -2156,19 +2162,22 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     }
     $scope.refreshRuleGroupExecFunction();
   }
-  $scope.downloadFile = function (data) {
-    if($scope.isD3RuleEexecGraphShow){
-      return false;
-    }
-    var uuid = data.uuid;
-    var version = data.version;
-    var url = $location.absUrl().split("app")[0]
+
+
+
+  $scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
-      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version,
+      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();
+      $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			
       var filename = headers['filename'];
       var contentType = headers['content-type'];
       var linkElement = document.createElement('a');
@@ -2191,5 +2200,19 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     }).error(function (data) {
       console.log(data);
     });
+	}
+
+
+  $scope.downloadFile = function (data) {
+    debugger
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
+    $scope.download.data=data;
+      $('#downloadSample').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+   
   };
 }); //End RuleViewResultController

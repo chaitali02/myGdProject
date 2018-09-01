@@ -4,14 +4,20 @@
 
 DataPipelineModule= angular.module('DataPipelineModule');
 
-DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http, $filter) {
+DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http,$filter,CF_DOWNLOAD) {
  return {
    scope : {
      name: "=",
      hcolumns:"=",
      data: "="
    },
-   link: function ($scope, element, attrs) {   
+   link: function ($scope, element, attrs) {
+    $scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to;   
      var initialised = false;
      $scope.filteredRows = [];
      $scope.pagination={
@@ -228,36 +234,48 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              console.log(ex);
          }
        }
-       $scope.downloaddata=function(url,uuid){
-         $http({
-           method: 'GET',
-           url:url,
-           responseType: 'arraybuffer'
-         }).success(function(data, status, headers) {
-           headers = headers();  
-           var filename = headers['filename'];
-           var contentType = headers['content-type']; 
-           var linkElement = document.createElement('a');
-           try {
-             var blob = new Blob([data], {
-             type: contentType
-           });
-           var url = window.URL.createObjectURL(blob);
-             linkElement.setAttribute('href', url);
-             linkElement.setAttribute("download",filename);
-             var clickEvent = new MouseEvent("click", {
-               "view": window,
-               "bubbles": true,
-               "cancelable": false
-             });
-             linkElement.dispatchEvent(clickEvent);
-           } catch (ex) {
-             console.log(ex);
-           }
-         }).error(function(data) {
-           console.log(data);
-       }); 
+       $scope.submitDownload=function(){
+    	  $('#downloadSampleCommon').modal("hide"); 
+        $http({
+          method: 'GET',
+          url: $scope.download.url+"&rows="+$scope.download.rows,
+          responseType: 'arraybuffer'
+        }).success(function(data, status, headers) {
+          headers = headers(); 
+        
+          $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+          var filename = headers['filename'];
+          var contentType = headers['content-type']; 
+          var linkElement = document.createElement('a');
+          try {
+            var blob = new Blob([data], {
+            type: contentType
+          });
+          var url = window.URL.createObjectURL(blob);
+            linkElement.setAttribute('href', url);
+            linkElement.setAttribute("download",filename);
+            var clickEvent = new MouseEvent("click", {
+              "view": window,
+              "bubbles": true,
+              "cancelable": false
+            });
+            linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+            console.log(ex);
+          }
+        }).error(function(data) {
+          console.log(data);
+      }); 
        }
+       $scope.downloaddata=function(url,uuid){
+        $scope.download.url=url
+        $('#downloadSampleCommon').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        
+       }
+
        window.downloadPiplineFile = function() {               
          var uuid = $scope.downloadDetail.uuid;
          var version=$scope.downloadDetail.version;
@@ -280,7 +298,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              $scope.downloaddata(url,uuid);
            }
            else if($scope.downloadDetail.type =="map"){
-             url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode;
+             url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode
              $scope.downloaddata(url,uuid)
            }
            else if($scope.downloadDetail.type =="recon"){
@@ -374,7 +392,49 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                </div>
              </div>
            </div>
-         </div> 
+          </div> 
+          <div id="downloadSampleCommon" class="modal fade bs-modal-lg in" style="display: none;">
+            <div class="modal-dialog" style="width:40%">
+              <div class="modal-content" style="resize: both;overflow: auto;">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                  <h4 class="modal-title">Download Param</h4>
+                </div>
+                <form class="form-horizontal" name="myform3"  ng-submit="submitDownload()" novalidate="novalidate">
+                  <div class="modal-body" style="padding-top:0px">
+                    <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                      <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                        data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="col-md-3 control-label">Rows</label>
+                              <div class="col-md-8">
+                                <input type="number" limit-to="{{download.limit_to}}" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
+                                  required>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-3 control-label">Formate</label>
+                              <div class="col-md-8">
+                                <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--End Model Body-->
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    <button type="submit" class="btn green">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
        `
      };
  });

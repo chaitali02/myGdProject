@@ -2,7 +2,7 @@
     "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tx",
     "name" : "aml_admin",
     "version" : "1521430857",
-    "desc" : "Admin group for anti-money laundering application",
+    "desc" : "Admin group for fraud application",
     "createdBy" : {
         "ref" : {
             "type" : "user",

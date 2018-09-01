@@ -1342,7 +1342,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
 
 
-ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService,privilegeSvc) {
+ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService,privilegeSvc,CF_DOWNLOAD) {
   $scope.select = $stateParams.type;
   $scope.type = {text : $scope.select == 'recongroupexec' ? 'recongroup' : 'recon'};
   $scope.showprogress=false;
@@ -1352,6 +1352,12 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.isD3RuleEexecGraphShow=false;
   $scope.isD3RGEexecGraphShow=false;
   $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
+  $scope.download={};
+  $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+  $scope.download.formates=CF_DOWNLOAD.formate;
+  $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+  $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+  $scope.download.limit_to=CF_DOWNLOAD.limit_to;
   // ui grid
   var notify = {
     type: 'success',
@@ -1552,20 +1558,32 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.toggleZoom = function(){
     $scope.showZoom = !$scope.showZoom;
   }
-
+  
   $scope.downloadFile = function(data) {
     if($scope.isD3RuleEexecGraphShow){
       return false;
     }
-    var uuid = data.uuid;
-    var version=data.version;
-    var url=$location.absUrl().split("app")[0]
+    $scope.download.data=data;
+    $('#downloadSample').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  };
+
+
+	$scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
-      url:url+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version,
+      url:url+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&rows="+$scope.download.rows,
       responseType: 'arraybuffer'
     }).success(function(data, status, headers) {
       headers = headers();
+      $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			
       var filename = headers['filename'];
       var contentType = headers['content-type'];
       var linkElement = document.createElement('a');
@@ -1589,6 +1607,6 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
     }).error(function(data) {
       console.log(data);
     });
-  };
+	}
 
 });
