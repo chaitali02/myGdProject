@@ -183,8 +183,6 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		}
 		
 		// save result
-		Datasource dpDatasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
-		exec = execFactory.getExecutor(dpDatasource.getType());
 		save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
 		return null;
 	}
