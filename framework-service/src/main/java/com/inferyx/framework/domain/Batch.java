@@ -17,23 +17,56 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "batch")
 public class Batch extends BaseEntity {
 
+	private Schedule scheduleInfo;
 	private List<MetaIdentifierHolder> metaList;
 	private String inParallel;
-
-	public String getInParallel() {
-		return inParallel;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the scheduleInfo
+	 */
+	public Schedule getScheduleInfo() {
+		return scheduleInfo;
 	}
-
-	public void setInParallel(String inParallel) {
-		this.inParallel = inParallel;
+	/**
+	 * @Ganesh
+	 *
+	 * @param scheduleInfo the scheduleInfo to set
+	 */
+	public void setScheduleInfo(Schedule scheduleInfo) {
+		this.scheduleInfo = scheduleInfo;
 	}
-
+	/**
+	 * @Ganesh
+	 *
+	 * @return the metaList
+	 */
 	public List<MetaIdentifierHolder> getMetaList() {
 		return metaList;
 	}
-
+	/**
+	 * @Ganesh
+	 *
+	 * @param metaList the metaList to set
+	 */
 	public void setMetaList(List<MetaIdentifierHolder> metaList) {
 		this.metaList = metaList;
 	}
-
+	/**
+	 * @Ganesh
+	 *
+	 * @return the inParallel
+	 */
+	public String getInParallel() {
+		return inParallel;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param inParallel the inParallel to set
+	 */
+	public void setInParallel(String inParallel) {
+		this.inParallel = inParallel;
+	}	
 }
