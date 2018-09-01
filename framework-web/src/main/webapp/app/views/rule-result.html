@@ -214,12 +214,11 @@
                         <div class="form-group">
                           <label class="col-md-3 control-label">Rows</label>
                           <div class="col-md-8">
-                            <input type="number" limit-to="{{download.limit_to}}" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
-                              required>
+                            <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload" >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-md-3 control-label">Formate</label>
+                          <label class="col-md-3 control-label">Format</label>
                           <div class="col-md-8">
                             <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
                             </select>
