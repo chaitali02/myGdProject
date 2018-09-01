@@ -33,7 +33,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 	}
 	else{
 	$scope.isAdd=true;
-	}
+  }
+  this.activeDate;
+  this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+  
+  this.identity = angular.identity;
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
