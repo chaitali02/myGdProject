@@ -42,7 +42,7 @@ public class SparkConnector implements IConnector{
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
 					SparkContext sparkContext = new SparkContext(sparkConf);
 					this.sparkSession = new SparkSession(sparkContext);
-					registerUDF.register();
+					registerUDF.register(sparkSession);
 				}
 			}
 		} 

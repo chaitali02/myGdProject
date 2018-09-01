@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.register;
 
-import java.io.IOException;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.math3.distribution.BetaDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -20,30 +18,16 @@ import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.api.java.UDF2;
 import org.apache.spark.sql.api.java.UDF3;
 import org.apache.spark.sql.types.DataTypes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.connector.SparkConnector;
-
-@Component
 public class UDFRegister implements java.io.Serializable {
 	
-	@Autowired
-	SparkConnector sparkConnector;
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public void register() {
-		SparkSession sparkSession = null;
-		try {
-			sparkSession = (SparkSession) sparkConnector.getConnection().getStmtObject();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void register(SparkSession sparkSession) {
 		
 		//Register NORM.S.INV
 		sparkSession.udf().register("normSInv",new UDF1<Double,Double>() {
