@@ -506,27 +506,6 @@
 			<version>1.8.0</version>
 		</dependency>
 		
-		
-			<!-- scala-library -->
-		<dependency>
-		    <groupId>org.scala-lang</groupId>
-		    <artifactId>scala-library</artifactId>
-		    <version>2.11.8</version>
-		</dependency>
-		
-		<!-- spring-boot-starter-batch -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-batch</artifactId>
-		    <version>2.0.4.RELEASE</version>
-		    <exclusions>
-			    <exclusion>
-			      <groupId>org.springframework.boot</groupId>
-			      <artifactId>spring-boot-starter-logging</artifactId>
-			    </exclusion>
-			</exclusions>
-		</dependency>
-		
 		<!-- H2O -->
 <!-- 		<dependency>
 		    <groupId>ai.h2o</groupId>
