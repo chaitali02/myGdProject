@@ -152,10 +152,13 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 }]);
 
 
-InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService) {
+InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService','defaultErrorMessageResolver', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService,defaultErrorMessageResolver                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ) {
     Idle.watch();
     validator.setValidElementStyling(false);
     validator.setInvalidElementStyling(true);
+    defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+        errorMessages['maxLimitDownload'] = 'Max rows exceeded the limit (100000)';
+      });
     if (localStorage.userdetail) {
           $rootScope.productDetail = (JSON.parse(localStorage.userdetail).productDetail);
         $rootScope.role = localStorage.role;
@@ -2306,7 +2309,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
         
         .state('batchexecresult', {
-            url: "/BatchResult?id&mode&returnBack&version",
+            url: "/BatchResult?id&mode&returnBack&version&name",
             templateUrl: "views/batch-result.html",
             data: { pageTitle: ' Batch Scheduler' },
             controller: "",

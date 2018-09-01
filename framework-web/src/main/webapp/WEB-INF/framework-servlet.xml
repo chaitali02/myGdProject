@@ -34,7 +34,7 @@
 				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
 	<context:component-scan base-package="com.inferyx" />
-	<!-- <mvc:resources mapping="/app/**" location="/app"/> -->
+	<!-- <mvc:sources mapping="/app/**" location="/app"/> -->
 	<mvc:annotation-driven />
 	
 	<!-- Enable AspectJ style of Spring AOP -->
@@ -244,9 +244,9 @@
 	<bean id="sparkConnector" class="com.inferyx.framework.connector.SparkConnector">
 	</bean>
 
-	<bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
+	<!-- <bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
 		<constructor-arg ref="sparkConnector" />
-	</bean>
+	</bean> -->
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -319,6 +319,7 @@
 	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
+	<bean id="schedulerService" class="com.inferyx.framework.service.SchedulerService"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>

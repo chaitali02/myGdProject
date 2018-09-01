@@ -1,7 +1,7 @@
 {
   "uuid": "7db4e820-3e15-4ef9-b326-a32f6f63823b",
   "version": "1520009749",
-  "name": "Linear Support Vector Machine Classifier",
+  "name": "Linear SVM Classifier",
   "desc": "Linear Support Vector Machine Classifier Algorithm",
   "createdBy": {
     "ref": {

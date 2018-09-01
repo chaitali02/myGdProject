@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,10 @@ import com.inferyx.framework.executor.ExecContext;
 
 @Component
 public class SparkInfo {
+	
+	static final Logger logger = Logger.getLogger(SparkInfo.class);
+	
+	
 	private Properties prop;	   
     
     public Properties getProp() {
@@ -50,6 +55,7 @@ public class SparkInfo {
 					sparkProps.put(key, value);				
 				}
 			}
+			logger.info("Spark properties : " + sparkProps);
 			for(int i=0; i<sparkProps.size(); i++)
 			{				
 				for(Map.Entry<String, String> ent : sparkProps.entrySet()) {

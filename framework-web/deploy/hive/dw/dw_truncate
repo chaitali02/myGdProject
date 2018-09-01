@@ -1,0 +1,17 @@
+truncate table framework.dim_account;
+truncate table framework.dim_address;
+truncate table framework.dim_bank;
+truncate table framework.dim_branch; 
+truncate table framework.dim_country;
+truncate table framework.dim_customer;
+truncate table framework.dim_state;
+truncate table framework.dim_transaction_type;
+truncate table framework.dp_rule_results;
+truncate table framework.dq_rule_results;
+truncate table framework.fact_account_summary_monthly;
+truncate table framework.fact_customer_summary_monthly;
+truncate table framework.fact_transaction;
+truncate table framework.profile_rule_results;
+truncate table framework.rc_rule_results;
+
+
