@@ -50,7 +50,7 @@
         {
             "attributeId" : 4,
             "name" : "label",
-            "type" : "double",
+            "type" : "integer",
             "desc" : "label",
             "key" : "",
             "partition" : "N",
@@ -60,16 +60,26 @@
         {
             "attributeId" : 5,
             "name" : "censor",
-            "type" : "double",
+            "type" : "integer",
             "desc" : "censor",
             "key" : "",
             "partition" : "N",
             "dispName" : "censor",
             "active" : "Y"
+        }, 
+        {
+            "attributeId" : 6,
+            "name" : "version",
+            "type" : "integer",
+            "desc" : "version",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "version",
+            "active" : "Y"
         }
     ],
     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-    "version" : "1520328505",
+    "version" : "1535817666",
     "name" : "model_training_set",
     "createdBy" : {
         "ref" : {
@@ -79,7 +89,7 @@
             "name" : "ypalrecha"
         }
     },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "createdOn" : ISODate("2018-09-01T16:01:06.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

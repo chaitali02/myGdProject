@@ -765,7 +765,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						e.printStackTrace();
 					}
 				}
-				if (isModelSved) {					
+				if (isModelSved) {	
+					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
