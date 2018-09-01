@@ -488,12 +488,13 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 		});
 	}
 
-	$scope.onChipsRemove=function(index){
+	$scope.onChipsRemove=function(index,filterIndex){
+		debugger
 		$scope.filterTag.splice(index,1);
-		$scope.selectedAttributeValue[index] = null;
+		$scope.selectedAttributeValue[filterIndex] = null;
 			var noSelect = { "id": null, "value": "-select-" }
 			setTimeout(function () {
-				$scope.selectedAttributeValue[index] = noSelect;
+				$scope.selectedAttributeValue[filterIndex] = noSelect;
 				$scope.applyFilter();
 			}, 100);
 
@@ -602,7 +603,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 				ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
 				filterList.ref = ref;
 				filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
-				filterTag.text = $scope.filterAttribureIdValues[i].attrName + "-" + $scope.selectedAttributeValue[i].value;
+				filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
 				filterTag.index = i;
 				filterTag.value = $scope.selectedAttributeValue[i].value;
 				filterList.value = $scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
@@ -1653,14 +1654,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 
 	}
 	$scope.downloadFile = function (data) {
-		if ($scope.gridOptions.data.length == 0) {
-			return false;
+		
+		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData==true) {
+			$scope.download.data = data;
+			$('#downloadSample').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
 		}
-		$scope.download.data = data;
-		$('#downloadSample').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
+		
 	};
 
 });

@@ -1063,14 +1063,23 @@ transition: right 1m
 
 /*filter Chips*/
 .chip {
-  display: inline-block;
+  /* display: inline-block;
   padding: 0 25px;
   height: 42px;
   font-size: 15px;
   line-height: 40px;
   border-radius: 25px;
   background-color: #f1f1f1;
-  margin-bottom: 10px;
+  margin-bottom: 10px; */
+  margin: 1px;
+  display: inline-block;
+  padding: 0px 25px 0px 25px;
+  height: 25px;
+  font-size: 12px;
+  line-height: 25px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+  
 }
 
 
