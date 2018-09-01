@@ -319,7 +319,6 @@
 	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
-	<bean id="schedulerService" class="com.inferyx.framework.service.SchedulerService"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
