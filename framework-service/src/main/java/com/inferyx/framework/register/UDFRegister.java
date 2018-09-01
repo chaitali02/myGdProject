@@ -13,13 +13,18 @@ package com.inferyx.framework.register;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.math3.distribution.BetaDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.log4j.Logger;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.api.java.UDF2;
 import org.apache.spark.sql.api.java.UDF3;
 import org.apache.spark.sql.types.DataTypes;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UDFRegister implements java.io.Serializable {
+	
+	static final Logger logger = Logger.getLogger(UDFRegister.class);
 	
 	
 	/**
@@ -28,7 +33,7 @@ public class UDFRegister implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public void register(SparkSession sparkSession) {
-		
+		logger.info("Inside UDF Register");
 		//Register NORM.S.INV
 		sparkSession.udf().register("normSInv",new UDF1<Double,Double>() {
 			/**
