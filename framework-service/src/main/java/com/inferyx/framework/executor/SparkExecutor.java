@@ -1730,16 +1730,19 @@ public class SparkExecutor<T> implements IExecutor {
 			return rsHolder;
 	}
 	
-	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df.show(false);
+		df.show(false);
 		List<String> partitionColList = new ArrayList<>();
-		if(datapod != null) {
-			for(Attribute attribute : datapod.getAttributes()) {
+		if(targetDatapod != null) {
+			for(Attribute attribute : targetDatapod.getAttributes()) {
 				if (attribute.getPartition().equalsIgnoreCase("y"))
 					partitionColList.add(attribute.getName());
 			}
 		}
+		
+		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
+		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			if(partitionColList.size() > 0) {

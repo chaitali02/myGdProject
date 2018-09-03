@@ -54,23 +54,25 @@
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="5" />
+		<property name="queueCapacity" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
 	<bean id="stageExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="3" />
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
 	<bean id="dagExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="3" />
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
@@ -78,7 +80,8 @@
 	
 	<bean id="metaExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
 		<property name="queueCapacity" value="3" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
@@ -92,9 +95,21 @@
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
+	<bean id="batchExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="queueCapacity" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="taskThreadMap2" name="taskThreadList2" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="dagDependeeMap2" name="dagDependeeMap2" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="batchThreadMap" name="batchThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -148,9 +163,9 @@
 		mongo-template-ref="mongoTemplate" />
 
 	<!-- Initialize spark context -->
-	<bean id="sparkContext" class="org.apache.spark.SparkContext">
+	<!-- <bean id="sparkContext" class="org.apache.spark.SparkContext">
 		<constructor-arg value="#{sparkInfo.getSparkConfiguration()}" />
-	</bean>
+	</bean> -->
 
 	<bean id="dbConfiguration"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -171,14 +186,14 @@
 	</bean> -->
 	
 	<!-- Initialize Spark Session scope="request" -->
-	<bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
+	<!-- <bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize SQL Context scope="request" -->
-	<bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
+	<!-- <bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<bean id="parser" class="com.inferyx.framework.parser.DagParser">
 	</bean>
@@ -215,23 +230,30 @@
 	<bean id="profileInfo" class="com.inferyx.framework.common.ProfileInfo">
 		<property name="profileTargetUUID" value="${framework.profile.datapod.uuid}"></property>
 	</bean>
+	
+	<bean id="reconInfo" class="com.inferyx.framework.common.ReconInfo">
+		<property name="reconTargetUUID" value="${framework.recon.datapod.uuid}"></property>
+	</bean>
 
 	<bean id="registerDataPod" class="com.inferyx.framework.register.DatapodRegister">
 		<!-- <constructor-arg ref="miUtil"/> <constructor-arg ref="dataSourceFactory"/> 
 			<constructor-arg ref="connFactory"/> <constructor-arg ref="hdfsInfo" /> -->
 	</bean>
-
-	<bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
-		<constructor-arg ref="sparkSession" />
+	
+	<bean id="sparkConnector" class="com.inferyx.framework.connector.SparkConnector">
 	</bean>
+
+	<!-- <bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
+		<constructor-arg ref="sparkConnector" />
+	</bean> -->
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
 	
-	<bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
+	<!-- <bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 
 	<bean id="graphFlag" class="com.inferyx.framework.common.GraphInfo">
 		<property name="mode" value="${framework.graph.enabled}"></property>
@@ -256,7 +278,7 @@
 	<bean id="datasetServiceImpl" class="com.inferyx.framework.service.DatasetServiceImpl"></bean>
 	<bean id="dimensionServiceImpl" class="com.inferyx.framework.service.DimensionServiceImpl"></bean>
 	<bean id="dagServiceImpl" class="com.inferyx.framework.service.DagServiceImpl"></bean>
-	<!-- <bean id="securityServiceImpl" class="com.inferyx.framework.service.SecurityServiceImpl"></bean> -->
+	<bean id="securityServiceImpl" class="com.inferyx.framework.service.SecurityServiceImpl"></bean>
 	<bean id="conditionServiceImpl" class="com.inferyx.framework.service.ConditionServiceImpl"></bean>
 	<bean id="dataStoreServiceImpl" class="com.inferyx.framework.service.DataStoreServiceImpl"></bean>
 	<bean id="datasetViewServiceImpl" class="com.inferyx.framework.service.DatasetViewServiceImpl"></bean>
@@ -290,6 +312,12 @@
 	<bean id="dataFrameService" class="com.inferyx.framework.service.DataFrameService"/>
 	<bean id="downloadExec" class="com.inferyx.framework.domain.DownloadExec"/>
 	<bean id="uploadExec" class="com.inferyx.framework.domain.UploadExec"/>
+	<bean id="predictExec" class="com.inferyx.framework.domain.PredictExec"/>
+	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
+	<bean id="uploadExecServiceImpl" class="com.inferyx.framework.service.UploadExecServiceImpl"/>
+	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
+	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
+	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
@@ -324,14 +352,36 @@
 	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
 	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
 	
-	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
+	<bean id="postGresConnector" class="com.inferyx.framework.connector.PostGresConnector"/>
+	<bean id="postGresExecutor" class="com.inferyx.framework.executor.PostGresExecutor"/>
+	<bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
+	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/>
+	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
+	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
 	
+	<bean id="reconOperat
+		  or" class="com.inferyx.framework.operator.ReconOperator"/>
+	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>
+	<bean id="reconGroupServiceImpl" class="com.inferyx.framework.service.ReconGroupServiceImpl"/> 
+	<bean id="reconServiceImpl" class="com.inferyx.framework.service.ReconServiceImpl"/>
+	<bean id="reconGroupExecServiceImpl" class="com.inferyx.framework.service.ReconGroupExecServiceImpl"/>
+	<bean id="reconViewServiceImpl" class="com.inferyx.framework.service.ReconViewServiceImpl"/>
+	
+	<bean id="trainAndValidateOperator" class="com.inferyx.framework.operator.TrainAndValidateOperator"/>
+	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
+	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
+	
+	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
+	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
+	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
+		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
 	<!--<bean id="exceptionHandlingAspect" class="com.inferyx.framework.aspect.ControllerValidation"/> -->
 	<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"/> 
 	
 	<bean id="runBaseRuleService" class="com.inferyx.framework.service.RunBaseRuleService"/>
+	<bean id="monteCarloSimulation" class="com.inferyx.framework.datascience.MonteCarloSimulation"/>
 	
 	<bean id="graphController" class="com.inferyx.framework.controller.GraphController">
 		<property name="graphRegister" ref="registerGraph"></property>
@@ -339,7 +389,7 @@
 
 	<bean id="registerGraph" class="com.inferyx.framework.register.GraphRegister">
 		<property name="graphFlag" ref="graphFlag" />
-		<property name="javaSparkContext" ref="javaSparkContext" />
+		<!-- <property name="javaSparkContext" ref="javaSparkContext" /> -->
 		<!-- <property name="hiveContext" ref="hiveContext" /> -->
 	</bean>
 </beans>

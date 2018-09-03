@@ -76,15 +76,6 @@
       "paramListInfo": null
     },
     {
-      "featureId": "4",
-      "name": "label",
-      "type": "integer",
-      "desc": "label",
-      "minVal": 1,
-      "maxVal": 100,
-      "paramListInfo": null
-    },
-    {
       "featureId": "5",
       "name": "censor",
       "type": "integer",

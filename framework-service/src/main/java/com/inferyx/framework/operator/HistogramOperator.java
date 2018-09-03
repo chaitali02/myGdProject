@@ -101,21 +101,18 @@ public class HistogramOperator implements IOperator {
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
 		String locationTableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		if(locationTableName == null || locationTableName.isEmpty()) {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			/*if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-					|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {*/
-			if (!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
-			}  else {
-				locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
-			}			
-			execParams.getOtherParams().put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", locationTableName);
+
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
+		if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
+		} else if(locationTableName == null || locationTableName.isEmpty()) {			
+			locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
 		}
+
+		execParams.getOtherParams().put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", locationTableName);
 		
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
+
 		IExecutor exec = execFactory.getExecutor(datasource.getType());		
 		
 		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
