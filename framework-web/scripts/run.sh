@@ -1,5 +1,5 @@
 ./install_application.sh localhost refresh ../app/admin/meta/
-./install_application.sh localhost append ../app/datawarehouse/meta/
+./install_application.sh localhost append ../app/dw/meta/
 ./install_application.sh localhost append ../app/fraud/meta/
 ./install_application.sh localhost append ../app/ecocap/meta/
 ./update_application.sh localhost datasource d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd
