@@ -1,0 +1,195 @@
+{
+  "uuid": "5a86be34-9d25-47c5-8768-620fc3a6608d",
+  "version": "1535969313",
+  "name": "Train AFT Survival Regression",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Sep 03 15:38:33 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+      "version": null,
+      "name": "model_aft_survival_regression"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+      "version": null,
+      "name": "model_training_set"
+    },
+    "value": null
+  },
+  "featureAttrMap": [
+    {
+      "featureMapId": "0",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+          "version": null,
+          "name": "model_aft_survival_regression"
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": "customer_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+          "version": null,
+          "name": "model_training_set"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "customer_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "1",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+          "version": null,
+          "name": "model_aft_survival_regression"
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": "address_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+          "version": null,
+          "name": "model_training_set"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "address_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "2",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+          "version": null,
+          "name": "model_aft_survival_regression"
+        },
+        "value": null,
+        "featureId": "2",
+        "featureName": "branch_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+          "version": null,
+          "name": "model_training_set"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "branch_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "3",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+          "version": null,
+          "name": "model_aft_survival_regression"
+        },
+        "value": null,
+        "featureId": "3",
+        "featureName": "commute_distance_miles"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+          "version": null,
+          "name": "model_training_set"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "commute_distance_miles",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "4",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+          "version": null,
+          "name": "model_aft_survival_regression"
+        },
+        "value": null,
+        "featureId": "5",
+        "featureName": "censor"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+          "version": null,
+          "name": "model_training_set"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "censor",
+        "attrType": null
+      }
+    }
+  ],
+  "trainPercent": 70,
+  "valPercent": 30,
+  "labelInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+      "version": null,
+      "name": "model_training_set"
+    },
+    "value": null,
+    "attrId": "4",
+    "attrName": "label",
+    "attrType": null
+  },
+  "useHyperParams": "N"
+}

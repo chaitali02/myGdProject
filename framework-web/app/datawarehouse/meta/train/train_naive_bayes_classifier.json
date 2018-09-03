@@ -1,0 +1,169 @@
+{
+  "uuid": "46bcd068-eca9-4b80-a25d-913e8fd463ec",
+  "version": "1535964696",
+  "name": "Train Naive Bayes Classifier",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Sep 03 14:21:36 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69",
+      "version": null,
+      "name": "model_naivebayes_classifier"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+      "version": null,
+      "name": "customer"
+    },
+    "value": null
+  },
+  "featureAttrMap": [
+    {
+      "featureMapId": "0",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69",
+          "version": null,
+          "name": "model_naivebayes_classifier"
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": "customer_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+          "version": null,
+          "name": "customer"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "customer_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "1",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69",
+          "version": null,
+          "name": "model_naivebayes_classifier"
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": "address_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+          "version": null,
+          "name": "customer"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "address_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "2",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69",
+          "version": null,
+          "name": "model_naivebayes_classifier"
+        },
+        "value": null,
+        "featureId": "2",
+        "featureName": "branch_id"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+          "version": null,
+          "name": "customer"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "branch_id",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "3",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69",
+          "version": null,
+          "name": "model_naivebayes_classifier"
+        },
+        "value": null,
+        "featureId": "3",
+        "featureName": "commute_distance_miles"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+          "version": null,
+          "name": "customer"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "commute_distance_miles",
+        "attrType": null
+      }
+    }
+  ],
+  "trainPercent": 70,
+  "valPercent": 30,
+  "labelInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+      "version": null,
+      "name": "customer"
+    },
+    "value": null,
+    "attrId": "12",
+    "attrName": "load_id",
+    "attrType": null
+  },
+  "useHyperParams": "N"
+}
