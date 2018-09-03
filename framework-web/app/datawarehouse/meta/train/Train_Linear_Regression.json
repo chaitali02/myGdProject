@@ -8,7 +8,7 @@
     "source" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
     "featureAttrMap" : [ 
@@ -22,10 +22,10 @@
                 }
             },
             "attribute" : {
-                "attrId" : "0",
+                "attrId" : "19",
                 "ref" : {
                     "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             }
         }, 
@@ -42,7 +42,7 @@
                 "attrId" : "1",
                 "ref" : {
                     "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             }
         }, 
@@ -59,7 +59,7 @@
                 "attrId" : "2",
                 "ref" : {
                     "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             }
         }
@@ -70,12 +70,12 @@
         "attrId" : "4",
         "ref" : {
             "type" : "datapod",
-            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
     "useHyperParams" : "N",
     "uuid" : "ef4d437d-8eba-415f-aa46-bf8563bbde05",
-    "version" : "1535818073",
+    "version" : "1535973389",
     "name" : "Train Linear Regression",
     "createdBy" : {
         "ref" : {
@@ -85,7 +85,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-01T16:07:53.000Z"),
+    "createdOn" : ISODate("2018-09-03T11:16:29.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
