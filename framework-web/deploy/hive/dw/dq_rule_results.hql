@@ -5,7 +5,9 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `dq_rule_results`(
   `rowkey` string,
   `datapoduuid` string,
   `datapodversion` string,
+  `datapodname` string,
   `attributeid` string,
+  `attributename` string,  
   `attributevalue` string,
   `nullcheck_pass` string,
   `valuecheck_pass` string,
@@ -17,3 +19,4 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `dq_rule_results`(
   `dupcheck_pass` string,
   `customcheck_pass` string,
   `version` int);
+  

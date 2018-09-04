@@ -548,8 +548,13 @@ public class DataStoreServiceImpl {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
 			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				filePath = String.format("%s%s", hdfsLocation, filePath);
-				tableName = Helper.genTableName(filePath);
+				if(!(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					tableName = datasource.getDbname() + "." + dp.getName();
+				} else {
+					filePath = String.format("%s%s", hdfsLocation, filePath);
+					tableName = Helper.genTableName(filePath);
+				}
 			} else {
 				if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 						||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
