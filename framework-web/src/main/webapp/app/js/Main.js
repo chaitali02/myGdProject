@@ -62,7 +62,10 @@ var InferyxApp = angular.module("InferyxApp", [
     'ngclipboard',
     "Utils",
     "ui.multiselect",
-    "jsonFormatter"
+    "jsonFormatter",
+    "moment-picker",
+    "multipleDatePicker"
+   
 ]);
 
 
@@ -71,7 +74,7 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 	/* $ocLazyLoadProvider.config({
 	        // global configs go here
 	    });*/
-
+       
     if (typeof localStorage.userdetail != "undefined") {
         console.log(JSON.parse(localStorage.userdetail).sessionId)
         $httpProvider.defaults.headers.common['sessionId'] = JSON.parse(localStorage.userdetail).sessionId

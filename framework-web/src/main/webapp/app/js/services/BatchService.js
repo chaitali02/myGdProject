@@ -187,8 +187,33 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 		var deferred = $q.defer();
 		BatchFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
+			var batchResult={};
+			batchResult.batch=response;
+			var scheduleInfoArray=[];
+            if(response.scheduleInfo !=null){
+				for(var i=0;i<response.scheduleInfo.length;i++){
+					var scheduleInfo={};
+					scheduleInfo.name=response.scheduleInfo[i].name;
+					scheduleInfo.startDate= moment(response.scheduleInfo[i].startDate);
+					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
+					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;
+					scheduleInfo.frequencyDetail=response.scheduleInfo[i].frequencyDetail;
+					scheduleInfo.recurring=response.scheduleInfo[i].recurring=='Y' ?true:false;
+					// if(response.scheduleInfo[i].frequencyDetail.length >0){
+					// 	for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
+					// 		var dd=$filter('date')(new Date(response.scheduleInfo[i].frequencyDetail[j]), "dd");
+					// 		scheduleInfo.frequencyDetail[j]=moment().date(dd);
+					// 		var date=moment(scheduleInfo.frequencyDetail[j])._d
+					// 		scheduleInfo.frequencyDetail[j]=($filter('date')(date, "MM-dd-yyyy"));
+					// 	}
+					// }
+					
+					scheduleInfoArray[i]=scheduleInfo;
+				}
+			}
+			batchResult.scheduleInfoArray=scheduleInfoArray;
 			deferred.resolve({
-				data: response
+				data: batchResult
 			})
 		}
 		return deferred.promise;

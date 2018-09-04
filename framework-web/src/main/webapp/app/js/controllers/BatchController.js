@@ -1,8 +1,12 @@
 BatchModule = angular.module('BatchModule');
 
 BatchModule.controller('DetailBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES) {
-  
+  $scope.moment = moment();
+  $scope.moment.locale('fr-FR');
   $scope.select = 'batch';
+  $scope.myArrayOfDates = [];
+ 
+  $scope.WeekArray = [1,2];
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -33,7 +37,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 	}
 	else{
 	$scope.isAdd=true;
-	}
+  }
+  var batchScope=$scope;
+  $scope.minDate=moment().subtract(new Date(), 'day');
+  $scope.frequencyTypes=[{"text":"once","caption":"Once"},{"text":"dom","caption":"DOM"},{"text":"dow","caption":"DOW"}];
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -43,6 +50,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.batch.versions = []
   $scope.isDependencyShow = false;
   $scope.privileges = [];
+  $scope.scheduleTableArray;
+  $scope.popoverIsOpen=false;
   $scope.privileges = privilegeSvc.privileges[CF_META_TYPES.batch] || [];
   $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
   $scope.$on('privilegesUpdated',function (e,data) {
@@ -109,7 +118,124 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       });
    }
   }
- 
+
+  $scope.onChangeFrequencyType=function(index){
+    $scope.scheduleTableArray[index].frequencyDetail=[];
+  }
+
+  $scope.closeFrequencyDetailDOW=function(index){
+    if($scope.scheduleTableArray[index].domPopoverIsOpen ==true){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+      for(var i=0;i<$scope.WeekArray.length;i++){
+        $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.WeekArray[i];
+      }
+    }else{
+      $scope.WeekArray=[];
+      for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
+       $scope.WeekArray[i]=Number($scope.scheduleTableArray[index].frequencyDetail[i]);
+      }
+    }
+
+    for(var k=0;k<$scope.scheduleTableArray.length;k++){
+      $scope.scheduleTableArray[k].domPopoverIsOpen=false;
+      $scope.scheduleTableArray[index].domPopoverIsOpen=true;
+    }
+    $scope.scheduleTableArray[index].domPopoverIsOpen=!$scope.scheduleTableArray[index].domPopoverIsOpen;
+  }
+
+  $scope.closeFrequencyDetail=function(index){
+   // $scope.scheduleTableArray[index].frequencyDetail=[];
+    if($scope.scheduleTableArray[index].popoverIsOpen ==true){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+      for(var i=0;i<$scope.myArrayOfDates.length;i++){
+        console.log($scope.myArrayOfDates[i]._d)
+        var date=moment($scope.myArrayOfDates[i])._d
+        console.log($filter('date')(date, "EEE MMM d y h:mm:ss "))
+        $scope.scheduleTableArray[index].frequencyDetail.push($filter('date')(date, "MM-dd-yyyy"));
+      }
+      
+    }
+    else{
+      $scope.myArrayOfDates=[];
+      if($scope.scheduleTableArray[index].frequencyDetail){
+        for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
+          var dd=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "dd");
+          var mm=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "MM");
+          var yyyy=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "yyyy");
+          $scope.myArrayOfDates.push(moment().year(yyyy).month(mm-1).date(dd));
+        }
+        var sd=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "dd");
+        var smm=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "MM");
+        var syyyy=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "yyyy");
+        $scope.scheduleTableArray[index].disable_days_before=moment().year(syyyy).month(smm-1).date(sd);
+        var ed=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "dd");
+        var emm=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "MM");
+        var eyyyy=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "yyyy");
+        $scope.scheduleTableArray[index].disable_days_after=moment().year(eyyyy).month(emm-1).date(ed);
+      }
+    }
+    for(var k=0;k<$scope.scheduleTableArray.length;k++){
+      $scope.scheduleTableArray[k].popoverIsOpen=false;
+      $scope.scheduleTableArray[index].popoverIsOpen=true;
+    }
+    $scope.scheduleTableArray[index].popoverIsOpen=!$scope.scheduleTableArray[index].popoverIsOpen;
+  }
+  
+  $scope.onChangeStartDate=function(newDate,index){
+    var d=$filter('date')(newDate._d, "dd");
+    var mm=$filter('date')(newDate._d, "MM");
+    var yyyy=$filter('date')(newDate._d, "yyyy");
+    $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].frequencyDetail=[]
+  }
+  $scope.onChangeEndDate=function(newDate,index){
+    var d=$filter('date')(newDate._d, "dd");
+    var mm=$filter('date')(newDate._d, "MM");
+    var yyyy=$filter('date')(newDate._d, "yyyy");
+    $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].frequencyDetail=[];
+  }
+
+  $scope.disable6MonthsFromNow = function(event, month){
+    if(month.isBefore(moment().subtract(6, 'month'), 'month') || month.isAfter(moment().add(6, 'month'), 'month')){
+        event.preventDefault();
+    }
+};
+
+  $scope.$watch('myArrayOfDates', function(newValue, oldValue){
+    if(newValue){
+        console.log('my array changed, new size : ' +  $filter('date')(newValue, "dd/MM/yyyy"));
+    }
+   }, true);
+  
+   $scope.selectedAllRow = function () {
+		angular.forEach($scope.scheduleTableArray, function (attribute) {
+			attribute.selected = $scope.selectAllRow;
+		});
+	}
+
+  $scope.addRow=function(){
+    if($scope.scheduleTableArray ==null){
+      $scope.scheduleTableArray=[]; 
+    }
+    var len=$scope.scheduleTableArray.length;
+    var scheduleInfo={};
+    scheduleInfo.frequencyType=$scope.frequencyTypes[0].text;
+    scheduleInfo.startDate;
+    $scope.scheduleTableArray.splice(len,0,scheduleInfo);
+  }
+
+  $scope.removeRow = function () {
+		var newDataList = [];
+		$scope.selectAllRow = false
+		angular.forEach($scope.scheduleTableArray, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		$scope.scheduleTableArray = newDataList;
+	}
+
   $scope.getAllLatest=function(type){
     BatchService.getAllLatest(type).then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
@@ -142,24 +268,27 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     }
     BatchService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, CF_META_TYPES.batch).then(function(response) {onsuccess(response.data)});
     var onsuccess = function(response) {
-      $scope.batchDetail = response;
-      $scope.tags = response.tags
-      $scope.checkboxModelparallel = response.inParallel;
+      $scope.batchDetail = response.batch;
+      
+      if( $scope.batchDetail.tags)
+        $scope.tags =  $scope.batchDetail.tags
+      $scope.checkboxModelparallel =  $scope.batchDetail.inParallel;
       var defaultversion = {};
-      defaultversion.version = response.version;
-      defaultversion.uuid = response.uuid;
+      defaultversion.version =  $scope.batchDetail.version;
+      defaultversion.uuid =  $scope.batchDetail.uuid;
       $scope.batch.defaultVersion = defaultversion;
       var metaTagArray = [];
-      for (var i = 0; i < response.metaList.length; i++) {
+      for (var i = 0; i <  $scope.batchDetail.metaList.length; i++) {
         var metaTags = {};
-        metaTags.uuid = response.metaList[i].ref.uuid;
-        metaTags.type = response.metaList[i].ref.type;
-        metaTags.name = response.metaList[i].ref.name;
-        metaTags.id = response.metaList[i].ref.uuid;
-        metaTags.version = response.metaList[i].ref.version;
+        metaTags.uuid =  $scope.batchDetail.metaList[i].ref.uuid;
+        metaTags.type =  $scope.batchDetail.metaList[i].ref.type;
+        metaTags.name =  $scope.batchDetail.metaList[i].ref.name;
+        metaTags.id =  $scope.batchDetail.metaList[i].ref.uuid;
+        metaTags.version =  $scope.batchDetail.metaList[i].ref.version;
         metaTagArray[i] = metaTags;
       }
       $scope.metaTags = metaTagArray
+      $scope.scheduleTableArray=response.scheduleInfoArray;
     }
   }
 
@@ -167,23 +296,26 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.myform.$dirty = false;
     BatchService.getOneByUuidAndVersion($scope.batch.defaultVersion.uuid, $scope.batch.defaultVersion.version, CF_META_TYPES.batch).then(function(response) {onsuccess(response.data)});
     var onsuccess = function(response) {
-      $scope.batchDetail = response;
-      $scope.tags = response.tags
+      $scope.batchDetail = response.batch;
+      if(response.batch.tags)
+        $scope.tags = response.batch.tags
+      $scope.checkboxModelparallel = response.batch.inParallel;
       var defaultversion = {};
-      defaultversion.version = response.version;
-      defaultversion.uuid = response.uuid;
+      defaultversion.version = response.batch.version;
+      defaultversion.uuid = response.batch.uuid;
       $scope.batch.defaultVersion = defaultversion;
-      var metaTagsArray = [];
-      for (var i = 0; i < response.metaList.length; i++) {
+      var metaTagArray = [];
+      for (var i = 0; i < response.batch.metaList.length; i++) {
         var metaTags = {};
-        metaTags.uuid = response.metaList[i].ref.uuid;
-        metaTags.type = response.metaList[i].ref.type;
-        metaTags.name = response.metaList[i].ref.name;
-        metaTags.id = response.metaList[i].ref.uuid;
-        metaTags.version = response.metaList[i].ref.version;
-        metaTagsArray[i] = metaTags;
+        metaTags.uuid = response.batch.metaList[i].ref.uuid;
+        metaTags.type = response.batch.metaList[i].ref.type;
+        metaTags.name = response.batch.metaList[i].ref.name;
+        metaTags.id = response.batch.metaList[i].ref.uuid;
+        metaTags.version = response.batch.metaList[i].ref.version;
+        metaTagArray[i] = metaTags;
       }
-      $scope.metaTags = metaTagsArray
+      $scope.metaTags = metaTagArray
+      $scope.scheduleTableArray=response.batch.scheduleInfoArray;
     }
   }
 
@@ -238,6 +370,18 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     }
     
     batchJson.metaList = metaInfoArray;
+    var scheduleTableArray=[];
+    for(var i=0;i<$scope.scheduleTableArray.length;i++){
+      var scheduleInfo={};
+      scheduleInfo.name=$scope.scheduleTableArray[i].name;
+      scheduleInfo.startDate=new Date($scope.scheduleTableArray[i].startDate);
+      scheduleInfo.endDate=new Date($scope.scheduleTableArray[i].endDate);
+      scheduleInfo.frequencyType=$scope.scheduleTableArray[i].frequencyType;
+      scheduleInfo.frequencyDetail=$scope.scheduleTableArray[i].frequencyDetail;
+      scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
+      scheduleTableArray[i]=scheduleInfo;
+    }  
+    batchJson.scheduleInfo=scheduleTableArray; 
     console.log(JSON.stringify(batchJson))
     BatchService.submit(batchJson, CF_META_TYPES.batch,upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
@@ -646,3 +790,55 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
   
 });
 
+(function($angular, _, $moment, Hammer) {
+  'use strict';
+	BatchModule.directive('weekdaySelector', [function() {
+		// init tracker and sort model
+		var _tracker = function(m){
+			m.sort();
+			return _.times(7, function(i){
+				return (_.indexOf(m, i) !== -1);
+			});
+		};
+		
+		// toggle day and sort model
+		var _toggle = function(m, d, t){
+			var i = _.indexOf(m, d);
+			t[d] = (i === -1);
+			(i > -1) ? m.splice(i, 1) : m.push(d);
+			m.sort();
+		};
+
+		return {
+      restrict: 'E',
+      replace: true,
+
+			scope: {
+				model: '=?'
+			},
+			
+      template: '<div class="weekday-selector"><ul><li ng-repeat="day in days" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{day[0]}}</span></li></ul></div>',
+
+			link: function(scope, element, attrs) {
+				scope.days = $moment.weekdays();
+				scope.toggle = function(m, d, t) {
+					_toggle(m, d, t);
+				};
+				scope.tracker = _tracker(scope.model);
+				scope.$watch('model', function(n){
+					scope.tracker = _tracker(n);
+				})
+			}
+    };
+  }])
+	.directive('tap', [function() {
+		return function(scope, element, attr) {
+			var hammerTap = new Hammer(element[0], {});
+			hammerTap.on('tap', function() {
+				scope.$apply(function() {
+					scope.$eval(attr.tap);
+				});
+			});
+		};
+  }])
+})(window.angular, window._, window.moment, window.Hammer);
