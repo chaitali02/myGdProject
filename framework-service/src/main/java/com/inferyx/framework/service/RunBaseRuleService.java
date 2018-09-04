@@ -443,15 +443,14 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		Datapod dp = null;
 		try {
 			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
 			if (datasource.getType().equals(ExecContext.FILE.toString())) {
 				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+			} else {
+				return datasource.getDbname() + "." + dp.getName();
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-		}
-		if (dp != null) {
-			return datasource.getDbname() + "." + dp.getName();
 		}
 		return null;
 	}
@@ -561,8 +560,18 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-				rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
-				countRows = rsHolder.getCountRows();
+				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
+				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
+				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
+						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
+					exec.executeSql(sql, appUuid);
+				} else {
+					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
+					countRows = rsHolder.getCountRows();
+				}
 			}
 				
 			logger.info("temp table registered: "+tableName);

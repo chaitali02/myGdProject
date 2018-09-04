@@ -62,17 +62,15 @@
             "uuid" : "53b44d5b-6571-4c46-af08-549b1445d056"
         }
     },
-  	"savePmml" : "Y",
+  	"savePmml" : "N",
 	"summaryMethods" : [  
 		"estimatedDocConcentration",
-		"getDocConcentration",
 		"getK",
 		"getLearningDecay",
 		"getLearningOffset",
 		"getOldDocConcentration",
 		"getOldTopicConcentration",
 		"getSubsamplingRate",
-		"getTopicConcentration",
 		"getOptimizer",
 		"getTopicDistributionCol",
 		"supportedOptimizers",

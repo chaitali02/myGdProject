@@ -242,10 +242,10 @@ public class GenerateDataOperator implements IOperator {
 //		List<Attribute> attributes = locationDatapod.getAttributes();
 		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
 		if(exec instanceof SparkExecutor<?> && !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			resultSetHolder.setTableName(tableName);
 			sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);
 		} else {
-			exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
-			
+			exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());	
 		}
 		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());

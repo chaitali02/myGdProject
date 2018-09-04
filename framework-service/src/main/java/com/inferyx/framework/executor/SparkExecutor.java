@@ -2188,13 +2188,14 @@ public class SparkExecutor<T> implements IExecutor {
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
 			try {
+				trainingDf.show(false);
 				cvModel = cv.fit(trainingDf);
 			} catch (Exception e) {
 				e.printStackTrace();
-				throw new RuntimeException(e);
+				throw new RuntimeException("Training failed.");
 			} catch (Error e) {
 				e.printStackTrace();
-				throw new RuntimeException(e);
+				throw new RuntimeException("Training failed.");
 			}
 			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
@@ -2330,7 +2331,8 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 		} 
-		return paramGridBuilder.build();
+		ParamMap[] paramMaps = paramGridBuilder.build();
+		return paramMaps;
 	}
 
 	@SuppressWarnings("unchecked")

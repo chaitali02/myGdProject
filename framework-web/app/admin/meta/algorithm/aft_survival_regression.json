@@ -68,7 +68,6 @@
 		"getAggregationDepth",
 		"getMaxIter",
 		"getQuantileProbabilities",
-		"getQuantilesCol",
 		"getTol",
 		"intercept",
 		"scale"

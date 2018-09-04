@@ -1617,12 +1617,12 @@ public class MetadataServiceImpl {
 			if(execParams.getParamInfo() != null) {
 				for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
 					List<ParamListHolder> paramListHolder = getParamListHolder(paramSetHolder);
-					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClass, true,algoClassName);					
+					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClass, true, algoClassName);					
 					paramMapList.add(paramMap);
 				}
 			} else if(execParams.getParamListInfo() != null) {
 				List<ParamListHolder> paramListHolderList = execParams.getParamListInfo();
-				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false, algoClassName);						
 				paramMapList.add(paramMap);
 			} 
 		} else {
@@ -1630,7 +1630,7 @@ public class MetadataServiceImpl {
 			ParamListHolder plHolder = new ParamListHolder();
 			plHolder.setRef(algo.getParamListWoH().getRef());
 			paramListHolderList.add(plHolder);
-			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
+			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false, algoClassName);						
 			paramMapList.add(paramMap);
 		}
 
@@ -1641,7 +1641,7 @@ public class MetadataServiceImpl {
 		ParamMap paramMap = new ParamMap();
 		try {
 			for(ParamListHolder plh : paramListHolder) {
-				ParamList paramList= (ParamList) commonServiceImpl.getLatestByUuid(plh.getRef().getUuid(), MetaType.paramlist.toString());
+				ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(plh.getRef().getUuid(), MetaType.paramlist.toString());
 				if(filterParams) {						
 					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
 						if(param.getParamId().equals(plh.getParamId())){

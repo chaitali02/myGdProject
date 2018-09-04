@@ -67,28 +67,6 @@
         },
 	"value" : "1.0"
     }
-    },
-    {
-      "paramId": "2",
-      "paramName": "predictionCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col1"
-    }
-    },
-    {
-      "paramId": "3",
-      "paramName": "featuresCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col2"
-    }
     }
   ]
 }
