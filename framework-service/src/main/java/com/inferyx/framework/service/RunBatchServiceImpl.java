@@ -274,8 +274,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 						break;
 				default:
 					break;
-				}
-				
+				}				
 			}
 		}
 		

@@ -11,8 +11,10 @@
 package com.inferyx.framework.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
@@ -64,7 +66,7 @@ public class BatchServiceImpl {
 		try {
 			Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 			if(batchExec == null) {
-				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.batch, batchUuid, batchUuid));
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.batch, batchUuid, batchVersion));
 				batchExec = new BatchExec();
 				batchExec.setDependsOn(dependsOn);
 				batchExec.setBaseEntity();
@@ -158,48 +160,62 @@ public class BatchServiceImpl {
 	}*/
 	
 	public BatchExec checkBatchStatus(BatchExec batchExec) throws Exception {
+		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchExec.getDependsOn().getRef().getUuid(), batchExec.getDependsOn().getRef().getVersion(), batchExec.getDependsOn().getRef().getType().toString());
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
 		boolean areAllCompleted = false;
 		Stage batchStatus = Helper.getLatestStatus(batchExec.getStatusList()).getStage();
 		boolean isKilled = false;
 		boolean isFailed = false;
 		boolean isCompleted = false;
-		boolean isAnyOneTerminating = false;
-		boolean isAnyOneInProgress = false;
+		Map<Stage, Boolean> statusMap = new HashMap<>();
 		
 		do {
 			for(int i=0; i<execList.size(); i++) {
 				MetaIdentifier execMI = execList.get(i).getRef();				
 				Status latestStatus = checkStatusByExec(execMI);
 				
-				if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
-					isAnyOneInProgress = true;
-				}
-				
-				if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
-					isAnyOneTerminating = true;
-				}
-				
 				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
-					areAllCompleted = true;
 					isCompleted = true;
+					statusMap.put(Stage.Completed, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
+					statusMap.put(Stage.InProgress, true);
+					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
+					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
+					
+					if(!batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
+					statusMap.put(Stage.Terminating, true);
+					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
+					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
+					
+					if(!batchExecLatestStatus.getStage().equals(Status.Stage.Terminating)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					}
+				} else if(latestStatus.getStage().equals(Status.Stage.NotStarted)) {
+					statusMap.put(Stage.NotStarted, true);
 				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
-					areAllCompleted = true;
 					isKilled = true;
+					statusMap.put(Stage.Killed, true);
 				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
-					areAllCompleted = true;
 					isFailed = true;
-				} else {
-					areAllCompleted = false;
-				}				
+					statusMap.put(Stage.Failed, true);
+				} 			
 			}
 			
-			if(isAnyOneInProgress) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+			if(statusMap.get(Stage.NotStarted).equals(true) 
+					|| statusMap.get(Stage.InProgress).equals(true)
+					|| statusMap.get(Stage.Terminating).equals(true)) {
+				areAllCompleted = false;
+			} else if(statusMap.get(Stage.Completed).equals(true) 
+					|| statusMap.get(Stage.Failed).equals(true)
+					|| statusMap.get(Stage.Killed).equals(true)) {
+				areAllCompleted = true;
 			}
-			
-			if(isAnyOneTerminating) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+			statusMap = resetMap(statusMap);
+			if(isFailed && batch.getInParallel() != null && !batch.getInParallel().isEmpty() && batch.getInParallel().equalsIgnoreCase("false")) {
+				batchExec = kill(batchExec.getUuid(), batchExec.getVersion());
 			}
 			
 			if(areAllCompleted) {
@@ -215,6 +231,16 @@ public class BatchServiceImpl {
 		} while(!areAllCompleted);
 		
 		return batchExec;
+	}
+	
+	public Map<Stage, Boolean> resetMap(Map<Stage, Boolean> statusMap) {
+		statusMap.put(Stage.Completed, false);
+		statusMap.put(Stage.InProgress, false);
+		statusMap.put(Stage.Terminating, false);
+		statusMap.put(Stage.NotStarted, false);
+		statusMap.put(Stage.Killed, false);
+		statusMap.put(Stage.Failed, false);		
+		return statusMap;
 	}
 	
 	public Status checkStatusByExec(MetaIdentifier execMI) throws JsonProcessingException {		
