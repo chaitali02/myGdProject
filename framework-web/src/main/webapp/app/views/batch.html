@@ -1,3 +1,4 @@
+
 <div class="row" ng-controller="DetailBatchController">
   <div class="col-md-12">
     <div class="page-bar">
@@ -264,14 +265,14 @@
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input class="form-control" placeholder="Select a start date..." moment-picker="data.startDate" locale="en" format="MM-D-YYYY, h:mm:ss a"
                             ng-model="data.startDate" ng-model-options="{ updateOn: 'blur' }" start-view="month" min-date=minDate
-                            validate=true change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message="">
+                            validate=true  max-view="hour" change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message="">
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input class="form-control" placeholder="Select a end date..." moment-picker="data.endDate" locale="en" format="MM-D-YYYY, h:mm:ss a"
                             ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" start-view="month" min-date=data.startDate
-                            change="onChangeEndDate(data.endDate,$index)" validate=true required disable-validation-message="">
+                            max-view="hour" change="onChangeEndDate(data.endDate,$index)" validate=true required disable-validation-message="">
                         </span>
                       </td>
                       <td style="text-align: center;width:5%;">
@@ -281,7 +282,7 @@
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select ng-model="data.frequencyType" ng-options=" x.text as x.caption for x in frequencyTypes" ng-disabled="{{mode}}" class="form-control"></select>
+                          <select ng-model="data.frequencyType" ng-change="onChangeFrequencyType($index)" ng-options=" x.text as x.caption for x in frequencyTypes" ng-disabled="{{mode}}" class="form-control"></select>
                         </span>
                       </td>
                       
@@ -302,6 +303,23 @@
                               </div>
                             </script>
                           </div>
+                          <div ng-if="data.frequencyType =='dow'" >
+                            
+                              <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
+                                popover-is-open="data.domPopoverIsOpen"  ng-click="closeFrequencyDetailDOW($index)">
+                                
+                                <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                              </div>
+                              <script type="text/ng-template" id="dow-popoverTemplate_data.html">
+                                <div style="width:270px;"> 
+                                   
+                                    <weekday-selector model="WeekArray"></weekday-selector>
+                                  <div style="border-top:1px solid grey;height:50px;padding:6px;">
+                                    <input type="button" class="btn" ng-click="closeFrequencyDetailDOW($index)"  ng-disabled="{{mode}}" value="Done">                                    
+                                  </div>
+                                </div>
+                              </script>
+                            </div>
                           <div ng-if="data.frequencyType =='once'" style="text-align:center" >-NA-</div>
                         </span>
                       </td>

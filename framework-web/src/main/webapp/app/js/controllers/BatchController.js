@@ -6,7 +6,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.select = 'batch';
   $scope.myArrayOfDates = [];
  
-
+  $scope.WeekArray = [1,2];
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -119,8 +119,31 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
    }
   }
 
+  $scope.onChangeFrequencyType=function(index){
+    $scope.scheduleTableArray[index].frequencyDetail=[];
+  }
+
+  $scope.closeFrequencyDetailDOW=function(index){
+    if($scope.scheduleTableArray[index].domPopoverIsOpen ==true){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+      for(var i=0;i<$scope.WeekArray.length;i++){
+        $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.WeekArray[i];
+      }
+    }else{
+      $scope.WeekArray=[];
+      for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
+       $scope.WeekArray[i]=Number($scope.scheduleTableArray[index].frequencyDetail[i]);
+      }
+    }
+
+    for(var k=0;k<$scope.scheduleTableArray.length;k++){
+      $scope.scheduleTableArray[k].domPopoverIsOpen=false;
+      $scope.scheduleTableArray[index].domPopoverIsOpen=true;
+    }
+    $scope.scheduleTableArray[index].domPopoverIsOpen=!$scope.scheduleTableArray[index].domPopoverIsOpen;
+  }
+
   $scope.closeFrequencyDetail=function(index){
-   
    // $scope.scheduleTableArray[index].frequencyDetail=[];
     if($scope.scheduleTableArray[index].popoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
@@ -767,3 +790,55 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
   
 });
 
+(function($angular, _, $moment, Hammer) {
+  'use strict';
+	BatchModule.directive('weekdaySelector', [function() {
+		// init tracker and sort model
+		var _tracker = function(m){
+			m.sort();
+			return _.times(7, function(i){
+				return (_.indexOf(m, i) !== -1);
+			});
+		};
+		
+		// toggle day and sort model
+		var _toggle = function(m, d, t){
+			var i = _.indexOf(m, d);
+			t[d] = (i === -1);
+			(i > -1) ? m.splice(i, 1) : m.push(d);
+			m.sort();
+		};
+
+		return {
+      restrict: 'E',
+      replace: true,
+
+			scope: {
+				model: '=?'
+			},
+			
+      template: '<div class="weekday-selector"><ul><li ng-repeat="day in days" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{day[0]}}</span></li></ul></div>',
+
+			link: function(scope, element, attrs) {
+				scope.days = $moment.weekdays();
+				scope.toggle = function(m, d, t) {
+					_toggle(m, d, t);
+				};
+				scope.tracker = _tracker(scope.model);
+				scope.$watch('model', function(n){
+					scope.tracker = _tracker(n);
+				})
+			}
+    };
+  }])
+	.directive('tap', [function() {
+		return function(scope, element, attr) {
+			var hammerTap = new Hammer(element[0], {});
+			hammerTap.on('tap', function() {
+				scope.$apply(function() {
+					scope.$eval(attr.tap);
+				});
+			});
+		};
+  }])
+})(window.angular, window._, window.moment, window.Hammer);

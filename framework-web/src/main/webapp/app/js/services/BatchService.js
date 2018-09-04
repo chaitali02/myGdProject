@@ -207,7 +207,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					// 		scheduleInfo.frequencyDetail[j]=($filter('date')(date, "MM-dd-yyyy"));
 					// 	}
 					// }
-					console.log(scheduleInfo.frequencyDetail)
+					
 					scheduleInfoArray[i]=scheduleInfo;
 				}
 			}
