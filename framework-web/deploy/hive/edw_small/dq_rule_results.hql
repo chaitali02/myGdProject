@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small ;
-use edw_small ;
+CREATE DATABASE IF NOT EXISTS edw_small;
+use edw_small;
 DROP TABLE IF EXISTS dq_rule_results;
 CREATE EXTERNAL TABLE IF NOT EXISTS `dq_rule_results`(
   `rowkey` string,

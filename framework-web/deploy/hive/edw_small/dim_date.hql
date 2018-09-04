@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small ;
-use edw_small ;
+CREATE DATABASE IF NOT EXISTS edw_small;
+use edw_small;
 DROP TABLE IF EXISTS dim_date;
 CREATE EXTERNAL TABLE IF NOT EXISTS `dim_date`(
   `date_id` int, 
@@ -64,6 +64,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `dim_date`(
   `load_date` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE edw_small .dim_date ADD PARTITION(load_date='2017-12-04');
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/edw_small /upload/dim_date_small.csv' OVERWRITE INTO TABLE dim_date PARTITION (load_date='2017-12-04');
+ALTER TABLE edw_small.dim_date ADD PARTITION(load_date='2017-12-04');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/edw_small/upload/dim_date_small.csv' OVERWRITE INTO TABLE dim_date PARTITION (load_date='2017-12-04');
 

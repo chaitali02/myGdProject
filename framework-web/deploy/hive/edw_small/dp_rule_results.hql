@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small ;
-use edw_small ;
+CREATE DATABASE IF NOT EXISTS edw_small;
+use edw_small;
 DROP TABLE IF EXISTS dp_rule_results;
 CREATE TABLE dp_rule_results
 (
