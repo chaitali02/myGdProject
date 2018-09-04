@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS ecocap;
-use ecocap;
 DROP TABLE IF EXISTS portfolio_loss_summary;
 CREATE  TABLE IF NOT EXISTS `portfolio_loss_summary`(
   `portfolio_avg_pd` int, 

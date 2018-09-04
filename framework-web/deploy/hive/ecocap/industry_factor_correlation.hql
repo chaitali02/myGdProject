@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS ecocap;
-use ecocap;
 DROP TABLE IF EXISTS industry_factor_correlation;
 CREATE TABLE IF NOT EXISTS `industry_factor_correlation`(
   `factor` string, 

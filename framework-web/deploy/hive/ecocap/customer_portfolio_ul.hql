@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS ecocap;
-use ecocap;
 DROP TABLE IF EXISTS customer_portfolio_ul;
 CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul`(
   `cust_id` string, 
