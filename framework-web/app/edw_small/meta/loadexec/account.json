@@ -1,0 +1,44 @@
+{
+	"statusList": [
+		{
+			"stage": "NotStarted",
+			"createdOn": ISODate("2017-03-25T04:13:30.921Z")
+		},
+		{
+			"stage": "InProgress",
+			"createdOn": ISODate("2017-03-25T04:13:30.921Z")
+		},
+		{
+			"stage": "Completed",
+			"createdOn": ISODate("2017-03-25T04:13:32.413Z")
+		}
+	],
+	"dependsOn": {
+		"ref": {
+			"type": "load",
+			"uuid": "a3d5a995-3ba0-4c20-b53e-800f690e59a9",
+			"version": "1490415208"
+		}
+	},
+	"uuid": "60c20336-98a5-459a-acbf-06788a92ee8f",
+	"version": "1490415210",
+	"name": "account",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	]
+}

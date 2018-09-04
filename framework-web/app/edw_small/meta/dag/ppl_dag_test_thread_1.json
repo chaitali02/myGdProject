@@ -1,0 +1,663 @@
+{
+   
+    "xPos" : 70.0,
+    "yPos" : 580.0,
+    "templateFlg" : "N",
+    "stages" : [ 
+        {
+            "stageId" : "stage_0",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "7af51854-96ea-4a1a-bded-42d73397daa2",
+                    "dependsOn" : [],
+                    "name" : "dqr_account_account_status_Id",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "dq",
+                                        "uuid" : "21f22d9e-d769-4150-9bfc-857be7e047e9",
+                                        "name" : "dqr_account_account_status_Id"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1320.0,
+                    "yPos" : 80.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "639af879-9aad-429e-9e94-f708890e100f",
+                    "dependsOn" : [],
+                    "name" : "profile_account_status_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "c4fd6174-e8c7-4995-aa5c-ec9ca239146e",
+                                        "name" : "profile_account_status_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1320.0,
+                    "yPos" : 170.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "8634fa82-0395-4caf-8a52-154ad2afa607",
+                    "dependsOn" : [],
+                    "name" : "profile_account_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
+                                        "name" : "profile_account_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1330.0,
+                    "yPos" : 260.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "2c92a3d7-1ee0-4bec-bba8-500b8d788cef",
+                    "dependsOn" : [],
+                    "name" : "profile_branch",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "43bc864f-d8eb-4ef8-a675-0aae391ee764",
+                                        "name" : "profile_branch"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1320.0,
+                    "yPos" : -10.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "4b52ca50-048d-4d78-bbfc-da4b0d0801f3",
+                    "dependsOn" : [],
+                    "name" : "dqr_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "dq",
+                                        "uuid" : "15d9baaf-a35f-4c95-b7e4-e5070175428c",
+                                        "name" : "dqr_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1330.0,
+                    "yPos" : 360.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }
+            ],
+            "name" : "new stage",
+            "xPos" : 990.0,
+            "yPos" : 170.0,
+            "active" : "Y",
+            "statusList" : []
+        }, 
+        {
+            "stageId" : "9c2347c2-0c95-4e36-9782-e71063671d34",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "d1923e52-11d3-4866-9855-19bae311fd37",
+                    "dependsOn" : [],
+                    "name" : "dqr_account_account_open_date",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "dq",
+                                        "uuid" : "5c9786a3-e934-461e-9b54-ef07e9e02a63",
+                                        "name" : "dqr_account_account_open_date"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 0.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "4bc3493f-1dc4-473f-9cfa-5f8650cb48e0",
+                    "dependsOn" : [],
+                    "name" : "map_dim_branch",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "d2cc6181-9104-4f2d-b220-2cd29a69dabe",
+                                        "name" : "map_dim_branch"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 100.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "755cf21f-958d-43b8-8e45-25d864310ce4",
+                    "dependsOn" : [],
+                    "name" : "map_dim_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "ec398401-8495-419f-bde7-76db137f3088",
+                                        "name" : "map_dim_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 380.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "1e7bcfe2-78f5-48ce-89ce-be0d8cd48d59",
+                    "dependsOn" : [],
+                    "name" : "profile_account_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
+                                        "name" : "profile_account_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 290.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "7170c5f0-6bac-4d50-803b-67d733308c8b",
+                    "dependsOn" : [],
+                    "name" : "profile_account_status_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "c4fd6174-e8c7-4995-aa5c-ec9ca239146e",
+                                        "name" : "profile_account_status_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 660.0,
+                    "yPos" : 190.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }
+            ],
+            "name" : "New stage",
+            "xPos" : 360.0,
+            "yPos" : 180.0,
+            "active" : "Y",
+            "statusList" : []
+        }, 
+        {
+            "stageId" : "6b1b14e4-92a3-435d-9e82-ba2327c977fc",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "49395b0b-780b-4787-82c8-22f360d73f53",
+                    "dependsOn" : [],
+                    "name" : "profile_bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
+                                        "name" : "profile_bank"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1340.0,
+                    "yPos" : 650.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "1f683284-ca33-424b-8eec-f57f703311d3",
+                    "dependsOn" : [],
+                    "name" : "dqr_account_account_open_date",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "dq",
+                                        "uuid" : "5c9786a3-e934-461e-9b54-ef07e9e02a63",
+                                        "name" : "dqr_account_account_open_date"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1340.0,
+                    "yPos" : 770.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "dd0fbb1d-badb-4ef2-a602-a10b9381e212",
+                    "dependsOn" : [],
+                    "name" : "map_dim_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "ec398401-8495-419f-bde7-76db137f3088",
+                                        "name" : "map_dim_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1340.0,
+                    "yPos" : 870.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "49b8a4d9-5db7-4091-983c-d688753fa293",
+                    "dependsOn" : [],
+                    "name" : "profile_bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
+                                        "name" : "profile_bank"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1350.0,
+                    "yPos" : 960.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "7cd9e5ac-309f-4fdf-966f-105a2fe84381",
+                    "dependsOn" : [],
+                    "name" : "map_dim_bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a",
+                                        "name" : "map_dim_bank"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1350.0,
+                    "yPos" : 1070.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }
+            ],
+            "name" : "New stage",
+            "xPos" : 990.0,
+            "yPos" : 860.0,
+            "active" : "Y",
+            "statusList" : []
+        }, 
+        {
+            "stageId" : "c77c736c-f170-4730-a306-c16ffc4566fb",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "1341cbf0-1506-45e3-8676-767ef4d48f20",
+                    "dependsOn" : [],
+                    "name" : "map_dim_address",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db",
+                                        "name" : "map_dim_address"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1820.0,
+                    "yPos" : 590.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "8e94430c-2cf1-49d6-9387-0318ffc497c9",
+                    "dependsOn" : [],
+                    "name" : "profile_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
+                                        "name" : "profile_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1830.0,
+                    "yPos" : 490.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "9991559c-c30e-4bb8-86ff-dc829c757872",
+                    "dependsOn" : [],
+                    "name" : "profile_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
+                                        "name" : "profile_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1830.0,
+                    "yPos" : 380.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "478487e6-d713-4945-974b-6e0abc2cc3c6",
+                    "dependsOn" : [],
+                    "name" : "map_dim_transaction_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "4f875b10-9534-4f9d-b9e5-b4cae8e7bf0d",
+                                        "name" : "map_dim_transaction_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1830.0,
+                    "yPos" : 700.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "addb3a71-9f36-4c08-a784-11b2bca2bfb3",
+                    "dependsOn" : [],
+                    "name" : "profile_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
+                                        "name" : "profile_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 1830.0,
+                    "yPos" : 820.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }
+            ],
+            "name" : "New stage",
+            "xPos" : 1450.0,
+            "yPos" : 590.0,
+            "active" : "Y",
+            "statusList" : []
+        }, 
+        {
+            "stageId" : "cff994e7-fa61-47b0-a098-5fe99c4e0ba1",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "365632a4-5107-4ebe-b342-380ad5e4f3a3",
+                    "dependsOn" : [],
+                    "name" : "map_dim_address",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db",
+                                        "name" : "map_dim_address"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 640.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "6aeb3c32-530a-4772-b074-ccd9ecd96052",
+                    "dependsOn" : [],
+                    "name" : "profile_address",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "5ba9f2c3-bfbd-422f-ae27-6ff94ac6b874",
+                                        "name" : "profile_address"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 740.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "d34a0c16-9e9c-45c6-9084-433a90ac88d7",
+                    "dependsOn" : [],
+                    "name" : "dqr_account",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "dq",
+                                        "uuid" : "15d9baaf-a35f-4c95-b7e4-e5070175428c",
+                                        "name" : "dqr_account"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 840.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "431c6e42-9726-47dd-96af-37f7c0960f00",
+                    "dependsOn" : [],
+                    "name" : "profile_account_status_type",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "profile",
+                                        "uuid" : "c4fd6174-e8c7-4995-aa5c-ec9ca239146e",
+                                        "name" : "profile_account_status_type"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 940.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "7260a2b2-5607-49a9-b195-11f2bb2131f9",
+                    "dependsOn" : [],
+                    "name" : "map_dim_branch",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "map",
+                                        "uuid" : "d2cc6181-9104-4f2d-b220-2cd29a69dabe",
+                                        "name" : "map_dim_branch"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "xPos" : 650.0,
+                    "yPos" : 1040.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }
+            ],
+            "name" : "New stage",
+            "xPos" : 330.0,
+            "yPos" : 840.0,
+            "active" : "Y",
+            "statusList" : []
+        }
+    ],
+    "statusList" : [],
+    "uuid" : "d807674e-4cd2-483b-a836-8f1b0fc8e28a",
+    "version" : "1532676022",
+    "name" : "ppl_dag_test_thread_1",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-07-26T19:20:22.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

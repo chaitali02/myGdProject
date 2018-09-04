@@ -1,0 +1,17 @@
+truncate table edw_small.dim_account;
+truncate table edw_small.dim_address;
+truncate table edw_small.dim_bank;
+truncate table edw_small.dim_branch; 
+truncate table edw_small.dim_country;
+truncate table edw_small.dim_customer;
+truncate table edw_small.dim_state;
+truncate table edw_small.dim_transaction_type;
+truncate table edw_small.dp_rule_results;
+truncate table edw_small.dq_rule_results;
+truncate table edw_small.fact_account_summary_monthly;
+truncate table edw_small.fact_customer_summary_monthly;
+truncate table edw_small.fact_transaction;
+truncate table edw_small.profile_rule_results;
+truncate table edw_small.rc_rule_results;
+
+

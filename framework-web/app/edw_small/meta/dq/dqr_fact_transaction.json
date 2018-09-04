@@ -1,0 +1,46 @@
+{
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+		}
+	},
+	"duplicateKeyCheck": "Y",
+	"nullCheck": "N",
+	"valueCheck": [],
+	"rangeCheck": {
+		
+	},
+	"lengthCheck": {
+		
+	},
+	"refIntegrityCheck": {
+		
+	},
+	"uuid": "ff8972bc-abda-4125-80da-72de2a09ee8f",
+	"version": "1490112539",
+	"name": "dqr_fact_transaction",
+	"desc": "dq table level check on target tables for duplicates",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

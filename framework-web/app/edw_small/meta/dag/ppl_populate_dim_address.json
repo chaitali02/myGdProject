@@ -1,0 +1,59 @@
+{
+	 "xPos" : 10.0,
+    "yPos" : 90.0,
+	"templateFlg" : "N",
+	"stages": [
+		{
+			"stageId": "bd261aa4-4bd6-4b1d-a2ad-b0d08ddb9a27",
+			"xPos" : 480.0,
+            "yPos" : 90.0,
+			"dependsOn": [],
+			"name": "Populate dim_address",
+			"tasks": [
+				{
+					"taskId": "106a0191-84ff-4204-b80d-895d26bb6ce3",
+					"xPos": 860,
+					"yPos": 90,
+					"dependsOn": [],
+					"name": "map_dim_address",
+					"operators": [
+						{
+							"operatorId": "82f6a9cb-a560-4d1c-af46-bd59cd32103e",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "map",
+									"uuid": "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db"
+								}
+							}],
+							"operatorParams": {
+								
+							},
+							"filterInfo": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"uuid": "e01bb677-7640-4e86-a954-0e8be8b45dab",
+	"version": "1488620441",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"name": "ppl_populate_dim_address"
+}

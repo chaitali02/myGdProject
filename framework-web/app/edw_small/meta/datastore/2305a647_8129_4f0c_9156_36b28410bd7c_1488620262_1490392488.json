@@ -1,0 +1,44 @@
+{
+	"metaId": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c",
+			"version": "1488620262"
+		}
+	},
+	"execId": {
+		"ref": {
+			"type": "loadExec",
+			"uuid": "d7cabee9-966a-4ecc-9494-a31ed4f43c6b",
+			"version": "1490392489"
+		}
+	},
+	"location": "/2305a647-8129-4f0c-9156-36b28410bd7c/1488620262/1490392488",
+	"numRows": {
+		"$numberLong": "3"
+	},
+        "runMode" : "BATCH",
+	"uuid": "96c4ddac-d742-43cc-b708-56047386f42f",
+	"version": "1490392490",
+	"name": "2305a647_8129_4f0c_9156_36b28410bd7c_1488620262_1490392488",
+	"desc": "Creating datastore for 2305a647_8129_4f0c_9156_36b28410bd7c_1488620262_1490392488",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+    
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	]
+}
