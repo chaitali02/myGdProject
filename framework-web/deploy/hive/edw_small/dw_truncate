@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS edw_small;
+use edw_small;
+
 truncate table edw_small.dim_account;
 truncate table edw_small.dim_address;
 truncate table edw_small.dim_bank;
@@ -15,3 +18,27 @@ truncate table edw_small.profile_rule_results;
 truncate table edw_small.rc_rule_results;
 
 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/account.csv' OVERWRITE INTO TABLE edw_small.account PARTITION (load_date='2017-07-01', load_id='00');
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/account_status_type.csv' OVERWRITE INTO TABLE edw_small.account_status_type PARTITION (load_date='2017-07-01', load_id='00');
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/account_type.csv' OVERWRITE INTO TABLE edw_small.account_type PARTITION (load_date='2017-07-01', load_id='00');
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/address.csv' OVERWRITE INTO TABLE edw_small.address PARTITION (load_date='2017-07-01', load_id='00');  
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/bank.csv' OVERWRITE INTO TABLE edw_small.bank PARTITION (load_date='2017-07-01', load_id='00'); 
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/branch.csv' OVERWRITE INTO TABLE edw_small.branch PARTITION (load_date='2017-07-01', load_id='00'); 
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/branch_type.csv' OVERWRITE INTO TABLE edw_small.branch_type PARTITION (load_date='2017-07-01', load_id='00'); 
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer.csv' OVERWRITE INTO TABLE edw_small.customer PARTITION (load_date='2017-07-01', load_id='00'); 
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/dim_date.csv' OVERWRITE INTO TABLE dim_date PARTITION (load_date='2017-12-04');
+
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/product_type.csv' OVERWRITE INTO TABLE edw_small.product_type PARTITION (load_date='2017-07-01', load_id='00'); 
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/transaction.csv' OVERWRITE INTO TABLE edw_small.transaction PARTITION (load_date='2017-07-01', load_id='00');
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/transaction_type.csv' OVERWRITE INTO TABLE edw_small.transaction_type PARTITION (load_date='2017-07-01', load_id='00');

@@ -1,0 +1,59 @@
+invalidate metadata;
+
+select 'edw_medium.account' as input_table, count(*) as cnt from edw_medium.account
+union
+select 'edw_medium.account_status_type' as input_table, count(*) as cnt from edw_medium.account_status_type
+union
+select 'edw_medium.account_type' as input_table, count(*) as cnt from edw_medium.account_type
+union
+select 'edw_medium.address' as input_table, count(*) as cnt from edw_medium.address
+union
+select 'edw_medium.bank' as input_table, count(*) as cnt from edw_medium.bank
+union
+select 'edw_medium.branch' as input_table, count(*) as cnt from edw_medium.branch
+union
+select 'edw_medium.branch_type' as input_table, count(*) as cnt from edw_medium.branch_type
+union
+select 'edw_medium.customer' as input_table, count(*) as cnt from edw_medium.customer
+union
+select 'edw_medium.dim_date' as input_table, count(*) as cnt from edw_medium.dim_date
+union
+select 'edw_medium.product_type' as input_table, count(*) as cnt from edw_medium.product_type
+union
+select 'edw_medium.transaction' as input_table, count(*) as cnt from edw_medium.transaction
+union
+select 'edw_medium.transaction_type' as input_table, count(*) as cnt from edw_medium.transaction_type;
+
+
+
+
+select 'edw_medium.dim_account' as output_table, count(*) as cnt from edw_medium.dim_account
+union
+select 'edw_medium.dim_address' as output_table, count(*) as cnt from edw_medium.dim_address
+union
+select 'edw_medium.dim_bank' as output_table, count(*) as cnt from edw_medium.dim_bank
+union
+select 'edw_medium.dim_branch' as output_table, count(*) as cnt from edw_medium.dim_branch
+union
+select 'edw_medium.dim_customer' as output_table, count(*) as cnt from edw_medium.dim_customer
+union
+select 'edw_medium.dim_transaction_type' as output_table, count(*) as cnt from edw_medium.dim_transaction_type
+union
+select 'edw_medium.dp_rule_results' as output_table, count(*) as cnt from edw_medium.dp_rule_results
+union
+select 'edw_medium.dq_rule_results' as output_table, count(*) as cnt from edw_medium.dq_rule_results
+union
+select 'edw_medium.fact_account_summary_monthly' as output_table, count(*) as cnt from edw_medium.fact_account_summary_monthly
+union
+select 'edw_medium.fact_customer_summary_monthly' as output_table, count(*) as cnt from edw_medium.fact_customer_summary_monthly
+union
+select 'edw_medium.fact_transaction' as output_table, count(*) as cnt from edw_medium.fact_transaction
+union
+select 'edw_medium.profile_rule_results' as output_table, count(*) as cnt from edw_medium.profile_rule_results
+union
+select 'edw_medium.rc_rule_results' as input_output, count(*) as cnt from edw_medium.rc_rule_results;
+
+
+	
+
+

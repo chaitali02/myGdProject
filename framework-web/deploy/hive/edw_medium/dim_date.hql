@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small;
-use edw_small;
+CREATE DATABASE IF NOT EXISTS edw_medium;
+use edw_medium;
 DROP TABLE IF EXISTS dim_date;
 CREATE TABLE IF NOT EXISTS `dim_date`(
   `date_id` int, 
@@ -64,5 +64,4 @@ CREATE TABLE IF NOT EXISTS `dim_date`(
   `load_date` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE edw_small.dim_date ADD PARTITION(load_date='2017-12-04');
-
+ALTER TABLE edw_medium.dim_date ADD PARTITION(load_date='2017-12-04');

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small;
-use edw_small;
+CREATE DATABASE IF NOT EXISTS edw_medium;
+use edw_medium;
 DROP TABLE IF EXISTS fact_customer_summary_monthly;
 CREATE TABLE IF NOT EXISTS `fact_customer_summary_monthly`(
   `customer_id` string, 
@@ -13,7 +13,8 @@ PARTITIONED BY (
   `load_date` string,
   `load_id` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
-ALTER TABLE edw_small.fact_customer_summary_monthly ADD PARTITION(load_date='2017-12-04', load_id='00');
+
+ALTER TABLE edw_medium.fact_customer_summary_monthly ADD PARTITION(load_date='2017-12-04', load_id='00');
 
 
 

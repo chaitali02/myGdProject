@@ -1,1 +1,0 @@
-transaction_id,src_transaction_id,transaction_type_id,trans_date_id,bank_id,branch_id,customer_id,address_id,account_id,from_account,to_account,amount_base_curr,amount_usd,currency_code,currency_rate,notes

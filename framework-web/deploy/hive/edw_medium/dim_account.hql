@@ -1,12 +1,12 @@
-CREATE DATABASE IF NOT EXISTS edw_small;
-use edw_small;
-DROP TABLE IF EXISTS account;
-CREATE TABLE IF NOT EXISTS `account`(
+CREATE DATABASE IF NOT EXISTS edw_medium;
+use edw_medium;
+DROP TABLE IF EXISTS dim_account;
+CREATE TABLE IF NOT EXISTS `dim_account`(
   `account_id` string, 
-  `account_type_id` int, 
-  `account_status_id` int, 
-  `product_type_id` int, 
-  `customer_id` string, 
+  `src_account_id` string,
+  `account_type_code` string, 
+  `account_status_code` string, 
+  `product_type_code` string, 
   `pin_number` int, 
   `nationality` string, 
   `primary_iden_doc` string, 
@@ -24,10 +24,8 @@ CREATE TABLE IF NOT EXISTS `account`(
   `interest_rate` float)
    PARTITIONED BY ( 
   `load_date` string,
-  `load_id` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE edw_small.account ADD PARTITION(load_date='2017-07-01', load_id='00');
-
+  `load_id` string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+ALTER TABLE edw_medium.dim_account ADD PARTITION(load_date='2017-12-04', load_id='00');
 
 

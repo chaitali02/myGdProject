@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS edw_small;
-use edw_small;
+CREATE DATABASE IF NOT EXISTS edw_medium;
+use edw_medium;
 DROP TABLE IF EXISTS account_type;
 CREATE TABLE IF NOT EXISTS `account_type`(
   `account_type_id` int, 
@@ -10,4 +10,4 @@ PARTITIONED BY (
   `load_id` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE edw_small.account_type ADD PARTITION (load_date='2017-07-01', load_id='00');
+ALTER TABLE edw_medium.account_type ADD PARTITION (load_date='2017-07-01', load_id='00');

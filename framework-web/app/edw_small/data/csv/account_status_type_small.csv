@@ -1,3 +1,0 @@
-account_status_id,account_status_code,account_status_desc,load_date,load_id
-101,ACTIVE,Account with frequent/regular transactions,2017-03-01,0
-102,DORMANT,No transactions done for a period of 24 months,2017-03-01,0
