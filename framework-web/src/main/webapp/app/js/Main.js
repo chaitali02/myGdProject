@@ -64,6 +64,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "ui.multiselect",
     "jsonFormatter",
     "moment-picker",
+    "multipleDatePicker"
    
 ]);
 

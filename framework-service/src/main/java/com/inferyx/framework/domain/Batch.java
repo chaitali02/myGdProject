@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "batch")
 public class Batch extends BaseEntity {
 
-	private Schedule scheduleInfo;
+	private List<Schedule> scheduleInfo;
 	private List<MetaIdentifierHolder> metaList;
 	private String inParallel;
 	
@@ -26,7 +26,7 @@ public class Batch extends BaseEntity {
 	 *
 	 * @return the scheduleInfo
 	 */
-	public Schedule getScheduleInfo() {
+	public  List<Schedule> getScheduleInfo() {
 		return scheduleInfo;
 	}
 	/**
@@ -34,7 +34,7 @@ public class Batch extends BaseEntity {
 	 *
 	 * @param scheduleInfo the scheduleInfo to set
 	 */
-	public void setScheduleInfo(Schedule scheduleInfo) {
+	public void setScheduleInfo( List<Schedule> scheduleInfo) {
 		this.scheduleInfo = scheduleInfo;
 	}
 	/**
