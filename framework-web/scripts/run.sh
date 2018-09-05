@@ -1,5 +1,5 @@
 ./install_application.sh localhost refresh ../app/admin/meta/
-./install_application.sh localhost append ../app/dw/meta/
+./install_application.sh localhost append ../app/edw/meta/
 ./install_application.sh localhost append ../app/fraud/meta/
 ./install_application.sh localhost append ../app/ecocap/meta/
 ./update_application.sh localhost datasource d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd
@@ -23,7 +23,7 @@
 rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework
-cp -r ../app/*/data/csv/noheader/* /user/hive/warehouse/framework/upload/
+
 
 mkdir /user/hive/warehouse/framework/train
 mkdir /user/hive/warehouse/framework/predict
@@ -38,3 +38,5 @@ mkdir /user/hive/warehouse/framework/export
 mkdir /user/hive/warehouse/framework/script
 mkdir /user/hive/warehouse/framework/script/r
 mkdir /user/hive/warehouse/framework/script/py
+cp -r ../app/*/data/csv/noheader/* /user/hive/warehouse/framework/upload/
+

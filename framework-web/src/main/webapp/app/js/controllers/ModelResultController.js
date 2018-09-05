@@ -438,6 +438,9 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
        
     }
     $scope.showPMMLResult=function(){
+        if($scope.isPMMLDownload){
+            return false;
+        }
         var url = $location.absUrl().split("app")[0]
         $http({method : 'GET',
             url : url + "model/download?modelExecUUID="+$scope.modelDetail.uuid+"&modelExecVersion="+ $scope.modelDetail.version,
