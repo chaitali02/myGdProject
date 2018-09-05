@@ -434,8 +434,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) throws JsonProcessingException {
-		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || datapodKey.getType().equals(MetaType.rule) || execContext.equals(ExecContext.FILE) 
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) || execContext.equals(ExecContext.FILE) 
 				/*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 		}
@@ -538,7 +538,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			exec = execFactory.getExecutor(execContext.toString());
 			
-			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext);
+			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext, runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 			Datapod datapod = null;
@@ -560,18 +560,18 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
-				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
-						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
-					exec.executeSql(sql, appUuid);
-				} else {
+//				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
+//				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
+//				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
+//						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
+//							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+//					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
+//					exec.executeSql(sql, appUuid);
+//				} else {
 					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
 					countRows = rsHolder.getCountRows();
-				}
+//				}
 			}
 				
 			logger.info("temp table registered: "+tableName);
