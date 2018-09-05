@@ -42,7 +42,9 @@ import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
+import org.apache.spark.ml.clustering.DistributedLDAModel;
 import org.apache.spark.ml.clustering.KMeansSummary;
+import org.apache.spark.ml.clustering.LocalLDAModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
@@ -639,7 +641,7 @@ public class SparkExecutor<T> implements IExecutor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new IOException("Can not write data.");
-			}
+			}rsHolder.getDataFrame().show(false);
 			datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -1680,6 +1682,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(true);
@@ -1717,8 +1720,8 @@ public class SparkExecutor<T> implements IExecutor {
 //			Dataset<Row> dfTask = rsHolder.getDataFrame();
 //			dfTask.show(true);
 //			dfTask.cache();
-
-			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
+		predictionDf.show(false);
+			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
 //			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 //			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			ResultSetHolder rsHolder = new ResultSetHolder();
@@ -1726,7 +1729,6 @@ public class SparkExecutor<T> implements IExecutor {
 			rsHolder.setDataFrame(predictionDf);
 			rsHolder.setCountRows(predictionDf.count());
 			rsHolder.setTableName(tableName);
-			rsHolder.setTableName("tempPredictResult");
 			return rsHolder;
 	}
 	
@@ -1993,7 +1995,12 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		Object mlReader = modelClass.getMethod("read").invoke(modelClass);
+		Object mlReader = null;
+		if(modelClass.getName().toLowerCase().contains("ldamodel")) {
+			mlReader = LocalLDAModel.read();
+		} else {
+			mlReader = modelClass.getMethod("read").invoke(modelClass);
+		}
 		
 		Object mlReader2 = mlReader.getClass().getMethod("context", SQLContext.class).invoke(mlReader, sparkSession.sqlContext());
 		trainedModel = mlReader2.getClass().getMethod("load", String.class).invoke(mlReader2, location);

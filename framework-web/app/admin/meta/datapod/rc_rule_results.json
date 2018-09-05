@@ -102,7 +102,7 @@
       "type": "Double",
       "desc": "Computed value from source",
       "key": null,
-      "partition": "Y",
+      "partition": "N",
       "dispName": "SourceValue",
       "active": "Y",
       "expr": null

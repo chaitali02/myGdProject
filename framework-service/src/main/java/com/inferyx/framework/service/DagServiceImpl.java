@@ -1081,11 +1081,11 @@ public class DagServiceImpl {
 									datapodList, refKeyMap, otherParams, taskExecParams, RunMode.BATCH);
 						} else if (ref.getType().equals(MetaType.rule)) {
 							baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, taskExecParams, datapodList, dagExec);
-							baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+							baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.ONLINE);
 						} else if (ref.getType().equals(MetaType.rulegroup)) {
 							baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 									datapodList, (RuleGroupExec)baseExec, dagExec);
-							baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+							baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, RunMode.ONLINE);
 						} else if (ref.getType().equals(MetaType.dq)) {
 							baseExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),(DataQualExec) baseExec,refKeyMap,datapodList,dagExec);
 							baseExec =  (DataQualExec)dataQualServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);

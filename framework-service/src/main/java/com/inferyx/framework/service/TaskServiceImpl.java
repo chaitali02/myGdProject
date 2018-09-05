@@ -656,7 +656,7 @@ public class TaskServiceImpl implements Callable<String> {
 					}
 					ruleExec.setExecParams(execParams3);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
-					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams3, ruleExec, runMode);
+					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams3, ruleExec, RunMode.ONLINE);
 					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception("Rule execution failed.");
 					}
@@ -672,7 +672,7 @@ public class TaskServiceImpl implements Callable<String> {
 				RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.rulegroupExec.toString());
 				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleGroupExec.getVersion());
 				execParams.setInternalVarMap(internalVarMap);
-				ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, runMode);
+				ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, RunMode.ONLINE);
 				if (Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
 				}
