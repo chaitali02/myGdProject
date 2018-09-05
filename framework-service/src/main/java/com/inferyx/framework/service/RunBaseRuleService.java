@@ -569,7 +569,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 //					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
 //					exec.executeSql(sql, appUuid);
 //				} else {
-					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
+					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), Helper.genTableName(filePath), appUuid);
 					countRows = rsHolder.getCountRows();
 //				}
 			}
