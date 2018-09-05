@@ -119,6 +119,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
    }
   }
 
+  $scope.clear=function(){
+    $scope.metaTags=[];
+  }
+
   $scope.onChangeFrequencyType=function(index){
     $scope.scheduleTableArray[index].frequencyDetail=[];
   }
