@@ -1718,7 +1718,7 @@ public class SparkExecutor<T> implements IExecutor {
 //			dfTask.show(true);
 //			dfTask.cache();
 
-			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
+			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
 //			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 //			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			ResultSetHolder rsHolder = new ResultSetHolder();
@@ -1726,7 +1726,6 @@ public class SparkExecutor<T> implements IExecutor {
 			rsHolder.setDataFrame(predictionDf);
 			rsHolder.setCountRows(predictionDf.count());
 			rsHolder.setTableName(tableName);
-			rsHolder.setTableName("tempPredictResult");
 			return rsHolder;
 	}
 	
