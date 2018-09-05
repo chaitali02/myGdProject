@@ -22,6 +22,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 
 public class RunDataQualServiceImpl extends RunBaseRuleService {
@@ -55,17 +56,21 @@ public class RunDataQualServiceImpl extends RunBaseRuleService {
 	 * @throws JsonProcessingException 
 	 */
 	@Override
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) throws JsonProcessingException {
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) || execContext.equals(ExecContext.FILE) 
+				/*|| execContext.equals(ExecContext.livy_spark)*/) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+		}
 		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), MetaType.datapod.toString());
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
-		if (/*execContext == null || execContext.equals(ExecContext.spark) ||*/ datasource.getType().equals(ExecContext.FILE.toString()) /*|| execContext.equals(ExecContext.livy_spark)*/) {
+		if (/*execContext == null || execContext.equals(ExecContext.spark) ||*/ datasource.getType().equals(ExecContext.FILE.toString()) || runMode.equals(RunMode.ONLINE) /*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", datapodKey.getUuid().replace("-", "_"),
 					datapodKey.getVersion(), baseRuleExec.getVersion());
 		}
 		logger.info("datasource.getType() : " + datasource.getType());
 		if (dp != null) {
 			return datasource.getDbname() + "." + dp.getName();
-		}
+		} 
 		return null;
 	}
 	
