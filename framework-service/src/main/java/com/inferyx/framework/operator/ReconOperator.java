@@ -155,7 +155,7 @@ public class ReconOperator {
 			      + SINGLE_QUOTE + reconExec.getVersion() + SINGLE_QUOTE + " AS version"
 			      
 			      + FROM
-			      + BRACKET_OPEN
+//			      + BRACKET_OPEN
 			      
 			      + BRACKET_OPEN
 			      + SELECT
@@ -171,12 +171,12 @@ public class ReconOperator {
 			      + " source "
 			      + WHERE_1_1 
 			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
-			      + GROUP_BY
-			      + SOURCE_UUID_ALIAS + COMMA
-			      + SOURCE_VERSION_ALIAS + COMMA
-			      + SOURCE_NAME_ALIAS + COMMA
-			      + "sourceAttributeId" + COMMA
-			      + "sourceAttributeName"		      
+//			      + GROUP_BY
+//			      + SOURCE_UUID_ALIAS + COMMA
+//			      + SOURCE_VERSION_ALIAS + COMMA
+//			      + SOURCE_NAME_ALIAS + COMMA
+//			      + "sourceAttributeId" + COMMA
+//			      + "sourceAttributeName"		      
 			      + BRACKET_CLOSE
 			      + "source2"
 
@@ -196,16 +196,16 @@ public class ReconOperator {
 			      + " target "
 			      + WHERE_1_1 
 			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
-			      + GROUP_BY
-			      + TARGET_UUID_ALIAS + COMMA
-			      + TARGET_VERSION_ALIAS + COMMA
-			      + TARGET_NAME_ALIAS + COMMA
-			      + "targetAttributeId" + COMMA
-			      + "targetAttributeName"
+//			      + GROUP_BY
+//			      + TARGET_UUID_ALIAS + COMMA
+//			      + TARGET_VERSION_ALIAS + COMMA
+//			      + TARGET_NAME_ALIAS + COMMA
+//			      + "targetAttributeId" + COMMA
+//			      + "targetAttributeName"
 			      + BRACKET_CLOSE
-			      + " target2"
+			      + " target2";
 			      
-			      + BRACKET_CLOSE;
+//			      + BRACKET_CLOSE;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			LOGGER.error(e);
