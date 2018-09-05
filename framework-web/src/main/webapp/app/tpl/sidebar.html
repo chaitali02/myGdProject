@@ -186,7 +186,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="graphanAlysisSubMenu in GraphAnalysis.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
+                <li ng-disabled="graphanAlysisSubMenu.caption == 'Create New' && (!privileges['graphpod'] || privileges['graphpod'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="graphanAlysisSubMenu in GraphAnalysis.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
                     <a ui-sref="{{graphanAlysisSubMenu.name}}({type:graphanAlysisSubMenu.type})" class="nav-link">
                         <span class="title">{{graphanAlysisSubMenu.caption}}</span>
                         <span class="badge badge-success">{{metaStats[graphanAlysisSubMenu.typeCount].count}}</span>

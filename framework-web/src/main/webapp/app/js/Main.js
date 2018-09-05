@@ -456,7 +456,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "name": "graphanalysis ",
         "class": "fa fa-bar-chart",
         "submenu": [
-            { "name": "createga", "type": "createga", "uuid": "null", "caption": "Create New" },
+            { "name": "creaetgraphpod", "type": "graphpod", "uuid": "null", "caption": "Create New" },
             { "name": "listgraphpod", "type": "graphpod", "uuid": "null", "caption": "List" },
             { "name": "graphpodresultlist", "type": "graphexec", "uuid": "null", "caption": "Results" }
         ]
