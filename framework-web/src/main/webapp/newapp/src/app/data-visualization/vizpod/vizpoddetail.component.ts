@@ -393,7 +393,6 @@ export class VizpodDetailComponent {
         }
     }
     submit(){
-        debugger
         this.isSubmitEnable=true
         let vizpodjson={}
         vizpodjson["uuid"]=this.vizpoddata.uuid;
