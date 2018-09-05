@@ -18,7 +18,7 @@ import org.apache.hadoop.io.LongWritable;
  * @author joy
  *
  */
-@Description(name = "rand",
+@Description(name = "randn",
 value = "_FUNC_([seed]) - Returns a gaussian number between 0 and 1")
 @UDFType(deterministic = false)
 @VectorizedExpressions({FuncRandNoSeed.class, FuncRand.class})
