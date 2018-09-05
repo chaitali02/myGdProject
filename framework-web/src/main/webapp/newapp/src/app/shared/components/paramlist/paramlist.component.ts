@@ -73,10 +73,9 @@ export class ParamlistComponent implements OnInit {
     { 'value': 'distribution', 'label': 'distribution' },
     { 'value': 'attribute', 'label': 'attribute' },
     { 'value': 'attributes', 'label': 'attribute[s]' },
-    { 'value': 'datapod', 'label': 'datapod' }]
-
+    { 'value': 'datapod', 'label': 'datapod' }
+    ]
     this.typeSimple = ["string", "double", "date", "integer", "list"];
-
   }
 
   ngOnInit() {
