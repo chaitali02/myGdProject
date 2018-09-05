@@ -1,4 +1,4 @@
-import { ParamlistComponent } from './paramlist/paramlist.component';
+//import { ParamlistComponent } from './paramlist/paramlist.component';
 import { AlgorithmComponent } from './algorithm/algorithm.component';
 import { DataScienceComponent } from './data-science.component';
 import { ModuleWithProviders } from '@angular/core';
@@ -10,9 +10,10 @@ import { ResultsComponent } from './results/resultsCommon.component';
 import {TrainingComponent } from './training/training.component';
 import {DistributionComponent } from './distribution/distribution.component';
 import {PredictionComponent } from './prediction/prediction.component';
-import {SimulationComponent} from './simulation/simulation.component'
+import {SimulationComponent} from './simulation/simulation.component';
 import {OperatorComponent} from './operator/operator.component';
 import {ResultDetailsComponent} from './results/resultDetails.component';
+import { ParamlistComponent } from '../shared/components/paramlist/paramlist.component';
 
 const routes: Routes = [
     {
@@ -25,9 +26,11 @@ const routes: Routes = [
             {path: 'model/:id/:version/:mode', component: ModelComponent,pathMatch:'full' },
             {path: 'model/model/:id/:version/:mode', component:ModelComponent, pathMatch: 'full'},
             {path: 'model', component: ModelComponent, pathMatch: 'full'},
-            {path: 'paramlist/:id/:version/:mode', component: ParamlistComponent,pathMatch:'full' },
+            
+            {path: 'paramlist/:parentType/:id/:version/:mode', component: ParamlistComponent,pathMatch:'full' },
             {path: 'paramlist/paramlist/:id/:version/:mode', component:ParamlistComponent, pathMatch: 'full'},
-            {path: 'paramlist', component: ParamlistComponent, pathMatch: 'full'},
+            {path: 'paramlist/:parentType', component: ParamlistComponent, pathMatch: 'full'},
+
             {path: 'paramset/:id/:version/:mode', component: ParamsetComponent,pathMatch:'full' },
             {path: 'paramset/paramset/:id/:version/:mode', component:ParamsetComponent, pathMatch: 'full'},
             {path: 'paramset', component: ParamsetComponent, pathMatch: 'full'},

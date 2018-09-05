@@ -113,6 +113,11 @@ export class SidebarComponent {
         type: "rulegroup"
       },
       {
+        name: "Parameter List",
+        type: "paramlist",
+        parentType: "rule"
+      },
+      {
         name: "Rule Results",
         type: "ruleexec"
       }
@@ -151,7 +156,8 @@ export class SidebarComponent {
       },
       {
         name: "Parameter List",
-        type: "paramlist"
+        type: "paramlist",
+        parentType: "model"
       },
       {
         name: "Parameter Set",

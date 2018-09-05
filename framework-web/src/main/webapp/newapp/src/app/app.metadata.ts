@@ -862,8 +862,8 @@ export class AppMetadata {
         allowInMenu: false,
         listState: 'paramlist',
         detailState: 'paramlist',
-        moduleState: 'dataScience',
-        moduleCaption: 'Data Science',
+        moduleState: '',
+        moduleCaption: '',
         class: 'fa fa-flask'
       },
       'paramset': {

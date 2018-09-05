@@ -19,6 +19,7 @@ const routes: Routes = [
                 { path: 'DataDiscovery/dataPreparation', redirectTo: 'dataPreparation'},
                 
                 { path: 'list/:type', component: CommonListComponent, data: { name: 'impactLogin' }},
+                { path: 'list/:parentType/:type', component: CommonListComponent, data: { name: 'impactLogin' }},
                 
                 { path: 'dataVisualization', loadChildren: 'app/data-visualization/data-visualization.module#DataVisualizationModule'},
                 { path: 'list/:type/dataVisualization',redirectTo :'dataVisualization'},
@@ -32,8 +33,7 @@ const routes: Routes = [
                 
                 { path: 'systemMonitoring', loadChildren: 'app/system-monitoring/system-monitoring.module#SystemMonitoringModule'},
                 //{ path: 'systemMonitoring/list/:type',redirectTo :'list/:type'},
-
-                
+               
                 { path: 'jobMonitoring', component: jobMonitoringComponent},
                 { path: 'jobMonitoring/list/:type',redirectTo :'list/:type'},
                 { path: 'list/:type/JobMonitoring',redirectTo :'JobMonitoring'},

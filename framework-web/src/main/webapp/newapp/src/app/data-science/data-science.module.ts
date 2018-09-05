@@ -16,7 +16,7 @@ import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.serv
 import { CommonService } from '../metadata/services/common.service';
 import { MenuModule,MenuItem} from 'primeng/primeng';
 import { ModelComponent } from './model/model.component';
-import { ParamlistComponent } from './paramlist/paramlist.component';
+
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { GrowlModule } from 'primeng/components/growl/growl';
@@ -76,7 +76,6 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         DataScienceComponent,
         AlgorithmComponent,
         ModelComponent,
-        ParamlistComponent,
         ParamsetComponent,
         ResultsComponent,
         TrainingComponent,
@@ -99,8 +98,7 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         OperatorComponent,
         CommonListService,
         DataScienceResultService,
-        AlgorithmService,
-        ParamlistService
+        AlgorithmService
 
     ]
 })

@@ -17,9 +17,8 @@ import { BusinessRulesResultComponent} from './business-rulesresult.component'
 
 import { RuleService } from '../metadata/services/rule.service';
 import { CommonService}from '../metadata/services/common.service';
-import { JointjsService} from '../data-pipeline/jointjsservice'
-import { routing1} from './business-rules-routing.module'
-
+import { JointjsService} from '../data-pipeline/jointjsservice';
+import { routing1} from './business-rules-routing.module';
 
 @NgModule({
     imports: [
@@ -38,12 +37,12 @@ import { routing1} from './business-rules-routing.module'
         BusinessRulesComponent,
         BusinessRulesDetailComponent,
         BusinessRulesGroupDetailComponent,
-        BusinessRulesResultComponent   
+        BusinessRulesResultComponent
     ],
     providers: [
         RuleService,
         CommonService,
-        JointjsService,
+        JointjsService
     ],
 
 })
