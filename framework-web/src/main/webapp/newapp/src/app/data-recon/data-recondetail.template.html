@@ -243,35 +243,103 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr *ngFor="let data of filterTableArray;let i=index">
+                                                            <tr *ngFor="let tabledata of sourceTableArray;let i=index">
 
-                                                                <td style="text-align:center;Vertical-align:middle;">
-                                                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedFilter+{{i}}" [disabled]="mode == 'true'"
-                                                                    />
-                                                                </td>
-                                                                <td></td>
+                                                                <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'"[(ngModel)]="tabledata.selected" name="selected" /></th>
                                                                 <td>
-                                                                    <select class="form-control" [(ngModel)]="data.logicalOperator" name="logicalOperator{{i}}" [disabled]="i === 0 || mode == 'true'">
+                                                                    
+                                                                    <select class="form-control" [(ngModel)]="tabledata.logicalOperator" name="logicalOperator+{{i}}" [disabled]="i === 0">
                                                                         <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
-                                                                    </select>
+                                                                      </select>
                                                                 </td>
                                                                 <td>
-                                                                    <p-dropdown [options]="lhsdatapodattributefilter" [(ngModel)]="data.lhsFilter" name="{{data.lhsFilter.attrId}}" dataKey="u_Id"
-                                                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                                                        [filter]="true">
+                                                                    <p-dropdown [options]="lhsTypes"          
+                                                                    [(ngModel)]="tabledata.lhstype"
+                                                                    name="lhstype+{{i}}"
+                                                                    optionLabel="caption"
+                                                                    dataKey="text"
+                                                                    [disabled]="mode == 'true'"
+                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                    (onChange)="selectlhsType(tabledata.lhstype.text,i)"
+                                                                    >
                                                                     </p-dropdown>
-
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control" [(ngModel)]="data.operator" name="operator{{i}}" [disabled]="mode == 'true'">
+                                                                    <input type="number" class="form-control" [(ngModel)]="tabledata.lhsInt" name="integer+{{i}}" *ngIf="tabledata.islhsInt" [disabled]="mode == 'true'">
+                                                                    <input type="text" class="form-control" [(ngModel)]="tabledata.lhsvalue" name="sourcesimple+{{i}}" *ngIf="tabledata.islhsSimple" [disabled]="mode == 'true'">
+                                                                    <div *ngIf="tabledata.islhsDatapod">
+                                                                       <!-- {{sourceTableArray[i].lhsdatapodAttribute|json }}
+                                                                       {{allAttribute|json}} -->
+                                                                        <p-dropdown [options]="allAttribute"          
+                                                                        [(ngModel)]="sourceTableArray[i].lhsdatapodAttribute"
+                                                                        name="sourceattribute+{{i}}"
+                                                                        dataKey="id"
+                                                                        [disabled]="mode == 'true'"
+                                                                        [style]="{'width':'100%','padding':'3px'}"
+                                                                        [filter]="true"
+                                                                        >
+                                                                        </p-dropdown>
+                                                                        </div>
+                                                                        
+                                                                    <div *ngIf="tabledata.islhsFormula">
+                                                                        <p-dropdown 
+                                                                        [options]="allFormula"          
+                                                                        [(ngModel)]="sourceTableArray[i].lhsformula"
+                                                                        name="sourceformula+{{i}}"
+                                                                        dataKey="uuid"
+                                                                        [disabled]="mode == 'true'"
+                                                                        [style]="{'width':'100%','padding':'3px'}"
+                                                                        [filter]="true"
+                                                                        >
+                                                                      </p-dropdown>
+                                                                    </div>      
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control" [(ngModel)]="tabledata.operator" name="operator+{{i}}" [disabled]="mode == 'true'">
                                                                         <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
-                                                                    </select>
+                                                                      </select>
                                                                 </td>
-                                                                <td></td>
                                                                 <td>
-                                                                    <input type="text" class="form-control" [(ngModel)]="data.filtervalue" name="filtervalue{{i}}" [disabled]="mode == 'true'">
+                                                                    <p-dropdown [options]="rhsTypes"          
+                                                                    [(ngModel)]="tabledata.rhstype"
+                                                                    name="rhstype+{{i}}"
+                                                                    optionLabel="caption"
+                                                                    dataKey="text"
+                                                                    [disabled]="mode == 'true'"
+                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                    (onChange)="selectrhsType(tabledata.rhstype.text,i)"
+                                                                    >
+                                                                    </p-dropdown>
                                                                 </td>
-                                                            </tr>
+                                                                <td>
+                                                                        <input type="number" class="form-control" [(ngModel)]="tabledata.rhsvalue" name="integer+{{i}}" *ngIf="tabledata.isrhsInt" [disabled]="mode == 'true'">
+                                                                    <input type="text" class="form-control" [(ngModel)]="tabledata.rhsvalue" name="sourcesimpleRhs+{{i}}" *ngIf="tabledata.isrhsSimple" [disabled]="mode == 'true'">
+                                                                    <div *ngIf="tabledata.isrhsDatapod">
+                                                                        <p-dropdown [options]="allAttribute"          
+                                                                        [(ngModel)]="sourceTableArray[i].rhsdatapodAttribute"
+                                                                        name="rhsdatapodAttribute+{{i}}"
+                                                                        dataKey="id"
+                                                                        [disabled]="mode == 'true'"
+                                                                        [style]="{'width':'100%','padding':'3px'}"
+                                                                        [filter]="true"
+                                                                        >
+                                                                        </p-dropdown>
+                                                                        </div>
+                                                                    <div *ngIf="tabledata.isrhsFormula">
+                                                                        <p-dropdown 
+                                                                        [options]="allFormula"          
+                                                                        [(ngModel)]="sourceTableArray[i].rhsformula"
+                                                                        name="rhsformula+{{i}}"
+                                                                        dataKey="uuid"
+                                                                        [disabled]="mode == 'true'"
+                                                                        [style]="{'width':'100%','padding':'3px'}"
+                                                                        [filter]="true"
+                                                                        >
+                                                                      </p-dropdown>
+                                                
+                                                                    </div>          
+                                                                </td>
+                                                                </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -346,68 +414,135 @@
                                                     </div>
                                                 </div>
                                                 <div class="portlet box green">
-                                                    <div class="portlet-title">
-                                                        <div class="caption">
-                                                            <i class="fa fa-gift"></i>Filter
+                                                        <div class="portlet-title">
+                                                            <div class="caption">
+                                                                <i class="fa fa-gift"></i>Filter
+                                                            </div>
+                                                        </div>
+                                                        <div class="portlet-body form">
+                                                            <div class="x_title" style="padding:10px;">
+                                                                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRowTarget()" [disabled]="mode == 'true'"></button>
+                                                                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRowTarget()" [disabled]="mode == 'true'"></button>
+                                                            </div>
+                                                            <br>
+                                                            <div class="form-body" style="padding-top:50px;">
+                                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                                                                <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAllTarget" name="checkAllTarget"
+                                                                                    (click)="selectAllRowTarget()" />
+                                                                            </th>
+                                                                            <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
+                                                                            <th style="width:14%;text-align:center;"> LHS Type</th>
+                                                                            <th style="text-align: center;width:190px;">LHS Attribute</th>
+                                                                            <th style="text-align: center;width:15%;">Operator</th>
+                                                                            <th style="width:14%;text-align:center;">RHS Type</th>
+                                                                            <th style="text-align: center;width:190px;">RHS Attribute</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr *ngFor="let targettabledata of targettableArray;let i=index">
+            
+                                                                            <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'"[(ngModel)]="targettabledata.selected" name="targetselected" /></th>
+                                                                            <td>
+                                                                                
+                                                                                <select class="form-control" [(ngModel)]="targettabledata.logicalOperator" name="targetlogicalOperator+{{i}}" [disabled]="i === 0">
+                                                                                    <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
+                                                                                  </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <p-dropdown [options]="lhsTypes"          
+                                                                                [(ngModel)]="targettabledata.lhstype"
+                                                                                name="targetlhstype+{{i}}"
+                                                                                dataKey="text"
+                                                                                optionLabel="caption"
+                                                                                [disabled]="mode == 'true'"
+                                                                                [style]="{'width':'100%','padding':'3px'}"
+                                                                                (onChange)="targetselectlhsType(targettabledata.lhstype.text,i)"
+                                                                                >
+                                                                                </p-dropdown>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="number" class="form-control" [(ngModel)]="targettabledata.lhsvalue" name="integer+{{i}}" *ngIf="targettabledata.islhsInt" [disabled]="mode == 'true'">
+                                                                                <input type="text" class="form-control" [(ngModel)]="targettabledata.lhsvalue" name="sourcesimple+{{i}}" *ngIf="targettabledata.islhsSimple" [disabled]="mode == 'true'">
+                                                                                <div *ngIf="targettabledata.islhsDatapod">
+                                                                                   
+                                                                                    <p-dropdown [options]="allAttributeTarget"          
+                                                                                    [(ngModel)]="targettableArray[i].lhsdatapodAttribute"
+                                                                                    name="targetattribute+{{i}}"
+                                                                                    dataKey="id"
+                                                                                    [disabled]="mode == 'true'"
+                                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                                    [filter]="true"
+                                                                                    >
+                                                                                    </p-dropdown>
+                                                                                    </div>
+                                                                                    
+                                                                                <div *ngIf="targettabledata.islhsFormula">
+                                                                                    <p-dropdown 
+                                                                                    [options]="allFormulaTarget"          
+                                                                                    [(ngModel)]="targettableArray[i].lhsformula"
+                                                                                    name="targetformula+{{i}}"
+                                                                                    dataKey="uuid"
+                                                                                    [disabled]="mode == 'true'"
+                                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                                    [filter]="true"
+                                                                                    >
+                                                                                  </p-dropdown>
+                                                                                </div>      
+                                                                            </td>
+                                                                            <td>
+                                                                                <select class="form-control" [(ngModel)]="targettabledata.operator" name="operator+{{i}}" [disabled]="mode == 'true'">
+                                                                                    <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
+                                                                                  </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <p-dropdown [options]="rhsTypes"          
+                                                                                [(ngModel)]="targettabledata.rhstype"
+                                                                                name="targetrhstype+{{i}}"
+                                                                                optionLabel="caption"
+                                                                                dataKey="text"
+                                                                                [disabled]="mode == 'true'"
+                                                                                [style]="{'width':'100%','padding':'3px'}"
+                                                                                (onChange)="targetselectrhsType(targettabledata.rhstype.text,i)"
+                                                                                >
+                                                                                </p-dropdown>
+                                                                            </td>
+                                                                            <td>
+                                                                                    <input type="number" class="form-control" [(ngModel)]="targettabledata.rhsvalue" name="integer+{{i}}" *ngIf="targettabledata.isrhsInt" [disabled]="mode == 'true'">
+                                                                                <input type="text" class="form-control" [(ngModel)]="targettabledata.rhsvalue" name="sourcesimpleRhs+{{i}}" *ngIf="targettabledata.isrhsSimple" [disabled]="mode == 'true'">
+                                                                                <div *ngIf="targettabledata.isrhsDatapod">
+                                                                                    <p-dropdown [options]="allAttributeTarget"          
+                                                                                    [(ngModel)]="targettableArray[i].rhsdatapodAttribute"
+                                                                                    name="targetrhsdatapodAttribute+{{i}}"
+                                                                                    dataKey="id"
+                                                                                    [disabled]="mode == 'true'"
+                                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                                    [filter]="true"
+                                                                                    >
+                                                                                    </p-dropdown>
+                                                                                    </div>
+                                                                                <div *ngIf="targettabledata.isrhsFormula">
+                                                                                    <p-dropdown 
+                                                                                    [options]="allFormulaTarget"          
+                                                                                    [(ngModel)]="targettableArray[i].rhsformula"
+                                                                                    name="targetrhsformula+{{i}}"
+                                                                                    dataKey="uuid"
+                                                                                    [disabled]="mode == 'true'"
+                                                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                                                    [filter]="true"
+                                                                                    >
+                                                                                  </p-dropdown>
+                                                            
+                                                                                </div>          
+                                                                            </td>
+                                                                            </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="portlet-body form">
-                                                        <div class="x_title" style="padding:10px;">
-                                                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRow()" [disabled]="mode == 'true'"></button>
-                                                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()" [disabled]="mode == 'true'"></button>
-                                                        </div>
-                                                        <br>
-                                                        <div class="form-body" style="padding-top:50px;">
-                                                            <table class=" row-border hover table  table-striped table-bordered">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th style="width:5%;text-align: center; Vertical-align: middle;">
-                                                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
-                                                                                (click)="checkAllFilterRow()" />
-                                                                        </th>
-                                                                        <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
-                                                                        <th style="width:14%;text-align:center;"> LHS Type</th>
-                                                                        <th style="text-align: center;width:190px;">LHS Attribute</th>
-                                                                        <th style="text-align: center;width:15%;">Operator</th>
-                                                                        <th style="width:14%;text-align:center;">RHS Type</th>
-                                                                        <th style="text-align: center;width:190px;">RHS Attribute</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr *ngFor="let data of filterTableArray;let i=index">
-        
-                                                                        <td style="text-align:center;Vertical-align:middle;">
-                                                                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedFilter+{{i}}" [disabled]="mode == 'true'"
-                                                                            />
-                                                                        </td>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <select class="form-control" [(ngModel)]="data.logicalOperator" name="logicalOperator{{i}}" [disabled]="i === 0 || mode == 'true'">
-                                                                                <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <p-dropdown [options]="lhsdatapodattributefilter" [(ngModel)]="data.lhsFilter" name="{{data.lhsFilter.attrId}}" dataKey="u_Id"
-                                                                                [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                                                                [filter]="true">
-                                                                            </p-dropdown>
-        
-                                                                        </td>
-                                                                        <td>
-                                                                            <select class="form-control" [(ngModel)]="data.operator" name="operator{{i}}" [disabled]="mode == 'true'">
-                                                                                <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <input type="text" class="form-control" [(ngModel)]="data.filtervalue" name="filtervalue{{i}}" [disabled]="mode == 'true'">
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
@@ -437,7 +572,7 @@
                                             <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
                                                 <i class="fa fa-angle-left"></i> Back
                                             </a>
-                                            <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'" (click)="dagSubmit()">Submit</button>
+                                            <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'" (click)="submit()">Submit</button>
                                             <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
                                                 <div class="bounce1"></div>
                                                 <div class="bounce2"></div>
