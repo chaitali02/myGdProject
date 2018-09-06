@@ -3272,31 +3272,26 @@ public class CommonServiceImpl <T> {
 		}*/
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public List<T> findAllLatestWithoutAppUuid(MetaType type) {
+		public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 			List objectList = new ArrayList();
 			List<T> finalObjectList = new ArrayList<>();
 			java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>(); 
 			BaseEntity baseEntity = null;
-			try {
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
-				objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
-				
-				for (int i = 0; i < objectList.size(); i++) {
-					baseEntity = BaseEntity.class.cast(objectList.get(i));
-					if (objectMap.containsKey(baseEntity.getUuid())) {
-						if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
-							objectMap.put(baseEntity.getUuid(), baseEntity);
-						}
-					} else {
+			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+			objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
+			
+			for (int i = 0; i < objectList.size(); i++) {
+				baseEntity = BaseEntity.class.cast(objectList.get(i));
+				if (objectMap.containsKey(baseEntity.getUuid())) {
+					if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
 						objectMap.put(baseEntity.getUuid(), baseEntity);
 					}
+				} else {
+					objectMap.put(baseEntity.getUuid(), baseEntity);
 				}
-				for (String uuid : objectMap.keySet()) {
-					finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
-				}
-				return finalObjectList;
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
+			}
+			for (String uuid : objectMap.keySet()) {
+				finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
 			}
 			return finalObjectList;
 		}
@@ -3944,7 +3939,7 @@ public class CommonServiceImpl <T> {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
-		query.fields().include("actuve");
+		query.fields().include("active");
 		query.fields().include("name");
 		query.fields().include("appInfo");
 		query.fields().include("createdBy");
