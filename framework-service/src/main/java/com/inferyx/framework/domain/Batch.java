@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Batch extends BaseEntity {
 
 	private List<Schedule> scheduleInfo;
-	private List<MetaIdentifierHolder> metaList;
+	private List<MetaIdentifierHolder> pipelineInfo;
 	private String inParallel;
 	
 	/**
@@ -40,18 +40,18 @@ public class Batch extends BaseEntity {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the metaList
+	 * @return the pipelineInfo
 	 */
-	public List<MetaIdentifierHolder> getMetaList() {
-		return metaList;
+	public List<MetaIdentifierHolder> getPipelineInfo() {
+		return pipelineInfo;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param metaList the metaList to set
+	 * @param pipelineInfo the pipelineInfo to set
 	 */
-	public void setMetaList(List<MetaIdentifierHolder> metaList) {
-		this.metaList = metaList;
+	public void setPipelineInfo(List<MetaIdentifierHolder> pipelineInfo) {
+		this.pipelineInfo = pipelineInfo;
 	}
 	/**
 	 * @Ganesh
