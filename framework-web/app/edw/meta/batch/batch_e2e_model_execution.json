@@ -28,7 +28,7 @@
     }
   ],
   "scheduleInfo": null,
-  "metaList": [
+  "pipelineInfo": [
     {
       "ref": {
         "type": "dag",
