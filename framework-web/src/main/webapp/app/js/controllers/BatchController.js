@@ -40,7 +40,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   var batchScope=$scope;
   $scope.minDate=moment().subtract(new Date(), 'day');
-  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"By-Weekly","caption":"By-Weekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -834,7 +834,8 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
       template: '<div class="weekday-selector"><ul><li ng-repeat="day in days" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{day[0]}}</span></li></ul></div>',
 
 			link: function(scope, element, attrs) {
-				scope.days = $moment.weekdays();
+        scope.days = $moment.weekdays();
+       // console.log(scope.days)
 				scope.toggle = function(m, d, t) {
 					_toggle(m, d, t);
 				};
