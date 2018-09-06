@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.register;
 
+import java.util.Random;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.math3.distribution.BetaDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -105,6 +107,17 @@ public class UDFRegister implements java.io.Serializable {
 				maxArray[0] = value1;
 				maxArray[1] = value2;
 				return NumberUtils.min(maxArray);
+			}
+		}, DataTypes.DoubleType);
+		
+		sparkSession.udf().register("randnorm", new UDF1<Object, Double>() {
+			
+			private static final long serialVersionUID = 1L;
+			Random random = new Random();
+
+			@Override
+			public Double call(Object t1) throws Exception {
+				return random.nextGaussian();
 			}
 		}, DataTypes.DoubleType);
 		

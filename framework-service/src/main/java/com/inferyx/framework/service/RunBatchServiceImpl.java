@@ -268,7 +268,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		List<MetaIdentifierHolder> execList = new ArrayList<>();
 		synchronized (batchExec.getUuid()) {
-			for(MetaIdentifierHolder metaMI : batch.getMetaList()) {
+			for(MetaIdentifierHolder metaMI : batch.getPipelineInfo()) {
 				switch(metaMI.getRef().getType()) {
 					case dag : execList.add(dagServiceImpl.submitDag(metaMI.getRef().getUuid(), metaMI.getRef().getVersion(), execParams, type, runMode));
 						break;

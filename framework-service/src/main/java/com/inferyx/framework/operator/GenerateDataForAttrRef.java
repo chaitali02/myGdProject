@@ -256,25 +256,25 @@ public List<String> getColumnNameList(Object source, ParamListHolder holder ){
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
-					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+					+", ("+"randnorm(null)"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
 					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
-					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+					+", ("+"randnorm(null)"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
 					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
-					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+					+", ("+"randnorm(null)"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
 					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		} else {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
-					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+					+", ("+"randnorm(null)"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
 					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
