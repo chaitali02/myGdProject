@@ -426,8 +426,8 @@ public class BatchServiceImpl {
 		for(Batch batch : batches) {
 			if(batch.getScheduleInfo() != null)
 				for(Schedule schedule : batch.getScheduleInfo()) {
-					Date startDate = simpleDateFormat.parse(schedule.getStartDate());
-					Date endDate = simpleDateFormat.parse(schedule.getEndDate());
+					Date startDate = simpleDateFormat.parse(schedule.getStartDate().toString());
+					Date endDate = simpleDateFormat.parse(schedule.getEndDate().toString());
 					
 					if (startDate.compareTo(currDate) > 0) {
 						//"startDate is after currDate"

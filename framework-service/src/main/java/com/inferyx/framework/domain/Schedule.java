@@ -3,6 +3,9 @@
  */
 package com.inferyx.framework.domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,8 +14,8 @@ import java.util.List;
  */
 public class Schedule {
 	private String name;
-	private String startDate;
-	private String endDate;
+	private Date startDate;
+	private Date endDate;
 	private String frequencyType; //Once/Daily/Weekly/Monthly/Yearly
 	private List<String> frequencyDetail;//if weekly then days/if monthly then date
 	private String recurring = "N";
@@ -41,7 +44,7 @@ public class Schedule {
 	 *
 	 * @return the startDate
 	 */
-	public String getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 	/**
@@ -51,7 +54,13 @@ public class Schedule {
 	 * @param startDate the startDate to set
 	 */
 	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
+		try {
+			this.startDate = formatter.parse(startDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 *
@@ -59,7 +68,7 @@ public class Schedule {
 	 *
 	 * @return the endDate
 	 */
-	public String getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 	/**
@@ -69,7 +78,13 @@ public class Schedule {
 	 * @param endDate the endDate to set
 	 */
 	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
+		try {
+			this.endDate = formatter.parse(endDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 *
@@ -124,5 +139,5 @@ public class Schedule {
 	 */
 	public void setRecurring(String recurring) {
 		this.recurring = recurring;
-	}	
+	}
 }
