@@ -13,8 +13,8 @@ public class Schedule {
 	private String name;
 	private String startDate;
 	private String endDate;
-	private String frequencyType; //once/dow/dom
-	private List<String> frequencyDetail;
+	private String frequencyType; //Once/Daily/Weekly/Monthly/Yearly
+	private List<String> frequencyDetail;//if weekly then days/if monthly then date
 	private String recurring = "N";
 	
 	public String getName() {
