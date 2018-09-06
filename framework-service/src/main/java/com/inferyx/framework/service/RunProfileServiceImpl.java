@@ -61,7 +61,11 @@ public class RunProfileServiceImpl extends RunBaseRuleService {
 	 */
 	@Override
 	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
-		if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) || execContext.equals(ExecContext.FILE) 
+		if(datapodKey.getType().equals(MetaType.rule)) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+
+		}
+		else if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) && execContext.equals(ExecContext.FILE) 
 				/*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 		}

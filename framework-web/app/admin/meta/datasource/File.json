@@ -28,5 +28,5 @@
 	"username": "",
 	"password": "",
 	"path": "/user/hive/warehouse/framework/upload/",
-	"sessionParameters": ""
+	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }
