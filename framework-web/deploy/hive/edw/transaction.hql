@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS transaction;
 CREATE TABLE IF NOT EXISTS `transaction`(
   `transaction_id` string, 
-  `transaction_type_id` int, 
+  `transaction_type_id` string, 
   `account_id` string, 
   `transaction_date` string, 
   `from_account` string, 
