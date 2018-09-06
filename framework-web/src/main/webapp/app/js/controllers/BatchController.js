@@ -40,7 +40,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   var batchScope=$scope;
   $scope.minDate=moment().subtract(new Date(), 'day');
-  $scope.frequencyTypes=[{"text":"once","caption":"Once"},{"text":"dom","caption":"DOM"},{"text":"dow","caption":"DOW"}];
+  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -128,6 +128,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.closeFrequencyDetailDOW=function(index){
+    $scope.WeekArray=[];
+    $scope.scheduleTableArray[index].domPopoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetailDOW=function(index){
     if($scope.scheduleTableArray[index].domPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       for(var i=0;i<$scope.WeekArray.length;i++){
@@ -148,6 +153,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.closeFrequencyDetail=function(index){
+    $scope.myArrayOfDates=[];
+    $scope.scheduleTableArray[index].popoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetail=function(index){
    // $scope.scheduleTableArray[index].frequencyDetail=[];
     if($scope.scheduleTableArray[index].popoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
@@ -378,8 +388,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     for(var i=0;i<$scope.scheduleTableArray.length;i++){
       var scheduleInfo={};
       scheduleInfo.name=$scope.scheduleTableArray[i].name;
-      scheduleInfo.startDate=new Date($scope.scheduleTableArray[i].startDate);
-      scheduleInfo.endDate=new Date($scope.scheduleTableArray[i].endDate);
+      scheduleInfo.startDate=$filter('date')(new Date($scope.scheduleTableArray[i].startDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].startDate);
+      scheduleInfo.endDate=$filter('date')(new Date($scope.scheduleTableArray[i].endDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].endDate);
       scheduleInfo.frequencyType=$scope.scheduleTableArray[i].frequencyType;
       scheduleInfo.frequencyDetail=$scope.scheduleTableArray[i].frequencyDetail;
       scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
