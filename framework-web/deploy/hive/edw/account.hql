@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS account;
 CREATE TABLE IF NOT EXISTS `account`(
   `account_id` string, 
-  `account_type_id` int, 
-  `account_status_id` int, 
-  `product_type_id` int, 
+  `account_type_id` string, 
+  `account_status_id` string, 
+  `product_type_id` string, 
   `customer_id` string, 
   `pin_number` int, 
   `nationality` string, 
