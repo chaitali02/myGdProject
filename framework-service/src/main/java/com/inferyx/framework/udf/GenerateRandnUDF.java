@@ -22,13 +22,13 @@ import org.apache.hadoop.io.LongWritable;
 value = "_FUNC_([seed]) - Returns a gaussian number between 0 and 1")
 @UDFType(deterministic = false)
 @VectorizedExpressions({FuncRandNoSeed.class, FuncRand.class})
-public class GenerateDataUDF extends UDF {
+public class GenerateRandnUDF extends UDF {
 
 	private Random random;
 
 	  private final DoubleWritable result = new DoubleWritable();
 
-	  public GenerateDataUDF() {
+	  public GenerateRandnUDF() {
 	  }
 
 	  public DoubleWritable evaluate() {
