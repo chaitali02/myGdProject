@@ -34,6 +34,31 @@ export class CommonListService {
       })
     // .catch(this.handleError);
   }
+
+  getParamListByRule(type, name, startDate, tags, userName, endDate, active, status): Observable<CommonList[]> {
+    
+      this.url = this.baseUrl + 'metadata/getParamListByRule?action=view&type=' + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&status=" + status;
+   
+    return this.http
+      .get(this.url, { headers: this.headers })
+      .map((response: Response) => {
+        return <CommonList[]>response.json();
+      })
+    // .catch(this.handleError);
+  }
+
+  getParamListByModel(type, name, startDate, tags, userName, endDate, active, status): Observable<CommonList[]> {
+    
+      this.url = this.baseUrl + 'metadata/getParamListByModel?action=view&type=' + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&status=" + status;
+   
+    return this.http
+      .get(this.url, { headers: this.headers })
+      .map((response: Response) => {
+        return <CommonList[]>response.json();
+      })
+    // .catch(this.handleError);
+  }
+
   getAllLatest(type): Observable<any[]> {
     let url = '/common/getAllLatest?action=view&type=' + type;
     return this._sharedService.getCall(url)

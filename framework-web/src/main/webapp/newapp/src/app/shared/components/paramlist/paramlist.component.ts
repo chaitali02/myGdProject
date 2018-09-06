@@ -1,20 +1,21 @@
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { AppConfig } from './../../app.config';
-import { Version } from './../../shared/version';
 
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
-import { CommonService } from '../../metadata/services/common.service';
-import { DependsOn } from '../dependsOn';
-import { ParamlistService } from '../../metadata/services/paramlist.service';
+import { AppConfig } from '../../../app.config';
+import { Version } from '../../version';
+import { CommonService } from '../../../metadata/services/common.service';
+import { DependsOn } from '../../../data-science/dependsOn';
+import { ParamlistService } from '../../../metadata/services/paramlist.service';
 
 @Component({
   selector: 'app-paramlist',
   templateUrl: './paramlist.component.html',
-  styleUrls: ['./paramlist.component.css']
+  styleUrls: []
 })
 export class ParamlistComponent implements OnInit {
+  parentType: any;
   allTemplateList: any[];
   isTemplateInfoRequired: boolean = false;
   selectedTemplate: {};
@@ -60,6 +61,7 @@ export class ParamlistComponent implements OnInit {
     this.showParamlist = true;
     this.paramlist = {};
     this.paramlist["active"] = true;
+    this.paramlist["templateFlg"] = true;
     this.template = {};
     this.isSubmitEnable = true;
     this.paramtableArray = null;
@@ -71,22 +73,9 @@ export class ParamlistComponent implements OnInit {
     { 'value': 'distribution', 'label': 'distribution' },
     { 'value': 'attribute', 'label': 'attribute' },
     { 'value': 'attributes', 'label': 'attribute[s]' },
-    { 'value': 'datapod', 'label': 'datapod' }]
-
-    this.typeSimple = ["string", "double", "date", "integer", "list"];
-    this.breadcrumbDataFrom = [{
-      "caption": "Data Science",
-      "routeurl": "/app/list/paramlist"
-    },
-    {
-      "caption": "Parameter List",
-      "routeurl": "/app/list/paramlist"
-    },
-    {
-      "caption": "",
-      "routeurl": null
-    }
+    { 'value': 'datapod', 'label': 'datapod' }
     ]
+    this.typeSimple = ["string", "double", "date", "integer", "list"];
   }
 
   ngOnInit() {
@@ -94,7 +83,38 @@ export class ParamlistComponent implements OnInit {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
+      this.parentType = params['parentType']
     });
+    if (this.parentType == "rule") {
+      this.breadcrumbDataFrom = [
+        {
+          "caption": "BusinessRules",
+          "routeurl": "/app/list/rule/paramlist"
+        },
+        {
+          "caption": "Parameter List",
+          "routeurl": "/app/list/rule/paramlist"
+        },
+        {
+          "caption": "",
+          "routeurl": null
+        }]
+    } else if (this.parentType == "model") {
+      this.breadcrumbDataFrom = [
+        {
+          "caption": "DataScience",
+          "routeurl": "/app/list/model/paramlist"
+        },
+        {
+          "caption": "Parameter List",
+          "routeurl": "/app/list/model/paramlist"
+        },
+        {
+          "caption": "",
+          "routeurl": null
+        }]
+    }
+
     if (this.mode !== undefined) {
       this.getOneByUuidAndVersion(this.id, this.version);
       this.getAllVersionByUuid();
@@ -105,15 +125,17 @@ export class ParamlistComponent implements OnInit {
   }
 
   onChangeIsTemplate(event) {
-    if (event === true) {
-      this.templateFlg = 'Y';
+    if (event === false) {
+      this.paramlist.templateFlg = false;
 
-      this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg, "paramlist", "")
+      this._paramlistService.getAllLatestParamListByTemplate('Y', "paramlist", "")
         .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response) },
         error => console.log("Error :: " + error));
     }
-    else
-      this.templateFlg = 'N';
+    else {
+      this.paramlist.templateFlg = true;
+      this.template = {};
+    }
   }
 
   onSuccessgetAllLatestParamListByTemplate(response) {
@@ -158,9 +180,9 @@ export class ParamlistComponent implements OnInit {
   }
 
   onChangeTemplate() {
-    this.templateFlg = 'Y';
+    // this.paramlist.templateFlg = 'Y';
 
-    this._paramlistService.getAllLatestParamListByTemplate(this.templateFlg, "paramlist", "")
+    this._paramlistService.getAllLatestParamListByTemplate('Y', "paramlist", "")
       .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response) },
       error => console.log("Error :: " + error));
   }
@@ -187,8 +209,9 @@ export class ParamlistComponent implements OnInit {
     this.active = response['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
 
-    this.templateFlg = response['templateFlg'];
-
+    this.paramlist.templateFlg = response['templateFlg'];
+    this.paramlist.parentType = response['paramListType'];
+    this.parentType = this.paramlist.parentType;
     var tags = [];
     if (response.tags != null) {
       for (var i = 0; i < response.tags.length; i++) {
@@ -348,13 +371,28 @@ export class ParamlistComponent implements OnInit {
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
         tagArray[counttag] = this.tags[counttag].value;
-
       }
     }
     paramlistJson['tags'] = tagArray
     paramlistJson["desc"] = this.paramlist.desc
     paramlistJson["active"] = this.paramlist.active == true ? 'Y' : "N"
     paramlistJson["published"] = this.paramlist.published == true ? 'Y' : "N"
+    paramlistJson["templateFlg"] = this.paramlist.templateFlg == true ? 'Y' : "N"
+
+    let templateInfo = {};
+    if (this.paramlist.templateFlg == 'N') {
+      let templateInfoRef = {};
+      templateInfoRef["type"] = "paramlist"
+      templateInfoRef["uuid"] = this.template["uuid"];
+      templateInfo["ref"] = templateInfoRef;
+    } else {
+      templateInfo = null;
+    }
+    paramlistJson["templateInfo"] = templateInfo;
+
+    if (this.parentType) {
+      paramlistJson["paramListType"] = this.parentType;
+    }
 
     var paramInfoArray = [];
     for (var i = 0; i < this.paramtableArray.length; i++) {
@@ -405,15 +443,15 @@ export class ParamlistComponent implements OnInit {
   }
 
   public goBack() {
-    //this._location.back();
-    this.router.navigate(['app/list/paramlist']);
-
+    this._location.back();
+    //this.router.navigate(['app/list/paramlist']);
   }
+
   enableEdit(uuid, version) {
-    this.router.navigate(['app/dataScience/paramlist', uuid, version, 'false']);
+    this.router.navigate(['app/dataScience/paramlist',this.parentType, uuid, version, 'false']);
   }
 
   showview(uuid, version) {
-    this.router.navigate(['app/dataScience/paramlist', uuid, version, 'true']);
+    this.router.navigate(['app/dataScience/paramlist',this.parentType, uuid, version, 'true']);
   }
 }

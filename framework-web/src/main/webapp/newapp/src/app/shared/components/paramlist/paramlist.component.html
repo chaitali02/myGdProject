@@ -1,7 +1,7 @@
 <div>
   <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
   <br>
-  <p-growl [(value)]="msgs"></p-growl>
+  <!-- <p-growl [(value)]="msgs"></p-growl> -->
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
@@ -132,8 +132,9 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
+                    
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeIsTemplate($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="templateFlg" name="templateFlg"
+                    <ui-switch (change)="onChangeIsTemplate($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.templateFlg" name="templateFlg"
                       [checked]="templateFlg" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
@@ -143,7 +144,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Use Template</label>
                 <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                     <p-dropdown [options]="allTemplateList" [(ngModel)]="template" name="template" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
-                        [filter]="true" [disabled]="mode == 'true'||mode == 'false'" (onChange)="onChangeTemplate()"
+                        [filter]="true" [disabled]="mode == 'true'|| mode == 'false' || paramlist.templateFlg == true" (onChange)="onChangeTemplate()"
                         placeholder="Select">
                     </p-dropdown>
                 </div>

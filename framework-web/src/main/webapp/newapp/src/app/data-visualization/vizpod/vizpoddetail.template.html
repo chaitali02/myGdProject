@@ -151,7 +151,7 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Detail
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
-                <angular2-multiselect [data]="dropdownList"  [disable]="mode == 'true'" [(ngModel)]="vizpoddata.detailAttr" [settings]="dropdownSettings" name="attributeInfo">
+                <angular2-multiselect [data]="dropdownList"  [(ngModel)]="vizpoddata.detailAttr" [settings]="dropdownSettings" name="attributeInfo">
                 </angular2-multiselect>
               </div>
             </div>

@@ -34,6 +34,7 @@ interface FileReaderEventTarget extends EventTarget {
 })
 
 export class CommonListComponent {
+  parentType: any;
   selectAllAttributeRow: any;
   paramtableArray: any[];
   paramType: { "label": string; "value": string; }[];
@@ -44,7 +45,7 @@ export class CommonListComponent {
   paramlistData: any[];
   selectParamsetName: {};
   selectParamType: string;
-  displayDialogBox: boolean=false;
+  displayDialogBox: boolean = false;
   attributeTypes: any[];
   paramListHolder: any[];
   displayDialogBoxSimulation: boolean = false;
@@ -180,8 +181,9 @@ export class CommonListComponent {
     }
   ];
   types: { "value": string; "caption": string; }[];
-  
+
   constructor(private sanitizer: DomSanitizer, private http: Http, private _commonListService: CommonListService, private activatedRoute: ActivatedRoute, public router: Router, private fb: FormBuilder, public metaconfig: AppMetadata, public apphelper: AppHepler, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService) {
+
     let temp;
     this.active = " ";
     this.status = " ";
@@ -213,7 +215,8 @@ export class CommonListComponent {
         this.Exec = false;
       }
       this.type = (params['type']).toLowerCase();
-
+      this.parentType = (params['parentType'])
+      console.log(this.parentType);
     });
     this.gridTitle = metaconfig.getMetadataDefs((this.type).toLowerCase())['caption']
     //this.routerUrl=metaconfig.getMetadataDefs(this.type)['detailState']
@@ -243,8 +246,8 @@ export class CommonListComponent {
     this.selectParamlistName = {};
     this.selectParamlistName["uuid"] = " ";
     this.selectParamsetName = {};
- 
-    this.getBaseEntityByCriteria();
+
+    // this.getBaseEntityByCriteria();
 
     this.breadcrumbDataFrom = [
       {
@@ -319,6 +322,7 @@ export class CommonListComponent {
   ngOnInit() {
     let temp;
     this.activatedRoute.params.subscribe((params: Params) => {
+      this.parentType = params['parentType'];
       this.type = params['type'];
       this.getBaseEntityByCriteria();
       this.rowData1 = null;
@@ -337,28 +341,64 @@ export class CommonListComponent {
           "caption": "Rule Group"
         }
       ];
-
-      this.breadcrumbDataFrom = [
-        {
-          "caption": this.metaconfig.getMetadataDefs((this.type))['moduleCaption'],
-          "routeurl": "./"
-        },
-        {
-          "caption": this.metaconfig.getMetadataDefs((this.type).toLowerCase())['caption'],
-          "routeurl": null
-        }]
+      if (this.type == "paramlist") {
+        if (this.parentType == "rule") {
+          this.breadcrumbDataFrom = [
+            {
+              "caption": "BusinessRules",
+              "routeurl": "./"
+            },
+            {
+              "caption": this.metaconfig.getMetadataDefs((this.type).toLowerCase())['caption'],
+              "routeurl": null
+            }]
+        } else if (this.parentType == "model") {
+          this.breadcrumbDataFrom = [
+            {
+              "caption": "DataScience",
+              "routeurl": "./"
+            },
+            {
+              "caption": this.metaconfig.getMetadataDefs((this.type).toLowerCase())['caption'],
+              "routeurl": null
+            }]
+        }
+      }
+      else {
+        this.breadcrumbDataFrom = [
+          {
+            "caption": this.metaconfig.getMetadataDefs((this.type))['moduleCaption'],
+            "routeurl": "./"
+          },
+          {
+            "caption": this.metaconfig.getMetadataDefs((this.type).toLowerCase())['caption'],
+            "routeurl": null
+          }]
+      }
     });
   }
 
   add() {
-    if (this.type != "activity") {
+    if (this.parentType == "rule") {
+      this.router.navigate(["../../../businessRules/paramlist", this.parentType], { relativeTo: this.activeroute });
+    }
+    else if (this.parentType == "model") {
+      this.router.navigate(["../../../dataScience/paramlist", this.parentType], { relativeTo: this.activeroute });
+    }
+    else if (this.type != "activity" && this.parentType !== "rule") {
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['detailState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
   view(uuid, version) {
-    if (this.type == "dashboard") {
+    if (this.parentType == "rule") {
+      this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
+    }
+    else if (this.parentType == "model") {
+      this.router.navigate(["../../../dataScience/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
+    }
+    else if (this.type == "dashboard") {
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
@@ -376,11 +416,17 @@ export class CommonListComponent {
     }
   }
   edit(uuid, version) {
-
-    let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
-    this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['detailState']
-    this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'false'], { relativeTo: this.activeroute });
-
+    if (this.parentType == "rule") {
+      this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'false'], { relativeTo: this.activeroute });
+    }
+    else if (this.parentType == "model") {
+      this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'false'], { relativeTo: this.activeroute });
+    }
+    else {
+      let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
+      this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['detailState']
+      this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'false'], { relativeTo: this.activeroute });
+    }
   }
   delete(id) {
     this.deleteId = id
@@ -671,8 +717,8 @@ export class CommonListComponent {
       },
       error => console.log("Error :: " + error)
       )
-
   }
+
   okKill() {
     let type = this.type.split("exec")[0]
     this._commonListService.kill(this.killId, this.killVersion, type, "Killed")
@@ -685,17 +731,32 @@ export class CommonListComponent {
       },
       error => console.log("Error :: " + error)
       )
-
   }
+
   getBaseEntityByCriteria(): void {
-    this._commonListService.getBaseEntityByCriteria(((this.type).toLowerCase()), "", "", "", "", "", "", "")
-      .subscribe(
-      response => { this.getGrid(response) },
-      error => console.log("Error :: " + error)
-      )
+    if (this.parentType == "rule") {
+      this._commonListService.getParamListByRule(((this.type).toLowerCase()), "", "", "", "", "", "", "")
+        .subscribe(
+        response => { this.getGrid(response) },
+        error => console.log("Error :: " + error)
+        )
+    }
+    else if (this.parentType == "model") {
+      this._commonListService.getParamListByModel(((this.type).toLowerCase()), "", "", "", "", "", "", "")
+        .subscribe(
+        response => { this.getGrid(response) },
+        error => console.log("Error :: " + error)
+        )
+    }
+    else {
+      this._commonListService.getBaseEntityByCriteria(((this.type).toLowerCase()), "", "", "", "", "", "", "")
+        .subscribe(
+        response => { this.getGrid(response) },
+        error => console.log("Error :: " + error)
+        )
+    }
   }
   getGrid(response) {
-
     this.isExecutable = this.nonExecTypes.indexOf((this.type).toLowerCase());
     if (this.isExecutable != -1) {
       this.showExecute = false
@@ -962,7 +1023,7 @@ export class CommonListComponent {
 
   }
   OnSucessgetAllLatestUser(response) {
- 
+
 
     this.allUserName = []
     let temp = []
@@ -1032,7 +1093,7 @@ export class CommonListComponent {
   }
 
 
-//code for training execution
+  //code for training execution
   getParamListORParamset() {
     this.displayDialogBox = true;
     this.onChangeType()
@@ -1138,7 +1199,7 @@ export class CommonListComponent {
       console.log(JSON.stringify(paramjson))
     });
   }
-  
+
   executeWithExecParamListTraining() {
     this.displayDialogBox = false; if (this.selectParamType == "paramlist") {
       if (this.selectParamlistName) {
@@ -1189,16 +1250,18 @@ export class CommonListComponent {
       }
     }
     //this.execParams = execParams;
-    this._commonService.executeWithParams("train", this.executeId, this.executeVersion,execParams)
-    .subscribe(response => {
-      this.onSuccessExecuteTraining(response)},
-      error =>{ 
+    this._commonService.executeWithParams("train", this.executeId, this.executeVersion, execParams)
+      .subscribe(response => {
+        this.onSuccessExecuteTraining(response)
+      },
+      error => {
         console.log('Error :: ' + error)
-        this.onErrorTraining()}
-    )
+        this.onErrorTraining()
+      }
+      )
   }
 
-  onSuccessExecuteTraining(response){
+  onSuccessExecuteTraining(response) {
     this.showMessage('Configuration Submited and Saved Successfully', 'success', 'Success Message')
     setTimeout(() => {
       // this.goBack()
@@ -1210,12 +1273,12 @@ export class CommonListComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  onErrorTraining(){
+  onErrorTraining() {
     this.msgs = [];
     this.msgs.push({ severity: 'failed', summary: 'failed message', detail: 'execution failed' });
   }
 
-//code for simulation execution 
+  //code for simulation execution 
   onChangeAtrributes(index) {
     this._commonService.getAllAttributeBySource(this.paramListHolder[index].paramValue.uuid, "datapod").subscribe(
       response => { this.onSuccessgetAttributesByDatapod(response, index) },

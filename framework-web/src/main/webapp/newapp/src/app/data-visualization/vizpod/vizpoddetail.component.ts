@@ -442,7 +442,7 @@ getAllExpression() {
         dependsOn["ref"] = ref;
         vizpodjson["source"] = dependsOn;
         vizpodjson["type"] = this.vizpodtype;
-        vizpodjson["limit"] = null;
+        vizpodjson["limit"] = this.vizpoddata.limit;
 
         let attributeInfoArray = [];
         if (this.vizpoddata.detailAttr != null) {
