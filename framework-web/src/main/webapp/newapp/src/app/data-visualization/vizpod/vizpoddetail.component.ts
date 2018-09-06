@@ -93,6 +93,7 @@ export class VizpodDetailComponent {
             if (this.mode !== undefined) {
                 this.getAllVersionByUuid();
                 this.getOneByUuidAndVersion();
+                this.dropdownSettings.disabled = this.mode == "false" ? false : true
             }
             else {
                 this.getAllLatest(true);
@@ -520,9 +521,13 @@ getAllExpression() {
     }
     enableEdit(uuid, version) {
         this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'false']);
+        this.dropdownSettings.disabled =true
+         
     }
     showview(uuid, version) {
         this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'true']);
+        this.dropdownSettings.disabled =false;
+        
     }
 
 }
