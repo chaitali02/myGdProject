@@ -38,7 +38,7 @@ public class ScheduleChanger {
       Random rnd = new Random();
       int nextTimeout = rnd.nextInt(30000);
       System.out.println("Changing poll time to: " + nextTimeout);
-//      List<Batch> scheduledTasks = batchServiceImpl.getLatestBatch((List<Batch>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.batch));
+      List<Batch> scheduledTasks = batchServiceImpl.getLatestBatch((List<Batch>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.batch));
       dynamicSchedule.reset(nextTimeout);
    }
 

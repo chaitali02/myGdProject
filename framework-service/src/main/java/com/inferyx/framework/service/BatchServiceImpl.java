@@ -31,7 +31,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.cloudera.io.netty.util.collection.IntObjectMap.Entry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
@@ -425,9 +424,10 @@ public class BatchServiceImpl {
 		Map<Date, String> scheduleMap = new TreeMap<>();
 		for(Batch batch : batches) {
 			if(batch.getScheduleInfo() != null)
+				System.out.println("batch schedule size: >>>>> "+batch.getScheduleInfo().size());
 				for(Schedule schedule : batch.getScheduleInfo()) {
-					Date startDate = simpleDateFormat.parse(schedule.getStartDate().toString());
-					Date endDate = simpleDateFormat.parse(schedule.getEndDate().toString());
+					Date startDate = schedule.getStartDate();
+					Date endDate = schedule.getEndDate();
 					
 					if (startDate.compareTo(currDate) > 0) {
 						//"startDate is after currDate"
@@ -442,8 +442,9 @@ public class BatchServiceImpl {
 			        } 
 				}					
 		}
-		for(java.util.Map.Entry<Date, String> entry :scheduleMap.entrySet())
-			System.out.println(entry.getKey() +" : "+entry.getValue());
+		System.out.println("size: "+scheduleMap.entrySet().size());
+		for(java.util.Map.Entry<Date, String> entry : scheduleMap.entrySet())
+			System.out.println(entry.getKey() +" >>>>>>>> "+entry.getValue());
 		return batchesToExecute;
 	}
 }
