@@ -27,7 +27,7 @@
       "value": null
     }
   ],
-  "metaList": [
+  "pipelineInfo": [
     {
       "ref": {
         "type": "dag",

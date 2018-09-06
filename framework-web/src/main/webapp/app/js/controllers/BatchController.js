@@ -119,6 +119,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
    }
   }
 
+  $scope.clear=function(){
+    $scope.metaTags=[];
+  }
+
   $scope.onChangeFrequencyType=function(index){
     $scope.scheduleTableArray[index].frequencyDetail=[];
   }
@@ -278,13 +282,13 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       defaultversion.uuid =  $scope.batchDetail.uuid;
       $scope.batch.defaultVersion = defaultversion;
       var metaTagArray = [];
-      for (var i = 0; i <  $scope.batchDetail.metaList.length; i++) {
+      for (var i = 0; i <  $scope.batchDetail.pipelineInfo.length; i++) {
         var metaTags = {};
-        metaTags.uuid =  $scope.batchDetail.metaList[i].ref.uuid;
-        metaTags.type =  $scope.batchDetail.metaList[i].ref.type;
-        metaTags.name =  $scope.batchDetail.metaList[i].ref.name;
-        metaTags.id =  $scope.batchDetail.metaList[i].ref.uuid;
-        metaTags.version =  $scope.batchDetail.metaList[i].ref.version;
+        metaTags.uuid =  $scope.batchDetail.pipelineInfo[i].ref.uuid;
+        metaTags.type =  $scope.batchDetail.pipelineInfo[i].ref.type;
+        metaTags.name =  $scope.batchDetail.pipelineInfo[i].ref.name;
+        metaTags.id =  $scope.batchDetail.pipelineInfo[i].ref.uuid;
+        metaTags.version =  $scope.batchDetail.pipelineInfo[i].ref.version;
         metaTagArray[i] = metaTags;
       }
       $scope.metaTags = metaTagArray
@@ -305,13 +309,13 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       defaultversion.uuid = response.batch.uuid;
       $scope.batch.defaultVersion = defaultversion;
       var metaTagArray = [];
-      for (var i = 0; i < response.batch.metaList.length; i++) {
+      for (var i = 0; i < response.batch.pipelineInfo.length; i++) {
         var metaTags = {};
-        metaTags.uuid = response.batch.metaList[i].ref.uuid;
-        metaTags.type = response.batch.metaList[i].ref.type;
-        metaTags.name = response.batch.metaList[i].ref.name;
-        metaTags.id = response.batch.metaList[i].ref.uuid;
-        metaTags.version = response.batch.metaList[i].ref.version;
+        metaTags.uuid = response.batch.pipelineInfo[i].ref.uuid;
+        metaTags.type = response.batch.pipelineInfo[i].ref.type;
+        metaTags.name = response.batch.pipelineInfo[i].ref.name;
+        metaTags.id = response.batch.pipelineInfo[i].ref.uuid;
+        metaTags.version = response.batch.pipelineInfo[i].ref.version;
         metaTagArray[i] = metaTags;
       }
       $scope.metaTags = metaTagArray
@@ -369,7 +373,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       metaInfoArray[i] = metaInfo;
     }
     
-    batchJson.metaList = metaInfoArray;
+    batchJson.pipelineInfo = metaInfoArray;
     var scheduleTableArray=[];
     for(var i=0;i<$scope.scheduleTableArray.length;i++){
       var scheduleInfo={};
