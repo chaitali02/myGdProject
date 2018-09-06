@@ -40,7 +40,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   var batchScope=$scope;
   $scope.minDate=moment().subtract(new Date(), 'day');
-  $scope.frequencyTypes=[{"text":"once","caption":"Once"},{"text":"dom","caption":"DOM"},{"text":"dow","caption":"DOW"}];
+  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -128,6 +128,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.closeFrequencyDetailDOW=function(index){
+    $scope.WeekArray=[];
+    $scope.scheduleTableArray[index].domPopoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetailDOW=function(index){
     if($scope.scheduleTableArray[index].domPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       for(var i=0;i<$scope.WeekArray.length;i++){
@@ -148,6 +153,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.closeFrequencyDetail=function(index){
+    $scope.myArrayOfDates=[];
+    $scope.scheduleTableArray[index].popoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetail=function(index){
    // $scope.scheduleTableArray[index].frequencyDetail=[];
     if($scope.scheduleTableArray[index].popoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
