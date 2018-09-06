@@ -388,8 +388,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     for(var i=0;i<$scope.scheduleTableArray.length;i++){
       var scheduleInfo={};
       scheduleInfo.name=$scope.scheduleTableArray[i].name;
-      scheduleInfo.startDate=new Date($scope.scheduleTableArray[i].startDate);
-      scheduleInfo.endDate=new Date($scope.scheduleTableArray[i].endDate);
+      scheduleInfo.startDate=$filter('date')(new Date($scope.scheduleTableArray[i].startDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].startDate);
+      scheduleInfo.endDate=$filter('date')(new Date($scope.scheduleTableArray[i].endDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].endDate);
       scheduleInfo.frequencyType=$scope.scheduleTableArray[i].frequencyType;
       scheduleInfo.frequencyDetail=$scope.scheduleTableArray[i].frequencyDetail;
       scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
