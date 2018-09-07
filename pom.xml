@@ -254,6 +254,12 @@
 			<version>${hive.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-metastore</artifactId>
+			<version>${hive.version}</version>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>org.neo4j</groupId>
@@ -547,6 +553,13 @@
 		    <artifactId>sparkling-water-ml_2.11</artifactId>
 		    <version>2.3.7</version>
 		</dependency> -->
+		<dependency>
+			<groupId>org.apache.sqoop</groupId>
+			<artifactId>sqoop</artifactId>
+			<version>${sqoop.version}</version>
+			<type>pom</type>
+		</dependency>
+		
 	</dependencies>
 
 	<properties>
@@ -554,6 +567,7 @@
 		<livy.version>0.4.0-incubating</livy.version>
 		<hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
 		<hive.version>1.1.0-cdh5.13.0</hive.version>
+		<sqoop.version>1.4.6-cdh5.13.0</sqoop.version>
 	</properties>
 
 	<modules>
@@ -561,6 +575,7 @@
 		<module>framework-web</module>
 		<module>framework-service</module>
 		<module>framework-batch</module>
+		<module>framework-udfs</module>
 	</modules>
 
 	<build>
