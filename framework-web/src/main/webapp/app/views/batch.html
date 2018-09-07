@@ -312,6 +312,7 @@
                           <div ng-if="data.frequencyType =='Monthly'" >
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
+                              
                               <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
                             </div>
                             <script type="text/ng-template" id="dom-popoverTemplate_data.html">

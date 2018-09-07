@@ -428,12 +428,17 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       scheduleInfo.endDate=$filter('date')(new Date($scope.scheduleTableArray[i].endDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].endDate);
       scheduleInfo.frequencyType=$scope.scheduleTableArray[i].frequencyType;
       scheduleInfo.frequencyDetail=[];
+      
       if($scope.scheduleTableArray[i].frequencyDetail){
         for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-          scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+          if($scope.scheduleTableArray[i].frequencyType !="Monthly"){
+            scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+          }
+        else{
+          scheduleInfo.frequencyDetail[j]=$scope.scheduleTableArray[i].frequencyDetail[j];
         }
       }
-      
+    }
     //  scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
       scheduleTableArray[i]=scheduleInfo;
     }  
