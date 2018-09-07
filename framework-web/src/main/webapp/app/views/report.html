@@ -173,19 +173,18 @@
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
                                         <div style="border-bottom: 1px solid darkgray;">
-                                                <div class="form-group">
-                                                        <div class="col-md-1 col-sm-1" style="margin-left:-3px;width:4%;margin-top: 4px;">
-                                                            <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size: 18px;"></span>
-                                                        </div>
-                                                        <div class="col-md-10 col-sm-10" style="padding-left:0px;">
-                                                            <div class="chip" ng-repeat=" filterdata in filterTag">
-                                                                 {{filterdata.text}}
-                                                                 
-                                                                <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
-                                                              </div>
-                                                        </div>
-                                                      
+                                            <div class="form-group">
+                                                    <!-- style="padding-left:0px;" -->
+                                                <div class="col-md-11 col-sm-11" >
+                                                    <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                        {{filterdata.text}}
+                                                        <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
                                                     </div>
+                                                </div>
+                                                <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top: 4px;">
+                                                    <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size: 18px;"></span>
+                                                </div>   
+                                            </div>
                                         </div>
                                         <br>
                                     </div>
@@ -211,7 +210,7 @@
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <div class="col-md-12 col-sm-12">
-                                                <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                                <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;margin-right: -4px;">
                                                     <label>Search:</label>
                                                     <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext"
                                                         aria-controls="datastoredatatable">
@@ -558,7 +557,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="slimScrollDiv" style="margin-top:10px;">
-                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="min-height:150px;overflow-y: scroll;height: 300px;">
+                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: scroll;max-height: 300px;">
                                 <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
                                     <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
                                         <div class="spinner">
