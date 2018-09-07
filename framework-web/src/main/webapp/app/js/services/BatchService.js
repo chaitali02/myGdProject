@@ -188,6 +188,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 		BatchFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var batchResult={};
+			var weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
 			batchResult.batch=response;
 			var scheduleInfoArray=[];
             if(response.scheduleInfo !=null){
@@ -197,8 +198,14 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.startDate= moment(response.scheduleInfo[i].startDate);
 					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
 					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;
-					scheduleInfo.frequencyDetail=response.scheduleInfo[i].frequencyDetail;
-					scheduleInfo.recurring=response.scheduleInfo[i].recurring=='Y' ?true:false;
+					scheduleInfo.frequencyDetail=[];
+					if(response.scheduleInfo[i].frequencyDetail){
+						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
+							scheduleInfo.frequencyDetail[j]=weekNumToDays[response.scheduleInfo[i].frequencyDetail[j]];
+						}
+				    }
+				  	
+					// scheduleInfo.recurring=response.scheduleInfo[i].recurring=='Y' ?true:false;
 					// if(response.scheduleInfo[i].frequencyDetail.length >0){
 					// 	for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
 					// 		var dd=$filter('date')(new Date(response.scheduleInfo[i].frequencyDetail[j]), "dd");
