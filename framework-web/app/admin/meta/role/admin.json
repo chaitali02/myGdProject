@@ -5791,7 +5791,7 @@
 					"type" : "privilege",
 		 			"uuid" : "e598fd95-469e-4852-8a38-70a6d75649c7",
 		 			"version" : null,
-		            "name" : "BatchexecExecute"
+		            "name" : "ScheduleExecute"
 				},
 				"value" : null
 		},
@@ -5800,7 +5800,7 @@
 					"type" : "privilege",
 		 			"uuid" : "a41d5a83-61a9-4770-b4fa-4bb24f14a831",
 		 			"version" : null,
-		            "name" : "BatchexecEdit"
+		            "name" : "ScheduleEdit"
 				},
 				"value" : null
 		},
@@ -5818,7 +5818,7 @@
 					"type" : "privilege",
 		 			"uuid" : "f255c689-de20-4d41-8d05-eed78884a950",
 		 			"version" : null,
-		            "name" : "BatchexecClone"
+		            "name" : "ScheduleClone"
 				},
 				"value" : null
 		},
@@ -5827,7 +5827,88 @@
 					"type" : "privilege",
 		 			"uuid" : "7abdd78f-ddf5-417a-8f6c-bbe11c22f3e6",
 		 			"version" : null,
-		            "name" : "BatchexecAdd"
+		            "name" : "ScheduleAdd"
+				},
+				"value" : null
+		},			
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "76bd2a66-de74-4b2d-aed3-c0a9ce4b45a0",
+		 			"version" : null,
+		            "name" : "ScheduleView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a5de7ee9-e088-4bf9-8106-8e0585151108",
+		 			"version" : null,
+		            "name" : "ScheduleUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "7ba281bd-f2b7-4814-8d68-9d6d4782cba5",
+		 			"version" : null,
+		            "name" : "ScheduleRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "1e3e9184-aa2c-467e-bc99-f93c1dec58b6",
+		 			"version" : null,
+		            "name" : "SchedulePublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "47ebb750-cbaf-41c0-a2b9-c3fa4eeae7bd",
+		 			"version" : null,
+		            "name" : "ScheduleExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8d675488-70aa-4671-9926-287d60401c3d",
+		 			"version" : null,
+		            "name" : "ScheduleEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d21ff514-dc6e-42c3-9651-c41a7f552362",
+		 			"version" : null,
+		            "name" : "ScheduleDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "076611d0-8618-453e-a6ec-e61ddff384b7",
+		 			"version" : null,
+		            "name" : "ScheduleClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "59761537-3b4e-42c9-8c00-cb030256e263",
+		 			"version" : null,
+		            "name" : "ScheduleAdd"
 				},
 				"value" : null
 		}

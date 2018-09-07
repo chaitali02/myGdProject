@@ -94,6 +94,7 @@ import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
+import com.inferyx.framework.dao.IScheduleDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
@@ -389,9 +390,18 @@ public class GraphRegister<T> {
 	IGraphpodDao iGraphpodDao;
 	@Autowired
 	IGraphpodExecDao iGraphpodExecDao;
+	@Autowired
+	IScheduleDao iScheduleDao;
 	
 	
-	
+	public IScheduleDao getiScheduleDao() {
+		return iScheduleDao;
+	}
+
+	public void setiScheduleDao(IScheduleDao iScheduleDao) {
+		this.iScheduleDao = iScheduleDao;
+	}
+
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
 	}
