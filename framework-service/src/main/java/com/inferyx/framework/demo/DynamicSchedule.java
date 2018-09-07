@@ -55,20 +55,24 @@ public class DynamicSchedule implements Trigger {
 	      future = scheduler.schedule(task, this);
 	   }
 
-	   public void setNextExecutionTime(Date nextExecutionTime, List<Batch> batchs) throws Exception {
+//	   public void setNextExecutionTime(Date nextExecutionTime, List<Batch> batchs) throws Exception {
+//		   this.nextExecutionTime = nextExecutionTime;
+//		   if (future != null) {
+//		         System.out.println("Cancelling task...");
+//		         future.cancel(true);
+//		      }
+////		      this.delay = 10000;
+//		      System.out.println("Starting task...");
+//		      future = scheduler.schedule(task, this);
+//		      for(Batch batch : batchs) {
+//		    	  BatchExec batchExec = batchServiceImpl.create(batch.getUuid(), batch.getVersion(), null, null, RunMode.BATCH);
+//		    	  batchServiceImpl.submitBatch(batch.getUuid(), batch.getVersion(), batchExec, null, null, RunMode.BATCH);
+//		      }
+////		   future = scheduler.schedule(task, this);
+//	   }
+
+	   public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
 		   this.nextExecutionTime = nextExecutionTime;
-		   if (future != null) {
-		         System.out.println("Cancelling task...");
-		         future.cancel(true);
-		      }
-//		      this.delay = 10000;
-		      System.out.println("Starting task...");
-		      future = scheduler.schedule(task, this);
-		      for(Batch batch : batchs) {
-		    	  BatchExec batchExec = batchServiceImpl.create(batch.getUuid(), batch.getVersion(), null, null, RunMode.BATCH);
-		    	  batchServiceImpl.submitBatch(batch.getUuid(), batch.getVersion(), batchExec, null, null, RunMode.BATCH);
-		      }
-//		   future = scheduler.schedule(task, this);
 	   }
 	   
 	   @Override

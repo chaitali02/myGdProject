@@ -52,7 +52,8 @@ public class ScheduleServiceImpl {
 		if(scheduleInfo != null) {
 			for(Schedule schedule : scheduleInfo) {
 				List<MetaIdentifierHolder> batchHolder = null;
-				Date nextRunTime = getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				Date nextRunTime = schedule.getNextRunTime();
+				//Date nextRunTime = getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail());
 				if(nextRunTime != null) {
 					Object value = scheduleMap.get(nextRunTime);
 					if(value != null) {
@@ -75,11 +76,11 @@ public class ScheduleServiceImpl {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
-		if (startDate.compareTo(currDate) > 0) { //"startDate is after currDate"					
-            logger.info("can not schedule batch because start date '"+startDate+"' is after current date '"+currDate+"'.");
-        } else if (startDate.compareTo(currDate) < 0 || startDate.compareTo(currDate) == 0) { //"startDate is before currDate OR startDate is equal to currDate"
-           if (endDate.compareTo(currDate) > 0 || endDate.compareTo(currDate) == 0) { //"endDate is after currDate OR endDate is equal to currDate"
-        		switch(frequencyType.toLowerCase()) {
+		if (startDate.compareTo(currDate) < 0) { //"startDate is after currDate"					
+            logger.info("Start date '"+startDate+"' is before current date '"+currDate+"'. Setting to current date");
+            return currDate;
+        } else {
+        			switch(frequencyType.toLowerCase()) {
 	        		case "once" : return startDate;
 	        		case "daily" : return getNextDailyRunTime(startDate, endDate, previousRunTime);
 	        		case "weekly" : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
@@ -89,9 +90,7 @@ public class ScheduleServiceImpl {
 	        		case "yearly" : return getNextYearlyRunTime(startDate, endDate, previousRunTime);
 	        		default : return null;	
         		}
-        	}
-        } 		
-		return currDate;
+        	} 		
 	}
 
 	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
@@ -132,12 +131,6 @@ public class ScheduleServiceImpl {
 	
 	public void setSchedulingTrigger() throws Exception {
 		Map<Date, List<MetaIdentifierHolder>> scheduleMap = getLatestBatch();
-		List<Batch> batchs = new ArrayList<>();
-		 for(MetaIdentifierHolder batchHolder : new ArrayList<>(scheduleMap.values()).get(0)) {
-			 MetaIdentifier batchMI = batchHolder.getRef();
-			 Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchMI.getUuid(), batchMI.getVersion(), batchMI.getType().toString());
-			 batchs.add(batch);
-		 }
-		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]/*new Date(new Date().getTime() + (1000 * 20))*/, batchs);
+		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]);
 	}
 }
