@@ -110,7 +110,7 @@ public class UDFRegister implements java.io.Serializable {
 			}
 		}, DataTypes.DoubleType);
 		
-		sparkSession.udf().register("randnorm", new UDF1<Object, Double>() {
+		sparkSession.udf().register("randn", new UDF1<Object, Double>() {
 			
 			private static final long serialVersionUID = 1L;
 			Random random = new Random();

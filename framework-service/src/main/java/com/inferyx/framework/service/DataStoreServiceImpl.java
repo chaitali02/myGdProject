@@ -535,22 +535,28 @@ public class DataStoreServiceImpl {
 		String metaid = dataStore.getMetaId().getRef().getUuid();
 		String metaV = dataStore.getMetaId().getRef().getVersion();
 		MetaType metaType = dataStore.getMetaId().getRef().getType();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		String dsType = datasource.getType();
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		String dsType = appDatasource.getType();
 		if (metaType == MetaType.datapod) {
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
 			if (dp == null) {
 				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
 			}
-			datasource = commonServiceImpl.getDatasourceByDatapod(dp);
-			dsType = datasource.getType();
+			Datasource dpDatasource = commonServiceImpl.getDatasourceByDatapod(dp);
+			dsType = dpDatasource.getType();
 			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
 			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				if(!(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-					tableName = datasource.getDbname() + "." + dp.getName();
+				if((appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
+						&& !(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					filePath = String.format("%s%s", hdfsLocation, filePath);
+					tableName = Helper.genTableName(filePath);
+				} else if(!(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					tableName = dpDatasource.getDbname() + "." + dp.getName();
 				} else {
 					filePath = String.format("%s%s", hdfsLocation, filePath);
 					tableName = Helper.genTableName(filePath);
@@ -563,7 +569,7 @@ public class DataStoreServiceImpl {
 					}
 					tableName = Helper.genTableName(filePath);				
 				} else {
-					tableName = datasource.getDbname() + "." + dp.getName();
+					tableName = dpDatasource.getDbname() + "." + dp.getName();
 					if(tableName.startsWith("."))
 						tableName = tableName.substring(1);
 				}
@@ -586,7 +592,7 @@ public class DataStoreServiceImpl {
 					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + ruleName;
+					tableName = appDatasource.getDbname() + "." + ruleName;
 		} else if (metaType == MetaType.recon) {
 			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.recon.toString());
 			String reconName = recon.getName();
@@ -602,7 +608,7 @@ public class DataStoreServiceImpl {
 					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + reconName;
+					tableName = appDatasource.getDbname() + "." + reconName;
 		} else if (metaType == MetaType.operator) {
 			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
 			String operatorName = recon.getName();
@@ -618,7 +624,7 @@ public class DataStoreServiceImpl {
 					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + operatorName;
+					tableName = appDatasource.getDbname() + "." + operatorName;
 		} else if (metaType == MetaType.report) {
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.report.toString());
 			String reportName = report.getName();
@@ -632,7 +638,7 @@ public class DataStoreServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + reportName;
+					tableName = appDatasource.getDbname() + "." + reportName;
 		} 
 		return tableName;
 	}
