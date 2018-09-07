@@ -139,8 +139,7 @@ public class BatchViewServiceImpl {
 			schedule.setFrequencyType(schedule.getFrequencyType());
 			schedule.setFrequencyDetail(schedule.getFrequencyDetail());
 			save(schedule);
-		}
-		
+		}		
 		return batch;
 	}
 	
