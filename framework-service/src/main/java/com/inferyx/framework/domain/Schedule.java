@@ -29,7 +29,7 @@ public class Schedule extends BaseEntity {
 	private Date nextRunTime;
 	private String frequencyType; //Once/Daily/Weekly/Bi-Weekly/Monthly/Quarterly/Yearly
 	private List<String> frequencyDetail;//if weekly then days/if monthly then date
-	private String recurring = "N";
+//	private String recurring = "N";
 	private MetaIdentifierHolder dependsOn;
 	private String scheduleChg;
 	
@@ -195,22 +195,22 @@ public class Schedule extends BaseEntity {
 	public void setFrequencyDetail(List<String> frequencyDetail) {
 		this.frequencyDetail = frequencyDetail;
 	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the recurring
-	 */
-	public String getRecurring() {
-		return recurring;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param recurring the recurring to set
-	 */
-	public void setRecurring(String recurring) {
-		this.recurring = recurring;
-	}
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @return the recurring
+//	 */
+//	public String getRecurring() {
+//		return recurring;
+//	}
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @param recurring the recurring to set
+//	 */
+//	public void setRecurring(String recurring) {
+//		this.recurring = recurring;
+//	}
 }
