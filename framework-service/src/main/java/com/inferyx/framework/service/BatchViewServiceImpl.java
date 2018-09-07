@@ -38,13 +38,15 @@ public class BatchViewServiceImpl {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
-	SecurityServiceImpl securityServiceImpl;
+	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	IBatchDao iBatchDao;
+	private IBatchDao iBatchDao;
 	@Autowired
 	private IScheduleDao iScheduleDao;   
     @Autowired
-	GraphRegister<?> registerGraph;
+    private GraphRegister<?> registerGraph;
+    @Autowired
+    private ScheduleServiceImpl scheduleServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchViewServiceImpl.class);
 	
@@ -124,6 +126,7 @@ public class BatchViewServiceImpl {
 			batch = setBatchProperties(batchView, batchView.getVersion());
 		}	
 		
+		boolean setTrigger = false;
 		//set schedule properties and save 
 		for(Schedule schedule : batchView.getScheduleInfo()) {
 			if(schedule.getScheduleChg().equalsIgnoreCase("Y") && (schedule.getUuid() == null || schedule.getUuid().isEmpty())) {
@@ -133,17 +136,23 @@ public class BatchViewServiceImpl {
 				//setting schedule specific properties
 				schedule.setStartDate(schedule.getStartDate().toString());
 				schedule.setEndDate(schedule.getEndDate().toString());
-				schedule.setNextRunTime(schedule.getNextRunTime().toString());
+				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
 				schedule.setFrequencyType(schedule.getFrequencyType());
 				schedule.setFrequencyDetail(schedule.getFrequencyDetail());
 				save(schedule);
+				setTrigger = true;
 			} else if(schedule.getScheduleChg().equalsIgnoreCase("Y")) {
 				schedule = setScheduleProperties(schedule, null);
+				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
 				save(schedule);
+				setTrigger = true;
 			} /*else {
 				schedule = setScheduleProperties(schedule, schedule.getVersion());
 			}*/
 		}		
+		if(setTrigger) {
+			scheduleServiceImpl.setSchedulingTrigger();
+		}
 		return batch;
 	}
 	
@@ -192,7 +201,7 @@ public class BatchViewServiceImpl {
 		//setting schedule specific properties
 		schedule2.setStartDate(schedule.getStartDate().toString());
 		schedule2.setEndDate(schedule.getEndDate().toString());
-		schedule2.setNextRunTime(schedule.getNextRunTime().toString());
+//		schedule2.setNextRunTime(schedule.getNextRunTime().toString());
 		schedule2.setFrequencyType(schedule.getFrequencyType());
 		schedule2.setFrequencyDetail(schedule.getFrequencyDetail());		
 		return schedule2;

@@ -28,7 +28,7 @@ public class Schedule extends BaseEntity {
 	private Date endDate;
 	private Date nextRunTime;
 	private String frequencyType; //Once/Daily/Weekly/Bi-Weekly/Monthly/Quarterly/Yearly
-	private List<String> frequencyDetail;//if weekly then days/if monthly then date
+	private List<String> frequencyDetail;//if weekly then days/if monthly then date/if quarterly then quarter
 //	private String recurring = "N";
 	private MetaIdentifierHolder dependsOn;
 	private String scheduleChg;

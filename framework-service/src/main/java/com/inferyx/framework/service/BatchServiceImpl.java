@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
@@ -27,7 +23,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +36,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Status.Stage;
 import com.inferyx.framework.enums.RunMode;
@@ -65,8 +59,6 @@ public class BatchServiceImpl {
 	ConcurrentHashMap<String, FutureTask<String>> batchThreadMap;
 	@Autowired
 	private SessionHelper sessionHelper;
-	@Autowired 
-	MongoTemplate mongoTemplate;
 	
 	static final Logger logger = Logger.getLogger(BatchServiceImpl.class);
 	
@@ -415,47 +407,4 @@ public class BatchServiceImpl {
 		}
 		return batchExec;
 	}
-	
-	/*public List<Batch> getLatestBatch(List<Batch> batches) throws ParseException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
-		Date currDate = simpleDateFormat.parse(new Date().toString());
-		
-		List<Batch> batchesToExecute = new ArrayList<>();
-		Map<Date, List<String>> scheduleMap = new TreeMap<>();
-		for(Batch batch : batches) {
-			if(batch.getScheduleInfo() != null)
-				System.out.println("batch schedule size: >>>>> "+batch.getScheduleInfo().size());
-				for(Schedule schedule : batch.getScheduleInfo()) {
-					Date startDate = schedule.getStartDate();
-					Date endDate = schedule.getEndDate();
-					
-					if (startDate.compareTo(currDate) > 0) { //"startDate is after currDate"					
-			            continue;
-			        } else if (startDate.compareTo(currDate) < 0 || startDate.compareTo(currDate) == 0) { //"startDate is before currDate OR startDate is equal to currDate"
-			           Object value = scheduleMap.get(startDate);
-			        	if(value == null) {
-			        		List<String> uuidList = new ArrayList<>();
-			        		uuidList.add(batch.getUuid());
-			        		scheduleMap.put(startDate, uuidList);
-			        	} else {
-			        		@SuppressWarnings("unchecked")
-							List<String> uuidList = (List<String>) value;
-			        		uuidList.add(batch.getUuid());
-			        		scheduleMap.put(startDate, uuidList);
-			        	}
-			        	if (endDate.compareTo(currDate) > 0 || endDate.compareTo(currDate) == 0) { //"endDate is after currDate OR endDate is equal to currDate"
-			        		batchesToExecute.add(batch);
-			        	}
-			        } 
-				}					
-		}
-		System.out.println("size: "+scheduleMap.entrySet().size());
-		for(java.util.Map.Entry<Date, List<String>> entry : scheduleMap.entrySet())
-			System.out.println(entry.getKey() +" >>>>>>>> "+entry.getValue());
-		return batchesToExecute;
-	}*/
-	
-//	public Date getNextRunTime(Date startDate, Date endDate, String frequencyType, List<String> frequencyDetail) {
-//		
-//	}
 }

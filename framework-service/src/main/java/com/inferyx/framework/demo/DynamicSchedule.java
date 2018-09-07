@@ -23,6 +23,7 @@ public class DynamicSchedule implements Trigger {
 	   private Runnable task;
 	   private ScheduledFuture<?> future;
 	   private int delay;
+	   private Date nextExecutionTime;
 	   
 	public DynamicSchedule() {
 		super();
@@ -44,10 +45,17 @@ public class DynamicSchedule implements Trigger {
 	      future = scheduler.schedule(task, this);
 	   }
 
+	   public void setNextExecutionTime(Date nextExecutionTime) {
+		   this.nextExecutionTime = nextExecutionTime;
+	   }
+	   
 	   @Override
 	   public Date nextExecutionTime(TriggerContext triggerContext) {
-	      Date lastTime = triggerContext.lastActualExecutionTime();
-	      Date nextExecutionTime = (lastTime == null)
+//		  future = scheduler.schedule(task, this);
+		  Date lastTime = triggerContext.lastActualExecutionTime();
+	      delay = 30000;
+	      Date nextExecutionTime = this.nextExecutionTime;
+	      nextExecutionTime = (lastTime == null)
 	         ? new Date()
 	         : new Date(lastTime.getTime() + delay);
 	         System.out.println("DynamicSchedule -- delay: " + delay +

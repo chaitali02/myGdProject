@@ -17,6 +17,7 @@ import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.BatchServiceImpl;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.ScheduleServiceImpl;
 
 /**
  * @author joy
@@ -30,16 +31,16 @@ public class ScheduleChanger {
    @Autowired
    private CommonServiceImpl<?> commonServiceImpl;
    @Autowired
-   private BatchServiceImpl batchServiceImpl;
+   private ScheduleServiceImpl scheduleServiceImpl;
 
-   @Scheduled(fixedDelay=60000)
-   public void change() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-	  System.out.println("Inside ScheduleChanger");
-      Random rnd = new Random();
-      int nextTimeout = rnd.nextInt(60000);
-      System.out.println("Changing poll time to: " + nextTimeout);
-//      List<Batch> scheduledTasks = batchServiceImpl.getLatestBatch((List<Batch>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.batch));
-      dynamicSchedule.reset(60000);
-   }
+//   @Scheduled(fixedDelay=60000)
+//   public void change() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//	  System.out.println("Inside ScheduleChanger");
+//      Random rnd = new Random();
+//      int nextTimeout = rnd.nextInt(60000);
+//      System.out.println("Changing poll time to: " + nextTimeout);
+////      List<Batch> scheduledTasks = scheduleServiceImpl.getLatestBatch((List<Batch>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.batch));
+//      dynamicSchedule.reset(60000);
+//   }
 
 }
