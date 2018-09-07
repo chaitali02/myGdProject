@@ -29,32 +29,32 @@
     <div options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="batchDetail"
       comment-panel-directive></div>
 
-    <div class="portlet light bordered" id="form_wizard_1">
+    <div class="portlet box green" >
       <div class="portlet-title">
+       
         <div class="caption">
-          <i class=" icon-layers "></i>
-          <span class="caption-subject">{{batchDetail.name}}</span>
+            <i class="fa fa-gift"></i>{{batchDetail.name}}
         </div>
-        <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+        <div class="tools">
+          <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+          <a  href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(batchDetail.uuid,batchDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
+          <a  href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
             tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
-            <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white"></i>
           </a>
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
+          <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()" data-original-title=""
             title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
+          <a class="" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
             tooltip>
-            <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-times" style="display: block;margin: 2px auto;color:white"></i>
           </a>
         </div>
       </div>
@@ -176,18 +176,20 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Pipeline Info
                   <span class="required" aria-required="true"> * </span>
                 </label>
-                <div class="col-md-6">
-                  <tags-input class="tag-scroll" min-length="1" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" required="">
+                <div class="col-md-6"> 
+                  <tags-input class="tag-scroll" min-tags="0" name="metaTags" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
+                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                     <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-                      load-on-empty="true" required="">
+                      load-on-empty="true" >
                     </auto-complete>
                   </tags-input>
+                  <input type="hidden" ng-model="metaTags" name="metaTags" required="">
                 </div>
                 <div class="col-md-1">
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
+               
               </div>
 
               <div class="form-group">
@@ -229,7 +231,7 @@
             </div>
             <div>
               <div class="">
-                <table class=" row-border hover table  table-striped table-bordered">
+                <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                   <thead>
                     <tr>
                       <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -238,10 +240,10 @@
                           />
                         </span>
                       </th>
-                      <th style="width:18%;text-align: center">Name</th>
-                      <th style="width:20%;text-align: center">Start Time</th>
-                      <th style="width:20%;text-align: center">End Time</th>
-                      <th style="width:6%;text-align: center">Recurring</th>
+                      <th style="width:17%;text-align: center">Name</th>
+                      <th style="width:238px;text-align: center">Start Time</th>
+                      <th style="width:238px;text-align: center">End Time</th>
+                      <!-- <th style="width:6%;text-align: center">Recurring</th> -->
                       <th style="width:14%;text-align: center">Frequency Type</th>
                       <th style="width:16%;text-align: center">Frequency Detail</th>
 
@@ -252,36 +254,53 @@
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message="" title="{{data.name}}"
-                            ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                          ng-change="onChangeScheduleName($index)" ng-disabled="{{mode}}">
                         </span>
                       </td>
                       <td>
                           <!-- max-view="hour" -->
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <!-- MM-D-YYYY, h:mm:ss a -->
-                          <input class="form-control" placeholder="Select a start date..." moment-picker="data.startDate" locale="en" format="MMM D HH:mm:00 YYYY"
-                            ng-model="data.startDate" ng-model-options="{ updateOn: 'blur' }" start-view="month" min-date=minDate
-                            validate=true  max-view="hour" change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message="">
+                            <div class="input-group" moment-picker="data.startDate" 
+                              start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=minDate  validate=true =true >
+                              <span class="form-control" name="startDate" style="padding-right: 5px;text-align:right;"  name="startDate" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
+                             
+                              <!-- <input class="form-control" placeholder="Select a start date..." locale="en" 
+                                  ng-model="data.startDate" ng-model-options="{ updateOn: 'blur' }" 
+                                  change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message=""> -->
+                                <span class="input-group-addon">
+                                  <i class="fa fa-calendar"></i>
+                                </span>
+                           </div>
+                           <input type="hidden" ng-model="data.startDate" name="startDate" required disable-validation-message="">
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input class="form-control" placeholder="Select a end date..." moment-picker="data.endDate" locale="en" format="MMM D HH:mm:00 YYYY"
-                            ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" start-view="month" min-date=data.startDate
-                             change="onChangeEndDate(data.endDate,$index)" max-view="hour" validate=true required disable-validation-message="">
-                        </span>
+                          <div class="input-group" moment-picker="data.endDate" 
+                            start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true>
+                            <span class="form-control" name="startDate" style="padding-right: 5px; text-align:right;"  name="endDate" >{{data.endDate}} <span style="text-align:right;">{{timezone}}</span></span>  
+                            <!-- <input class="form-control" placeholder="Select a end date..." locale="en" 
+                            ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" 
+                             change="onChangeEndDate(data.endDate,$index)" required disable-validation-message=""> -->
+                             <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                           </div>
+                           <input type="hidden" ng-model="data.endDate" name="endDate" required disable-validation-message="">
+                          </span>
                       </td>
-                      <td style="text-align: center;width:5%;">
+                      <!-- <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.recurring" ng-disabled="{{mode}}" />
                         </span>
-                      </td>
+                      </td> -->
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select ng-model="data.frequencyType" ng-change="onChangeFrequencyType($index)" ng-options=" x.text as x.caption for x in frequencyTypes" ng-disabled="{{mode}}" class="form-control"></select>
@@ -308,7 +327,7 @@
                               </div>
                             </script>
                           </div>
-                          <div ng-if="data.frequencyType =='Weekly' || data.frequencyType =='By-Weekly'">
+                          <div ng-if="data.frequencyType =='Weekly' || data.frequencyType =='Bi-Weekly'">
                             
                               <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                                 popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">

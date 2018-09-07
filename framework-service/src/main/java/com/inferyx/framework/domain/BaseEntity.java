@@ -186,7 +186,7 @@ public class BaseEntity {
 				}
 			}
 		}
-		if (this.getCreatedOn().isEmpty()) {
+		if (this.getCreatedOn() == null || this.getCreatedOn().isEmpty()) {
 			this.setCreatedOn(Helper.getCurrentDate().toString());
 		}
 	}
