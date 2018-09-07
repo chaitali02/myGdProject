@@ -294,7 +294,10 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-					df = sparkSession.sql(sql);
+				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
+					sparkSession.sql("SET "+sessionParam);
+				}
+				df = sparkSession.sql(sql);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())

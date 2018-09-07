@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.framework.udf;
+package com.inferyx.framework.udfs;
 
 import java.util.Random;
 

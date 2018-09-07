@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BatchExec;
+import com.inferyx.framework.domain.BatchView;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -221,7 +222,8 @@ public class RegisterService {
 	@Autowired
 	private ReconExecServiceImpl reconExecServiceImpl;
 	@Autowired
-	private ReportViewServiceImpl reportViewServiceImpl;
+	private ReportViewServiceImpl reportViewServiceImpl;@Autowired
+	private BatchViewServiceImpl batchViewServiceImpl;
 
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -998,6 +1000,10 @@ public class RegisterService {
 			case "reportview" :
 				ReportView reportView = mapper.convertValue(operator, ReportView.class);
 				baseEntity = reportViewServiceImpl.save(reportView);
+				break;
+			case "batchview" :
+				BatchView batchView = mapper.convertValue(operator, BatchView.class);
+				baseEntity = batchViewServiceImpl.save(batchView);
 				break;
 			}
 		}
@@ -1811,6 +1817,9 @@ public class RegisterService {
 				break;*/
 			case "reportview":
 				result = ow.writeValueAsString(reportViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "batchview":
+				result = ow.writeValueAsString(batchViewServiceImpl.findOneByUuidAndVersion(uuid, version));
 				break;
 			}
 		}

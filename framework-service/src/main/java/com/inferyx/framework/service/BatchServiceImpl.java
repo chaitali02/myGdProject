@@ -31,7 +31,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.cloudera.io.netty.util.collection.IntObjectMap.Entry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
@@ -417,33 +416,46 @@ public class BatchServiceImpl {
 		return batchExec;
 	}
 	
-	public List<Batch> getLatestBatch(List<Batch> batches) throws ParseException {
+	/*public List<Batch> getLatestBatch(List<Batch> batches) throws ParseException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
 		List<Batch> batchesToExecute = new ArrayList<>();
-		Map<Date, String> scheduleMap = new TreeMap<>();
+		Map<Date, List<String>> scheduleMap = new TreeMap<>();
 		for(Batch batch : batches) {
 			if(batch.getScheduleInfo() != null)
+				System.out.println("batch schedule size: >>>>> "+batch.getScheduleInfo().size());
 				for(Schedule schedule : batch.getScheduleInfo()) {
-					Date startDate = simpleDateFormat.parse(schedule.getStartDate().toString());
-					Date endDate = simpleDateFormat.parse(schedule.getEndDate().toString());
+					Date startDate = schedule.getStartDate();
+					Date endDate = schedule.getEndDate();
 					
-					if (startDate.compareTo(currDate) > 0) {
-						//"startDate is after currDate"
+					if (startDate.compareTo(currDate) > 0) { //"startDate is after currDate"					
 			            continue;
-			        } else if (startDate.compareTo(currDate) < 0 || startDate.compareTo(currDate) == 0) {
-			            //"startDate is before currDate OR startDate is equal to currDate"
-	
-		        		scheduleMap.put(startDate, "start date '"+startDate+"' is before OR after current date '"+currDate+"'");
-			        	if (endDate.compareTo(currDate) > 0 || endDate.compareTo(currDate) == 0) {
-			        		//"endDate is after currDate OR endDate is equal to currDate"
+			        } else if (startDate.compareTo(currDate) < 0 || startDate.compareTo(currDate) == 0) { //"startDate is before currDate OR startDate is equal to currDate"
+			           Object value = scheduleMap.get(startDate);
+			        	if(value == null) {
+			        		List<String> uuidList = new ArrayList<>();
+			        		uuidList.add(batch.getUuid());
+			        		scheduleMap.put(startDate, uuidList);
+			        	} else {
+			        		@SuppressWarnings("unchecked")
+							List<String> uuidList = (List<String>) value;
+			        		uuidList.add(batch.getUuid());
+			        		scheduleMap.put(startDate, uuidList);
+			        	}
+			        	if (endDate.compareTo(currDate) > 0 || endDate.compareTo(currDate) == 0) { //"endDate is after currDate OR endDate is equal to currDate"
+			        		batchesToExecute.add(batch);
 			        	}
 			        } 
 				}					
 		}
-		for(java.util.Map.Entry<Date, String> entry :scheduleMap.entrySet())
-			System.out.println(entry.getKey() +" : "+entry.getValue());
+		System.out.println("size: "+scheduleMap.entrySet().size());
+		for(java.util.Map.Entry<Date, List<String>> entry : scheduleMap.entrySet())
+			System.out.println(entry.getKey() +" >>>>>>>> "+entry.getValue());
 		return batchesToExecute;
-	}
+	}*/
+	
+//	public Date getNextRunTime(Date startDate, Date endDate, String frequencyType, List<String> frequencyDetail) {
+//		
+//	}
 }

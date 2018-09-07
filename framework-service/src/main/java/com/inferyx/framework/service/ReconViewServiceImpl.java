@@ -22,16 +22,13 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IReconDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Recon;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.ReconView;
-import com.inferyx.framework.view.metadata.RuleView;
 
 @Service
 public class ReconViewServiceImpl {
@@ -51,8 +48,7 @@ public class ReconViewServiceImpl {
 	@Autowired
 	UserServiceImpl userServiceImpl;
     @Autowired
-    CommonServiceImpl<?> commonServiceImpl;
-    
+    CommonServiceImpl<?> commonServiceImpl;    
     @Autowired
 	GraphRegister<?> registerGraph;
 
