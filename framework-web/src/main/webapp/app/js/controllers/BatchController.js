@@ -214,17 +214,18 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   
   $scope.onChangeStartDate=function(newDate,index){
-    var d=$filter('date')(newDate._d, "dd");
-    var mm=$filter('date')(newDate._d, "MM");
-    var yyyy=$filter('date')(newDate._d, "yyyy");
+    var d=$filter('date')(newDate, "dd");
+    var mm=$filter('date')(newDate, "MM");
+    var yyyy=$filter('date')(newDate, "yyyy");
     $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
     $scope.scheduleTableArray[index].frequencyDetail=[]
     $scope.scheduleTableArray[index].scheduleChg="Y"
   }
   $scope.onChangeEndDate=function(newDate,index){
-    var d=$filter('date')(newDate._d, "dd");
-    var mm=$filter('date')(newDate._d, "MM");
-    var yyyy=$filter('date')(newDate._d, "yyyy");
+    
+    var d=$filter('date')(newDate, "dd");
+    var mm=$filter('date')(newDate, "MM");
+    var yyyy=$filter('date')(newDate, "yyyy");
     $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
     $scope.scheduleTableArray[index].frequencyDetail=[];
     $scope.scheduleTableArray[index].scheduleChg="Y"
@@ -422,8 +423,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       scheduleInfo.endDate=$filter('date')(new Date($scope.scheduleTableArray[i].endDate), "EEE MMM dd HH:mm:ss Z yyyy");//new Date($scope.scheduleTableArray[i].endDate);
       scheduleInfo.frequencyType=$scope.scheduleTableArray[i].frequencyType;
       scheduleInfo.frequencyDetail=[];
-      for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-        scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+      if($scope.scheduleTableArray[i].frequencyDetail){
+        for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
+          scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+        }
       }
       
     //  scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
