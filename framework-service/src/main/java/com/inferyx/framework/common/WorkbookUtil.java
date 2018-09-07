@@ -176,12 +176,12 @@ public class WorkbookUtil {
 
 	/******* adding title *******/
 		Font titleHeaderFont = workBook.createFont();
-		titleHeaderFont.setBold(true);
-		titleHeaderFont.setFontHeight((short)4);
-//		titleHeaderFont.setFontHeight((short)1);
+		titleHeaderFont.setBold(false);
+	//	titleHeaderFont.setFontHeight((short)8);
+		titleHeaderFont.setFontHeightInPoints((short)20);
 		CellStyle titleHeaderStyle = workBook.createCellStyle();
-//		titleHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-//		titleHeaderStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+		titleHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		titleHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		titleHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		titleHeaderStyle.setFont(titleHeaderFont);
 		titleHeaderStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -207,7 +207,7 @@ public class WorkbookUtil {
 			filterHeaderFont.setBold(true);
 			CellStyle filterHeaderStyle = workBook.createCellStyle();
 			filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			filterHeaderStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);
+			filterHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 			filterHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 			filterHeaderStyle.setFont(filterHeaderFont);
 			
@@ -236,7 +236,7 @@ public class WorkbookUtil {
 		columnHeaderFont.setBold(true);
 		CellStyle columnHeaderStyle = workBook.createCellStyle();
 		columnHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		columnHeaderStyle.setFillForegroundColor(HSSFColor.ORANGE.index);
+		columnHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		columnHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		columnHeaderStyle.setFont(columnHeaderFont);
 		columnHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);

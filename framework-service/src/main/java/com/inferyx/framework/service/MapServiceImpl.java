@@ -943,9 +943,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
-			logger.error("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
-			throw new RuntimeException("Number of rows "+rowLimit+" exceeded. Max row allow "+maxRows);
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
 		List<java.util.Map<String, Object>> results = getMapResults(uuid, version, offset, limit, sortBy, order, requestId, runMode);
