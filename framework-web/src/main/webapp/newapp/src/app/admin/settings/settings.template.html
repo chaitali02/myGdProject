@@ -14,7 +14,7 @@
               <hr>
             </div>
             <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitSettings()">
-              <div class="form-body">
+              <div class="form-body"*ngIf="tab.caption!=='Graph Engine' && tab.caption!=='Application Engine'"  >
                 <table class=" row-border hover table  table-striped table-bordered">
                   <thead>
                     <tr>

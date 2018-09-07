@@ -23,6 +23,8 @@ export class SettingsComponent implements OnInit {
     private generalSetting: any[]
     private metaEngine: any[]
     private ruleEngine:any[]
+    private GraphEngine :any[]
+    ApplicationEngine :any[]
     private propertyName: any
     private propertyValue: any
     private tableData: any
@@ -33,7 +35,9 @@ export class SettingsComponent implements OnInit {
     tabs = [
         { caption:'General',title:'General Settings'},
         { caption:'Meta Engine', title:'Meta Engine Settings'},
-        { caption:'Rule Engine',title:'Rule Engine Settings'}
+        { caption:'Rule Engine',title:'Rule Engine Settings'},
+        { caption:'Graph Engine',title:'Graph Engine '},
+        { caption:'Application Engine',title:'Application Engine '}
       ];
     constructor(private _datapodService : DatapodService,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _settingsService: SettingsService) {
         this.breadcrumbDataFrom=[{
@@ -72,6 +76,9 @@ export class SettingsComponent implements OnInit {
         this.generalSetting = response['generalSetting'];
         this.metaEngine = response['metaEngine'];
         this.ruleEngine = response['ruleEngine'];
+        this.GraphEngine =null
+        this.ApplicationEngine =null
+
         this.tableData = this.generalSetting
     }
 
@@ -82,9 +89,14 @@ export class SettingsComponent implements OnInit {
         else if(event.index =="1"){
             this.tableData = this.metaEngine
         }
-        else{
+           else if(event.index =="2"){
             this.tableData = this.ruleEngine
         }
+     
+        else {
+            this.router.navigate(['/app/list/appconfig']);   
+            }
+        
     }
     addRow(){
         if(this.tableData == null){
