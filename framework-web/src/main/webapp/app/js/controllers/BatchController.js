@@ -213,21 +213,26 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.scheduleTableArray[index].scheduleChg="Y";
   }
   
-  $scope.onChangeStartDate=function(newDate,index){
+  $scope.onChangeStartDate=function(newDate,index,isStartDateChange){
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
     $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
-    $scope.scheduleTableArray[index].frequencyDetail=[]
+    if(isStartDateChange=="Y"){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+    }
+    $scope.scheduleTableArray[index].isStartDateChange="Y"
     $scope.scheduleTableArray[index].scheduleChg="Y"
   }
-  $scope.onChangeEndDate=function(newDate,index){
-    
+  $scope.onChangeEndDate=function(newDate,index,isEndDateChange){
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
     $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
-    $scope.scheduleTableArray[index].frequencyDetail=[];
+    if(isEndDateChange=="Y"){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+    }
+    $scope.scheduleTableArray[index].isEndDateChange="Y"
     $scope.scheduleTableArray[index].scheduleChg="Y"
   }
   
