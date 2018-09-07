@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -23,8 +24,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.demo.DynamicSchedule;
 import com.inferyx.framework.domain.Batch;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
 
 /**
@@ -35,48 +40,35 @@ import com.inferyx.framework.domain.Schedule;
 public class ScheduleServiceImpl {
 	@Autowired
 	private DynamicSchedule dynamicSchedule;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(ScheduleServiceImpl.class);
 	
-	public List<Batch> getLatestBatch(List<Batch> batches) throws ParseException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
-		Date currDate = simpleDateFormat.parse(new Date().toString());
-		
-		List<Batch> batchesToExecute = new ArrayList<>();
-		Map<Date, List<String>> scheduleMap = new TreeMap<>();
-		List<Schedule> scheduleInfo = null;
-		for(Batch batch : batches) {
-			if(scheduleInfo != null) {
-				/*System.out.println("batch schedule size: >>>>> "+scheduleInfo.size());
-				for(Schedule schedule : scheduleInfo) {
-					Date startDate = schedule.getStartDate();
-					Date endDate = schedule.getEndDate();
-					
-					if (startDate.compareTo(currDate) > 0) { //"startDate is after currDate"					
-			            continue;
-			        } else if (startDate.compareTo(currDate) < 0 || startDate.compareTo(currDate) == 0) { //"startDate is before currDate OR startDate is equal to currDate"
-			           Object value = scheduleMap.get(startDate);
-			        	if(value == null) {
-			        		List<String> uuidList = new ArrayList<>();
-			        		uuidList.add(batch.getUuid());
-			        		scheduleMap.put(startDate, uuidList);
-			        	} else {
-			        		@SuppressWarnings("unchecked")
-							List<String> uuidList = (List<String>) value;
-			        		uuidList.add(batch.getUuid());
-			        		scheduleMap.put(startDate, uuidList);
-			        	}
-			        	if (endDate.compareTo(currDate) > 0 || endDate.compareTo(currDate) == 0) { //"endDate is after currDate OR endDate is equal to currDate"
-			        		batchesToExecute.add(batch);
-			        	}
-			        } 
-				}*/	
+	@SuppressWarnings("unchecked")
+	public Map<Date, List<MetaIdentifierHolder>> getLatestBatch() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		Map<Date, List<MetaIdentifierHolder>> scheduleMap = new TreeMap<>();
+		List<Schedule> scheduleInfo = (List<Schedule>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.schedule);
+		if(scheduleInfo != null) {
+			for(Schedule schedule : scheduleInfo) {
+				List<MetaIdentifierHolder> batchHolder = null;
+				Date nextRunTime = getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				if(nextRunTime != null) {
+					Object value = scheduleMap.get(nextRunTime);
+					if(value != null) {
+						batchHolder = (List<MetaIdentifierHolder>) value;
+						batchHolder.add(schedule.getDependsOn());
+						scheduleMap.put(nextRunTime, batchHolder);
+					} else {
+						batchHolder = new ArrayList<>();
+						batchHolder.add(schedule.getDependsOn());
+						scheduleMap.put(nextRunTime, batchHolder);
+					}
+				}
 			}
 		}
-		System.out.println("size: "+scheduleMap.entrySet().size());
-		for(java.util.Map.Entry<Date, List<String>> entry : scheduleMap.entrySet())
-			System.out.println(entry.getKey() +" >>>>>>>> "+entry.getValue());
-		return batchesToExecute;
+		
+		return scheduleMap;
 	}
 
 	public Date getNextRunTime(Date startDate, Date endDate, Date previousRunTime, String frequencyType, List<String> frequencyDetail) throws ParseException {
@@ -99,7 +91,7 @@ public class ScheduleServiceImpl {
         		}
         	}
         } 		
-		return null;
+		return currDate;
 	}
 
 	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
@@ -138,7 +130,14 @@ public class ScheduleServiceImpl {
 		}
 	}
 	
-	public void setSchedulingTrigger() {
-		dynamicSchedule.setNextExecutionTime(new Date());
+	public void setSchedulingTrigger() throws Exception {
+		Map<Date, List<MetaIdentifierHolder>> scheduleMap = getLatestBatch();
+		List<Batch> batchs = new ArrayList<>();
+		 for(MetaIdentifierHolder batchHolder : new ArrayList<>(scheduleMap.values()).get(0)) {
+			 MetaIdentifier batchMI = batchHolder.getRef();
+			 Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchMI.getUuid(), batchMI.getVersion(), batchMI.getType().toString());
+			 batchs.add(batch);
+		 }
+		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]/*new Date(new Date().getTime() + (1000 * 20))*/, batchs);
 	}
 }

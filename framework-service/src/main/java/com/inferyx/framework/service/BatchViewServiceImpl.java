@@ -108,7 +108,7 @@ public class BatchViewServiceImpl {
 		return batchView;
 	}
 
-	public Batch save(BatchView batchView) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public Batch save(BatchView batchView) throws Exception {
 		//set batch properties and save 
 		Batch batch = null;
 		if(batchView.getBatchChg().equalsIgnoreCase("Y") && (batchView.getUuid() == null || batchView.getUuid().isEmpty())) {
@@ -116,6 +116,7 @@ public class BatchViewServiceImpl {
 			//setting batch baseEntity
 			batch.setName(batchView.getName());
 			batch.setBaseEntity();
+			
 			//setting batch specific properties
 			batch.setPipelineInfo(batchView.getPipelineInfo());
 			batch.setInParallel(batchView.getInParallel());	
@@ -135,6 +136,7 @@ public class BatchViewServiceImpl {
 				//setting schedule baseEntity
 				schedule.setName(schedule.getName());
 				schedule.setBaseEntity();
+				
 				//setting schedule specific properties
 				schedule.setStartDate(schedule.getStartDate().toString());
 				schedule.setEndDate(schedule.getEndDate().toString());
