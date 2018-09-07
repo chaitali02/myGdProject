@@ -130,9 +130,15 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 						break;
 					}
 				}
+				for(var j=0;j<response[i].statusList.length;j++){
+					if(response[i].statusList[j].stage == "InProgress"){
+						result.InProgressTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+						break;
+					}
+				}
 				if(response[i].status[len].stage == "Completed"){
 					result.endTime=$filter('date')(new Date(response[i].statusList[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
-					var date1 = new Date(result.startTime)
+					var date1 = new Date(result.InProgressTime)
          			var date2 = new Date(result.endTime)
 					result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
          			
@@ -195,6 +201,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 				for(var i=0;i<response.scheduleInfo.length;i++){
 					var scheduleInfo={};
 					scheduleInfo.name=response.scheduleInfo[i].name;
+					scheduleInfo.uuid=response.scheduleInfo[i].uuid;
 					scheduleInfo.startDate= moment(response.scheduleInfo[i].startDate);
 					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
 					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;

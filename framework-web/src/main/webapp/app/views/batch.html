@@ -29,32 +29,32 @@
     <div options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="batchDetail"
       comment-panel-directive></div>
 
-    <div class="portlet light bordered" id="form_wizard_1">
+    <div class="portlet box green" >
       <div class="portlet-title">
+       
         <div class="caption">
-          <i class=" icon-layers "></i>
-          <span class="caption-subject">{{batchDetail.name}}</span>
+            <i class="fa fa-gift"></i>{{batchDetail.name}}
         </div>
-        <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+        <div class="tools">
+          <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+          <a  href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(batchDetail.uuid,batchDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
+          <a  href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
             tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
-            <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white"></i>
           </a>
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
+          <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()" data-original-title=""
             title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
+          <a class="" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
             tooltip>
-            <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-times" style="display: block;margin: 2px auto;color:white"></i>
           </a>
         </div>
       </div>
@@ -254,13 +254,13 @@
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message="" title="{{data.name}}"
-                            ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                          ng-change="onChangeScheduleName($index)" ng-disabled="{{mode}}">
                         </span>
                       </td>
                       <td>
