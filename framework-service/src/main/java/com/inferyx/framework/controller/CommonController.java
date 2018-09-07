@@ -175,7 +175,8 @@ public class CommonController<T> {
 				|| type.equalsIgnoreCase(MetaType.ruleview.toString())
 				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
 				|| type.equalsIgnoreCase(MetaType.reconview.toString())
-				|| type.equalsIgnoreCase(MetaType.reportview.toString())) {
+				|| type.equalsIgnoreCase(MetaType.reportview.toString())
+				|| type.equalsIgnoreCase(MetaType.batchview.toString())) {
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
 			 
