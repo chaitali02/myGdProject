@@ -17,26 +17,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "batch")
 public class Batch extends BaseEntity {
 
-	private List<Schedule> scheduleInfo;
+//	private List<Schedule> scheduleInfo;
 	private List<MetaIdentifierHolder> pipelineInfo;
 	private String inParallel;
 	
-	/**
-	 * @Ganesh
-	 *
-	 * @return the scheduleInfo
-	 */
-	public  List<Schedule> getScheduleInfo() {
-		return scheduleInfo;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param scheduleInfo the scheduleInfo to set
-	 */
-	public void setScheduleInfo( List<Schedule> scheduleInfo) {
-		this.scheduleInfo = scheduleInfo;
-	}
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @return the scheduleInfo
+//	 */
+//	public  List<Schedule> getScheduleInfo() {
+//		return scheduleInfo;
+//	}
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @param scheduleInfo the scheduleInfo to set
+//	 */
+//	public void setScheduleInfo( List<Schedule> scheduleInfo) {
+//		this.scheduleInfo = scheduleInfo;
+//	}
 	/**
 	 * @Ganesh
 	 *
