@@ -1,6 +1,13 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+ *
+ * This unpublished material is proprietary to Inferyx Inc.
+ * The methods and techniques described herein are considered  trade 
+ * secrets and/or confidential. Reproduction or distribution, in whole or 
+ * in part, is forbidden.
+ *
+ * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
+ *******************************************************************************/
 package com.inferyx.framework.domain;
 
 import java.text.ParseException;
@@ -8,36 +15,102 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @author Ganesh
  *
  */
-public class Schedule {
-	private String name;
+@Document(collection = "schedule")
+public class Schedule extends BaseEntity {
+//	private String name;
 	private Date startDate;
 	private Date endDate;
-	private String frequencyType; //Once/Daily/Weekly/Monthly/Yearly
+	private Date nextRunTime;
+	private String frequencyType; //Once/Daily/Weekly/Bi-Weekly/Monthly/Quarterly/Yearly
 	private List<String> frequencyDetail;//if weekly then days/if monthly then date
 	private String recurring = "N";
+	private MetaIdentifierHolder dependsOn;
+	private String scheduleChg;
 	
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @return the name
+	 * @return the scheduleChg
 	 */
-	public String getName() {
-		return name;
+	public String getScheduleChg() {
+		return scheduleChg;
 	}
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param name the name to set
+	 * @param scheduleChg the scheduleChg to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setScheduleChg(String scheduleChg) {
+		this.scheduleChg = scheduleChg;
 	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the dependsOn
+	 */
+	public MetaIdentifierHolder getDependsOn() {
+		return dependsOn;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param dependsOn the dependsOn to set
+	 */
+	public void setDependsOn(MetaIdentifierHolder dependsOn) {
+		this.dependsOn = dependsOn;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the nextRunTime
+	 */
+	public Date getNextRunTime() {
+		return nextRunTime;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param nextRunTime the nextRunTime to set
+	 */
+	public void setNextRunTime(String nextRunTime) {
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
+		try {
+			this.nextRunTime = formatter.parse(nextRunTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @return the name
+//	 */
+//	public String getName() {
+//		return name;
+//	}
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @param name the name to set
+//	 */
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 	/**
 	 *
 	 * @Ganesh
