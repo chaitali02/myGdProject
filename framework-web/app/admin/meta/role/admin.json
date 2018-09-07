@@ -5827,7 +5827,7 @@
 					"type" : "privilege",
 		 			"uuid" : "7abdd78f-ddf5-417a-8f6c-bbe11c22f3e6",
 		 			"version" : null,
-		            "name" : "BatchexecAdd"
+		            "name" : "ScheduleAdd"
 				},
 				"value" : null
 		},			
@@ -5873,15 +5873,6 @@
 		 			"uuid" : "47ebb750-cbaf-41c0-a2b9-c3fa4eeae7bd",
 		 			"version" : null,
 		            "name" : "ScheduleExport"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "585e506f-e866-4e8a-820a-e3044876921f",
-		 			"version" : null,
-		            "name" : "ScheduleExecute"
 				},
 				"value" : null
 		},

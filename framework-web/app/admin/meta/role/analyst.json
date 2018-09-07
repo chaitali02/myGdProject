@@ -4245,15 +4245,6 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "585e506f-e866-4e8a-820a-e3044876921f",
-		 			"version" : null,
-		            "name" : "ScheduleExecute"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
 		 			"uuid" : "8d675488-70aa-4671-9926-287d60401c3d",
 		 			"version" : null,
 		            "name" : "ScheduleEdit"
