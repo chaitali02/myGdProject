@@ -1033,11 +1033,15 @@ public class DatapodServiceImpl {
 			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
 			List<Attribute> dpAttrs = datapod.getAttributes();
+		
 			int count = 0;
 			for(int i=0; i<dpAttrs.size();i++) {
-				if(dpAttrs.get(i).getName().contentEquals("version")){					
+				if(dpAttrs.get(i).getName().contentEquals("version")){	
+					if(!attributes.get(attributes.size()-1).getName().contentEquals("version")) 
+					{
 					dpAttrs.remove(dpAttrs.get(i));
 					count++;
+					}
 				}	
 				if(count>1) {
 					throw new Exception("2 Version column in datapod");
