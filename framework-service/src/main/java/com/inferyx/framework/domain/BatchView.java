@@ -12,32 +12,17 @@ package com.inferyx.framework.domain;
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "batch")
-public class Batch extends BaseEntity {
-
-//	private List<Schedule> scheduleInfo;
+/**
+ * @author Ganesh
+ *
+ */
+public class BatchView extends BaseEntity {
 	private List<MetaIdentifierHolder> pipelineInfo;
 	private String inParallel;
-	
-//	/**
-//	 * @Ganesh
-//	 *
-//	 * @return the scheduleInfo
-//	 */
-//	public  List<Schedule> getScheduleInfo() {
-//		return scheduleInfo;
-//	}
-//	/**
-//	 * @Ganesh
-//	 *
-//	 * @param scheduleInfo the scheduleInfo to set
-//	 */
-//	public void setScheduleInfo( List<Schedule> scheduleInfo) {
-//		this.scheduleInfo = scheduleInfo;
-//	}
+	private String batchChg;
+	private List<Schedule> scheduleInfo;
 	/**
+	 *
 	 * @Ganesh
 	 *
 	 * @return the pipelineInfo
@@ -46,6 +31,7 @@ public class Batch extends BaseEntity {
 		return pipelineInfo;
 	}
 	/**
+	 *
 	 * @Ganesh
 	 *
 	 * @param pipelineInfo the pipelineInfo to set
@@ -54,6 +40,7 @@ public class Batch extends BaseEntity {
 		this.pipelineInfo = pipelineInfo;
 	}
 	/**
+	 *
 	 * @Ganesh
 	 *
 	 * @return the inParallel
@@ -62,11 +49,48 @@ public class Batch extends BaseEntity {
 		return inParallel;
 	}
 	/**
+	 *
 	 * @Ganesh
 	 *
 	 * @param inParallel the inParallel to set
 	 */
 	public void setInParallel(String inParallel) {
 		this.inParallel = inParallel;
-	}	
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the batchChg
+	 */
+	public String getBatchChg() {
+		return batchChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param batchChg the batchChg to set
+	 */
+	public void setBatchChg(String batchChg) {
+		this.batchChg = batchChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the scheduleInfo
+	 */
+	public List<Schedule> getScheduleInfo() {
+		return scheduleInfo;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param scheduleInfo the scheduleInfo to set
+	 */
+	public void setScheduleInfo(List<Schedule> scheduleInfo) {
+		this.scheduleInfo = scheduleInfo;
+	}
 }
