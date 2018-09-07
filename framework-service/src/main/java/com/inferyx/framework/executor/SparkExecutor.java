@@ -911,9 +911,24 @@ public class SparkExecutor<T> implements IExecutor {
 										long count = dfTmp.count();
 		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, "dfLoadTemp");
-		ResultSetHolder rsHolder = executeSql(
-				"SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer) + " AS version FROM dfLoadTemp",
-				clientContext);
+		
+		ResultSetHolder rsHolder;		
+		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
+				+ " AS version FROM dfLoadTemp";
+		String sqlWoVersion = "SELECT * FROM dfLoadTemp";
+
+		String[] columns = dfTmp.columns();
+		List<String> list = Arrays.asList(columns);
+		if (list.contains("version")) {
+			rsHolder = executeSql(sqlWoVersion, clientContext);
+		} else {
+			if (!datapod.getAttributes().get(datapod.getAttributes().size() - 1).getName()
+					.equalsIgnoreCase("version")) {
+				rsHolder = executeSql(sqlWoVersion, clientContext);
+			} else
+				rsHolder = executeSql(sqlWiVersion, clientContext);
+		}
+
 		Dataset<Row> dfTask = rsHolder.getDataFrame();
 
 		// dfTask = hiveContext.sql("select *, "+ dagExecVer + " as version from
