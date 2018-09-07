@@ -105,6 +105,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroup;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.RunStatusHolder;
+import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
@@ -287,6 +288,7 @@ public class Helper {
 				case reportExec : return "iReportExecDao";
 				case batch : return "iBatchDao";
 				case batchExec : return "iBatchExecDao";
+				case schedule : return "iScheduleDao";				
 				default:
 					return null;
 			}
@@ -402,6 +404,7 @@ public class Helper {
 		case reportExec : return ReportExec.class;
 		case batch : return Batch.class;
 		case batchExec : return BatchExec.class;
+		case schedule : return Schedule.class;
 		default:
 			return null;
 		}
@@ -492,6 +495,7 @@ public class Helper {
 				case "reportexec" : return MetaType.reportExec;
 				case "batch" : return MetaType.batch;
 				case "batchexec" : return MetaType.batchExec;
+				case "schedule" : return MetaType.schedule;
 				default : return null;
 			}
 		}
