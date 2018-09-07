@@ -339,6 +339,7 @@
 	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
+	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
