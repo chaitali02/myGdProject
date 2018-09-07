@@ -23,6 +23,7 @@ import com.inferyx.framework.dao.IBatchDao;
 import com.inferyx.framework.dao.IScheduleDao;
 import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchView;
+import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
@@ -38,13 +39,15 @@ public class BatchViewServiceImpl {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
-	SecurityServiceImpl securityServiceImpl;
+	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	IBatchDao iBatchDao;
+	private IBatchDao iBatchDao;
 	@Autowired
 	private IScheduleDao iScheduleDao;   
     @Autowired
-	GraphRegister<?> registerGraph;
+    private GraphRegister<?> registerGraph;
+    @Autowired
+    private ScheduleServiceImpl scheduleServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchViewServiceImpl.class);
 	
@@ -105,7 +108,7 @@ public class BatchViewServiceImpl {
 		return batchView;
 	}
 
-	public Batch save(BatchView batchView) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public Batch save(BatchView batchView) throws Exception {
 		//set batch properties and save 
 		Batch batch = null;
 		if(batchView.getBatchChg().equalsIgnoreCase("Y") && (batchView.getUuid() == null || batchView.getUuid().isEmpty())) {
@@ -113,6 +116,7 @@ public class BatchViewServiceImpl {
 			//setting batch baseEntity
 			batch.setName(batchView.getName());
 			batch.setBaseEntity();
+			
 			//setting batch specific properties
 			batch.setPipelineInfo(batchView.getPipelineInfo());
 			batch.setInParallel(batchView.getInParallel());	
@@ -124,26 +128,38 @@ public class BatchViewServiceImpl {
 			batch = setBatchProperties(batchView, batchView.getVersion());
 		}	
 		
+		boolean setTrigger = false;
+		MetaIdentifierHolder scheduleDependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.batch, batch.getUuid(), null));
 		//set schedule properties and save 
 		for(Schedule schedule : batchView.getScheduleInfo()) {
 			if(schedule.getScheduleChg().equalsIgnoreCase("Y") && (schedule.getUuid() == null || schedule.getUuid().isEmpty())) {
 				//setting schedule baseEntity
 				schedule.setName(schedule.getName());
 				schedule.setBaseEntity();
+				
 				//setting schedule specific properties
 				schedule.setStartDate(schedule.getStartDate().toString());
 				schedule.setEndDate(schedule.getEndDate().toString());
-				schedule.setNextRunTime(schedule.getNextRunTime().toString());
+				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
 				schedule.setFrequencyType(schedule.getFrequencyType());
 				schedule.setFrequencyDetail(schedule.getFrequencyDetail());
+				schedule.setDependsOn(scheduleDependsOn);
+				schedule.setScheduleChg(null);
 				save(schedule);
+				setTrigger = true;
 			} else if(schedule.getScheduleChg().equalsIgnoreCase("Y")) {
 				schedule = setScheduleProperties(schedule, null);
+				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
+				schedule.setDependsOn(scheduleDependsOn);
 				save(schedule);
+				setTrigger = true;
 			} /*else {
 				schedule = setScheduleProperties(schedule, schedule.getVersion());
 			}*/
 		}		
+		if(setTrigger) {
+			scheduleServiceImpl.setSchedulingTrigger();
+		}
 		return batch;
 	}
 	
@@ -153,7 +169,7 @@ public class BatchViewServiceImpl {
 		batch.setActive(batchView.getActive());
 		batch.setAppInfo(batchView.getAppInfo());
 		batch.setCreatedBy(batchView.getCreatedBy());
-		batch.setCreatedOn(batchView.getCreatedOn());
+//		batch.setCreatedOn(batchView.getCreatedOn());
 		batch.setDesc(batchView.getDesc());
 		batch.setName(batchView.getName());
 		batch.setPublished(batchView.getPublished());
@@ -177,7 +193,7 @@ public class BatchViewServiceImpl {
 		schedule2.setActive(schedule.getActive());
 		schedule2.setAppInfo(schedule.getAppInfo());
 		schedule2.setCreatedBy(schedule.getCreatedBy());
-		schedule2.setCreatedOn(schedule.getCreatedOn());
+//		schedule2.setCreatedOn(schedule.getCreatedOn());
 		schedule2.setDesc(schedule.getDesc());
 		schedule2.setName(schedule.getName());
 		schedule2.setPublished(schedule.getPublished());
@@ -192,27 +208,32 @@ public class BatchViewServiceImpl {
 		//setting schedule specific properties
 		schedule2.setStartDate(schedule.getStartDate().toString());
 		schedule2.setEndDate(schedule.getEndDate().toString());
-		schedule2.setNextRunTime(schedule.getNextRunTime().toString());
+//		schedule2.setNextRunTime(schedule.getNextRunTime().toString());
 		schedule2.setFrequencyType(schedule.getFrequencyType());
-		schedule2.setFrequencyDetail(schedule.getFrequencyDetail());		
+		schedule2.setFrequencyDetail(schedule.getFrequencyDetail());
+		schedule2.setScheduleChg(null);
 		return schedule2;
 	}
 
 	public Batch save(Batch batch) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		batch.setAppInfo(metaIdentifierHolderList);
+		List<MetaIdentifierHolder> appInfos = new ArrayList<>();
+		appInfos.add(securityServiceImpl.getAppInfo());
+		batch.setAppInfo(appInfos);
+//		batch.setCreatedOn("");
+		batch.setCreatedBy(null);
+		batch.setBaseEntity();
 		Batch savedBatch = iBatchDao.save(batch);
 		registerGraph.updateGraph((Object) savedBatch, MetaType.batch);
 		return savedBatch;
 	}
 	
 	public Schedule save(Schedule schedule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		schedule.setAppInfo(metaIdentifierHolderList);
+		List<MetaIdentifierHolder> appInfos = new ArrayList<>();
+		appInfos.add(securityServiceImpl.getAppInfo());
+		schedule.setAppInfo(appInfos);
+//		schedule.setCreatedOn("");
+		schedule.setCreatedBy(null);
+		schedule.setBaseEntity();
 		Schedule savedSchedule = iScheduleDao.save(schedule);
 		registerGraph.updateGraph((Object) savedSchedule, MetaType.schedule);
 		return savedSchedule;
