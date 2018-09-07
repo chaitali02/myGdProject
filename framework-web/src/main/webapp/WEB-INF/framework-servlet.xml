@@ -46,9 +46,6 @@
 
 	<task:scheduler id="scheduler" />
 	
-	<bean id="scheduleChanger" class="com.inferyx.framework.demo.ScheduleChanger">
-	</bean>
-
 	<bean id="dynamicSchedule" class="com.inferyx.framework.demo.DynamicSchedule">
 		<constructor-arg ref="scheduler" />
 		<constructor-arg>
@@ -58,7 +55,6 @@
 			</bean>
 		</constructor-arg>
 		<constructor-arg value="3000" />
-		<constructor-arg ref="batchServiceImpl"/>
 	</bean>
 	
 	<import resource="spring-security.xml" />

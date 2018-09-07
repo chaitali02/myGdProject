@@ -46,29 +46,21 @@ public class ScheduleServiceImpl {
 	static Logger logger = Logger.getLogger(ScheduleServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
-	public Map<Date, List<MetaIdentifierHolder>> getLatestBatch() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		Map<Date, List<MetaIdentifierHolder>> scheduleMap = new TreeMap<>();
+	public Map<Date, String> getLatestBatch() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
+		Date currDate = simpleDateFormat.parse(new Date().toString());
+		Map<Date, String> scheduleMap = new TreeMap<>();
 		List<Schedule> scheduleInfo = (List<Schedule>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.schedule);
 		if(scheduleInfo != null) {
 			for(Schedule schedule : scheduleInfo) {
-				List<MetaIdentifierHolder> batchHolder = null;
 				Date nextRunTime = schedule.getNextRunTime();
-				//Date nextRunTime = getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail());
-				if(nextRunTime != null) {
-					Object value = scheduleMap.get(nextRunTime);
-					if(value != null) {
-						batchHolder = (List<MetaIdentifierHolder>) value;
-						batchHolder.add(schedule.getDependsOn());
-						scheduleMap.put(nextRunTime, batchHolder);
-					} else {
-						batchHolder = new ArrayList<>();
-						batchHolder.add(schedule.getDependsOn());
-						scheduleMap.put(nextRunTime, batchHolder);
+				if(nextRunTime != null && nextRunTime.compareTo(currDate) > 0) {
+					if(nextRunTime != null) {
+						scheduleMap.put(nextRunTime,"tmp");
 					}
 				}
 			}
-		}
-		
+		}		
 		return scheduleMap;
 	}
 
@@ -130,7 +122,7 @@ public class ScheduleServiceImpl {
 	}
 	
 	public void setSchedulingTrigger() throws Exception {
-		Map<Date, List<MetaIdentifierHolder>> scheduleMap = getLatestBatch();
+		Map<Date, String> scheduleMap = getLatestBatch();
 		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]);
 	}
 }
