@@ -123,9 +123,12 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-md-3 control-label">Limit</label>
-              <div class="col-md-6">
-                <input type="text" class="form-control" [disabled]="mode == 'true'" ng-model="limit" disabled="disabled">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="number" limit-to="4" class="form-control" [(ngModel)]="vizpoddata.limit" [disabled]="mode =='true'" name="numIterations"
+                  max="1000" required>
               </div>
             </div>
             <div class="form-group">

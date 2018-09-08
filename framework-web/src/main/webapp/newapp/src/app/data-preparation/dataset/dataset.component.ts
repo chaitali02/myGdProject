@@ -71,6 +71,7 @@ export class DatasetComponent implements OnInit {
   selectedVersion: Version
   isSubmitEnable: any;
   baseUrl: any;
+  limit: any
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
     this.showdatapod = true;
@@ -183,6 +184,7 @@ export class DatasetComponent implements OnInit {
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.breadcrumbDataFrom[2].caption = this.dataset.name;
+    this.dataset.limit = response.limit;
     this.source = response["dependsOn"]["ref"]["type"]
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
@@ -672,6 +674,7 @@ export class DatasetComponent implements OnInit {
     datasetJson["dependsOn"] = dependsOn;
     datasetJson["active"] = this.dataset.active == true ? 'Y' : "N"
     datasetJson["published"] = this.dataset.published == true ? 'Y' : "N"
+    datasetJson["limit"] = this.dataset.limit
     if (this.datasetCompare != null && this.datasetCompare.dependsOn.ref.uuid != this.sourcedata.uuid) {
       datasetJson["sourceChg"] = "y";
     }
