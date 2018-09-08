@@ -46,11 +46,11 @@
 
 	<task:scheduler id="scheduler" />
 	
-	<bean id="batchSchedulerServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl">
+	<bean id="batchTriggerServiceImpl" class="com.inferyx.framework.service.BatchTriggerServiceImpl">
 		<constructor-arg ref="scheduler" />
 		<constructor-arg>
 			<bean class="org.springframework.scheduling.support.MethodInvokingRunnable">
-				<property name="targetObject" ref="scheduleServiceImpl" />
+				<property name="targetObject" ref="batchSchedulerServiceImpl" />
 				<property name="targetMethod" value="runBatches" />
 			</bean>
 		</constructor-arg>
@@ -336,7 +336,7 @@
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
 	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
-	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.ScheduleServiceImpl"/>
+	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl"/>
 	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl"/>
 	
 	

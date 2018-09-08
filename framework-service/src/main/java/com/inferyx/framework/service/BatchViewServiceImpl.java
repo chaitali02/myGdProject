@@ -47,7 +47,7 @@ public class BatchViewServiceImpl {
     @Autowired
     private GraphRegister<?> registerGraph;
     @Autowired
-    private ScheduleServiceImpl scheduleServiceImpl;
+    private BatchSchedulerServiceImpl scheduleServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchViewServiceImpl.class);
 	
