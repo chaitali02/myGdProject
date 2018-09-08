@@ -240,12 +240,12 @@
                           />
                         </span>
                       </th>
-                      <th style="width:17%;text-align: center">Name</th>
-                      <th style="width:238px;text-align: center">Start Time</th>
-                      <th style="width:238px;text-align: center">End Time</th>
+                      <th style="text-align: center">Name</th>
+                      <th style="width:225px;text-align: center">Start Time</th>
+                      <th style="width:225px;text-align: center">End Time</th>
                       <!-- <th style="width:6%;text-align: center">Recurring</th> -->
-                      <th style="width:14%;text-align: center">Frequency Type</th>
-                      <th style="width:16%;text-align: center">Frequency Detail</th>
+                      <th style="width: 141px;text-align: center">Frequency Type</th>
+                      <th style="text-align: center">Frequency Detail</th>
 
                     </tr>
                   </thead>
@@ -265,21 +265,21 @@
                       </td>
                       <td>
                           <!-- max-view="hour" -->
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                        <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;width:210px;">
                             <!-- MM-D-YYYY, h:mm:ss a -->
                             <div class="input-group" moment-picker="data.startDate" 
                               start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=minDate  validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)" >
-                              <span class="form-control" name="startDate" style="padding-right: 5px;text-align:right;"  name="startDate" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
+                              <span class="form-control" name="startDate" style="padding-right:10px;text-align:right;"  name="startDate" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
                              
                               <!-- <input class="form-control" placeholder="Select a start date..." locale="en" 
                                   ng-model="data.startDate" ng-model-options="{ updateOn: 'blur' }" 
                                   change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message=""> -->
-                                <span class="input-group-addon">
-                                  <i class="fa fa-calendar"></i>
+                                <span class="input-group-addon" style="padding:5px;">
+                                  <i class="fa fa-calendar" style="color:#666;"></i>
                                 </span>
                            </div>
                            <input type="hidden" ng-model="data.startDate" name="startDate" required disable-validation-message="">
-                        </span>
+                          </div>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -289,8 +289,8 @@
                             <!-- <input class="form-control" placeholder="Select a end date..." locale="en" 
                             ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" 
                              change="onChangeEndDate(data.endDate,$index)" required disable-validation-message=""> -->
-                             <span class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                             <span class="input-group-addon" style="padding:5px;">
+                                <i class="fa fa-calendar" style="color:#666;"></i>
                             </span>
                            </div>
                            <input type="hidden" ng-model="data.endDate" name="endDate" required disable-validation-message="">
