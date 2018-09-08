@@ -391,7 +391,7 @@ export class CommonListComponent {
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
-  view(uuid, version) {
+  view(uuid, version) {debugger
     if (this.parentType == "rule") {
       this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
@@ -403,7 +403,7 @@ export class CommonListComponent {
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
-    else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec") {
+    else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
 
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']

@@ -377,27 +377,41 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       else{
 
       }
-      if (this.sourceTableArray) {
+      if (this.sourceTableArray) {debugger
         for (var i = 0; i < this.sourceTableArray.length; i++) {
           this.sourceTableArray[i].lhstype={}
           this.sourceTableArray[i].rhstype={}
           this.sourceTableArray[i].lhsdatapodAttribute={}
+          this.sourceTableArray[i].rhsdatapodAttribute={}
           this.selectlhsType(this.sourceTableArray[i]["operand"][0]["ref"]["type"],i)
           this.selectrhsType(this.sourceTableArray[i]["operand"][1]["ref"]["type"],i)
           this.sourceTableArray[i].lhstype.text= this.sourceTableArray[i]["operand"][0]["ref"]["type"]   
           this.sourceTableArray[i].rhstype.text= this.sourceTableArray[i]["operand"][1]["ref"]["type"]  
-          if (this.sourceTableArray[i].lhstype.text == "string") {
+          if (this.sourceTableArray[i].lhstype.text == "string" || this.sourceTableArray[i].lhstype.text == "simple") {
             this.sourceTableArray[i].lhsvalue=this.sourceTableArray[i]["operand"][0].value
           }
           else if (this.sourceTableArray[i].lhstype.text == "integer") {
             this.sourceTableArray[i].lhsInt=""
           }
           else if (this.sourceTableArray[i].lhstype.text == "datapod") {
-            this.sourceTableArray[i].lhsdatapodAttribute.value=this.sourceTableArray[i]["operand"][0]["ref"]["uuid"]+"_"+this.sourceTableArray[i]["operand"][0]["attributeId"]
+            this.sourceTableArray[i].lhsdatapodAttribute.id=this.sourceTableArray[i]["operand"][0]["ref"]["uuid"]+"_"+this.sourceTableArray[i]["operand"][0]["attributeId"]
             this.sourceTableArray[i].lhsdatapodAttribute.label=this.sourceTableArray[i]["operand"][0]["ref"]["name"]+"."+this.sourceTableArray[i]["operand"][0]["attributeName"]
           }
           else if (this.sourceTableArray[i].lhstype.text == "formula") {
             this.sourceTableArray[i].lhsformula=this.sourceTableArray[i]["operand"][0]["ref"]["uuid"]
+          } 
+           if (this.sourceTableArray[i].rhstype.text == "string" || this.sourceTableArray[i].rhstype.text == "simple") {
+            this.sourceTableArray[i].rhsvalue=this.sourceTableArray[i]["operand"][1].value
+          }
+          else if (this.sourceTableArray[i].rhstype.text == "integer") {
+            this.sourceTableArray[i].lhsInt=""
+          }
+          else if (this.sourceTableArray[i].rhstype.text == "datapod") {
+            this.sourceTableArray[i].rhsdatapodAttribute.id=this.sourceTableArray[i]["operand"][1]["ref"]["uuid"]+"_"+this.sourceTableArray[i]["operand"][1]["attributeId"]
+            this.sourceTableArray[i].rhsdatapodAttribute.label=this.sourceTableArray[i]["operand"][1]["ref"]["name"]+"."+this.sourceTableArray[i]["operand"][1]["attributeName"]
+          }
+          else if (this.sourceTableArray[i].rhstype.text == "formula") {
+            this.sourceTableArray[i].rhsformula=this.sourceTableArray[i]["operand"][1]["ref"]["uuid"]
           } 
           
         }        
@@ -406,24 +420,39 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
         for (var i = 0; i < this.targettableArray.length; i++) {
           this.targettableArray[i].lhstype={}
           this.targettableArray[i].rhstype={}
+          this.targettableArray[i].lhsdatapodAttribute={}
+          this.targettableArray[i].rhsdatapodAttribute={}
           this.targettableArray[i].lhstype.text= this.targettableArray[i]["operand"][0]["ref"]["type"]   
           this.targettableArray[i].rhstype.text= this.targettableArray[i]["operand"][1]["ref"]["type"]   
           this.targetselectlhsType(this.targettableArray[i]["operand"][0]["ref"]["type"],i)
           this.targetselectrhsType(this.targettableArray[i]["operand"][1]["ref"]["type"],i)
-          if (this.targettableArray[i].lhstype.text == "string") {
-            this.targettableArray[i].lhsvalue=this.sourceTableArray[i]["operand"][0].value
+          if (this.targettableArray[i].lhstype.text == "string" || this.targettableArray[i].lhstype.text == "simple") {
+            this.targettableArray[i].lhsvalue=this.targettableArray[i]["operand"][0].value
           }
           else if (this.targettableArray[i].lhstype.text == "integer") {
             this.targettableArray[i].lhsInt=""
           }
           else if (this.targettableArray[i].lhstype.text == "datapod") {
-            this.sourceTableArray[i].lhsdatapodAttribute.value.id=this.targettableArray[i]["operand"][0]["ref"]["uuid"]+"_"+this.sourceTableArray[i]["operand"][0]["attributeId"]
-            this.targettableArray[i].lhsdatapodAttribute.value.label=this.sourceTableArray[i]["operand"][0]["ref"]["name"]+"."+this.sourceTableArray[i]["operand"][0]["attributeName"]
-            this.targettableArray[i].lhsdatapodAttribute.label=this.sourceTableArray[i]["operand"][0]["ref"]["name"]+"."+this.sourceTableArray[i]["operand"][0]["attributeName"]
+            this.targettableArray[i].lhsdatapodAttribute.id=this.targettableArray[i]["operand"][0]["ref"]["uuid"]+"_"+this.targettableArray[i]["operand"][0]["attributeId"]
+            this.targettableArray[i].lhsdatapodAttribute.label=this.targettableArray[i]["operand"][0]["ref"]["name"]+"."+this.targettableArray[i]["operand"][0]["attributeName"]
+           // this.targettableArray[i].lhsdatapodAttribute.label=this.sourceTableArray[i]["operand"][0]["ref"]["name"]+"."+this.sourceTableArray[i]["operand"][0]["attributeName"]
           }
           else if (this.targettableArray[i].lhstype.text == "formula") {
             this.targettableArray[i].lhsformula=this.targettableArray[i]["operand"][0]["ref"]["uuid"]
           }
+           if (this.targettableArray[i].rhstype.text == "string" || this.targettableArray[i].rhstype.text == "simple") {
+            this.targettableArray[i].rhsvalue=this.targettableArray[i]["operand"][1].value
+          }
+          else if (this.targettableArray[i].rhstype.text == "integer") {
+            this.targettableArray[i].lhsInt=""
+          }
+          else if (this.targettableArray[i].rhstype.text == "datapod") {
+            this.targettableArray[i].rhsdatapodAttribute.id=this.targettableArray[i]["operand"][1]["ref"]["uuid"]+"_"+this.targettableArray[i]["operand"][1]["attributeId"]
+            this.targettableArray[i].rhsdatapodAttribute.label=this.targettableArray[i]["operand"][1]["ref"]["name"]+"."+this.targettableArray[i]["operand"][1]["attributeName"]
+          }
+          else if (this.targettableArray[i].rhstype.text == "formula") {
+            this.targettableArray[i].rhsformula=this.targettableArray[i]["operand"][1]["ref"]["uuid"]
+          } 
         }        
       }
     }
@@ -628,16 +657,16 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
         temp[n] = allname1;
       }
       this.allAttribute = temp;
-      if (defaultValue == true && index != null) {
-        let lhsdatapodAttribute = {}
-        lhsdatapodAttribute["label"] = this.allAttribute[0]["label"];
-        lhsdatapodAttribute["id"] = this.allAttribute[0]["value"]['id'];
-        if (type == 'lhs') {
-          this.sourceTableArray[index].lhsdatapodAttribute = lhsdatapodAttribute;
-        } else {
-          this.sourceTableArray[index].rhsdatapodAttribute = lhsdatapodAttribute;
-        }
-      }
+      // if (defaultValue == true && index != null) {
+      //   let lhsdatapodAttribute = {}
+      //   lhsdatapodAttribute["label"] = this.allAttribute[0]["label"];
+      //   lhsdatapodAttribute["id"] = this.allAttribute[0]["value"]['id'];
+      //   if (type == 'lhs') {
+      //     this.sourceTableArray[index].lhsdatapodAttribute = lhsdatapodAttribute;
+      //   } else {
+      //     this.sourceTableArray[index].rhsdatapodAttribute = lhsdatapodAttribute;
+      //   }
+      // }
   
     }
     getAllFormula(defaultValue, index, type) {
@@ -688,16 +717,16 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
         temp[n] = allname1;
       }
       this.allAttributeTarget = temp;
-      if (defaultValue == true && index != null) {
-        let lhsdatapodAttribute = {}
-        lhsdatapodAttribute["label"] = this.allAttributeTarget[0]["label"];
-        lhsdatapodAttribute["id"] = this.allAttributeTarget[0]["value"]['id'];
-        if (type == 'lhs') {
-          this.targettableArray[index].lhsdatapodAttribute = lhsdatapodAttribute;
-        } else {
-          this.targettableArray[index].rhsdatapodAttribute = lhsdatapodAttribute;
-        }
-      }
+      // if (defaultValue == true && index != null) {
+      //   let lhsdatapodAttribute = {}
+      //   lhsdatapodAttribute["label"] = this.allAttributeTarget[0]["label"];
+      //   lhsdatapodAttribute["id"] = this.allAttributeTarget[0]["value"]['id'];
+      //   if (type == 'lhs') {
+      //     this.targettableArray[index].lhsdatapodAttribute = lhsdatapodAttribute;
+      //   } else {
+      //     this.targettableArray[index].rhsdatapodAttribute = lhsdatapodAttribute;
+      //   }
+      // }
   
     }
     getAllFormulaTarget(defaultValue, index, type) {
@@ -809,7 +838,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       }
       this.sourceTableArray = newDataList;
     }
-    submit(){
+    submit(){debugger
       this.isSubmitEnable = true;
       this.isSubmit="true"
       let dqJson={};
@@ -868,7 +897,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
           var rhsref = {};
           expressioninfo["logicalOperator"] = this.sourceTableArray[i].logicalOperator;
           expressioninfo["operator"] = this.sourceTableArray[i].operator;
-          if (this.sourceTableArray[i].lhstype.text == "string") {
+          if (this.sourceTableArray[i].lhstype.text == "string" || this.sourceTableArray[i].lhstype.text == "simple") {
   
             lhsref["type"] = "simple";
             lhsoperand["ref"] = lhsref;
@@ -892,7 +921,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
             lhsoperand["ref"] = lhsref;
           }
           operand[0] = lhsoperand;
-          if (this.sourceTableArray[i].rhstype.text == "string") {
+          if (this.sourceTableArray[i].rhstype.text == "string" || this.sourceTableArray[i].rhstype.text == "simple") {
   
             rhsref["type"] = "simple";
             rhsoperand["ref"] = rhsref;
@@ -938,7 +967,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
           var rhsref = {};
           expressioninfo["logicalOperator"] = this.targettableArray[i].logicalOperator;
           expressioninfo["operator"] = this.targettableArray[i].operator;
-          if (this.targettableArray[i].lhstype.text == "string") {
+          if (this.targettableArray[i].lhstype.text == "string" || this.targettableArray[i].lhstype.text == "simple") {
   
             lhsref["type"] = "simple";
             lhsoperand["ref"] = lhsref;
@@ -962,7 +991,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
             lhsoperand["ref"] = lhsref;
           }
           operand[0] = lhsoperand;
-          if (this.targettableArray[i].rhstype.text == "string") {
+          if (this.targettableArray[i].rhstype.text == "string" || this.targettableArray[i].lhstype.text == "simple") {
   
             rhsref["type"] = "simple";
             rhsoperand["ref"] = rhsref;

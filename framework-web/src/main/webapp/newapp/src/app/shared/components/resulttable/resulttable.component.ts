@@ -10,6 +10,7 @@ import { jointjsGroupService } from '../../components/jointjsgroup/joinjsgroup.s
   styleUrls: []
 })
 export class TableRenderComponent {
+  modeOfExec: any;
   type: any;
   version: any;
   uuid: any;
@@ -49,38 +50,50 @@ export class TableRenderComponent {
       case 'rule':
         type = 'rule';
         break;
+      case 'recon':
+        type = 'recon';
+        break
     }
-    this._jointjsGroupService.getResults(type, params.uuid, params.version)
-      .subscribe(
-      response => {
-        this.IsTableShow = true;
-        this.colsdata = response
-        let columns = [];
-        console.log(response)
-        if (response.length && response.length > 0) {
-          Object.keys(response[0]).forEach(val => {
-            if (val != "rownum") {
-              let width = ((val.split("").length * 9) + 20) + "px"
-              columns.push({ "field": val, "header": val, colwidth: width });
-            }
-          });
-        }
-
-        this.cols = columns
-        this.columnOptions = [];
-        for (let i = 0; i < this.cols.length; i++) {
-          this.columnOptions.push({ label: this.cols[i].header, value: this.cols[i] });
-        }
-      },
-      error => {
-        this.IsTableShow = true;
-        console.log("Error :: " + error)
-        this.IsError = true;
-
+    this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
+    .subscribe(
+    response => {
+      this.modeOfExec=response["runMode"]
+      this.results(type, params.uuid, params.version,this.modeOfExec)
+    })   
+    
+  }
+  results(type, uuid, version,mode){debugger
+    this._jointjsGroupService.getResults(type,uuid,version,mode)
+    .subscribe(
+    response => {
+      this.IsTableShow = true;
+      this.colsdata = response
+      let columns = [];
+      console.log(response)
+      if (response.length && response.length > 0) {
+        Object.keys(response[0]).forEach(val => {
+          if (val != "rownum") {
+            let width = ((val.split("").length * 9) + 20) + "px"
+            columns.push({ "field": val, "header": val, colwidth: width });
+          }
+        });
       }
-      );
-      this.uuid = params.uuid;
-      this.version = params.version;
-      this.type = type;
+
+      this.cols = columns
+      this.columnOptions = [];
+      for (let i = 0; i < this.cols.length; i++) {
+        this.columnOptions.push({ label: this.cols[i].header, value: this.cols[i] });
+      }
+    },
+    error => {
+      this.IsTableShow = true;
+      console.log("Error :: " + error)
+      this.IsError = true;
+
+    }
+    );
+    this.uuid = uuid;
+    this.version =version;
+    this.type = type;
   }
 }

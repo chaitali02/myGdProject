@@ -1,0 +1,174 @@
+
+<p-growl [(value)]="msgs"></p-growl>
+<div>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+  <br>
+  <div class="row">
+    <div class="col-md-12">
+      <!-- BEGIN: ACCORDION DEMO -->
+      <div class="portlet light bordered" id="form_wizard_1">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class=" icon-layers "></i>
+            <span class="caption-subject  bold "> Rule Group</span>
+          </div>
+          <!-- <div class="actions">
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+              data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+              tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
+              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
+              data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
+              <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+            </a>
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
+              title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()"title="Close" data-toggle="tooltip" data-placement="top"
+              tooltip>
+              <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+          </div> -->
+          <div class="actions">
+
+            <a title="Edit" class="btn btn-circle btn-icon-only btn-default" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip 
+              *ngIf="mode">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a title="View" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip 
+              *ngIf="mode">
+              <span class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></span>
+            </a>
+            <a title="Show Dependencies" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip
+               *ngIf="mode">
+              <i class="fa fa-sitemap" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a title="Refresh" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+            <a title="Close" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" data-placement="top" tooltip (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="portlet-body form">
+          <div class="form-body" style="padding-top:50px;">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submit()" #myNewForm="ngForm">
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="datarecongroup.uuid" name="uuid" placeholder="" [disabled]="true">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="datarecongroup.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                </div>
+              </div>
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">Version </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="datarecongroup.createdOn" name="createdOn">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tag-input [(ngModel)]="datarecongroup.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="datarecongroup.desc" name="desc" class="form-control noresize " rows="2"
+                    style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <p-checkbox [(ngModel)]="datarecongroup.inParallel" name="inParallel" binary="true"></p-checkbox>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Rules  
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
+
+                  <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings" name="attributeInfo">
+                  </angular2-multiselect>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datarecongroup.active" name="active" [checked]="active"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datarecongroup.published " name="published" [checked]="published"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+                </div>
+              </div>
+              <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
