@@ -309,7 +309,7 @@
                       
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;" >
-                          <div ng-if="data.frequencyType =='Monthly'" >
+                          <div ng-if="data.frequencyType =='MONTHLY'" >
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               
@@ -328,7 +328,7 @@
                               </div>
                             </script>
                           </div>
-                          <div ng-if="data.frequencyType =='Weekly' || data.frequencyType =='Bi-Weekly'">
+                          <div ng-if="data.frequencyType =='WEEKLY' || data.frequencyType =='BIWEEKLY'">
                             
                               <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                                 popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">
@@ -348,7 +348,7 @@
                                 </div>
                               </script>
                             </div>
-                          <div ng-if="['Once','Daily','Yearly'].indexOf(data.frequencyType) !=-1" style="text-align:center" >-NA-</div>
+                          <div ng-if="['ONCE','DAILY','YEARLY'].indexOf(data.frequencyType) !=-1" style="text-align:center" >-NA-</div>
                         </span>
                       </td>
                     </tr>

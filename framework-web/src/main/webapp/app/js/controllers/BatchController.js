@@ -42,7 +42,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   var batchScope=$scope;
   $scope.minDate=moment().subtract(new Date(), 'day');
-  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"Bi-Weekly","caption":"BiWeekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
   $scope.showForm = true;
@@ -439,7 +439,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       
       if($scope.scheduleTableArray[i].frequencyDetail){
         for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-          if($scope.scheduleTableArray[i].frequencyType !="Monthly"){
+          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY"){
             scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
           }
         else{
