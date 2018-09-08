@@ -23,32 +23,37 @@ public class DynamicSchedule implements Trigger {
 	   private Runnable task;
 	   private ScheduledFuture<?> future;
 	   private int delay;
-	   private Date nextExecutionTime;
 	   
 	public DynamicSchedule() {
 		super();
 	}
 
-	public DynamicSchedule(TaskScheduler scheduler, Runnable task) {
+	public DynamicSchedule(TaskScheduler scheduler, Runnable task, int delay) {
 	      this.scheduler = scheduler;
 	      this.task = task;
+	      reset(delay);
 	   }
 
-	public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
-	   System.out.println("Setting nextExecutionTime: " + nextExecutionTime);
-	   this.nextExecutionTime = nextExecutionTime;
-      if (future != null) {
-         System.out.println("Cancelling trigger task...");
-         future.cancel(true);
-      }
-      System.out.println("Starting trigger task...");
-      future = scheduler.schedule(task, this);
-   }
+	   public void reset(int delay) {
+	      if (future != null) {
+	         System.out.println("Cancelling task...");
+	         future.cancel(true);
+	      }
+	      this.delay = delay;
+	      System.out.println("Starting task...");
+	      future = scheduler.schedule(task, this);
+	   }
 
-	@Override
-	public Date nextExecutionTime(TriggerContext triggerContext) {
-	   System.out.println("Current nextExecutionTime: " + this.nextExecutionTime);
-	   return this.nextExecutionTime;
-	}
+	   @Override
+	   public Date nextExecutionTime(TriggerContext triggerContext) {
+	      Date lastTime = triggerContext.lastActualExecutionTime();
+	      Date nextExecutionTime = (lastTime == null)
+	         ? new Date()
+	         : new Date(lastTime.getTime() + delay);
+	         System.out.println("DynamicSchedule -- delay: " + delay +
+	              ", lastActualExecutionTime: " + lastTime +
+	              "; nextExecutionTime: " + nextExecutionTime);
+	      return nextExecutionTime;
+	   }
 
 	}

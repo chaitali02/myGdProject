@@ -39,14 +39,14 @@ import com.inferyx.framework.domain.Schedule;
 @Service
 public class ScheduleServiceImpl {
 	@Autowired
-	private DynamicSchedule dynamicSchedule;
+	private BatchSchedulerServiceImpl batchSchedulerServiceImpl;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(ScheduleServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
-	public Map<Date, String> getLatestBatch() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+	public Map<Date, String> getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		Map<Date, String> scheduleMap = new TreeMap<>();
@@ -122,12 +122,15 @@ public class ScheduleServiceImpl {
 	}
 	
 	public void setSchedulingTrigger() throws Exception {
-		Map<Date, String> scheduleMap = getLatestBatch();
-		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]);
+		Map<Date, String> scheduleMap = getNextBatchExecTime();
+		batchSchedulerServiceImpl.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]);
 	}
 	
-	public void runBatches() {
+	public void runBatches() throws Exception {
       System.out.println("Scheduler triggered. Submitting batch...");
+      //Set the next time the scheduler to start.
+	  Map<Date, String> scheduleMap = getNextBatchExecTime();      
+      batchSchedulerServiceImpl.setNextExecutionTime(null); //Change null with map position 0 but need to handle nulls.
    }
 
 }

@@ -46,7 +46,7 @@
 
 	<task:scheduler id="scheduler" />
 	
-	<bean id="dynamicSchedule" class="com.inferyx.framework.demo.DynamicSchedule">
+	<bean id="batchSchedulerServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl">
 		<constructor-arg ref="scheduler" />
 		<constructor-arg>
 			<bean class="org.springframework.scheduling.support.MethodInvokingRunnable">
