@@ -178,7 +178,7 @@
                 </label>
                 <div class="col-md-6"> 
                   <tags-input class="tag-scroll" min-tags="0" name="metaTags" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" on-tag-adding="onTagAdding($tag)" on-tag-removed="onTagRemoved($tag)">
                     <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                       load-on-empty="true" >
                     </auto-complete>
@@ -312,8 +312,12 @@
                           <div ng-if="data.frequencyType =='MONTHLY'" >
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
-                              
-                              <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                              <div class="col-md-11" style="padding: 0px;">
+                                <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                              </div>
                             </div>
                             <script type="text/ng-template" id="dom-popoverTemplate_data.html">
                               <div>
@@ -332,7 +336,12 @@
                             
                               <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                                 popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">
-                                <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                <div class="col-md-11" style="padding: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                </div>
+                                <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                  <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                                </div>
                               </div>
                               <script type="text/ng-template" id="dow-popoverTemplate_data.html">
                                 <div style="width:270px;"> 

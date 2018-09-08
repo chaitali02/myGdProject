@@ -295,7 +295,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         metajson.type =type;
         metajson.id = response.data[i].uuid ;
         metajson.name = response.data[i].name;
+        metajson.tempName = response.data[i].name;
         metajson.version = response.data[i].version;
+        metajson.index = i;
         metaArray[i] = metajson;
       }
       $scope.allMeta = metaArray;
@@ -331,8 +333,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         var metaTags = {};
         metaTags.uuid =  $scope.batchDetail.pipelineInfo[i].ref.uuid;
         metaTags.type =  $scope.batchDetail.pipelineInfo[i].ref.type;
-        metaTags.name = $scope.batchDetail.pipelineInfo[i].ref.name;
+        metaTags.name =i+1+" - "+response.batch.pipelineInfo[i].ref.name;
+        metaTags.tempName = $scope.batchDetail.pipelineInfo[i].ref.name;
         metaTags.id =  $scope.batchDetail.pipelineInfo[i].ref.uuid;
+        metaTags.index =  i;
         metaTags.version =  $scope.batchDetail.pipelineInfo[i].ref.version;
         metaTagArray[i] = metaTags;
       }
@@ -358,9 +362,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         var metaTags = {};
         metaTags.uuid = response.batch.pipelineInfo[i].ref.uuid;
         metaTags.type = response.batch.pipelineInfo[i].ref.type;
-        metaTags.name = response.batch.pipelineInfo[i].ref.name;
-        metaTags.id = response.batch.pipelineInfo[i].ref.uuid;
+        metaTags.name = i+1+" - "+response.batch.pipelineInfo[i].ref.name;
         metaTags.version = response.batch.pipelineInfo[i].ref.version;
+        metaTags.tempName = $scope.batchDetail.pipelineInfo[i].ref.name;
+        metaTags.id =  $scope.batchDetail.pipelineInfo[i].ref.uuid;
+        metaTags.index =  i;
         metaTagArray[i] = metaTags;
       }
       $scope.metaTags = metaTagArray
@@ -380,6 +386,22 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       setTimeout(function() {
         $state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].listState);
       }, 2000);
+    }
+  }
+   
+  $scope.onTagAdding=function(tag){
+    var len;
+    if($scope.metaTags){
+      len=$scope.metaTags.length+1;
+    }else{
+      len =1;
+    } 
+   tag.name=len+" - "+tag.name 
+  // console.log(tag)
+  }
+  $scope.onTagRemoved=function(tag){
+    for(var i=0;i<$scope.metaTags.length;i++){
+      $scope.metaTags[i].name = i+1+" - "+$scope.metaTags[i].tempName
     }
   }
 
