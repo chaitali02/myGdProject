@@ -42,7 +42,7 @@
 	<!-- Enable AspectJ style of Spring AOP -->
 	<!-- <aop:aspectj-autoproxy /> -->
 	
-	<task:annotation-driven />
+	<!-- <task:annotation-driven />
 
 	<task:scheduler id="scheduler" />
 	
@@ -54,7 +54,8 @@
 				<property name="targetMethod" value="runBatches" />
 			</bean>
 		</constructor-arg>
-	</bean>
+		<constructor-arg ref="batchSchedulerServiceImpl"/>
+	</bean> -->
 	
 	<import resource="spring-security.xml" />
 	<bean id="propertyConfigurer"
