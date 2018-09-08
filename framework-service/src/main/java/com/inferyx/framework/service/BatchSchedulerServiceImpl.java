@@ -31,6 +31,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
+import com.inferyx.framework.enums.FrequencyType;
 
 /**
  * @author Ganesh
@@ -44,10 +45,10 @@ public class BatchSchedulerServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 	
 	@SuppressWarnings("unchecked")
 	public Map<Date, String> getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		Map<Date, String> scheduleMap = new TreeMap<>();
 		List<Schedule> scheduleInfo = (List<Schedule>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.schedule);
@@ -65,24 +66,29 @@ public class BatchSchedulerServiceImpl {
 	}
 
 	public Date getNextRunTime(Date startDate, Date endDate, Date previousRunTime, String frequencyType, List<String> frequencyDetail) throws ParseException {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
 		if (startDate.compareTo(currDate) < 0) { //"startDate is after currDate"					
             logger.info("Start date '"+startDate+"' is before current date '"+currDate+"'. Setting to current date");
             return currDate;
         } else {
-        			switch(frequencyType.toLowerCase()) {
-	        		case "once" : return startDate;
-	        		case "daily" : return getNextDailyRunTime(startDate, endDate, previousRunTime);
-	        		case "weekly" : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-	        		case "bi-weekly" : return getNextBiWeeklyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-	        		case "monthly" : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-	        		case "quarterly" : return getNextQuarterlyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-	        		case "yearly" : return getNextYearlyRunTime(startDate, endDate, previousRunTime);
+        		switch(FrequencyType.valueOf(frequencyType.toLowerCase())) {
+	        		case ONCE : return startDate;
+	        		case HOURLY : return getNextHourlyRunTime(startDate, endDate, previousRunTime);
+	        		case DAILY : return getNextDailyRunTime(startDate, endDate, previousRunTime);
+	        		case WEEKLY : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
+	        		case BIWEEKLY : return getNextBiWeeklyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
+	        		case MONTHLY : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
+	        		case QUARTERLY : return getNextQuarterlyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
+	        		case YEARLY : return getNextYearlyRunTime(startDate, endDate, previousRunTime);
 	        		default : return null;	
         		}
         	} 		
+	}
+
+	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
@@ -104,7 +110,8 @@ public class BatchSchedulerServiceImpl {
 
 	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
 		// TODO Auto-generated method stub
-		//LocalDateTime.from(dt.toInstant()).plusDays(1);
+		LocalDateTime.from(new Date().toInstant()).plusDays(1);
+		
 		return null;
 	}
 
