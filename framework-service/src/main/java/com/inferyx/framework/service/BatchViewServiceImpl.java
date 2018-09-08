@@ -6,6 +6,7 @@ package com.inferyx.framework.service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -140,7 +141,10 @@ public class BatchViewServiceImpl {
 				//setting schedule specific properties
 				schedule.setStartDate(schedule.getStartDate().toString());
 				schedule.setEndDate(schedule.getEndDate().toString());
-				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
+				Date nextRunTime = scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				if(nextRunTime != null) {
+					schedule.setNextRunTime(nextRunTime.toString());
+				}
 				schedule.setFrequencyType(schedule.getFrequencyType());
 				schedule.setFrequencyDetail(schedule.getFrequencyDetail());
 				schedule.setDependsOn(scheduleDependsOn);
@@ -149,7 +153,10 @@ public class BatchViewServiceImpl {
 				setTrigger = true;
 			} else if(schedule.getScheduleChg().equalsIgnoreCase("Y")) {
 				schedule = setScheduleProperties(schedule, null);
-				schedule.setNextRunTime(scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyType(), schedule.getFrequencyDetail()).toString());
+				Date nextRunTime = scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				if(nextRunTime != null) {
+					schedule.setNextRunTime(nextRunTime.toString());
+				}
 				schedule.setDependsOn(scheduleDependsOn);
 				save(schedule);
 				setTrigger = true;

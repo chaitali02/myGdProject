@@ -6,6 +6,7 @@ package com.inferyx.framework.service;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
+import org.apache.log4j.Logger;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -22,8 +23,10 @@ public class BatchTriggerServiceImpl implements Trigger {
 	   private TaskScheduler scheduler;
 	   private Runnable task;
 	   private ScheduledFuture<?> future;
-	   private int delay;
+//	   private int delay;
 	   private Date nextExecutionTime;
+	
+	   static Logger logger = Logger.getLogger(BatchTriggerServiceImpl.class);
 	   
 	public BatchTriggerServiceImpl() {
 		super();
@@ -35,21 +38,21 @@ public class BatchTriggerServiceImpl implements Trigger {
 	   }
 
 	public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
-	   System.out.println("Setting nextExecutionTime: " + nextExecutionTime);
+		logger.info("Setting nextExecutionTime: " + nextExecutionTime);
 	   this.nextExecutionTime = nextExecutionTime;
       if (future != null) {
-         System.out.println("Cancelling trigger task...");
+    	  logger.info("Cancelling trigger task...");
          future.cancel(true);
       }
       if (nextExecutionTime != null) {
-    	  System.out.println("Starting trigger task...");
+    	  logger.info("Starting trigger task...");
     	  future = scheduler.schedule(task, this);
       }
    }
 
 	@Override
 	public Date nextExecutionTime(TriggerContext triggerContext) {
-	   System.out.println("Current nextExecutionTime: " + this.nextExecutionTime);
+		logger.info("Current nextExecutionTime: " + this.nextExecutionTime);
 	   return this.nextExecutionTime;
 	}
 
