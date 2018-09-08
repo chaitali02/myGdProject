@@ -54,7 +54,6 @@
 				<property name="targetMethod" value="runBatches" />
 			</bean>
 		</constructor-arg>
-		<constructor-arg ref="batchSchedulerServiceImpl"/>
 	</bean> -->
 	
 	<import resource="spring-security.xml" />
