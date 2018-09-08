@@ -374,6 +374,9 @@
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
 	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
+	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
+	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl"/>
+	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
