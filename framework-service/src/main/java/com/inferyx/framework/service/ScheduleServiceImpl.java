@@ -125,4 +125,9 @@ public class ScheduleServiceImpl {
 		Map<Date, String> scheduleMap = getLatestBatch();
 		dynamicSchedule.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]);
 	}
+	
+	public void runBatches() {
+      System.out.println("Scheduler triggered. Submitting batch...");
+   }
+
 }

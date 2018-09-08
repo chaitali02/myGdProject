@@ -29,21 +29,26 @@ public class DynamicSchedule implements Trigger {
 		super();
 	}
 
-	public DynamicSchedule(TaskScheduler scheduler, Runnable task, int delay) {
+	public DynamicSchedule(TaskScheduler scheduler, Runnable task) {
 	      this.scheduler = scheduler;
 	      this.task = task;
-	      this.delay = delay;
 	   }
 
 	public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
 	   System.out.println("Setting nextExecutionTime: " + nextExecutionTime);
 	   this.nextExecutionTime = nextExecutionTime;
+      if (future != null) {
+         System.out.println("Cancelling trigger task...");
+         future.cancel(true);
+      }
+      System.out.println("Starting trigger task...");
+      future = scheduler.schedule(task, this);
    }
 
 	@Override
 	public Date nextExecutionTime(TriggerContext triggerContext) {
-	   System.out.println("Fetching nextExecutionTime: " + nextExecutionTime);
-	   return null;
+	   System.out.println("Current nextExecutionTime: " + this.nextExecutionTime);
+	   return this.nextExecutionTime;
 	}
 
 	}

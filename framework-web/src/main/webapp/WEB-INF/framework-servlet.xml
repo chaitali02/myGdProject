@@ -50,11 +50,10 @@
 		<constructor-arg ref="scheduler" />
 		<constructor-arg>
 			<bean class="org.springframework.scheduling.support.MethodInvokingRunnable">
-				<property name="targetObject" ref="scheduledProcessor" />
-				<property name="targetMethod" value="process" />
+				<property name="targetObject" ref="scheduleServiceImpl" />
+				<property name="targetMethod" value="runBatches" />
 			</bean>
 		</constructor-arg>
-		<constructor-arg value="3000" />
 	</bean>
 	
 	<import resource="spring-security.xml" />
