@@ -125,20 +125,20 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			  response[i].statusList=response[i].status;
 			  if(response[i].statusList !=null && response[i].statusList.length > 1){
 				for(var j=0;j<response[i].statusList.length;j++){
-					if(response[i].statusList[j].stage == "NotStarted"){
+					if(response[i].statusList[j].stage == "InProgress"){
 						result.startTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
 						break;
 					}
 				}
-				for(var j=0;j<response[i].statusList.length;j++){
-					if(response[i].statusList[j].stage == "InProgress"){
-						result.InProgressTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
-						break;
-					}
-				}
+				// for(var j=0;j<response[i].statusList.length;j++){
+				// 	if(response[i].statusList[j].stage == "InProgress"){
+				// 		result.InProgressTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+				// 		break;
+				// 	}
+				// }
 				if(response[i].status[len].stage == "Completed"){
 					result.endTime=$filter('date')(new Date(response[i].statusList[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
-					var date1 = new Date(result.InProgressTime)
+					var date1 = new Date(result.startTime)
          			var date2 = new Date(result.endTime)
 					result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
          			
