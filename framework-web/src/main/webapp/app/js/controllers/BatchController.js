@@ -42,7 +42,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   var batchScope=$scope;
   $scope.minDate=moment().subtract(new Date(), 'day');
-  $scope.frequencyTypes=[{"text":"Once","caption":"Once"},{"text":"Daily","caption":"Daily"},{"text":"Weekly","caption":"Weekly"},{"text":"Bi-Weekly","caption":"Bi-Weekly"},{"text":"Monthly","caption":"Monthly"},{"text":"Yearly","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
   $scope.showForm = true;
@@ -127,7 +127,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.metaTags=null;
   }
 
- 
+  $scope.isSelectable=function(date,type){
+    
+    return  $scope.mode == "true" ?false:true;
+  }
 
   $scope.closeFrequencyDetailDOW=function(index){
     $scope.WeekArray=[];
@@ -137,6 +140,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.doneFrequencyDetailDOW=function(index){
     if($scope.scheduleTableArray[index].domPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
    //   console.log($scope.WeekArray)
       for(var i=0;i<$scope.WeekArray.length;i++){
         $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.weekNumToDays[$scope.WeekArray[i]];
@@ -168,6 +172,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
    // $scope.scheduleTableArray[index].frequencyDetail=[];
     if($scope.scheduleTableArray[index].popoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
       for(var i=0;i<$scope.myArrayOfDates.length;i++){
         console.log($scope.myArrayOfDates[i]._d)
         var date=moment($scope.myArrayOfDates[i])._d
@@ -220,9 +225,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
     if(isStartDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
     }
     $scope.scheduleTableArray[index].isStartDateChange="Y"
     $scope.scheduleTableArray[index].scheduleChg="Y"
+    
   }
   $scope.onChangeEndDate=function(newDate,index,isEndDateChange){
     var d=$filter('date')(newDate, "dd");
@@ -231,6 +238,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
     if(isEndDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
     }
     $scope.scheduleTableArray[index].isEndDateChange="Y"
     $scope.scheduleTableArray[index].scheduleChg="Y"
@@ -431,7 +439,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       
       if($scope.scheduleTableArray[i].frequencyDetail){
         for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-          if($scope.scheduleTableArray[i].frequencyType !="Monthly"){
+          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY"){
             scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
           }
         else{
