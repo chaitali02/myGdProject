@@ -62,6 +62,7 @@ public class BatchSchedulerServiceImpl {
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
 	
+	
 	/*@SuppressWarnings("unchecked")
 	public Map<Date, String> getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		Date currDate = simpleDateFormat.parse(new Date().toString());

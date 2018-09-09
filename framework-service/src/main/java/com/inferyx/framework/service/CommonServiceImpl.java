@@ -1724,9 +1724,9 @@ public class CommonServiceImpl <T> {
 					resolveName(invokedObj, type);
 				}
 			} catch (NullPointerException | NoSuchMethodException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			return object;
 		}
@@ -2195,7 +2195,6 @@ public class CommonServiceImpl <T> {
 		try{
 			T object = null;
 			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			
 			if (appUuid != null){
 				if(StringUtils.isBlank(version))
 					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao,appUuid, uuid,new Sort(Sort.Direction.DESC, "version"));
@@ -2207,6 +2206,7 @@ public class CommonServiceImpl <T> {
 				else
 					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
 			}
+			//return (T) object;
 			return (T) resolveName(object, Helper.getMetaType(type));
 		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
 			

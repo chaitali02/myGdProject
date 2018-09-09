@@ -296,7 +296,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		}
 
 		public DagExec createDagExecBatch(Dag dag, DagExec dagExec, RunMode runMode) {
-			
+			logger.info("Inside createDagExecBatch");
 			List<FutureTask> taskList = new ArrayList<FutureTask>();
 			List<StageExec> depStageExecs = new ArrayList<>();
 			if (dagExec == null) {

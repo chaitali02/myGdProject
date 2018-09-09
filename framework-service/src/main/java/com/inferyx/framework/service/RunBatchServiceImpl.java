@@ -43,8 +43,10 @@ public class RunBatchServiceImpl implements Callable<String> {
 	private SessionContext sessionContext;
 	private DagExecServiceImpl dagExecServiceImpl;
 	
+
 	static Logger logger = Logger.getLogger(RunBatchServiceImpl.class);
 	
+
 	/**
 	 * @Ganesh
 	 *
@@ -265,6 +267,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 	}
 
 	public BatchExec execute() throws Exception {
+//		frameworkThreadServiceImpl.setSession("ypalrecha");
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		List<MetaIdentifierHolder> execList = new ArrayList<>();
 		synchronized (batchExec.getUuid()) {
@@ -280,8 +283,8 @@ public class RunBatchServiceImpl implements Callable<String> {
 		
 		batchExec.setExecList(execList);
 		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
-//		Thread.sleep(5000);
-		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
+		Thread.sleep(5000);
+//		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
 		return batchExec;
 	}
 	

@@ -143,11 +143,14 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
 					Status.Stage.NotStarted);
 		}
+		logger.info(" After Set not started status");
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
+		logger.info(" After operator fetch");
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
+		logger.info(" Before customCreate");
 		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");
 		return operatorExec;
