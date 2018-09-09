@@ -235,7 +235,7 @@ public class BatchServiceImpl {
 				}
 				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, batchStatus);
 			}
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		} while(!areAllCompleted);
 		
 		return batchExec;
