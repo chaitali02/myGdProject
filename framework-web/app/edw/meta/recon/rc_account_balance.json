@@ -1,18 +1,18 @@
 {
-  "id": "5abf8661c4adca0a47da63bc",
   "uuid": "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
-  "version": "1522501217",	
-  "name": "recon_account",
+  "version": "1536442143",
+  "name": "rc_account_balance",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
     "value": null
   },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "createdOn": "Sat Sep 08 17:29:03 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -21,7 +21,8 @@
       "ref": {
         "type": "application",
         "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
+        "version": "1464977196",
+        "name": "Data Warehouse"
       },
       "value": null
     }
@@ -30,17 +31,20 @@
     "ref": {
       "type": "datapod",
       "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-      "version": null
+      "version": null,
+      "name": "account"
     },
     "value": null,
     "attrId": "14",
-    "attrName": "current_balance"
+    "attrName": "current_balance",
+    "attrType": null
   },
   "sourceFunc": {
     "ref": {
       "type": "function",
       "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002671",
-      "version": null
+      "version": null,
+      "name": "max(col)"
     },
     "value": null
   },
@@ -48,20 +52,25 @@
     "ref": {
       "type": "datapod",
       "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-      "version": null
+      "version": null,
+      "name": "account"
     },
     "value": null,
     "attrId": "14",
-    "attrName": "current_balance"
+    "attrName": "current_balance",
+    "attrType": null
   },
   "targetFunc": {
     "ref": {
       "type": "function",
       "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002671",
-      "version": null
+      "version": null,
+      "name": "max(col)"
     },
     "value": null
   },
   "sourceFilter": null,
-  "targetFilter": null
+  "targetFilter": null,
+  "sourceDistinct": "N",
+  "targetDistinct": "N"
 }
