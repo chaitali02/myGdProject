@@ -198,6 +198,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		keywordList.add("nodeProperties");
 		keywordList.add("edgeProperties");
 		keywordList.add("metaList");
+		keywordList.add("pipelineInfo");
+
+		
 
 	}
 
@@ -910,9 +913,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-//			if (key.equalsIgnoreCase("metaList")) {
-//				System.out.println("assssssd");
-//			}
+	/*	if (key.equalsIgnoreCase("pipelineInfo")) {
+			System.out.println("assssssd");
+			}*/
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -1122,7 +1125,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						 * verticesRowMap, edgeRowMap, refName, name, null); } }
 						 */
 
-						else if (key.equalsIgnoreCase("ruleInfo")) {
+						else if (key.equalsIgnoreCase("ruleInfo") || key.equalsIgnoreCase("pipelineInfo")) {
 							// String attrN = childObj.optString("ref");
 							if (childObj != null && value.startsWith("{", 0)) {
 								String refN = childObj.optString("ref");
