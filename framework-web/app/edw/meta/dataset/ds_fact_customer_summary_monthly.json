@@ -8,81 +8,80 @@
 	"filterInfo": [],
     	"limit" : 0,
 	"attributeInfo": [
-		{
-			"attrSourceId": "0",
-			"attrSourceName": "customer_id",
-			"sourceAttr": {
-				"attrId": "6",
-				"attrType": "string",				
-				"ref": {
-					"type": "datapod",
-					"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
-				}
-			}
-		},
-		{
-			"attrSourceId": "1",
-			"attrSourceName": "yyyy_mm",
-			"sourceAttr": {
-				"attrId": "55",
-				"attrType": "string",
-				"ref": {
-					"type": "datapod",
-					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
-				}
-			}
-		},
-		
-		{
-			"attrSourceId": "2",
-			"attrSourceName": "attribute4",
-			"sourceAttr": {
-				"ref": {
-					"type": "formula",
-					"uuid": "ff8d4132-370a-41d6-97a0-ad70ffea6180"
-				}
-			}
-		},
-		{
-			"attrSourceId": "3",
-			"attrSourceName": "attribute5",
-			"sourceAttr": {
-				"ref": {
-					"type": "formula",
-					"uuid": "fbb3e147-92a3-4159-bde9-1ef3b1f84559"
-				}
-			}
-		},
-		{
-			"attrSourceId": "4",
-			"attrSourceName": "attribute6",
-			"sourceAttr": {
-				"ref": {
-					"type": "formula",
-					"uuid": "822419a1-2b72-4b36-9f8c-147ca8bbcc3a"
-				}
-			}
-		},
-		{
-			"attrSourceId": "5",
-			"attrSourceName": "attribute7",
-			"sourceAttr": {
-				"ref": {
-					"type": "formula",
-					"uuid": "8b2e51db-1551-455a-9bf2-390e6bc07634"
-				}
-			}
-		},
-		{
-			"attrSourceId": "6",
-			"attrSourceName": "attribute8",
-			"sourceAttr": {
-				"ref": {
-					"type": "formula",
-					"uuid": "6c6b76f9-d301-44da-b00e-462da3d5054d"
-				}
-			}
-		}
+		 {
+            "attrSourceId" : "0",
+            "attrSourceName" : "customer_id",
+            "sourceAttr" : {
+                "attrId" : "6",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "1",
+            "attrSourceName" : "yyyy_mm",
+            "sourceAttr" : {
+                "attrId" : "55",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "2",
+            "attrSourceName" : "formula_total_trans_count",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "ff8d4132-370a-41d6-97a0-ad70ffea6180"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "3",
+            "attrSourceName" : "formula_sum_trans_amount_usd",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "fbb3e147-92a3-4159-bde9-1ef3b1f84559"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "4",
+            "attrSourceName" : "formula_avg_trans_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "822419a1-2b72-4b36-9f8c-147ca8bbcc3a"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "5",
+            "attrSourceName" : "formula_min_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "8b2e51db-1551-455a-9bf2-390e6bc07634"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "6",
+            "attrSourceName" : "formula_max_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "6c6b76f9-d301-44da-b00e-462da3d5054d"
+                }
+            }
+        }
 	],
 	"uuid": "b1de8190-a60b-4f69-8ea6-e8ad3b6d4ab1",
 	"version": "1491486002",
