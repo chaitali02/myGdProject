@@ -118,13 +118,6 @@
       <version>2.2.3-1</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.sqoop</groupId>
-      <artifactId>sqoop</artifactId>
-      <version>1.4.6-cdh5.13.0</version>
-      <type>pom</type>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
   <properties>
     <hadoop.version>2.6.0-cdh5.13.0</hadoop.version>

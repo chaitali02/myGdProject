@@ -336,7 +336,7 @@
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
 	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
-	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl" />
+	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl" init-method="init" />
 	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl" />
 	
 	

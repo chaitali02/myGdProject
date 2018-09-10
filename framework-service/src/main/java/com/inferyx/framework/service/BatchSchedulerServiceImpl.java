@@ -21,7 +21,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -41,12 +45,14 @@ import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.enums.RunMode;
 
@@ -59,13 +65,13 @@ public class BatchSchedulerServiceImpl {
 	@Autowired
 	private BatchTriggerServiceImpl batchTriggerServiceImpl;
 	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
 	private BatchServiceImpl batchServiceImpl;
 	@Autowired
 	private BatchViewServiceImpl batchViewServiceImpl;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
@@ -171,11 +177,11 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 	
-	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
+	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
 		if(previousRunTime != null) {
 			Date nextRunTime = DateUtils.addHours(previousRunTime, 1);
 			if(nextRunTime.compareTo(endDate) <= 0) {
-				return nextRunTime;
+				return simpleDateFormat.parse(nextRunTime.toString());
 			} else {
 				return null; 
 			}
@@ -184,9 +190,31 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 
-	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) {
+	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
 		if(previousRunTime != null) {
 			Date nextRunTime = DateUtils.addYears(previousRunTime, 1);
+			if(nextRunTime.compareTo(endDate) <= 0) {
+				return simpleDateFormat.parse(nextRunTime.toString());
+			} else {
+				return null; 
+			}
+		} else {
+			return startDate;
+		}
+	}
+
+	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		if(previousRunTime != null) {
+			Date nextRunTime = null;
+			Date currDate = simpleDateFormat.parse(new Date().toString());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(currDate);
+			
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
@@ -197,28 +225,56 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 
-	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime,
-			List<String> frequencyDetail) {
-		// TODO Auto-generated method stub
-		return null;
+	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		//if(previousRunTime != null) {
+			Date currDate = simpleDateFormat.parse(new Date().toString());
+//			Weeks weeks = Weeks.weeksBetween(new DateTime(startDate.getTime()), new DateTime(endDate.getTime()));
+//			int weeks2 = weeks.getWeeks();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(currDate);
+//			System.out.println("WoM: "+cal.get(Calendar.WEEK_OF_MONTH)); //3
+//			System.out.println("DoM: "+cal.get(Calendar.DAY_OF_MONTH)); //10
+			System.out.println("DoW: "+cal.get(3)); //2
+//			System.out.println("WoY: "+cal.get(Calendar.WEEK_OF_YEAR)); //37
+//			System.out.println("FDoW: "+cal.getFirstDayOfWeek());
+			
+			Date nextRunTime = null;
+			for(String day : frequencyDetail) {
+				if((Integer.parseInt(day)+1) >= cal.get(Calendar.DAY_OF_WEEK)) {
+					Date tempDate = getDateByDayOfWeek((Integer.parseInt(day)+1), startDate, currDate);//new SimpleDateFormat("MM-dd-yyyy hh:mm:ss").parse(date+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
+					tempDate.setHours(startDate.getHours());
+					tempDate.setMinutes(startDate.getMinutes());
+					tempDate.setSeconds(startDate.getSeconds());
+					nextRunTime = simpleDateFormat.parse(tempDate.toString());
+				}
+			}
+			
+			if(nextRunTime.compareTo(endDate) <= 0) {
+				return nextRunTime;
+			} else {
+				return null; 
+			}
+//		} else {
+//			return startDate;
+//		}
 	}
 
-	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime,
-			List<String> frequencyDetail) {
-		// TODO Auto-generated method stub
-		return null;
+	public Date getDateByDayOfWeek(int doW, Date startDate, Date currDate) {
+		switch(doW) {
+		case 1 : return DateUtils.addDays(currDate, (6-doW)); //SUNDAY
+		case 2 : return DateUtils.addDays(currDate, (6-doW)); //MONDAY
+		case 3 : return DateUtils.addDays(currDate, (6-doW)); //TEUSDAY
+		case 4 : return DateUtils.addDays(currDate, (6-doW)); //WEDNESDAY
+		case 5 : return DateUtils.addDays(currDate, (6-doW)); //THURSDAY
+		case 6 : return DateUtils.addDays(currDate, (6-doW)); //FRIDAY
+		case 7 : return DateUtils.addDays(currDate, 6-doW); //SATURDAY
+		default : return null;
+		}
 	}
-
-	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
-		// TODO Auto-generated method stub
-		LocalDateTime.from(new Date().toInstant()).plusDays(1);
-		
-		return null;
-	}
-
-	private Date getNextDailyRunTime(Date startDate, Date endDate, Date previousRunTime) {
+	
+	private Date getNextDailyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
 		if(previousRunTime != null) {
-			Date nextRunTime = new Date(previousRunTime.getTime() + (1000 * 60 * 60 * 24));
+			Date nextRunTime = simpleDateFormat.parse(new Date(previousRunTime.getTime() + (1000 * 60 * 60 * 24)).toString());
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
@@ -230,42 +286,50 @@ public class BatchSchedulerServiceImpl {
 	}
 	
 	public void setSchedulingTrigger() throws Exception {
-		Date nextExecutionTime = getNextBatchExecTime();
-		if(nextExecutionTime != null) {
-			batchTriggerServiceImpl.setNextExecutionTime(nextExecutionTime);
-		} else {
+		try {
+			Date nextExecutionTime = getNextBatchExecTime();
+			if(nextExecutionTime != null) {
+				batchTriggerServiceImpl.setNextExecutionTime(nextExecutionTime);
+			} else {
+				batchTriggerServiceImpl.setNextExecutionTime(null);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 			batchTriggerServiceImpl.setNextExecutionTime(null);
 		}
 	}
 	
-	public void runBatches() throws Exception {		
+	public void runBatches(){		
 		//Set the next time the scheduler to start.
-		System.out.println("nextExecutionTime: "+batchTriggerServiceImpl.getNextExecutionTime());
-		System.out.println("lastExecutionTime: "+batchTriggerServiceImpl.getLastExecutionTime());
-		List<Schedule> schedules = getcurrentSchedules(batchTriggerServiceImpl.getNextExecutionTime(), batchTriggerServiceImpl.getLastExecutionTime()); 
-		  
-		if(schedules != null) {
-			logger.info("Scheduler triggered. Submitting batch...");
-		    for(Schedule schedule : schedules) {
-		  	  	MetaIdentifier batchMI = schedule.getDependsOn().getRef();
-		  	  	BatchExec batchExec = batchServiceImpl.create(batchMI.getUuid(), batchMI.getVersion(), null, null, RunMode.BATCH);
-		    	batchServiceImpl.submitBatch(batchMI.getUuid(), batchMI.getVersion(), batchExec, null, null, RunMode.BATCH);
-		    }
-		    updateScheduleForNextRunTime(schedules);
-		} else if(schedules == null) {
-			logger.info("No batch is scheduled at "+batchTriggerServiceImpl.getNextExecutionTime());
+		try {
+			List<Schedule> schedules = getCurrentSchedules(batchTriggerServiceImpl.getNextExecutionTime(), batchTriggerServiceImpl.getLastExecutionTime()); 
+			  
+			if(schedules != null) {
+				logger.info("Scheduler triggered. Submitting batch...");
+			    for(Schedule schedule : schedules) {
+			  	  	MetaIdentifier batchMI = schedule.getDependsOn().getRef();
+			  	  	BatchExec batchExec = batchServiceImpl.create(batchMI.getUuid(), batchMI.getVersion(), null, null, RunMode.BATCH);
+			    	batchServiceImpl.submitBatch(batchMI.getUuid(), batchMI.getVersion(), batchExec, null, null, RunMode.BATCH);
+			    }
+			    updateScheduleForNextRunTime(schedules);
+			} else if(schedules == null) {
+				logger.info("No batch is scheduled at "+batchTriggerServiceImpl.getNextExecutionTime());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				setSchedulingTrigger();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-//		Map<Date, String> scheduleMap = getNextBatchExecTime();
-//		batchTriggerServiceImpl.setNextExecutionTime(scheduleMap.keySet().toArray(new Date[scheduleMap.keySet().size()])[0]); //Change null with map position 0 but need to handle nulls.
-		setSchedulingTrigger();
    }
 
 	private void updateScheduleForNextRunTime(List<Schedule> schedules) throws Exception {
-//		batchViewServiceImpl.save(schedule)
-//		BatchView batchView = new BatchView();
-//		batchView.setBatchChg("N");
-//		batchView.setScheduleInfo(schedules);
-//		batchViewServiceImpl.save(batchView);
 		for(Schedule schedule : schedules) {
 			Date nextExecutionTime = getNextRunTimeBySchedule(schedule);
 			schedule.setNextRunTime(nextExecutionTime.toString());
@@ -278,34 +342,35 @@ public class BatchSchedulerServiceImpl {
 
 	public Date getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
 		Date currDate = simpleDateFormat.parse(new Date().toString());
-		
-//		Criteria criteria = new Criteria();
-//		List<Criteria> criteriaList = new ArrayList<Criteria>();		
-//		criteriaList.add(where("nextRunTime").gte(currDate));
-//		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
-//		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-//		AggregationResults scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-//		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
-//		Set<Date> dateSet = new TreeSet<>();
-//		for(Schedule schedule : schedulerList) {
-//			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
-//			dateSet.add(schedule2.getNextRunTime());
-//		}		
-//		return !dateSet.isEmpty() ? dateSet.toArray(new Date[dateSet.size()])[0] : null;
 
-		MatchOperation filterSchedule = match(new Criteria("nextRunTime").gte(currDate));
-		GroupOperation groupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
-		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "nextRunTime"));
-		LimitOperation limitToOnlyFirstDoc = limit(1);
-		Aggregation scheduleAggr = newAggregation(filterSchedule,groupByUuid,sortByNextRunTime,limitToOnlyFirstDoc);
+		Criteria criteria = new Criteria();
+		List<Criteria> criteriaList = new ArrayList<Criteria>();		
+		criteriaList.add(where("nextRunTime").gte(currDate));
+		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
 		AggregationResults scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-		Schedule schedule = (Schedule) scheduleAggrResults.getUniqueMappedResult();	
-		return schedule.getNextRunTime();
+		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
+		Set<Date> dateSet = new TreeSet<>();
+		for(Schedule schedule : schedulerList) {
+			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
+			dateSet.add(schedule2.getNextRunTime());
+		}		
+		return !dateSet.isEmpty() ? dateSet.toArray(new Date[dateSet.size()])[0] : null;
+		
+//		MatchOperation filterSchedule = match(new Criteria("nextRunTime").gte(currDate));
+//		GroupOperation groupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
+//		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "nextRunTime"));
+//		LimitOperation limitToOnlyFirstDoc = limit(1);
+//		Aggregation scheduleAggr = newAggregation(filterSchedule, groupByUuid, sortByNextRunTime, limitToOnlyFirstDoc);
+//		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+//		Schedule schedule = (Schedule) scheduleAggrResults.getUniqueMappedResult();	
+//		return schedule.getNextRunTime();
 
 	}
 	
-	public List<Schedule> getcurrentSchedules(Date currentTriggerTime, Date lastExecutionTime) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
+	public List<Schedule> getCurrentSchedules(Date currentTriggerTime, Date lastExecutionTime) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
 		Date currDate = simpleDateFormat.parse(new Date().toString());
+		
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		
@@ -333,7 +398,70 @@ public class BatchSchedulerServiceImpl {
 		for(Schedule schedule : schedulerList) {
 			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
 			schedules.add(schedule2);
-		}		
+		}
+		
+//		MatchOperation scheduleFilter = null;
+//		if(lastExecutionTime != null) {
+//			scheduleFilter = match(new Criteria("nextRunTime").gt(lastExecutionTime).andOperator(new Criteria("nextRunTime").lte(currDate)));
+//		} else {
+//			scheduleFilter = match(new Criteria("nextRunTime").gte(currentTriggerTime).andOperator(new Criteria("nextRunTime").lte(currDate)));
+//		}
+//		
+//		GroupOperation schedulerGroupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
+//		SortOperation schedulerSortDirection = sort(new Sort(Direction.ASC, "nextRunTime"));
+//		Aggregation aggregateOnSchedule = newAggregation(scheduleFilter, schedulerGroupByUuid, schedulerSortDirection);
+//		AggregationResults<Schedule> scheduleAggrResult = mongoTemplate.aggregate(aggregateOnSchedule, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+//		
+//		List<Schedule> schedules = new ArrayList<>();
+//		for(Schedule schedule : scheduleAggrResult.getMappedResults()) {
+//			Schedule resolvedSchedule = getSchedule(schedule.getId(), schedule.getVersion(), schedule.getNextRunTime());
+//			if(resolvedSchedule != null)
+//				schedules.add(resolvedSchedule);
+//		}
 		return schedules;
+	}
+	
+	public Schedule getSchedule(String uuid, String version, Date nextRunTime) {
+		Query query = new Query();
+		query.fields().exclude("_id");
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("active");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("desc");
+		query.fields().include("tags");
+		query.fields().include("published");
+		query.fields().include("startDate");
+		query.fields().include("endDate");
+		query.fields().include("nextRunTime");
+		query.fields().include("frequencyType");
+		query.fields().include("frequencyDetail");
+		query.fields().include("dependsOn");
+		
+		if(uuid != null)
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+		if(version != null)
+			query.addCriteria(Criteria.where("version").is(version));
+		if(nextRunTime != null)
+			query.addCriteria(Criteria.where("nextRunTime").is(nextRunTime));
+		
+		List<Schedule> schedules = mongoTemplate.find(query, Schedule.class);
+		if(!schedules.isEmpty()) {
+			return schedules.get(0);
+		} else {
+			return null;
+		}
+	}
+	
+	public void init() {
+		try {
+			setSchedulingTrigger();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
