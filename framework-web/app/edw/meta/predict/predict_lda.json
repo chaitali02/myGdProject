@@ -106,7 +106,7 @@
     },
     "uuid" : "ea110f53-23b5-4b90-8788-bd4dbbf3c331",
     "version" : "1536047758",
-    "name" : "Predict LDA",
+    "name" : "predict_lda",
     "createdBy" : {
         "ref" : {
             "type" : "user",

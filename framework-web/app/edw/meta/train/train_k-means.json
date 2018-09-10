@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
         }
     },
     "source" : {
@@ -18,7 +18,7 @@
                 "featureId" : "0",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
                 }
             },
             "attribute" : {
@@ -35,7 +35,7 @@
                 "featureId" : "1",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
                 }
             },
             "attribute" : {
@@ -52,7 +52,7 @@
                 "featureId" : "2",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
                 }
             },
             "attribute" : {
@@ -69,28 +69,11 @@
                 "featureId" : "3",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
                 }
             },
             "attribute" : {
                 "attrId" : "3",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "4",
-            "feature" : {
-                "featureId" : "5",
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
-                }
-            },
-            "attribute" : {
-                "attrId" : "5",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
@@ -108,9 +91,9 @@
         }
     },
     "useHyperParams" : "N",
-    "uuid" : "572d86d5-5106-40c9-b4c0-ede6b676476c",
-    "version" : "1535817985",
-    "name" : "Train Decision Tree Classifier",
+    "uuid" : "d762b4ea-5adc-4d05-ab93-d78d00a48609",
+    "version" : "1535821565",
+    "name" : "train_k-means",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -119,7 +102,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-01T16:06:25.000Z"),
+    "createdOn" : ISODate("2018-09-01T17:06:05.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
