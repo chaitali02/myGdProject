@@ -124,7 +124,7 @@
     },
     "uuid" : "eab24f5c-b2d9-437f-b507-c5e5eb432793",
     "version" : "1535968258",
-    "name" : "Predict Linear SVM Classifier",
+    "name" : "predict_linear_svm_classifier",
     "createdBy" : {
         "ref" : {
             "type" : "user",

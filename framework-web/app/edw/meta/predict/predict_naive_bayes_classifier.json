@@ -124,7 +124,7 @@
     },
     "uuid" : "8dd10724-03eb-4cfd-ac59-4f90b8650209",
     "version" : "1536052144",
-    "name" : "Predict Naive Bayes Classifier",
+    "name" : "predict_naive_bayes_classifier",
     "createdBy" : {
         "ref" : {
             "type" : "user",

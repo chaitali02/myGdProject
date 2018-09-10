@@ -2426,8 +2426,34 @@ public class RegisterService {
 						}
 					}
 				}
+			}else {
+				
+				if (relationDetails.getDependsOn().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString())) {
+					Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(relationDetails.getDependsOn().getRef().getUuid(), relationDetails.getDependsOn().getRef().getType().toString());
+					MetaIdentifier ref = new MetaIdentifier();
+					ref.setName(datapodDet.getName());
+					ref.setUuid(datapodDet.getUuid());
+					ref.setVersion(datapodDet.getVersion());
+					ref.setType(MetaType.datapod);
+					List<Attribute> listAttributes = datapodDet.getAttributes();
+					for (Attribute attr : listAttributes) {
+						AttributeRefHolder attributeRefTemp = new AttributeRefHolder();
+						attributeRefTemp.setAttrId(Integer.toString((attr.getAttributeId())));
+						attributeRefTemp
+								.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
+						if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
+							attributeRefTemp.setAttrName(
+									datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+						} else
+							attributeRefTemp
+									.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
+						attributeRefTemp.setRef(ref);
+						attrRefDetails.add(attributeRefTemp);
+					}
+				}
 			}
 		}else {
+			System.out.println("trest");
 			if (relationDetails.getRelationInfo().size() > 0) {
 				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
 					for (int j = 0; j < relationDetails.getRelationInfo().get(i).getJoinKey().size(); j++) {

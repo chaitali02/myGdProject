@@ -124,7 +124,7 @@
     },
     "uuid" : "2349eb21-b19b-4fba-8522-930ba2849eec",
     "version" : "1535970104",
-    "name" : "Predict Random Forest Classifier",
+    "name" : "predict_random_forest_classifier",
     "createdBy" : {
         "ref" : {
             "type" : "user",
