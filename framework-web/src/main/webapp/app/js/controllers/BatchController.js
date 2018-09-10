@@ -41,7 +41,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 	$scope.isAdd=true;
   }
   var batchScope=$scope;
-  $scope.minDate=moment().subtract(new Date(), 'day');
+  $scope.minDate=moment()
   $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
@@ -912,6 +912,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
 
 			link: function(scope, element, attrs) {
         scope.days = $moment.weekdays();
+        scope.days=["1","2","3","4","5","6","7","8","9","'\n'","10","11"]
        // console.log(scope.days)
 				scope.toggle = function(m, d, t) {
 					_toggle(m, d, t);

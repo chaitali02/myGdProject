@@ -38,37 +38,11 @@
     <!-- END PAGE HEADER-->
     <br>
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div  options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dagExecData" comment-panel-directive></div>
-
- 
-    <!-- BEGIN MAIN CONTENT -->
-    <!-- <div class="portlet box green" ng-hide="hideothers">
-      <div class="portlet-title">
-        <div class="caption">
-          <i class="fa fa-cogs"></i>Select DAG
-        </div>
-        <div class="tools">
-          <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
-          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip class="reload" ng-click="broadcastRefreshData()"  data-original-title="" title=""> </a>
-        </div>
-      </div>
-
-      <div class="portlet-body">
-        <form class="form-horizontal">
+    <div options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dagExecData"
+      comment-panel-directive></div>
 
 
-          <div class="form-group">
-            <label class="control-label col-md-1 col-sm-1 col-xs-12" for="select" >Select:</label>
-            <div class="col-md-4">
-              <select class="form-control" select2 ng-change="selectDag()"
-              data-ng-model="selecteddagdata" ng-options="r as r.name for r in dagAll" >
-              </select >
-            </div>
-          </div>
-				</form>
-      </div>
-    </div> -->
-    <!-- END SAMPLE TABLE PORTLET-->
+
 
     <div class="portlet box green" id="dag-exec-model">
       <div class="portlet-title">
@@ -115,8 +89,9 @@
           </a>
         </div>
       </div>
+
       <div class="portlet-body" style="{{fullscreen ? '' : 'max-height:710px; overflow:auto'}}">
-        <div ng-hide="showgraphdiv" joint-graph-directive edit-mode="false" exec-mode="true" graph="graph"></div>
+        <div ng-hide="showgraphdiv" joint-graph-directive edit-mode="false" exec-mode="true" graph="graph" style="padding:7px" height="700"></div>
         <div ng-if="showgraphdiv" class="form-body graph-body">
           <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
           <div class="spinner text-center" id="graphloader">
@@ -128,9 +103,8 @@
           </div>
         </div>
       </div>
-    </div><!-- END SAMPLE TABLE PORTLET-->
-  </div><!-- BEGIN MAIN JS -->
-
+    </div>
+  </div>
   <div class="modal fade in" id="DagConfExModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
     <div class="modal-dialog">
       <div class="modal-content rulemodel">
@@ -143,10 +117,12 @@
           <span style="text-transform: capitalize">Pipeline</span> ?</div>
         <div class="modal-footer">
           <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-          <budivtton type="button" class="btn green" ng-click="ok()">Ok</button>
+          <button type="button" class="btn green" ng-click="ok()">Ok</button>
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
   </div>
 
   <div class="modal fade in" id="executionsubmit" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
@@ -160,7 +136,9 @@
         <div class="modal-footer">
           <button type="button" class="btn green" data-dismiss="modal">OK</button>
         </div>
-      </div><!-- /.modal-content -->
-    </div> <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
   </div>
 </div>

@@ -492,7 +492,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
        </div>
 
        <div class="joint-graph-zoom-slider col-md-1 col-md-offset-11">
-       <div class="pull-right" style="height:120px;width:25px;margin-right:25px">
+       <div class="pull-right" style="height:120px;width:25px;margin-right:15px;margin-top:10px">
          <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
          <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
          <a ng-click="changeSliderBack()"> <i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
@@ -1191,6 +1191,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      addMode:'=',
      graph : '=',
      isTemplate:'=',
+     height:'=',
     },
     link: function ($scope, element, attrs) {
      var taskDetail=null;

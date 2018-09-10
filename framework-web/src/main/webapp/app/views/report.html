@@ -126,7 +126,7 @@
                                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a> -->
 
-                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download"  ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
+                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
                                 <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -158,44 +158,45 @@
                     <!--End Protlet-title-->
 
                     <div class="portlet-body">
-
-                        <div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
-                            <div class="spinner" ng-show="spinner">
-                                <div class="bounce1"></div>
-                                <div class="bounce2"></div>
-                                <div class="bounce3"></div>
-                            </div>
-                            <div ng-show="isDataError">
-                                <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
-                            </div>
-
-                            <div ng-show="!isDataInpogress ">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div style="border-bottom: 1px solid darkgray;">
-                                            <div class="form-group">
-                                                    <!-- style="padding-left:0px;" -->
-                                                <div class="col-md-11 col-sm-11" >
-                                                    <div class="chip" ng-repeat=" filterdata in filterTag">
-                                                        {{filterdata.text}}
-                                                        <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
-                                                    </div>
+                        <div class="form-body" ng-show="isShowSimpleData">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div style="border-bottom: 1px solid darkgray;">
+                                        <div class="form-group">
+                                            <div class="col-md-11 col-sm-11">
+                                                <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                    {{filterdata.text}}
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
                                                 </div>
-                                                <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top: 4px;cursor: pointer;">
-                                                    <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size: 18px;"></span>
-                                                </div>   
+                                            </div>
+                                            <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top: 4px;cursor: pointer;">
+                                                <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size: 18px;"></span>
                                             </div>
                                         </div>
-                                        <br>
                                     </div>
-                                   
+                                    <br>
+                                </div>
+
+                                <div class=" form-body col-md-12 col-sm-12 {{tableclass}}">
+                                    <div class="spinner" ng-show="spinner">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                    </div>
+                                    <div ng-show="isDataError">
+                                        <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="!isDataInpogress ">
+                                <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <!-- <div class="col-md-1 col-sm-1" style="margin-left:-3px;">
                                                 <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
                                             </div> -->
                                             <div class="col-md-10 col-sm-10">
-                                                
+
                                                 <!-- <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input> -->
                                                 <!-- <div class="chip" ng-repeat=" filterdata in filterTag">
                                                      {{filterdata.text}}
@@ -545,7 +546,7 @@
                         </div>
                     </div>
                     <!-- </div> -->
-                </form>
+            </form>
             </div>
         </div>
         <div id="attrFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
@@ -570,8 +571,8 @@
                                         <div class="form-group" ng-repeat="data in filterAttribureIdValues">
                                             <label class="col-md-3 control-label" title="{{data.dname}}">{{data.attrName}}</label>
                                             <div class="col-md-6">
-                                                    <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
-                                                    ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value" >
+                                                <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
+                                                    ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value">
                                                 </select>
                                             </div>
                                         </div>
@@ -597,47 +598,46 @@
             </div>
         </div>
 
-            
-    <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-        <div class="modal-dialog" style="width:40%">
-            <div class="modal-content" style="resize: both;overflow: auto;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Download </h4>
-            </div>
-            <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
-                <div class="modal-body" style="padding-top:0px">
-                <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                    <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                    <div class="row">
-                        <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Rows</label>
-                            <div class="col-md-8">
-                            <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
-                                required  max-err-type="maxLimitDownload">
+
+        <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+            <div class="modal-dialog" style="width:40%">
+                <div class="modal-content" style="resize: both;overflow: auto;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Download </h4>
+                    </div>
+                    <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+                        <div class="modal-body" style="padding-top:0px">
+                            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Rows</label>
+                                                <div class="col-md-8">
+                                                    <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Format</label>
+                                                <div class="col-md-8">
+                                                    <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Format</label>
-                            <div class="col-md-8">
-                            <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-                            </select>
-                            </div>
+                        <!--End Model Body-->
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                            <button type="submit" class="btn green">Submit</button>
                         </div>
-                        </div>
-                    </div>
-                    </div>
+                    </form>
                 </div>
-                </div>
-                <!--End Model Body-->
-                <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                <button type="submit" class="btn green">Submit</button>
-                </div>
-            </form>
             </div>
         </div>
     </div>
-</div>

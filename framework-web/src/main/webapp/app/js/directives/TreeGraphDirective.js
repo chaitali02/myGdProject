@@ -571,8 +571,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
-                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
+                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
