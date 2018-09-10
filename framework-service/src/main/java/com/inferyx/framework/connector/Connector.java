@@ -102,4 +102,10 @@ public class Connector implements IConnector {
 		} 
 		return connHolder;
 	}
+
+	@Override
+	public ConnectionHolder getConnection(Object input) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
