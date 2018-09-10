@@ -23,8 +23,26 @@ public class Recon extends BaseRule {
 	private MetaIdentifierHolder targetFunc;
 	private List<AttributeRefHolder> sourceFilter;
 	private List<AttributeRefHolder> targetFilter;
-	private String sourceDistinct ="N";
-	private String targetDistinct="N";
+	private String sourceDistinct = "N";
+	private String targetDistinct = "N";
+	private List<AttributeRefHolder> sourceGroup;
+	private List<AttributeRefHolder> targetGroup;
+
+	public List<AttributeRefHolder> getSourceGroup() {
+		return this.sourceGroup;
+	}
+
+	public void setSourceGroup(List<AttributeRefHolder> sourceGroup) {
+		this.sourceGroup = sourceGroup;
+	}
+
+	public List<AttributeRefHolder> getTargetGroup() {
+		return this.targetGroup;
+	}
+
+	public void setTargetGroup(List<AttributeRefHolder> targetGroup) {
+		this.targetGroup = targetGroup;
+	}
 
 	public String getSourceDistinct() {
 		return sourceDistinct;

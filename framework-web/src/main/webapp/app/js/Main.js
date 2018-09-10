@@ -556,6 +556,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
                 }
             }
             if (localStorage.isAppRoleExists) {
+                $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });
                 var onSuccessGetMetaStats = function (response) {
                     angular.forEach(response, function (val, key) {
@@ -661,6 +662,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             var onSecurityAppRoleSuccess = function (response) {
                 localStorage.isAppRoleExists = true
                 console.log(JSON.stringify(response.data));
+                $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });
                 var onSuccessGetMetaStats = function (response) {
                     angular.forEach(response, function (val, key) {

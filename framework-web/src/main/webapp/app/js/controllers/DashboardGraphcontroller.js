@@ -600,12 +600,22 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
     }
     //$scope.fullscreen();
-
+    
     $timeout(function () {
       $window.dispatchEvent(new Event("resize"));
     }, 100);
   }
+  
+  $scope.onClickChart=function(parentIndex, index){
+    $scope.sectionRows[parentIndex].columns[index].isDataGridShow=false;
+    $scope.sectionRows[parentIndex].columns[index].isChartShow=true;
+  }
 
+  $scope.onClickGrid=function(parentIndex, index){
+    $scope.sectionRows[parentIndex].columns[index].isChartShow=false;
+    $scope.sectionRows[parentIndex].columns[index].isDataGridShow=true;
+    
+  }
   $scope.time_format = function (timestamp) {
     //  console.log(timestamp)
     return timestamp.toFixed(2);
@@ -635,13 +645,25 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.onChange = function () {
     $scope.isApplyFilter = false;
   }
+
+  $scope.openFilterPopup = function () {
+		if ($scope.filterAttribureIdValues == null) {
+			$scope.getFilterValue($scope.report);
+		}
+		$('#attrFilter').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
   $scope.onFilterChange = function (index) {
     // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
     // console.log(JSON.stringify($scope.selectedAttributeValue))
     var count = 0;
     $scope.filterListarray = [];
+    $scope.filterTag = [];
     for (var i = 0; i < $scope.selectedAttributeValue.length; i++) {
       var filterList = {};
+      var filterTag = {};
       var ref = {};
       if ($scope.selectedAttributeValue[i].value != "-select-") {
         ref.type = $scope.filterAttribureIdValues[i].type;
@@ -650,15 +672,30 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
         filterList.value = $scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
         $scope.filterListarray[count] = filterList;
+        filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				filterTag.index = i;
+        filterTag.value = $scope.selectedAttributeValue[i].value;
+        	$scope.filterTag[count] = filterTag;
         count = count + 1;
       }
     }
     console.log(JSON.stringify($scope.filterListarray));
     $scope.vizpodbody.filterInfo = $scope.filterListarray
+    $('#attrFilter').modal("hide");
     $scope.getVizpodResut($scope.vizpodbody);
 
   }
+  $scope.onChipsRemove=function(index,filterIndex){
+		
+		$scope.filterTag.splice(index,1);
+		$scope.selectedAttributeValue[filterIndex] = null;
+			var noSelect = { "id": null, "value": "-select-" }
+			setTimeout(function () {
+				$scope.selectedAttributeValue[filterIndex] = noSelect;
+				$scope.onFilterChange();
+			}, 100);
 
+	}
   $scope.getFilterValue = function (data) {
 
     $scope.filterAttribureIdValues = []
@@ -681,6 +718,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
           filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
           filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
           filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+          filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
           filterAttribureIdvalueJSON.values = result[i].data
           filterAttribureIdvalueJSON.values.splice(0, 0, defaultvalue)
           $scope.selectedAttributeValue[i] = defaultvalue
@@ -708,7 +746,10 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         vizpoddetailjson.iconclass = "fa fa-expand";
         vizpoddetailjson.showtooltiptitle = "Maximize";
         vizpoddetailjson.show = true;
-        $scope.sectionRows[i].columns[j].vizpodDetails = vizpoddetailjson
+        $scope.sectionRows[i].columns[j].vizpodDetails = vizpoddetailjson;
+        $scope.sectionRows[i].columns[j].isChartDataGrid=true;
+        $scope.sectionRows[i].columns[j].isChartShow=true;
+        $scope.sectionRows[i].columns[j].isDataGridShow=false;
         datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName//x value
         $scope.sectionRows[i].columns[j].vizpodDetails.datax = datax;
         var datacolumnsarray = [];
@@ -751,8 +792,14 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         $scope.sectionRows[i].columns[j].vizpodDetails.columnNameY2 = columnName[0];
         columnName.splice(0, 1);
         $scope.sectionRows[i].columns[j].vizpodDetails.columnNameY1 = columnName.toString();
-        if ($scope.sectionRows[i].columns[j].vizpodInfo.type == "data-grid") {
+
+
+        if ($scope.sectionRows[i].columns[j].vizpodInfo.type == "data-grid" ||  $scope.sectionRows[i].columns[j].isChartDataGrid) {
           var keyvalueData = null;
+          if($scope.sectionRows[i].columns[j].vizpodInfo.type == "data-grid"){
+            $scope.sectionRows[i].columns[j].isChartShow=false;
+            $scope.sectionRows[i].columns[j].isDataGridShow=false;
+          }
           $scope.sectionRows[i].columns[j].gridOptions = {}
           $scope.Preparedatagrid(i, j);
           $scope.sectionRows[i].columns[j].gridOptions.columnDefs = [];
@@ -1061,72 +1108,115 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
               }
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = result.data;
             }
-            if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type == "data-grid") {
+            if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type == "data-grid" ||$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isChartDataGrid) {
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].gridOptions.data = result.data;
             }
           }
-          $scope.preparColumnDataFromResult();
+          $scope.preparColumnDataFromResult(result.vizpodResuts.rowNo,result.vizpodResuts.colNo);
           //return { state: "fulfilled", value: result };
         })
         .catch(function (result) {
-          // console.log(result)
+         // console.log(result)
           $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError = true;
           $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess = false;
           $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = [];
-          $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg = "Some Error Occurred";
+          $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg = result.data.message ||"Some Error Occurred";
           $scope.inprogressdata = false;
           // return { state: "rejected", reason: error };
         });
     }));
     //console.log(JSON.stringify($scope.sectionRows))
   }
-
-  $scope.preparColumnDataFromResult = function () {
-    for (var i = 0; i < $scope.sectionRows.length; i++) {
-      for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {
-        if ($scope.sectionRows[i].columns[j].vizpodInfo.type == 'pie-chart' || $scope.sectionRows[i].columns[j].vizpodInfo.type == 'donut-chart') {
-          var columnname = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName
-          if ($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "dataset") {
-            columnnamevalue = $scope.sectionRows[i].columns[j].vizpodInfo.values[0].attributeName
-          }
-          else {
-            columnnamevalue = $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.name
-          }
-          var columnarray = []
-          var dataarray = []
-          var colorcount = 0;
-          for (var k = 0; k < $scope.sectionRows[i].columns[j].vizpodDetails.datapoints.length; k++) {
-            var datacolumnsjson = {};
-            var datajson = {};
-            datacolumnsjson.id = $scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnname] + "";
-            datacolumnsjson.ref = "jitu"
-            datacolumnsjson.type = $scope.sectionRows[i].columns[j].vizpodDetails.type.split("-")[0];
-            if (colorcount <= 15) {
-              if (colorcount == 15) {
-                colorcount = 0;
-              }
-              datacolumnsjson.color = $scope.chartcolor[colorcount];
-              colorcount = colorcount + 1;
-            }//End If
-            datajson[$scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnname]] = $scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnnamevalue];
-            columnarray[k] = datacolumnsjson;
-            dataarray[k] = datajson;
-            console.log(JSON.stringify(columnarray));
-          }
-
-          console.log(JSON.stringify(dataarray));
-          $scope.sectionRows[i].columns[j].vizpodDetails.datax = "";
-          $scope.sectionRows[i].columns[j].vizpodDetails.datapoints = dataarray;
-          $scope.sectionRows[i].columns[j].vizpodDetails.datacolumns = columnarray;
-
-        }
+  
+  $scope.preparColumnDataFromResult = function (rowNo,colNo) {
+    if ($scope.sectionRows[rowNo].columns[colNo].vizpodInfo.type == 'pie-chart' || $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.type == 'donut-chart') {
+      var columnname = $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.keys[0].attributeName
+      if ($scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].ref.type == "dataset") {
+        columnnamevalue = $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].attributeName
       }
+      else {
+        columnnamevalue = $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].ref.name
+      }
+      var columnarray = []
+      var dataarray = []
+      var colorcount = 0;
+      for (var k = 0; k < $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints.length; k++) {
+        var datacolumnsjson = {};
+        var datajson = {};
+        datacolumnsjson.id = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname] + "";
+        datacolumnsjson.ref = "jitu"
+        datacolumnsjson.type = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.type.split("-")[0];
+        if (colorcount <= 15) {
+          if (colorcount == 15) {
+            colorcount = 0;
+          }
+          datacolumnsjson.color = $scope.chartcolor[colorcount];
+          colorcount = colorcount + 1;
+        }//End If
+        datajson[$scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname]] = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnnamevalue];
+        columnarray[k] = datacolumnsjson;
+        dataarray[k] = datajson;
+        
+      }
+
+    //  console.log(JSON.stringify(dataarray));
+      $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datax = "";
+      $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints = dataarray;
+      $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datacolumns = columnarray;
+
     }
+    
     //  console.log(JSON.stringify($scope.sectionRows));
   }
+  // $scope.preparColumnDataFromResult = function () {
+  //   for (var i = 0; i < $scope.sectionRows.length; i++) {
+  //     for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {
+        
+
+  //       if ($scope.sectionRows[i].columns[j].vizpodInfo.type == 'pie-chart' || $scope.sectionRows[i].columns[j].vizpodInfo.type == 'donut-chart') {
+  //         var columnname = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName
+  //         if ($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "dataset") {
+  //           columnnamevalue = $scope.sectionRows[i].columns[j].vizpodInfo.values[0].attributeName
+  //         }
+  //         else {
+  //           columnnamevalue = $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.name
+  //         }
+  //         var columnarray = []
+  //         var dataarray = []
+  //         var colorcount = 0;
+  //         for (var k = 0; k < $scope.sectionRows[i].columns[j].vizpodDetails.datapoints.length; k++) {
+  //           var datacolumnsjson = {};
+  //           var datajson = {};
+  //           datacolumnsjson.id = $scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnname] + "";
+  //           datacolumnsjson.ref = "jitu"
+  //           datacolumnsjson.type = $scope.sectionRows[i].columns[j].vizpodDetails.type.split("-")[0];
+  //           if (colorcount <= 15) {
+  //             if (colorcount == 15) {
+  //               colorcount = 0;
+  //             }
+  //             datacolumnsjson.color = $scope.chartcolor[colorcount];
+  //             colorcount = colorcount + 1;
+  //           }//End If
+  //           datajson[$scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnname]] = $scope.sectionRows[i].columns[j].vizpodDetails.datapoints[k][columnnamevalue];
+  //           columnarray[k] = datacolumnsjson;
+  //           dataarray[k] = datajson;
+            
+  //         }
+
+  //         console.log(JSON.stringify(dataarray));
+  //         $scope.sectionRows[i].columns[j].vizpodDetails.datax = "";
+  //         $scope.sectionRows[i].columns[j].vizpodDetails.datapoints = dataarray;
+  //         $scope.sectionRows[i].columns[j].vizpodDetails.datacolumns = columnarray;
+
+  //       }
+  //     }
+  //   }
+  //   //  console.log(JSON.stringify($scope.sectionRows));
+  // }
 
   $scope.callGraph = function () {
     $scope.vizpodtypedetail1 = [];
+    $scope.filterTag=[];
     count = 0;
     DahsboardSerivce.getLatestByUuidView($stateParams.id, "dashboardview").then(function (response) { onSuccessLatestByUuid(response.data) });
     var onSuccessLatestByUuid = function (response) {

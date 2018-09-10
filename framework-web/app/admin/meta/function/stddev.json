@@ -1,15 +1,15 @@
 {
-    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4",
-    "version" : "1488801522",
-    "name" : "avg(col)",
-    "desc" : "Returns the average of the elements in the group or the average of the distinct values of the column in the group. It required numeric value.",
+    "uuid" : "9e3e2fb2-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "stddev(col)",
+    "desc" : "Returns the standard deviation of a numeric column in the group.",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [ 
         "DEV", 
         "1.0.1", 
@@ -19,7 +19,7 @@
     "published" : "N",
     "inputReq" : "Y",
     "appInfo" : [ 
-        {
+         {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -32,39 +32,38 @@
             }
         }
     ],
-    "functionInfo" : [ 
+    "funcType" : "hive",
+    "category":"aggregate",
+    "functionInfo" : [     	 
         {
             "type" : "file",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         },
         {
             "type" : "mysql",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "hive",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "impala",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "oracle",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         },
         {
             "type" : "postgres",
-            "name" : "avg",
+            "name" : "stddev",
             "paramInfoHolder" : []
         }
-    ],
-    "funcType" : "hive",
-    "category" : "aggregate"
+    ]
 }
-

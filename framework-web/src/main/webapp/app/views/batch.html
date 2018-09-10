@@ -267,7 +267,7 @@
                           <!-- max-view="hour" -->
                         <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;width:210px;">
                             <!-- MM-D-YYYY, h:mm:ss a -->
-                            <div class="input-group" moment-picker="data.startDate" 
+                            <div class="input-group" moment-picker="data.startDate"
                               start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=minDate  selectable="isSelectable(date, type)"   validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)" >
                               <span class="form-control" name="startDate" style="padding-right:10px;text-align:right;"  name="startDate" ng-disabled="{{mode}}" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
                              
@@ -282,7 +282,7 @@
                           </div>
                       </td>
                       <td>
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;width:210px;">
                           <div class="input-group" moment-picker="data.endDate" 
                             start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true selectable="isSelectable(date, type)" change="onChangeEndDate(data.endDate,$index,data.isEndDateChange)">
                             <span class="form-control" name="startDate" style="padding-right: 5px; text-align:right;"   ng-disabled="{{mode}}" name="endDate" >{{data.endDate}} <span style="text-align:right;">{{timezone}}</span></span>  
@@ -294,7 +294,7 @@
                             </span>
                            </div>
                            <input type="hidden" ng-model="data.endDate" name="endDate" required disable-validation-message="">
-                          </span>
+                          </div>
                       </td>
                       <!-- <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">

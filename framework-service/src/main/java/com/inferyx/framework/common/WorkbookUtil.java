@@ -168,11 +168,13 @@ public class WorkbookUtil {
 	
 	public Workbook getWorkbookForReport(List<Map<String, Object>> resultList, ReportExec reportExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
-		
 		Workbook workBook = new HSSFWorkbook();
 		Sheet hssfSheet = workBook.createSheet("report");
-		hssfSheet.addMergedRegion(new CellRangeAddress(1, 3,0, report.getAttributeInfo().size()-1));
-		
+		if (report.getAttributeInfo().size() > 1) {
+			hssfSheet.addMergedRegion(new CellRangeAddress(1, 3, 0, report.getAttributeInfo().size() - 1));
+		} else {
+			hssfSheet.addMergedRegion(new CellRangeAddress(1, 3, 0, 1));
+		}
 
 	/******* adding title *******/
 		Font titleHeaderFont = workBook.createFont();
@@ -196,9 +198,10 @@ public class WorkbookUtil {
 		
 		
 	 /******* adding filter *******/
-	
-		hssfSheet.addMergedRegion(new CellRangeAddress(6, 6,0, report.getAttributeInfo().size()-1));
-		
+		if (report.getAttributeInfo().size() > 1)
+			hssfSheet.addMergedRegion(new CellRangeAddress(6, 6, 0, report.getAttributeInfo().size() - 1));
+		else
+			hssfSheet.addMergedRegion(new CellRangeAddress(6, 6, 0, 1));
 		
 		short filterRowNum = 6;
 		ExecParams execParams = reportExec.getExecParams();

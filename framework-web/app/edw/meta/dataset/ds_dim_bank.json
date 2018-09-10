@@ -113,7 +113,7 @@
     "limit" : 0,
     "uuid" : "73077330-9061-40c9-a787-bcc75862900d",
     "version" : "1529487184",
-    "name" : "dataset_dim_bank",
+    "name" : "ds_dim_bank",
     "desc" : "dataset for mapping transformation from source relation to target datapod",
     "createdBy" : {
         "ref" : {

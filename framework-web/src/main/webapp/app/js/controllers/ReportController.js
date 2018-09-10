@@ -489,7 +489,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 	}
 
 	$scope.onChipsRemove=function(index,filterIndex){
-		debugger
+		
 		$scope.filterTag.splice(index,1);
 		$scope.selectedAttributeValue[filterIndex] = null;
 			var noSelect = { "id": null, "value": "-select-" }

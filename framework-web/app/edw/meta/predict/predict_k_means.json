@@ -106,7 +106,7 @@
     },
     "uuid" : "5de51a33-79ad-417d-98d5-11877c68c744",
     "version" : "1535967398",
-    "name" : "Predict K-Means",
+    "name" : "predict_k-means",
     "createdBy" : {
         "ref" : {
             "type" : "user",
