@@ -120,7 +120,7 @@ public class BatchServiceImpl {
 		}
 		
 		User user = (User) commonServiceImpl.getOneByUuidAndVersion(batchExec.getCreatedBy().getRef().getUuid(), batchExec.getCreatedBy().getRef().getVersion(), batchExec.getCreatedBy().getRef().getType().toString());
-		frameworkThreadServiceImpl.setSession(user.getName());
+		frameworkThreadServiceImpl.setSession(user.getName(), batch.getAppInfo().get(0));
 		// Populate ParseRunDagServiceImpl		
 		runBatchServiceImpl.setBatchExec(batchExec);
 		runBatchServiceImpl.setBatchUuid(batchUuid);
