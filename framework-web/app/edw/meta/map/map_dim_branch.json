@@ -6,180 +6,180 @@
 		}
 	},
 	"source": {
-		"ref": {
-			"type": "rule",
-			"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-		}
+		"ref" : {
+            "type" : "dataset",
+            "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+        }
 	},
 	"attributeMap": [
 		{
-			"attrMapId": "0",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "1",
-			"sourceAttr": {
-				"attrId": "1",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "1",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "2",
-			"sourceAttr": {
-				"attrId": "2",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "2",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "3",
-			"sourceAttr": {
-				"attrId": "3",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "3",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "4",
-			"sourceAttr": {
-				"attrId": "4",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "4",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "5",
-			"sourceAttr": {
-				"attrId": "5",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "5",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "6",
-			"sourceAttr": {
-				"attrId": "6",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "6",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "7",
-			"sourceAttr": {
-				"attrId": "7",
-				"ref": {
-					"type": "rule",
-					"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc"
-				}
-			},
-			"targetAttr": {
-				"attrId": "7",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "8",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "9e3de26e-02fb-11e7-93ae-92361f002671"
-				}
-			},
-			"targetAttr": {
-				"attrId": "8",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		},
-		{
-			"attrMapId": "9",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "9e3dff24-02fb-11e7-93ae-92361f002671"
-				}
-			},
-			"targetAttr": {
-				"attrId": "9",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-				}
-			}
-		}
+            "attrMapId" : "0",
+            "sourceAttr" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "1",
+            "sourceAttr" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "2",
+            "sourceAttr" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "3",
+            "sourceAttr" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "4",
+            "sourceAttr" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "5",
+            "sourceAttr" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "6",
+            "sourceAttr" : {
+                "attrId" : "6",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "6",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "7",
+            "sourceAttr" : {
+                "attrId" : "7",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "7",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "8",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "8",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "9",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+                }
+            },
+            "targetAttr" : {
+                "attrId" : "9",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+                }
+            }
+        }
 	],
 	"uuid": "d2cc6181-9104-4f2d-b220-2cd29a69dabe",
 	"version": "1490413174",
