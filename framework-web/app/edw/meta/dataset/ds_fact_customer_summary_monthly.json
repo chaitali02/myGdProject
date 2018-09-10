@@ -86,7 +86,7 @@
 	],
 	"uuid": "b1de8190-a60b-4f69-8ea6-e8ad3b6d4ab1",
 	"version": "1491486002",
-	"name": "dataset_fact_customer_summary_monthly",
+	"name": "ds_fact_customer_summary_monthly",
 	"desc": "dataset made on relation_summary_monthly to perform aggregation roll ups and populate datapods",
 	"createdBy": {
 		"ref": {

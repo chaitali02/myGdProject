@@ -2,7 +2,7 @@
 	"id": "5920e30f096b64f63e501d3c",
 	"uuid": "b7b0a515-9a71-43ba-a89d-195299dc2052",
 	"version": "1495327503",
-	"name": "dataset_customer_usa",
+	"name": "ds_customer_usa",
 	"desc": "All USA Customers",
 	"createdBy": {
 		"ref": {
