@@ -912,7 +912,6 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
 
 			link: function(scope, element, attrs) {
         scope.days = $moment.weekdays();
-        scope.days=["1","2","3","4","5","6","7","8","9","'\n'","10","11"]
        // console.log(scope.days)
 				scope.toggle = function(m, d, t) {
 					_toggle(m, d, t);

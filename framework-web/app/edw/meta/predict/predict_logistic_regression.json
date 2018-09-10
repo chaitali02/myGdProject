@@ -106,7 +106,7 @@
     },
     "uuid" : "52dd0298-bac0-45fb-8907-abb50a1e9ca3",
     "version" : "1535969555",
-    "name" : "Predict Logistic Regression",
+    "name" : "predict_logistic_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",

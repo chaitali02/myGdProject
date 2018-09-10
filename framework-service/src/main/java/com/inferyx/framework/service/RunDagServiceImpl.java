@@ -177,12 +177,16 @@ public class RunDagServiceImpl implements Callable<String> {
 		try {
 			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			logger.info(" sessionContext " + sessionContext.getUserInfo());
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
+			logger.info(" After set sessionContext ");
 			//Check if parsing has happ or not. If not then parse.
 			dagServiceImpl.setRunMode(runMode);
 			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
 				// Parse to create SQL
+				logger.info(" Before parse ");
 				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
+				logger.info(" After parse ");
 				//dagExecServiceImpl.save(dagExec);
 				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			}
@@ -192,6 +196,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			}
 
 			// Execute the object
+			logger.info(" Before  createDagExecBatch");
 			dagExec = btchServ.createDagExecBatch(dag, dagExec, runMode);
 			
 			

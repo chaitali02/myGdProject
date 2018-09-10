@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+            "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
         }
     },
     "source" : {
@@ -18,7 +18,7 @@
                 "featureId" : "0",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
                 }
             },
             "attribute" : {
@@ -35,7 +35,7 @@
                 "featureId" : "1",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
                 }
             },
             "attribute" : {
@@ -52,7 +52,7 @@
                 "featureId" : "2",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
                 }
             },
             "attribute" : {
@@ -69,11 +69,28 @@
                 "featureId" : "3",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
                 }
             },
             "attribute" : {
                 "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "feature" : {
+                "featureId" : "5",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
@@ -91,9 +108,9 @@
         }
     },
     "useHyperParams" : "N",
-    "uuid" : "46bcd068-eca9-4b80-a25d-913e8fd463ec",
-    "version" : "1536045262",
-    "name" : "Train Naive Bayes Classifier",
+    "uuid" : "c969e192-b285-4a15-9fcc-3c31de061489",
+    "version" : "1535821272",
+    "name" : "train_random_forest_classifier",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -102,7 +119,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-03T19:14:22.000Z"),
+    "createdOn" : ISODate("2018-09-01T17:01:12.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

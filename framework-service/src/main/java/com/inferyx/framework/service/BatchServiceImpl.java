@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Status.Stage;
+import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -59,6 +60,8 @@ public class BatchServiceImpl {
 	ConcurrentHashMap<String, FutureTask<String>> batchThreadMap;
 	@Autowired
 	private SessionHelper sessionHelper;
+	@Autowired
+	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(BatchServiceImpl.class);
 	
@@ -103,6 +106,8 @@ public class BatchServiceImpl {
 		return batchExec;
 	}
 	
+	
+	
 	public BatchExec submitBatch(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
@@ -113,7 +118,9 @@ public class BatchServiceImpl {
 			logger.info("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
 			throw new Exception("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
 		}
-					
+		
+		User user = (User) commonServiceImpl.getOneByUuidAndVersion(batchExec.getCreatedBy().getRef().getUuid(), batchExec.getCreatedBy().getRef().getVersion(), batchExec.getCreatedBy().getRef().getType().toString());
+		frameworkThreadServiceImpl.setSession(user.getName(), batch.getAppInfo().get(0));
 		// Populate ParseRunDagServiceImpl		
 		runBatchServiceImpl.setBatchExec(batchExec);
 		runBatchServiceImpl.setBatchUuid(batchUuid);
@@ -228,6 +235,7 @@ public class BatchServiceImpl {
 				}
 				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, batchStatus);
 			}
+			Thread.sleep(10000);
 		} while(!areAllCompleted);
 		
 		return batchExec;
@@ -396,6 +404,7 @@ public class BatchServiceImpl {
 					isAnyoneFailed = true;
 				}
 			}
+			Thread.sleep(5000);
 		} while(!areAllExecRestarted);
 		
 		if(areAllExecRestarted) {

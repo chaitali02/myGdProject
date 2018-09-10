@@ -125,7 +125,7 @@
     "limit" : 0,
     "uuid" : "649b54f8-ab50-4286-ad82-837a36850ceb",
     "version" : "1529487487",
-    "name" : "dataset_dim_branch",
+    "name" : "ds_dim_branch",
     "desc" : "dataset for mapping transformation from source relation to target datapod",
     "createdBy" : {
         "ref" : {

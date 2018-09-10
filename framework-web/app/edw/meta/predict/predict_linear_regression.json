@@ -88,7 +88,7 @@
     },
     "uuid" : "50451c93-059e-43b0-8819-e027bea180e3",
     "version" : "1535974604",
-    "name" : "Predict Linear Regression",
+    "name" : "predict_linear_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",

@@ -45,6 +45,8 @@ public class FrameworkThreadServiceImpl {
 	CommonServiceImpl commonServiceImpl;
 	@Autowired
 	ActivityServiceImpl activityServiceImpl;
+	@Autowired
+	SecurityServiceImpl securityServiceImpl;
 
 	static final Logger logger = Logger.getLogger(FrameworkThreadServiceImpl.class);
 
@@ -53,6 +55,10 @@ public class FrameworkThreadServiceImpl {
 	}
 
 	public void setSession(String userName) throws JSONException, ParseException, IOException {
+		MetaIdentifierHolder appInfo = securityServiceImpl.getAppInfo(); 
+		setSession(userName, appInfo);
+	}
+	public void setSession(String userName, MetaIdentifierHolder appInfo) throws JSONException, ParseException, IOException {
 		User userDO = iUserDao.findLatestByUsername(userName, new Sort(Sort.Direction.DESC, "version"));
 		if (userDO != null) {
 			// Setting sessionContext object
@@ -64,7 +70,7 @@ public class FrameworkThreadServiceImpl {
 			sessionContext.setUserInfo(userInfo);
 
 			// Set default app and role
-			sessionContext.setAppInfo(userDO.getAppInfo().get(0));
+			sessionContext.setAppInfo((appInfo != null)? appInfo : userDO.getAppInfo().get(0));
 			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
 			Group group = (Group) commonServiceImpl.getOneByUuidAndVersion(
 					userDO.getGroupInfo().get(0).getRef().getUuid(), userDO.getGroupInfo().get(0).getRef().getVersion(),
@@ -107,7 +113,7 @@ public class FrameworkThreadServiceImpl {
 
 			// Add activity
 //			Activity activityDO = activityServiceImpl.createActivity(userDO.getUuid());
-			MetaIdentifierHolder appInfo = sessionContext.getAppInfo();
+//			MetaIdentifierHolder appInfo = sessionContext.getAppInfo();
 			if (appInfo != null) {
 				List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 				metaIdentifierHolderList.add(appInfo);

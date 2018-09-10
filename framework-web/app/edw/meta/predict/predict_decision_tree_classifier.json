@@ -124,7 +124,7 @@
     },
     "uuid" : "b4c4349d-a2dc-46d0-8edd-393c7c188173",
     "version" : "1535972749",
-    "name" : "Predict Decision Tree Classifier",
+    "name" : "predict_decision_tree_classifier",
     "createdBy" : {
         "ref" : {
             "type" : "user",

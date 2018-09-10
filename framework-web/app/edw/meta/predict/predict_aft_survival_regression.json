@@ -124,7 +124,7 @@
     },
     "uuid" : "8050c9a2-eef5-4846-9b0e-49a979f63ff8",
     "version" : "1535972399",
-    "name" : "Predict AFT Survival Regression",
+    "name" : "predict_aft_survival_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",

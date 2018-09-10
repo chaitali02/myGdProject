@@ -23,9 +23,9 @@
 				http://www.springframework.org/schema/lang
 				http://www.springframework.org/schema/lang/spring-lang.xsd
 				http://www.springframework.org/schema/tx
-				http://www.springframework.org/schema/tx/spring-tx.xsd
 				http://www.springframework.org/schema/util
 				http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/tx/spring-tx.xsd
 				http://www.springframework.org/schema/mvc
 				http://www.springframework.org/schema/mvc/spring-mvc.xsd
 				http://www.springframework.org/schema/data/mongo
@@ -336,8 +336,8 @@
 	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
 	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
 	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
-	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl"/>
-	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl"/>
+	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl" />
+	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl" />
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
@@ -412,6 +412,6 @@
 		<!-- <property name="javaSparkContext" ref="javaSparkContext" /> -->
 		<!-- <property name="hiveContext" ref="hiveContext" /> -->
 	</bean>
-	
+	<!-- <bean id="sampleServiceImpl" class="com.inferyx.framework.service.SampleServiceImpl" init-method="init"/> --> 
 	
 	</beans>

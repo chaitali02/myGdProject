@@ -25,6 +25,8 @@ public class BatchTriggerServiceImpl implements Trigger {
 	   private ScheduledFuture<?> future;
 //	   private int delay;
 	   private Date nextExecutionTime;
+//	   private BatchSchedulerServiceImpl batchSchedulerServiceImpl;
+	   private Date lastExecutionTime;
 	
 	   static Logger logger = Logger.getLogger(BatchTriggerServiceImpl.class);
 	   
@@ -35,7 +37,13 @@ public class BatchTriggerServiceImpl implements Trigger {
 	public BatchTriggerServiceImpl(TaskScheduler scheduler, Runnable task) {
 	      this.scheduler = scheduler;
 	      this.task = task;
-	   }
+	}
+	
+/*	public BatchTriggerServiceImpl(TaskScheduler scheduler, Runnable task, BatchSchedulerServiceImpl batchSchedulerServiceImpl) {
+	      this.scheduler = scheduler;
+	      this.task = task;
+	      this.batchSchedulerServiceImpl = batchSchedulerServiceImpl;
+	}*/
 
 	public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
 		logger.info("Setting nextExecutionTime: " + nextExecutionTime);
@@ -49,10 +57,27 @@ public class BatchTriggerServiceImpl implements Trigger {
     	  future = scheduler.schedule(task, this);
       }
    }
+	
+	public Date getLastExecutionTime() {
+		return this.lastExecutionTime;
+	}
 
+	public Date getNextExecutionTime() {
+		return this.nextExecutionTime;
+	}
+	
 	@Override
 	public Date nextExecutionTime(TriggerContext triggerContext) {
 		logger.info("Current nextExecutionTime: " + this.nextExecutionTime);
+		this.lastExecutionTime = triggerContext.lastActualExecutionTime();
+		/*if(triggerContext.lastActualExecutionTime() == null) {
+			try {
+				batchSchedulerServiceImpl.setSchedulingTrigger();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}*/
 	   return this.nextExecutionTime;
 	}
 

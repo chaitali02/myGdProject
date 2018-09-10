@@ -116,6 +116,7 @@ public class BatchViewServiceImpl {
 			batch = new Batch();
 			//setting batch baseEntity
 			batch.setName(batchView.getName());
+			batch.setTags(batchView.getTags());
 			batch.setBaseEntity();
 			
 			//setting batch specific properties
@@ -125,7 +126,7 @@ public class BatchViewServiceImpl {
 		} else if(batchView.getBatchChg().equalsIgnoreCase("Y")) {
 			batch = setBatchProperties(batchView, null);
 			batch = save(batch);
-		} else {
+		} else if(batchView.getUuid() != null || !batchView.getUuid().isEmpty()){
 			batch = setBatchProperties(batchView, batchView.getVersion());
 		}	
 		
@@ -136,12 +137,13 @@ public class BatchViewServiceImpl {
 			if(schedule.getScheduleChg().equalsIgnoreCase("Y") && (schedule.getUuid() == null || schedule.getUuid().isEmpty())) {
 				//setting schedule baseEntity
 				schedule.setName(schedule.getName());
+				schedule.setTags(schedule.getTags());
 				schedule.setBaseEntity();
 				
 				//setting schedule specific properties
 				schedule.setStartDate(schedule.getStartDate().toString());
 				schedule.setEndDate(schedule.getEndDate().toString());
-				Date nextRunTime = scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				Date nextRunTime = scheduleServiceImpl.getNextRunTimeBySchedule(schedule);
 				if(nextRunTime != null) {
 					schedule.setNextRunTime(nextRunTime.toString());
 				}
@@ -153,7 +155,7 @@ public class BatchViewServiceImpl {
 				setTrigger = true;
 			} else if(schedule.getScheduleChg().equalsIgnoreCase("Y")) {
 				schedule = setScheduleProperties(schedule, null);
-				Date nextRunTime = scheduleServiceImpl.getNextRunTime(schedule.getStartDate(), schedule.getEndDate(), null, schedule.getFrequencyType(), schedule.getFrequencyDetail());
+				Date nextRunTime = scheduleServiceImpl.getNextRunTimeBySchedule(schedule);
 				if(nextRunTime != null) {
 					schedule.setNextRunTime(nextRunTime.toString());
 				}
