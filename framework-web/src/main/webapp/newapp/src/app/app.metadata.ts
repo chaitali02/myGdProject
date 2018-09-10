@@ -5,7 +5,7 @@ export class AppMetadata {
   defaultElement: any
   validElementTypes: string[];
   defaultLink: { attrs: { '.connection': { stroke: string; }; '.marker-target': { d: string; fill: string; stroke: string; }; }; };
-  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; };
+  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; 'recon':any,'recongroup':any};
   obj: any;
   constructor() {
     this.obj = {};
@@ -255,8 +255,10 @@ export class AppMetadata {
         iconCaption: '',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
+        moduleState: 'reconexec',
         detailState: 'jobexecutorlistrecongroupexec',
         moduleCaption: 'Data Reconciliation',
+        resultState: 'viewdrresultspage',
         childMenu: [],
         allowInChildMenu: false,
       },
@@ -1732,8 +1734,8 @@ export class AppMetadata {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }
     };
 
-    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup'];
-    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup'];
+    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup','recon','recongroup'];
+    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup','recon','recongroup'];
     this.defaultElement = {
       markup: '<g class="rotatable"><g class="scalable"><image class="body" /></g><image class="remove" title="Remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
       size: { width: 50, height: 50 },
@@ -1911,7 +1913,33 @@ export class AppMetadata {
           },
         }
       }),
+      'recon': Object.assign({}, this.defaultElement, {
+        elementType: 'recon',
+        attrs: {
+          '.body': {
+            elementType: 'recon',
+            "xlink:href": this.obj.metadataDefs['recon'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
 
+      'recongroup': Object.assign({}, this.defaultElement, {
+        elementType: 'recongroup',
+        attrs: {
+          '.body': {
+            elementType: 'recongroup',
+            "xlink:href": this.obj.metadataDefs['recongroup'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
       'model': Object.assign({}, this.defaultElement, {
         elementType: 'model',
         attrs: {

@@ -467,7 +467,8 @@
                                                                                 <input type="number" class="form-control" [(ngModel)]="targettabledata.lhsvalue" name="integer+{{i}}" *ngIf="targettabledata.islhsInt" [disabled]="mode == 'true'">
                                                                                 <input type="text" class="form-control" [(ngModel)]="targettabledata.lhsvalue" name="sourcesimple+{{i}}" *ngIf="targettabledata.islhsSimple" [disabled]="mode == 'true'">
                                                                                 <div *ngIf="targettabledata.islhsDatapod">
-                                                                                   
+                                                                                   <!-- {{targettableArray[i].lhsdatapodAttribute|json}}
+                                                                                   {{allAttributeTarget|json}} -->
                                                                                     <p-dropdown [options]="allAttributeTarget"          
                                                                                     [(ngModel)]="targettableArray[i].lhsdatapodAttribute"
                                                                                     name="targetattribute+{{i}}"
