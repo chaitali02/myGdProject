@@ -680,6 +680,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	};
 
     $scope.showCompareMetaData=function(data){
+		if($scope.isShowCompareMetaData){
+			return false
+		}
 		$scope.isShowCompareMetaData=true;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false
@@ -717,6 +720,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	
 	$scope.synchronousMetadata=function(data){
+		if($scope.isMetaSysn || $scope.selectSourceType=='file'){
+			return false
+		}
+
 		$scope.isShowCompareMetaData=true;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false
