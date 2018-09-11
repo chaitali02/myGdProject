@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
+CREATE DATABASE  IF NOT EXISTS `edw_small`;
+USE `edw_small`;
 DROP TABLE IF EXISTS `branch_type`;
 CREATE TABLE `branch_type` (
   `branch_type_id` int(11) NOT NULL DEFAULT '0',
@@ -10,6 +10,6 @@ CREATE TABLE `branch_type` (
   `load_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`branch_type_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `framework`.`branch_type` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
+ALTER TABLE `branch_type` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
 LOAD DATA LOCAL INFILE '/var/lib/mysql-files/branch_type.csv'  IGNORE INTO TABLE branch_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
 
