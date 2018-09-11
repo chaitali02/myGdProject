@@ -74,54 +74,7 @@ public class BatchSchedulerServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss z yyyy");
-	
-	
-	/*@SuppressWarnings("unchecked")
-	public Map<Date, String> getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		Date currDate = simpleDateFormat.parse(new Date().toString());
-		Map<Date, String> scheduleMap = new TreeMap<>();
-		List<Schedule> scheduleInfo = (List<Schedule>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.schedule);
-		if(scheduleInfo != null) {
-			for(Schedule schedule : scheduleInfo) {
-				Date nextRunTime = schedule.getNextRunTime();
-				if(nextRunTime != null && nextRunTime.compareTo(currDate) > 0) {
-					scheduleMap.put(nextRunTime, "tmp");
-				} else {
-					scheduleMap.put(currDate, "tmp");
-				}
-			}
-		}		
-		return scheduleMap;
-	}*/
-
-	/*@SuppressWarnings({ "unchecked", "null" })
-	public Map<Date, List<Schedule>> getNextBatchSchedules() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		Date currDate = simpleDateFormat.parse(new Date().toString());
-		Map<Date, List<Schedule>> scheduleMap = new TreeMap<>();
-		List<Schedule> scheduleInfo = (List<Schedule>) commonServiceImpl.findAllLatestWithoutAppUuid(MetaType.schedule);
-		if(scheduleInfo != null) {
-			for(Schedule schedule : scheduleInfo) {
-				Date nextRunTime = schedule.getNextRunTime();
-				List<Schedule> nextBatchSchedules = null;
-				if(nextRunTime != null && nextRunTime.compareTo(currDate) > 0) {
-					if(nextRunTime != null) {
-						if(scheduleMap.get(nextRunTime) != null) {
-							nextBatchSchedules.add(schedule);
-							scheduleMap.put(nextRunTime, nextBatchSchedules);
-						} else {
-							nextBatchSchedules = new ArrayList<>();
-							nextBatchSchedules.add(schedule);
-							scheduleMap.put(nextRunTime, nextBatchSchedules);
-						}
-					}
-				} else {
-					scheduleMap.put(currDate, null);
-				}
-			}
-		}		
-		return scheduleMap;
-	}*/
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
 	
 	public Date getNextRunTimeBySchedule(Schedule schedule) throws ParseException {
 		switch(schedule.getFrequencyType().toUpperCase()) {
@@ -137,31 +90,10 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 	
-//	public Date getNextRunTime(Date startDate, Date endDate, Date previousRunTime, String frequencyType, List<String> frequencyDetail) throws ParseException {
-//		Date currDate = simpleDateFormat.parse(new Date().toString());
-//		
-//		if (startDate.compareTo(currDate) < 0) { //"startDate is before currDate"					
-//            logger.info("Start date '"+startDate+"' is before current date '"+currDate+"'. Setting to current date");
-//            return currDate;
-//        } else {
-//        		switch(frequencyType.toUpperCase()) {
-//	        		case "ONCE" : return startDate;
-//	        		case "HOURLY" : return getNextHourlyRunTime(startDate, endDate, previousRunTime);
-//	        		case "DAILY" : return getNextDailyRunTime(startDate, endDate, previousRunTime);
-//	        		case "WEEKLY" : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-//	        		case "BIWEEKLY" : return getNextBiWeeklyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-//	        		case "MONTHLY" : return getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-//	        		case "QUARTERLY" : return getNextQuarterlyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
-//	        		case "YEARLY" : return getNextYearlyRunTime(startDate, endDate, previousRunTime);
-//	        		default : return null;	
-//        		}
-//        	} 		
-//	}
-
 	private Date getNextMonthlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
 		Set<Date> sortedDates = new TreeSet<>();
 		for(String date : frequencyDetail) {
-			Date tempDate = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss").parse(date+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
+			Date tempDate = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").parse(date+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
 			Date actualDate = simpleDateFormat.parse(tempDate.toString());
 			sortedDates.add(actualDate);
 		}
@@ -378,7 +310,12 @@ public class BatchSchedulerServiceImpl {
 	private void updateScheduleForNextRunTime(List<Schedule> schedules) throws Exception {
 		for(Schedule schedule : schedules) {
 			Date nextExecutionTime = getNextRunTimeBySchedule(schedule);
-			schedule.setNextRunTime(nextExecutionTime.toString());
+			if (nextExecutionTime != null) {
+				schedule.setNextRunTime(nextExecutionTime.toString());				
+			}
+			else {
+				schedule.setNextRunTime(null);
+			}				
 			//Create a new schedule object
 			schedule.setId(null);
 			schedule.setVersion(null);
@@ -387,53 +324,44 @@ public class BatchSchedulerServiceImpl {
 	}
 
 	public Date getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
+
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 
-		Criteria criteria = new Criteria();
-		List<Criteria> criteriaList = new ArrayList<Criteria>();		
-		criteriaList.add(where("nextRunTime").gte(currDate));
-		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
-		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-		AggregationResults scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
-		Set<Date> dateSet = new TreeSet<>();
-		for(Schedule schedule : schedulerList) {
-			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
-			dateSet.add(schedule2.getNextRunTime());
-		}		
-		return !dateSet.isEmpty() ? dateSet.toArray(new Date[dateSet.size()])[0] : null;
+//		Criteria criteria = new Criteria();
+//		List<Criteria> criteriaList = new ArrayList<Criteria>();		
+//		criteriaList.add(where("nextRunTime").gte(currDate));
+//		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+//		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+//		AggregationResults scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+//		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
+//		Set<Date> dateSet = new TreeSet<>();
+//		for(Schedule schedule : schedulerList) {
+//			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
+//			dateSet.add(schedule2.getNextRunTime());
+//		}		
+//		return !dateSet.isEmpty() ? dateSet.toArray(new Date[dateSet.size()])[0] : null;
 		
-//		MatchOperation filterSchedule = match(new Criteria("nextRunTime").gte(currDate));
-//		GroupOperation groupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
-//		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "nextRunTime"));
-//		LimitOperation limitToOnlyFirstDoc = limit(1);
-//		Aggregation scheduleAggr = newAggregation(filterSchedule, groupByUuid, sortByNextRunTime, limitToOnlyFirstDoc);
-//		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-//		Schedule schedule = (Schedule) scheduleAggrResults.getUniqueMappedResult();	
-//		return schedule.getNextRunTime();
+		MatchOperation filterSchedule = match(new Criteria("nextRunTime").gte(currDate));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
+		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "nextRunTime"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
+		Aggregation scheduleAggr = newAggregation(filterSchedule, groupByUuid, sortByNextRunTime, limitToOnlyFirstDoc);
+		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+		Schedule schedule = (Schedule) scheduleAggrResults.getUniqueMappedResult();	
+		return schedule.getNextRunTime();
 
 	}
 	
 	public List<Schedule> getCurrentSchedules(Date currentTriggerTime, Date lastExecutionTime) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
-		Criteria criteria = new Criteria();
-		List<Criteria> criteriaList = new ArrayList<Criteria>();
-		
-		if(lastExecutionTime != null) {
-/*			query.addCriteria(Criteria.where("nextRunTime").gt(lastExecutionTime)
-					.andOperator(Criteria.where("nextRunTime").lte(currDate)));*/
-			
-			criteriaList.add(where("nextRunTime").gt(lastExecutionTime)
-					.andOperator(Criteria.where("nextRunTime").lte(currDate)));
-		} else {
-	/*		query.addCriteria(Criteria.where("nextRunTime").gte(currentTriggerTime)
-					.andOperator(Criteria.where("nextRunTime").lte(currDate)));*/
-
-			criteriaList.add(where("nextRunTime").gte(currentTriggerTime)
-					.andOperator(Criteria.where("nextRunTime").lte(currDate)));
+		if(lastExecutionTime == null) {
+			lastExecutionTime = currentTriggerTime; 
 		}
-		
+
+		Criteria criteria = new Criteria();
+		List<Criteria> criteriaList = new ArrayList<Criteria>();		
+		criteriaList.add(where("nextRunTime").gte(lastExecutionTime).andOperator(Criteria.where("nextRunTime").lte(currentTriggerTime)));		
 		
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 		

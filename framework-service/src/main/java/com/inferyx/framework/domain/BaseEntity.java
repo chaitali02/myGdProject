@@ -108,7 +108,7 @@ public class BaseEntity {
 	}
 
 	public void setCreatedOn(String createdOn) {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		
 		//Date tmp = new Date(createdOn);
 		try {
