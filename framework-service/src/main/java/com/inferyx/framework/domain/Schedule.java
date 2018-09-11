@@ -85,13 +85,17 @@ public class Schedule extends BaseEntity {
 	 * @param nextRunTime the nextRunTime to set
 	 */
 	public void setNextRunTime(String nextRunTime) {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
-		try {
-			this.nextRunTime = formatter.parse(nextRunTime);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (nextRunTime != null) {
+			SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");		
+			try {
+				this.nextRunTime = formatter.parse(nextRunTime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		else
+			this.nextRunTime = null;
 	}
 //	/**
 //	 *
@@ -127,7 +131,7 @@ public class Schedule extends BaseEntity {
 	 * @param startDate the startDate to set
 	 */
 	public void setStartDate(String startDate) {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");		
 		try {
 			this.startDate = formatter.parse(startDate);
 		} catch (ParseException e) {
@@ -151,7 +155,7 @@ public class Schedule extends BaseEntity {
 	 * @param endDate the endDate to set
 	 */
 	public void setEndDate(String endDate) {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");		
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");		
 		try {
 			this.endDate = formatter.parse(endDate);
 		} catch (ParseException e) {

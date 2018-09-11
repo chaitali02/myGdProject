@@ -57,4 +57,10 @@ public class MySqlConnector implements IConnector {
 		}
 		return conholder;
 	}
+
+	@Override
+	public ConnectionHolder getConnection(Object input) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
