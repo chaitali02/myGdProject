@@ -1136,6 +1136,7 @@ transition: right 1m
   padding: 20px 5px 0px 5px;
   color:black;
   height: 70px;
+  width: 200px;
 }
 .quarterly-selector ul{
   list-style: none;

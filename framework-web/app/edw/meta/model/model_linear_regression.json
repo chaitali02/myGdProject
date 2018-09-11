@@ -45,8 +45,7 @@
       "type": "double",
       "desc": "interest_rate",
       "minVal": 1,
-      "maxVal": 10,
-      "paramListInfo": null
+      "maxVal": 10
     },
     {
       "featureId": "1",
@@ -54,8 +53,7 @@
       "type": "integer",
       "desc": "account_type_id",
       "minVal": 1,
-      "maxVal": 100,
-      "paramListInfo": null
+      "maxVal": 100
     },
     {
       "featureId": "2",
@@ -63,8 +61,7 @@
       "type": "integer",
       "desc": "account_status_id",
       "minVal": 1,
-      "maxVal": 100,
-      "paramListInfo": null
+      "maxVal": 100
     }
   ],
   "scriptName": null,

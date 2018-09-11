@@ -195,7 +195,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 		var onSuccess = function (response) {
 			var batchResult={};
 			var weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
-			var numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4ss"};
+			var numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};
 			batchResult.batch=response;
 			var scheduleInfoArray=[];
             if(response.scheduleInfo !=null){

@@ -43,7 +43,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   
   var batchScope=$scope;
-  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"QUARTERLY","caption":"Quarterly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"};
   $scope.numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};
@@ -178,7 +178,6 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     if($scope.scheduleTableArray[index].quarterlyPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
-   //   console.log($scope.WeekArray)
       for(var i=0;i<$scope.myArrayOfquarters.length;i++){
         $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.numToQuarterly[$scope.myArrayOfquarters[i]]
       }
@@ -187,9 +186,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       
     }else{
       $scope.myArrayOfquarters=[];
-    //  console.log($scope.scheduleTableArray[index].frequencyDetail)
+      console.log($scope.scheduleTableArray[index].frequencyDetail)
       for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
-       $scope.myArrayOfquarters[i]=$scope.quarterlyToNum[$scope.scheduleTableArray[index].frequencyDetail[i]];
+       $scope.myArrayOfquarters[i]= Number($scope.quarterlyToNum[$scope.scheduleTableArray[index].frequencyDetail[i]]);
       }
     }
 

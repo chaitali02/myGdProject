@@ -45,8 +45,7 @@
       "type": "integer",
       "desc": "customer_id",
       "minVal": 1,
-      "maxVal": 10,
-      "paramListInfo": null
+      "maxVal": 10
     },
     {
       "featureId": "1",
@@ -54,8 +53,7 @@
       "type": "integer",
       "desc": "address_id",
       "minVal": 1,
-      "maxVal": 10,
-      "paramListInfo": null
+      "maxVal": 10
     },
     {
       "featureId": "2",
@@ -63,8 +61,7 @@
       "type": "integer",
       "desc": "branch_id",
       "minVal": 1,
-      "maxVal": 10,
-      "paramListInfo": null
+      "maxVal": 10
     },
     {
       "featureId": "3",
@@ -72,8 +69,7 @@
       "type": "integer",
       "desc": "commute_distance_miles",
       "minVal": 1,
-      "maxVal": 10,
-      "paramListInfo": null
+      "maxVal": 10
     }
   ],
   "scriptName": null,

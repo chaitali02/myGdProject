@@ -316,7 +316,7 @@
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}" required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                 <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
@@ -339,7 +339,7 @@
                             <div uib-popover-template="'quarterly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.quarterlyPopoverIsOpen" ng-click="doneFrequencyDetailQuarterly($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                 <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
@@ -360,7 +360,7 @@
                               <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                                 popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">
                                 <div class="col-md-11" style="padding: 0px;">
-                                  <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                  <input type="text" class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
                                 </div>
                                 <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                   <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
