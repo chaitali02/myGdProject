@@ -209,32 +209,52 @@ public class BatchSchedulerServiceImpl {
 	}
 
 	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
-		if(previousRunTime != null) {
-			Date nextRunTime = null;
-			Date currDate = simpleDateFormat.parse(new Date().toString());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(currDate);
+	
+		Date nextRunTime = null;
+		Date currDate = simpleDateFormat.parse(new Date().toString());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currDate);
+		int weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
+
+		Date weekStartDate = null;
+		Date weekEndDate = null;
+		if(weekOfYear%2 == 0) {
+			Date tempStartDate = getWeekStartDate(cal.get(Calendar.DAY_OF_WEEK), startDate, currDate);
+			tempStartDate.setHours(startDate.getHours());
+			tempStartDate.setMinutes(startDate.getMinutes());
+			tempStartDate.setSeconds(startDate.getSeconds());
+			weekStartDate = simpleDateFormat.parse(tempStartDate.toString());
 			
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return nextRunTime;
-			} else {
-				return null; 
-			}
+			Date tempEndDate = getWeekStartDate(cal.get(Calendar.DAY_OF_WEEK), startDate, currDate);
+			tempEndDate.setHours(startDate.getHours());
+			tempEndDate.setMinutes(startDate.getMinutes());
+			tempEndDate.setSeconds(startDate.getSeconds());
+			weekEndDate = simpleDateFormat.parse(tempEndDate.toString());
+			
+			
 		} else {
-			return startDate;
+			nextRunTime = getNextWeelyRunTime(startDate, endDate, previousRunTime, frequencyDetail);
 		}
+		
+		if(nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
+		} else {
+			return null; 
+		}		
 	}
+	
+	/*public Date getBiWeeklyNextRunTime(Date weekStartDate, Date weekEndDate, Date scheduleStartDate, Date currDate) {
+		
+	}*/
 
 	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
 		//if(previousRunTime != null) {
 			Date currDate = simpleDateFormat.parse(new Date().toString());
-//			Weeks weeks = Weeks.weeksBetween(new DateTime(startDate.getTime()), new DateTime(endDate.getTime()));
-//			int weeks2 = weeks.getWeeks();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(currDate);
 //			System.out.println("WoM: "+cal.get(Calendar.WEEK_OF_MONTH)); //3
 //			System.out.println("DoM: "+cal.get(Calendar.DAY_OF_MONTH)); //10
-			System.out.println("DoW: "+cal.get(3)); //2
+//			System.out.println("DoW: "+cal.get(Calendar.DAY_OF_WEEK)); //2
 //			System.out.println("WoY: "+cal.get(Calendar.WEEK_OF_YEAR)); //37
 //			System.out.println("FDoW: "+cal.getFirstDayOfWeek());
 			
@@ -249,7 +269,7 @@ public class BatchSchedulerServiceImpl {
 				}
 			}
 			
-			if(nextRunTime.compareTo(endDate) <= 0) {
+			if(nextRunTime.compareTo(currDate) > 0 && nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
 				return null; 
@@ -267,7 +287,33 @@ public class BatchSchedulerServiceImpl {
 		case 4 : return DateUtils.addDays(currDate, (6-doW)); //WEDNESDAY
 		case 5 : return DateUtils.addDays(currDate, (6-doW)); //THURSDAY
 		case 6 : return DateUtils.addDays(currDate, (6-doW)); //FRIDAY
-		case 7 : return DateUtils.addDays(currDate, 6-doW); //SATURDAY
+		case 7 : return DateUtils.addDays(currDate, (6-doW)); //SATURDAY
+		default : return null;
+		}
+	}
+	
+	public Date getWeekStartDate(int doW, Date startDate, Date currDate) {
+		switch(doW) {
+		case 1 : return DateUtils.addDays(currDate, (1-doW)); //SUNDAY
+		case 2 : return DateUtils.addDays(currDate, (1-doW)); //MONDAY
+		case 3 : return DateUtils.addDays(currDate, (1-doW)); //TEUSDAY
+		case 4 : return DateUtils.addDays(currDate, (1-doW)); //WEDNESDAY
+		case 5 : return DateUtils.addDays(currDate, (1-doW)); //THURSDAY
+		case 6 : return DateUtils.addDays(currDate, (1-doW)); //FRIDAY
+		case 7 : return DateUtils.addDays(currDate, (1-doW)); //SATURDAY
+		default : return null;
+		}
+	}
+	
+	public Date getWeekEndDate(int doW, Date startDate, Date currDate) {
+		switch(doW) {
+		case 1 : return DateUtils.addDays(currDate, (doW+1)); //SUNDAY
+		case 2 : return DateUtils.addDays(currDate, (doW+2)); //MONDAY
+		case 3 : return DateUtils.addDays(currDate, (doW+3)); //TEUSDAY
+		case 4 : return DateUtils.addDays(currDate, (doW+4)); //WEDNESDAY
+		case 5 : return DateUtils.addDays(currDate, (doW+5)); //THURSDAY
+		case 6 : return DateUtils.addDays(currDate, (doW+6)); //FRIDAY
+		case 7 : return DateUtils.addDays(currDate, (doW+7)); //SATURDAY
 		default : return null;
 		}
 	}
