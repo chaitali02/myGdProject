@@ -57,6 +57,7 @@ public class BatchViewServiceImpl {
 		BatchView batchView = new BatchView();
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		//setting batchView properties specific to baseEntity
+		batchView.setId(batch.getId());
 		batchView.setUuid(batch.getUuid());
 		batchView.setVersion(batch.getVersion());
 		batchView.setName(batch.getName());
@@ -128,6 +129,7 @@ public class BatchViewServiceImpl {
 			batch = save(batch);
 		} else if(batchView.getUuid() != null || !batchView.getUuid().isEmpty()){
 			batch = setBatchProperties(batchView, batchView.getVersion());
+			batch.setId(batchView.getId());
 		}	
 		
 		boolean setTrigger = false;

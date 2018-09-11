@@ -316,7 +316,7 @@
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input class="form-control" ng-model="data.frequencyDetail" ng-disabled="{{mode}}" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                 <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
@@ -325,7 +325,7 @@
                             <script type="text/ng-template" id="dom-popoverTemplate_data.html">
                               <div>
                               
-                                <multiple-date-picker  ng-model="myArrayOfDates"  ng-disabled="{{mode}}" disable-days-before="data.disable_days_before" disable-days-after="data.disable_days_after" month-click="disable6MonthsFromNow"></multiple-date-picker>
+                                <multiple-date-picker  ng-model="myArrayOfDates"  ng-disabled="true" disable-days-before="data.disable_days_before" disable-days-after="data.disable_days_after" month-click="disable6MonthsFromNow"></multiple-date-picker>
                                 <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
                                   <!-- <input type="button" class="btn" ng-click="closeFrequencyDetail($index)"  ng-disabled="{{mode}}" value="Cancel" style="background-color:white;color:black;">  
                                   <input type="button" class="btn" ng-click="doneFrequencyDetail($index)"  ng-disabled="{{mode}}" value="Done" style="background-color:white;color:blue;">                                     -->

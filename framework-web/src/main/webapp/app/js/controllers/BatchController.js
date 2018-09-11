@@ -181,7 +181,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         console.log($scope.myArrayOfDates[i]._d)
         var date=moment($scope.myArrayOfDates[i])._d
         console.log($filter('date')(date, "EEE MMM d y h:mm:ss "))
-        $scope.scheduleTableArray[index].frequencyDetail.push($filter('date')(date, "MM-dd-yyyy"));
+        $scope.scheduleTableArray[index].frequencyDetail.push($filter('date')(date, "dd"));
+        $scope.scheduleTableArray[index].frequencyDetail.sort();
         $scope.scheduleTableArray[index].scheduleChg="Y";
       }
       
@@ -190,19 +191,20 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       $scope.myArrayOfDates=[];
       if($scope.scheduleTableArray[index].frequencyDetail){
         for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
-          var dd=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "dd");
-          var mm=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "MM");
-          var yyyy=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "yyyy");
-          $scope.myArrayOfDates.push(moment().year(yyyy).month(mm-1).date(dd));
+        //  var dd=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "dd");
+        //  var mm=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "MM");
+        //  var yyyy=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "yyyy");
+          // moment().year(yyyy).month(mm-1).date(dd)
+          $scope.myArrayOfDates.push(moment().date($scope.scheduleTableArray[index].frequencyDetail[i]));
         }
         var sd=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "dd");
         var smm=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "MM");
         var syyyy=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "yyyy");
-        $scope.scheduleTableArray[index].disable_days_before=moment().year(syyyy).month(smm-1).date(sd);
+        $scope.scheduleTableArray[index].disable_days_before=moment().date(sd);//moment().year(syyyy).month(smm-1).date(sd);
         var ed=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "dd");
         var emm=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "MM");
         var eyyyy=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "yyyy");
-        $scope.scheduleTableArray[index].disable_days_after=moment().year(eyyyy).month(emm-1).date(ed);
+        $scope.scheduleTableArray[index].disable_days_after=moment().date(ed);//moment().year(eyyyy).month(emm-1).date(ed);
       }
     }
     for(var k=0;k<$scope.scheduleTableArray.length;k++){
@@ -225,7 +227,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
-    $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].disable_days_before=moment().date(d);//moment().year(yyyy).month(mm-1).date(d);
     if(isStartDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
@@ -238,7 +240,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
-    $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].disable_days_after=moment().date(d);//moment().year(yyyy).month(mm-1).date(d);
     if(isEndDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
@@ -436,6 +438,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     options.execution = $scope.checkboxModelexecution;
     var batchJson = {}
     batchJson.uuid = $scope.batchDetail.uuid;
+    batchJson.id = $scope.batchDetail.id;
     batchJson.name = $scope.batchDetail.name;
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
