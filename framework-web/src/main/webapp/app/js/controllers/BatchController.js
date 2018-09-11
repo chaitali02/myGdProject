@@ -274,6 +274,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var scheduleInfo={};
     scheduleInfo.frequencyType=$scope.frequencyTypes[0].text;
     scheduleInfo.startDate;
+    scheduleInfo.scheduleChg="Y";
     scheduleInfo.minDate=$scope.minDate=moment().subtract(new Date(), 'day');
     $scope.scheduleTableArray.splice(len,0,scheduleInfo);
   }
@@ -444,6 +445,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       batchJson.batchChg="Y";
     }else{
       batchJson.batchChg=$scope.batchDetail.batchChg;
+      if($scope.batchDetail.batchChg ==null){
+        batchJson.batchChg="N";
+      }
     }
    
     var tagArray = [];

@@ -240,7 +240,7 @@
                           />
                         </span>
                       </th>
-                      <th style="width:15%;text-align: center">Name</th>
+                      <th style="width:13%;text-align: center">Name</th>
                       <!-- 225 -->
                       <th style="width:230px;text-align: center">Start Time</th>
                       <th style="width:230px;text-align: center">End Time</th>
@@ -252,12 +252,14 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="data in scheduleTableArray">
+                      
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
                         </span>
                       </td>
                       <td>
+                          
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message="" title="{{data.name}}"
                           ng-change="onChangeScheduleName($index)" ng-disabled="{{mode}}">
@@ -314,10 +316,10 @@
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" ng-disabled="{{mode}}" required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                                <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
                               </div>
                             </div>
                             <script type="text/ng-template" id="dom-popoverTemplate_data.html">
@@ -341,7 +343,7 @@
                                   <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
                                 </div>
                                 <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                  <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                                  <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
                                 </div>
                               </div>
                               <script type="text/ng-template" id="dow-popoverTemplate_data.html">

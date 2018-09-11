@@ -20,12 +20,15 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -90,99 +93,37 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private Date getNextMonthlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currDate);
 		Set<Date> sortedDates = new TreeSet<>();
-		for(String date : frequencyDetail) {
-			Date tempDate = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").parse(date+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
+		for(String day : frequencyDetail) {
+			Date tempDate = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").parse((cal.get(Calendar.MONTH)+1)+"-"+day+"-"+cal.get(Calendar.YEAR)+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
 			Date actualDate = simpleDateFormat.parse(tempDate.toString());
 			sortedDates.add(actualDate);
 		}
-		if(previousRunTime != null) {
-			for(Date nextRunTime : Collections.list(Collections.enumeration(sortedDates))) {
-				if(nextRunTime.compareTo(endDate) <= 0 && nextRunTime.compareTo(previousRunTime) > 0) {
+//		if(previousRunTime != null) {
+			for(Date nextRunTime : Collections.list(Collections.enumeration(sortedDates))) {				
+				if(nextRunTime.compareTo(endDate) <= 0 && nextRunTime.compareTo(currDate) >= 0) {
 					return nextRunTime;
 				} 
 			}
 			return null; 
-		} else {
-			return Collections.list(Collections.enumeration(sortedDates)).get(0);//sortedDates.toArray(new Date[sortedDates.size()])[0];
-		}
+//		} else {
+//			return Collections.list(Collections.enumeration(sortedDates)).get(0);//sortedDates.toArray(new Date[sortedDates.size()])[0];
+//		}
 	}
 	
 	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
-		if(previousRunTime != null) {
-			Date nextRunTime = DateUtils.addHours(previousRunTime, 1);
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+//		if(previousRunTime != null) {
+			Date nextRunTime = DateUtils.addHours(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1);
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return simpleDateFormat.parse(nextRunTime.toString());
-			} else {
-				return null; 
-			}
-		} else {
-			return startDate;
-		}
-	}
-
-	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
-		if(previousRunTime != null) {
-			Date nextRunTime = DateUtils.addYears(previousRunTime, 1);
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return simpleDateFormat.parse(nextRunTime.toString());
-			} else {
-				return null; 
-			}
-		} else {
-			return startDate;
-		}
-	}
-
-	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
-		if(previousRunTime != null) {
-			Date nextRunTime = null;
-			Date currDate = simpleDateFormat.parse(new Date().toString());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(currDate);
-			
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return nextRunTime;
-			} else {
-				return null; 
-			}
-		} else {
-			return startDate;
-		}
-	}
-
-	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
-		//if(previousRunTime != null) {
-			Date currDate = simpleDateFormat.parse(new Date().toString());
-//			Weeks weeks = Weeks.weeksBetween(new DateTime(startDate.getTime()), new DateTime(endDate.getTime()));
-//			int weeks2 = weeks.getWeeks();
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(currDate);
-//			System.out.println("WoM: "+cal.get(Calendar.WEEK_OF_MONTH)); //3
-//			System.out.println("DoM: "+cal.get(Calendar.DAY_OF_MONTH)); //10
-			System.out.println("DoW: "+cal.get(3)); //2
-//			System.out.println("WoY: "+cal.get(Calendar.WEEK_OF_YEAR)); //37
-//			System.out.println("FDoW: "+cal.getFirstDayOfWeek());
-			
-			Date nextRunTime = null;
-			for(String day : frequencyDetail) {
-				if((Integer.parseInt(day)+1) >= cal.get(Calendar.DAY_OF_WEEK)) {
-					Date tempDate = getDateByDayOfWeek((Integer.parseInt(day)+1), startDate, currDate);//new SimpleDateFormat("MM-dd-yyyy hh:mm:ss").parse(date+" "+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds());;
-					tempDate.setHours(startDate.getHours());
-					tempDate.setMinutes(startDate.getMinutes());
-					tempDate.setSeconds(startDate.getSeconds());
-					nextRunTime = simpleDateFormat.parse(tempDate.toString());
-				}
-			}
-			
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return nextRunTime;
 			} else {
 				return null; 
 			}
@@ -191,30 +132,116 @@ public class BatchSchedulerServiceImpl {
 //		}
 	}
 
-	public Date getDateByDayOfWeek(int doW, Date startDate, Date currDate) {
-		switch(doW) {
-		case 1 : return DateUtils.addDays(currDate, (6-doW)); //SUNDAY
-		case 2 : return DateUtils.addDays(currDate, (6-doW)); //MONDAY
-		case 3 : return DateUtils.addDays(currDate, (6-doW)); //TEUSDAY
-		case 4 : return DateUtils.addDays(currDate, (6-doW)); //WEDNESDAY
-		case 5 : return DateUtils.addDays(currDate, (6-doW)); //THURSDAY
-		case 6 : return DateUtils.addDays(currDate, (6-doW)); //FRIDAY
-		case 7 : return DateUtils.addDays(currDate, 6-doW); //SATURDAY
-		default : return null;
-		}
+	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+//		if(previousRunTime != null) {
+			Date nextRunTime = DateUtils.addYears(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1);
+			if(nextRunTime.compareTo(endDate) <= 0) {
+				return simpleDateFormat.parse(nextRunTime.toString());
+			} else {
+				return null; 
+			}
+//		} else {
+//			return startDate;
+//		}
+	}
+
+	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currDate);
+	
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
+		Date firstDayOfTheWeek = cal.getTime();
+		firstDayOfTheWeek.setHours(startDate.getHours());
+		firstDayOfTheWeek.setMinutes(startDate.getMinutes());
+		firstDayOfTheWeek.setSeconds(startDate.getSeconds());
+		
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+		Date lastDayOfTheWeek = cal.getTime();
+		lastDayOfTheWeek.setHours(startDate.getHours());
+		lastDayOfTheWeek.setMinutes(startDate.getMinutes());
+		lastDayOfTheWeek.setSeconds(startDate.getSeconds());
+		
+
+		Date nextRunTime = getBiWeekDate(firstDayOfTheWeek, lastDayOfTheWeek, currDate, frequencyDetail);
+		if(nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
+		} else {
+			return null; 
+		}		
 	}
 	
+	public Date getBiWeekDate(Date firstDayOfTheWeek, Date lastDayOfTheWeek, Date currDate, List<String> frequencyDetail) {
+		for(String day : frequencyDetail) {
+			Date date = DateUtils.addDays(firstDayOfTheWeek, Integer.parseInt(day));
+			if(date.compareTo(firstDayOfTheWeek) >= 0 && date.compareTo(lastDayOfTheWeek) <= 0 && date.compareTo(currDate) >= 0) {
+				return date;
+			} 
+		}
+		Date nextWeekStartDate = DateUtils.addDays(lastDayOfTheWeek, 1);
+		Date nextWeekEndDate = DateUtils.addDays(nextWeekStartDate, 6);
+		return getBiWeekDate(nextWeekStartDate, nextWeekEndDate, currDate, frequencyDetail);
+	}
+
+	@SuppressWarnings("deprecation")
+	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currDate);
+	
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
+		Date firstDayOfTheWeek = cal.getTime();
+		firstDayOfTheWeek.setHours(startDate.getHours());
+		firstDayOfTheWeek.setMinutes(startDate.getMinutes());
+		firstDayOfTheWeek.setSeconds(startDate.getSeconds());
+		
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+		Date lastDayOfTheWeek = cal.getTime();
+		lastDayOfTheWeek.setHours(startDate.getHours());
+		lastDayOfTheWeek.setMinutes(startDate.getMinutes());
+		lastDayOfTheWeek.setSeconds(startDate.getSeconds());
+		
+		Date nextRunTime = null;
+		for(String day : frequencyDetail) {
+			Date date = DateUtils.addDays(firstDayOfTheWeek, Integer.parseInt(day));
+			if(date.compareTo(currDate) >= 0) {
+				nextRunTime = date;
+				break;
+			}
+		}		
+		
+		if(nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
+		} else {
+			return null; 
+		}
+	}
+
 	private Date getNextDailyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
-		if(previousRunTime != null) {
-			Date nextRunTime = simpleDateFormat.parse(new Date(previousRunTime.getTime() + (1000 * 60 * 60 * 24)).toString());
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+		
+//		if(previousRunTime != null) {
+			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
 				return null; 
 			}
-		} else {
-			return startDate;
-		}
+//		} else {
+//			return startDate;
+//		}
 	}
 	
 	public void setSchedulingTrigger() throws Exception {
@@ -278,7 +305,6 @@ public class BatchSchedulerServiceImpl {
 	}
 
 	public Date getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
-
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 
 //		Criteria criteria = new Criteria();
@@ -286,7 +312,7 @@ public class BatchSchedulerServiceImpl {
 //		criteriaList.add(where("nextRunTime").gte(currDate));
 //		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 //		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-//		AggregationResults scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+//		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
 //		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
 //		Set<Date> dateSet = new TreeSet<>();
 //		for(Schedule schedule : schedulerList) {
@@ -307,7 +333,7 @@ public class BatchSchedulerServiceImpl {
 	}
 	
 	public List<Schedule> getCurrentSchedules(Date currentTriggerTime, Date lastExecutionTime) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
-		Date currDate = simpleDateFormat.parse(new Date().toString());
+//		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
 		if(lastExecutionTime == null) {
 			lastExecutionTime = currentTriggerTime; 
@@ -320,13 +346,19 @@ public class BatchSchedulerServiceImpl {
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 		
 		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-		List<Schedule> schedulerList = ruleExecResults.getMappedResults();		
+		AggregationResults<Schedule> scheduleAggrResult = mongoTemplate.aggregate(ruleExecAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+		List<Schedule> schedulerList = scheduleAggrResult.getMappedResults();		
 		List<Schedule> schedules = new ArrayList<>();
 		for(Schedule schedule : schedulerList) {
 			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
 			schedules.add(schedule2);
 		}
+//		List<Schedule> schedules = new ArrayList<>();
+//		for(Schedule schedule : scheduleAggrResult.getMappedResults()) {
+//		Schedule resolvedSchedule = getSchedule(schedule.getId(), schedule.getVersion(), schedule.getNextRunTime());
+//		if(resolvedSchedule != null)
+//			schedules.add(resolvedSchedule);
+//		}
 		
 //		MatchOperation scheduleFilter = null;
 //		if(lastExecutionTime != null) {
