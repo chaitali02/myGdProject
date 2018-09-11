@@ -165,12 +165,58 @@ ReconModule.factory('ReconRuleFactory', function ($http, $location) {
 			then(function (response, status, headers) {
 				return response;
 			})
+    }
+    factory.findReconExecByReconwithParms = function (uuid, startDate, endDate) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "recon/getReconExecByRecon?action=view&uuid=" + uuid + "&startDate=" + startDate + "&endDate=" + endDate
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+    }
+    factory.findReconExecByDatapod = function (uuid, startdate, enddate) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "recon/getRecpnExecByDatapod?action=view&uuid=" + uuid + "&startDate=" + startdate + "&endDate=" + enddate
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
 	}
     return factory;
 })
 
 
 ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFactory) {
+    this.getReconExecByReconwithParms = function (uuid, startDate, endDate) {
+		var deferred = $q.defer();
+		ReconRuleFactory.findReconExecByReconwithParms(uuid, startDate, endDate).then(function (response) {
+			onSuccess(response.data)
+		});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.getReconExecByDatapod = function (uuid, startDate, endDate) {
+		var deferred = $q.defer();
+		ReconRuleFactory.findReconExecByDatapod(uuid, startDate, endDate).then(function (response) {
+			onSuccess(response.data)
+		});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+
+		return deferred.promise;
+	}
+
     this.getFormulaByType = function (uuid, type) {
         var deferred = $q.defer();
         ReconRuleFactory.findFormulaByType(uuid, type).then(function (response) { onSuccess(response.data) });
