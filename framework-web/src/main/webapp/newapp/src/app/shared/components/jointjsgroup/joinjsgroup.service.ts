@@ -24,7 +24,14 @@ export class jointjsGroupService{
         .catch(this.handleError);
     }
 
-    
+    getNumRows(uuid,version,type): Observable<any> {
+        let url = "metadata/getNumRowsbyExec?action=view&execUuid="+uuid+"&execVersion="+version+"&type="+type;
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+        return <any>response.json();
+        })
+        .catch(this.handleError);
+    }
 
     getMetaIdByExecId(uuid,version,type): Observable<any> {
         let url = "metadata/getMetaIdByExecId?action=view&execUuid="+uuid+"&execVersion="+version+"&type="+type;
@@ -35,8 +42,8 @@ export class jointjsGroupService{
         .catch(this.handleError);
     }
 
-    getResults(type,uuid,version): Observable<any> {
-        let url =type+"/getResults?action=view&uuid="+uuid+"&version="+version+"&requestId=";
+    getResults(type,uuid,version,mode): Observable<any> {
+        let url =type+"/getResults?action=view&uuid="+uuid+"&version="+version+"&mode="+mode+"&requestId=";
         return this._sharedService.getCall(url)
         .map((response: Response) => {
         return <any>response.json();

@@ -283,54 +283,54 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-  executeWithParams(uuid,version,type,action,execParams){
-    this.headers=null;
-    this.headers=new Headers({'sessionId': this.sessionId});
-    if(type=="rule"){
-      this.url = this.baseUrl+ 'rule/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
-    } 
-    else if(type=="simulate"){
-      this.url = this.baseUrl+ 'model/simulate/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
-    } 
-    else if(type=="train"){
-          this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
-        }
-    else{
-      this.url = this.baseUrl+ 'model/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
-    }
-    let body
-    if(type== "simulate"){
-      body= execParams
-    }
-    else{
-      body= JSON.stringify({execParams});
-    }
-    this.headers.append('Accept','*/*')
-    this.headers.append('content-Type',"application/json");
-    return this.http                 
-    .post( this.url,body, {headers: this.headers})
+//   executeWithParams(uuid,version,type,action,execParams){debugger
+//     this.headers=null;
+//     this.headers=new Headers({'sessionId': this.sessionId});
+//     if(type=="rule"){
+//       this.url = this.baseUrl+ 'rule/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+//     } 
+//     else if(type=="simulate"){
+//       this.url ='model/simulate/execute?uuid=' + uuid + '&version=' + version +'&action='+ action ;
+//     } 
+//     else if(type=="train"){
+//           this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+//         }
+//     else{
+//       this.url = this.baseUrl+ 'model/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+//     }
+//     let data = execParams;
+//    // this.headers.append('Accept','*/*')
+//     //this.headers.append('content-Type',"application/json");
+//     console.log(this.url);
+//     return this._sharedService.postCall(this.url,data)
+//         .map((response: Response) => {
+//           console.log(response);
+//           return <any[]>response["_body"];
+//     // return this.http                 
+//     // .post( this.url,body, {headers: this.headers})
+//     // .map((response: Response) => {
+//     // return <any>response.json();
+//   })
+// }
+executeWithParams(type, uuid, version, data): Observable<any[]>{ 
+  let url
+  if(type=='train'){
+    url = "/model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+  }else if(type=='simulate'){
+    url ='model/simulate/execute?uuid=' + uuid + '&version=' + version +'&action=view';
+  }else{
+    url = 'model/execute?uuid=' + uuid + '&version=' + version + '&type=' + type+'action=execute';
+  }
+    let data1 = data;
+    return this._sharedService.postCall(url,data1)
     .map((response: Response) => {
-    return <any>response.json();
+      console.log(response);
+      return <any>response["_body"];
   })
+   .catch(this.handleError);
+  
 }
-  // executeWithParams(uuid, version, type, action, execParams) {
-  //   this.headers = null;
-  //   this.headers = new Headers({ 'sessionId': this.sessionId });
-  //   if (type == "rule") {
-  //     this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
-  //   }
-  //   else {
-  //     this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
-  //   }
-  //   let body = JSON.stringify({ execParams });
-  //   this.headers.append('Accept', '*/*')
-  //   this.headers.append('content-Type', "application/json");
-  //   return this.http
-  //     .post(this.url, body, { headers: this.headers })
-  //     .map((response: Response) => {
-  //       return <any>response.json();
-  //     })
-  // }
+
   uploadFile(fd, filename, type) {
     var url = this.baseUrl + 'metadata/file?action=edit&fileName=' + filename + '&type=' + type;
     let body = fd;

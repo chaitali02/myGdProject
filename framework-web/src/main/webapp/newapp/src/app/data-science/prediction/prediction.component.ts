@@ -558,7 +558,7 @@ export class PredictionComponent implements OnInit {
       this._commonService.getOneById("predict", response).subscribe(
         response => {
           this.OnSucessGetOneById(response);
-          this.goBack()
+          this.goBack();
         },
         error => console.log('Error :: ' + error)
       )

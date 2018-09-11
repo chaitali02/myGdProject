@@ -162,7 +162,6 @@ export class SimulationComponent implements OnInit {
     }
     this.paramListHolder[index]["allattributeInfoTag"] = allAttributeinto;
     console.log(JSON.stringify(this.paramListHolder[index]["allattributeInfoTag"]));
-
   }
 
   getAllAttribute(index) {
@@ -258,7 +257,6 @@ export class SimulationComponent implements OnInit {
         this.onSuccessgetOneByUuidAndVersion(response)
       },
       error => console.log("Error :: " + error));
-
   }
 
   getAllLatestModel() {
@@ -533,6 +531,7 @@ export class SimulationComponent implements OnInit {
     this.simulation.seed = Math.floor(1000 + Math.random() * 9000);
     this.simulation.numIterations = 1000;
   }
+
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/simulation', uuid, version, 'false']);
   }
@@ -540,7 +539,6 @@ export class SimulationComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/dataScience/simulation', uuid, version, 'true']);
   }
-
 
   onChangeRunImmediately() {
     this._simulateService.getParamListByDistribution(this.selectDistributionList.uuid).subscribe(
@@ -761,9 +759,11 @@ export class SimulationComponent implements OnInit {
           paramList["attributeInfo"] = attributeInfoArray;
         }
         else if (this.paramListHolder[i].paramType == 'distribution' || this.paramListHolder[i].paramType == 'datapod') {
+       
           let ref = {};
           let paramValue = {};
           ref["type"] = this.paramListHolder[i].selectedParamValueType;
+          ref["uuid"] = this.paramListHolder[i].paramValue.uuid;
           // if(this.paramListHolder[i].selectedParamValue !== null){
           // ref["uuid"] = this.paramListHolder[i].selectedParamValue.uuid;
           // }
@@ -794,8 +794,7 @@ export class SimulationComponent implements OnInit {
       execParams = null;
     }
     console.log(JSON.stringify(execParams));
-
-    this._commonListService.executeWithParams(response.uuid, response.version, "simulate", "view", execParams).subscribe(
+    this._commonService.executeWithParams("simulate", response.uuid, response.version, execParams).subscribe(
       response => { this.onSuccessExecute(response) },
       error => { this.onError(error) }
     )

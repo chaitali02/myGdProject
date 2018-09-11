@@ -298,7 +298,6 @@ export class CommonListComponent {
           }
         }
       },
-
     ];
   }
   refershGrid() {
@@ -391,7 +390,7 @@ export class CommonListComponent {
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
-  view(uuid, version) {
+  view(uuid, version) {debugger
     if (this.parentType == "rule") {
       this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
@@ -403,7 +402,7 @@ export class CommonListComponent {
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
-    else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec") {
+    else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
 
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
@@ -474,7 +473,6 @@ export class CommonListComponent {
       "message": "Clone",
       "functionName": "okClone()"
     }
-
   }
   export(uuid, name) {
     this.exportId = uuid
@@ -1023,8 +1021,6 @@ export class CommonListComponent {
 
   }
   OnSucessgetAllLatestUser(response) {
-
-
     this.allUserName = []
     let temp = []
     for (const i in response) {
@@ -1091,7 +1087,6 @@ export class CommonListComponent {
     this.gridOptions.api.setQuickFilter($event.target.value);
     //this.gridOptions.onModelUpdated()
   }
-
 
   //code for training execution
   getParamListORParamset() {
@@ -1249,7 +1244,6 @@ export class CommonListComponent {
         }
       }
     }
-    //this.execParams = execParams;
     this._commonService.executeWithParams("train", this.executeId, this.executeVersion, execParams)
       .subscribe(response => {
         this.onSuccessExecuteTraining(response)
@@ -1348,7 +1342,6 @@ export class CommonListComponent {
       //this.getAllAttribute(type,index);
       this.paramListHolder[index]["allDatapod"] = allDatapod;
     }
-
     //this.allDatapod=temp1;
 
     if (type == "dataset") {
@@ -1505,12 +1498,12 @@ export class CommonListComponent {
           paramList["attributeInfo"] = attributeInfoArray;
         }
         else if (this.paramListHolder[i].paramType == 'distribution' || this.paramListHolder[i].paramType == 'datapod') {
+
           let ref = {};
           let paramValue = {};
           ref["type"] = this.paramListHolder[i].selectedParamValueType;
-          // if(this.paramListHolder[i].selectedParamValue !== null){
-          // ref["uuid"] = this.paramListHolder[i].selectedParamValue.uuid;
-          // }
+          ref["uuid"] = this.paramListHolder[i].paramValue.uuid;
+
           paramValue["ref"] = ref;
           paramList["paramValue"] = paramValue;
         }
@@ -1538,7 +1531,7 @@ export class CommonListComponent {
       execParams = null;
     }
     console.log(JSON.stringify(execParams));
-    this._commonListService.executeWithParams(this.executeId, this.executeVersion, "simulate", "view", execParams).subscribe(
+    this._commonListService.executeWithParams("simulate", this.executeId, this.executeVersion, execParams).subscribe(
       response => { this.onSuccessExecute(response) },
       error => { this.onError(error) }
     )
@@ -1673,7 +1666,7 @@ export class CommonListComponent {
       }
     }
     jQuery(this.ParamsModel.nativeElement).modal('hide');
-    this._commonListService.executeWithParams(this.executeId, this.executeVersion, this.type, "execute", execParams)
+    this._commonListService.executeWithParams(this.type, this.executeId, this.executeVersion, execParams)
       .subscribe(
       response => {
         //this.getBaseEntityByCriteria()

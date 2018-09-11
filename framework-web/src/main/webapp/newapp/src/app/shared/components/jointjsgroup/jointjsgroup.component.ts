@@ -525,7 +525,13 @@ import {jointjsGroupService} from './joinjsgroup.service'
               break;
             case 'rulegroupexec':
               api = 'rule';
-              break;           
+              break; 
+              case 'recongroupexec':
+              api = 'recon';
+              break;
+              case 'reconexec':
+              api = 'recon';
+              break;          
         }
         this._jointjsGroupService.setStatus(api,uuid,version,execType,status)
          .subscribe(
