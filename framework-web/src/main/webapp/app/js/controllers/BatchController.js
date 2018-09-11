@@ -5,6 +5,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.moment.locale('fr-FR');
   $scope.select = 'batch';
   $scope.myArrayOfDates = [];
+  $scope.myArrayOfquarters=[];
   $scope.tz = localStorage.serverTz;
   var matches = $scope.tz.match(/\b(\w)/g);
   $scope.timezone = matches.join('')
@@ -44,7 +45,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   var batchScope=$scope;
   $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
-  $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
+  $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"};
+  $scope.numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};
+  $scope.quarterlyToNum={"Q1":"0","Q2":"1","Q3":"2","Q4":"3"};
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -165,6 +168,36 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       $scope.scheduleTableArray[index].domPopoverIsOpen=true;
     }
     $scope.scheduleTableArray[index].domPopoverIsOpen=!$scope.scheduleTableArray[index].domPopoverIsOpen;
+  }
+  $scope.closeFrequencyDetailQuarterly=function(index){
+    $scope.WeekArray=[];
+    $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetailQuarterly=function(index){
+    if($scope.scheduleTableArray[index].quarterlyPopoverIsOpen ==true){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
+   //   console.log($scope.WeekArray)
+      for(var i=0;i<$scope.myArrayOfquarters.length;i++){
+        $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.numToQuarterly[$scope.myArrayOfquarters[i]]
+      }
+      $scope.scheduleTableArray[index].scheduleChg="Y";
+    //  console.log($scope.scheduleTableArray[index].frequencyDetail)
+      
+    }else{
+      $scope.myArrayOfquarters=[];
+    //  console.log($scope.scheduleTableArray[index].frequencyDetail)
+      for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
+       $scope.myArrayOfquarters[i]=$scope.quarterlyToNum[$scope.scheduleTableArray[index].frequencyDetail[i]];
+      }
+    }
+
+    for(var k=0;k<$scope.scheduleTableArray.length;k++){
+      $scope.scheduleTableArray[k].quarterlyPopoverIsOpen=false;
+      $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=true;
+    }
+    $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=!$scope.scheduleTableArray[index].quarterlyPopoverIsOpen;
   }
 
   $scope.closeFrequencyDetail=function(index){
@@ -494,8 +527,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       
       if($scope.scheduleTableArray[i].frequencyDetail){
         for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY"){
+          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY" && $scope.scheduleTableArray[i].frequencyType !="QUARTERLY"){
             scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+          }
+          else if($scope.scheduleTableArray[i].frequencyType =="QUARTERLY"){
+            scheduleInfo.frequencyDetail[j]=$scope.quarterlyToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
           }
         else{
           scheduleInfo.frequencyDetail[j]=$scope.scheduleTableArray[i].frequencyDetail[j];
@@ -946,6 +982,46 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
 			link: function(scope, element, attrs) {
         scope.days = $moment.weekdays();
        // console.log(scope.days)
+				scope.toggle = function(m, d, t) {
+					_toggle(m, d, t);
+				};
+				scope.tracker = _tracker(scope.model);
+				scope.$watch('model', function(n){
+					scope.tracker = _tracker(n);
+				})
+			}
+    };
+  }])
+  BatchModule.directive('quarterlySelector', [function() {
+		// init tracker and sort model
+		var _tracker = function(m){
+			m.sort();
+			return _.times(7, function(i){
+				return (_.indexOf(m, i) !== -1);
+			});
+		};
+		
+		// toggle day and sort model
+		var _toggle = function(m, d, t){
+			var i = _.indexOf(m, d);
+			t[d] = (i === -1);
+			(i > -1) ? m.splice(i, 1) : m.push(d);
+			m.sort();
+		};
+
+		return {
+      restrict: 'E',
+      replace: true,
+
+			scope: {
+				model: '=?'
+			},
+			
+      template: '<div class="quarterly-selector"><ul><li ng-repeat="quarterly in quarters" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{quarterly[0]}}{{quarterly[1]}}</span></li></ul></div>',
+
+			link: function(scope, element, attrs) {
+        scope.quarters =["Q1","Q2","Q3","Q4"];
+       // console.log(scope.days);
 				scope.toggle = function(m, d, t) {
 					_toggle(m, d, t);
 				};
