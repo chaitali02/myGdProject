@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -132,6 +133,15 @@ public class ReconController {
 		return reconServiceImpl.getReconExecByRGExec(reconGroupExecUuid, reconGroupExecVersion);
 	}
 	 
+	@RequestMapping(value = "/getReconExecByRecon", method = RequestMethod.GET, params = {"uuid", "startDate", "endDate"}	)
+    public List<ReconExec> getReconExecByRecon(@RequestParam("uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {        
+        return reconServiceImpl.findReconExecByRecon(uuid, startDate, endDate, type, action);
+    }
+	
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResults(@RequestParam("uuid") String reconExecUuid, 
 			@RequestParam("version") String reconExecVersion,
@@ -159,5 +169,16 @@ public class ReconController {
 		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null);
 		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, runMode);
 		return reconGroupServiceImpl.execute(reconGroupUUID, reconGroupVersion, execParams, reconGroupExec, runMode);
+	}
+
+	@RequestMapping(value = "/getReconExecByDatapod", method = RequestMethod.GET, params = { "uuid", "startDate",
+			"endDate" })
+	public List<ReconExec> getReconExecByDatapod(@RequestParam("uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate)
+			throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		return reconServiceImpl.findReconExecByDatapod(uuid, startDate, endDate, type);
 	}
 }

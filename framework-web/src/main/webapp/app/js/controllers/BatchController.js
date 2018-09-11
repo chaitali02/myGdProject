@@ -38,10 +38,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 		});
 	}
 	else{
-	$scope.isAdd=true;
+  $scope.isAdd=true;
   }
+  
   var batchScope=$scope;
-  $scope.minDate=moment()
   $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
@@ -127,9 +127,13 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.metaTags=null;
   }
 
-  $scope.isSelectable=function(date,type){
-    
-    return  $scope.mode == "true" ?false:true;
+  $scope.isSelectable=function(date,type,index){
+    var result=false;
+    if($scope.mode !="true"){
+      result=true;
+    }
+   // console.log(date)
+    return result;
   }
 
   $scope.closeFrequencyDetailDOW=function(index){
@@ -208,7 +212,6 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.scheduleTableArray[index].popoverIsOpen=!$scope.scheduleTableArray[index].popoverIsOpen;
   }
 
-
   $scope.onChangeScheduleName=function(index){
     $scope.scheduleTableArray[index].scheduleChg="Y";
   }
@@ -226,11 +229,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     if(isStartDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
+      $scope.scheduleTableArray[index].scheduleChg="Y";
     }
     $scope.scheduleTableArray[index].isStartDateChange="Y"
-    $scope.scheduleTableArray[index].scheduleChg="Y"
-    
   }
+
   $scope.onChangeEndDate=function(newDate,index,isEndDateChange){
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
@@ -239,9 +242,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     if(isEndDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
+      $scope.scheduleTableArray[index].scheduleChg="Y"
     }
     $scope.scheduleTableArray[index].isEndDateChange="Y"
-    $scope.scheduleTableArray[index].scheduleChg="Y"
   }
   
  
@@ -249,7 +252,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     if(month.isBefore(moment().subtract(6, 'month'), 'month') || month.isAfter(moment().add(6, 'month'), 'month')){
         event.preventDefault();
     }
-};
+  };
 
   $scope.$watch('myArrayOfDates', function(newValue, oldValue){
     if(newValue){
@@ -271,6 +274,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var scheduleInfo={};
     scheduleInfo.frequencyType=$scope.frequencyTypes[0].text;
     scheduleInfo.startDate;
+    scheduleInfo.minDate=$scope.minDate=moment().subtract(new Date(), 'day');
     $scope.scheduleTableArray.splice(len,0,scheduleInfo);
   }
 
@@ -388,21 +392,38 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       }, 2000);
     }
   }
-   
-  $scope.onTagAdding=function(tag){
+
+  $scope.onChangeDesc=function(){
+    $scope.batchDetail.batchChg="Y";
+  }
+
+  $scope.onChangeRunInParallel=function(){
+    $scope.batchDetail.batchChg="Y";
+  }
+  
+  $scope.onTagRemoved=function(){
+    $scope.batchDetail.batchChg="Y";
+  }
+  $scope.onTagAdd=function(){
+    $scope.batchDetail.batchChg="Y";
+  }
+  
+  $scope.onPipelineInfoTagAdding=function(tag){
     var len;
     if($scope.metaTags){
       len=$scope.metaTags.length+1;
     }else{
       len =1;
     } 
-   tag.name=len+" - "+tag.name 
-  // console.log(tag)
+    tag.name=len+" - "+tag.name 
+    //console.log(tag)
+    $scope.batchDetail.batchChg="Y";
   }
-  $scope.onTagRemoved=function(tag){
+  $scope.onPipelineInfoTagRemoved=function(tag){
     for(var i=0;i<$scope.metaTags.length;i++){
       $scope.metaTags[i].name = i+1+" - "+$scope.metaTags[i].tempName
     }
+    $scope.batchDetail.batchChg="Y";
   }
 
   $scope.submit = function() {
@@ -419,7 +440,12 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.active = $scope.batchDetail.active;
     batchJson.published = $scope.batchDetail.published;
     batchJson.inParallel= $scope.batchDetail.inParallel;
-    batchJson.batchChg="Y";
+    if($scope.isAdd ==true){
+      batchJson.batchChg="Y";
+    }else{
+      batchJson.batchChg=$scope.batchDetail.batchChg;
+    }
+   
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

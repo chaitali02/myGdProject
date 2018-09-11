@@ -1644,6 +1644,23 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+
+        .state('reconcompare', {
+            url: "/ReconCompare",
+            templateUrl: "views/recon-compare.html",
+            data: { pageTitle: 'Data Reconciliation' },
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'Reconcompare',
+                        files: [
+                            'js/controllers/ReconCompareController.js',
+                            'js/services/ReconRuleService.js'
+                        ]
+                    }]);
+                }]
+            }
+        })
         .state('viewdataquality', {
             url: "/ListDataQuality",
             templateUrl: "views/common-list.html",

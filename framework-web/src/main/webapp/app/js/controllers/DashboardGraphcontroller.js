@@ -1059,13 +1059,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
 
     function ConvertTwoDisit(data, propName) {
-      if (data.length > 0 && data[0][propName].indexOf("-") != -1) {
+      console.log(data[0].account_id)
+      if(isNaN(data[0][propName])){
+      if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
         for (var i = 0; i < data.length; i++) {
           a = data[i][propName].split('-')[0];
           b = data[i][propName].split('-')[1]
           data[i][propName] = parseFloat(a).toFixed(2) + "-" + parseFloat(b).toFixed(2);
           // console.log(data[i][propName])
         }
+      }
       }
       console.log(data)
       return data;
@@ -1100,11 +1103,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
             if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart") {
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
             } else {
-              if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
-                ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
-
-                result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
-
+              if(isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])){
+                if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
+                  ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
+                  result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
+                }
+               
               }
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = result.data;
             }
