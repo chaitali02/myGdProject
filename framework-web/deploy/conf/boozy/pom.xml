@@ -489,6 +489,7 @@
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.2.3-1</version>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
@@ -496,6 +497,7 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
+			<optional>true</optional>
 		</dependency>
 		
 		<!-- httpcore -->
@@ -503,6 +505,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4.9</version>
+			<optional>true</optional>
 		</dependency>
 		
 		<!-- Tensorflow -->
@@ -510,6 +513,7 @@
 			<groupId>org.tensorflow</groupId>
 			<artifactId>tensorflow</artifactId>
 			<version>1.8.0</version>
+			<optional>true</optional>
 		</dependency>
 		
 		<!-- scala-library -->
@@ -517,6 +521,7 @@
 		    <groupId>org.scala-lang</groupId>
 		    <artifactId>scala-library</artifactId>
 		    <version>2.11.8</version>
+		    <optional>true</optional>
 		</dependency>
 		
 		
@@ -557,12 +562,14 @@
 			<groupId>org.apache.sqoop</groupId>
 			<artifactId>sqoop</artifactId>
 			<version>${sqoop.version}</version>
+			<optional>true</optional>
 			<!-- <type>pom</type> -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sqoop</groupId>
 			<artifactId>sqoop-client</artifactId>
 			<version>1.99.5-cdh5.13.0</version>
+			<optional>true</optional>
 		</dependency>
 		
 		
