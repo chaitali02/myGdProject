@@ -5,7 +5,7 @@ ReconModule.controller('ReconCompareController', function($state,$filter, $state
     $scope.isSelect=true;
     $scope.types = [
         {"text":"recon","caption":"Rule"},
-        {"text":"datapod","caption":"Datapod"}
+        // {"text":"datapod","caption":"Datapod"}
        
     ]
 

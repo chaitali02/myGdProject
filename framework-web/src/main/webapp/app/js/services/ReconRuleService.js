@@ -180,7 +180,7 @@ ReconModule.factory('ReconRuleFactory', function ($http, $location) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'GET',
-			url: url + "recon/getRecpnExecByDatapod?action=view&uuid=" + uuid + "&startDate=" + startdate + "&endDate=" + enddate
+			url: url + "recon/getReconExecByDatapod?action=view&uuid=" + uuid + "&startDate=" + startdate + "&endDate=" + enddate
 		}).
 			then(function (response, status, headers) {
 				return response;
