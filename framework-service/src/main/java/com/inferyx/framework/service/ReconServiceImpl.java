@@ -54,6 +54,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -377,9 +378,44 @@ public class ReconServiceImpl extends RuleTemplate {
 		return ReconExecObjList;
 	}
 
-	public List<ReconExec> findReconExecByDatapod(String uuid, String startDate, String endDate, String type) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ReconExec> findReconExecByDatapod(String datapodUuid, String startDate, String endDate, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException {
+		List<ReconExec> ReconExecObjList = new ArrayList<>();
+		List<ReconExec> ExecObjList = new ArrayList<>();
+
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("dependsOn");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+
+		try {
+			if ((datapodUuid != null && !StringUtils.isEmpty(datapodUuid)))
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(datapodUuid));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		List<Recon> ReconList = new ArrayList<>();
+		ReconList = (List<Recon>) mongoTemplate.find(query, Recon.class);
+
+		for (Recon dq : ReconList) {
+			ReconExecObjList = findReconExecByRecon(dq.getUuid(), startDate, endDate, null, null);
+			
+			if (!ReconExecObjList.isEmpty()) {
+				ExecObjList.addAll(ReconExecObjList);
+			}
+
+		}
+		return ExecObjList;
 	}
-	
 }

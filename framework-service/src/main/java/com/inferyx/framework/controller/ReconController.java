@@ -171,7 +171,7 @@ public class ReconController {
 		return reconGroupServiceImpl.execute(reconGroupUUID, reconGroupVersion, execParams, reconGroupExec, runMode);
 	}
 
-	@RequestMapping(value = "/getreconExecByDatapod", method = RequestMethod.GET, params = { "uuid", "startDate",
+	@RequestMapping(value = "/getReconExecByDatapod", method = RequestMethod.GET, params = { "uuid", "startDate",
 			"endDate" })
 	public List<ReconExec> getReconExecByDatapod(@RequestParam("uuid") String uuid,
 			@RequestParam(value = "type", required = false) String type,
