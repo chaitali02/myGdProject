@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,10 +29,13 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -50,6 +54,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
@@ -326,6 +331,55 @@ public class ReconServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+
+	public List<ReconExec> findReconExecByRecon(String reconExecUuid, String startDate, String endDate, String type,
+			String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		Query query = new Query();
+		query.fields().include("statusList");
+		query.fields().include("dependsOn");
+		query.fields().include("exec");
+		query.fields().include("result");
+		query.fields().include("refKeyList");
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("published");
+		query.fields().include("appInfo");
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
+
+		try {
+			if ((startDate != null && !StringUtils.isEmpty(startDate))
+					&& (endDate != null && !StringUtils.isEmpty(endDate))) {
+				query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate))
+						.lte(simpleDateFormat.parse(endDate)));
+			} else if ((startDate != null && !startDate.isEmpty()) && StringUtils.isEmpty(endDate)) {
+				query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
+			} else if (endDate != null && !endDate.isEmpty())
+				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
+
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(reconExecUuid));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		List<ReconExec> ReconExecObjList = new ArrayList<>();
+		ReconExecObjList = (List<ReconExec>) mongoTemplate.find(query, ReconExec.class);
+
+		return ReconExecObjList;
+	}
+
+	public List<ReconExec> findReconExecByDatapod(String uuid, String startDate, String endDate, String type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
