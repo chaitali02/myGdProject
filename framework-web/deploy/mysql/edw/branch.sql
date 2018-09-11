@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
+CREATE DATABASE  IF NOT EXISTS `edw_small`;
+USE `edw_small`;
 DROP TABLE IF EXISTS `branch`;
 CREATE TABLE `branch` (
   `branch_id` int(11) NOT NULL DEFAULT '0',

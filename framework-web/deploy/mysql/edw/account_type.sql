@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
+CREATE DATABASE  IF NOT EXISTS `edw_small`;
+USE `edw_small`;
 DROP TABLE IF EXISTS `account_type`;
 CREATE TABLE `account_type` (
   `account_type_id` int(11) NOT NULL DEFAULT '0',
@@ -10,7 +10,7 @@ CREATE TABLE `account_type` (
   `load_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_type_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `framework`.`account_type` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
+ALTER TABLE `account_type` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
 LOAD DATA LOCAL INFILE '/var/lib/mysql-files/account_type.csv' IGNORE INTO TABLE account_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
 
 
