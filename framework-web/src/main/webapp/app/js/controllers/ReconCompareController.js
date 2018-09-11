@@ -145,7 +145,9 @@ ReconModule.controller('ReconCompareController', function($state,$filter, $state
             if($scope.selectTargetReconexec){
                 if($scope.selectSoureReconexec.uuid == $scope.selectTargetReconexec.uuid){
                 $scope.allTargetReconexec=[];
+                $scope.targetShowProgress = false;
                 $scope.isTargetTableShow=false;
+                $scope.isTargetDataError = false;
                 }
             }
             $scope.allTargetReconexec = $scope.allSourceDqexec.filter(function(el) {
@@ -154,12 +156,16 @@ ReconModule.controller('ReconCompareController', function($state,$filter, $state
             ReconRuleService.getNumRowsbyExec($scope.selectSoureReconexec.uuid,$scope.selectSoureReconexec.version,"reconexec").then(function(response) {onSuccessGetNumRowsbyExec(response.data)});
             var onSuccessGetNumRowsbyExec = function(response) { 
                 $scope.sourceShowProgress = true;
+                $scope.targetShowProgress = false;
                 $scope.isSourceTableShow=false;
                 $scope.getSummary($scope.selectSoureReconexec.uuid,$scope.selectSoureReconexec.version,"source",response.runMode)   
             }
         }
     }
     $scope.onChangeTargetReconExec=function(){
+          $scope.targetShowProgress = true;
+        $scope.isTargetTableShow=false;
+        $scope.isTargetDataError = false;
         if($scope.selectTargetReconexec){
             ReconRuleService.getNumRowsbyExec($scope.selectTargetReconexec.uuid,$scope.selectTargetReconexec.version,"reconexec").then(function(response) {onSuccessGetNumRowsbyExec(response.data)});
             var onSuccessGetNumRowsbyExec = function(response) { 
@@ -185,7 +191,7 @@ ReconModule.controller('ReconCompareController', function($state,$filter, $state
       };
     
     $scope.getSummary=function(uuid,version,type,mode){
-        ReconRuleService.getSummary(uuid,version,"reconexec",mode).then(function(response) {onSuccessGetSummary(response.data)},function(response){OnError(response.data)});
+        ReconRuleService.getResults(uuid,version,"reconexec",mode).then(function(response) {onSuccessGetSummary(response.data)},function(response){OnError(response.data)});
         var onSuccessGetSummary = function(response) { 
             console.log(response)
             if(type == "source"){  

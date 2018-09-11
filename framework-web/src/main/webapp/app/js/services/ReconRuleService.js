@@ -185,12 +185,60 @@ ReconModule.factory('ReconRuleFactory', function ($http, $location) {
 			then(function (response, status, headers) {
 				return response;
 			})
-	}
+    }
+    factory.findNumRowsbyExec = function (uuid, version, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getNumRowsbyExec?action=view&execUuid=" + uuid + "&execVersion=" + version + "&type=" + type,
+			method: "GET",
+		}).then(function (response) {
+			return response
+		})
+
+    }  
+    factory.getResults = function (uuid, version, type,mode) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "recon/getResults?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&mode="+mode+"&requestId=",
+			method: "GET",
+		}).then(function (response) {
+			return response
+		})
+	}           
+
     return factory;
 })
 
 
 ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFactory) {
+    this.getResults = function (uuid, version, type,mode) {
+		var deferred = $q.defer();
+		ReconRuleFactory.getResults(uuid, version, type,mode).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+        var onSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            })
+        }
+        var onError = function (response) {
+            deferred.reject({
+                data: response
+            })
+        }
+		return deferred.promise;
+    }
+    this.getNumRowsbyExec = function (uuid, version, type) {
+		var deferred = $q.defer();
+		ReconRuleFactory.findNumRowsbyExec(uuid, version, type).then(function (response) {
+			onSuccess(response.data)
+		});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+
+		return deferred.promise;
+	}
     this.getReconExecByReconwithParms = function (uuid, startDate, endDate) {
 		var deferred = $q.defer();
 		ReconRuleFactory.findReconExecByReconwithParms(uuid, startDate, endDate).then(function (response) {
