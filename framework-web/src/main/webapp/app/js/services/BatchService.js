@@ -202,12 +202,13 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					var scheduleInfo={};
 					scheduleInfo.name=response.scheduleInfo[i].name;
 					scheduleInfo.uuid=response.scheduleInfo[i].uuid;
-					scheduleInfo.startDate= moment(response.scheduleInfo[i].startDate);
+					scheduleInfo.startDate=moment(response.scheduleInfo[i].startDate);
+					scheduleInfo.minDate=moment(response.scheduleInfo[i].startDate);
 					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
 					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;
 					scheduleInfo.frequencyDetail=[];
-					response.scheduleInfo[i].isStartDateChange="N";
-					response.scheduleInfo[i].isEndDateChange="N";
+					scheduleInfo.isStartDateChange="N";
+					scheduleInfo.isEndDateChange="N";
 					if(response.scheduleInfo[i].frequencyDetail){
 						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
 							if(response.scheduleInfo[i].frequencyType !='MONTHLY'){
@@ -231,6 +232,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfoArray[i]=scheduleInfo;
 				}
 			}
+			console.log(scheduleInfoArray)
 			batchResult.scheduleInfoArray=scheduleInfoArray;
 			deferred.resolve({
 				data: batchResult

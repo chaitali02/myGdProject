@@ -120,8 +120,8 @@
                 <div class="col-md-6">
                   <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-                    add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                    add-on-enter="true" add-on-space="true" on-tag-adding="onTagAdd($tag)" on-tag-removed="onTagRemoved($tag)">
+                    <auto-complete source="loadTag($query)"  min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                     </auto-complete>
                   </tags-input>
                 </div>
@@ -130,7 +130,7 @@
               <div class="form-group">
                 <label class="control-label col-md-3">Desc</label>
                 <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="batchDetail.desc" rows="2" style="resize:none;"></textarea>
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDesc()" ng-model="batchDetail.desc" rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -164,7 +164,7 @@
                   <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;">
                     <label class="mt-checkbox " style="margin-bottom:-1px;">
                       <input type="checkbox" ng-model="batchDetail.inParallel" ng-disabled="{{mode}}" ng-true-value="'true'" ng-false-value="'false'"
-                        ng-change="changeCheckboxExecution()">
+                        ng-change="onChangeRunInParallel()">
                       <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
                     </label>
 
@@ -178,7 +178,7 @@
                 </label>
                 <div class="col-md-6"> 
                   <tags-input class="tag-scroll" min-tags="0" name="metaTags" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" on-tag-adding="onTagAdding($tag)" on-tag-removed="onTagRemoved($tag)">
+                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" on-tag-adding="onPipelineInfoTagAdding($tag)" on-tag-removed="onPipelineInfoTagRemoved($tag)">
                     <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                       load-on-empty="true" >
                     </auto-complete>
@@ -241,8 +241,9 @@
                         </span>
                       </th>
                       <th style="text-align: center">Name</th>
-                      <th style="width:225px;text-align: center">Start Time</th>
-                      <th style="width:225px;text-align: center">End Time</th>
+                      <!-- 225 -->
+                      <th style="width:23%;text-align: center">Start Time</th>
+                      <th style="width:23%;text-align: center">End Time</th>
                       <!-- <th style="width:6%;text-align: center">Recurring</th> -->
                       <th style="width: 141px;text-align: center">Frequency Type</th>
                       <th style="text-align: center">Frequency Detail</th>
@@ -253,7 +254,6 @@
                     <tr ng-repeat="data in scheduleTableArray">
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-
                           <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
                         </span>
                       </td>
@@ -265,10 +265,10 @@
                       </td>
                       <td>
                           <!-- max-view="hour" -->
-                        <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;width:210px;">
+                        <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;">
                             <!-- MM-D-YYYY, h:mm:ss a -->
                             <div class="input-group" moment-picker="data.startDate"
-                              start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=minDate  selectable="isSelectable(date, type)"   validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)" >
+                              start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=data.minDate  selectable="isSelectable(date,type,$index)"   validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)" ng-init="getMinDate()" >
                               <span class="form-control" name="startDate" style="padding-right:10px;text-align:right;"  name="startDate" ng-disabled="{{mode}}" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
                              
                               <!-- <input class="form-control" placeholder="Select a start date..." locale="en" 
@@ -282,9 +282,10 @@
                           </div>
                       </td>
                       <td>
-                          <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;width:210px;">
+                          <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;">
                           <div class="input-group" moment-picker="data.endDate" 
-                            start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true selectable="isSelectable(date, type)" change="onChangeEndDate(data.endDate,$index,data.isEndDateChange)">
+                         
+                            start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true change="onChangeEndDate(data.endDate,$index,data.isEndDateChange)">
                             <span class="form-control" name="startDate" style="padding-right: 5px; text-align:right;"   ng-disabled="{{mode}}" name="endDate" >{{data.endDate}} <span style="text-align:right;">{{timezone}}</span></span>  
                             <!-- <input class="form-control" placeholder="Select a end date..." locale="en" 
                             ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" 
