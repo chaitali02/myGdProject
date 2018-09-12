@@ -25,6 +25,26 @@ public class IngestView extends BaseEntity {
 	private String ingestChg;
 	private Filter filter;	
 	private String filterChg;
+	private String sourceChg;
+	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceChg
+	 */
+	public String getSourceChg() {
+		return sourceChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceChg the sourceChg to set
+	 */
+	public void setSourceChg(String sourceChg) {
+		this.sourceChg = sourceChg;
+	}
 	/**
 	 *
 	 * @Ganesh
