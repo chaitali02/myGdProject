@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
@@ -1019,6 +1020,23 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) 
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getBatchMetaInfoByBatchExec(uuid, version);
-
+	}
+	
+	@RequestMapping(value = "/getFileDetailsByDatasource", method = RequestMethod.GET)
+	public List<String> getFileDetailsByDatasource(
+			@RequestParam(value = "uuid") String datasourceUuid,
+			@RequestParam(value = "version", required = false) String datasourceVersion, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getFileDetailsByDatasource(datasourceUuid);
+	}
+	
+	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)
+	public List<BaseEntity> getDatapodByDatasource(
+			@RequestParam(value = "uuid") String datasourceUuid,
+			@RequestParam(value = "version", required = false) String datasourceVersion, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) {
+		return metadataServiceImpl.getDatapodByDatasource(datasourceUuid);
 	}
 }
