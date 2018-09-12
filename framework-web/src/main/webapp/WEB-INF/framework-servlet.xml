@@ -339,6 +339,7 @@
 	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl" init-method="init" />
 	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl" />
 	<bean id="ingestViewServiceImpl" class="com.inferyx.framework.service.IngestViewServiceImpl"/>
+	<bean id="ingestServiceImpl" class="com.inferyx.framework.service.IngestServiceImpl"/>
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
 	<bean id="impalaExecutor" class="com.inferyx.framework.executor.ImpalaExecutor"/>
