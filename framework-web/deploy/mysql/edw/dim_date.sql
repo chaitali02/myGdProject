@@ -66,7 +66,7 @@ CREATE TABLE `dim_date` (
 );
 
 ALTER TABLE `dim_date` PARTITION BY KEY(load_date) PARTITIONS 1;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' IGNORE 1 LINES;
 
 
 

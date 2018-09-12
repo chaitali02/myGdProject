@@ -5,6 +5,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.moment.locale('fr-FR');
   $scope.select = 'batch';
   $scope.myArrayOfDates = [];
+  $scope.myArrayOfquarters=[];
   $scope.tz = localStorage.serverTz;
   var matches = $scope.tz.match(/\b(\w)/g);
   $scope.timezone = matches.join('')
@@ -42,9 +43,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   
   var batchScope=$scope;
-  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"QUARTERLY","caption":"Quarterly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
-  $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"}
+  $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"};
+  $scope.numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};
+  $scope.quarterlyToNum={"Q1":"0","Q2":"1","Q3":"2","Q4":"3"};
   $scope.showForm = true;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -166,6 +169,35 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     }
     $scope.scheduleTableArray[index].domPopoverIsOpen=!$scope.scheduleTableArray[index].domPopoverIsOpen;
   }
+  $scope.closeFrequencyDetailQuarterly=function(index){
+    $scope.WeekArray=[];
+    $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=false;
+  }
+
+  $scope.doneFrequencyDetailQuarterly=function(index){
+    if($scope.scheduleTableArray[index].quarterlyPopoverIsOpen ==true){
+      $scope.scheduleTableArray[index].frequencyDetail=[];
+      $scope.myform.$dirty=true;
+      for(var i=0;i<$scope.myArrayOfquarters.length;i++){
+        $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.numToQuarterly[$scope.myArrayOfquarters[i]]
+      }
+      $scope.scheduleTableArray[index].scheduleChg="Y";
+    //  console.log($scope.scheduleTableArray[index].frequencyDetail)
+      
+    }else{
+      $scope.myArrayOfquarters=[];
+      console.log($scope.scheduleTableArray[index].frequencyDetail)
+      for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
+       $scope.myArrayOfquarters[i]= Number($scope.quarterlyToNum[$scope.scheduleTableArray[index].frequencyDetail[i]]);
+      }
+    }
+
+    for(var k=0;k<$scope.scheduleTableArray.length;k++){
+      $scope.scheduleTableArray[k].quarterlyPopoverIsOpen=false;
+      $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=true;
+    }
+    $scope.scheduleTableArray[index].quarterlyPopoverIsOpen=!$scope.scheduleTableArray[index].quarterlyPopoverIsOpen;
+  }
 
   $scope.closeFrequencyDetail=function(index){
     $scope.myArrayOfDates=[];
@@ -181,7 +213,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         console.log($scope.myArrayOfDates[i]._d)
         var date=moment($scope.myArrayOfDates[i])._d
         console.log($filter('date')(date, "EEE MMM d y h:mm:ss "))
-        $scope.scheduleTableArray[index].frequencyDetail.push($filter('date')(date, "MM-dd-yyyy"));
+        $scope.scheduleTableArray[index].frequencyDetail.push($filter('date')(date, "dd"));
+        $scope.scheduleTableArray[index].frequencyDetail.sort();
         $scope.scheduleTableArray[index].scheduleChg="Y";
       }
       
@@ -190,19 +223,20 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       $scope.myArrayOfDates=[];
       if($scope.scheduleTableArray[index].frequencyDetail){
         for(var i=0;i<$scope.scheduleTableArray[index].frequencyDetail.length;i++){
-          var dd=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "dd");
-          var mm=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "MM");
-          var yyyy=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "yyyy");
-          $scope.myArrayOfDates.push(moment().year(yyyy).month(mm-1).date(dd));
+        //  var dd=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "dd");
+        //  var mm=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "MM");
+        //  var yyyy=$filter('date')(new Date($scope.scheduleTableArray[index].frequencyDetail[i]), "yyyy");
+          // moment().year(yyyy).month(mm-1).date(dd)
+          $scope.myArrayOfDates.push(moment().date($scope.scheduleTableArray[index].frequencyDetail[i]));
         }
         var sd=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "dd");
         var smm=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "MM");
         var syyyy=$filter('date')(new Date($scope.scheduleTableArray[index].startDate), "yyyy");
-        $scope.scheduleTableArray[index].disable_days_before=moment().year(syyyy).month(smm-1).date(sd);
+        $scope.scheduleTableArray[index].disable_days_before=moment().date(sd);//moment().year(syyyy).month(smm-1).date(sd);
         var ed=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "dd");
         var emm=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "MM");
         var eyyyy=$filter('date')(new Date($scope.scheduleTableArray[index].endDate), "yyyy");
-        $scope.scheduleTableArray[index].disable_days_after=moment().year(eyyyy).month(emm-1).date(ed);
+        $scope.scheduleTableArray[index].disable_days_after=moment().date(ed);//moment().year(eyyyy).month(emm-1).date(ed);
       }
     }
     for(var k=0;k<$scope.scheduleTableArray.length;k++){
@@ -225,7 +259,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
-    $scope.scheduleTableArray[index].disable_days_before=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].disable_days_before=moment().date(d);//moment().year(yyyy).month(mm-1).date(d);
     if(isStartDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
@@ -238,7 +272,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var d=$filter('date')(newDate, "dd");
     var mm=$filter('date')(newDate, "MM");
     var yyyy=$filter('date')(newDate, "yyyy");
-    $scope.scheduleTableArray[index].disable_days_after=moment().year(yyyy).month(mm-1).date(d);
+    $scope.scheduleTableArray[index].disable_days_after=moment().date(d);//moment().year(yyyy).month(mm-1).date(d);
     if(isEndDateChange=="Y"){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
@@ -274,6 +308,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     var scheduleInfo={};
     scheduleInfo.frequencyType=$scope.frequencyTypes[0].text;
     scheduleInfo.startDate;
+    scheduleInfo.scheduleChg="Y";
     scheduleInfo.minDate=$scope.minDate=moment().subtract(new Date(), 'day');
     $scope.scheduleTableArray.splice(len,0,scheduleInfo);
   }
@@ -435,6 +470,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     options.execution = $scope.checkboxModelexecution;
     var batchJson = {}
     batchJson.uuid = $scope.batchDetail.uuid;
+    batchJson.id = $scope.batchDetail.id;
     batchJson.name = $scope.batchDetail.name;
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
@@ -444,6 +480,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       batchJson.batchChg="Y";
     }else{
       batchJson.batchChg=$scope.batchDetail.batchChg;
+      if($scope.batchDetail.batchChg ==null){
+        batchJson.batchChg="N";
+      }
     }
    
     var tagArray = [];
@@ -487,8 +526,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       
       if($scope.scheduleTableArray[i].frequencyDetail){
         for(var j=0;j<$scope.scheduleTableArray[i].frequencyDetail.length;j++){
-          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY"){
+          if($scope.scheduleTableArray[i].frequencyType !="MONTHLY" && $scope.scheduleTableArray[i].frequencyType !="QUARTERLY"){
             scheduleInfo.frequencyDetail[j]=$scope.weekDaysToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
+          }
+          else if($scope.scheduleTableArray[i].frequencyType =="QUARTERLY"){
+            scheduleInfo.frequencyDetail[j]=$scope.quarterlyToNum[$scope.scheduleTableArray[i].frequencyDetail[j]];
           }
         else{
           scheduleInfo.frequencyDetail[j]=$scope.scheduleTableArray[i].frequencyDetail[j];
@@ -939,6 +981,46 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
 			link: function(scope, element, attrs) {
         scope.days = $moment.weekdays();
        // console.log(scope.days)
+				scope.toggle = function(m, d, t) {
+					_toggle(m, d, t);
+				};
+				scope.tracker = _tracker(scope.model);
+				scope.$watch('model', function(n){
+					scope.tracker = _tracker(n);
+				})
+			}
+    };
+  }])
+  BatchModule.directive('quarterlySelector', [function() {
+		// init tracker and sort model
+		var _tracker = function(m){
+			m.sort();
+			return _.times(7, function(i){
+				return (_.indexOf(m, i) !== -1);
+			});
+		};
+		
+		// toggle day and sort model
+		var _toggle = function(m, d, t){
+			var i = _.indexOf(m, d);
+			t[d] = (i === -1);
+			(i > -1) ? m.splice(i, 1) : m.push(d);
+			m.sort();
+		};
+
+		return {
+      restrict: 'E',
+      replace: true,
+
+			scope: {
+				model: '=?'
+			},
+			
+      template: '<div class="quarterly-selector"><ul><li ng-repeat="quarterly in quarters" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{quarterly[0]}}{{quarterly[1]}}</span></li></ul></div>',
+
+			link: function(scope, element, attrs) {
+        scope.quarters =["Q1","Q2","Q3","Q4"];
+       // console.log(scope.days);
 				scope.toggle = function(m, d, t) {
 					_toggle(m, d, t);
 				};

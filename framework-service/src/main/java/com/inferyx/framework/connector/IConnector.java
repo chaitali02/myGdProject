@@ -15,5 +15,5 @@ import java.io.IOException;
 public interface IConnector {
 
 	ConnectionHolder getConnection() throws IOException;
-	ConnectionHolder getConnection(Object input) throws IOException;
+	ConnectionHolder getConnection(Object input, Object input2) throws IOException;
 }

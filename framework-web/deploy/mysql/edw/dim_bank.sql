@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
+CREATE DATABASE  IF NOT EXISTS `edw_small`;
+USE `edw_small`;
 DROP TABLE IF EXISTS `dim_bank`;
 CREATE TABLE `dim_bank` (
   `bank_id` varchar(45) NOT NULL DEFAULT '',

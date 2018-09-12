@@ -59,7 +59,7 @@ public class ImpalaConnector implements IConnector {
 	}
 
 	@Override
-	public ConnectionHolder getConnection(Object input) throws IOException {
+	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

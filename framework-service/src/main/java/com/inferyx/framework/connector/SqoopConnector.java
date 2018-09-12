@@ -26,8 +26,13 @@ public class SqoopConnector implements IConnector {
 	}
 	
 	@Override
-	public ConnectionHolder getConnection(Object input) throws IOException {
-		SqoopOptions sqoopOptions = new SqoopOptions();
+	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
+		SqoopOptions sqoopOptions = null;
+		if (input2 == null) {
+			sqoopOptions = new SqoopOptions();
+		} else {
+			sqoopOptions = (SqoopOptions) input2;
+		}
 		ConnectionHolder connHolder = new ConnectionHolder();
 		Datasource datasource = null;
 		String connectionString = null;

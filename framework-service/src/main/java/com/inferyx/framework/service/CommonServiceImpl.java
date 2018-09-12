@@ -1606,8 +1606,10 @@ public class CommonServiceImpl <T> {
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
 						name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
-						object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
-						name = null;
+						if(name != null) {
+							object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
+							name = null;							
+						}
 						continue;
 					}
 					if (method.getName().contains("UUID")) {
@@ -1684,13 +1686,16 @@ public class CommonServiceImpl <T> {
 					}
 					 
 					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){
+							
 						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
-						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
-						for(Param param : paramList.getParams()) {							
-							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
-								paramListHolder.setParamName(param.getParamName());
-						}
-						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
+						if(paramListHolder != null) {
+							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+							for(Param param : paramList.getParams()) {							
+								if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+									paramListHolder.setParamName(param.getParamName());
+							}
+							object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);								
+						}						
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1823,7 +1828,6 @@ public class CommonServiceImpl <T> {
 	public String resolveName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		if(type == MetaType.simple)
 			return null;
-		
 		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
 		BaseEntity baseEntity = null;
 		if (version != null)
@@ -1831,8 +1835,11 @@ public class CommonServiceImpl <T> {
 		else{
 			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,uuid,new Sort(Sort.Direction.DESC, "version"));
 		}
+		if(baseEntity != null)
 			return baseEntity.getName();
-		}
+		else 
+			return null;
+	}
 	
 	public String resolveAttributeName(String attributeId, Object object) throws JsonProcessingException {
 		Method [] methodList = object.getClass().getMethods();

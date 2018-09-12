@@ -240,24 +240,26 @@
                           />
                         </span>
                       </th>
-                      <th style="text-align: center">Name</th>
+                      <th style="width:13%;text-align: center">Name</th>
                       <!-- 225 -->
-                      <th style="width:23%;text-align: center">Start Time</th>
-                      <th style="width:23%;text-align: center">End Time</th>
+                      <th style="width:230px;text-align: center">Start Time</th>
+                      <th style="width:230px;text-align: center">End Time</th>
                       <!-- <th style="width:6%;text-align: center">Recurring</th> -->
-                      <th style="width: 141px;text-align: center">Frequency Type</th>
-                      <th style="text-align: center">Frequency Detail</th>
+                      <th style="width:14%;text-align: center">Frequency Type</th>
+                      <th style="width:18%;text-align: center">Frequency Detail</th>
 
                     </tr>
                   </thead>
                   <tbody>
                     <tr ng-repeat="data in scheduleTableArray">
+                      
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
                         </span>
                       </td>
                       <td>
+                          
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message="" title="{{data.name}}"
                           ng-change="onChangeScheduleName($index)" ng-disabled="{{mode}}">
@@ -314,16 +316,16 @@
                             <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                               popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}" required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                                <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
                               </div>
                             </div>
                             <script type="text/ng-template" id="dom-popoverTemplate_data.html">
                               <div>
                               
-                                <multiple-date-picker  ng-model="myArrayOfDates"  ng-disabled="{{mode}}" disable-days-before="data.disable_days_before" disable-days-after="data.disable_days_after" month-click="disable6MonthsFromNow"></multiple-date-picker>
+                                <multiple-date-picker  ng-model="myArrayOfDates"  ng-disabled="true" disable-days-before="data.disable_days_before" disable-days-after="data.disable_days_after" month-click="disable6MonthsFromNow"></multiple-date-picker>
                                 <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
                                   <!-- <input type="button" class="btn" ng-click="closeFrequencyDetail($index)"  ng-disabled="{{mode}}" value="Cancel" style="background-color:white;color:black;">  
                                   <input type="button" class="btn" ng-click="doneFrequencyDetail($index)"  ng-disabled="{{mode}}" value="Done" style="background-color:white;color:blue;">                                     -->
@@ -333,15 +335,35 @@
                               </div>
                             </script>
                           </div>
+                          <div ng-if="data.frequencyType =='QUARTERLY'" >
+                            <div uib-popover-template="'quarterly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
+                              popover-is-open="data.quarterlyPopoverIsOpen" ng-click="doneFrequencyDetailQuarterly($index)">
+                              <div class="col-md-11" style="padding: 0px;">
+                                <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
+                              </div>
+                            </div>
+                            <script type="text/ng-template" id="quarterly-popoverTemplate_data.html">
+                              <div>
+                                <quarterly-selector model="myArrayOfquarters"></quarterly-selector>
+                                <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
+                                  <button type="button"  class="btn dark btn-outline" ng-click="closeFrequencyDetailQuarterly($index)">Cancel</button>  
+                                  <button type="button"  class="btn green"  ng-click="doneFrequencyDetailQuarterly($index)"  ng-disabled="{{mode}}">Done</button>
+                                </div>
+                              </div>
+                            </script>
+                          </div>
                           <div ng-if="data.frequencyType =='WEEKLY' || data.frequencyType =='BIWEEKLY'">
                             
                               <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
                                 popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">
                                 <div class="col-md-11" style="padding: 0px;">
-                                  <input type="text" class="form-control" ng-model="data.frequencyDetail" ng-disabled="true" required disable-validation-message="">
+                                  <input type="text" class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
                                 </div>
                                 <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                  <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"></span>
+                                  <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
                                 </div>
                               </div>
                               <script type="text/ng-template" id="dow-popoverTemplate_data.html">

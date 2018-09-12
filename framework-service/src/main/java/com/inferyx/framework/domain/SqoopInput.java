@@ -1,6 +1,6 @@
 package com.inferyx.framework.domain;
 
-import com.cloudera.sqoop.SqoopOptions.IncrementalMode;
+import com.inferyx.framework.enums.SqoopIncrementalMode;
 
 public class SqoopInput {
 	
@@ -14,10 +14,12 @@ public class SqoopInput {
 	private String partitionValue;
 	private String whereClause;
 	private String compressionCodec;
-	private IncrementalMode mode;
 	private String checkColumn;
     private String lastVale;
     private Boolean appendMode;
+    private SqoopIncrementalMode incrementalMode;
+    private String incrementalTestColumn;
+    private String incrementalLastValue;
 
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
@@ -164,20 +166,6 @@ public class SqoopInput {
 	}
 
 	/**
-	 * @return the mode
-	 */
-	public IncrementalMode getMode() {
-		return mode;
-	}
-
-	/**
-	 * @param mode the mode to set
-	 */
-	public void setMode(IncrementalMode mode) {
-		this.mode = mode;
-	}
-
-	/**
 	 * @return the checkColumn
 	 */
 	public String getCheckColumn() {
@@ -219,6 +207,48 @@ public class SqoopInput {
 		this.appendMode = appendMode;
 	}
 
+	/**
+	 * @return the incrementalMode
+	 */
+	public SqoopIncrementalMode getIncrementalMode() {
+		return incrementalMode;
+	}
+
+	/**
+	 * @param incrementalMode the incrementalMode to set
+	 */
+	public void setIncrementalMode(SqoopIncrementalMode incrementalMode) {
+		this.incrementalMode = incrementalMode;
+	}
+
+	/**
+	 * @return the incrementalTestColumn
+	 */
+	public String getIncrementalTestColumn() {
+		return incrementalTestColumn;
+	}
+
+	/**
+	 * @param incrementalTestColumn the incrementalTestColumn to set
+	 */
+	public void setIncrementalTestColumn(String incrementalTestColumn) {
+		this.incrementalTestColumn = incrementalTestColumn;
+	}
+
+	/**
+	 * @return the incrementalLastValue
+	 */
+	public String getIncrementalLastValue() {
+		return incrementalLastValue;
+	}
+
+	/**
+	 * @param incrementalLastValue the incrementalLastValue to set
+	 */
+	public void setIncrementalLastValue(String incrementalLastValue) {
+		this.incrementalLastValue = incrementalLastValue;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -227,8 +257,10 @@ public class SqoopInput {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
 				+ sourceDirectory + ", targetDirectory=" + targetDirectory + ", hiveImport=" + hiveImport
 				+ ", partitionKey=" + partitionKey + ", partitionValue=" + partitionValue + ", whereClause="
-				+ whereClause + ", compressionCodec=" + compressionCodec + ", mode=" + mode + ", checkColumn="
-				+ checkColumn + ", lastVale=" + lastVale + ", appendMode=" + appendMode + "]";
+				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn="
+				+ checkColumn + ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode="
+				+ incrementalMode + ", incrementalTestColumn=" + incrementalTestColumn + ", incrementalLastValue="
+				+ incrementalLastValue + "]";
 	}
 	
 }

@@ -195,6 +195,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 		var onSuccess = function (response) {
 			var batchResult={};
 			var weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
+			var numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};
 			batchResult.batch=response;
 			var scheduleInfoArray=[];
             if(response.scheduleInfo !=null){
@@ -211,9 +212,14 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.isEndDateChange="N";
 					if(response.scheduleInfo[i].frequencyDetail){
 						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
-							if(response.scheduleInfo[i].frequencyType !='MONTHLY'){
+							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'){
 								scheduleInfo.frequencyDetail[j]=weekNumToDays[response.scheduleInfo[i].frequencyDetail[j]];
-							}else{
+							}
+							else if(response.scheduleInfo[i].frequencyType =='QUARTERLY'){
+								scheduleInfo.frequencyDetail[j]=numToQuarterly[response.scheduleInfo[i].frequencyDetail[j]];
+							}
+
+							else{
 								scheduleInfo.frequencyDetail[j]=response.scheduleInfo[i].frequencyDetail[j];
 							}
 						}
