@@ -1023,7 +1023,7 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getFileDetailsByDatasource", method = RequestMethod.GET)
-	public List<String> getFileDetailsByDatasource(
+	public @ResponseBody List<String> getFileDetailsByDatasource(
 			@RequestParam(value = "uuid") String datasourceUuid,
 			@RequestParam(value = "version", required = false) String datasourceVersion, 
 			@RequestParam(value = "type", required = false) String type,
@@ -1032,7 +1032,7 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)
-	public List<BaseEntity> getDatapodByDatasource(
+	public @ResponseBody List<BaseEntity> getDatapodByDatasource(
 			@RequestParam(value = "uuid") String datasourceUuid,
 			@RequestParam(value = "version", required = false) String datasourceVersion, 
 			@RequestParam(value = "type", required = false) String type,
