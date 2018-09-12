@@ -66,6 +66,8 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
+import com.inferyx.framework.domain.Ingest;
+import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -288,7 +290,9 @@ public class Helper {
 				case reportExec : return "iReportExecDao";
 				case batch : return "iBatchDao";
 				case batchExec : return "iBatchExecDao";
-				case schedule : return "iScheduleDao";				
+				case schedule : return "iScheduleDao";	
+				case ingest : return "iIngestDao";
+				case ingestExec : return "iIngestExecDao";
 				default:
 					return null;
 			}
@@ -405,6 +409,8 @@ public class Helper {
 		case batch : return Batch.class;
 		case batchExec : return BatchExec.class;
 		case schedule : return Schedule.class;
+		case ingest : return Ingest.class;
+		case ingestExec : return IngestExec.class;
 		default:
 			return null;
 		}
@@ -496,6 +502,8 @@ public class Helper {
 				case "batch" : return MetaType.batch;
 				case "batchexec" : return MetaType.batchExec;
 				case "schedule" : return MetaType.schedule;
+				case "ingest" : return MetaType.ingest;
+				case "ingestExec" : return  MetaType.ingestExec; 
 				default : return null;
 			}
 		}
@@ -888,6 +896,7 @@ public class Helper {
 		case operatorExec : return MetaType.operator;
 		case reportExec : return MetaType.report;
 		case batchExec : return MetaType.batch;
+		case ingestExec : return MetaType.ingest;
 		default : return null;
 		}
 	}
@@ -950,6 +959,7 @@ public class Helper {
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
 		case graphExec : return new GraphExec();
+		case ingest : return new IngestExec();
 		default : return null;
 		}
 	}

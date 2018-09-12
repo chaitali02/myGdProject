@@ -16,39 +16,42 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.inferyx.framework.domain.BatchExec;
+import com.inferyx.framework.domain.IngestExec;
 
-public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
-
+/**
+ * @author Ganesh
+ *
+ */
+public interface IIngestExecDao extends MongoRepository<IngestExec, String> {
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
-	public BatchExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
+	public IngestExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
-	public BatchExec findOneByUuidAndVersion(String uuid, String version);
+	public IngestExec findOneByUuidAndVersion(String uuid, String version);
 
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
-	public List<BatchExec> test(String param1);
+	public List<IngestExec> test(String param1);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public List<BatchExec> findAll(String appUuid);
+	public List<IngestExec> findAll(String appUuid);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
-	public List<BatchExec> findAllByUuid(String appUuid, String uuid);
+	public List<IngestExec> findAllByUuid(String appUuid, String uuid);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
-	public BatchExec findLatestByUuid(String appUuid, String uuid, Sort sort);
+	public IngestExec findLatestByUuid(String appUuid, String uuid, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0 }")
-	public BatchExec findLatestByUuid(String uuid, Sort sort);
+	public IngestExec findLatestByUuid(String uuid, Sort sort);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
-	public List<BatchExec> findAllVersion(String appUuid, String uuid);
+	public List<IngestExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
-	public List<BatchExec> findAllVersion(String uuid);
+	public List<IngestExec> findAllVersion(String uuid);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
-	public BatchExec findOneById(String appUuid, String id);
+	public IngestExec findOneById(String appUuid, String id);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
@@ -57,29 +60,29 @@ public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 	public void delete(String id);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
-	public BatchExec findAsOf(String appUuid, String uuid, String version, Sort sort);
+	public IngestExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
-	public BatchExec findAsOf(String uuid, String version, Sort sort);
+	public IngestExec findAsOf(String uuid, String version, Sort sort);
 	
 	@Query(value = "{}")
-	public BatchExec findLatest(Sort sort);
+	public IngestExec findLatest(Sort sort);
 	
 	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public BatchExec findLatest(String appUuid, Sort sort);
+	public IngestExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")
-	public BatchExec findOneById(String id);
+	public IngestExec findOneById(String id);
 	
 	@Query(value="{'uuid':?0}")
-	public BatchExec findAllByUuid(String uuid);
+	public IngestExec findAllByUuid(String uuid);
 	
 	@Query(value="{}")
-	public List<BatchExec> findAll();		
+	public List<IngestExec> findAll();		
 		
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
-	public BatchExec save(String appUuid, String id);
+	public IngestExec save(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
-	public BatchExec save(String id);
+	public IngestExec save(String id);
 }
