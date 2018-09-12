@@ -503,7 +503,7 @@ public class Helper {
 				case "batchexec" : return MetaType.batchExec;
 				case "schedule" : return MetaType.schedule;
 				case "ingest" : return MetaType.ingest;
-				case "ingestExec" : return  MetaType.ingestExec; 
+				case "ingestexec" : return  MetaType.ingestExec; 
 				default : return null;
 			}
 		}

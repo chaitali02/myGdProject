@@ -457,10 +457,49 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IScheduleDao iScheduleDao;
 	@Autowired 
-	IIngestDao iIgectDao;
+	IIngestDao iIngestDao;
 	@Autowired
-	IIngestExecDao iIngectExecDao;
-	
+	IIngestExecDao iIngestExecDao;
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the iIngestDao
+	 */
+	public IIngestDao getiIngestDao() {
+		return iIngestDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param iIgestDao the iIngestDao to set
+	 */
+	public void setiIngestDao(IIngestDao iIngestDao) {
+		this.iIngestDao = iIngestDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the iIngestExecDao
+	 */
+	public IIngestExecDao getiIngestExecDao() {
+		return iIngestExecDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param iIngestExecDao the iIngestExecDao to set
+	 */
+	public void setiIngestExecDao(IIngestExecDao iIngestExecDao) {
+		this.iIngestExecDao = iIngestExecDao;
+	}
+
 	public IScheduleDao getiScheduleDao() {
 		return iScheduleDao;
 	}
@@ -2376,7 +2415,7 @@ public class CommonServiceImpl <T> {
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
 			for(MetaType mType : metaTypes){
-				//logger.info("MetaType: "+mType+"\n");
+//				logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {

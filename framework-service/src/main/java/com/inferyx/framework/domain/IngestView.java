@@ -10,16 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
-
-import org.springframework.data.mongodb.core.mapping.Document;
-
 /**
  * @author Ganesh
  *
  */
-@Document(collection = "ingest")
-public class Ingest extends BaseEntity {
+public class IngestView extends BaseEntity {
 	private String sourceType;
 	private MetaIdentifierHolder sourceName;
 	private MetaIdentifierHolder sourceDetail;
@@ -27,26 +22,9 @@ public class Ingest extends BaseEntity {
 	private MetaIdentifierHolder targetName;
 	private MetaIdentifierHolder targetDetail;
 	private String runParams;
-	private List<AttributeRefHolder> filterInfo;
-	
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the filterInfo
-	 */
-	public List<AttributeRefHolder> getFilterInfo() {
-		return filterInfo;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param filterInfo the filterInfo to set
-	 */
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
-		this.filterInfo = filterInfo;
-	}
+	private String ingestChg;
+	private Filter filter;	
+	private String filterChg;
 	/**
 	 *
 	 * @Ganesh
@@ -172,5 +150,59 @@ public class Ingest extends BaseEntity {
 	 */
 	public void setRunParams(String runParams) {
 		this.runParams = runParams;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestChg
+	 */
+	public String getIngestChg() {
+		return ingestChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestChg the ingestChg to set
+	 */
+	public void setIngestChg(String ingestChg) {
+		this.ingestChg = ingestChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the filter
+	 */
+	public Filter getFilter() {
+		return filter;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param filter the filter to set
+	 */
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the filterChg
+	 */
+	public String getFilterChg() {
+		return filterChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param filterChg the filterChg to set
+	 */
+	public void setFilterChg(String filterChg) {
+		this.filterChg = filterChg;
 	}
 }
