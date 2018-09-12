@@ -106,4 +106,41 @@ public class ParquetReader implements IReader
 		return rsHolder;
 	}	
 
+//	public ResultSetHolder read(String filePath, Object conObject) throws IOException {
+//		String tableName = "";
+//		ResultSetHolder rsHolder = new ResultSetHolder();
+//		try {			
+//			Dataset<Row> df = null;
+//			SparkSession sparkSession = (SparkSession) conObject;
+//			DataFrameReader reader = sparkSession.read();
+//			df = reader.load(filePath);
+//			tableName = Helper.genTableName(filePath);
+//			rsHolder.setDataFrame(df);
+//			rsHolder.setCountRows(df.count());
+//			rsHolder.setType(ResultType.dataframe);
+//			rsHolder.setTableName(tableName);
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//			String errorMessage = e.getMessage();
+//			if(errorMessage.contains("Path does not exist:")) {
+//				String message = null;
+//				try {
+//					message = e.getMessage();
+//				}catch (Exception e2) {
+//					// TODO: handle exception
+//				}
+//				try {
+//					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+//				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+//						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
+//						| ParseException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//					throw new RuntimeException((message != null) ? message : "File path not exist.");
+//				}
+//				throw new RuntimeException((message != null) ? message : "File path not exist.");
+//			}
+//		}		
+//		return rsHolder;
+//	}
 }
