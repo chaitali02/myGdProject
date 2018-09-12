@@ -10,18 +10,20 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+
 /**
  * @author Ganesh
  *
  */
 public class IngestView extends BaseEntity {
-	private String sourceType;
-	private MetaIdentifierHolder sourceName;
+	private String type;
+	private MetaIdentifierHolder sourceDatasource;
 	private MetaIdentifierHolder sourceDetail;
-	private String targetType;
-	private MetaIdentifierHolder targetName;
+	private MetaIdentifierHolder targetDatasource;
 	private MetaIdentifierHolder targetDetail;
 	private String runParams;
+	private String sourceFormat;
+	private String targetFormat;
 	private String ingestChg;
 	private Filter filter;	
 	private String filterChg;
@@ -31,55 +33,37 @@ public class IngestView extends BaseEntity {
 	 *
 	 * @Ganesh
 	 *
-	 * @return the sourceChg
+	 * @return the type
 	 */
-	public String getSourceChg() {
-		return sourceChg;
+	public String getType() {
+		return type;
 	}
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param sourceChg the sourceChg to set
+	 * @param type the type to set
 	 */
-	public void setSourceChg(String sourceChg) {
-		this.sourceChg = sourceChg;
+	public void setType(String type) {
+		this.type = type;
 	}
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @return the sourceType
+	 * @return the sourceDatasource
 	 */
-	public String getSourceType() {
-		return sourceType;
+	public MetaIdentifierHolder getSourceDatasource() {
+		return sourceDatasource;
 	}
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param sourceType the sourceType to set
+	 * @param sourceDatasource the sourceDatasource to set
 	 */
-	public void setSourceType(String sourceType) {
-		this.sourceType = sourceType;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the sourceName
-	 */
-	public MetaIdentifierHolder getSourceName() {
-		return sourceName;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param sourceName the sourceName to set
-	 */
-	public void setSourceName(MetaIdentifierHolder sourceName) {
-		this.sourceName = sourceName;
+	public void setSourceDatasource(MetaIdentifierHolder sourceDatasource) {
+		this.sourceDatasource = sourceDatasource;
 	}
 	/**
 	 *
@@ -103,37 +87,19 @@ public class IngestView extends BaseEntity {
 	 *
 	 * @Ganesh
 	 *
-	 * @return the targetType
+	 * @return the targetDatasource
 	 */
-	public String getTargetType() {
-		return targetType;
+	public MetaIdentifierHolder getTargetDatasource() {
+		return targetDatasource;
 	}
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param targetType the targetType to set
+	 * @param targetDatasource the targetDatasource to set
 	 */
-	public void setTargetType(String targetType) {
-		this.targetType = targetType;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the targetName
-	 */
-	public MetaIdentifierHolder getTargetName() {
-		return targetName;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param targetName the targetName to set
-	 */
-	public void setTargetName(MetaIdentifierHolder targetName) {
-		this.targetName = targetName;
+	public void setTargetDatasource(MetaIdentifierHolder targetDatasource) {
+		this.targetDatasource = targetDatasource;
 	}
 	/**
 	 *
@@ -170,6 +136,42 @@ public class IngestView extends BaseEntity {
 	 */
 	public void setRunParams(String runParams) {
 		this.runParams = runParams;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceFormat
+	 */
+	public String getSourceFormat() {
+		return sourceFormat;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceFormat the sourceFormat to set
+	 */
+	public void setSourceFormat(String sourceFormat) {
+		this.sourceFormat = sourceFormat;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the targetFormat
+	 */
+	public String getTargetFormat() {
+		return targetFormat;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param targetFormat the targetFormat to set
+	 */
+	public void setTargetFormat(String targetFormat) {
+		this.targetFormat = targetFormat;
 	}
 	/**
 	 *
@@ -224,5 +226,23 @@ public class IngestView extends BaseEntity {
 	 */
 	public void setFilterChg(String filterChg) {
 		this.filterChg = filterChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceChg
+	 */
+	public String getSourceChg() {
+		return sourceChg;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceChg the sourceChg to set
+	 */
+	public void setSourceChg(String sourceChg) {
+		this.sourceChg = sourceChg;
 	}
 }

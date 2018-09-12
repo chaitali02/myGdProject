@@ -43,7 +43,6 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
@@ -1022,13 +1021,18 @@ public class MetadataController {
 		return metadataServiceImpl.getBatchMetaInfoByBatchExec(uuid, version);
 	}
 	
-	@RequestMapping(value = "/getFileDetailsByDatasource", method = RequestMethod.GET)
-	public @ResponseBody List<String> getFileDetailsByDatasource(
-			@RequestParam(value = "uuid") String datasourceUuid,
-			@RequestParam(value = "version", required = false) String datasourceVersion, 
+	@RequestMapping(value = "/getDatasourceForFile", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getDatasourceForFile(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return metadataServiceImpl.getFileDetailsByDatasource(datasourceUuid);
+		return metadataServiceImpl.getDatasourceForFile();
+	}
+	
+	@RequestMapping(value = "/getDatasourceForTable", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getDatasourceForTable( 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getDatasourceForTable();
 	}
 	
 	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)

@@ -42,7 +42,6 @@ import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
-import org.apache.spark.ml.clustering.DistributedLDAModel;
 import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.clustering.LocalLDAModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
@@ -69,6 +68,7 @@ import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.AnalysisException;
+import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -125,6 +125,7 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
+import com.inferyx.framework.reader.ParquetReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
@@ -171,6 +172,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
+	@Autowired
+	private ParquetReader parquetReader;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -2885,5 +2888,29 @@ public class SparkExecutor<T> implements IExecutor {
 			comparisonResultMap.put(dType._1(), comparison);
 		}
 		return comparisonResultMap;
+	}
+	
+	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String clientContext) throws IOException {		
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+//		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+//		ResultSetHolder rsHolder = parquetReader.read(filePath, conHolder.getStmtObject());
+		
+		//reading file
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		DataFrameReader reader = sparkSession.read();
+		Dataset<Row> df = reader.load(filePath);
+		tableName = Helper.genTableName(filePath);
+		
+		//creating rsHolder
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setCountRows(df.count());
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setTableName(tableName);
+		
+		//registering temp table
+		sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+		return rsHolder;
 	}
 }

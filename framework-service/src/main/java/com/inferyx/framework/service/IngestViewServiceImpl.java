@@ -24,8 +24,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IIngestDao;
 import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Batch;
-import com.inferyx.framework.domain.BatchView;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestView;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -40,8 +38,6 @@ import com.inferyx.framework.register.GraphRegister;
 public class IngestViewServiceImpl {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private BatchSchedulerServiceImpl batchSchedulerServiceImpl;
 	@Autowired
 	private SecurityServiceImpl securityServiceImpl;
     @Autowired
@@ -69,15 +65,15 @@ public class IngestViewServiceImpl {
 		ingestView.setTags(ingest.getTags());
 		
 		//setting ingestView properties specific to ingest
-		ingestView.setSourceType(ingest.getSourceType());
-		ingestView.setSourceName(ingest.getSourceName());
+		ingestView.setType(ingest.getType());
+		ingestView.setSourceDatasource(ingest.getSourceDatasource());
 		ingestView.setSourceDetail(ingest.getSourceDetail());
-		ingestView.setTargetType(ingest.getSourceType());
-		ingestView.setTargetName(ingest.getTargetName());
+		ingestView.setSourceFormat(ingest.getSourceFormat());
+		ingestView.setTargetDatasource(ingest.getTargetDatasource());
 		ingestView.setTargetDetail(ingest.getTargetDetail());
+		ingestView.setTargetFormat(ingest.getTargetFormat());
 		ingestView.setRunParams(ingest.getRunParams());
-//		ingestView.setFilter(filter);
-		
+//		ingestView.setFilter(filter);		
 		return ingestView;
 	}
 
@@ -98,16 +94,16 @@ public class IngestViewServiceImpl {
 		}
 		
 		//setting ingest specific properties
-		ingest.setSourceType(ingestView.getSourceType());
-		ingest.setSourceName(ingestView.getSourceName());
+		ingest.setType(ingestView.getType());
+		ingest.setSourceDatasource(ingestView.getSourceDatasource());
 		ingest.setSourceDetail(ingestView.getSourceDetail());
-		ingest.setTargetType(ingestView.getSourceType());
-		ingest.setTargetName(ingestView.getTargetName());
+		ingest.setSourceFormat(ingestView.getSourceFormat());
+		ingest.setTargetDatasource(ingestView.getTargetDatasource());
 		ingest.setTargetDetail(ingestView.getTargetDetail());
-		ingest.setRunParams(ingestView.getRunParams());	
+		ingest.setTargetFormat(ingestView.getTargetFormat());
+		ingest.setRunParams(ingestView.getRunParams());
 //		ingest.setFilterInfo(filterInfo);
-		ingest = save(ingest);
-		return ingest;
+		return save(ingest);
 	}
 	
 	public Ingest save(Ingest ingest) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {

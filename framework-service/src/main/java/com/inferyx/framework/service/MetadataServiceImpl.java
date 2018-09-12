@@ -15,7 +15,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -99,6 +98,7 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -1458,6 +1458,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		@SuppressWarnings("rawtypes")
 		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.comment.toString(), className);
 		result = ruleExecResults.getMappedResults();
 		for (BaseEntity baseEntity : result) {
@@ -1979,8 +1980,9 @@ public class MetadataServiceImpl {
 		
 		return baseEntityStatusList;
 	}
-	
-	public List<String> getFileDetailsByDatasource(String datasourceUuid) throws JsonProcessingException {
+
+	/********************** UNUSED **********************/
+	/*public List<String> getFileDetailsByDatasource(String datasourceUuid) throws JsonProcessingException {
 		Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(datasourceUuid, MetaType.datasource.toString());
 		File folder = new File(datasource.getPath());
 		File[] listOfFiles = folder.listFiles();
@@ -1994,7 +1996,7 @@ public class MetadataServiceImpl {
 			}
 		}		
 		return fileNameList;
-	}
+	}*/
 	
 	public List<BaseEntity> getDatapodByDatasource(String datasourceUuid) {		
 		MatchOperation filter = match(new Criteria("datasource.ref.uuid").is(datasourceUuid));
@@ -2006,19 +2008,20 @@ public class MetadataServiceImpl {
 		List<BaseEntity> datapodBE = new ArrayList<>();
 		for(Datapod datapod : aggregationResults.getMappedResults()) {
 			Datapod datapod2 = getDatapod(datapod.getId(), datapod.getVersion());
-			
-			BaseEntity baseEntity = new BaseEntity();
-			baseEntity.setUuid(datapod2.getUuid());
-			baseEntity.setVersion(datapod2.getVersion());
-			baseEntity.setName(datapod2.getName());
-			baseEntity.setDesc(datapod2.getDesc());
-			baseEntity.setCreatedBy(datapod2.getCreatedBy());
-			baseEntity.setCreatedOn(datapod2.getCreatedOn());
-			baseEntity.setTags(datapod2.getTags());
-			baseEntity.setActive(datapod2.getActive());
-			baseEntity.setPublished(datapod2.getPublished());
-			baseEntity.setAppInfo(datapod2.getAppInfo());
-			datapodBE.add(baseEntity);	
+			if(datapod2 != null) {
+				BaseEntity baseEntity = new BaseEntity();
+				baseEntity.setUuid(datapod2.getUuid());
+				baseEntity.setVersion(datapod2.getVersion());
+				baseEntity.setName(datapod2.getName());
+				baseEntity.setDesc(datapod2.getDesc());
+				baseEntity.setCreatedBy(datapod2.getCreatedBy());
+				baseEntity.setCreatedOn(datapod2.getCreatedOn());
+				baseEntity.setTags(datapod2.getTags());
+				baseEntity.setActive(datapod2.getActive());
+				baseEntity.setPublished(datapod2.getPublished());
+				baseEntity.setAppInfo(datapod2.getAppInfo());
+				datapodBE.add(baseEntity);				
+			}	
 		}
 		
 		return datapodBE;
@@ -2049,5 +2052,51 @@ public class MetadataServiceImpl {
 		} else {
 			return null;
 		}
+	}
+
+	public List<BaseEntity> getDatasourceForFile() {
+		@SuppressWarnings("unchecked")
+		List<Datasource> datasources = commonServiceImpl.findAllLatest(MetaType.datasource);
+		List<BaseEntity> dsForFile = new ArrayList<>();
+		for(Datasource datasource : datasources) {
+			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				BaseEntity baseEntity = new BaseEntity();
+				baseEntity.setUuid(datasource.getUuid());
+				baseEntity.setVersion(datasource.getVersion());
+				baseEntity.setName(datasource.getName());
+				baseEntity.setDesc(datasource.getDesc());
+				baseEntity.setCreatedBy(datasource.getCreatedBy());
+				baseEntity.setCreatedOn(datasource.getCreatedOn());
+				baseEntity.setTags(datasource.getTags());
+				baseEntity.setActive(datasource.getActive());
+				baseEntity.setPublished(datasource.getPublished());
+				baseEntity.setAppInfo(datasource.getAppInfo());
+				dsForFile.add(baseEntity);
+			}
+		}
+		return dsForFile;
+	}
+
+	public List<BaseEntity> getDatasourceForTable() {
+		@SuppressWarnings("unchecked")
+		List<Datasource> datasources = commonServiceImpl.findAllLatest(MetaType.datasource);
+		List<BaseEntity> dsForFile = new ArrayList<>();
+		for(Datasource datasource : datasources) {
+			if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				BaseEntity baseEntity = new BaseEntity();
+				baseEntity.setUuid(datasource.getUuid());
+				baseEntity.setVersion(datasource.getVersion());
+				baseEntity.setName(datasource.getName());
+				baseEntity.setDesc(datasource.getDesc());
+				baseEntity.setCreatedBy(datasource.getCreatedBy());
+				baseEntity.setCreatedOn(datasource.getCreatedOn());
+				baseEntity.setTags(datasource.getTags());
+				baseEntity.setActive(datasource.getActive());
+				baseEntity.setPublished(datasource.getPublished());
+				baseEntity.setAppInfo(datasource.getAppInfo());
+				dsForFile.add(baseEntity);
+			}
+		}
+		return dsForFile;
 	}
 }
