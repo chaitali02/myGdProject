@@ -3,6 +3,11 @@
  */
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,7 +19,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -49,6 +61,8 @@ public class BatchViewServiceImpl {
     private GraphRegister<?> registerGraph;
     @Autowired
     private BatchSchedulerServiceImpl scheduleServiceImpl;
+    @Autowired
+    private BatchSchedulerServiceImpl batchSchedulerServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchViewServiceImpl.class);
 	
@@ -73,38 +87,55 @@ public class BatchViewServiceImpl {
 		batchView.setInParallel(batch.getInParallel());
 		
 		//setting batchView properties specific to schedule 	
-		Query query = new Query();
-		query.fields().include("uuid");
-		query.fields().include("version");
-		query.fields().include("active");
-		query.fields().include("name");
-		query.fields().include("appInfo");
-		query.fields().include("createdBy");
-		query.fields().include("createdOn");
-		query.fields().include("desc");
-		query.fields().include("tags");
-		query.fields().include("published");
-		query.fields().include("startDate");
-		query.fields().include("endDate");
-		query.fields().include("nextRunTime");
-		query.fields().include("frequencyType");
-		query.fields().include("frequencyDetail");
-		query.fields().include("dependsOn");
-		query.fields().include("scheduleChg");
+//		Query query = new Query();
+//		query.fields().include("uuid");
+//		query.fields().include("version");
+//		query.fields().include("active");
+//		query.fields().include("name");
+//		query.fields().include("appInfo");
+//		query.fields().include("createdBy");
+//		query.fields().include("createdOn");
+//		query.fields().include("desc");
+//		query.fields().include("tags");
+//		query.fields().include("published");
+//		query.fields().include("startDate");
+//		query.fields().include("endDate");
+//		query.fields().include("nextRunTime");
+//		query.fields().include("frequencyType");
+//		query.fields().include("frequencyDetail");
+//		query.fields().include("dependsOn");
+//		query.fields().include("scheduleChg");
+//		
+//		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(batchUuid));
 		
-		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(batchUuid));
-		
-		List<Schedule> schedulesList = mongoTemplate.find(query, Schedule.class);
-		
+		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(batchUuid));
+		GroupOperation schedulerGroup = group("uuid").max("version").as("version");
+		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "version"));
+		Aggregation scheduleAggr = newAggregation(filter, schedulerGroup, sortByNextRunTime);
+		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
+		List<Schedule> schedulesList = scheduleAggrResults.getMappedResults();	
 		List<Schedule> latestSchedules = new ArrayList<>();
 		Set<String> uuidSet = new HashSet<>();
 		for(Schedule schedule : schedulesList) {
 			if(!uuidSet.contains(schedule.getUuid())) {
-				Schedule latestSchedule = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getUuid(), MetaType.schedule.toString(), "N");
+				Schedule latestSchedule = (Schedule) batchSchedulerServiceImpl.getSchedule(schedule.getUuid(), schedule.getVersion(), null);
 				latestSchedules.add(latestSchedule);
 				uuidSet.add(schedule.getUuid());
 			}
 		}
+		
+		
+//		List<Schedule> schedulesList = mongoTemplate.find(query, Schedule.class);
+//		
+//		List<Schedule> latestSchedules = new ArrayList<>();
+//		Set<String> uuidSet = new HashSet<>();
+//		for(Schedule schedule : schedulesList) {
+//			if(!uuidSet.contains(schedule.getUuid())) {
+//				Schedule latestSchedule = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getUuid(), MetaType.schedule.toString(), "N");
+//				latestSchedules.add(latestSchedule);
+//				uuidSet.add(schedule.getUuid());
+//			}
+//		}
 		batchView.setScheduleInfo(latestSchedules);		
 		return batchView;
 	}
