@@ -265,10 +265,12 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
             }
             else{
                 $scope.onChangeSourceDataSource();
+                
                 var selectedSourceDetail={};
                 selectedSourceDetail.type=$scope.ingestData.sourceDetail.ref.type;
                 selectedSourceDetail.uuid=$scope.ingestData.sourceDetail.ref.uuid;
                 $scope.selectedSourceDetail=selectedSourceDetail;
+                $scope.getAllAttributeBySource();
                 
             }
             $scope.onChangeTargetDataSource();
@@ -331,6 +333,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
                     selectedSourceDetail.type=$scope.ingestData.sourceDetail.ref.type;
                     selectedSourceDetail.uuid=$scope.ingestData.sourceDetail.ref.uuid;
                     $scope.selectedSourceDetail=selectedSourceDetail;
+                    $scope.getAllAttributeBySource();
                 },100);
                 
                 
@@ -690,7 +693,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
             sourceDetails.value=$scope.selectedSourceDetail;
         }else{
             sourceDetailsRef.type="datapod";
-            sourceDetailsRef.uuid=$scope.sourceDetails.uuid;
+            sourceDetailsRef.uuid=$scope.selectedSourceDetail.uuid;
             sourceDetails.ref=sourceDetailsRef;
         }
         ingestJson.sourceDetail=sourceDetails;
