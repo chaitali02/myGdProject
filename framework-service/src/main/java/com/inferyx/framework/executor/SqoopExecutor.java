@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.cloudera.sqoop.SqoopOptions;
 import com.cloudera.sqoop.SqoopOptions.IncrementalMode;
+import com.cloudera.sqoop.tool.ExportTool;
 import com.cloudera.sqoop.tool.ImportTool;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.SqoopConnector;
@@ -21,7 +22,7 @@ import com.inferyx.framework.domain.SqoopInput;
  *
  */
 @Service
-public class SqoopImportExecutor {
+public class SqoopExecutor {
 	
 	@Autowired
 	private SqoopConnector sqoopConnector;
@@ -29,7 +30,7 @@ public class SqoopImportExecutor {
 	/**
 	 * 
 	 */
-	public SqoopImportExecutor() {
+	public SqoopExecutor() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -68,12 +69,30 @@ public class SqoopImportExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getWhereClause())) {
 			sqoopOptions.setWhereClause(sqoopInput.getWhereClause());
 		}
-	    
-	    
+		if (StringUtils.isNotBlank(sqoopInput.getExportDir())) {
+			sqoopOptions.setExportDir(sqoopInput.getExportDir());
+		}
+		if (sqoopInput.getNumMappers() > 0) {
+			sqoopOptions.setNumMappers(sqoopInput.getNumMappers());
+		}
+		if (sqoopInput.getLinesTerminatedBy() > 0) {
+			sqoopOptions.setLinesTerminatedBy(sqoopInput.getLinesTerminatedBy());
+		}
+		if (sqoopInput.getFieldsTerminatedBy() > 0) {
+			sqoopOptions.setFieldsTerminatedBy(sqoopInput.getFieldsTerminatedBy());
+		}
+		sqoopOptions.setExplicitInputDelims(sqoopInput.getExplicitInputDelims());
+		sqoopOptions.setExplicitOutputDelims(sqoopInput.getExplicitOutputDelims());
 	    
 		
 	}
 	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 * @throws IOException
+	 */
 	public Object execute(Object input) throws IOException {
 		SqoopInput sqoopInput = null;
 		SqoopOptions sqoopOptions = new SqoopOptions();
@@ -83,11 +102,19 @@ public class SqoopImportExecutor {
 		}
 		if (input instanceof SqoopInput) {
 			sqoopInput = (SqoopInput) input;
-			sqoopOptions = (SqoopOptions) sqoopConnector.getConnection(sqoopInput.getSourceDs(), sqoopOptions).getConObject();
+			if (sqoopInput.getImportIntended()) {
+				sqoopOptions = (SqoopOptions) sqoopConnector.getConnection(sqoopInput.getSourceDs(), sqoopOptions).getConObject();
+			} else {
+				sqoopOptions = (SqoopOptions) sqoopConnector.getConnection(sqoopInput.getTargetDs(), sqoopOptions).getConObject();
+			}
 			setSqoopOptions(sqoopOptions, sqoopInput);
 		}
 		int res;
-	    res = new ImportTool().run(sqoopOptions);
+		if (sqoopInput.getImportIntended()) {
+			res = new ImportTool().run(sqoopOptions);
+		} else {
+			res = new ExportTool().run(sqoopOptions);
+		}
 	    if (res != 0) {
 	      throw new RuntimeException("Sqoop API Failed - return code : "+Integer.toString(res));
 	    }

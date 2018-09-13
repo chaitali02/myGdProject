@@ -20,6 +20,13 @@ public class SqoopInput {
     private SqoopIncrementalMode incrementalMode;
     private String incrementalTestColumn;
     private String incrementalLastValue;
+    private String exportDir;
+	private int numMappers;
+	private char linesTerminatedBy;
+	private char fieldsTerminatedBy;
+	private Boolean explicitInputDelims;
+	private Boolean  explicitOutputDelims;
+	private Boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
 
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
@@ -249,6 +256,104 @@ public class SqoopInput {
 		this.incrementalLastValue = incrementalLastValue;
 	}
 
+	/**
+	 * @return the exportDir
+	 */
+	public String getExportDir() {
+		return exportDir;
+	}
+
+	/**
+	 * @param exportDir the exportDir to set
+	 */
+	public void setExportDir(String exportDir) {
+		this.exportDir = exportDir;
+	}
+
+	/**
+	 * @return the numMappers
+	 */
+	public int getNumMappers() {
+		return numMappers;
+	}
+
+	/**
+	 * @param numMappers the numMappers to set
+	 */
+	public void setNumMappers(int numMappers) {
+		this.numMappers = numMappers;
+	}
+
+	/**
+	 * @return the linesTerminatedBy
+	 */
+	public char getLinesTerminatedBy() {
+		return linesTerminatedBy;
+	}
+
+	/**
+	 * @param linesTerminatedBy the linesTerminatedBy to set
+	 */
+	public void setLinesTerminatedBy(char linesTerminatedBy) {
+		this.linesTerminatedBy = linesTerminatedBy;
+	}
+
+	/**
+	 * @return the fieldsTerminatedBy
+	 */
+	public char getFieldsTerminatedBy() {
+		return fieldsTerminatedBy;
+	}
+
+	/**
+	 * @param fieldsTerminatedBy the fieldsTerminatedBy to set
+	 */
+	public void setFieldsTerminatedBy(char fieldsTerminatedBy) {
+		this.fieldsTerminatedBy = fieldsTerminatedBy;
+	}
+
+	/**
+	 * @return the explicitInputDelims
+	 */
+	public Boolean getExplicitInputDelims() {
+		return explicitInputDelims;
+	}
+
+	/**
+	 * @param explicitInputDelims the explicitInputDelims to set
+	 */
+	public void setExplicitInputDelims(Boolean explicitInputDelims) {
+		this.explicitInputDelims = explicitInputDelims;
+	}
+
+	/**
+	 * @return the explicitOutputDelims
+	 */
+	public Boolean getExplicitOutputDelims() {
+		return explicitOutputDelims;
+	}
+
+	/**
+	 * @param explicitOutputDelims the explicitOutputDelims to set
+	 */
+	public void setExplicitOutputDelims(Boolean explicitOutputDelims) {
+		this.explicitOutputDelims = explicitOutputDelims;
+	}
+
+	/**
+	 * @return the importIntended
+	 */
+	public Boolean getImportIntended() {
+		return importIntended;
+	}
+
+	/**
+	 * @param importIntended the importIntended to set
+	 */
+	public void setImportIntended(Boolean importIntended) {
+		this.importIntended = importIntended;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -257,10 +362,12 @@ public class SqoopInput {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
 				+ sourceDirectory + ", targetDirectory=" + targetDirectory + ", hiveImport=" + hiveImport
 				+ ", partitionKey=" + partitionKey + ", partitionValue=" + partitionValue + ", whereClause="
-				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn="
-				+ checkColumn + ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode="
-				+ incrementalMode + ", incrementalTestColumn=" + incrementalTestColumn + ", incrementalLastValue="
-				+ incrementalLastValue + "]";
+				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn=" + checkColumn
+				+ ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode=" + incrementalMode
+				+ ", incrementalTestColumn=" + incrementalTestColumn + ", incrementalLastValue=" + incrementalLastValue
+				+ ", exportDir=" + exportDir + ", numMappers=" + numMappers + ", linesTerminatedBy=" + linesTerminatedBy
+				+ ", fieldsTerminatedBy=" + fieldsTerminatedBy + ", explicitInputDelims=" + explicitInputDelims
+				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended + "]";
 	}
 	
 }
