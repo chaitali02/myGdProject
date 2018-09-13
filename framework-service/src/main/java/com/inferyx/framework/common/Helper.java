@@ -1010,4 +1010,15 @@ public class Helper {
 		}
 		return null;
 	}
+	
+	public static String getDelimetrByFormat(String format) {
+		if(format != null) {
+			switch(format.toLowerCase()) {
+			case "csv" : return ",";
+			case "tsv" : return "\t";
+			case "psv" : return "!";
+			}
+		}
+		return null;
+	}
 }

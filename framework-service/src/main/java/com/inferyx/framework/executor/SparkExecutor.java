@@ -126,6 +126,7 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
+import com.inferyx.framework.reader.ParquetReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
@@ -172,6 +173,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
+	@Autowired
+	private ParquetReader parquetReader;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -2888,17 +2891,13 @@ public class SparkExecutor<T> implements IExecutor {
 		return comparisonResultMap;
 	}
 	
-	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String clientContext) throws IOException {		
+	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
-//		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
-//		ResultSetHolder rsHolder = parquetReader.read(filePath, conHolder.getStmtObject());
 		
 		//reading file
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		DataFrameReader reader = sparkSession.read();
-		Dataset<Row> df = reader.load(filePath);
-		tableName = Helper.genTableName(filePath);
+		Dataset<Row> df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
 		
 		//creating rsHolder
 		ResultSetHolder rsHolder = new ResultSetHolder();
@@ -2908,7 +2907,9 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setTableName(tableName);
 		
 		//registering temp table
-		sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+		if(registerTempTable) {
+			sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+		}
 		return rsHolder;
 	}
 	
@@ -2933,17 +2934,43 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String tableName, String saveMode, String fileFormat) throws IOException {
+	
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
+		String absolutePath = targetPath/*+fileName*/;
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
-			df.write().mode(saveMode).csv(targetPath);
+			df.write().mode(saveMode).option("delimiter", ",").csv(absolutePath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
-			
+			df.write().mode(saveMode).option("delimiter", "\t").csv(absolutePath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
-			
+			df.write().mode(saveMode).option("delimiter", "!").csv(absolutePath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			rsHolder = persistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
+	}
+	
+	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
+		List<Map<String, Object>> data = new ArrayList<>();
+		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, "true", clientContext, false).getDataFrame();
+		
+		List<Attribute> attributes = datapod.getAttributes();
+//		for(Attribute attribute : attributes){
+//			df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
+//		} 		
+////		df.show(false);
+		String[] columns = df.columns();
+		Row [] rows = (Row[]) df.head(rowLimit);
+		for (Row row : rows) {
+			int i = 0;
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(attributes.get(i).getName(), (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+				i++;
+			}
+			data.add(object);
+		}
+		return data;
 	}
 }

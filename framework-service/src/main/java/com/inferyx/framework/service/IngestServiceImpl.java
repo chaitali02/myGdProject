@@ -4,31 +4,27 @@
 package com.inferyx.framework.service;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SaveMode;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.athena.model.Row;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -38,9 +34,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ExecutorFactory;
 
 /**
  * @author Ganesh
@@ -56,15 +50,13 @@ public class IngestServiceImpl {
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
-	private ExecutorFactory execFactory;
-	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
 	public IngestExec create(String ingestUuid, String ingestVersion, ExecParams execParams, IngestExec ingestExec, RunMode runMode) throws Exception {
 		try {
-			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestUuid, MetaType.ingest.toString());
+			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString());
 			if(ingestExec == null) {
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingestUuid, ingestVersion));
 				ingestExec = new IngestExec();
@@ -114,7 +106,8 @@ public class IngestServiceImpl {
 			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			long countRows = -1L;
 			
-			String targetFilePathUrl = hdfsInfo.getHdfsURL() + targetDS.getPath();// + "/" + fileName;
+			String targetFilePathUrl = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+			//String targetFilePathUrl = String.format("%s/%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
@@ -123,17 +116,19 @@ public class IngestServiceImpl {
 			if(ingestionType.equals(IngestionType.FILETOFILE)) { 			
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
+
+				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
+				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+				targetFilePathUrl = String.format("%s/%s/%s/%s", targetFilePathUrl, targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
-					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
+					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
+					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + fileName;
 					
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, appUuid);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "true", appUuid, true);
 					
-					//writing to target
-					MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
-					targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
-										
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName, "append", ingest.getTargetFormat());
+					//writing to target				
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 				}
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
@@ -143,7 +138,7 @@ public class IngestServiceImpl {
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
 					
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, appUuid);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "true", appUuid, true);
 					
 					//writing to target
 					MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -156,7 +151,7 @@ public class IngestServiceImpl {
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				
 			} 
-			
+			System.out.println("target path: "+targetFilePathUrl);
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
 			persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
@@ -187,8 +182,18 @@ public class IngestServiceImpl {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
-				if(dirFileName.matches(fileName) && dirFileName.toLowerCase().endsWith("."+fileFormat.toLowerCase())) {
-					fileNameList.add(dirFileName);					
+				if(fileName.endsWith("*")) {
+					Pattern regex = Pattern.compile("^.*"+fileName+".*\\."+fileFormat+"$", Pattern.CASE_INSENSITIVE);
+					Matcher mtch = regex.matcher(dirFileName);
+			        if(mtch.matches()){
+			        	fileNameList.add(dirFileName);	
+			        }
+				} else {
+					Pattern regex = Pattern.compile("^"+fileName+"\\."+fileFormat+"$", Pattern.CASE_INSENSITIVE);
+					Matcher mtch = regex.matcher(dirFileName);
+			        if(mtch.matches()){
+			        	fileNameList.add(dirFileName);	
+			        }
 				}
 			} else if (listOfFiles[i].isDirectory()) {
 				logger.info("Directory " + listOfFiles[i].getName());
@@ -196,23 +201,27 @@ public class IngestServiceImpl {
 		}		
 		return fileNameList;
 	}
-
-	public List<Map<String, Object>> getResults(String execUuid, String execVersion, int rowLimit) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+	
+	public List<Map<String, Object>> getResults(String execUuid, String execVersion, int offset,
+			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
+		List<Map<String, Object>> data = new ArrayList<>();
 		try {
+			limit = offset + limit;
+			offset = offset + 1;
+			
 			IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
-			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getDependsOn().getRef().getUuid(), ingestExec.getDependsOn().getRef().getVersion(), MetaType.ingest.toString());
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getResult().getRef().getUuid(), ingestExec.getResult().getRef().getVersion(), MetaType.datastore.toString());
+			MetaIdentifier ingestMI = ingestExec.getDependsOn().getRef();
+			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestMI.getUuid(), ingestMI.getVersion(), ingestMI.getType().toString());
+			String appUuid = commonServiceImpl.getApp().getUuid();
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			
-			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getResult().getRef().getUuid(), ingestExec.getResult().getRef().getVersion(), MetaType.datastore.toString());
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			String targetTable = null;
-			if(targetDp != null)
-				targetTable = datasource.getDbname()+"."+targetDp.getName();
-			List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
-	
-			return strList;
+			if(!ingest.getTargetFormat().equals(FileType.PARQUET.toString())) {
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", Integer.parseInt(""+datastore.getNumRows()), appUuid);
+			} else {
+				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -221,10 +230,10 @@ public class IngestServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
-			throw new RuntimeException((message != null) ? message : "No data found.");
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new Exception((message != null) ? message : "Table not found.");
 		}
+		return data;
 	}
 	
 	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef, MetaIdentifier datapodKey, IngestExec ingestExec, long countRows, RunMode runMode) throws Exception {

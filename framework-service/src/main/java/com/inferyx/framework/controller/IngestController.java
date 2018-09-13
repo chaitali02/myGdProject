@@ -51,10 +51,15 @@ public class IngestController {
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResults(@RequestParam("uuid") String execUuid,
 			@RequestParam("version") String execVersion,
+			@RequestParam(value = "offset", defaultValue = "0") int offset,
+			@RequestParam(value = "limit", defaultValue = "200") int limit,
+			@RequestParam(value = "sortBy", required = false) String sortBy,
+			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
-		return ingestServiceImpl.getResults(execUuid, execVersion, rowLimit);
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return ingestServiceImpl.getResults(execUuid, execVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
 }
