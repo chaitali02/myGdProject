@@ -2962,7 +2962,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
 		List<Map<String, Object>> data = new ArrayList<>();
-		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, "true", clientContext, false).getDataFrame();
+		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, "false", clientContext, false).getDataFrame();
 		
 		List<Attribute> attributes = datapod.getAttributes();
 //		for(Attribute attribute : attributes){
