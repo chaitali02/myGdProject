@@ -31,10 +31,12 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.SqoopExecutor;
 
 /**
  * @author Ganesh
@@ -51,6 +53,8 @@ public class IngestServiceImpl {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private SqoopExecutor sqoopExecutor;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -148,9 +152,28 @@ public class IngestServiceImpl {
 					countRows = rsHolder.getCountRows();
 				}
 			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 
-				
+				SqoopInput sqoopInput = new SqoopInput();
+				sqoopInput.setSourceDs(sourceDS);
+				sqoopInput.setTargetDs(targetDS);
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				sqoopInput.setSourceDirectory(sourceDir);
+				sqoopInput.setTargetDirectory(targetDir);
+				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
+				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+				sqoopInput.setTable(targetTable);
+				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
-				
+				SqoopInput sqoopInput = new SqoopInput();
+				sqoopInput.setSourceDs(sourceDS);
+				sqoopInput.setTargetDs(targetDS);
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				sqoopInput.setSourceDirectory(sourceDir);
+				sqoopInput.setTargetDirectory(targetDir);
+				sqoopInput.setTable(targetDS+"."+ingest.getTargetDetail().getValue());
+				sqoopExecutor.execute(sqoopInput);
 			} 
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
