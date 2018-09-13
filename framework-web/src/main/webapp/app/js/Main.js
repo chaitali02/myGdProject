@@ -3250,12 +3250,12 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Data Ingestion' },
             params: { type: 'ingest'}
         })
-        .state('ingestrulegrouplist', {
-            url: "/DataIngestion/IngestGroupList",
-            templateUrl: "views/common-list.html",
-            data: { pageTitle: 'Data Ingestion' },
-            params: { type: 'ingestgrsoup'}
-        })
+        // .state('ingestrulegrouplist', {
+        //     url: "/DataIngestion/IngestGroupList",
+        //     templateUrl: "views/common-list.html",
+        //     data: { pageTitle: 'Data Ingestion' },
+        //     params: { type: 'ingestgroup'}
+        // })
         .state('ingestrulerestultlist', {
             url: "/DataIngestion/IngestResultList",
             templateUrl: "views/common-list.html",

@@ -497,7 +497,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsFormula = false;
                         filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value;
                     }
-                    else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod" || response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod") {
                         var rhsdatapodAttribute = {}
                         var obj = {}
                         obj.text = "datapod"
@@ -514,6 +514,23 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsdatapodAttribute.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
                         filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
                     }
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset" && response.filter.dependsOn.ref.uuid == response.filter.filterInfo[i].operand[1].ref.uuid) {
+						var rhsdatapodAttribute = {}
+						var obj = {}
+						obj.text = "datapod"
+						obj.caption = "attribute"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsSimple = false;
+						filterInfo.isrhsFormula = false
+						filterInfo.isrhsDatapod = true;
+						filterInfo.isrhsDataset = false;
+						rhsdatapodAttribute.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsdatapodAttribute.datapodname =response.filter.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.name =response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname =response.filter.filterInfo[i].operand[1].ref.name + "." +response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.attributeId =response.filter.filterInfo[i].operand[1].attributeId;
+						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+					}
                     else if (response.filter.filterInfo[i].operand[1].ref.type == "formula") {
                         var rhsformula = {}
                         var obj = {}
@@ -528,6 +545,43 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsformula.name = response.filter.filterInfo[i].operand[1].ref.name;
                         filterInfo.rhsformula = rhsformula;
                     }
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
+						var rhsdataset = {}
+						var obj = {}
+						obj.text = "dataset"
+						obj.caption = "dataset"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsFormula = false;
+						filterInfo.isrhsSimple = false;
+						filterInfo.isrhsDatapod = false;
+						filterInfo.isrhsDataset = true;
+						rhsdataset.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsdataset.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+						rhsdataset.name = response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdataset.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdataset.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
+						filterInfo.rhsdataset = rhsdataset;
+                    }
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "paramlist") {
+                        var rhsparamlist = {}
+                        var obj = {}
+                        obj.text = "paramlist"
+                        obj.caption = "paramlist"
+                        filterInfo.rhstype = obj;
+                        filterInfo.isrhsFormula = false;
+                        filterInfo.isrhsSimple = false;
+                        filterInfo.isrhsDatapod = false;
+                        filterInfo.isrhsDataset = false;
+                        filterInfo.isrhsParamlist = true;
+                        filterInfo.isrhsFunction = false;
+                        rhsparamlist.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsparamlist.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+                        rhsparamlist.name = response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
+                    
+                        filterInfo.rhsparamlist = rhsparamlist;
+                      }
                     filterInfoArray[i] = filterInfo
                 }
             }

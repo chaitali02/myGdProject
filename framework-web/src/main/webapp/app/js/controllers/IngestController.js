@@ -272,6 +272,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
                 selectedSourceDetail.uuid=$scope.ingestData.sourceDetail.ref.uuid;
                 $scope.selectedSourceDetail=selectedSourceDetail;
                 $scope.getAllAttributeBySource();
+                $scope.getParamByApp();
                 
             }
             $scope.onChangeTargetDataSource();
@@ -599,7 +600,6 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	}
    
 	$scope.getParamByApp=function(){
-		
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 		then(function (response) { onSuccessGetParamByApp(response.data)});
 		var onSuccessGetParamByApp=function(response){
