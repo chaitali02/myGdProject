@@ -45,6 +45,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
     $scope.ingestData;
     $scope.showForm = true;
     $scope.showGraphDiv = false
+    $scope.filterTableArray=[];
     $scope.ingest = {};
     $scope.ingest.versions = [];
     $scope.isDependencyShow = false;
@@ -846,5 +847,277 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			setTimeout(function () { $state.go('ingestrulelist'); }, 2000);
 		}
 	}
+
+});
+
+
+
+DataIngestionModule.controller('IngestResultController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService,privilegeSvc,CF_DOWNLOAD) {
+	$scope.select = $stateParams.type;
+	$scope.type = { text: $scope.select == 'ingestgroupexec' ? 'ingestegroup' : 'ingest' };
+	$scope.showprogress = false;
+	$scope.isRuleExec = false;
+	$scope.isRuleResult = false;
+	$scope.showZoom = false;
+	$scope.isD3RuleEexecGraphShow = false;
+	$scope.isD3RGEexecGraphShow = false;
+	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
+	$scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
+	// ui grid
+	var notify = {
+		type: 'success',
+		title: 'Success',
+		content: '',
+		timeout: 3000 //time in ms
+	};
+	$scope.getGridStyle = function () {
+		var style = {
+			'margin-top': '10px',
+			'height': '40px'
+		}
+		if ($scope.filteredRows) {
+			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 80) + 'px';
+		}
+		return style;
+	}
+	var privileges = privilegeSvc.privileges['comment'] || [];
+	$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	$scope.$on('privilegesUpdated', function (e, data) {
+	  var privileges = privilegeSvc.privileges['comment'] || [];
+	  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+	  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	  
+	});
+	$scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
+	$scope.filteredRows = [];
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+	};
+
+	$scope.refreshRuleExecData = function () {
+		$scope.gridOptionsRule.data = $filter('filter')($scope.orignalRuleExecData, $scope.searchruletext, undefined);
+	}
+
+	$scope.refreshRGExecData = function () {
+		$scope.gridOptionsRuleGroup.data = $filter('filter')($scope.orignalRGExecData, $scope.searchrGtext, undefined);
+	}
+	// ui grid
+	
+	//For Breadcrum
+	$scope.$on('daggroupExecChanged', function (e, groupExecName) {
+		$scope.daggroupExecName = groupExecName;
+	})
+
+	$scope.$on('resultExecChanged', function (e, resultExecName) {
+		$scope.resultExecName = resultExecName;
+	})
+	//For Breadcrum
+
+	$scope.onClickRuleResult = function () {
+		$scope.isRuleExec = true;
+		$scope.isRuleResult = false;
+		$scope.isD3RuleEexecGraphShow=false;
+		$scope.execDetail=$scope.ingestGroupLastParams
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
+		$scope.$emit('resultExecChanged', false);//Update Breadcrum
+	}
+
+
+	$scope.getIngestExec = function (data) {
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs["ingest"].execType; 
+		var uuid = data.uuid;
+		var version = data.version;
+		var name = data.name;
+		$scope.ruleExecUuid = uuid;
+		$scope.ruleExecVersion = version;
+		var params = { "id": uuid, "name": name, "elementType": "ingest", "version": version, "type": "ingest", "typeLabel": "Ingest" }
+		window.showResult(params);
+	}
+
+	$scope.$watch("zoomSize", function (newData, oldData) {
+		$scope.$broadcast('zoomChange', newData);
+	});
+
+	window.navigateTo = function (url) {
+		var state = JSON.parse(url);
+		$rootScope.previousState = { name: $state.current.name, params: $state.params };
+		var ispresent = false;
+		if (ispresent != true) {
+			var stateTab = {};
+			stateTab.route = state.state;
+			stateTab.param = state.params;
+			stateTab.active = false;
+			$rootScope.$broadcast('onAddTab', stateTab);
+		}
+		$state.go(state.state, state.params);
+	}
+
+	window.showResult = function (params) {
+		App.scrollTop();
+		$scope.lastParams = params;
+		if (params.type.slice(-5).toLowerCase() == 'group') {
+			$scope.isRuleExec = true;
+			$scope.isIngestGroupExec = true;
+			$scope.$broadcast('generateGroupGraph', params);
+		}
+		else {
+			$scope.isRuleResult = true;
+			$scope.isRuleExec = false;
+			$scope.isDataInpogress = true;
+			$scope.spinner = true;
+			$scope.execDetail=params;
+			$scope.execDetail.uuid=params.id;
+			$scope.metaType=dagMetaDataService.elementDefs["ingest"].execType; 
+		
+			setTimeout(function () {
+				$scope.$apply();
+				$scope.ruleExecUuid = params.id;
+				$scope.ruleExecVersion = params.version;
+				$scope.$broadcast('generateResults', params);
+				$scope.$emit('resultExecChanged', params.name);  //For Breadcrum
+			}, 100);
+		}
+	}
+	$scope.refreshData = function (searchtext) {
+		$scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
+	};
+
+	window.refreshResultfunction = function () {
+		$scope.isD3RuleEexecGraphShow = false;
+		window.showResult($scope.lastParams);
+	}
+
+	$scope.ruleExecshowGraph = function () {
+		$scope.isD3RuleEexecGraphShow = true;
+	}
+
+	$scope.rGExecshowGraph = function () {
+		$scope.isIngestGroupExec = false;
+		$scope.isD3RGEexecGraphShow = true;
+	}
+	$scope.ingestGroupExec = function (data) {
+		if ($scope.type.text == 'ingest') {
+			$scope.getIngestExec(data);
+			return
+		}
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
+		$scope.ingestGroupLastParams = data;
+		$scope.zoomSize = 7;
+		var uuid = data.uuid;
+		var version = data.version;
+		var name = data.name;
+		$scope.rGExecUuid = uuid;
+		$scope.rGExecVersion = version;
+		$scope.isRuleSelect = false;
+		$scope.isRuleGroupExec = false;
+		$scope.isRuleExec = true;
+		if ($scope.type.text == 'ingestgroup') {
+			$scope.isIngestGroupExec = true;
+		}
+		else {
+			$scope.isIngestGroupExec = false;
+		}
+		var params = { "id": uuid, "name": name, "elementType": "ingestgroup", "version": version, "type": "ingestgroup", "typeLabel": "IngestGroup", "url": "ingest/getIngestExecByIngestGroupExec?", "ref": { "type": "ingestgroupExec", "uuid": uuid, "version": version, "name": name } }
+		setTimeout(function () {
+			$scope.$broadcast('generateGroupGraph', params);
+		}, 100);
+	}
+	$scope.getExec = $scope.ingestGroupExec;
+	$scope.getExec({
+		uuid: $stateParams.id,
+		version: $stateParams.version,
+		name: $stateParams.name
+	});
+
+	$scope.reGroupExecute = function () {
+		$('#reExModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+
+	}
+	$scope.okReGroupExecute = function () {
+		$('#reExModal').modal('hide');
+		$scope.executionmsg = "Rule Group Restarted Successfully"
+		notify.type = 'success',
+		notify.title = 'Success',
+		notify.content = $scope.executionmsg
+		$rootScope.$emit('notify', notify);
+		CommonService.restartExec("ingestgroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			//$scope.refreshRuleGroupExecFunction();
+		}
+		$scope.refreshRuleGroupExecFunction();
+	}
+
+	$scope.refreshRuleGroupExecFunction = function () {
+		$scope.isD3RGEexecGraphShow = false;
+		$scope.ingestGroupExec($scope.ingestGroupLastParams);
+	}
+
+	$scope.toggleZoom = function () {
+		$scope.showZoom = !$scope.showZoom;
+	}
+   
+	$scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide");
+		$http({
+			method: 'GET',
+			url: url + "ingest/download?action=view&uuid=" + uuid + "&version=" + version+"&rows="+$scope.download.rows,
+			responseType: 'arraybuffer'
+		}).success(function (data, status, headers) {
+			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+		 
+			headers = headers();
+			var filename = headers['filename'];
+			var contentType = headers['content-type'];
+			var linkElement = document.createElement('a');
+			try {
+				var blob = new Blob([data], {
+					type: contentType
+				});
+				var url = window.URL.createObjectURL(blob);
+				linkElement.setAttribute('href', url);
+				linkElement.setAttribute("download", filename);
+				var clickEvent = new MouseEvent("click", {
+					"view": window,
+					"bubbles": true,
+					"cancelable": false
+				});
+				linkElement.dispatchEvent(clickEvent);
+			} catch (ex) {
+				console.log(ex);
+			}
+		}).error(function (data) {
+			console.log(data);
+		});
+	}
+	
+	$scope.downloadFilePofile = function (data) {
+        if($scope.isD3RuleEexecGraphShow){
+			return false;
+		}
+		$scope.download.data=data;
+        $('#downloadSample').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+
+	};
 
 });

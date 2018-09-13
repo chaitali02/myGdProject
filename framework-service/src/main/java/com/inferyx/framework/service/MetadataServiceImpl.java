@@ -74,6 +74,7 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
@@ -521,6 +522,11 @@ public class MetadataServiceImpl {
 				BatchExec batchExec = new BatchExec();
 				batchExec = (BatchExec) metaObject;
 				execStatus = (List<Status>) batchExec.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.ingestExec.toString())){
+				IngestExec ingestExec = new IngestExec();
+				ingestExec = (IngestExec) metaObject;
+				execStatus = (List<Status>) ingestExec.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
