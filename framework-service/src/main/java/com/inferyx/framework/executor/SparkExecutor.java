@@ -126,7 +126,6 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
-import com.inferyx.framework.reader.ParquetReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
@@ -173,8 +172,6 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
-	@Autowired
-	private ParquetReader parquetReader;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -2936,7 +2933,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, String targetPath, String tableName, String saveMode, String fileFormat) {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 			df.write().mode(saveMode).csv(targetPath);
@@ -2944,6 +2941,8 @@ public class SparkExecutor<T> implements IExecutor {
 			
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
 			
+		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
+			rsHolder = persistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
 	}

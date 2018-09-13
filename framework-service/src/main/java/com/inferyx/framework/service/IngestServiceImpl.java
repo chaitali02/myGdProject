@@ -132,9 +132,8 @@ public class IngestServiceImpl {
 					//writing to target
 					MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 					targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
-					
-//					rsHolder = sparkExecutor.persistDataframe(rsHolder, targetDp, "append", targetFilePathUrl, tableName, false);					
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetFilePathUrl, tableName, "append", ingest.getTargetFormat());
+										
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 				}
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
