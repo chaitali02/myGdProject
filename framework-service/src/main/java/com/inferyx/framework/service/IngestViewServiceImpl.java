@@ -100,14 +100,18 @@ public class IngestViewServiceImpl {
 			ingest.setTags(ingestView.getTags());
 			ingest.getFilterInfo();
 			ingest.setBaseEntity();
-			filterInfo = processFilter(ingestView, ingest.getUuid());
+			if(ingestView.getFilter() != null) {
+				filterInfo = processFilter(ingestView, ingest.getUuid());
+			}
 		} else if(ingestView.getIngestChg().equalsIgnoreCase("Y") & ingestView.getFilterChg().equalsIgnoreCase("N") ) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
 		} else if(ingestView.getFilterChg().equalsIgnoreCase("Y")) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
-			filterInfo = processFilter(ingestView, ingest.getUuid());
+			if(ingestView.getFilter() != null) {
+				filterInfo = processFilter(ingestView, ingest.getUuid());
+			}
 		}
 		
 		//setting ingest specific properties
@@ -119,7 +123,9 @@ public class IngestViewServiceImpl {
 		ingest.setTargetDetail(ingestView.getTargetDetail());
 		ingest.setTargetFormat(ingestView.getTargetFormat());
 		ingest.setRunParams(ingestView.getRunParams());
-		ingest.setFilterInfo(filterInfo);
+		if(ingestView.getFilter() != null) {
+			ingest.setFilterInfo(filterInfo);
+		}
 		return save(ingest);
 	}
 	

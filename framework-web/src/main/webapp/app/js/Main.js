@@ -3256,6 +3256,13 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Data Ingestion' },
             params: { type: 'ingestgrsoup'}
         })
+        .state('ingestrulerestultlist', {
+            url: "/DataIngestion/IngestResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingestexec', isExec: true}
+        })
+        
         .state('ingestruledetail', {
             url: "/DataIngestion/IngestRuleDetail?id&mode&returnBack&version",
             templateUrl: "views/ingest-rule.html",
@@ -3274,6 +3281,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('ingestexecresult', {
+            url: "/DataIngestion/IngestResult?id&version&type&name",
+            templateUrl: "views/ingest-result.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController.js',
+                            'js/services/IngestRuleService.js',
+                            'js/services/ProfileService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        
         
 }]);
 
