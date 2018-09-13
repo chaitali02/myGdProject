@@ -133,16 +133,17 @@ public class IngestServiceImpl {
 				}
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
+				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
+				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
+				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 				for(String fileName : fileNameList) {
+//					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
 					
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "true", appUuid, true);
-					
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", appUuid, true);
+					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 					//writing to target
-					MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
-					targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
 					countRows = rsHolder.getCountRows();
 				}
@@ -151,7 +152,7 @@ public class IngestServiceImpl {
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				
 			} 
-			System.out.println("target path: "+targetFilePathUrl);
+			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
 			persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
@@ -217,7 +218,7 @@ public class IngestServiceImpl {
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			
-			if(!ingest.getTargetFormat().equals(FileType.PARQUET.toString())) {
+			if(ingest.getTargetFormat() != null) {
 				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);

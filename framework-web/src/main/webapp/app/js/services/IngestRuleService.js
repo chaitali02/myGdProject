@@ -446,7 +446,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     var filterInfo = {};
                     filterInfo.logicalOperator = response.filter.filterInfo[i].logicalOperator;
                     filterInfo.operator = response.filter.filterInfo[i].operator;
-                    if (response.filterInfo[i].operand[0].ref.type == "simple") {
+                    if (response.filter.filterInfo[i].operand[0].ref.type == "simple") {
                         var obj = {}
                         obj.text = "string"
                         obj.caption = "string"
@@ -466,6 +466,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsFormula = false
                         filterInfo.islhsDatapod = true;
                         lhsdatapodAttribute.uuid = response.filter.filterInfo[i].operand[0].ref.uuid;
+                        lhsdatapodAttribute.type = response.filter.filterInfo[i].operand[0].ref.type;
                         lhsdatapodAttribute.datapodname = response.filter.filterInfo[i].operand[0].ref.name;
                         lhsdatapodAttribute.name = response.filter.filterInfo[i].operand[0].attributeName;
                         lhsdatapodAttribute.dname = response.filter.filterInfo[i].operand[0].ref.name + "." + response.filter.filterInfo[i].operand[0].attributeName;
@@ -482,6 +483,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsSimple = false;
                         filterInfo.islhsDatapod = false;
                         lhsformula.uuid = response.filter.filterInfo[i].operand[0].ref.uuid;
+                        lhsformula.type = response.filter.filterInfo[i].operand[0].ref.type;
                         lhsformula.name = response.filter.filterInfo[i].operand[0].ref.name;
                         filterInfo.lhsformula = lhsformula;
                     }
@@ -505,6 +507,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsFormula = false
                         filterInfo.isrhsDatapod = true;
                         rhsdatapodAttribute.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsdatapodAttribute.type = response.filter.filterInfo[i].operand[1].ref.type;
                         rhsdatapodAttribute.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
                         rhsdatapodAttribute.name = response.filter.filterInfo[i].operand[1].attributeName;
                         rhsdatapodAttribute.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
@@ -521,6 +524,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsSimple = false;
                         filterInfo.isrhsDatapod = false;
                         rhsformula.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsformula.type = response.filter.filterInfo[i].operand[1].ref.type;
                         rhsformula.name = response.filter.filterInfo[i].operand[1].ref.name;
                         filterInfo.rhsformula = rhsformula;
                     }
@@ -572,6 +576,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     for (var i = 0; i < response[j].attributes.length; i++) {
                         var attributedetail = {};
                         attributedetail.uuid = response[j].uuid;
+                        attributedetail.type = response[j].type;
                         attributedetail.datapodname = response[j].name;
                         attributedetail.name = response[j].attributes[i].name;
                         attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
@@ -591,6 +596,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 for (var j = 0; j < response.length; j++) {
                     var attributedetail = {};
                     attributedetail.uuid = response[j].ref.uuid;
+                    attributedetail.type = response[j].ref.type;
                     attributedetail.datapodname = response[j].ref.name;
                     attributedetail.name = response[j].attrName;
                     attributedetail.attributeId = response[j].attrId;
@@ -609,6 +615,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 for (var j = 0; j < response.length; j++) {
                     var attributedetail = {};
                     attributedetail.uuid = response[j].ref.uuid;
+                    attributedetail.type = response[j].ref.type;
                     attributedetail.datapodname = response[j].ref.name;
                     attributedetail.name = response[j].attrName;
                     attributedetail.attributeId = response[j].attrId;
@@ -628,6 +635,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 for (var j = 0; j < response.length; j++) {
                     var attributedetail = {};
                     attributedetail.uuid = response[j].ref.uuid;
+                    attributedetail.type = response[j].ref.type;
                     attributedetail.datapodname = response[j].ref.name;
                     attributedetail.name = response[j].attrName;
                     attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -646,6 +654,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 for (var j = 0; j < response.length; j++) {
                     var attributedetail = {};
                     attributedetail.uuid = response[j].ref.uuid;
+                    attributedetail.type = response[j].ref.type;
                     attributedetail.datapodname = response[j].ref.name;
                     attributedetail.name = response[j].paramName;
                     attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;

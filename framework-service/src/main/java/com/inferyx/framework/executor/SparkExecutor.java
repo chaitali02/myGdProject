@@ -33,6 +33,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
@@ -1770,7 +1771,16 @@ public class SparkExecutor<T> implements IExecutor {
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			if(partitionColList.size() > 0) {
-				df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).insertInto(rsHolder.getTableName());
+				String sessionParameters = datasource.getSessionParameters();
+				if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+					for(String sessionParam :sessionParameters.split(",")) {
+						df.sparkSession().sql("SET "+sessionParam);
+					}
+				}/*
+				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
+					df.sparkSession().sql("SET "+sessionParam);
+				}*/
+				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.insertInto(rsHolder.getTableName());
 			} else {
 				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
 			}
