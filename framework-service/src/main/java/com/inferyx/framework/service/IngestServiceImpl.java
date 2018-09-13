@@ -155,9 +155,24 @@ public class IngestServiceImpl {
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				sqoopInput.setSourceDirectory(sourceDir);
+				sqoopInput.setTargetDirectory(targetDir);
+				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
+				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+				sqoopInput.setTable(targetTable);
 				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
+				sqoopInput.setSourceDs(sourceDS);
+				sqoopInput.setTargetDs(targetDS);
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				sqoopInput.setSourceDirectory(sourceDir);
+				sqoopInput.setTargetDirectory(targetDir);
+				sqoopInput.setTable(targetDS+"."+ingest.getTargetDetail().getValue());
 				sqoopExecutor.execute(sqoopInput);
 			} 
 			
