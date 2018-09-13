@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Ganesh
  *
  */
-@Document(collection = "ingectExec")
+@Document(collection = "ingestExec")
 public class IngestExec extends BaseExec {
 	
 }
