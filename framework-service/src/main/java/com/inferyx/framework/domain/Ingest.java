@@ -20,15 +20,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "ingest")
 public class Ingest extends BaseEntity {
-	private String type;
+	private String type; //FILE-FILE, FILE-TABLE, TABLE-FILE, TABLE-TABLE
 	private MetaIdentifierHolder sourceDatasource;
 	private MetaIdentifierHolder sourceDetail;
 	private MetaIdentifierHolder targetDatasource;
 	private MetaIdentifierHolder targetDetail;
 	private List<AttributeRefHolder> filterInfo;
 	private String runParams;
-	private String sourceFormat;
-	private String targetFormat;
+	private String sourceFormat; //CSV, TSV, PSV
+	private String targetFormat; //CSV, TSV, PSV
 	/**
 	 *
 	 * @Ganesh

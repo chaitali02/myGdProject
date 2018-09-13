@@ -119,6 +119,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
@@ -996,5 +997,17 @@ public class Helper {
 //				e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public static IngestionType getIngestionType(String ingestionType) {
+		if(ingestionType != null) {
+			switch(ingestionType.toLowerCase()) {
+			case "file-file" : return IngestionType.FILETOFILE;
+			case "file-table" : return IngestionType.FILETOTABLE;
+			case "table-file" : return IngestionType.TABLETOFILE;
+			case "table-table" : return IngestionType.TABLETOTABLE;
+			}
+		}
+		return null;
 	}
 }

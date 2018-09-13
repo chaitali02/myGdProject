@@ -2913,4 +2913,25 @@ public class SparkExecutor<T> implements IExecutor {
 		sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 		return rsHolder;
 	}
+	
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
+		IWriter datapodWriter = null;
+		try {
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException("Can not write data.");
+		}
+		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
+
+		if(registerTempTable) {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+		}
+		return rsHolder;
+	}
 }
