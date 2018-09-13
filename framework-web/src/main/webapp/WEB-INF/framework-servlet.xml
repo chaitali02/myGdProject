@@ -413,6 +413,7 @@
 		<!-- <property name="javaSparkContext" ref="javaSparkContext" /> -->
 		<!-- <property name="hiveContext" ref="hiveContext" /> -->
 	</bean>
+	<bean id="sqoopExecutor" class="com.inferyx.framework.executor.SqoopExecutor" />
 	<!-- <bean id="sampleServiceImpl" class="com.inferyx.framework.service.SampleServiceImpl" init-method="init"/> --> 
 	
 	</beans>
