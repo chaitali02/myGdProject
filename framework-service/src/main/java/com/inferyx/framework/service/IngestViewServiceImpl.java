@@ -23,9 +23,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IIngestDao;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestView;
+import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.register.GraphRegister;
@@ -44,6 +47,8 @@ public class IngestViewServiceImpl {
     private GraphRegister<?> registerGraph;
     @Autowired
     private IIngestDao iIngestDao;
+	@Autowired
+	private FilterServiceImpl filterServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(IngestViewServiceImpl.class);
 	
@@ -73,24 +78,36 @@ public class IngestViewServiceImpl {
 		ingestView.setTargetDetail(ingest.getTargetDetail());
 		ingestView.setTargetFormat(ingest.getTargetFormat());
 		ingestView.setRunParams(ingest.getRunParams());
-//		ingestView.setFilter(filter);		
+		List<AttributeRefHolder> filterInfo = ingest.getFilterInfo();
+		Filter resolvedFilter = null;
+		if(filterInfo != null)		{
+			for (int i = 0; i < filterInfo.size(); i++) {
+				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), ingest.getVersion(), MetaType.filter.toString());
+				resolvedFilter = filterServiceImpl.resolveName(filter);
+			}
+		}
+		ingestView.setFilter(resolvedFilter);		
 		return ingestView;
 	}
 
 	public BaseEntity save(IngestView ingestView) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		Ingest ingest = null;
+		List<AttributeRefHolder> filterInfo = null;
 		if(ingestView.getIngestChg().equalsIgnoreCase("Y") && ingestView.getUuid() == null) {
 			ingest = new Ingest();
 			//setting ingest baseEntity
 			ingest.setName(ingestView.getName());
 			ingest.setTags(ingestView.getTags());
+			ingest.getFilterInfo();
 			ingest.setBaseEntity();
+			filterInfo = processFilter(ingestView, ingest.getUuid());
 		} else if(ingestView.getIngestChg().equalsIgnoreCase("Y") & ingestView.getFilterChg().equalsIgnoreCase("N") ) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
 		} else if(ingestView.getFilterChg().equalsIgnoreCase("Y")) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
+			filterInfo = processFilter(ingestView, ingest.getUuid());
 		}
 		
 		//setting ingest specific properties
@@ -102,8 +119,24 @@ public class IngestViewServiceImpl {
 		ingest.setTargetDetail(ingestView.getTargetDetail());
 		ingest.setTargetFormat(ingestView.getTargetFormat());
 		ingest.setRunParams(ingestView.getRunParams());
-//		ingest.setFilterInfo(filterInfo);
+		ingest.setFilterInfo(filterInfo);
 		return save(ingest);
+	}
+	
+	public List<AttributeRefHolder> processFilter(IngestView ingestView, String ingestUuid) throws JsonProcessingException, JSONException, ParseException {
+		Filter filter = new Filter();
+		filter.setName(ingestView.getName());
+		filter.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingestUuid, null)));
+		filter.setTags(ingestView.getTags());
+		filter.setDesc(ingestView.getDesc());
+		filter.setFilterInfo(ingestView.getFilter().getFilterInfo());
+		commonServiceImpl.save(MetaType.filter.toString(), filter);
+		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
+		AttributeRefHolder filterHolder = new AttributeRefHolder();
+		MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
+		filterHolder.setRef(filterMeta);
+		filterList.add(filterHolder);
+		return filterList;
 	}
 	
 	public Ingest save(Ingest ingest) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {

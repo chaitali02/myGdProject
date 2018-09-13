@@ -152,7 +152,7 @@ public class IngestServiceImpl {
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				
 			} 
-			System.out.println("target path: "+targetFilePathUrl);
+			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
 			persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
