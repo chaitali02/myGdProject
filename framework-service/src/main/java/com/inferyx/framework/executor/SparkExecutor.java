@@ -109,6 +109,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
@@ -2931,6 +2932,18 @@ public class SparkExecutor<T> implements IExecutor {
 			ConnectionHolder conHolder = connector.getConnection();
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+		}
+		return rsHolder;
+	}
+	
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, String targetPath, String tableName, String saveMode, String fileFormat) {
+		Dataset<Row> df = rsHolder.getDataFrame();
+		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
+			df.write().mode(saveMode).csv(targetPath);
+		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
+			
+		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
+			
 		}
 		return rsHolder;
 	}

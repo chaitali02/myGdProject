@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,15 @@ public class IngestController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestExec ingestExec = ingestServiceImpl.create(ingestUuid, ingestVersion, execParams, null, runMode);
 		return ingestServiceImpl.execute(ingestUuid, ingestVersion, ingestExec, execParams, type, runMode);
+	}
+	
+	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
+	public List<Map<String, Object>> getResults(@RequestParam("uuid") String execUuid,
+			@RequestParam("version") String execVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		return ingestServiceImpl.getResults(execUuid, execVersion, rowLimit);
 	}
 }
