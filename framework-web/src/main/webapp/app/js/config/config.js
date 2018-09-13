@@ -21,7 +21,7 @@ InferyxApp.constant('CF_META_TYPES',{
     reconview : "reconview",distribution : "distribution",appConfig : "appConfig",
     operatorexec : "operatorExec",operator : "operator",comment : "comment",commentView : "commentView",
     tag : "tag",lov:"lov",graphpod:"graphpod",graphexec:"graphExec",report:"report",reportexec:"reportExec",
-    reportview:"reportview",batch:"batch",batchexec:"batchExec"
+    reportview:"reportview",batch:"batch",batchexec:"batchExec",ingest:"ingest",ingestexec:"ingestExec"
 });
 
 

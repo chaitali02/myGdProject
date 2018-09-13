@@ -35,13 +35,7 @@
                 <span class="title">{{Datadiscovery.caption}}</span>
             </a>
         </li>
-         <li class="nav-item" ng-click="deInitTabs()">
-            <a ui-sref="{{MetaDatanavigator.name}}">
-                <i class="{{MetaDatanavigator.class}}"></i>
-                <span class="title">{{MetaDatanavigator.caption}}</span>
-
-            </a>
-        </li>
+        
         <!--Datavisualization Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -58,6 +52,25 @@
                 </li>
             </ul>
         </li>
+         <!--Data Ingestion Menu-->
+        <li class="nav-item">
+                <a href="#" class="nav-link nav-toggle">
+                      <i class="{{Ingestdata.class}}"></i>
+                      <span class="title">{{Ingestdata.caption}}</span>
+                      <span class="arrow"></span>
+                      
+                  </a>
+                  <ul class="sub-menu">
+                      <li class="nav-item"data-ng-repeat="ingestdatasubmenu in Ingestdata.submenu | orderBy" ng-click="deInitTabs()">
+                          <a ui-sref="{{ingestdatasubmenu.name}}" class="nav-link">
+                              <span class="title">{{ingestdatasubmenu.caption}}</span>
+                               <span class="badge badge-success">{{metaStats[ingestdatasubmenu.typeCount].count}}</span>
+                          </a>
+                      </li>
+                     
+                  </ul>
+      
+              </li>
         <!--Profile Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -217,6 +230,7 @@
                 </li>
             </ul>
         </li>
+       
           <!--Batch Menu-->
           <li class="nav-item">
             <a href="#" class="nav-link nav-toggle">
@@ -272,18 +286,26 @@
             </ul>
         </li>
 
-<li class="nav-item" ng-click="deInitTabs()">
+        <li class="nav-item" ng-click="deInitTabs()">
             <a ui-sref="{{JobExecutor.name}}">
                 <i class="{{JobExecutor.class}}"></i>
                 <span class="title">{{JobExecutor.caption}}</span>
 
             </a>
         </li>
+
         <li class="nav-item">
           <a ui-sref="{{SystemMonitering.name}}">
               <i class="{{SystemMonitering.class}}"></i>
               <span class="title">{{SystemMonitering.caption}}</span>
           </a>
-                </li>
+        </li>
+        <li class="nav-item" ng-click="deInitTabs()">
+            <a ui-sref="{{MetaDatanavigator.name}}">
+                <i class="{{MetaDatanavigator.class}}"></i>
+                <span class="title">{{MetaDatanavigator.caption}}</span>
+
+            </a>
+        </li>
     </ul><!-- END SIDEBAR MENU -->
 </div>

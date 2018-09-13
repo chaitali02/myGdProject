@@ -24,6 +24,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "DatascienceModule",
     "GraphAnalysisModule",
     "VizpodModule",
+    "DataIngestionModule",
     'dataGrid',
     'pagination',
     "ngCookies",
@@ -489,6 +490,17 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
         ]
     }
+    $scope.Ingestdata = {
+        "caption": "Data Ingestion",
+        "name": "ingest",
+        "class": "fa fa-random",
+        "submenu": [
+            { "name": "ingestrulelist", "type": "ingest", "uuid": "null", "caption": "Rule" },
+            { "name": "ingestrulegrouplist", "type": "ingestgroup", "uuid": "null", "caption": "Rule Group" },
+            { "name": "ingestrulerestultlist", "type": "ingestexec", "uuid": "null", "caption": "Rule Results" }
+        ]
+    }
+
     $scope.Admindata = {
         "caption": "Admin",
         "name": "admin",
@@ -3232,7 +3244,37 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-
+        .state('ingestrulelist', {
+            url: "/DataIngestion/IngestList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingest'}
+        })
+        .state('ingestrulegrouplist', {
+            url: "/DataIngestion/IngestGroupList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingestgrsoup'}
+        })
+        .state('ingestruledetail', {
+            url: "/DataIngestion/IngestRuleDetail?id&mode&returnBack&version",
+            templateUrl: "views/ingest-rule.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController.js',
+                            'js/services/IngestRuleService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        
 }]);
 
 

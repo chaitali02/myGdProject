@@ -1022,21 +1022,21 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getDatasourceForFile", method = RequestMethod.GET)
-	public List<BaseEntity> getDatasourceForFile(
+	public @ResponseBody List<BaseEntity> getDatasourceForFile(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getDatasourceForFile();
 	}
 	
 	@RequestMapping(value = "/getDatasourceForTable", method = RequestMethod.GET)
-	public List<BaseEntity> getDatasourceForTable( 
+	public @ResponseBody List<BaseEntity> getDatasourceForTable( 
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getDatasourceForTable();
 	}
 	
 	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)
-	public List<BaseEntity> getDatapodByDatasource(
+	public @ResponseBody List<BaseEntity> getDatapodByDatasource(
 			@RequestParam(value = "uuid") String datasourceUuid,
 			@RequestParam(value = "version", required = false) String datasourceVersion, 
 			@RequestParam(value = "type", required = false) String type,

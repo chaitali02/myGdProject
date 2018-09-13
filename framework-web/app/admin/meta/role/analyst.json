@@ -4277,6 +4277,96 @@
 		            "name" : "ScheduleAdd"
 				},
 				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b5737b28-a539-4072-963a-5a1f6fe53e95",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "4472c4df-5f65-44e2-b027-be5b2e3ec698",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a8e7e3b5-322f-4568-a764-6e8c5e5f449d",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9051058c-561d-4f90-b7a4-4973c6c4737e",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "716dd883-4536-493f-8c11-703dc523ac4b",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "73c45788-c09f-4631-9c2e-099fc4697a33",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "23f239b5-b1fc-4c90-9c6a-3ebb672ea5d7",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "11502ad7-8a2d-43b2-b9b5-03af519297b5",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "11502ad7-8a2d-43b2-b9b5-03af519297b5",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
+		},
+                 {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f6f40e77-9950-4b82-9e56-358ae3f8ce7e",
+		 			"version" : null,
+		            "name" : ""
+				},
+				"value" : null
 		}
 	]
 }
