@@ -9,14 +9,14 @@ public class SqoopInput {
 	private Datasource targetDs;
 	private String sourceDirectory;
 	private String targetDirectory;
-	private Boolean hiveImport;
+	private boolean hiveImport;
 	private String partitionKey;
 	private String partitionValue;
 	private String whereClause;
 	private String compressionCodec;
 	private String checkColumn;
     private String lastVale;
-    private Boolean appendMode;
+    private boolean appendMode;
     private SqoopIncrementalMode incrementalMode;
     private String incrementalTestColumn;
     private String incrementalLastValue;
@@ -24,9 +24,9 @@ public class SqoopInput {
 	private int numMappers;
 	private char linesTerminatedBy;
 	private char fieldsTerminatedBy;
-	private Boolean explicitInputDelims;
-	private Boolean  explicitOutputDelims;
-	private Boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
+	private boolean explicitInputDelims;
+	private boolean  explicitOutputDelims;
+	private boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
 
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
@@ -105,14 +105,14 @@ public class SqoopInput {
 	/**
 	 * @return the hiveImport
 	 */
-	public Boolean getHiveImport() {
+	public boolean getHiveImport() {
 		return hiveImport;
 	}
 
 	/**
 	 * @param hiveImport the hiveImport to set
 	 */
-	public void setHiveImport(Boolean hiveImport) {
+	public void setHiveImport(boolean hiveImport) {
 		this.hiveImport = hiveImport;
 	}
 
@@ -203,14 +203,14 @@ public class SqoopInput {
 	/**
 	 * @return the appendMode
 	 */
-	public Boolean getAppendMode() {
+	public boolean getAppendMode() {
 		return appendMode;
 	}
 
 	/**
 	 * @param appendMode the appendMode to set
 	 */
-	public void setAppendMode(Boolean appendMode) {
+	public void setAppendMode(boolean appendMode) {
 		this.appendMode = appendMode;
 	}
 
@@ -315,42 +315,42 @@ public class SqoopInput {
 	/**
 	 * @return the explicitInputDelims
 	 */
-	public Boolean getExplicitInputDelims() {
+	public boolean getExplicitInputDelims() {
 		return explicitInputDelims;
 	}
 
 	/**
 	 * @param explicitInputDelims the explicitInputDelims to set
 	 */
-	public void setExplicitInputDelims(Boolean explicitInputDelims) {
+	public void setExplicitInputDelims(boolean explicitInputDelims) {
 		this.explicitInputDelims = explicitInputDelims;
 	}
 
 	/**
 	 * @return the explicitOutputDelims
 	 */
-	public Boolean getExplicitOutputDelims() {
+	public boolean getExplicitOutputDelims() {
 		return explicitOutputDelims;
 	}
 
 	/**
 	 * @param explicitOutputDelims the explicitOutputDelims to set
 	 */
-	public void setExplicitOutputDelims(Boolean explicitOutputDelims) {
+	public void setExplicitOutputDelims(boolean explicitOutputDelims) {
 		this.explicitOutputDelims = explicitOutputDelims;
 	}
 
 	/**
 	 * @return the importIntended
 	 */
-	public Boolean getImportIntended() {
+	public boolean getImportIntended() {
 		return importIntended;
 	}
 
 	/**
 	 * @param importIntended the importIntended to set
 	 */
-	public void setImportIntended(Boolean importIntended) {
+	public void setImportIntended(boolean importIntended) {
 		this.importIntended = importIntended;
 	}
 
