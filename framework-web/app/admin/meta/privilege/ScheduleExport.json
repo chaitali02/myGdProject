@@ -2,7 +2,7 @@
 	"uuid": "47ebb750-cbaf-41c0-a2b9-c3fa4eeae7bd",
 	"name": "ScheduleExport",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish Export",
+	"desc": "Schedule Privilege for Publish Export",
 	"createdBy": {
 		"ref": {
 			"type": "user",

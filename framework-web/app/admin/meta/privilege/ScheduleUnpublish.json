@@ -2,7 +2,7 @@
 	"uuid": "a5de7ee9-e088-4bf9-8106-8e0585151108",
 	"name": "ScheduleUnpublish",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Unpublish",
+	"desc": "Schedule Privilege for Unpublish",
 	"createdBy": {
 		"ref": {
 			"type": "user",

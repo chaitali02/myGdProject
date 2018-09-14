@@ -2,7 +2,7 @@
 	"uuid": "59761537-3b4e-42c9-8c00-cb030256e263",
 	"name": "ScheduleAdd",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Add",
+	"desc": "Schedule Privilege for Add",
 	"createdBy": {
 		"ref": {
 			"type": "user",

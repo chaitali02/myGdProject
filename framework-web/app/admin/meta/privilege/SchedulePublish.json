@@ -2,7 +2,7 @@
 	"uuid": "1e3e9184-aa2c-467e-bc99-f93c1dec58b6",
 	"name": "SchedulePublish",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish",
+	"desc": "Schedule Privilege for Publish",
 	"createdBy": {
 		"ref": {
 			"type": "user",

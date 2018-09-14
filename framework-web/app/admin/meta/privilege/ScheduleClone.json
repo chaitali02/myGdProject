@@ -2,7 +2,7 @@
 	"uuid": "076611d0-8618-453e-a6ec-e61ddff384b7",
 	"name": "ScheduleClone",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish Clone",
+	"desc": "Schedule Privilege for Publish Clone",
 	"createdBy": {
 		"ref": {
 			"type": "user",

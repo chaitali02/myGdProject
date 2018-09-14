@@ -2,7 +2,7 @@
 	"uuid": "8d675488-70aa-4671-9926-287d60401c3d",
 	"name": "ScheduleEdit",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish Edit",
+	"desc": "Schedule Privilege for Publish Edit",
 	"createdBy": {
 		"ref": {
 			"type": "user",

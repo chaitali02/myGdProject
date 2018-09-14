@@ -2,7 +2,7 @@
 	"uuid": "76bd2a66-de74-4b2d-aed3-c0a9ce4b45a0",
 	"name": "ScheduleView",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for View",
+	"desc": "Schedule Privilege for View",
 	"createdBy": {
 		"ref": {
 			"type": "user",

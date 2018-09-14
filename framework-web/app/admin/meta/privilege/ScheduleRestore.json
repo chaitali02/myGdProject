@@ -2,7 +2,7 @@
 	"uuid": "7ba281bd-f2b7-4814-8d68-9d6d4782cba5",
 	"name": "ScheduleRestore",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish Restore",
+	"desc": "Schedule Privilege for Publish Restore",
 	"createdBy": {
 		"ref": {
 			"type": "user",

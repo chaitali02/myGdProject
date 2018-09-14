@@ -2,7 +2,7 @@
 	"uuid": "855e7bd7-cd06-4c1a-bbcc-261ac3f6a971",
 	"name": "SessionView",
 	"version": "1464977196",
-	"desc": "Privilage for View",
+	"desc": "Privilege for View",
 	"createdBy": {
 		"ref": {
 			"type": "user",

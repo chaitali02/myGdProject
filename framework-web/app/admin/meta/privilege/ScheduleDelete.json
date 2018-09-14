@@ -2,7 +2,7 @@
 	"uuid": "d21ff514-dc6e-42c3-9651-c41a7f552362",
 	"name": "ScheduleDelete",
 	"version": "1464977196",
-	"desc": "Schedule Privilage for Publish Delete",
+	"desc": "Schedule Privilege for Publish Delete",
 	"createdBy": {
 		"ref": {
 			"type": "user",
