@@ -5,6 +5,7 @@ package com.inferyx.framework.test;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,10 @@ public class SqoopImportTest {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Ignore
 	@Test
 	public void importTest() throws IOException {
+		System.out.println("Running importTest ...");
 		SqoopInput input = new SqoopInput();
 		Datasource datasource = new Datasource();
 		datasource.setHost("127.0.0.1");
