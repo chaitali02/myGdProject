@@ -1,8 +1,8 @@
 {
-  "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
-  "version": "1536856233",
-  "name": "formula_total_accounts",
-  "desc": "Total Accounts",
+  "uuid": "cda08d9f-fd8b-41c3-b30b-3bd4bd03f329",
+  "version": "1536871830",
+  "name": "fm_fraud_ind_count",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,30 +12,27 @@
     },
     "value": null
   },
-  "createdOn": "Thu Sep 13 12:30:33 EDT 2018",
-  "tags": [
-    "DEV",
-    "0.1.0"
-  ],
+  "createdOn": "Thu Sep 13 16:50:30 EDT 2018",
+  "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
     {
       "ref": {
         "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": "1521430822",
+        "name": "Fraud Analytics"
       },
       "value": null
     }
   ],
   "dependsOn": {
     "ref": {
-      "type": "relation",
-      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
       "version": null,
-      "name": "relation_datawarehouse"
+      "name": "cc_transactions"
     },
     "value": null
   },
@@ -66,14 +63,14 @@
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+        "type": "formula",
+        "uuid": "98ebca17-5b1b-465b-9667-723dc56a73a6",
         "version": null,
-        "name": "dim_account"
+        "name": "fm_fraud_ind"
       },
-      "attributeId": 0,
+      "attributeId": null,
       "value": null,
-      "attributeName": "account_id",
+      "attributeName": null,
       "attributeType": null
     },
     {
