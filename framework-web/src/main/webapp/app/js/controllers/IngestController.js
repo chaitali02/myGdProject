@@ -35,8 +35,8 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
     }
     
     $scope.ruleTypes=[{"text":"FILE-FILE","caption":"File - File"},{"text":"FILE-TABLE","caption":"File - Table"},{"text":"TABLE-TABLE","caption":"Table - Table"},{"text":"TABLE-FILE","caption":"Table - File"}];
-    $scope.sourceFormate=["CSV","TSV","PSV"];
-    $scope.targetFormate=["CSV","TSV","PSV"];
+    $scope.sourceFormate=["CSV","TSV","PSV","PARQUET"];
+    $scope.targetFormate=["CSV","TSV","PSV","PARQUET"];
     $scope.userDetail = {}
     $scope.userDetail.uuid = $rootScope.setUseruuid;
     $scope.userDetail.name = $rootScope.setUserName;
