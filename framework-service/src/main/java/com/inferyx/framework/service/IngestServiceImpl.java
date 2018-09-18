@@ -35,6 +35,8 @@ import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SqoopIncrementalMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 
@@ -115,14 +117,15 @@ public class IngestServiceImpl {
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
-			Datapod targetDp = null;
+			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
+			Datapod sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
+			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			String tableName = null;
 			if(ingestionType.equals(IngestionType.FILETOFILE)) { 			
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
 
-				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
-				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 				targetFilePathUrl = String.format("%s/%s/%s/%s", targetFilePathUrl, targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
@@ -138,8 +141,7 @@ public class IngestServiceImpl {
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
-				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
-				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+								
 				for(String fileName : fileNameList) {
 //					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
@@ -155,24 +157,38 @@ public class IngestServiceImpl {
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
-				MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
-				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
-				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
-				sqoopInput.setTable(targetTable);
+//				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+//				sqoopInput.setTable(targetTable);
+				sqoopInput.setTable(sourceDp.getName());
+				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
+				sqoopInput.setExportDir(targetDir);
+				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sqoopInput.setHiveImport(false);
+					sqoopInput.setImportIntended(false);
+				}
 				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
-				sqoopInput.setTable(targetDS+"."+ingest.getTargetDetail().getValue());
+				sqoopInput.setTable(sourceDp.getName());
+				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
+				sqoopInput.setExportDir(targetDir);
+				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sqoopInput.setHiveImport(false);
+					sqoopInput.setImportIntended(false);
+				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sqoopInput.setHiveImport(true);
+					sqoopInput.setImportIntended(true);
+				}
 				sqoopExecutor.execute(sqoopInput);
 			} 
 			
