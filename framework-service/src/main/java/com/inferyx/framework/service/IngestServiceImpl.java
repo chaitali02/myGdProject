@@ -226,13 +226,13 @@ public class IngestServiceImpl {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
 				if(fileName.endsWith("*")) {
-					Pattern regex = Pattern.compile("^.*"+fileName+".*\\."+fileFormat+"$", Pattern.CASE_INSENSITIVE);
+					Pattern regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
 					Matcher mtch = regex.matcher(dirFileName);
 			        if(mtch.matches()){
 			        	fileNameList.add(dirFileName);	
 			        }
 				} else {
-					Pattern regex = Pattern.compile("^"+fileName+"\\."+fileFormat+"$", Pattern.CASE_INSENSITIVE);
+					Pattern regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
 					Matcher mtch = regex.matcher(dirFileName);
 			        if(mtch.matches()){
 			        	fileNameList.add(dirFileName);	
