@@ -563,6 +563,12 @@
 			<groupId>org.apache.sqoop</groupId>
 			<artifactId>sqoop</artifactId>
 			<version>${sqoop.version}</version>
+		<!-- 	<exclusions>
+				<exclusion>
+					<groupId>org.apache.hadoop</groupId>
+					<artifactId>hadoop-common</artifactId>
+				</exclusion>
+			</exclusions> -->
 			<!-- <type>pom</type> -->
 		</dependency>
 		<!-- <dependency>
