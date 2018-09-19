@@ -211,13 +211,13 @@ public class BatchServiceImpl {
 				} 			
 			}
 			
-			if(statusMap.get(Stage.NotStarted).equals(true) 
-					|| statusMap.get(Stage.InProgress).equals(true)
-					|| statusMap.get(Stage.Terminating).equals(true)) {
+			if((statusMap.get(Stage.NotStarted) != null && statusMap.get(Stage.NotStarted).equals(true)) 
+					|| (statusMap.get(Stage.InProgress) != null && statusMap.get(Stage.InProgress).equals(true))
+					|| (statusMap.get(Stage.Terminating) != null && statusMap.get(Stage.Terminating).equals(true))) {
 				areAllCompleted = false;
-			} else if(statusMap.get(Stage.Completed).equals(true) 
-					|| statusMap.get(Stage.Failed).equals(true)
-					|| statusMap.get(Stage.Killed).equals(true)) {
+			} else if((statusMap.get(Stage.Completed) != null && statusMap.get(Stage.Completed).equals(true)) 
+					|| (statusMap.get(Stage.Failed) != null && statusMap.get(Stage.Failed).equals(true))
+					|| (statusMap.get(Stage.Killed) != null && statusMap.get(Stage.Killed).equals(true))) {
 				areAllCompleted = true;
 			}
 			statusMap = resetMap(statusMap);

@@ -284,7 +284,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 		batchExec.setExecList(execList);
 		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
 		Thread.sleep(5000);
-//		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
+		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
 		return batchExec;
 	}
 	
