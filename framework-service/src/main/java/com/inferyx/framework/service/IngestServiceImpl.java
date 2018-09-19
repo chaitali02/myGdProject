@@ -112,13 +112,16 @@ public class IngestServiceImpl {
 			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			long countRows = -1L;
 			
-			String targetFilePathUrl = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+			String targetFilePathUrl = String.format("%s%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
 			//String targetFilePathUrl = String.format("%s/%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
 			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
-			Datapod sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+			Datapod sourceDp = null;
+			if(sourceDpMI.getUuid() != null) {
+				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+			}
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			String tableName = null;
@@ -126,7 +129,7 @@ public class IngestServiceImpl {
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
 
-				targetFilePathUrl = String.format("%s/%s/%s/%s", targetFilePathUrl, targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + fileName;
@@ -257,8 +260,8 @@ public class IngestServiceImpl {
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			
-			if(ingest.getTargetFormat() != null) {
-				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", Integer.parseInt(""+datastore.getNumRows()), appUuid);
+			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), "false", Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			}

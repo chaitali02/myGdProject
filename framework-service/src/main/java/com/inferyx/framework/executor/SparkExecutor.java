@@ -2944,17 +2944,41 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
+	public ResultSetHolder applySchema(ResultSetHolder rsHolder, Datapod datapod, String tableName) throws IOException {
+		Dataset<Row> df = rsHolder.getDataFrame();
+//		df.show(true);
+		df.printSchema();
+		String[] dfColumns = df.columns();
+		if(datapod !=null) {
+			if(df.columns().length != datapod.getAttributes().size())
+				throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+			
+			List<Attribute> attributes = datapod.getAttributes();
+			int i = 0;
+			for(Attribute attribute : attributes){
+				df = df.withColumnRenamed(dfColumns[i], attribute.getName());
+				df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
+				i++;
+			} 				
+		} 
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		rsHolder.setDataFrame(df);
+		return rsHolder;
+	}
 	
 	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-		String absolutePath = targetPath/*+fileName*/;
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", ",").csv(absolutePath);
+			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", "\t").csv(absolutePath);
+			df.write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", "!").csv(absolutePath);
+			df.write().mode(saveMode).option("delimiter", "!").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
+			rsHolder = applySchema(rsHolder, targetDp, tableName);
 			rsHolder = persistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
