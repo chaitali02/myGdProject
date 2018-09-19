@@ -69,7 +69,6 @@ import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.AnalysisException;
-import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -127,7 +126,6 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
-import com.inferyx.framework.reader.ParquetReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
@@ -174,8 +172,6 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
-	@Autowired
-	private ParquetReader parquetReader;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -649,7 +645,8 @@ public class SparkExecutor<T> implements IExecutor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new IOException("Can not write data.");
-			}rsHolder.getDataFrame().show(false);
+			}
+//			rsHolder.getDataFrame().show(false);
 			datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -1705,7 +1702,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.show(false);
+//		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(true);
@@ -1743,7 +1740,7 @@ public class SparkExecutor<T> implements IExecutor {
 //			Dataset<Row> dfTask = rsHolder.getDataFrame();
 //			dfTask.show(true);
 //			dfTask.cache();
-		predictionDf.show(false);
+//			predictionDf.show(false);
 			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
 //			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 //			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
@@ -1757,7 +1754,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-		df.show(false);
+//		df.show(false);
 		List<String> partitionColList = new ArrayList<>();
 		if(targetDatapod != null) {
 			for(Attribute attribute : targetDatapod.getAttributes()) {
@@ -1959,7 +1956,7 @@ public class SparkExecutor<T> implements IExecutor {
 		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(joinColumns).asScala());
 //		df_1 = df_1.crossJoin(df_2);
 		df_1.printSchema();
-		df_1.show(true);
+//		df_1.show(true);
 		
 		registerTempTable(df_1, joinTabName_1);
 		return joinTabName_1;
@@ -2227,7 +2224,7 @@ public class SparkExecutor<T> implements IExecutor {
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
 			try {
-				trainingDf.show(false);
+//				trainingDf.show(false);
 				cvModel = cv.fit(trainingDf);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2923,7 +2920,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
+	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
 		IWriter datapodWriter = null;
 		try {
 			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
@@ -2979,7 +2976,7 @@ public class SparkExecutor<T> implements IExecutor {
 			df.write().mode(saveMode).option("delimiter", "!").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			rsHolder = applySchema(rsHolder, targetDp, tableName);
-			rsHolder = persistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
+			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
 	}
@@ -2989,10 +2986,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, "false", clientContext, false).getDataFrame();
 		
 		List<Attribute> attributes = datapod.getAttributes();
-//		for(Attribute attribute : attributes){
-//			df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
-//		} 		
-////		df.show(false);
+//		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
