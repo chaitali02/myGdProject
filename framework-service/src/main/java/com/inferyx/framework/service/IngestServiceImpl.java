@@ -128,8 +128,11 @@ public class IngestServiceImpl {
 			if(ingestionType.equals(IngestionType.FILETOFILE)) { 			
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
-
-				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+				if(fileNameList == null || fileNameList.isEmpty()) {
+					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+				}
+				
+				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid()/*.replaceAll("-", "_")*/, targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + fileName;
@@ -144,7 +147,10 @@ public class IngestServiceImpl {
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
-								
+				if(fileNameList == null || fileNameList.isEmpty()) {
+					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+				}
+				
 				for(String fileName : fileNameList) {
 //					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
