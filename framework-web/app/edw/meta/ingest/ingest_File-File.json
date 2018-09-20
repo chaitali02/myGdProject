@@ -26,7 +26,7 @@
         }
     },
     "sourceFormat" : "CSV",
-    "targetFormat" : "CSV",
+    "targetFormat" : "PARQUET",
     "uuid" : "8c60df28-eb0d-4c27-8d3b-0e214aee9c4f",
     "version" : "1536837201",
     "name" : "ingest_File-File",

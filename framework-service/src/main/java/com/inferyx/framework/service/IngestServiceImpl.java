@@ -296,6 +296,8 @@ public class IngestServiceImpl {
 			
 			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
+			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
 			} else {
 				IExecutor exec = execFactory.getExecutor(targetDS.getType());
 				String tableName = targetDS.getDbname()+"."+targetDp.getName();
