@@ -27,8 +27,29 @@ public class Ingest extends BaseEntity {
 	private MetaIdentifierHolder targetDetail;
 	private List<AttributeRefHolder> filterInfo;
 	private String runParams;
-	private String sourceFormat; //CSV, TSV, PSV
-	private String targetFormat; //CSV, TSV, PSV
+	private String sourceFormat; //CSV, TSV, PSV, PARQUET
+	private String targetFormat; //CSV, TSV, PSV, PARQUET
+	private String header;
+	
+	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the header
+	 */
+	public String getHeader() {
+		return header;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param header the header to set
+	 */
+	public void setHeader(String header) {
+		this.header = header;
+	}
 	/**
 	 *
 	 * @Ganesh
