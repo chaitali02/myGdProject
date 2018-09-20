@@ -94,7 +94,7 @@ export class SettingsComponent implements OnInit {
         }
      
         else {
-            this.router.navigate(['/app/list/appconfig']);   
+          //  this.router.navigate(['/app/list/appconfig']);   
             }
         
     }
