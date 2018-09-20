@@ -1005,8 +1005,8 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   function ConvertTwoDisit(data, propName) {
-    console.log(data[0].account_id)
-    if(isNaN(data[0][propName])){
+   
+   // if(isNaN(data[0][propName])){
     if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
       for (var i = 0; i < data.length; i++) {
         a = data[i][propName].split('-')[0];
@@ -1015,7 +1015,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         // console.log(data[i][propName])
       }
     }
-    }
+   // }
     console.log(data)
     return data;
   }
@@ -1036,7 +1036,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
   }
   $scope.refreshVizpod=function(rowNo,colNo){
-    debugger
     var parentIndex=rowNo-1;
     var index=colNo-1;
     $scope.sectionRows[parentIndex].columns[index].isDataError = false;
