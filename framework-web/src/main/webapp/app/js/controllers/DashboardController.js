@@ -579,7 +579,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			notify.title = 'Success',
 			notify.content = 'Dashboard Saved Successfully'
 			$scope.$emit('notify', notify);
-			$scope.okdashboardsave();
+			setTimeout(function () {
+			$scope.okdashboardsave()},2000);
 		}
 		var onError = function (response) {
 			notify.type = 'error',
@@ -603,14 +604,14 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	
 		if (hidemode == 'yes') {
 			if ($scope.stageName == "metadata") {
-				setTimeout(function () { $state.go('metadata', { 'type': 'dashboard' }); }, 2000);
+				 $state.go('metadata', { 'type': 'dashboard' });
 			}
 			else if ($scope.stageName != "metadata" && typeof $scope.stageParams.id != "undefined") {
 
-				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); }, 2000);
+			 	$state.go($scope.stageName, {'id': $scope.stageParams.id }); 
 			}
 			else {
-				setTimeout(function () { $state.go("dashboard"); }, 2000);
+				 $state.go("dashboard");
 			}
 		}
 	}

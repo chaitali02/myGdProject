@@ -457,9 +457,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "name": "graphanalysis ",
         "class": "fa fa-bar-chart",
         "submenu": [
-            { "name": "creaetgraphpod", "type": "graphpod", "uuid": "null", "caption": "Create New" },
-            { "name": "listgraphpod", "type": "graphpod", "uuid": "null", "caption": "List" },
-            { "name": "graphpodresultlist", "type": "graphexec", "uuid": "null", "caption": "Results" }
+            { "name": "creaetgraphpod", "type": "graphpod", "typeCount": "","uuid": "null", "caption": "Create New" },
+            { "name": "listgraphpod", "type": "graphpod", "typeCount": "graphpod","uuid": "null", "caption": "List" },
+            { "name": "graphpodresultlist", "type": "graphexec","typeCount": "graphexec", "uuid": "null", "caption": "Results" }
         ]
     };
     $scope.Datascience = {
@@ -495,9 +495,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "name": "ingest",
         "class": "fa fa-random",
         "submenu": [
-            { "name": "ingestrulelist", "type": "ingest", "uuid": "null", "caption": "Rule" },
-            { "name": "ingestrulegrouplist", "type": "ingestgroup", "uuid": "null", "caption": "Rule Group" },
-            { "name": "ingestrulerestultlist", "type": "ingestexec", "uuid": "null", "caption": "Rule Results" }
+            { "name": "ingestrulelist", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
+            { "name": "ingestrulegrouplist", "type": "ingestgroup", "typeCount": "ingestgroup","uuid": "null", "caption": "Rule Group" },
+            { "name": "ingestrulerestultlist", "type": "ingestexec",  "typeCount": "ingestexec","uuid": "null", "caption": "Rule Results" }
         ]
     }
 

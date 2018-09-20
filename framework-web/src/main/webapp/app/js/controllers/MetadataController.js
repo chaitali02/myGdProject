@@ -346,9 +346,12 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.gridOptionsDatapod.columnDefs = [
 		{
 			name: 'attributeId',
+			displayName: 'Id',
 			enableCellEdit: false,
-			visible: false,
-			headerCellClass: 'text-center'
+			visible: true,
+			width: '5%',
+			headerCellClass: 'text-center',
+			cellClass: 'text-center'
 		},
 		{
 			name: 'key',
@@ -395,7 +398,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		//, displayName: 'Name', cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.name"  title="{{row.entity.name}}" ng-disabled="row.entity.isAttributeEnable ||{{grid.appScope.mode}}"class="form-control">'},
 		{
 			name: 'type',
-			width: '16%',
+			width: '13%',
 			enableCellEdit: false,
 			displayName: 'Type',
 			cellTemplate: ' <select select2 style="margin:10px;" ng-model="row.entity.type" ng-options="x for x in grid.appScope.type"  ng-disabled="{{grid.appScope.mode}}" class="form-control"></select>',
@@ -412,7 +415,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		{
 			name: 'desc',
 			displayName: 'Desc',
-			width: '19%',
+			width: '17%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		}
@@ -532,14 +535,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.showDatastrores=function(data){
-		if($scope.isShowDatastore)
-		  return false;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false;
 		$scope.showGraphDiv = false;
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
 		$scope.isDownloadDatapod=true;
+		$scope.gridOptionsDataStrore.data=[];
 		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatastoreByDatapode = function (response) {
 			$scope.isShowDatastore=true;
@@ -589,6 +591,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.datamessage = "Some Error Occurred";
 			$scope.isDataInpogress = true;
 			$scope.spinner = false;
+			$scope.isEnableDSRB(data);
 		}
 	}
 	$scope.showSampleTable = function (data) {

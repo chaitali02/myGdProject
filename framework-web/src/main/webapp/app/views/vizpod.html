@@ -186,7 +186,7 @@
 								<div class="form-group">
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Detail</label>
 									<div class="col-md-6">
-										<tags-input  class="tag-scroll" ng-model="filterAttributeTags"  ng-disabled="{{mode}}"  display-property="dname"  key-property="id"add-from-autocomplete-only="true" ng-focus="onTagFocuse()" >
+										<tags-input  class="tag-scroll" ng-model="filterAttributeTags"  ng-disabled="{{mode}}"  display-property="dname"  key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" >
 											<auto-complete source="loadProfiles($query)" min-length="1"
 											debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
 											</auto-complete>
@@ -197,7 +197,7 @@
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
 									<div class="col-md-6">
 										<ul class="tagitdd" style="height:100px;" ng-class="({{mode}} ==true)?'disabled-ul':'default'">
-											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute | orderBy: 'name'" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
+											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute track by item.id" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
 												<span class="tagit-label">{{item.dname}}</span>
 												<a class="tagit-close-dd">
 			   										<span class="ui-icon ui-icon-close"></span>
