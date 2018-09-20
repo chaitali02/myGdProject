@@ -901,7 +901,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       filterInfo.ref = ref;
       filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
       for (var i = 0; i < data.vizpod.vizpodInfo.values.length; i++) {
-        var atttrName = data.vizpod.vizpodInfo.values[i].attributeName;
+        if(data.vizpod.vizpodInfo.values[i].ref =="datapod" ||data.vizpod.vizpodInfo.values[i].ref =="dataset"){
+          atttrName=data.vizpod.vizpodInfo.values[i].attributeName;
+         }
+         else{
+          atttrName=data.vizpod.vizpodInfo.values[i].ref.name;
+         }
         if (atttrName.indexOf(data.dataobj.id) != -1) {
           filterInfo.attrId = data.vizpod.vizpodInfo.values[i].attributeId;
           break;
