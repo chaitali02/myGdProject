@@ -37,8 +37,10 @@ import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.factory.ExecutorFactory;
 
 /**
  * @author Ganesh
@@ -57,6 +59,8 @@ public class IngestServiceImpl {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private SqoopExecutor sqoopExecutor;
+	@Autowired
+	private ExecutorFactory execFactory;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -132,13 +136,19 @@ public class IngestServiceImpl {
 					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
-				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid()/*.replaceAll("-", "_")*/, targetDp.getVersion(), ingestExec.getVersion());
+				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + fileName;
 					
+					String header = resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", appUuid, true);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, header.equalsIgnoreCase("true"));
+					
+					//applying source schema to df
+					if(header.equalsIgnoreCase("false")) {
+						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+					}
 					
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, "append", ingest.getTargetFormat());
@@ -155,9 +165,16 @@ public class IngestServiceImpl {
 //					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
 					
+					String header = resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), "false", appUuid, true);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, header.equalsIgnoreCase("true"));
 					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
+					
+					//applying source schema to df
+					if(header.equalsIgnoreCase("false")) {
+						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+					}
+					
 					//writing to target
 					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
 					countRows = rsHolder.getCountRows();
@@ -217,8 +234,11 @@ public class IngestServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution fauled.");
-			throw new RuntimeException((message != null) ? message : "Ingest execution fauled.");
+			if(message != null && message.toLowerCase().contains("duplicate entry")) {
+				message = "Duplicate entry/entries found for primary key(s).";
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
+			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
 		}
 		
 		return ingestExec;
@@ -265,11 +285,16 @@ public class IngestServiceImpl {
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+			MetaIdentifier targetDSMI = ingest.getTargetDatasource().getRef();
+			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			
 			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), "false", Integer.parseInt(""+datastore.getNumRows()), appUuid);
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), ingest.getHeader(), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else {
-				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+				IExecutor exec = execFactory.getExecutor(targetDS.getType());
+				String tableName = targetDS.getDbname()+"."+targetDp.getName();
+				String sql = generateSqlByDatasource(targetDS, tableName, limit);
+				data = exec.executeAndFetch(sql, appUuid);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -288,5 +313,23 @@ public class IngestServiceImpl {
 	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef, MetaIdentifier datapodKey, IngestExec ingestExec, long countRows, RunMode runMode) throws Exception {
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, tableName, datapodKey, ingestExec.getRef(MetaType.ingestExec), ingestExec.getAppInfo(), ingestExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
+	}
+	
+	public String resolveHeader(String header) {
+		if(header != null && !header.isEmpty()) {
+			switch(header) {
+			case "Y" : return "true";
+			case "N" : return "false";
+			}
+		}
+		return null;
+	}
+	
+	public String generateSqlByDatasource(Datasource  datasource, String tableName, int limit) {
+		if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {				
+				return "SELECT * FROM " + tableName + " WHERE rownum< " + limit;
+		} else {
+			return "SELECT * FROM " + tableName + " LIMIT " + limit;
+		}
 	}
 }

@@ -1753,40 +1753,33 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		try {
-			rsHolder = applySchema(rsHolder, targetDatapod, rsHolder.getTableName());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(false);
-		List<String> partitionColList = new ArrayList<>();
-		if(targetDatapod != null) {
-			for(Attribute attribute : targetDatapod.getAttributes()) {
-				if (attribute.getPartition().equalsIgnoreCase("y"))
-					partitionColList.add(attribute.getName());
-			}
-		}
+//		List<String> partitionColList = new ArrayList<>();
+//		if(targetDatapod != null) {
+//			for(Attribute attribute : targetDatapod.getAttributes()) {
+//				if (attribute.getPartition().equalsIgnoreCase("y"))
+//					partitionColList.add(attribute.getName());
+//			}
+//		}
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
 		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			if(partitionColList.size() > 0) {
+//			if(partitionColList.size() > 0) {
 				String sessionParameters = datasource.getSessionParameters();
 				if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 					for(String sessionParam :sessionParameters.split(",")) {
 						df.sparkSession().sql("SET "+sessionParam);
 					}
-				}/*
-				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
-					df.sparkSession().sql("SET "+sessionParam);
-				}*/
-				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.insertInto(rsHolder.getTableName());
-			} else {
+				}
+//
+//				//df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).insertInto(rsHolder.getTableName());
+//				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
+//			} else {
 				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
-			}
+//			}
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();
@@ -1795,11 +1788,11 @@ public class SparkExecutor<T> implements IExecutor {
 			connectionProperties.put("password", datasource.getPassword());
 			if(Arrays.asList(df.columns()).contains("features"))
 				df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
-			if(partitionColList.size() > 0) {
-				df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).jdbc(url, rsHolder.getTableName(), connectionProperties);
-			} else {
+//			if(partitionColList.size() > 0) {
+//				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
+//			} else {
 				df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
-			}
+//			}
 		}		
 		return rsHolder;
 	}
@@ -2935,7 +2928,7 @@ public class SparkExecutor<T> implements IExecutor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IOException("Can not write data.");
-		}
+		}		
 		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 
 		if(registerTempTable) {
@@ -2947,33 +2940,39 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder applySchema(ResultSetHolder rsHolder, Datapod datapod, String tableName) throws IOException {
+	public ResultSetHolder applySchema(ResultSetHolder rsHolder, Datapod datapod, String tableName, boolean registerTempTable) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
-		df.printSchema();
+//		df.printSchema();
 		String[] dfColumns = df.columns();
-		if(datapod !=null) {
-			if(df.columns().length != datapod.getAttributes().size())
-				throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
-			
-			List<Attribute> attributes = datapod.getAttributes();
-			int i = 0;
-			for(Attribute attribute : attributes){
-				df = df.withColumnRenamed(dfColumns[i], attribute.getName());
-				df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
-				i++;
-			} 				
-		} 
-		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		ConnectionHolder conHolder = connector.getConnection();
-		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		if(df.columns().length != datapod.getAttributes().size())
+			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		
+		List<Attribute> attributes = datapod.getAttributes();
+		int i = 0;
+		for(Attribute attribute : attributes){
+			df = df.withColumnRenamed(dfColumns[i], attribute.getName());
+			df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
+			i++;
+		} 				
+	 
+		if(registerTempTable) {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		}
 		rsHolder.setDataFrame(df);
 		return rsHolder;
 	}
 	
 	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
+		
+		if(df.columns().length != targetDp.getAttributes().size()) {
+			throw new RuntimeException("Datapod '" + targetDp.getName() + "' column size(" + targetDp.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		}
+		
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
@@ -2981,7 +2980,6 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "!").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			rsHolder = applySchema(rsHolder, targetDp, tableName);
 			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
@@ -2989,7 +2987,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
 		List<Map<String, Object>> data = new ArrayList<>();
-		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, "false", clientContext, false).getDataFrame();
+		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, header, clientContext, false).getDataFrame();
 		
 		List<Attribute> attributes = datapod.getAttributes();
 //		df.show(false);
