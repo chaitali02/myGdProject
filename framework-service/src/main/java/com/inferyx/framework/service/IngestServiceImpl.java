@@ -143,7 +143,10 @@ public class IngestServiceImpl {
 					
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, header.equalsIgnoreCase("true"));
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+					
+					//adding version column to data
+					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 					
 					//applying source schema to df
 					if(header.equalsIgnoreCase("false")) {
@@ -167,8 +170,11 @@ public class IngestServiceImpl {
 					
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, header.equalsIgnoreCase("true"));
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
 					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
+					
+					//adding version column data
+					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 					
 					//applying source schema to df
 					if(header.equalsIgnoreCase("false")) {
@@ -289,7 +295,7 @@ public class IngestServiceImpl {
 			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			
 			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), ingest.getHeader(), Integer.parseInt(""+datastore.getNumRows()), appUuid);
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else {
 				IExecutor exec = execFactory.getExecutor(targetDS.getType());
 				String tableName = targetDS.getDbname()+"."+targetDp.getName();
