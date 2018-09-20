@@ -217,6 +217,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	}
 
 	$scope.onChangedepandsOnTypes = function () {
+		$scope.formulainfoarray=[];
 		MetadataFormulaSerivce.getAllLatest($scope.selectedDependsOnType).then(function (response) { onSuccessRelation(response.data) });
 		var onSuccessRelation = function (response) {
 			$scope.allformuladepands = response
@@ -228,6 +229,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	}
 
 	$scope.selectDependson = function () {
+		$scope.formulainfoarray=[];
 		MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
 		var onSuccessGetAllAttributeBySource = function (resposne) {
 			$scope.allAttribute = resposne;

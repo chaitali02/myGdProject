@@ -86,8 +86,9 @@
                   </div>
                 </div>
                 <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
-                  <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size: 18px;"></span>
-                </div>       
+                  <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size:20px;padding-bottom: 5px"></span>
+                </div>
+                <br>       
               </div>
               <br>
             </div>
@@ -133,8 +134,8 @@
                   
                   <div class="portlet light bordered"  style="min-height:420px;">
                     <div class="portlet-title">
-                      <div class="caption">
-                        <span class="caption-subject font-dark bold ">{{datacol.name}}</span>
+                      <div class="caption" style="width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                        <span class="caption-subject font-dark bold " title="{{datacol.name}}">{{datacol.name}}</span>
                       </div>
                       <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" ng-show="datacol.isDataGridShow" uib-tooltip="Chart" ng-click="onClickChart($parent.$index,$index)" ng-show="hideIcon">
@@ -153,6 +154,9 @@
                        
                         <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" uib-tooltip="{{datacol.vizpodDetails.showtooltiptitle}}" ng-click="datacol.fullWidth =!datacol.fullWidth;fullScreenVizpod($parent.$index,$index)">
                           <i class="{{datacol.vizpodDetails.iconclass}}" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="refreshVizpod(datacol.rowNo,datacol.colNo)" data-original-title="">
+                          <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i> 
                         </a>
                       </div>
                     </div>

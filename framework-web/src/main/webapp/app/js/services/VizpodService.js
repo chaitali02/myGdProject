@@ -202,6 +202,7 @@
             for (var j = 0; j < response.length; j++) {
               var attributedetail = {};
               attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.index = j; 
               attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
               attributedetail.name = response[j].ref.name;
@@ -211,7 +212,7 @@
               attributedetail.attributeId = response[j].attrId;
               attributes.push(attributedetail)
             }
-    
+            console.log(JSON.stringify(attributes));
             deferred.resolve({
               data: attributes
             })
@@ -227,6 +228,7 @@
             for (var j = 0; j < response.length; j++) {
               var attributedetail = {};
               attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.index = j; 
               attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
               attributedetail.name = response[j].ref.name;
@@ -253,6 +255,7 @@
               var attributedetail = {};
               attributedetail.id = j
               attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.index = j; 
               attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
               attributedetail.name = response[j].ref.name;
@@ -278,6 +281,7 @@
             for (var j = 0; j < response.length; j++) {
               var attributedetail = {};
               attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.index = j; 
               attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
               attributedetail.name = response[j].ref.name;

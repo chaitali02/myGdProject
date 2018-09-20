@@ -148,7 +148,6 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	}//End indexOfdata
 
 	$scope.beforeDropKey = function (event, ui, data) {
-	
 		var deferred = $q.defer();
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
@@ -164,7 +163,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropKey = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
 		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
@@ -201,7 +200,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropGroup = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
 		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
@@ -244,9 +243,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropValue = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
-		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
+	    $scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
 	}//End onDropValue
 
@@ -277,7 +276,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onSuccessGetFormulaByType = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var formulajson = {};
-				formulajson.id = $scope.allSourceAttribute.length
+				formulajson.index = $scope.allSourceAttribute.length;
+				formulajson.id = response[i].uuid+"_"+i;
 				formulajson.class = "tagit-choice_formula-dd"
 				formulajson.uuid = response[i].uuid
 				formulajson.dname = response[i].name
@@ -293,7 +293,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onSuccessGetExpressionByType = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var expressionjson = {};
-				expressionjson.id = $scope.allSourceAttribute.length
+				expressionjson.index = $scope.allSourceAttribute.length;
+				expressionjson.id = response[i].uuid+"_"+i
 				expressionjson.class = "tagit-choice_expression-dd"
 				expressionjson.uuid = response[i].uuid
 				expressionjson.dname = response[i].name

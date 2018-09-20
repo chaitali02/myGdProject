@@ -949,7 +949,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.contextMenu1 = function (menu, vizpodbody) {
-
     d3.select(".jitu").selectAll('.context-menu').data([1])
       .enter()
       .append('div')
@@ -987,7 +986,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.setDefault = function (inProgess, isDataError) {
-
     for (var i = 0; i < $scope.sectionRows.length; i++) {
       for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {
         $scope.sectionRows[i].columns[j].isDataError = isDataError;
@@ -996,6 +994,97 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       }
     }
   }
+  $scope.convertResultTwoDisit = function (data, columnName) {
+    if (data.length > 0) {
+      for (var i = 0; i < data.length; i++) {
+        data[i][columnName] = parseFloat(data[i][columnName].toFixed(2));
+      }
+    }
+
+    return data;
+  }
+
+  function ConvertTwoDisit(data, propName) {
+    console.log(data[0].account_id)
+    if(isNaN(data[0][propName])){
+    if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
+      for (var i = 0; i < data.length; i++) {
+        a = data[i][propName].split('-')[0];
+        b = data[i][propName].split('-')[1]
+        data[i][propName] = parseFloat(a).toFixed(2) + "-" + parseFloat(b).toFixed(2);
+        // console.log(data[i][propName])
+      }
+    }
+    }
+    console.log(data)
+    return data;
+  }
+  var reA = /[^a-zA-Z]/g;
+  var reN = /[^0-9]/g;
+  function sortAlphaNum(propName) {
+    return function (a, b) {
+
+      var aA = a[propName].replace(reA, "");
+      var bA = b[propName].replace(reA, "");
+      if (aA === bA) {
+        var aN = parseFloat(a[propName].replace(reN, ""), 10);
+        var bN = parseFloat(b[propName].replace(reN, ""), 10);
+        return aN === bN ? 0 : aN > bN ? 1 : -1;
+      } else {
+        return aA > bA ? 1 : -1;
+      }
+    }
+  }
+  $scope.refreshVizpod=function(rowNo,colNo){
+    debugger
+    var parentIndex=rowNo-1;
+    var index=colNo-1;
+    $scope.sectionRows[parentIndex].columns[index].isDataError = false;
+    $scope.sectionRows[parentIndex].columns[index].isInprogess = true;
+    $scope.sectionRows[parentIndex].columns[index].vizpodDetails.datapoints = [];
+    var vizpodResuts = {};
+    vizpodResuts.rowNo =parentIndex ;
+    vizpodResuts.colNo =index;
+    vizpodResuts.type = $scope.dashboarddata.sectionInfo[parentIndex].vizpodInfo.type;
+    DahsboardSerivce.getVizpodResults($scope.sectionRows[parentIndex].columns[index].vizpodInfo.uuid, $scope.sectionRows[parentIndex].columns[index].vizpodInfo.version,$scope.vizpodbody, vizpodResuts).then(function (response) { onSuccessGetVizpodResult(response) }, function (response) { onError(response)});
+    var onSuccessGetVizpodResult=function(result){
+      if (result.vizpodResuts != "network-graph") {
+        $scope.inprogressdata = false
+        $scope.isUserNotification = false;
+        $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError = false;
+        $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess = false;
+        $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg = "";
+        if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart") {
+          $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
+        } else {
+          if(isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])){
+            if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
+              ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
+              result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
+            }
+           
+          }
+          $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = result.data;
+        }
+        if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type == "data-grid" ||$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isChartDataGrid) {
+          $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].gridOptions.data = result.data;
+        }
+      }
+      $scope.preparColumnDataFromResult(result.vizpodResuts.rowNo,result.vizpodResuts.colNo);
+      
+    }
+
+    var onError=function(result){
+      console.log(result)
+      $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError = true;
+      $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isInprogess = false;
+      $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = [];
+      $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg = result.data.message ||"Some Error Occurred";
+      $scope.inprogressdata = false;
+
+    }
+  }
+
   $scope.getVizpodResut = function (data) {
     $scope.isDataError = false;
     $scope.vizpodResutsArray = [];
@@ -1053,47 +1142,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
     // });
 
-    $scope.convertResultTwoDisit = function (data, columnName) {
-      if (data.length > 0) {
-        for (var i = 0; i < data.length; i++) {
-          data[i][columnName] = parseFloat(data[i][columnName].toFixed(2));
-        }
-      }
-
-      return data;
-    }
-
-    function ConvertTwoDisit(data, propName) {
-      console.log(data[0].account_id)
-      if(isNaN(data[0][propName])){
-      if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
-        for (var i = 0; i < data.length; i++) {
-          a = data[i][propName].split('-')[0];
-          b = data[i][propName].split('-')[1]
-          data[i][propName] = parseFloat(a).toFixed(2) + "-" + parseFloat(b).toFixed(2);
-          // console.log(data[i][propName])
-        }
-      }
-      }
-      console.log(data)
-      return data;
-    }
-    var reA = /[^a-zA-Z]/g;
-    var reN = /[^0-9]/g;
-    function sortAlphaNum(propName) {
-      return function (a, b) {
-
-        var aA = a[propName].replace(reA, "");
-        var bA = b[propName].replace(reA, "");
-        if (aA === bA) {
-          var aN = parseFloat(a[propName].replace(reN, ""), 10);
-          var bN = parseFloat(b[propName].replace(reN, ""), 10);
-          return aN === bN ? 0 : aN > bN ? 1 : -1;
-        } else {
-          return aA > bA ? 1 : -1;
-        }
-      }
-    }
+    
 
     $q.all($scope.vizpodResutsArray.map(function (value) {
       return $q.resolve(value)
