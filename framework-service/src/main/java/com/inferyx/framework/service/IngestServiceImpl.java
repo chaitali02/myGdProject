@@ -37,8 +37,10 @@ import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.factory.ExecutorFactory;
 
 /**
  * @author Ganesh
@@ -57,6 +59,8 @@ public class IngestServiceImpl {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private SqoopExecutor sqoopExecutor;
+	@Autowired
+	private ExecutorFactory execFactory;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -230,6 +234,9 @@ public class IngestServiceImpl {
 				// TODO: handle exception
 			}
 
+			if(message != null && message.toLowerCase().contains("duplicate entry")) {
+				message = "Duplicate entry/entries found for primary key(s).";
+			}
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
 			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
 		}
@@ -278,11 +285,16 @@ public class IngestServiceImpl {
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
+			MetaIdentifier targetDSMI = ingest.getTargetDatasource().getRef();
+			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			
 			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), ingest.getHeader(), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else {
-				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+				IExecutor exec = execFactory.getExecutor(targetDS.getType());
+				String tableName = targetDS.getDbname()+"."+targetDp.getName();
+				String sql = generateSqlByDatasource(targetDS, tableName, limit);
+				data = exec.executeAndFetch(sql, appUuid);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -311,5 +323,13 @@ public class IngestServiceImpl {
 			}
 		}
 		return null;
+	}
+	
+	public String generateSqlByDatasource(Datasource  datasource, String tableName, int limit) {
+		if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {				
+				return "SELECT * FROM " + tableName + " WHERE rownum< " + limit;
+		} else {
+			return "SELECT * FROM " + tableName + " LIMIT " + limit;
+		}
 	}
 }
