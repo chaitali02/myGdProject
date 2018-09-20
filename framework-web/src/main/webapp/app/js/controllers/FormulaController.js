@@ -163,6 +163,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		if(!$scope.isEdit && !$scope.isAdd ){
 			return false;
 		}
+		debugger
 		 console.log($scope.formulainfoarray[index]);
 	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
 			$scope.attributeinfo={};
@@ -180,11 +181,21 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			$scope.DblClcikEditDetail.isEdit=true;
 			$scope.DblClcikEditDetail.index=index; 
 		}
-		else if (type == "string"){
+		else if (type == "string" || type == "simple"){
 			var type={};
-	 	    type.text=$scope.formulainfoarray[index].type;
+	 	    type.text="string"//$scope.formulainfoarray[index].type;
 		    $scope.attributeType= type;
 			$scope.sourcesimple=$scope.formulainfoarray[index].value;
+			$scope.DblClcikEditDetail={};
+			$scope.DblClcikEditDetail.isEdit=true;
+			$scope.DblClcikEditDetail.index=index; 
+		}else{
+			var type={};
+	 	    type.text=$scope.formulainfoarray[index].type;
+			$scope.attributeType= type;
+			$scope.sourcefunction={}
+			$scope.sourcefunction.uuid=$scope.formulainfoarray[index].uuid;
+			$scope.sourcefunction.name=$scope.formulainfoarray[index].name;
 			$scope.DblClcikEditDetail={};
 			$scope.DblClcikEditDetail.isEdit=true;
 			$scope.DblClcikEditDetail.index=index; 
