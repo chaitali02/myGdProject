@@ -656,7 +656,8 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.desc = $scope.ingestData.desc;
 		ingestJson.active = $scope.ingestData.active;
         ingestJson.published = $scope.ingestData.published;
-        ingestJson.runParams=$scope.ingestData.runParams;
+		ingestJson.runParams=$scope.ingestData.runParams;
+		ingestJson.header=$scope.ingestData.header;
         if ($scope.ingestCompare == null) {
 			ingestJson.ingestChg = "Y";
 			ingestJson.filterChg = "Y";

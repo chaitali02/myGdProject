@@ -180,6 +180,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" ng-init="ingestData.header='N'">
+                                        <div class="btn-group">
+                                            <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Target DS
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
@@ -217,6 +226,7 @@
                                         <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ingestData.runParams" rows="2" style="resize:none;" data-ng-change="onchangeGroble()"></textarea>
                                     </div>
                                 </div>
+                               
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
