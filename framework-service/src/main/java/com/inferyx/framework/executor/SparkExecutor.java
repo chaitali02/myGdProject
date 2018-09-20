@@ -3005,4 +3005,11 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return data;
 	}
+	
+	public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
+		String sql = "SELECT *, "+version+" AS version FROM "+tableName;
+		ResultSetHolder rsHolder2 = executeSql(sql);
+		rsHolder.setDataFrame(rsHolder2.getDataFrame());
+		return rsHolder;
+	}
 }

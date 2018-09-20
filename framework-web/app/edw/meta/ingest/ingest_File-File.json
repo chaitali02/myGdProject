@@ -11,7 +11,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account"
+        "value" : "account.csv"
     },
     "targetDatasource" : {
         "ref" : {
@@ -22,7 +22,7 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
     "sourceFormat" : "CSV",
@@ -30,6 +30,7 @@
     "uuid" : "8c60df28-eb0d-4c27-8d3b-0e214aee9c4f",
     "version" : "1536837201",
     "name" : "ingest_File-File",
+    "header" : "N",
     "createdBy" : {
         "ref" : {
             "type" : "user",
