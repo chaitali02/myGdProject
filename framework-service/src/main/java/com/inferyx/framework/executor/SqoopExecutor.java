@@ -6,6 +6,7 @@ package com.inferyx.framework.executor;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class SqoopExecutor {
 	
 	@Autowired
 	private SqoopConnector sqoopConnector;
+	
+	static final Logger logger = Logger.getLogger(SqoopExecutor.class);
 
 	/**
 	 * 
@@ -83,7 +86,7 @@ public class SqoopExecutor {
 		}
 		sqoopOptions.setExplicitInputDelims(sqoopInput.getExplicitInputDelims());
 		sqoopOptions.setExplicitOutputDelims(sqoopInput.getExplicitOutputDelims());
-	    
+	    logger.info("SqoopInput : " + sqoopInput);
 		
 	}
 	

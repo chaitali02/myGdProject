@@ -972,6 +972,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+                     ingest : {name:'ingest', label: 'Ingest'},
+                     ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
                    }
                  
                    var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
@@ -1169,6 +1171,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                    break;
                  case 'recongroup':
                    api = 'recon';
+                   break;
+                  case 'ingest':
+                   api = 'ingest';
+                   break;
+                  case 'ingestgroup':
+                   api = 'ingest';
                    break;
                }
                if(!api){
@@ -1918,6 +1926,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                recon : {name:'recon', label: 'Recon'},
                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+               ingest : {name:'ingest', label: 'Ingest'},
+               ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
              }
           
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};

@@ -6050,6 +6050,186 @@
 		            "name" : ""
 				},
 				"value" : null
+		},						
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "712530e8-1575-4ee1-a615-8d7d506272c9",
+		 			"version" : null,
+		            "name" : "IngestgroupView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "6feda12c-601a-4e44-939c-38048f65830b",
+		 			"version" : null,
+		            "name" : "IngestgroupUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "67e01616-c938-4019-a747-a3ff91480020",
+		 			"version" : null,
+		            "name" : "IngestgroupRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "344b8fce-1cd8-4f14-9cad-bb5b73df1219",
+		 			"version" : null,
+		            "name" : "IngestgroupPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "97b90f43-b441-4249-bcb6-74675418c494",
+		 			"version" : null,
+		            "name" : "IngestgroupExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9634d7dd-d313-439a-9419-64e7051127a5",
+		 			"version" : null,
+		            "name" : "IngestgroupExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bfc47e1c-43d8-4e2e-abce-c972652658ab",
+		 			"version" : null,
+		            "name" : "IngestgroupEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "42a7efc2-e1fe-4d72-a3ec-3f0e4a515463",
+		 			"version" : null,
+		            "name" : "IngestgroupDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2741f98c-ffbe-4c93-a538-d8419fd2edd4",
+		 			"version" : null,
+		            "name" : "IngestgroupClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "ec8f4835-fd46-420f-9060-f5e012506bb4",
+		 			"version" : null,
+		            "name" : "IngestgroupAdd"
+				},
+				"value" : null
+		},								
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "56220aa9-9235-461b-b2b2-1d2b232d2815",
+		 			"version" : null,
+		            "name" : "IngestgroupView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "c46dd177-5d97-4b78-92d0-2db7c905d1aa",
+		 			"version" : null,
+		            "name" : "IngestgroupUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "de28ebb4-cfcb-4933-a4b2-2ee51cd37d7b",
+		 			"version" : null,
+		            "name" : "IngestgroupRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a74a6f9d-d372-4d68-a185-ab4d68a3dd97",
+		 			"version" : null,
+		            "name" : "IngestgroupPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a918cc9d-3047-4fa2-9982-5662863a9fec",
+		 			"version" : null,
+		            "name" : "IngestgroupExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "328d3750-be7e-4980-927d-9264c5d82fb2",
+		 			"version" : null,
+		            "name" : "IngestgroupExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b6ccf924-7be3-4286-bb12-54bcdc76a2b4",
+		 			"version" : null,
+		            "name" : "IngestgroupEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0f73c743-1c06-47fc-ad1b-01f8bf3e3675",
+		 			"version" : null,
+		            "name" : "IngestgroupDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3551ee09-87d6-4858-8f2f-7b3f5943f736",
+		 			"version" : null,
+		            "name" : "IngestgroupClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "961377a8-8c17-48e3-95aa-ac2bc6144e51",
+		 			"version" : null,
+		            "name" : "IngestgroupAdd"
+				},
+				"value" : null
 		}
 		
     ]

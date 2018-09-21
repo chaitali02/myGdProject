@@ -75,6 +75,7 @@ import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
@@ -528,6 +529,11 @@ public class MetadataServiceImpl {
 				ingestExec = (IngestExec) metaObject;
 				execStatus = (List<Status>) ingestExec.getStatusList();	
 			}
+			else if(type.equalsIgnoreCase(MetaType.ingestgroupExec.toString())){
+				IngestGroupExec execObject = new IngestGroupExec();
+				execObject = (IngestGroupExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
@@ -915,6 +921,9 @@ public class MetadataServiceImpl {
 		} else if (type.equals(MetaType.recongroupExec.toString())) {
 			execListName = "execList";
 		}
+		 else if (type.equals(MetaType.ingestgroupExec.toString())) {
+				execListName = "execList";
+			}
 				
 		//Create query
 		Query query = new Query();
@@ -1012,6 +1021,13 @@ public class MetadataServiceImpl {
 				return null;
 			}
 			statusHolderList = getStatusHolderList(reconGroupExec.getExecList(), Helper.getMetaType(reftype), ref, reconGroupExec.getName(), reconGroupExec.getStatusList());
+		} // End-If 
+		else if (metaObjectList.get(0) instanceof IngestGroupExec) {
+			IngestGroupExec ingestGroupExec = (IngestGroupExec) metaObjectList.get(0);
+			if (ingestGroupExec.getExecList() == null || ingestGroupExec.getExecList().isEmpty()) {
+				return null;
+			}
+			statusHolderList = getStatusHolderList(ingestGroupExec.getExecList(), Helper.getMetaType(reftype), ref, ingestGroupExec.getName(), ingestGroupExec.getStatusList());
 		} // End-If 
 		return statusHolderList;
 	}	

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
@@ -30,6 +32,7 @@ import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
@@ -61,6 +64,10 @@ public class IngestServiceImpl {
 	private SqoopExecutor sqoopExecutor;
 	@Autowired
 	private ExecutorFactory execFactory;
+	@Autowired
+	private Helper helper;
+	@Autowired
+	private IngestExecServiceImpl ingestExecServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -116,8 +123,9 @@ public class IngestServiceImpl {
 			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			long countRows = -1L;
 			
-			String targetFilePathUrl = String.format("%s%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+			String targetFilePathUrl = helper.getPathByDataSource(targetDS);//String.format("%s%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
 			//String targetFilePathUrl = String.format("%s/%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+			String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath();
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
@@ -139,7 +147,7 @@ public class IngestServiceImpl {
 				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
-					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + fileName;
+					sourceFilePathUrl = sourceFilePathUrl + fileName;
 					
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
@@ -166,7 +174,7 @@ public class IngestServiceImpl {
 				
 				for(String fileName : fileNameList) {
 //					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
-					String sourceFilePathUrl = hdfsInfo.getHdfsURL() + sourceDS.getPath() + "/" + fileName;
+					sourceFilePathUrl = sourceFilePathUrl + fileName;
 					
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
@@ -189,8 +197,11 @@ public class IngestServiceImpl {
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+//				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+//				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				String targetDir = helper.getPathByDataSource(targetDS);//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				
+				String sourceDir = helper.getPathByDataSource(sourceDS);//String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
 //				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
@@ -201,14 +212,22 @@ public class IngestServiceImpl {
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
+				} else {
+					sqoopInput.setExportDir(null);
+					sqoopInput.setImportIntended(true);
 				}
+				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				String targetDir = targetDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = sourceDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+//				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+//				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				logger.info("targetDir : " + targetDir);
+				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
 				sqoopInput.setTable(sourceDp.getName());
@@ -221,6 +240,7 @@ public class IngestServiceImpl {
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
 				}
+				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				sqoopExecutor.execute(sqoopInput);
 			} 
 			
@@ -251,6 +271,7 @@ public class IngestServiceImpl {
 	}
 
 	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat) throws JsonProcessingException {
+		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
@@ -339,5 +360,20 @@ public class IngestServiceImpl {
 		} else {
 			return "SELECT * FROM " + tableName + " LIMIT " + limit;
 		}
+	}
+	
+	public String getIngestExecByRGExec(String ingestGroupExecUuid, String ingestGroupExecVersion) throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(ingestExecServiceImpl.findReconExecByReconGroupExec(ingestGroupExecUuid, ingestGroupExecVersion));
+		return result;
+	}
+	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
+		MetaIdentifier mi = new MetaIdentifier();
+		mi.setType(MetaType.ingest);
+		mi.setUuid(ingestExec.getDependsOn().getRef().getUuid());
+		mi.setVersion(ingestExec.getDependsOn().getRef().getVersion());
+		return mi;
 	}
 }

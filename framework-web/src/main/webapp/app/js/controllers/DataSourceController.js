@@ -48,7 +48,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 	$scope.showGraphDiv = false;
 	$scope.datasource = {};
 	$scope.datasource.versions = [];
-	$scope.datasourceTypes = ["HIVE", "FILE"];
+	$scope.datasourceTypes = ["HIVE", "FILE","ORACLE","IMPALA","POSTGRES","MYSQL"];
 	$scope.datasourceHasChanged = true;
 	$scope.isSubmitEnable = true;
 	$scope.state = "admin";
@@ -133,6 +133,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 
 
 	$scope.onChangeDatasoureType = function () {
+		debugger
 		if ($scope.datasourcetype == $scope.datasourceTypes[0]) {
 			$scope.isHiveFieldDisabled = false;
 			$scope.isFileFieldDisabled = true;
@@ -172,7 +173,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 			$scope.datasource.defaultVersion = defaultversion;
 			$scope.datasourcedata = response
 			$scope.datasourcetype = response.type;
-			$scope.onChangeDatasoureType();
+			//$scope.onChangeDatasoureType();
 			var tags = [];
 			$scope.tags = [];
 			if (response.tags != null) {
@@ -189,20 +190,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 	/*Start If*/
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
-
 		$scope.isDependencyShow = true;
-		/* if($sessionStorage.fromParams.type !="datasource"){
-				$scope.state=$sessionStorage.fromStateName;
-				$scope.stateparme=$sessionStorage.fromParams;
-				$sessionStorage.showgraph=true;
-				var data=$stateParams.id.split("_");
-				var uuid=data[0];
-				var version=data[1];
-				$scope.getAllVersion(uuid)//Call SelectAllVersion Function
-				$scope.selectVersion(uuid,version);//Call SelectVersion Function
-	
-		 }//End Inner If
-		 else{*/
 		$scope.getAllVersion($stateParams.id)//Call SelectAllVersion Function
 		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datasource').then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -212,7 +200,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 			$scope.datasource.defaultVersion = defaultversion;
 			$scope.datasourcedata = response
 			$scope.datasourcetype = response.type;
-			$scope.onChangeDatasoureType();
+			//$scope.onChangeDatasoureType();
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {

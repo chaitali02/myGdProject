@@ -1,8 +1,8 @@
 {
 	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
 	"version": "1464977196",
-	"name": "File",
-	"desc": "File Data Source",
+	"name": "File_Data",
+	"desc": "File Data Source to store file data",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -27,6 +27,6 @@
 	"port": "",
 	"username": "",
 	"password": "",
-	"path": "/user/hive/warehouse/framework/upload/",
+	"path": "/user/hive/warehouse/framework/data/",
 	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

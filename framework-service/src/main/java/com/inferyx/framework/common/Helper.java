@@ -68,6 +68,8 @@ import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroup;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -130,6 +132,8 @@ public class Helper {
 	static Logger logger=Logger.getLogger(Helper.class);
 	@Autowired
 	Engine engine;
+	@Autowired
+	private HDFSInfo hdfsInfo;
 
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
@@ -294,6 +298,8 @@ public class Helper {
 				case schedule : return "iScheduleDao";	
 				case ingest : return "iIngestDao";
 				case ingestExec : return "iIngestExecDao";
+				case ingestgroup : return "iIngestGroupDao";
+				case ingestgroupExec : return "iIngestGroupExecDao";
 				default:
 					return null;
 			}
@@ -412,6 +418,8 @@ public class Helper {
 		case schedule : return Schedule.class;
 		case ingest : return Ingest.class;
 		case ingestExec : return IngestExec.class;
+		case ingestgroup : return IngestGroup.class;
+		case ingestgroupExec : return IngestGroupExec.class;
 		default:
 			return null;
 		}
@@ -505,6 +513,8 @@ public class Helper {
 				case "schedule" : return MetaType.schedule;
 				case "ingest" : return MetaType.ingest;
 				case "ingestexec" : return  MetaType.ingestExec; 
+				case "ingestgroup" : return MetaType.ingestgroup;
+				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
 				default : return null;
 			}
 		}
@@ -697,6 +707,8 @@ public class Helper {
 			 					break;
 				case XLS : regex = "xls";
 					break;
+			default:
+				break;
 			}
 		
 		for (Entry<Object, Object> entry : Helper.getPropertiesList()) {
@@ -713,9 +725,9 @@ public class Helper {
 				case CSV : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case LOG : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case ZIP : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
-				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;	
-				
-				
+				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
+			default:
+				break;					
 			}
 		return null;
 	}
@@ -743,6 +755,8 @@ public class Helper {
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
+			default:
+				break;
 			}
 		return null;
 	}
@@ -775,7 +789,7 @@ public class Helper {
 				}
 			}
 			else if(fileType.toString().equalsIgnoreCase("CSV")) {
-				return getPropertyValue("framework.file.upload.path");
+				return getPropertyValue("framework.file.upload.pafileTypeth");
 			}
 			else if(fileType.toString().equalsIgnoreCase("XLS")) {
 				return getPropertyValue("framework.file.upload.path");
@@ -898,6 +912,7 @@ public class Helper {
 		case reportExec : return MetaType.report;
 		case batchExec : return MetaType.batch;
 		case ingestExec : return MetaType.ingest;
+		case ingestgroupExec : return MetaType.ingestgroup;
 		default : return null;
 		}
 	}
@@ -961,6 +976,7 @@ public class Helper {
 		case operatorExec : return new OperatorExec();
 		case graphExec : return new GraphExec();
 		case ingest : return new IngestExec();
+		case ingestgroup : return new IngestGroupExec();
 		default : return null;
 		}
 	}
@@ -1020,5 +1036,9 @@ public class Helper {
 			}
 		}
 		return null;
+	}
+	
+	public String getPathByDataSource(Datasource datasource) {
+		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
 	}
 }
