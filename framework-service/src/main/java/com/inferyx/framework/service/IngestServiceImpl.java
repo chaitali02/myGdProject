@@ -209,6 +209,8 @@ public class IngestServiceImpl {
 				sqoopInput.setTargetDs(targetDS);
 				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
 				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				logger.info("targetDir : " + targetDir);
+				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
 				sqoopInput.setTable(sourceDp.getName());
@@ -251,6 +253,7 @@ public class IngestServiceImpl {
 	}
 
 	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat) throws JsonProcessingException {
+		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
