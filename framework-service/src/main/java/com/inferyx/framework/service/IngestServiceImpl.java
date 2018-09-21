@@ -212,8 +212,10 @@ public class IngestServiceImpl {
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+//				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+//				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				logger.info("targetDir : " + targetDir);
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setSourceDirectory(sourceDir);
