@@ -3085,6 +3085,27 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('jobexecutorlistingestexec', {
+            url: "/JobMonitoringList/ingest?id&mode&returnBack",
+            templateUrl: "views/ingest-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+        
 
         .state('commonlistpage', {
             url: "/list?type",
@@ -3250,12 +3271,12 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Data Ingestion' },
             params: { type: 'ingest'}
         })
-        // .state('ingestrulegrouplist', {
-        //     url: "/DataIngestion/IngestGroupList",
-        //     templateUrl: "views/common-list.html",
-        //     data: { pageTitle: 'Data Ingestion' },
-        //     params: { type: 'ingestgroup'}
-        // })
+        .state('ingestrulegrouplist', {
+            url: "/DataIngestion/IngestGroupList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingestgroup'}
+        })
         .state('ingestrulerestultlist', {
             url: "/DataIngestion/IngestResultList",
             templateUrl: "views/common-list.html",
@@ -3276,6 +3297,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/IngestController.js',
                             'js/services/IngestRuleService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('ingestrulegroupdetail', {
+            url: "/DataIngestion/IngestRuleGroupDetail?id&mode&returnBack&version",
+            templateUrl: "views/ingest-rule-group.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController.js',
+                            'js/services/IngestRuleGroupService.js',
                         ]
                     });
                 }]

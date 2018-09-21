@@ -73,6 +73,7 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Group;
+import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestView;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -4090,6 +4091,12 @@ public class RegisterService {
 		if (batchExec != null) {
 			countHolder.add(addToCount(MetaType.batchExec.toString(), batchExecCount,
 					batchExec.getCreatedBy().getRef().getName(), batchExec.getCreatedOn()));
+		}
+		int ingestExecCount = commonServiceImpl.findAllLatest(MetaType.ingestExec).size();
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatest(MetaType.ingestExec.toString());
+		if (ingestExec != null) {
+			countHolder.add(addToCount(MetaType.ingestExec.toString(), ingestExecCount,
+					ingestExec.getCreatedBy().getRef().getName(), ingestExec.getCreatedOn()));
 		}
 
 		return countHolder;

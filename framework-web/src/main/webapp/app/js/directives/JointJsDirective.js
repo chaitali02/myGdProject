@@ -972,6 +972,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+                     ingest : {name:'ingest', label: 'Ingest'},
+                     recongroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
                    }
                  
                    var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
