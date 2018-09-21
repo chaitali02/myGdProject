@@ -195,8 +195,8 @@ public class IngestServiceImpl {
 				sqoopInput.setTargetDs(targetDS);
 //				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
 //				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
-				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), /*targetDS.getHost(),*/ targetDS.getPath());
-				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), /*sourceDS.getHost(),*/ sourceDS.getPath());
+				String targetDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
 //				String targetTable = String.format("%s/%s/%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
@@ -211,13 +211,16 @@ public class IngestServiceImpl {
 					sqoopInput.setExportDir(null);
 					sqoopInput.setImportIntended(true);
 				}
+				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
 				sqoopInput.setTargetDs(targetDS);
-				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
-				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+				String targetDir = targetDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
+				String sourceDir = sourceDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
+//				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+//				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				logger.info("targetDir : " + targetDir);
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setSourceDirectory(sourceDir);
@@ -232,6 +235,7 @@ public class IngestServiceImpl {
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
 				}
+				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				sqoopExecutor.execute(sqoopInput);
 			} 
 			
