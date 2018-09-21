@@ -201,6 +201,9 @@ public class IngestServiceImpl {
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
+				} else {
+					sqoopInput.setExportDir(null);
+					sqoopInput.setImportIntended(true);
 				}
 				sqoopExecutor.execute(sqoopInput);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
