@@ -1,0 +1,72 @@
+{
+  "uuid": "8c60df28-eb0d-4c27-8d3b-0e214aee9c4f",
+  "version": "1537454724",
+  "name": "account_f2f",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Sep 20 10:45:24 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "FILE-FILE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "account_f2f.csv"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "version": null,
+      "name": "account"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": "CSV",
+  "targetFormat": "PARQUET",
+  "header": "Y"
+}
