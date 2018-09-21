@@ -132,6 +132,8 @@ public class Helper {
 	static Logger logger=Logger.getLogger(Helper.class);
 	@Autowired
 	Engine engine;
+	@Autowired
+	private HDFSInfo hdfsInfo;
 
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
@@ -705,6 +707,8 @@ public class Helper {
 			 					break;
 				case XLS : regex = "xls";
 					break;
+			default:
+				break;
 			}
 		
 		for (Entry<Object, Object> entry : Helper.getPropertiesList()) {
@@ -721,9 +725,9 @@ public class Helper {
 				case CSV : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case LOG : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case ZIP : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
-				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;	
-				
-				
+				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
+			default:
+				break;					
 			}
 		return null;
 	}
@@ -751,6 +755,8 @@ public class Helper {
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
+			default:
+				break;
 			}
 		return null;
 	}
@@ -783,7 +789,7 @@ public class Helper {
 				}
 			}
 			else if(fileType.toString().equalsIgnoreCase("CSV")) {
-				return getPropertyValue("framework.file.upload.path");
+				return getPropertyValue("framework.file.upload.pafileTypeth");
 			}
 			else if(fileType.toString().equalsIgnoreCase("XLS")) {
 				return getPropertyValue("framework.file.upload.path");
@@ -1030,5 +1036,9 @@ public class Helper {
 			}
 		}
 		return null;
+	}
+	
+	public String getPathByDataSource(Datasource datasource) {
+		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
 	}
 }
