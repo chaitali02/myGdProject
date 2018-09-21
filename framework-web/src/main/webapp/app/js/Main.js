@@ -3104,8 +3104,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })
 
-
-        
+        .state('jobexecutorlistingestgroupexec', {
+            url: "/JobMonitoringList/ingestGroup?id&mode&returnBack",
+            templateUrl: "views/ingest-group-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestGroupExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
 
         .state('commonlistpage', {
             url: "/list?type",

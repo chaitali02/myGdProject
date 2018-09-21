@@ -103,6 +103,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.action = function (data, mode, privilege) {
     $scope.setActivity(data.uuid, data.version, $scope.select, mode);
+    
     var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
