@@ -40,7 +40,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   if($scope.select !="paramlist")
   $scope.updateStats();
   
-  var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
+  var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec','ingestexec','ingestgroupexec'];
 
   if(!$scope.isJobExec) {
     $scope.handleGroup = groups.indexOf($scope.select.toLowerCase());
@@ -103,6 +103,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.action = function (data, mode, privilege) {
     $scope.setActivity(data.uuid, data.version, $scope.select, mode);
+    
     var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType

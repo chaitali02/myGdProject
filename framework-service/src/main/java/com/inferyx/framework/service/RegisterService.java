@@ -73,6 +73,8 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Group;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.IngestView;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -228,7 +230,11 @@ public class RegisterService {
 	private BatchViewServiceImpl batchViewServiceImpl;
 	@Autowired
 	private IngestViewServiceImpl ingestViewServiceImpl;
-
+	@Autowired
+	private IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
 
@@ -3928,6 +3934,12 @@ public class RegisterService {
 			case "operatorexec" : 
 				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
 				break;
+			case "ingestexec":
+				result = ow.writeValueAsString(ingestServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
+			case "ingestgroupexec":
+				result = ow.writeValueAsString(ingestGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
 			}
 		}
 		return result;
@@ -4090,6 +4102,18 @@ public class RegisterService {
 		if (batchExec != null) {
 			countHolder.add(addToCount(MetaType.batchExec.toString(), batchExecCount,
 					batchExec.getCreatedBy().getRef().getName(), batchExec.getCreatedOn()));
+		}
+		int ingestExecCount = commonServiceImpl.findAllLatest(MetaType.ingestExec).size();
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatest(MetaType.ingestExec.toString());
+		if (ingestExec != null) {
+			countHolder.add(addToCount(MetaType.ingestExec.toString(), ingestExecCount,
+					ingestExec.getCreatedBy().getRef().getName(), ingestExec.getCreatedOn()));
+		}
+		int ingestGroupExecCount = commonServiceImpl.findAllLatest(MetaType.ingestgroupExec).size();
+		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getLatest(MetaType.ingestgroupExec.toString());
+		if (ingestGroupExec != null) {
+			countHolder.add(addToCount(MetaType.ingestgroupExec.toString(), ingestGroupExecCount,
+					ingestGroupExec.getCreatedBy().getRef().getName(), ingestGroupExec.getCreatedOn()));
 		}
 
 		return countHolder;

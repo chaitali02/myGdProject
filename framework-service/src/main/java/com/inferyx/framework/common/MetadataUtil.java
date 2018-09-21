@@ -84,6 +84,8 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Group;
+import com.inferyx.framework.domain.Ingest;
+import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Map;
@@ -1185,7 +1187,25 @@ public class MetadataUtil {
 				return reconExec;
 			}
 		}
+		if(ref.getType() == MetaType.ingest) {
+			if (key.getVersion() != null ) {
+				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingest.toString());
+			} else {
+				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingest.toString());
+				ref.setVersion(ingest.getVersion());
+				return ingest;
+			}
+		}
 		
+		if(ref.getType() == MetaType.ingestExec) {
+			if (key.getVersion() != null ) {
+				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingestExec.toString());
+			} else {
+				IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingestExec.toString());
+				ref.setVersion(ingestExec.getVersion());
+				return ingestExec;
+			}
+		}
 		if(ref.getType() == MetaType.distribution)
 			if (key.getVersion() != null ) {
 				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.distribution.toString());

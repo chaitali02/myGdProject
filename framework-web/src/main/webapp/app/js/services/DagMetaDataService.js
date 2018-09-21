@@ -1846,13 +1846,16 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'ingestExec',
       metaType:'ingest',
       color : '#fff8dc',
-      parentIconCaption:'',
-      allowInMenu : false,
+      iconPath : 'assets/layouts/layout/img/ingest.svg',
+      parentIconCaption:'Data Ingestion',
+      childIconCaption:'Rule',
+      allowInMenu : true,
       listState : 'ingestrulelist',
       joblistState : '',
+      state:'ingestruledetail',
       detailState :'ingestruledetail',
-      childMenu:[],
-      allowInChildMenu : false,
+      childMenu:["ingest",'ingestgroup'],
+      allowInChildMenu : true,
     },
     'ingestexec':{
       name : 'ingest',
@@ -1874,19 +1877,37 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       caption:'Rule Group',
       execType:'ingestgroupExec',
       metaType:'ingestgroup',
+      iconPath : 'assets/layouts/layout/img/ingestgroup.svg',
       color : '#fff8dc',
       parentIconCaption:'',
+      childIconCaption:'Rule Group',
       allowInMenu : false,
       listState : 'ingestrulegrouplist',
       joblistState : '',
+      state :'ingestrulegroupdetail',
       detailState :'ingestrulegroupdetail',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+    'ingestgroupexec':{
+      name : 'ingestgroup',
+      caption:'Ingest Group Exec',
+      execType:'ingestgroupExec',
+      metaType:'ingestgroupExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistingestgroupexec',
+      resultState:'ingestexecresult',
       childMenu:[],
       allowInChildMenu : false,
     },
   };
 
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
   var defaultElement = {
     markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
     size: { width: 50, height: 50 },
@@ -2022,6 +2043,24 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '.body': {
           elementType : 'recongroup',
           "xlink:href": obj.elementDefs['recongroup'].iconPath
+        }
+      }
+    }),
+    'ingest' : angular.merge({},defaultElement,{
+      elementType:'ingest',
+      attrs: {
+        '.body': {
+          elementType : 'ingest',
+          "xlink:href": obj.elementDefs['ingest'].iconPath
+        }
+      }
+    }),
+    'ingestgroup' : angular.merge({},defaultElement,{
+      elementType:'ingestgroup',
+      attrs: {
+        '.body': {
+          elementType : 'ingestgroup',
+          "xlink:href": obj.elementDefs['ingestgroup'].iconPath
         }
       }
     }),

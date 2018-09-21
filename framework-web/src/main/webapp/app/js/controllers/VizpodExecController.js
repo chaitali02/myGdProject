@@ -56,7 +56,13 @@ JobMonitoringModule.controller('DetailVizpodExecController', function($state, $f
     $scope.graphDataStatus = false
     $scope.showgraphdiv = false;
   }
-
+  $scope.showSqlFormater=function(){
+    $('#sqlFormaterModel').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $scope.formateSql=sqlFormatter.format($scope.vizpodexecdata.sql);
+  }
 
 
 });
