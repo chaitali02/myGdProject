@@ -10,10 +10,13 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "dqgroupexec")
-public class DataQualGroupExec extends BaseRuleGroupExec {
-	
+/**
+ * @author Ganesh
+ *
+ */
+@Document(collection = "ingestgroupexec")
+public class IngestGroupExec extends BaseRuleGroupExec {
+
 }

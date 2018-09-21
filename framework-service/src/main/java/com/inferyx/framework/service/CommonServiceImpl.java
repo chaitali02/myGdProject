@@ -100,6 +100,8 @@ import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.IIngestDao;
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.IIngestExecDao;
+import com.inferyx.framework.dao.IIngestGroupDao;
+import com.inferyx.framework.dao.IIngestGroupExecDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
@@ -460,6 +462,28 @@ public class CommonServiceImpl <T> {
 	IIngestDao iIngestDao;
 	@Autowired
 	IIngestExecDao iIngestExecDao;
+	@Autowired
+	IIngestGroupDao iIngestGroupDao;
+	@Autowired
+	IIngestGroupExecDao iIngestGroupExecDao;
+	
+	
+	public IIngestGroupDao getiIngestGroupDao() {
+		return iIngestGroupDao;
+	}
+
+	public void setiIngestGroupDao(IIngestGroupDao iIngestGroupDao) {
+		this.iIngestGroupDao = iIngestGroupDao;
+	}
+
+	public IIngestGroupExecDao getiIngestGroupExecDao() {
+		return iIngestGroupExecDao;
+	}
+
+	public void setiIngestGroupExecDao(IIngestGroupExecDao iIngestGroupExecDao) {
+		this.iIngestGroupExecDao = iIngestGroupExecDao;
+	}
+
 	/**
 	 *
 	 * @Ganesh
