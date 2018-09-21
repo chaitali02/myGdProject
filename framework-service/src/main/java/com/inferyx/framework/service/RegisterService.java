@@ -229,7 +229,11 @@ public class RegisterService {
 	private BatchViewServiceImpl batchViewServiceImpl;
 	@Autowired
 	private IngestViewServiceImpl ingestViewServiceImpl;
-
+	@Autowired
+	private IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
 
@@ -3928,6 +3932,12 @@ public class RegisterService {
 				break;	
 			case "operatorexec" : 
 				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
+			case "ingestexec":
+				result = ow.writeValueAsString(ingestServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
+			case "ingestgroupexec":
+				result = ow.writeValueAsString(ingestGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
 				break;
 			}
 		}

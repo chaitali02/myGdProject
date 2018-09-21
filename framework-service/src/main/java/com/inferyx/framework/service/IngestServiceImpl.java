@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
@@ -30,6 +32,7 @@ import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
@@ -61,7 +64,8 @@ public class IngestServiceImpl {
 	private SqoopExecutor sqoopExecutor;
 	@Autowired
 	private ExecutorFactory execFactory;
-	
+	@Autowired
+	private IngestExecServiceImpl ingestExecServiceImpl;
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
 	public IngestExec create(String ingestUuid, String ingestVersion, ExecParams execParams, IngestExec ingestExec, RunMode runMode) throws Exception {
@@ -347,5 +351,20 @@ public class IngestServiceImpl {
 		} else {
 			return "SELECT * FROM " + tableName + " LIMIT " + limit;
 		}
+	}
+	
+	public String getIngestExecByRGExec(String ingestGroupExecUuid, String ingestGroupExecVersion) throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(ingestExecServiceImpl.findReconExecByReconGroupExec(ingestGroupExecUuid, ingestGroupExecVersion));
+		return result;
+	}
+	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
+		MetaIdentifier mi = new MetaIdentifier();
+		mi.setType(MetaType.ingest);
+		mi.setUuid(ingestExec.getDependsOn().getRef().getUuid());
+		mi.setVersion(ingestExec.getDependsOn().getRef().getVersion());
+		return mi;
 	}
 }

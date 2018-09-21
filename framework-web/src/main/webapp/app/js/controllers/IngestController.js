@@ -1125,7 +1125,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 
 DataIngestionModule.controller('IngestResultController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService, privilegeSvc, CF_DOWNLOAD) {
 	$scope.select = $stateParams.type;
-	$scope.type = { text: $scope.select == 'ingestgroupexec' ? 'ingestegroup' : 'ingest' };
+	$scope.type = { text: $scope.select == 'ingestgroupexec' ? 'ingestgroup' : 'ingest' };
 	$scope.showprogress = false;
 	$scope.isRuleExec = false;
 	$scope.isRuleResult = false;
@@ -1300,7 +1300,7 @@ DataIngestionModule.controller('IngestResultController', function ($http, dagMet
 		else {
 			$scope.isIngestGroupExec = false;
 		}
-		var params = { "id": uuid, "name": name, "elementType": "ingestgroup", "version": version, "type": "ingestgroup", "typeLabel": "IngestGroup", "url": "ingest/getIngestExecByIngestGroupExec?", "ref": { "type": "ingestgroupExec", "uuid": uuid, "version": version, "name": name } }
+		var params = { "id": uuid, "name": name, "elementType": "ingestgroup", "version": version, "type": "ingestgroup", "typeLabel": "IngestGroup", "url": "ingest/getIngestExecByRGExec?", "ref": { "type": "ingestgroupExec", "uuid": uuid, "version": version, "name": name } }
 		setTimeout(function () {
 			$scope.$broadcast('generateGroupGraph', params);
 		}, 100);

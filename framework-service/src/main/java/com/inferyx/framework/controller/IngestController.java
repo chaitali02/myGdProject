@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.IngestExec;
@@ -46,6 +48,13 @@ public class IngestController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestExec ingestExec = ingestServiceImpl.create(ingestUuid, ingestVersion, execParams, null, runMode);
 		return ingestServiceImpl.execute(ingestUuid, ingestVersion, ingestExec, execParams, type, runMode);
+	}
+	@RequestMapping(value = "/getIngestExecByRGExec", method = RequestMethod.GET)
+	public @ResponseBody String getIngestExecByRGExec(@RequestParam("ingestGroupExecUuid") String ingestGroupExecUuid,
+			@RequestParam("ingestGroupExecVersion") String ingestGroupExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return ingestServiceImpl.getIngestExecByRGExec(ingestGroupExecUuid, ingestGroupExecVersion);
 	}
 	
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)

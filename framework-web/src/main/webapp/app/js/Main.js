@@ -3313,7 +3313,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         name: 'InferyxApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                            'js/controllers/IngestController.js',
+                             'js/controllers/IngestController.js',
                             'js/services/IngestRuleGroupService.js',
                         ]
                     });
