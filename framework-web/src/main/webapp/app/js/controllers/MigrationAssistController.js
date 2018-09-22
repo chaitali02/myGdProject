@@ -613,8 +613,8 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
     });
 
     gridApi.selection.on.rowSelectionChangedBatch($scope,function(row){
-            $scope.selectButtonClick(row.entity);
-      });
+    	$scope.selectButtonClick(row[0].entity);
+    });
 
   $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
