@@ -391,6 +391,7 @@
                 d.vizpod=$scope.objdetail;
                 d.dataobj={};
                 var value=datamap.options.data[geography.id] || ""
+                d.dataobj.x=geography.id;
                 if(value !="")
                 d.dataobj.value=datamap.options.data[geography.id][columnname[0]]|| "";
                 else

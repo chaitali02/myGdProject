@@ -888,41 +888,15 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     console.log(data)
     $scope.contextMenu1(menu, data);
   }
-  $scope.actionEvent = function (d, i, data) {
 
-    var filterinfoArray = []
-    var vizpodbody = {}
-    var filterInfo = {};
-    var ref = {}
-    if (data.dataobj.value != "") {
-      ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
-      ref.version = null;
-      ref.type = data.vizpod.vizpodInfo.values[0].ref.type
-      filterInfo.ref = ref;
-      filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
-      for (var i = 0; i < data.vizpod.vizpodInfo.values.length; i++) {
-        if(data.vizpod.vizpodInfo.values[i].ref =="datapod" ||data.vizpod.vizpodInfo.values[i].ref =="dataset"){
-          atttrName=data.vizpod.vizpodInfo.values[i].attributeName;
-         }
-         else{
-          atttrName=data.vizpod.vizpodInfo.values[i].ref.name;
-         }
-        if (atttrName.indexOf(data.dataobj.id) != -1) {
-          filterInfo.attrId = data.vizpod.vizpodInfo.values[i].attributeId;
-          break;
-        }
-      }
-      filterInfo.value = data.dataobj.value
-      filterinfoArray.push(filterInfo);
-      vizpodbody.filterInfo = filterinfoArray
-    }
-    else {
-      vizpodbody = null;
-    }
+
+
+  $scope.getVizpodResultDetails=function(uuid,version,vizpodbody,data){
     $scope.IsVizpodDetailShow = true;
     $scope.inprogressdatavizpodetail = true;
     $scope.VizpodDetail = data.vizpod;
-    DahsboardSerivce.getVizpodDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody).then(function (response) { onSuccessGetVizpodDetails(response.data) }, function (response) { onError(response.data) });
+    $scope.isDataErrorvizpodetail =false;
+    DahsboardSerivce.getVizpodDetails(uuid,version, vizpodbody).then(function (response) { onSuccessGetVizpodDetails(response.data) }, function (response) { onError(response.data) });
     var onSuccessGetVizpodDetails = function (response) {
       $scope.isDataErrorvizpodetail = false;
       $scope.inprogressdatavizpodetail = false;
@@ -945,9 +919,75 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       $scope.isDataErrorvizpodetail = true;
       $scope.inprogressdatavizpodetail = false;
     }
-
   }
 
+  // $scope.actionEvent = function (d, i, data) {
+
+  //   var filterinfoArray = []
+  //   var vizpodbody = {}
+  //   var filterInfo = {};
+  //   var ref = {}
+  //   if (data.dataobj.value != "") {
+  //     ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
+  //     ref.version = null;
+  //     ref.type = data.vizpod.vizpodInfo.values[0].ref.type
+  //     filterInfo.ref = ref;
+  //     filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
+  //     for (var i = 0; i < data.vizpod.vizpodInfo.values.length; i++) {
+  //       if(data.vizpod.vizpodInfo.values[i].ref =="datapod" ||data.vizpod.vizpodInfo.values[i].ref =="dataset"){
+  //         atttrName=data.vizpod.vizpodInfo.values[i].attributeName;
+  //        }
+  //        else{
+  //         atttrName=data.vizpod.vizpodInfo.values[i].ref.name;
+  //        }
+  //       if (atttrName.indexOf(data.dataobj.id) != -1) {
+  //         filterInfo.attrId = data.vizpod.vizpodInfo.values[i].attributeId;
+  //         break;
+  //       }
+  //     }
+  //     filterInfo.value = data.dataobj.value
+  //     filterinfoArray.push(filterInfo);
+  //     vizpodbody.filterInfo = filterinfoArray
+  //   }
+  //   else {
+  //     vizpodbody = null;
+  //   }
+   
+  //   $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody,data)
+  // }
+
+
+  $scope.actionEvent = function (d, i, data) {
+    
+    var filterinfoArray = []
+    var vizpodbody = {}
+    var filterInfo = {};
+    var ref = {}
+    if (data.dataobj.value != "") {
+      ref.uuid = data.vizpod.vizpodInfo.keys[0].ref.uuid;
+      ref.version = null;
+      ref.type = data.vizpod.vizpodInfo.keys[0].ref.type
+      filterInfo.ref = ref;
+      filterInfo.attrId = data.vizpod.vizpodInfo.keys[0].attributeId;
+      if(data.vizpod.vizpodInfo.type =="world-map" || data.vizpod.vizpodInfo.type =="usa-map"){
+        filterInfo.value = data.dataobj.x;
+      }else if(["world-map","usa-map","pie-chart","donut-chart"].indexOf(data.vizpod.vizpodInfo.type) == -1){
+        filterInfo.value = data.vizpod.vizpodDetails.datapoints[data.dataobj.x][data.vizpod.vizpodDetails.datax.id];
+        filterInfo.value=filterInfo.value.replace(/0 -/g, ' -');
+        filterInfo.value=filterInfo.value.replace(/0$/g, '');
+      } else if(["pie-chart","donut-chart"].indexOf(data.vizpod.vizpodInfo.type) != -1){
+        filterInfo.value = data.dataobj.id
+      }
+      filterinfoArray.push(filterInfo);
+      vizpodbody.filterInfo = filterinfoArray
+    }
+    else {
+      vizpodbody = null;
+    }
+   
+    $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody,data)
+
+  }
   $scope.contextMenu1 = function (menu, vizpodbody) {
     d3.select(".jitu").selectAll('.context-menu').data([1])
       .enter()
@@ -1011,7 +1051,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       for (var i = 0; i < data.length; i++) {
         a = data[i][propName].split('-')[0];
         b = data[i][propName].split('-')[1]
-        data[i][propName] = parseFloat(a).toFixed(2) + "-" + parseFloat(b).toFixed(2);
+        data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
         // console.log(data[i][propName])
       }
     }
