@@ -671,4 +671,59 @@ public class HiveExecutor implements IExecutor{
 		}
 		return comparisonResultMap;
 	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside hive executor  for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
+		ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);
+		Object obj = conHolder.getStmtObject();
+		if(obj instanceof Statement) {
+			Statement stmt = (Statement) conHolder.getStmtObject();
+			ResultSet rs = null;
+			try {
+				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
+					stmt.execute("SET "+sessionParam);
+				}
+				if(sql.toUpperCase().contains("INSERT")) {
+					long result = stmt.executeUpdate(sql);
+					//long result = stmt.executeLargeUpdate(sql); Need to check for the large volume of data. 
+					rsHolder.setCountRows(result);
+					if(result != 0) 
+						logger.info("Successfull insertion operation. Num. of rows changed: "+result);
+					else 
+						logger.info("Unsuccessfull insertion operation.");
+				} else if(sql.toUpperCase().contains("LOAD DATA")) {
+					stmt.executeUpdate(sql);
+				} else {
+					rs = stmt.executeQuery(sql);
+				}
+				rsHolder.setResultSet(rs);
+				rsHolder.setType(ResultType.resultset);
+			} catch (SQLException 
+					| IllegalAccessException 
+					| IllegalArgumentException 
+					| InvocationTargetException 
+					| NoSuchMethodException 
+					| SecurityException 
+					| NullPointerException 
+					| ParseException e) {					
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}			
+		}		
+		return rsHolder;
+	}
+	
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		ResultSet rs = rsHolder.getResultSet();
+		rs.next();
+		return  (String) rs.getObject(1);			
+	}
 }

@@ -12,6 +12,7 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -621,4 +622,27 @@ public interface IExecutor {
 	 */
 	List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
 			throws IOException;
+	
+	/**
+	 * @Ganesh
+	 * 
+	 * Save sql as per context (shall be used for livy integration)
+	 * 
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext) throws IOException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param clientContext
+	 * @return 
+	 * @throws SQLException
+	 */
+	String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException;
 }

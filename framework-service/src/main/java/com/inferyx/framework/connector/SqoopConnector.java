@@ -97,4 +97,10 @@ public class SqoopConnector implements IConnector {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

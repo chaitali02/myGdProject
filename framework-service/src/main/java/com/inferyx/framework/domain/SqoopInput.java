@@ -1,5 +1,6 @@
 package com.inferyx.framework.domain;
 
+import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 
 public class SqoopInput {
@@ -29,9 +30,30 @@ public class SqoopInput {
 	private boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
 	private String hiveTableName;
 	private String hCatTableName;
-
+	private FileLayout fileLayout;
+	
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the fileLayout
+	 */
+	public FileLayout getFileLayout() {
+		return fileLayout;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param fileLayout the fileLayout to set
+	 */
+	public void setFileLayout(FileLayout fileLayout) {
+		this.fileLayout = fileLayout;
 	}
 
 	/**

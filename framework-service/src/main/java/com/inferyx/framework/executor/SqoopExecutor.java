@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudera.sqoop.SqoopOptions;
+import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.cloudera.sqoop.SqoopOptions.IncrementalMode;
 import com.cloudera.sqoop.tool.BaseSqoopTool;
 import com.cloudera.sqoop.tool.ExportTool;
@@ -48,8 +49,8 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.CONN_MANAGER_CLASS_NAME  ,);
 		this.keyConverter.put(BaseSqoopTool.CONNECT_PARAM_FILE  ,);
 		this.keyConverter.put(BaseSqoopTool.DRIVER_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.USERNAME_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.PASSWORD_ARG  ,);
+		this.keyConverter.put(BaseSqoopTool.USERNAME_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.PASSWORD_ARG  ,); <<<<<<<<<<<<<
 		this.keyConverter.put(BaseSqoopTool.PASSWORD_PROMPT_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.PASSWORD_PATH_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.PASSWORD_ALIAS_ARG  ,);
@@ -59,10 +60,10 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.STAGING_TABLE_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.CLEAR_STAGING_TABLE_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.COLUMNS_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.SPLIT_BY_ARG  ,);
+		this.keyConverter.put(BaseSqoopTool.SPLIT_BY_ARG  ,); <<<<<<<<<<<<<<
 		this.keyConverter.put(BaseSqoopTool.SPLIT_LIMIT_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.WHERE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.HADOOP_HOME_ARG  ,);
+		this.keyConverter.put(BaseSqoopTool.WHERE_ARG  ,); <<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.HADOOP_HOME_ARG  ,); 
 		this.keyConverter.put(BaseSqoopTool.HADOOP_MAPRED_HOME_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.HIVE_HOME_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.WAREHOUSE_DIR_ARG  ,);
@@ -76,11 +77,11 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.INPUT_NULL_NON_STRING  ,);
 		this.keyConverter.put(BaseSqoopTool.MAP_COLUMN_JAVA  ,);
 		this.keyConverter.put(BaseSqoopTool.MAP_COLUMN_HIVE  ,);
-		this.keyConverter.put(BaseSqoopTool.FMT_SEQUENCEFILE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.FMT_TEXTFILE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.FMT_AVRODATAFILE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.FMT_PARQUETFILE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.FMT_BINARYFILE_ARG  ,);
+		this.keyConverter.put(BaseSqoopTool.FMT_SEQUENCEFILE_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.FMT_TEXTFILE_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.FMT_AVRODATAFILE_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.FMT_PARQUETFILE_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.FMT_BINARYFILE_ARG  ,); <<<<<<<<<<<<<
 		this.keyConverter.put(BaseSqoopTool.HIVE_IMPORT_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.HIVE_TABLE_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.HIVE_DATABASE_ARG  ,);
@@ -142,14 +143,14 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.THROW_ON_ERROR_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.ORACLE_ESCAPING_DISABLED  ,);
 		this.keyConverter.put(BaseSqoopTool.ESCAPE_MAPPING_COLUMN_NAMES_ENABLED  ,);
-		this.keyConverter.put(BaseSqoopTool.PARQUET_CONFIGURATOR_IMPLEMENTATION  ,);
+		this.keyConverter.put(BaseSqoopTool.PARQUET_CONFIGURATOR_IMPLEMENTATION  ,); <<<<<<<<<<<<<
 		this.keyConverter.put(BaseSqoopTool.VALIDATE_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.VALIDATOR_CLASS_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.VALIDATION_THRESHOLD_CLASS_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.VALIDATION_FAILURE_HANDLER_CLASS_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.INCREMENT_TYPE_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.INCREMENT_COL_ARG  ,);
-		this.keyConverter.put(BaseSqoopTool.INCREMENT_LAST_VAL_ARG  ,);
+		this.keyConverter.put(BaseSqoopTool.INCREMENT_TYPE_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.INCREMENT_COL_ARG  ,); <<<<<<<<<<<<<
+		this.keyConverter.put(BaseSqoopTool.INCREMENT_LAST_VAL_ARG  ,); <<<<<<<<<<<<<
 		this.keyConverter.put(BaseSqoopTool.ALL_TABLE_EXCLUDES_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.HBASE_TABLE_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.HBASE_COL_FAM_ARG  ,);
@@ -200,7 +201,7 @@ public class SqoopExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionValue())) {
 			sqoopOptions.setHivePartitionValue(sqoopInput.getPartitionValue());
 		}
-		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode()==null? "" : sqoopInput.getIncrementalMode().toString())) {
+		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode() == null ? "" : sqoopInput.getIncrementalMode().toString())) {
 			switch(sqoopInput.getIncrementalMode()) {
 			case AppendRows : sqoopOptions.setIncrementalMode(IncrementalMode.AppendRows);
 				break;
@@ -240,6 +241,20 @@ public class SqoopExecutor {
 		}
 		if (StringUtils.isNotBlank(sqoopInput.gethCatTableName())) {
 			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
+		}
+		
+		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
+			switch(sqoopInput.getFileLayout()) {
+			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
+				break;
+			case SequenceFile : sqoopOptions.setFileLayout(FileLayout.SequenceFile);
+				break;
+			case TextFile : sqoopOptions.setFileLayout(FileLayout.TextFile);
+				break;
+			case ParquetFile : sqoopOptions.setFileLayout(FileLayout.ParquetFile);
+				break;
+			default : 
+			}
 		}
 		
 		/*Class sqoopOptionsClass = SqoopOptions.class;
@@ -303,6 +318,15 @@ public class SqoopExecutor {
 	      throw new RuntimeException("Sqoop API Failed - return code : "+Integer.toString(res));
 	    }
 	    return res;
+	}
+
+	public FileLayout getFileLayout(String targetFormat) {
+		if(targetFormat != null) {
+			switch(targetFormat.toLowerCase()) {
+			case "parquet" : return FileLayout.ParquetFile;
+			}
+		}
+		return null;
 	}
 
 }

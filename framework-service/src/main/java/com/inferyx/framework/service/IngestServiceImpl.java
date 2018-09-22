@@ -4,7 +4,12 @@
 package com.inferyx.framework.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -131,9 +138,18 @@ public class IngestServiceImpl {
 
 			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
 			Datapod sourceDp = null;
+			String incrLastValue = null;
+			String latestIncrLastValue = null;
 			if(sourceDpMI.getUuid() != null) {
 				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
-			}
+
+				//finding last incremental value
+				incrLastValue = getLastIncrValue(ingestExec.getUuid());
+				
+				//finding latest incremental value
+				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+			}			
+			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			String tableName = null;
@@ -216,8 +232,16 @@ public class IngestServiceImpl {
 					sqoopInput.setExportDir(null);
 					sqoopInput.setImportIntended(true);
 				}
+				sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
+				if(incrLastValue != null) {
+					sqoopInput.setIncrementalLastValue(incrLastValue);
+				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				sqoopExecutor.execute(sqoopInput);
+				Map<String, String> inputParams = null;
+				if(ingest.getRunParams() != null) {
+					getRunParams(ingest.getRunParams());
+				}
+				sqoopExecutor.execute(sqoopInput, inputParams);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
@@ -243,9 +267,21 @@ public class IngestServiceImpl {
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setHiveTableName(targetDp.getName());
 				}
+				if(incrLastValue != null) {
+					sqoopInput.setIncrementalLastValue(incrLastValue);
+				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				sqoopExecutor.execute(sqoopInput);
+				Map<String, String> inputParams = null;
+				if(ingest.getRunParams() != null) {
+					getRunParams(ingest.getRunParams());
+				}
+				sqoopExecutor.execute(sqoopInput, inputParams);
 			} 
+			
+			if(latestIncrLastValue != null) {
+				ingestExec.setLastIncrValue(latestIncrLastValue);
+				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+			}
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
@@ -371,6 +407,7 @@ public class IngestServiceImpl {
 		result = ow.writeValueAsString(ingestExecServiceImpl.findReconExecByReconGroupExec(ingestGroupExecUuid, ingestGroupExecVersion));
 		return result;
 	}
+	
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
 		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
 		MetaIdentifier mi = new MetaIdentifier();
@@ -378,5 +415,39 @@ public class IngestServiceImpl {
 		mi.setUuid(ingestExec.getDependsOn().getRef().getUuid());
 		mi.setVersion(ingestExec.getDependsOn().getRef().getVersion());
 		return mi;
+	}
+	
+	public String getLastIncrValue(String igstExecUuid) throws JsonProcessingException {
+		//first getting latest ingest exec then obtaining last incremental value from it
+		IngestExec latestIngExec = (IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
+		return latestIngExec.lastIncrValue;
+	}
+
+	private String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
+		String attrName = null;
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
+				attrName = attribute.getName();
+				break;
+			}
+		}
+		
+		if(attrName == null) {
+			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
+		}
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		String sql = "SELECT MAX("+attrName+") FROM " + datasource.getDbname() + "." + datapod.getName();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		ResultSetHolder rsHolder = exec.executeSqlByDatasource(sql, datasource, appUuid);
+		return exec.getIncrementalLastValue(rsHolder, appUuid);
+	}
+	
+	public Map<String, String> getRunParams(String runParams) {
+		Map<String, String> inputParams = new HashMap<>();
+		String[] splits = runParams.split(",");
+		for(String split : splits) {
+			inputParams.put(split, split);
+		}
+		return inputParams;
 	}
 }

@@ -47,9 +47,16 @@ public class PostGresConnector implements IConnector {
 			conholder.setType(ExecContext.POSTGRES.toString());
 			conholder.setStmtObject(stmt);
 			conholder.setConObject(con);
-		} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException
-				| ParseException | InvocationTargetException | NoSuchMethodException | SecurityException
-				| NullPointerException | IOException | SQLException e) {
+		} catch (ClassNotFoundException 
+				| IllegalAccessException 
+				| IllegalArgumentException
+				| ParseException 
+				| InvocationTargetException 
+				| NoSuchMethodException 
+				| SecurityException
+				| NullPointerException 
+				| IOException 
+				| SQLException e) {
 			e.printStackTrace();
 		}
 		return conholder;
@@ -59,6 +66,32 @@ public class PostGresConnector implements IConnector {
 	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
+		ConnectionHolder conholder = new ConnectionHolder();
+		try {
+			Class.forName(datasource.getDriver());
+			Connection con = null;
+			try {
+				con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
+				+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			Statement stmt = con.createStatement();
+			conholder.setType(ExecContext.POSTGRES.toString());
+			conholder.setStmtObject(stmt);
+		} catch (ClassNotFoundException 
+				| SQLException 
+				| IllegalArgumentException
+				| SecurityException 
+				| NullPointerException e) {
+			e.printStackTrace();
+			throw new IOException(e);
+		}
+		return conholder;
 	}
 
 }

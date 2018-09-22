@@ -593,4 +593,17 @@ public class LivyExecutor implements IExecutor {
 		}
 		return comparisonResultMap;
 	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
