@@ -27,6 +27,8 @@ public class SqoopInput {
 	private boolean explicitInputDelims;
 	private boolean  explicitOutputDelims;
 	private boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
+	private String hiveTableName;
+	private String hCatTableName;
 
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
@@ -354,6 +356,34 @@ public class SqoopInput {
 		this.importIntended = importIntended;
 	}
 
+	/**
+	 * @return the hiveTableName
+	 */
+	public String getHiveTableName() {
+		return hiveTableName;
+	}
+
+	/**
+	 * @param hiveTableName the hiveTableName to set
+	 */
+	public void setHiveTableName(String hiveTableName) {
+		this.hiveTableName = hiveTableName;
+	}
+
+	/**
+	 * @return the hCatTableName
+	 */
+	public String gethCatTableName() {
+		return hCatTableName;
+	}
+
+	/**
+	 * @param hCatTableName the hCatTableName to set
+	 */
+	public void sethCatTableName(String hCatTableName) {
+		this.hCatTableName = hCatTableName;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -367,7 +397,8 @@ public class SqoopInput {
 				+ ", incrementalTestColumn=" + incrementalTestColumn + ", incrementalLastValue=" + incrementalLastValue
 				+ ", exportDir=" + exportDir + ", numMappers=" + numMappers + ", linesTerminatedBy=" + linesTerminatedBy
 				+ ", fieldsTerminatedBy=" + fieldsTerminatedBy + ", explicitInputDelims=" + explicitInputDelims
-				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended + "]";
+				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
+				+ ", hiveTableName=" + hiveTableName + ", hCatTableName=" + hCatTableName + "]";
 	}
 	
 }
