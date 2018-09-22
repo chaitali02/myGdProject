@@ -1513,8 +1513,8 @@ export class AppMetadata {
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-flask'
-
       },
+
       'simulateExec': {
         name: 'simulate',
         caption: 'simulate Exec',
@@ -1529,9 +1529,6 @@ export class AppMetadata {
         resultState: 'simulateexec',
         moduleCaption: 'Data Science',
         class: 'fa fa-flask'
-
-      
-
       },
       
       'train': {
@@ -1566,9 +1563,7 @@ export class AppMetadata {
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-flask'
-
       },
-
 
       'trainExec': {
         name: 'train',
@@ -1584,8 +1579,6 @@ export class AppMetadata {
         resultState: 'trainExec',
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-flask'
-
-
       },
       'featureattrmap': {
         name: 'featureattrmap',

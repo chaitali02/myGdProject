@@ -123,7 +123,7 @@ export class ResultDetailsComponent {
     }
   }
 
-  private saveToFileSystem(response) {  debugger
+  private saveToFileSystem(response) { 
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
@@ -131,7 +131,7 @@ export class ResultDetailsComponent {
     saveAs(blob, filename);
   }
 
-  downloadTrainData() {debugger
+  downloadTrainData() {
     let filename = this.id+".txt";
     console.log(JSON.stringify(this.modelResult));
     console.log(this.modelResult);

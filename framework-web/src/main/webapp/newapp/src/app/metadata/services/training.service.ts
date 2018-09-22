@@ -52,7 +52,7 @@ export class TrainingService {
 
   executeWithParams(type, uuid, version, data){ 
     let url
-    if(type=='train'){debugger
+    if(type=='train'){
       url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       let body=null
       return this._sharedService.postCall(url,data)

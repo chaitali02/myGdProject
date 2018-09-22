@@ -260,13 +260,17 @@ executeWithParams(type, uuid, version, data): Observable<any[]>{
   let url
   if(type=='train'){
     url = "/model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+  }else if(type=='simulate'){
+    url ='/model/simulate/execute?uuid=' + uuid + '&version=' + version +'&action=view';
+  }
     let data1 = data;
     return this._sharedService.postCall(url,data1)
     .map((response: Response) => {
+      console.log(response);
       return <any>response["_body"];
   })
    .catch(this.handleError);
-  }
+  
 }
 
 getNumRowsbyExec(uuid, version, type): Observable<any>{
