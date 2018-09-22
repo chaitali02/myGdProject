@@ -18,5 +18,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "ingestExec")
 public class IngestExec extends BaseExec {
+	public String lastIncrValue;
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the lastIncrValue
+	 */
+	public String getLastIncrValue() {
+		return lastIncrValue;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param lastIncrValue the lastIncrValue to set
+	 */
+	public void setLastIncrValue(String lastIncrValue) {
+		this.lastIncrValue = lastIncrValue;
+	}
 	
 }
