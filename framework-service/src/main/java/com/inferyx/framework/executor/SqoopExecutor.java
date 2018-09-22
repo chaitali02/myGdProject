@@ -39,6 +39,9 @@ public class SqoopExecutor {
 	
 	private void setSqoopOptions(SqoopOptions sqoopOptions, SqoopInput sqoopInput) {
 		sqoopOptions.setHiveImport(sqoopInput.getHiveImport());
+		if (sqoopInput.getHiveImport()) {
+			sqoopOptions.doHiveImport();
+		}
 		if (StringUtils.isNotBlank(sqoopInput.getTable())) {
 			sqoopOptions.setTableName(sqoopInput.getTable());
 		}
@@ -86,6 +89,12 @@ public class SqoopExecutor {
 		}
 		sqoopOptions.setExplicitInputDelims(sqoopInput.getExplicitInputDelims());
 		sqoopOptions.setExplicitOutputDelims(sqoopInput.getExplicitOutputDelims());
+		if (StringUtils.isNotBlank(sqoopInput.getHiveTableName())) {
+			sqoopOptions.setHiveTableName(sqoopInput.getHiveTableName());
+		}
+		if (StringUtils.isNotBlank(sqoopInput.gethCatTableName())) {
+			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
+		}
 	    logger.info("SqoopInput : " + sqoopInput);
 		
 	}

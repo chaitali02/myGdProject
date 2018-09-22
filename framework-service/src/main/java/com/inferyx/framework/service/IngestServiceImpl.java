@@ -228,17 +228,20 @@ public class IngestServiceImpl {
 //				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				logger.info("targetDir : " + targetDir);
 				logger.info("sourceDir : " + sourceDir);
-				sqoopInput.setSourceDirectory(sourceDir);
-				sqoopInput.setTargetDirectory(targetDir);
-				sqoopInput.setTable(sourceDp.getName());
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-				sqoopInput.setExportDir(targetDir);
+//				sqoopInput.setExportDir(targetDir);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
+					sqoopInput.setTable(targetDp.getName());
+					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
+					sqoopInput.setTargetDirectory(targetDir);
+					sqoopInput.setHiveTableName(targetDp.getName());
 				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				sqoopExecutor.execute(sqoopInput);
