@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -105,6 +106,12 @@ public class PythonConnector implements IConnector {
 
 	@Override
 	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

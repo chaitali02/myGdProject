@@ -32,8 +32,48 @@ public class OracleConnector implements IConnector {
 	@Override
 	public ConnectionHolder getConnection() throws IOException {
 		ConnectionHolder connHolder = new ConnectionHolder();
+		
+			Datasource datasource = null;
+			try {
+				datasource = commonServiceImpl.getDatasourceByApp();
+
+				Class.forName(datasource.getDriver());
+				Connection con = null;
+				try {
+					con = DriverManager.getConnection("jdbc:oracle:thin:@" + datasource.getHost() + ":"
+							+ datasource.getPort() + ":" + datasource.getSid(), datasource.getUsername(),
+							datasource.getPassword());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				Statement stmt = con.createStatement();
+				connHolder.setType(ExecContext.ORACLE.toString());
+				connHolder.setStmtObject(stmt);
+			} catch (IllegalAccessException 
+					| IllegalArgumentException 
+					| InvocationTargetException
+					| NoSuchMethodException 
+					| SecurityException 
+					| NullPointerException 
+					| ParseException 
+					| ClassNotFoundException 
+					| SQLException e) {
+				e.printStackTrace();
+			}
+		 
+		return connHolder;
+	}
+
+	@Override
+	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
+		ConnectionHolder conholder = new ConnectionHolder();
 		try {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Class.forName(datasource.getDriver());
 			Connection con = null;
 			try {
@@ -44,40 +84,16 @@ public class OracleConnector implements IConnector {
 				e.printStackTrace();
 			}
 			Statement stmt = con.createStatement();
-			connHolder.setType(ExecContext.ORACLE.toString());
-			connHolder.setStmtObject(stmt);
-		} catch (ClassNotFoundException e) {
+			conholder.setType(ExecContext.ORACLE.toString());
+			conholder.setStmtObject(stmt);
+		} catch (ClassNotFoundException 
+				| SQLException 
+				| IllegalArgumentException
+				| SecurityException 
+				| NullPointerException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvocationTargetException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NoSuchMethodException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NullPointerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			throw new IOException(e);
 		}
-		return connHolder;
-	}
-
-	@Override
-	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return conholder;
 	}
 }

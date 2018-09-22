@@ -11,20 +11,15 @@
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-//import com.cloudera.impala.jdbc41.Driver;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -52,7 +47,15 @@ public class ImpalaConnector implements IConnector {
 			 Statement stmt=con.createStatement();
 			 conholder.setType(ExecContext.IMPALA.toString());
 			 conholder.setStmtObject(stmt);			
-		 	}catch (ClassNotFoundException | SQLException | SecurityException | NullPointerException | IllegalAccessException | IllegalArgumentException |InvocationTargetException | NoSuchMethodException | ParseException e) {
+		 	} catch (ClassNotFoundException 
+		 			| SQLException 
+		 			| SecurityException 
+		 			| NullPointerException 
+		 			| IllegalAccessException 
+		 			| IllegalArgumentException 
+		 			|InvocationTargetException 
+		 			| NoSuchMethodException 
+		 			| ParseException e) {
 			e.printStackTrace();
 		} 
 		return conholder;
@@ -62,5 +65,30 @@ public class ImpalaConnector implements IConnector {
 	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
+		ConnectionHolder conholder = new ConnectionHolder();
+		try {
+			Class.forName(datasource.getDriver());
+			Connection con = null;
+			try {
+				con = DriverManager.getConnection("jdbc:impala://"+datasource.getHost()+":"+datasource.getPort()+"/"+datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			Statement stmt = con.createStatement();
+			conholder.setType(ExecContext.IMPALA.toString());
+			conholder.setStmtObject(stmt);
+		} catch (ClassNotFoundException 
+				| SQLException 
+				| IllegalArgumentException
+				| SecurityException 
+				| NullPointerException e) {
+			e.printStackTrace();
+			throw new IOException(e);
+		}
+		return conholder;
 	}
 }

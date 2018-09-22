@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.SparkInfo;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.register.UDFRegister;
 
@@ -35,6 +36,7 @@ public class SparkConnector implements IConnector{
 //	@Autowired @Lazy
 	private SparkSession sparkSession;
 	
+	@SuppressWarnings({ "resource", "static-access" })
 	private SparkSession getSparkSession() throws IOException {
 		if (this.sparkSession == null) {
 			synchronized (this) {
@@ -63,6 +65,12 @@ public class SparkConnector implements IConnector{
 
 	@Override
 	public ConnectionHolder getConnection(Object input, Object input2) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
