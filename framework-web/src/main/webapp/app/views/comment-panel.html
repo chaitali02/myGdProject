@@ -4,7 +4,7 @@
             <div class="col-md-3 pull-left">
                 <h4 class="caption-subject font-dark bold">Comment</h4>
             </div>
-            <div class="col-md-1 pull-right" style="padding-top: 2%;">
+            <div class="col-md-2 pull-right" style="padding-top: 2%;padding-left: 9%;">
                 <div class="" ng-click="closePanle()" tooltip-placement="left" uib-tooltip="Close">
                     <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
                 </div>
@@ -15,7 +15,7 @@
                 <div class="mt-comments">
                     <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0" id="{{$index}}">
                         <div class="mt-comment-img">
-                            <img class=" img-circle" width="45px" ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar"
+                            <img class=" img-circle" width="35px" ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar"
                                 onerror="this.src='avatars/default.png';" />
                         </div>
                         <div class="mt-comment-body" style="position: inherit;">
@@ -45,30 +45,36 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="mt-comment-text" ng-if="!data.isEditComment">
-                                <show-more text="data.desc" limit="50"> </show-more>
+                            <div class="mt-comment-text" ng-if="!data.isEditComment" style="word-wrap: break-word;">
+                                <show-more text="data.desc" limit="40"> </show-more>
                             </div>
-                            <div class="mt-comment-text" style="height:6px;" ng-if="data.isEditComment">
-                                <div class="col-md-11" style="width:89%;padding-left: 0px;">
+                            <div class="mt-comment-text" style="height:30px;" ng-if="data.isEditComment">
+                                <div class="col-md-12" style="padding-left: 0px;">
+                                            <!-- <div class="col-md-11" style="width:89%;padding-left: 0px;"> -->
+                                    <div class="col-md-11" style="padding-left:0px;padding-right:0px;">
                                     <form novalidate="novalidate" name="Editform" ng-submit="submit(Editform,$parent.$index,$index,data)">
                                         <div class="input-group form-group" ng-if="isRequire">
                                             <input type="text" class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="data.desc" disable-validation-message=""
                                                 ng-required="isRequire">
                                             <div class="input-group-btn">
-                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
+                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled" style="background-color: white;border-color: #c2cad8;">
                                                     <!-- <i class="icon-paper-clip"></i> -->
-                                                    Submit
+                                                    <svg viewBox="0 0 16 16" style="width: 14px;fill: #797e89;"><path d="M1.388 15.77c-.977.518-1.572.061-1.329-1.019l1.033-4.585c.123-.543.659-1.034 1.216-1.1l6.195-.72c1.648-.19 1.654-.498 0-.687l-6.195-.708c-.55-.063-1.09-.54-1.212-1.085L.056 1.234C-.187.161.408-.289 1.387.231l12.85 6.829c.978.519.98 1.36 0 1.88l-12.85 6.83z" fill-rule="evenodd"></path></svg>
+
+                                                    <!-- Submit -->
                                                 </button>
                                             </div>
 
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">
+                                <!-- <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;"> -->
+                                    <div class="col-md-1" style="margin-top:8px;right:0px;padding:0px;padding-left:10px;">
                                     <label class=" input-group-btn" style="width:auto" tooltip-placement="left" uib-tooltip="Attach doc">
                                         <input id="avatar" parentIndex="{{$parent.$index}}" onchange="editReadfileName(this)" type="file" ng-model="file" style="display:none">
                                         <i class="icon-paper-clip" style="font-size: 20px;color:#008000;"></i>
                                     </label>
+                                </div>
                                 </div>
                             </div>
                             <div class="mt-comment-details">
@@ -105,7 +111,7 @@
                 <div class="mt-comments comment-panel-mt-comment">
                     <div class="mt-comment comment-panel-mt-comment">
                         <div class="mt-comment-img">
-                            <img class=" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"
+                            <img class=" img-circle" width="35px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"
                             />
                         </div>
                         <div class="mt-comment-body">
@@ -113,26 +119,30 @@
                                 <span class="mt-comment-author">{{currentUser.name}}</span>
                             </div>
                             <div class="mt-comment-text" style="height:6px;">
-                                <div class="col-md-11" style="width:89%;padding-left: 0px;">
+                                <div class="col-md-12"  style="padding-left: 0px;">
+                                        <!-- <div class="col-md-11" style="width:89%;padding-left: 0px;"> -->
+                                <div class="col-md-11" style="padding-left:0px;padding-right:0px;">
                                     <form novalidate="novalidate" name="myform" ng-submit="submit(myform,null,null,null)">
                                         <div class="input-group form-group" ng-if="isRequire">
                                             <input type="text" class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
                                                 disable-validation-message="" ng-required="isRequire">
                                             <div class="input-group-btn">
-                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
-                                                    <!-- <i class="icon-paper-clip"></i> -->
-                                                    Submit
+                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled" style="background-color: white;border-color: #c2cad8;">
+                                                    <!-- <i class=" fa fa-telegram"></i> -->
+                                                    <svg viewBox="0 0 16 16" style="width: 14px;fill: #797e89;"><path d="M1.388 15.77c-.977.518-1.572.061-1.329-1.019l1.033-4.585c.123-.543.659-1.034 1.216-1.1l6.195-.72c1.648-.19 1.654-.498 0-.687l-6.195-.708c-.55-.063-1.09-.54-1.212-1.085L.056 1.234C-.187.161.408-.289 1.387.231l12.85 6.829c.978.519.98 1.36 0 1.88l-12.85 6.83z" fill-rule="evenodd"></path></svg>
+                                                    <!-- Submit -->
                                                 </button>
                                             </div>
 
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">
+                                <div class="col-md-1" style="margin-top:8px;right:0px;padding:0px;padding-left:10px;">
                                     <label class=" input-group-btn" style="width:auto" tooltip-placement="left" uib-tooltip="Attach doc">
                                         <input id="avatar" onchange="readfileName(this,null,null)" type="file" ng-model="file" style="display:none">
                                         <i class="icon-paper-clip" style="font-size: 20px;color:#008000;"></i>
                                     </label>
+                                </div>
                                 </div>
                             </div>
                             <div class="mt-comment-details">

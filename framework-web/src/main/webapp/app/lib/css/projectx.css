@@ -1014,7 +1014,8 @@ font-weight:normtal;
 }
 .comment-panel-width{
 /* width:40%; */
-width: 500px;
+/* width: 500px; */
+width: 400px;
 right: 1%;
 transition: right 1m
 }
