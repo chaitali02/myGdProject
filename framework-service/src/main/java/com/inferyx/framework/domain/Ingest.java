@@ -30,8 +30,27 @@ public class Ingest extends BaseEntity {
 	private String sourceFormat; //CSV, TSV, PSV, PARQUET
 	private String targetFormat; //CSV, TSV, PSV, PARQUET
 	private String header;
+	private AttributeRefHolder incrAttr;
 	
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the incrAttr
+	 */
+	public AttributeRefHolder getIncrAttr() {
+		return incrAttr;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param incrAttr the incrAttr to set
+	 */
+	public void setIncrAttr(AttributeRefHolder incrAttr) {
+		this.incrAttr = incrAttr;
+	}
 	/**
 	 *
 	 * @Ganesh

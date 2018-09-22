@@ -11,7 +11,10 @@ sudo chown -R inferyx:inferyx /opt/tomcat/
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 sudo touch /etc/apt/sources.list.d/mongodb-org-4.0.list
 sudo apt-get update
-sudo apt-get install -y mongodb-org
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+sudo bash -c 'echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" > /etc/apt/sources.list.d/mongodb-org-3.2.list'
+sudo apt-get update
+sudo apt install mongodb-org
 sudo mkdir -p /data/db /install /app /backup
 sudo chmod 777 /data
 sudo chmod 777 /backup
