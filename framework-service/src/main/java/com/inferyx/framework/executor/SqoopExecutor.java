@@ -270,18 +270,12 @@ public class SqoopExecutor {
 			for (String key : inputParams.keySet()) {
 				if (methodMap.containsKey(key.toUpperCase())) {
 					Method method = methodMap.get(key.toUpperCase());
-//					Class<?> argumentClass = method.getParameterTypes()[0];
-					Object argument = resolveArgument(method, inputParams.get(key));//inputParams.get(key);
-//					if(argumentClass.getName().contains("int")) {
-//						argument = Integer.parseInt(""+inputParams.get(key));
-//					}
+					Object argument = resolveArgument(method, inputParams.get(key));
 					methodMap.get(key.toUpperCase()).invoke(sqoopOptions, argument);
 				}
 			}
-		}
-		
+		}		
 	    logger.info("SqoopInput : " + sqoopInput);
-		
 	}
 	
 	public Object resolveArgument(Method method , String argument) {
@@ -297,8 +291,6 @@ public class SqoopExecutor {
 			argumentVal = Float.parseFloat(""+argument);
 		} else if(argumentClass.getName().contains("short")) {
 			argumentVal = Short.parseShort(""+argument);
-		} else if(argumentClass.getName().contains("int")) {
-			argumentVal = Boolean.parseBoolean(""+argument);
 		}
 		return argumentVal;
 	}
