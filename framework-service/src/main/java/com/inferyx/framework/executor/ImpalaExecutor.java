@@ -629,4 +629,44 @@ public class ImpalaExecutor implements IExecutor {
 		}
 		return comparisonResultMap;
 	}
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside impala executor  for SQL : " + sql);
+		// TODO Auto-generated method stub
+		ResultSetHolder rsHolder=new ResultSetHolder();
+		IConnector connector=connectionFactory.getConnector(ExecContext.IMPALA.toString());
+		ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);
+		Object obj = conHolder.getStmtObject();
+		long countRows = -1L;
+		if(obj instanceof Statement){
+			Statement stmt = (Statement) conHolder.getStmtObject();
+			ResultSet rs = null;
+			try {
+				if(sql.toUpperCase().contains("INSERT")) {
+					countRows = stmt.executeUpdate(sql);
+					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
+					rsHolder.setCountRows(countRows);
+				} else if(sql.toUpperCase().contains("LOAD DATA")) {
+					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
+					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
+					stmt.execute(sql);
+				} else {
+					rs = stmt.executeQuery(sql);
+				}
+				rsHolder.setResultSet(rs);
+				rsHolder.setType(ResultType.resultset);
+			} catch (SQLException 
+					| IllegalArgumentException 
+					| SecurityException 
+					| NullPointerException e) {			
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}	
+		}
+		return rsHolder;
+	}
 }

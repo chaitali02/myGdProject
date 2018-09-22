@@ -3012,4 +3012,62 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setDataFrame(rsHolder2.getDataFrame());
 		return rsHolder;
 	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside spark executor  for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			Dataset<Row> df = null;
+			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
+					sparkSession.sql("SET "+sessionParam);
+				}
+				df = sparkSession.sql(sql);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.driver.extraClassPath", datasource.getDriver())
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as mysql_table").load();
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ")  oracle_table").load();
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {				
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("lazyInit", "true")
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as postgres_table").load();
+			}
+//			df.show(true);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setDataFrame(df);
+			rsHolder.setType(ResultType.dataframe);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {			
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}  catch (Exception e) {				
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}	
+		return rsHolder;
+	}
 }

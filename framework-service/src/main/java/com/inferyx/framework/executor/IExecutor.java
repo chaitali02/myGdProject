@@ -621,4 +621,15 @@ public interface IExecutor {
 	 */
 	List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
 			throws IOException;
+	
+	/**
+	 * Save sql as per context (shall be used for livy integration)
+	 * 
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext) throws IOException;
 }

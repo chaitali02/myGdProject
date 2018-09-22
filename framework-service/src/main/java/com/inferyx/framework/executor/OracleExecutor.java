@@ -104,19 +104,6 @@ public class OracleExecutor implements IExecutor {
 					throw new RuntimeException(e);
 				}		
 			}
-//			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//			if(requestAttributes != null) {
-//				HttpServletRequest request = requestAttributes.getRequest();
-//				if(request != null) {
-//					HttpSession session = request.getSession();
-//					if(session != null) {
-//						session.setAttribute("rsHolder", rsHolder);
-//					}else
-//						logger.info("HttpSession is \""+null+"\"");
-//				}else
-//					logger.info("HttpServletResponse is \""+null+"\"");
-//			}else
-//				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -613,6 +600,42 @@ public class OracleExecutor implements IExecutor {
 			comparisonResultMap.put(sourceAttrDetails.get("COLUMN_NAME"), comparison);
 		}
 		return comparisonResultMap;
+	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside oracle executor for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
+			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);
+			Object obj = conHolder.getStmtObject();
+			long countRows = -1L;
+			if(obj instanceof Statement) {
+				Statement stmt = (Statement) conHolder.getStmtObject();
+				ResultSet rs=null;
+				try {
+					if(sql.toUpperCase().contains("INSERT")) {
+						countRows = stmt.executeUpdate(sql);
+						//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
+						rsHolder.setCountRows(countRows);
+					} else 
+						rs = stmt.executeQuery(sql);
+					rsHolder.setResultSet(rs);
+					rsHolder.setType(ResultType.resultset);
+				} catch (SQLException e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}  catch (Exception e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}		
+			}
+		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+		}
+		return rsHolder;
 	}
 
 }

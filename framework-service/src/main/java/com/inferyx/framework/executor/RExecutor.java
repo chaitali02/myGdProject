@@ -506,4 +506,11 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

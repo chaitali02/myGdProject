@@ -716,4 +716,42 @@ public class PostGresExecutor implements IExecutor {
 		return comparisonResultMap;
 	}
 
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside PostGres executor  for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
+		ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);
+		Object obj = conHolder.getStmtObject();
+		long countRows = -1L;
+		if(obj instanceof Statement)
+		{
+			Statement stmt = (Statement) conHolder.getStmtObject();
+			ResultSet rs = null;
+			try {	
+				if(sql.toUpperCase().contains("INSERT")) {
+					countRows = stmt.executeUpdate(sql);
+					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
+					rsHolder.setCountRows(countRows);
+				} else if(sql.toUpperCase().contains("COPY")) {
+					stmt.executeUpdate(sql);
+					} else { 
+					rs = stmt.executeQuery(sql);
+					countRows = rs.getMetaData().getColumnCount();
+				}
+				rsHolder.setCountRows(countRows);
+				rsHolder.setResultSet(rs);
+				rsHolder.setType(ResultType.resultset);
+			}catch (SQLException e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}			
+		}		
+		return rsHolder;
+	}
+
 }

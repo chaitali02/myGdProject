@@ -593,4 +593,11 @@ public class LivyExecutor implements IExecutor {
 		}
 		return comparisonResultMap;
 	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
