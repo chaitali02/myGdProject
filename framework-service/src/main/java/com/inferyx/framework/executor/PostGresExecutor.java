@@ -614,7 +614,7 @@ public class PostGresExecutor implements IExecutor {
 				if(sourceTableName.contains(datasource.getDbname())) {
 					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
 				}
-				IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
+				IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
 				ConnectionHolder connectionHolder = connector.getConnection();
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				
