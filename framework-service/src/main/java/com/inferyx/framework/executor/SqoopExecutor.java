@@ -200,7 +200,7 @@ public class SqoopExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionValue())) {
 			sqoopOptions.setHivePartitionValue(sqoopInput.getPartitionValue());
 		}
-		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode()==null?"":sqoopInput.getIncrementalMode().toString())) {
+		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode()==null? "" : sqoopInput.getIncrementalMode().toString())) {
 			switch(sqoopInput.getIncrementalMode()) {
 			case AppendRows : sqoopOptions.setIncrementalMode(IncrementalMode.AppendRows);
 				break;

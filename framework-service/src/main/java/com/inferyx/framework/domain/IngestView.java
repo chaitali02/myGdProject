@@ -29,7 +29,26 @@ public class IngestView extends BaseEntity {
 	private String filterChg;
 	private String sourceChg;
 	private String header;
+	private AttributeRefHolder incrAttr;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the incrAttr
+	 */
+	public AttributeRefHolder getIncrAttr() {
+		return incrAttr;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param incrAttr the incrAttr to set
+	 */
+	public void setIncrAttr(AttributeRefHolder incrAttr) {
+		this.incrAttr = incrAttr;
+	}
 	/**
 	 *
 	 * @Ganesh
