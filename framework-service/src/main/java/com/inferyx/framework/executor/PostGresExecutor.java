@@ -754,4 +754,11 @@ public class PostGresExecutor implements IExecutor {
 		return rsHolder;
 	}
 
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		ResultSet rs = rsHolder.getResultSet();
+		rs.next();
+		return  (String) rs.getObject(1);
+	}
+
 }

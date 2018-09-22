@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -3069,5 +3070,11 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new RuntimeException(e);
 		}	
 		return rsHolder;
+	}
+
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

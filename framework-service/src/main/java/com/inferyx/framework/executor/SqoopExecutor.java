@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudera.sqoop.SqoopOptions;
+import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.cloudera.sqoop.SqoopOptions.IncrementalMode;
 import com.cloudera.sqoop.tool.BaseSqoopTool;
 import com.cloudera.sqoop.tool.ExportTool;
@@ -200,7 +201,7 @@ public class SqoopExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionValue())) {
 			sqoopOptions.setHivePartitionValue(sqoopInput.getPartitionValue());
 		}
-		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode()==null? "" : sqoopInput.getIncrementalMode().toString())) {
+		if (StringUtils.isNotBlank(sqoopInput.getIncrementalMode() == null ? "" : sqoopInput.getIncrementalMode().toString())) {
 			switch(sqoopInput.getIncrementalMode()) {
 			case AppendRows : sqoopOptions.setIncrementalMode(IncrementalMode.AppendRows);
 				break;
@@ -240,6 +241,20 @@ public class SqoopExecutor {
 		}
 		if (StringUtils.isNotBlank(sqoopInput.gethCatTableName())) {
 			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
+		}
+		
+		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
+			switch(sqoopInput.getFileLayout()) {
+			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
+				break;
+			case SequenceFile : sqoopOptions.setFileLayout(FileLayout.SequenceFile);
+				break;
+			case TextFile : sqoopOptions.setFileLayout(FileLayout.TextFile);
+				break;
+			case ParquetFile : sqoopOptions.setFileLayout(FileLayout.ParquetFile);
+				break;
+			default : 
+			}
 		}
 		
 		/*Class sqoopOptionsClass = SqoopOptions.class;
@@ -303,6 +318,15 @@ public class SqoopExecutor {
 	      throw new RuntimeException("Sqoop API Failed - return code : "+Integer.toString(res));
 	    }
 	    return res;
+	}
+
+	public FileLayout getFileLayout(String targetFormat) {
+		if(targetFormat != null) {
+			switch(targetFormat.toLowerCase()) {
+			case "parquet" : return FileLayout.ParquetFile;
+			}
+		}
+		return null;
 	}
 
 }

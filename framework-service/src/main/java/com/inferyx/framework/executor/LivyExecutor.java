@@ -600,4 +600,10 @@ public class LivyExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
