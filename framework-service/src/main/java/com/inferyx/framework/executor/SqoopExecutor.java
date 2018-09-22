@@ -281,15 +281,15 @@ public class SqoopExecutor {
 	public Object resolveArgument(Method method , String argument) {
 		Class<?> argumentClass = method.getParameterTypes()[0];
 		Object argumentVal = argument;
-		if(argumentClass.getName().contains("int")) {
+		if(argumentClass.getName().toLowerCase().contains("int")) {
 			argumentVal = Integer.parseInt(""+argument);
-		} else if(argumentClass.getName().contains("long")) {
+		} else if(argumentClass.getName().toLowerCase().contains("long")) {
 			argumentVal = Long.parseLong(""+argument);
-		} else if(argumentClass.getName().contains("double")) {
+		} else if(argumentClass.getName().toLowerCase().contains("double")) {
 			argumentVal = Double.parseDouble(""+argument);
-		} else if(argumentClass.getName().contains("float")) {
+		} else if(argumentClass.getName().toLowerCase().contains("float")) {
 			argumentVal = Float.parseFloat(""+argument);
-		} else if(argumentClass.getName().contains("short")) {
+		} else if(argumentClass.getName().toLowerCase().contains("short")) {
 			argumentVal = Short.parseShort(""+argument);
 		}
 		return argumentVal;
