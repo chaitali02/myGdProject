@@ -230,7 +230,6 @@ AdminModule.controller('MigrationAssistController', function($location,$state,$h
       });
   }
   $scope.getDetail=function(data,type){
-    alert(type)
     $scope.type=type
     var uuid = data.uuid;
     $scope.selectuuid=uuid
