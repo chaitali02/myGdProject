@@ -171,6 +171,12 @@ export class CommonListService {
     if (type == "map") {
       this.url = this.baseUrl + 'map/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "recon") {
+      this.url = this.baseUrl + 'recon/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "recongroup") {
+      this.url = this.baseUrl + 'recon/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
