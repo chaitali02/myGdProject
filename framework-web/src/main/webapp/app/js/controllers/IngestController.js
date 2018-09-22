@@ -187,7 +187,6 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	}
 
 	$scope.onChangeSourceDataSource = function () {
-		debugger
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
 		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceDatasource) {
@@ -719,14 +718,17 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			sourceDetails.ref = sourceDetailsRef;
 		}
 		ingestJson.sourceDetail = sourceDetails;
-
-		var sourceAttrDetail={};
-		var sourceAttrDetailRef={};
-		sourceAttrDetailRef.type="datapod";
-		sourceAttrDetailRef.uuid=$scope.selectedSourceAttrDetail.uuid;
-		sourceAttrDetail.ref=sourceAttrDetailRef;
-		sourceAttrDetail.attrId=$scope.selectedSourceAttrDetail.attributeId;
-		ingestJson.incrAttr=sourceAttrDetail;
+        if ($scope.selectedSourceType != "FILE") {
+			var sourceAttrDetail={};
+			var sourceAttrDetailRef={};
+			sourceAttrDetailRef.type="datapod";
+			sourceAttrDetailRef.uuid=$scope.selectedSourceAttrDetail.uuid;
+			sourceAttrDetail.ref=sourceAttrDetailRef;
+			sourceAttrDetail.attrId=$scope.selectedSourceAttrDetail.attributeId;
+			ingestJson.incrAttr=sourceAttrDetail;
+		}else{
+			ingestJson.incrAttr=null;
+		}
 		var targetDatasource = {};
 		var targetDatasourceRef = {};
 		targetDatasourceRef.uuid = $scope.selectedTargetDatasource.uuid;
