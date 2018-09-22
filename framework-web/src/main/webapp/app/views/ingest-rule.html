@@ -132,11 +132,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
                                     <div class="col-md-6">
                                         <select class="form-control" select2 name="" data-ng-change="onChangeRuleType()" data-ng-model="selectedRuleType" ng-options="r.text as r.caption for r in ruleTypes"
-                                            ng-disabled="{{mode}}">
+                                            ng-disabled="{{mode}}" required>
                                         </select>
+                                        <input type="hidden" name="type" ng-model="selectedRuleType" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -179,6 +182,18 @@
                                         <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
                                     </div>
                                 </div>
+                                <div class="form-group" ng-if="selectedSourceType !='FILE'">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Attribute
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceAttrDetail" ng-options="r as r.name for r in allSourceAttribute track by r.uuid+r.attributeId"
+                                            ng-disabled="{{mode}}">
+                                        </select>
+                                        <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" ng-init="ingestData.header='N'">

@@ -1,5 +1,10 @@
 InferyxApp=angular.module('InferyxApp');
 //CF:CONSTANT_FLAG
+InferyxApp.constant("CF_APP_SETTING",{
+    "companyName":"INFERYX"
+});
+
+
 InferyxApp.constant('CF_META_TYPES',{
     activity : "activity",algorithm : "algorithm",application : "application",condition : "condition",
     dag : "dag",dagexec : "dagExec",dashboard : "dashboard",dq : "dq",dqexec : "dqExec",
@@ -118,4 +123,5 @@ InferyxApp.constant("CF_GRAPHPOD",{
     nodeBackGroundColor:["#ef9a9a","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
     edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
   
-})
+});
+

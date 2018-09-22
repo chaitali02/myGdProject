@@ -832,9 +832,9 @@ InferyxApp.controller('AppController', ['$scope', '$rootScope', 'commentService'
 
 
 /* Setup Layout Part - Header */
-InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService','$sessionStorage', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService,$sessionStorage) {
+InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService','$sessionStorage','CF_APP_SETTING', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService,$sessionStorage,CF_APP_SETTING) {
     $rootScope.dummyArg = 1;
-    
+    $scope.appSetting=CF_APP_SETTING;
     $rootScope.caseConverter = function (str) {
         var temp = str.charAt(0).toUpperCase() + str.slice(1);
         return temp.replace(/([A-Z][a-z])/g, " $1");

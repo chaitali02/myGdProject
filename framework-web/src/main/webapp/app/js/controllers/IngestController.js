@@ -131,7 +131,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 	}
 
-
+    
 	$scope.getDatasourceForTable = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForTable("datasource").then(function (response) { onSuccessGetDatasourceForTable(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatasourceForTable = function (response) {
@@ -144,7 +144,16 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 
 		}
 	}
+	
+	// $scope.getAllAttributeBySource=function(){
+	// 	MetadataMapSerivce.getAllAttributeBySource($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
+	// 	var onSuccessGetAllAttributeBySourcet = function (response) {
+	// 		debugger
+	// 		$scope.allSourceAttribute = response;
 
+	// 	}
+	// }
+	
 	$scope.getDatasourceForFile = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForFile("datasource").then(function (response) { onSuccessGetDatasourceForFile(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatasourceForFile = function (response) {
@@ -224,6 +233,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			IngestRuleService.getAllAttributeBySource($scope.selectedSourceDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
 				$scope.sourcedatapodattribute = response;
+				$scope.allSourceAttribute = response;
 				$scope.lhsdatapodattributefilter = response;
 			}
 		}
@@ -266,13 +276,16 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			}
 			else {
 				$scope.onChangeSourceDataSource();
-
 				var selectedSourceDetail = {};
 				selectedSourceDetail.type = $scope.ingestData.sourceDetail.ref.type;
 				selectedSourceDetail.uuid = $scope.ingestData.sourceDetail.ref.uuid;
 				$scope.selectedSourceDetail = selectedSourceDetail;
 				$scope.getAllAttributeBySource();
 				$scope.getParamByApp();
+				var selectedSourceAttrDetail={};
+				selectedSourceAttrDetail.uuid=$scope.ingestData.incrAttr.ref.uuid;
+				selectedSourceAttrDetail.attributeId=$scope.ingestData.incrAttr.attrId;
+				$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
 
 			}
 			$scope.onChangeTargetDataSource();
@@ -311,6 +324,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				selectedSourceDatasource.type = $scope.ingestData.sourceDatasource.ref.type;
 				selectedSourceDatasource.uuid = $scope.ingestData.sourceDatasource.ref.uuid;
 				$scope.selectedSourceDatasource = selectedSourceDatasource;
+				$scope.onChangeSourceDataSource();
 			}, 100);
 
 			var selectedTargetDatasource = {};
@@ -328,14 +342,19 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				$scope.selectedSourceDetail = $scope.ingestData.sourceDetail.value;
 			}
 			else {
-				$scope.onChangeSourceDataSource();
+			//	$scope.onChangeSourceDataSource();
 				var selectedSourceDetail = {};
 				$scope.selectedSourceDetail = null;
+				$scope.selectedSourceAttrDetail=null;
 				setTimeout(function name(params) {
 					selectedSourceDetail.type = $scope.ingestData.sourceDetail.ref.type;
 					selectedSourceDetail.uuid = $scope.ingestData.sourceDetail.ref.uuid;
 					$scope.selectedSourceDetail = selectedSourceDetail;
 					$scope.getAllAttributeBySource();
+					var selectedSourceAttrDetail={};
+					selectedSourceAttrDetail.uuid=$scope.ingestData.incrAttr.ref.uuid;
+					selectedSourceAttrDetail.attributeId=$scope.ingestData.incrAttr.attrId;
+					$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
 				}, 100);
 
 
@@ -699,6 +718,17 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			sourceDetails.ref = sourceDetailsRef;
 		}
 		ingestJson.sourceDetail = sourceDetails;
+        if ($scope.selectedSourceType != "FILE") {
+			var sourceAttrDetail={};
+			var sourceAttrDetailRef={};
+			sourceAttrDetailRef.type="datapod";
+			sourceAttrDetailRef.uuid=$scope.selectedSourceAttrDetail.uuid;
+			sourceAttrDetail.ref=sourceAttrDetailRef;
+			sourceAttrDetail.attrId=$scope.selectedSourceAttrDetail.attributeId;
+			ingestJson.incrAttr=sourceAttrDetail;
+		}else{
+			ingestJson.incrAttr=null;
+		}
 		var targetDatasource = {};
 		var targetDatasourceRef = {};
 		targetDatasourceRef.uuid = $scope.selectedTargetDatasource.uuid;
