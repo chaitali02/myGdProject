@@ -4,6 +4,7 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -184,7 +185,7 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.AUTORESET_TO_ONE_MAPPER ,);*/
 	}
 	
-	private void setSqoopOptions(SqoopOptions sqoopOptions, SqoopInput sqoopInput, Map<String, String> inputParams) {
+	private void setSqoopOptions(SqoopOptions sqoopOptions, SqoopInput sqoopInput, Map<String, String> inputParams) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		sqoopOptions.setHiveImport(sqoopInput.getHiveImport());
 		if (sqoopInput.getHiveImport()) {
 			sqoopOptions.doHiveImport();
@@ -256,24 +257,50 @@ public class SqoopExecutor {
 			default : 
 			}
 		}
-		
-		/*Class sqoopOptionsClass = SqoopOptions.class;
-		Method[] methods = sqoopOptionsClass.getMethods();
-		// populate all methods in Set
-		Map<String, Method> methodMap = new HashMap<>();
-		for (Method method : methods) {
-			if (method.getName().startsWith("set")) {
-				methodMap.put(method.getName().substring(3, method.getName().length()-1).toUpperCase(), method);
+		if(inputParams != null && !inputParams.isEmpty()) {
+			Class sqoopOptionsClass = SqoopOptions.class;
+			Method[] methods = sqoopOptionsClass.getMethods();
+			// populate all methods in Set
+			Map<String, Method> methodMap = new HashMap<>();
+			for (Method method : methods) {
+				if (method.getName().startsWith("set")) {
+					methodMap.put(method.getName().substring(3, method.getName().length()-1).toUpperCase(), method);
+				}
+			}
+			for (String key : inputParams.keySet()) {
+				if (methodMap.containsKey(key.toUpperCase())) {
+					Method method = methodMap.get(key.toUpperCase());
+//					Class<?> argumentClass = method.getParameterTypes()[0];
+					Object argument = resolveArgument(method, inputParams.get(key));//inputParams.get(key);
+//					if(argumentClass.getName().contains("int")) {
+//						argument = Integer.parseInt(""+inputParams.get(key));
+//					}
+					methodMap.get(key.toUpperCase()).invoke(sqoopOptions, argument);
+				}
 			}
 		}
-		for (String key : inputParams.keySet()) {
-			if (methodMap.containsKey(key.toUpperCase())) {
-				methodMap.get(key.toUpperCase());
-			}
-		}*/
 		
 	    logger.info("SqoopInput : " + sqoopInput);
 		
+	}
+	
+	public Object resolveArgument(Method method , String argument) {
+		Class<?> argumentClass = method.getParameterTypes()[0];
+		Object argumentVal = argument;
+		if(argumentClass.getName().contains("int")) {
+			argumentVal = Integer.parseInt(""+argument);
+		} else if(argumentClass.getName().contains("long")) {
+			argumentVal = Long.parseLong(""+argument);
+		} else if(argumentClass.getName().contains("double")) {
+			argumentVal = Double.parseDouble(""+argument);
+		} else if(argumentClass.getName().contains("float")) {
+			argumentVal = Float.parseFloat(""+argument);
+		} else if(argumentClass.getName().contains("short")) {
+			argumentVal = Short.parseShort(""+argument);
+		} else if(argumentClass.getName().contains("int")) {
+			argumentVal = Boolean.parseBoolean(""+argument);
+		}
+		return argumentVal;
 	}
 	
 	/**
@@ -281,8 +308,11 @@ public class SqoopExecutor {
 	 * @param input
 	 * @return
 	 * @throws IOException
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public Object execute(Object input) throws IOException {
+	public Object execute(Object input) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		return execute(input, null);
 	}
 	
@@ -291,8 +321,11 @@ public class SqoopExecutor {
 	 * @param input
 	 * @return
 	 * @throws IOException
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public Object execute(Object input, Map<String, String> inputParams) throws IOException {
+	public Object execute(Object input, Map<String, String> inputParams) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SqoopInput sqoopInput = null;
 		SqoopOptions sqoopOptions = new SqoopOptions();
 		ConnectionHolder connHolder = null;

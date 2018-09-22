@@ -4,6 +4,7 @@
 package com.inferyx.framework.test;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class SqoopImportTest {
 	
 	@Ignore
 	@Test
-	public void importTest() throws IOException {
+	public void importTest() throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		System.out.println("Running importTest ...");
 		SqoopInput input = new SqoopInput();
 		Datasource datasource = new Datasource();

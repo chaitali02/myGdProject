@@ -147,7 +147,7 @@ public class IngestServiceImpl {
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
 				//finding latest incremental value
-				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+//				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -239,7 +239,7 @@ public class IngestServiceImpl {
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				Map<String, String> inputParams = null;
 				if(ingest.getRunParams() != null) {
-					getRunParams(ingest.getRunParams());
+					inputParams = getRunParams(ingest.getRunParams());
 				}
 				sqoopExecutor.execute(sqoopInput, inputParams);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
@@ -273,7 +273,7 @@ public class IngestServiceImpl {
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 				Map<String, String> inputParams = null;
 				if(ingest.getRunParams() != null) {
-					getRunParams(ingest.getRunParams());
+					inputParams = getRunParams(ingest.getRunParams());
 				}
 				sqoopExecutor.execute(sqoopInput, inputParams);
 			} 
@@ -446,7 +446,8 @@ public class IngestServiceImpl {
 		Map<String, String> inputParams = new HashMap<>();
 		String[] splits = runParams.split(",");
 		for(String split : splits) {
-			inputParams.put(split, split);
+			String[] property = split.split("=");
+			inputParams.put(property[0], property[1]);
 		}
 		return inputParams;
 	}
