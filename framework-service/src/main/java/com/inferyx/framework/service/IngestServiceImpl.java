@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -137,16 +138,16 @@ public class IngestServiceImpl {
 
 			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
 			Datapod sourceDp = null;
-			String lastIncrValue = null;
-			String newIncrValue = null;
+			String incrLastValue = null;
+			String latestIncrLastValue = null;
 			if(sourceDpMI.getUuid() != null) {
 				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
 
 				//finding last incremental value
-				lastIncrValue = getLastIncrValue(ingestExec.getUuid());
+				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
 				//finding latest incremental value
-				newIncrValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -232,8 +233,15 @@ public class IngestServiceImpl {
 					sqoopInput.setImportIntended(true);
 				}
 				sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
+				if(incrLastValue != null) {
+					sqoopInput.setIncrementalLastValue(incrLastValue);
+				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				sqoopExecutor.execute(sqoopInput);
+				Map<String, String> inputParams = null;
+				if(ingest.getRunParams() != null) {
+					getRunParams(ingest.getRunParams());
+				}
+				sqoopExecutor.execute(sqoopInput, inputParams);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
@@ -259,12 +267,19 @@ public class IngestServiceImpl {
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setHiveTableName(targetDp.getName());
 				}
+				if(incrLastValue != null) {
+					sqoopInput.setIncrementalLastValue(incrLastValue);
+				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				sqoopExecutor.execute(sqoopInput);
+				Map<String, String> inputParams = null;
+				if(ingest.getRunParams() != null) {
+					getRunParams(ingest.getRunParams());
+				}
+				sqoopExecutor.execute(sqoopInput, inputParams);
 			} 
 			
-			if(newIncrValue != null) {
-				ingestExec.setLastIncrValue(newIncrValue);
+			if(latestIncrLastValue != null) {
+				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			}
 			
@@ -425,5 +440,14 @@ public class IngestServiceImpl {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		ResultSetHolder rsHolder = exec.executeSqlByDatasource(sql, datasource, appUuid);
 		return exec.getIncrementalLastValue(rsHolder, appUuid);
+	}
+	
+	public Map<String, String> getRunParams(String runParams) {
+		Map<String, String> inputParams = new HashMap<>();
+		String[] splits = runParams.split(",");
+		for(String split : splits) {
+			inputParams.put(split, split);
+		}
+		return inputParams;
 	}
 }
