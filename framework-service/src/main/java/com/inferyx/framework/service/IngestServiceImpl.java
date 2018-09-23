@@ -248,18 +248,20 @@ public class IngestServiceImpl {
 				sqoopInput.setTargetDs(targetDS);
 				String targetDir = targetDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
 				String sourceDir = sourceDS.getPath();//String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
-//				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
-//				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
+//				targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
+//				sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
 				logger.info("targetDir : " + targetDir);
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-//				sqoopInput.setExportDir(targetDir);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					sourceDir = String.format("%s/%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), hdfsInfo.getSchemaPath(), sourceDp.getName());
+					logger.info("sourceDir : " + sourceDir);
+					sqoopInput.setExportDir(sourceDir);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
 					sqoopInput.setTable(targetDp.getName());
-					sqoopInput.sethCatTableName(sourceDp.getName());
+//					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
