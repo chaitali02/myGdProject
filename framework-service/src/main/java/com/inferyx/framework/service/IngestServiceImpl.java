@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
@@ -363,10 +364,16 @@ public class IngestServiceImpl {
 			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
 			} else {
-				IExecutor exec = execFactory.getExecutor(targetDS.getType());
-				String tableName = targetDS.getDbname()+"."+targetDp.getName();
-				String sql = generateSqlByDatasource(targetDS, tableName, limit);
-				data = exec.executeAndFetch(sql, appUuid);
+				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			//		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
+					data = dataStoreServiceImpl.getDatapodResults(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, limit, sortBy, order, null, runMode);
+				} else {
+					IExecutor exec = execFactory.getExecutor(targetDS.getType());
+					String tableName = targetDS.getDbname()+"."+targetDp.getName();
+					String sql = generateSqlByDatasource(targetDS, tableName, limit);
+					data = exec.executeAndFetch(sql, appUuid);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
