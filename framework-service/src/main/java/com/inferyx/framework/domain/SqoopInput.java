@@ -31,7 +31,49 @@ public class SqoopInput {
 	private String hiveTableName;
 	private String hCatTableName;
 	private FileLayout fileLayout;
+	private String overwriteHiveTable; 
+	private String hiveDatabaseName;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the hiveDatabaseName
+	 */
+	public String getHiveDatabaseName() {
+		return hiveDatabaseName;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param hiveDatabaseName the hiveDatabaseName to set
+	 */
+	public void setHiveDatabaseName(String hiveDatabaseName) {
+		this.hiveDatabaseName = hiveDatabaseName;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the overwriteHiveTable
+	 */
+	public String getOverwriteHiveTable() {
+		return overwriteHiveTable;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param overwriteHiveTable the overwriteHiveTable to set
+	 */
+	public void setOverwriteHiveTable(String overwriteHiveTable) {
+		this.overwriteHiveTable = overwriteHiveTable;
+	}
+
 	public SqoopInput() {
 		// TODO Auto-generated constructor stub
 	}

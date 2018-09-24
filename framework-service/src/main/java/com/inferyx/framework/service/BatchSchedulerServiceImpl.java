@@ -254,7 +254,8 @@ public class BatchSchedulerServiceImpl {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.info("Nothing to schedule ....!!");
 			batchTriggerServiceImpl.setNextExecutionTime(null);
 		}
 	}

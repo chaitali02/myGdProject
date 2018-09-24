@@ -268,6 +268,8 @@ public class IngestServiceImpl {
 					sqoopInput.setImportIntended(true);
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setHiveTableName(targetDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 				}
 				if(incrLastValue != null) {
 					sqoopInput.setIncrementalLastValue(incrLastValue);
