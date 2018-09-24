@@ -231,6 +231,15 @@ public class IngestServiceImpl extends RuleTemplate {
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
+					sourceDir = String.format("%s/%s", hdfsInfo.getSchemaPath(), sourceDp.getName());
+					targetDir = String.format("%s/%s", hdfsInfo.getSchemaPath(), targetDp.getName());
+					logger.info("sourceDir : " + sourceDir);
+					sqoopInput.setExportDir(targetDir);
+					sqoopInput.setSourceDirectory(sourceDir);
+					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setHiveTableName(sourceDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 				} else {
 					sqoopInput.setExportDir(null);
 					sqoopInput.setImportIntended(true);
@@ -265,6 +274,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
 					sqoopInput.setTable(targetDp.getName());
+					sqoopInput.setHiveTableName(sourceDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setTable(sourceDp.getName());
