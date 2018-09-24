@@ -23,8 +23,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -45,26 +43,29 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
+		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (IngestGroupExec) baseExec, runMode);
 		return null;
 	}
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, 
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
 	}
 
-	
-	
-	
-	
-	
+	public IngestGroupExec create(String groupUuid, String groupVersion, ExecParams execParams, List<String> datapodList, 
+			IngestGroupExec ingestGroupExec, 
+			DagExec dagExec) throws Exception {
+		return (IngestGroupExec) super.create(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, datapodList, ingestGroupExec, dagExec);
+	}
 
-	
-	
+	public IngestGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		return (IngestGroupExec) super.parse(execUuid, execVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, refKeyMap, datapodList, dagExec, runMode);
+	}
 
-
-
-
+	public MetaIdentifier execute(String groupUuid, String groupVersion, ExecParams execParams,
+			IngestGroupExec ingestGroupExec, RunMode runMode) throws Exception {
+		return super.execute(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, ingestGroupExec, runMode);
+	}
 }

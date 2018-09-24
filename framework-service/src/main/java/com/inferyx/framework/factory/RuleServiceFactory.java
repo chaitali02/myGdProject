@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.factory;
 
-import org.apache.hadoop.hive.ql.parse.PrunedPartitionList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,9 @@ import com.inferyx.framework.service.DataQualExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupServiceImpl;
 import com.inferyx.framework.service.DataQualServiceImpl;
+import com.inferyx.framework.service.IngestExecServiceImpl;
+import com.inferyx.framework.service.IngestGroupServiceImpl;
+import com.inferyx.framework.service.IngestServiceImpl;
 import com.inferyx.framework.service.ProfileExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupServiceImpl;
@@ -75,6 +77,12 @@ public class RuleServiceFactory {
 	ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
 	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
+	@Autowired
+	IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	IngestExecServiceImpl ingestExecServiceImpl;
+	@Autowired
+	IngestGroupServiceImpl ingestGroupServiceImpl;
 	
 	/**
 	 * 
@@ -99,6 +107,9 @@ public class RuleServiceFactory {
 		if (type == MetaType.recon) {
 			return reconServiceImpl;
 		}
+		if (type == MetaType.ingest) {
+			return ingestServiceImpl;
+		}
 		return null;
 	}
 	
@@ -117,6 +128,9 @@ public class RuleServiceFactory {
 		}
 		if (type == MetaType.reconExec) {
 			return reconExecServiceImpl;
+		}
+		if (type == MetaType.ingestExec) {
+			return ingestExecServiceImpl;
 		}
 		return null;
 	}
@@ -137,6 +151,9 @@ public class RuleServiceFactory {
 		if (type == MetaType.recongroup) {
 			return reconGroupServiceImpl;
 		}
+		if (type == MetaType.ingestgroup) {
+			return ingestGroupServiceImpl;
+		}
 		
 		return null;
 	}
@@ -156,6 +173,9 @@ public class RuleServiceFactory {
 		}
 		if (type == MetaType.recongroupExec) {
 			return reconGroupExecServiceImpl;
+		}
+		if (type == MetaType.ingestgroupExec) {
+//			return ingestGroupExecServiceImpl;
 		}
 		return null;
 	}
