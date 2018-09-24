@@ -253,7 +253,7 @@ public class IngestServiceImpl {
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					sourceDir = String.format("%s/%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), hdfsInfo.getSchemaPath(), sourceDp.getName());
+					sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), sourceDp.getName());
 					//sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(),  hdfsInfo.getSchemaPath(), sourceDp.getName());
 					logger.info("sourceDir : " + sourceDir);
 					sqoopInput.setExportDir(sourceDir);
