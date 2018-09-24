@@ -147,7 +147,7 @@ public class IngestServiceImpl {
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
 				//finding latest incremental value
-				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+//				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
