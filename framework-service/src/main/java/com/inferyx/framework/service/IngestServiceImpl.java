@@ -434,7 +434,7 @@ public class IngestServiceImpl {
 			}
 		}
 		
-		if(attrName == null) {
+		if(attrName == null || attrName.isEmpty() || attrName.equalsIgnoreCase("null")) {
 			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
 		}
 		String appUuid = commonServiceImpl.getApp().getUuid();
