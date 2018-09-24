@@ -147,7 +147,7 @@ public class IngestServiceImpl {
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
 				//finding latest incremental value
-//				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -215,8 +215,7 @@ public class IngestServiceImpl {
 				sqoopInput.setTargetDs(targetDS);
 //				String targetDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), targetDS.getHost(), targetDS.getPath());
 //				String sourceDir = String.format("%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), sourceDS.getPath());
-				String targetDir = helper.getPathByDataSource(targetDS);//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());
-				
+				String targetDir = helper.getPathByDataSource(targetDS);//String.format("%s/%s", hdfsInfo.getHdfsURL(), targetDS.getPath());				
 				String sourceDir = helper.getPathByDataSource(sourceDS);//String.format("%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getPath());
 				sqoopInput.setSourceDirectory(sourceDir);
 				sqoopInput.setTargetDirectory(targetDir);
