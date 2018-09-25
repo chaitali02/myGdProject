@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_address;
+DROP TABLE IF EXISTS dim_address;
 
-CREATE TABLE framework.dim_address
+CREATE TABLE dim_address
 (
   address_id text NOT NULL,
   src_address_id text,
@@ -20,4 +20,4 @@ CREATE TABLE framework.dim_address
   CONSTRAINT src_address_id UNIQUE (src_address_id, load_date, load_id)
 );
 
-ALTER TABLE framework.dim_address OWNER TO inferyx;
+ALTER TABLE dim_address OWNER TO inferyx;

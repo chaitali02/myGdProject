@@ -1,6 +1,6 @@
-DROP TABLE framework.fact_customer_summary_monthly;
+DROP TABLE fact_customer_summary_monthly;
 
-CREATE TABLE framework.fact_customer_summary_monthly
+CREATE TABLE fact_customer_summary_monthly
 (
   customer_id text NOT NULL,
   yyyy_mm text NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE framework.fact_customer_summary_monthly
   CONSTRAINT fact_customer_summary_monthly_pkey PRIMARY KEY (customer_id, yyyy_mm, load_date)
 );
 
-ALTER TABLE framework.fact_customer_summary_monthly OWNER TO inferyx;
+ALTER TABLE fact_customer_summary_monthly OWNER TO inferyx;
 
 
 

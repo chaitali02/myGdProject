@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_branch;
+DROP TABLE IF EXISTS dim_branch;
 
-CREATE TABLE framework.dim_branch
+CREATE TABLE dim_branch
 (
   branch_id text NOT NULL,
   src_branch_id integer,
@@ -16,4 +16,4 @@ CREATE TABLE framework.dim_branch
   CONSTRAINT src_branch_id UNIQUE (src_branch_id, load_date, load_id)
 );
 
-ALTER TABLE framework.dim_branch OWNER TO inferyx;
+ALTER TABLE dim_branch OWNER TO inferyx;

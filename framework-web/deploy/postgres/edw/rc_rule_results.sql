@@ -1,6 +1,6 @@
-DROP TABLE framework.rc_rule_results;
+DROP TABLE rc_rule_results;
 
-CREATE TABLE framework.rc_rule_results (
+CREATE TABLE rc_rule_results (
     sourcedatapoduuid text,
     sourcedatapodversion text,
     sourcedatapodname text,

@@ -1,6 +1,6 @@
-DROP TABLE framework.dp_rule_results;
+DROP TABLE dp_rule_results;
 
-CREATE TABLE framework.dp_rule_results
+CREATE TABLE dp_rule_results
 (
   datapoduuid text,
   datapodversion text,

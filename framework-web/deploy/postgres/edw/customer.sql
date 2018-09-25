@@ -1,6 +1,6 @@
-DROP TABLE framework.customer;  
+DROP TABLE customer;  
 
-CREATE TABLE framework.customer
+CREATE TABLE customer
 (
   customer_id text NOT NULL,
   address_id text,
@@ -14,9 +14,8 @@ CREATE TABLE framework.customer
   date_first_purchase text,
   commute_distance_miles integer,
   load_date text NOT NULL,
-  version text,
   load_id integer,
   CONSTRAINT customer_pkey PRIMARY KEY (customer_id, load_date)
 );
 
-Copy framework.customer(customer_id,address_id,branch_id,title,first_name,middle_name,last_name,ssn,phone,date_first_purchase,commute_distance_miles,load_date)FROM '/user/hive/warehouse/framework/upload/customer.csv' delimiter ',' csv  header;
+ALTER TABLE customer OWNER TO inferyx;

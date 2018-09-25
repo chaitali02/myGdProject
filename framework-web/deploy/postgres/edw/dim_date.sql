@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_date;
+DROP TABLE IF EXISTS dim_date cascade;
 
-CREATE TABLE framework.dim_date
+CREATE TABLE dim_date
 (
   date_id integer NOT NULL,
   date_type text,
@@ -70,7 +70,7 @@ ALTER TABLE framework.dim_date
 
 
 
-Copy framework.dim_date(date_id,
+Copy dim_date(date_id,
   date_type,
   date_val,
   day_num_of_week,
