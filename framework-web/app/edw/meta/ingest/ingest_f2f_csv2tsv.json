@@ -1,0 +1,55 @@
+{
+    "type" : "FILE-FILE",
+    "sourceDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "sourceDetail" : {
+        "ref" : {
+            "type" : "simple"
+        },
+        "value" : "account.csv"
+    },
+    "targetDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "targetDetail" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "f1a20571-7190-41d9-ac37-436463ddbc74"
+        }
+    },
+    "sourceFormat" : "CSV",
+    "targetFormat" : "TSV",
+    "header" : "N",
+    "uuid" : "a7b5df81-5d37-4fa1-bc2d-7fc89e89f861",
+    "version" : "1537857225",
+    "name" : "ingest_f2f_csv2tsv",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-25T06:33:45.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            }
+        }
+    ]
+}
