@@ -1,6 +1,6 @@
-DROP TABLE framework.address;
+DROP TABLE address;
    
-CREATE TABLE framework.address
+CREATE TABLE address
 (
   address_id text NOT NULL,
   address_line1 text,
@@ -14,9 +14,8 @@ CREATE TABLE framework.address
   latitude text,
   longitude text,
   load_date text NOT NULL,
-  version integer,
   load_id integer,
   CONSTRAINT address_pkey PRIMARY KEY (address_id, load_date)
 );
 
-Copy framework.address(address_id,address_line1,address_line2,address_line3,city,county,state,zipcode,country,latitude,longitude,load_date)FROM '/user/hive/warehouse/framework/upload/address.csv' delimiter ',' csv header;
+ALTER TABLE address OWNER TO inferyx;

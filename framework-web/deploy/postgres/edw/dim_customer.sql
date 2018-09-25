@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_customer;
+DROP TABLE IF EXISTS dim_customer;
 
-CREATE TABLE framework.dim_customer
+CREATE TABLE dim_customer
 (
   customer_id text NOT NULL,
   src_customer_id text,
@@ -23,4 +23,4 @@ CREATE TABLE framework.dim_customer
   CONSTRAINT src_customer_id UNIQUE (src_customer_id, load_date, load_id)
 );
 
-ALTER TABLE framework.dim_customer OWNER TO inferyx;
+ALTER TABLE dim_customer OWNER TO inferyx;

@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_account;
+DROP TABLE IF EXISTS dim_account;
 
-CREATE TABLE framework.dim_account
+CREATE TABLE dim_account
 (
   account_id text NOT NULL,
   src_account_id text,
@@ -27,7 +27,6 @@ CREATE TABLE framework.dim_account
   CONSTRAINT dim_account_pkey PRIMARY KEY (account_id, load_date, load_id),
   CONSTRAINT src_account_id UNIQUE (src_account_id, load_date, load_id)
 );
-ALTER TABLE framework.dim_account
-  OWNER TO inferyx;
+ALTER TABLE dim_account OWNER TO inferyx;
 
 

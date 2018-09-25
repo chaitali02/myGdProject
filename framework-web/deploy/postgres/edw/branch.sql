@@ -1,6 +1,6 @@
-DROP TABLE framework.branch;
+DROP TABLE branch cascade;
 
-CREATE TABLE framework.branch
+CREATE TABLE branch
 (
   branch_id integer NOT NULL,
   branch_type_id integer,
@@ -12,10 +12,9 @@ CREATE TABLE framework.branch
   branch_contact_phone text,
   branch_contact_email text,
   load_date text NOT NULL,
-  version integer,
   load_id integer,
   CONSTRAINT branch_pkey PRIMARY KEY (branch_id, load_date)
 );
 
-Copy framework.branch(branch_id,branch_type_id,bank_id,address_id,branch_name,branch_desc,branch_contact_name,branch_contact_phone,branch_contact_email,load_date)FROM '/user/hive/warehouse/framework/upload/branch.csv' delimiter ',' csv  header;
+ALTER TABLE branch OWNER TO inferyx;
 

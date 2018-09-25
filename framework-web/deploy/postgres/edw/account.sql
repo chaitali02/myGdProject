@@ -1,6 +1,6 @@
-DROP TABLE framework.account;
+DROP TABLE account;
    
-CREATE TABLE framework.account
+CREATE TABLE account
 (
   account_id text NOT NULL,
   account_type_id integer,
@@ -23,9 +23,8 @@ CREATE TABLE framework.account
   interest_type text,
   interest_rate double precision,
   load_date text NOT NULL,
-  version text,
   load_id integer,
   CONSTRAINT account_pkey PRIMARY KEY (account_id, load_date)
-)
+);
+ALTER TABLE account OWNER TO inferyx;
 
-Copy framework.account(account_id,account_type_id,account_status_id,product_type_id,customer_id,pin_number,nationality,primary_iden_doc,primary_iden_doc_id,secondary_iden_doc,secondary_iden_doc_id,account_open_date,account_number,opening_balance,current_balance,overdue_balance,overdue_date,currency_code,interest_type,interest_rate,load_date) FROM '/user/hive/warehouse/framework/upload/account.csv' delimiter ',' csv header;

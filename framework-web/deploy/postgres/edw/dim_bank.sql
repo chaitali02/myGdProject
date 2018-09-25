@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.dim_bank;
+DROP TABLE IF EXISTS dim_bank;
 
-CREATE TABLE framework.dim_bank
+CREATE TABLE dim_bank
 (
   bank_id text NOT NULL,
   src_bank_id text,

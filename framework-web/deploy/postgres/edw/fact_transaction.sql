@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS framework.fact_transaction;
+DROP TABLE IF EXISTS fact_transaction;
 
-CREATE TABLE framework.fact_transaction
+CREATE TABLE fact_transaction
 (
   transaction_id text,
   src_transaction_id text,
@@ -22,4 +22,4 @@ CREATE TABLE framework.fact_transaction
   load_id integer
 );
 
-ALTER TABLE framework.fact_transaction OWNER TO inferyx;
+ALTER TABLE fact_transaction OWNER TO inferyx;
