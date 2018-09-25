@@ -1,0 +1,85 @@
+{
+
+  "uuid": "919d133e-6a68-492e-a0df-efd8d62f1f42",
+  "version": "1537893843",
+  "name": "T2F_mysql_2_account_parquet",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Sep 25 12:44:03 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "TABLE-FILE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "MySql"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File_Data"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
+      "version": null,
+      "name": "account_parquet"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": null,
+  "targetFormat": "PARQUET",
+  "header": "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  }
+}
