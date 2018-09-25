@@ -577,7 +577,22 @@
 			<version>1.99.5-cdh5.13.0</version>
 			<optional>true</optional>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${zookeeper.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		    <version>2.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka_2.11</artifactId>
+		    <version>2.0.0</version>
+		</dependency>
 		
 	</dependencies>
 
@@ -587,6 +602,7 @@
 		<hadoop.version>2.6.0-cdh5.15.0</hadoop.version>
 		<hive.version>1.1.0-cdh5.15.0</hive.version>
 		<sqoop.version>1.4.6-cdh5.15.0</sqoop.version>
+		<zookeeper.version>3.4.5-cdh5.13.0</zookeeper.version>
 	</properties>
 
 	<modules>

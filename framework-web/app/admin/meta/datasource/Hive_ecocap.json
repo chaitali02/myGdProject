@@ -45,5 +45,6 @@
     "port" : "10000",
     "username" : "inferyx",
     "password" : "",
+    "path": "/user/hive/warehouse/ecocap/",
     "sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

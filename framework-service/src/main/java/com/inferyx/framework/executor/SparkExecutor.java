@@ -2904,7 +2904,12 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		//reading file
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		Dataset<Row> df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
+		Dataset<Row> df = null;
+		if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
+			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
+		} else {
+			df = sparkSession.read().parquet(filePath);
+		}
 		
 		//creating rsHolder
 		ResultSetHolder rsHolder = new ResultSetHolder();
@@ -2979,7 +2984,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", "!").csv(targetPath);
+			df.write().mode(saveMode).option("delimiter", "|").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
 		}
@@ -3008,9 +3013,13 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
-		String sql = "SELECT *, "+version+" AS version FROM "+tableName;
-		ResultSetHolder rsHolder2 = executeSql(sql);
-		rsHolder.setDataFrame(rsHolder2.getDataFrame());
+		String[] columns = rsHolder.getDataFrame().columns();
+		List<String> columnList = Arrays.asList(columns);
+		if(!columnList.contains("version")) {
+			String sql = "SELECT *, "+version+" AS version FROM "+tableName;
+			ResultSetHolder rsHolder2 = executeSql(sql);
+			rsHolder.setDataFrame(rsHolder2.getDataFrame());
+		} 	
 		return rsHolder;
 	}
 

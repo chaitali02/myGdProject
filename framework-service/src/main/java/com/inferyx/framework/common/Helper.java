@@ -1032,7 +1032,8 @@ public class Helper {
 			switch(format.toLowerCase()) {
 			case "csv" : return ",";
 			case "tsv" : return "\t";
-			case "psv" : return "!";
+			case "psv" : return "|";
+			case "parquet" : return "parquet";
 			}
 		}
 		return null;
