@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -65,8 +64,6 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private HDFSInfo hdfsInfo;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
@@ -143,9 +140,13 @@ public class IngestServiceImpl extends RuleTemplate {
 			Datapod sourceDp = null;
 			String incrLastValue = null;
 			String latestIncrLastValue = null;
+			String incrColName = null;
 			if(sourceDpMI.getUuid() != null) {
 				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
 
+				//finding incremental column name
+				incrColName = getIncrColName(sourceDp, ingest.getIncrAttr());
+				
 				//finding last incremental value
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
@@ -221,19 +222,50 @@ public class IngestServiceImpl extends RuleTemplate {
 				sqoopInput.setTable(sourceDp.getName());
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 				sqoopInput.setExportDir(targetDir);
-				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+				
+				if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					//this is import block
 					sqoopInput.setHiveImport(false);
-					sqoopInput.setImportIntended(false);
+					sqoopInput.setImportIntended(true);
 					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
 					targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
 					logger.info("sourceDir : " + sourceDir);
+					logger.info("targetDir : " + targetDir);
 					sqoopInput.setExportDir(targetDir);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTable(sourceDp.getName());
 				} else {
-					sqoopInput.setExportDir(null);
-					sqoopInput.setImportIntended(true);
+					//this is export block
+					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+					targetFilePathUrl = String.format("%s/%s", targetDS.getPath(), String.format("%s_%s_%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
+					logger.info("sourceDir : " + sourceDir);
+					logger.info("targetDir : " + targetFilePathUrl);
+					
+					String targetTableName = String.format("%s_%s_%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+					String sql = generateSqlByDatasource(targetDS, targetTableName, incrColName, incrLastValue, 0);
+					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
+					//adding version column data
+					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+					
+					//writing to target				
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, targetDp.getName(), targetTableName, "append", ingest.getTargetFormat());
+					countRows = rsHolder.getCountRows();
 				}
+				
+//				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+//					sqoopInput.setHiveImport(false);
+//					sqoopInput.setImportIntended(false);
+//					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+//					targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
+//					logger.info("sourceDir : " + sourceDir);
+//					logger.info("targetDir : " + targetDir);
+//					sqoopInput.setExportDir(targetDir);
+//					sqoopInput.setSourceDirectory(sourceDir);
+//					sqoopInput.setTable(sourceDp.getName());
+//				} else {
+//					sqoopInput.setExportDir(null);
+//					sqoopInput.setImportIntended(true);
+//				}
 				sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 				if(incrLastValue != null) {
 					sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -316,6 +348,17 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
+	private String getIncrColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
+		String attrName = null;
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
+				attrName = attribute.getName();
+				break;
+			}
+		}
+		return attrName;
+	}
+
 	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat) throws JsonProcessingException {
 		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
@@ -373,7 +416,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				} else {
 					IExecutor exec = execFactory.getExecutor(targetDS.getType());
 					String tableName = targetDS.getDbname()+"."+targetDp.getName();
-					String sql = generateSqlByDatasource(targetDS, tableName, limit);
+					String sql = generateSqlByDatasource(targetDS, tableName, null, null, limit);
 					data = exec.executeAndFetch(sql, appUuid);
 				}
 			}
@@ -406,11 +449,15 @@ public class IngestServiceImpl extends RuleTemplate {
 		return null;
 	}
 	
-	public String generateSqlByDatasource(Datasource  datasource, String tableName, int limit) {
+	public String generateSqlByDatasource(Datasource  datasource, String tableName, String incrColName, String incrLastValue, int limit) {
 		if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {				
-				return "SELECT * FROM " + tableName + " WHERE rownum< " + limit;
+				return "SELECT * FROM " + tableName + " WHERE "
+						+ (limit == 0 ? "" : "rownum< " + limit) 
+						+ (incrLastValue == null ? "" : " AND "+incrColName+" > "+incrLastValue);
 		} else {
-			return "SELECT * FROM " + tableName + " LIMIT " + limit;
+			return "SELECT * FROM " + tableName  
+					+ (incrLastValue == null ? "" : incrColName+" > "+incrLastValue) 
+					+ (limit == 0 ? "" : " LIMIT " + limit);
 		}
 	}
 	
@@ -437,13 +484,13 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 
 	private String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
-		String attrName = null;
-		for(Attribute attribute : datapod.getAttributes()) {
-			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
-				attrName = attribute.getName();
-				break;
-			}
-		}
+		String attrName = getIncrColName(datapod, incrAttrHolder);
+//		for(Attribute attribute : datapod.getAttributes()) {
+//			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
+//				attrName = attribute.getName();
+//				break;
+//			}
+//		}
 		
 		if(attrName == null || attrName.isEmpty() || attrName.equalsIgnoreCase("null")) {
 			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
