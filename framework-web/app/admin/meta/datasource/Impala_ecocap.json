@@ -33,5 +33,6 @@
 	"port": "21050",
 	"username": "inferyx",
 	"password": "",
+        "path": "/user/hive/warehouse/ecocap/",
 	"sessionParameters": ""
 }
