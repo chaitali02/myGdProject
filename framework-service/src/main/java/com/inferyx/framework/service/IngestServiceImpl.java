@@ -247,18 +247,20 @@ public class IngestServiceImpl extends RuleTemplate {
 				} else {
 					//this is export block
 					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-					targetFilePathUrl = String.format("%s%s", targetDS.getPath(), String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
+					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
 					String targetTableName = String.format("%s_%s_%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
-					String sourceTableName = sourceDp.getName();
+					String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
 					
 					String sql = generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
 					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
 					//adding version column data
+					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-					
+//					targetFilePathUrl = "file://"+targetFilePathUrl;
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, targetDp.getName(), targetTableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
