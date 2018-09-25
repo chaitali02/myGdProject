@@ -1,7 +1,7 @@
 {
   "uuid": "b4f2873f-3f2b-4b2f-be5a-f30e604e89df",
   "version": "1537856528",
-  "name": "F2F_account_PARQUET_2_PARQUET",
+  "name": "ingest_f2f_parquet2parquet",
   "desc": null,
   "createdBy": {
     "ref": {
