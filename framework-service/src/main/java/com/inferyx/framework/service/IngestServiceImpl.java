@@ -234,15 +234,27 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setExportDir(targetDir);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
+					if(incrLastValue != null) {
+						sqoopInput.setIncrementalLastValue(incrLastValue);
+					}
+					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+					Map<String, String> inputParams = null;
+					if(ingest.getRunParams() != null) {
+						inputParams = getRunParams(ingest.getRunParams());
+					}
+					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else {
 					//this is export block
 					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-					targetFilePathUrl = String.format("%s/%s", targetDS.getPath(), String.format("%s_%s_%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
+					targetFilePathUrl = String.format("%s%s", targetDS.getPath(), String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
 					String targetTableName = String.format("%s_%s_%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
-					String sql = generateSqlByDatasource(targetDS, targetTableName, incrColName, incrLastValue, 0);
+					String sourceTableName = sourceDp.getName();
+					
+					String sql = generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
 					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
 					//adding version column data
 					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
@@ -266,16 +278,6 @@ public class IngestServiceImpl extends RuleTemplate {
 //					sqoopInput.setExportDir(null);
 //					sqoopInput.setImportIntended(true);
 //				}
-				sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
-				if(incrLastValue != null) {
-					sqoopInput.setIncrementalLastValue(incrLastValue);
-				}
-				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				Map<String, String> inputParams = null;
-				if(ingest.getRunParams() != null) {
-					inputParams = getRunParams(ingest.getRunParams());
-				}
-				sqoopExecutor.execute(sqoopInput, inputParams);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
@@ -503,11 +505,14 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	public Map<String, String> getRunParams(String runParams) {
-		Map<String, String> inputParams = new HashMap<>();
-		String[] splits = runParams.split(",");
-		for(String split : splits) {
-			String[] property = split.split("=");
-			inputParams.put(property[0], property[1]);
+		Map<String, String> inputParams = null;
+		if(runParams != null && !runParams.isEmpty()) {
+			inputParams = new HashMap<>();
+			String[] splits = runParams.split(",");
+			for(String split : splits) {
+				String[] property = split.split("=");
+				inputParams.put(property[0], property[1]);
+			}
 		}
 		return inputParams;
 	}
