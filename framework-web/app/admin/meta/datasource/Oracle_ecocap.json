@@ -40,7 +40,7 @@
     "port" : "1521",
     "username" : "inferyx",
     "password" : "root",
-    "path": "/user/hive/warehouse/xe/",
+    "path": "/user/hive/warehouse/xe",
     "sessionParameters" : "framework.oracle.schema=ecocap",
     "createdOn" : ISODate("2017-12-08T08:03:03.324Z")
 }
