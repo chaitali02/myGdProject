@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document(collection = "ingest")
-public class Ingest extends BaseEntity {
+public class Ingest extends BaseRule {
 	private String type; //FILE-FILE, FILE-TABLE, TABLE-FILE, TABLE-TABLE
 	private MetaIdentifierHolder sourceDatasource;
 	private MetaIdentifierHolder sourceDetail;

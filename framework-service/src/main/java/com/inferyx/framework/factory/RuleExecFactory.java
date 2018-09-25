@@ -16,6 +16,8 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
@@ -47,6 +49,9 @@ public class RuleExecFactory {
 		if (type == MetaType.reconExec) {
 			return new ReconExec();
 		}
+		if (type == MetaType.ingestExec) {
+			return new IngestExec();
+		}
 		return null;
 	}
 
@@ -65,6 +70,9 @@ public class RuleExecFactory {
 		}
 		if (type == MetaType.recongroupExec) {
 			return new ReconGroupExec();
+		}
+		if (type == MetaType.ingestgroupExec) {
+			return new IngestGroupExec();
 		}
 		return null;
 	}

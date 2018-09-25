@@ -244,6 +244,14 @@ public class SqoopExecutor {
 			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
 		}
 		
+		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase("Y")) {
+			sqoopOptions.setOverwriteHiveTable(true);
+		}
+		
+		if(sqoopInput.getHiveDatabaseName() != null && !sqoopInput.getHiveDatabaseName().isEmpty()) {
+			sqoopOptions.setHiveDatabaseName(sqoopInput.getHiveDatabaseName());
+		}
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);

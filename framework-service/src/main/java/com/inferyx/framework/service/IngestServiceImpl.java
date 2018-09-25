@@ -14,12 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +31,9 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -39,7 +44,6 @@ import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
@@ -57,7 +61,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
  *
  */
 @Service
-public class IngestServiceImpl {
+public class IngestServiceImpl extends RuleTemplate {
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -147,7 +151,7 @@ public class IngestServiceImpl {
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
 				//finding latest incremental value
-//				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				latestIncrLastValue = getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -227,6 +231,15 @@ public class IngestServiceImpl {
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
+					sourceDir = String.format("%s/%s", hdfsInfo.getSchemaPath(), sourceDp.getName());
+					targetDir = String.format("%s/%s", hdfsInfo.getSchemaPath(), targetDp.getName());
+					logger.info("sourceDir : " + sourceDir);
+					sqoopInput.setExportDir(targetDir);
+					sqoopInput.setSourceDirectory(sourceDir);
+					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setHiveTableName(sourceDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 				} else {
 					sqoopInput.setExportDir(null);
 					sqoopInput.setImportIntended(true);
@@ -253,13 +266,17 @@ public class IngestServiceImpl {
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					sourceDir = String.format("%s/%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), hdfsInfo.getSchemaPath(), sourceDp.getName());
+//					sourceDir = String.format("%s/%s/%s/%s", hdfsInfo.getHdfsURL(), sourceDS.getHost(), hdfsInfo.getSchemaPath(), sourceDp.getName());
+					sourceDir = String.format("%s/%s", hdfsInfo.getSchemaPath(), sourceDp.getName());
 					logger.info("sourceDir : " + sourceDir);
 					sqoopInput.setExportDir(sourceDir);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
 					sqoopInput.setTable(targetDp.getName());
+					sqoopInput.setHiveTableName(sourceDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					sqoopInput.setTable(sourceDp.getName());
@@ -267,6 +284,8 @@ public class IngestServiceImpl {
 					sqoopInput.setImportIntended(true);
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setHiveTableName(targetDp.getName());
+					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 				}
 				if(incrLastValue != null) {
 					sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -360,10 +379,16 @@ public class IngestServiceImpl {
 			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
 			} else {
-				IExecutor exec = execFactory.getExecutor(targetDS.getType());
-				String tableName = targetDS.getDbname()+"."+targetDp.getName();
-				String sql = generateSqlByDatasource(targetDS, tableName, limit);
-				data = exec.executeAndFetch(sql, appUuid);
+				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			//		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
+					data = dataStoreServiceImpl.getDatapodResults(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, limit, sortBy, order, null, runMode);
+				} else {
+					IExecutor exec = execFactory.getExecutor(targetDS.getType());
+					String tableName = targetDS.getDbname()+"."+targetDp.getName();
+					String sql = generateSqlByDatasource(targetDS, tableName, limit);
+					data = exec.executeAndFetch(sql, appUuid);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -433,7 +458,7 @@ public class IngestServiceImpl {
 			}
 		}
 		
-		if(attrName == null) {
+		if(attrName == null || attrName.isEmpty() || attrName.equalsIgnoreCase("null")) {
 			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
 		}
 		String appUuid = commonServiceImpl.getApp().getUuid();
@@ -451,5 +476,30 @@ public class IngestServiceImpl {
 			inputParams.put(property[0], property[1]);
 		}
 		return inputParams;
+	}
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (IngestExec)baseExec, execParams, null, runMode);
+		return null;
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return baseExec; 
+	}
+
+	@Override
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			throws Exception {		
+		return (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
+	}
+
+	@Override
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec,
+			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		return execute(baseRuleExec.getDependsOn().getRef().getUuid(), baseRuleExec.getDependsOn().getRef().getVersion(), (IngestExec)baseRuleExec, execParams, null, runMode);
 	}
 }

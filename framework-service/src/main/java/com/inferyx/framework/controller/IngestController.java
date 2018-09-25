@@ -25,7 +25,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.service.IngestGroupServiceImpl;
 import com.inferyx.framework.service.IngestServiceImpl;
 
 /**
@@ -37,6 +40,8 @@ import com.inferyx.framework.service.IngestServiceImpl;
 public class IngestController {
 	@Autowired
 	private IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	
 	@RequestMapping(value = "execute", method = RequestMethod.POST)
 	public IngestExec execute(@RequestParam(value = "uuid") String ingestUuid,
@@ -55,6 +60,20 @@ public class IngestController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return ingestServiceImpl.getIngestExecByRGExec(ingestGroupExecUuid, ingestGroupExecVersion);
+	}
+	
+	@RequestMapping(value = "/executeGroup", method = RequestMethod.POST)
+	public MetaIdentifier executeGroup(@RequestParam("uuid") String groupUuid,
+			@RequestParam("version") String groupVersion, 
+			@RequestBody(required=false) ExecParams execParams,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		IngestGroupExec ingestGroupExec = null;
+		ingestGroupExec = ingestGroupServiceImpl.create(groupUuid, groupVersion, execParams, null, null, null);
+		ingestGroupExec = ingestGroupServiceImpl.parse(ingestGroupExec.getUuid(), ingestGroupExec.getVersion(), null, null, null, runMode);
+		return ingestGroupServiceImpl.execute(groupUuid, groupVersion, execParams, ingestGroupExec, runMode);
 	}
 	
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
