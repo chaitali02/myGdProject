@@ -190,7 +190,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
 				status = "Thread is not running";
 				// Try to set status as killed nevertheless
+				int count=0;
 				for (Stage stage : dagExec.getStages()) {
+					
 					if (stageId.equals(stage.getStageId())) {
 						stageExec = DagExecUtil.convertToStageExec(stage);
 						synchronized (uuid) {
@@ -204,6 +206,10 @@ import com.inferyx.framework.factory.ExecutorFactory;
 								for (Task task : stage.getTasks()) {
 									killTask(uuid, version, stageId, task.getTaskId());
 								}
+								 dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+								 stage=dagExec.getStages().get(count);
+								 count++;
+								 stageExec = DagExecUtil.convertToStageExec(stage);
 								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
 							} catch (Exception e) {
 								logger.error("Exception while setting terminating/kill status");
