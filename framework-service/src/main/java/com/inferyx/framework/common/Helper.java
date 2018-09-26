@@ -328,8 +328,10 @@ public class Helper {
 		case recongroup : return "ReconGroupServiceImpl";	
 		case recongroupExec : return "ReconGroupExecServiceImpl";		
 		case load : return "LoadExecServiceImpl";	
-		default:
-			return null;
+		case ingest : return "IngestServiceImpl";
+		case ingestExec : return "IngestExecServiceImpl";
+		case ingestgroup : return "IngestGroupServiceImpl";
+		default: return null;
 		}
 	}
 	
@@ -631,6 +633,7 @@ public class Helper {
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
 				case "postgres" : return ExecContext.POSTGRES;
+				case "sqoop" : return ExecContext.SQOOP;
 				default : return null;
 			}
 		else
@@ -882,6 +885,8 @@ public class Helper {
 		case operator : return MetaType.operatorExec;
 		case report : return MetaType.reportExec;
 		case batch : return MetaType.batchExec;
+		case ingest : return MetaType.ingestExec;
+		case ingestgroup : return MetaType.ingestgroupExec;
 		default : return null;
 		}
 	}
@@ -975,8 +980,8 @@ public class Helper {
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
 		case graphExec : return new GraphExec();
-		case ingest : return new IngestExec();
-		case ingestgroup : return new IngestGroupExec();
+		case ingestExec : return new IngestExec();
+		case ingestgroupExec : return new IngestGroupExec();
 		default : return null;
 		}
 	}

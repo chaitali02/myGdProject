@@ -45,6 +45,8 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
@@ -141,6 +143,10 @@ public class DagServiceImpl {
 	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
 	private Helper helper;
+	@Autowired
+	private IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -1137,7 +1143,13 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.graphpod)) {
 							baseExec = graphServiceImpl.create(baseExec, taskExecParams, runMode);
 							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-						} 
+						} else if (ref.getType().equals(MetaType.ingest)) {
+							baseExec = ingestServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.ingest, MetaType.ingestExec, (IngestExec) baseExec, refKeyMap, datapodList, dagExec);
+							baseExec = ingestServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
+						} else if (ref.getType().equals(MetaType.ingestgroup)) {
+							baseExec = ingestGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, datapodList, (IngestGroupExec)baseExec, dagExec);
+							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, RunMode.BATCH);
+						}
 						taskExecParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, taskExecParams.getOtherParams()));
 						// If conditions with parse goes here - END	
 						logger.info(" otherParams : " + otherParams);
