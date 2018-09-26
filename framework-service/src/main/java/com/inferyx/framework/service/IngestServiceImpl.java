@@ -209,7 +209,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //					if(incrLastValue != null) {
 //						sqoopInput.setIncrementalLastValue(incrLastValue);
 //					}
-					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+					targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
 						inputParams = getRunParams(ingest.getRunParams());
@@ -260,11 +260,15 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setImportIntended(true);
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
 					String targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
+					if(sourceDir.contains(".db")) {
+						sourceDir = sourceDir.replaceAll(".db", "");
+					}
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetDir);
 					sqoopInput.setExportDir(targetDir);
 					sqoopInput.setSourceDirectory(sourceDir);
-					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setTargetDirectory(targetDir);
+					sqoopInput.setTable(targetDp.getName());
 					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -279,9 +283,9 @@ public class IngestServiceImpl extends RuleTemplate {
 				} else {
 					//this is export block Hive table to local file
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-					if(sourceDir.contains(".db")) {
-						sourceDir = sourceDir.replaceAll(".db", "");
-					}
+//					if(sourceDir.contains(".db")) {
+//						sourceDir = sourceDir.replaceAll(".db", "");
+//					}
 					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
 //					if(targetFilePathUrl.startsWith("hdfs")) {
 //						targetFilePathUrl = "file"+targetFilePathUrl.substring(4);
