@@ -1755,8 +1755,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
-		df = df.na().fill(null, df.columns());
-		
+//		df = df.na().fill(null, df.columns());	
 //		df.show(false);
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		

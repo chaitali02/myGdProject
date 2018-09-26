@@ -134,6 +134,12 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		private ProfileInfo profileInfo;
 		@Autowired
 		private ReconInfo reconInfo;
+		@Autowired
+		private IngestServiceImpl ingestServiceImpl;
+		@Autowired
+		private IngestExecServiceImpl ingestExecServiceImpl;
+		@Autowired
+		private IngestGroupServiceImpl ingestGroupServiceImpl;
 		
 		static final Logger logger = Logger.getLogger(BatchExecServiceImpl.class);
 	
@@ -641,6 +647,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setReconGroupServiceImpl(reconGroupServiceImpl);
 			indivStageExe.setProfileInfo(profileInfo);
 			indivStageExe.setReconInfo(reconInfo);
+			indivStageExe.setIngestServiceImpl(ingestServiceImpl);
+			indivStageExe.setIngestExecServiceImpl(ingestExecServiceImpl);
+			indivStageExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
 			FutureTask<String> futureTask = new FutureTask<String>(indivStageExe);
 			stageExecutor.execute(futureTask);
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + indvStg.getStageId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

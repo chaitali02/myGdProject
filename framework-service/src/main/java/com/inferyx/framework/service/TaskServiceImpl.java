@@ -35,6 +35,9 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.Ingest;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MapExec;
@@ -124,9 +127,72 @@ public class TaskServiceImpl implements Callable<String> {
 	private SessionContext sessionContext;
 	private ReconServiceImpl reconServiceImpl;
 	private ReconGroupServiceImpl reconGroupServiceImpl;
+	private IngestServiceImpl ingestServiceImpl;
+	private IngestExecServiceImpl ingestExecServiceImpl;
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(TaskServiceImpl.class);
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestServiceImpl
+	 */
+	public IngestServiceImpl getIngestServiceImpl() {
+		return ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestServiceImpl the ingestServiceImpl to set
+	 */
+	public void setIngestServiceImpl(IngestServiceImpl ingestServiceImpl) {
+		this.ingestServiceImpl = ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestExecServiceImpl
+	 */
+	public IngestExecServiceImpl getIngestExecServiceImpl() {
+		return ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestExecServiceImpl the ingestExecServiceImpl to set
+	 */
+	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
+		this.ingestExecServiceImpl = ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestGroupServiceImpl
+	 */
+	public IngestGroupServiceImpl getIngestGroupServiceImpl() {
+		return ingestGroupServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestGroupServiceImpl the ingestGroupServiceImpl to set
+	 */
+	public void setIngestGroupServiceImpl(IngestGroupServiceImpl ingestGroupServiceImpl) {
+		this.ingestGroupServiceImpl = ingestGroupServiceImpl;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -780,7 +846,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} 	 else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.operator)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.operator)) {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.operatorExec.toString());
@@ -797,7 +863,33 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  // End else
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.ingest)) {
+			logger.info("Going to reconServiceImpl.execute");
+			try {
+				IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.ingestExec.toString());
+				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ingestExec.getDependsOn().getRef().getUuid(), MetaType.ingest.toString());
+				ingestExec = ingestServiceImpl.execute(ingest.getUuid(), ingest.getVersion(), ingestExec, execParams, null, runMode);
+				
+				if (Helper.getLatestStatus(ingestExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception("Ingest rule execution failed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.ingestgroup)) {
+			try {
+				IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.ingestgroupExec.toString());
+				MetaIdentifier ingestGroupExecMI = ingestGroupExec.getDependsOn().getRef();
+				ingestGroupServiceImpl.execute(ingestGroupExecMI.getUuid(), ingestGroupExecMI.getVersion(), execParams, ingestGroupExec, runMode);
+				if (Helper.getLatestStatus(ingestGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}   // End else
 		return datapodTableName;
 	}// End executeTask
 	

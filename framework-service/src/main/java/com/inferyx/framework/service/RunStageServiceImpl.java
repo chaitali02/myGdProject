@@ -34,7 +34,6 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.common.ReconInfo;
-import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
@@ -42,6 +41,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -120,7 +120,70 @@ public class RunStageServiceImpl implements Callable<String> {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	ProfileInfo profileInfo;
 	ReconInfo reconInfo;
+	private IngestServiceImpl ingestServiceImpl;
+	private IngestExecServiceImpl ingestExecServiceImpl;
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestServiceImpl
+	 */
+	public IngestServiceImpl getIngestServiceImpl() {
+		return ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestServiceImpl the ingestServiceImpl to set
+	 */
+	public void setIngestServiceImpl(IngestServiceImpl ingestServiceImpl) {
+		this.ingestServiceImpl = ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestExecServiceImpl
+	 */
+	public IngestExecServiceImpl getIngestExecServiceImpl() {
+		return ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestExecServiceImpl the ingestExecServiceImpl to set
+	 */
+	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
+		this.ingestExecServiceImpl = ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestGroupServiceImpl
+	 */
+	public IngestGroupServiceImpl getIngestGroupServiceImpl() {
+		return ingestGroupServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestGroupServiceImpl the ingestGroupServiceImpl to set
+	 */
+	public void setIngestGroupServiceImpl(IngestGroupServiceImpl ingestGroupServiceImpl) {
+		this.ingestGroupServiceImpl = ingestGroupServiceImpl;
+	}
 
 	/**
 	 * @Ganesh
@@ -717,7 +780,9 @@ public class RunStageServiceImpl implements Callable<String> {
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
 								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
+								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
+								|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
 						continue;
 						}
 					}
@@ -880,7 +945,9 @@ public class RunStageServiceImpl implements Callable<String> {
 									|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 									|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
 									/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-									|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
+									|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
+									|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
 							continue;
 							}
 						}
@@ -1115,14 +1182,22 @@ public class RunStageServiceImpl implements Callable<String> {
 						targetDatapod.getVersion());
 			}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 					&& operationInfoHolder.getRef().getType().equals(MetaType.recon)) {
-				MetaIdentifier mapRef = operationInfoHolder.getRef();
-				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.recon.toString());
+				MetaIdentifier reconRef = operationInfoHolder.getRef();
+				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(reconRef.getUuid(), MetaType.recon.toString());
 				/*Datapod targetDatapod = (Datapod) daoRegister
 						.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002699", null));*/
 				Datapod targetDatapod = (Datapod) daoRegister
 						.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
 				return new OrderKey(targetDatapod.getUuid(),
 						targetDatapod.getVersion());
+			} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.ingest)) {
+				MetaIdentifier ingestRef = operationInfoHolder.getRef();
+				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ingestRef.getUuid(), MetaType.ingest.toString());
+				if(ingest.getTargetDetail().getRef().getUuid() != null) {
+					Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(ingest.getTargetDetail().getRef().getUuid(), MetaType.datapod.toString());
+					return new OrderKey(targetDp.getUuid(), targetDp.getVersion());
+				}
 			} 
 		}		 
 		return null;
@@ -1213,6 +1288,9 @@ public class RunStageServiceImpl implements Callable<String> {
 		FutureTask<String> futureTask = new FutureTask<String>(indivTaskExe);
 		indivTaskExe.setReconServiceImpl(reconServiceImpl);
 		indivTaskExe.setReconGroupServiceImpl(reconGroupServiceImpl);
+		indivTaskExe.setIngestServiceImpl(ingestServiceImpl);
+		indivTaskExe.setIngestExecServiceImpl(ingestExecServiceImpl);
+		indivTaskExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
 		taskExecutor.execute(futureTask);
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);

@@ -2076,13 +2076,13 @@ public class MetadataServiceImpl {
 		}
 	}
 
-	public List<BaseEntity> getDatasourceForFile() {
+	public List<Datasource> getDatasourceForFile() {
 		@SuppressWarnings("unchecked")
 		List<Datasource> datasources = commonServiceImpl.findAllLatest(MetaType.datasource);
-		List<BaseEntity> dsForFile = new ArrayList<>();
+		List<Datasource> dsForFile = new ArrayList<>();
 		for(Datasource datasource : datasources) {
 			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				BaseEntity baseEntity = new BaseEntity();
+				/*BaseEntity baseEntity = new BaseEntity();
 				baseEntity.setUuid(datasource.getUuid());
 				baseEntity.setVersion(datasource.getVersion());
 				baseEntity.setName(datasource.getName());
@@ -2092,20 +2092,20 @@ public class MetadataServiceImpl {
 				baseEntity.setTags(datasource.getTags());
 				baseEntity.setActive(datasource.getActive());
 				baseEntity.setPublished(datasource.getPublished());
-				baseEntity.setAppInfo(datasource.getAppInfo());
-				dsForFile.add(baseEntity);
+				baseEntity.setAppInfo(datasource.getAppInfo());*/
+				dsForFile.add(datasource);
 			}
 		}
 		return dsForFile;
 	}
 
-	public List<BaseEntity> getDatasourceForTable() {
+	public List<Datasource> getDatasourceForTable() {
 		@SuppressWarnings("unchecked")
 		List<Datasource> datasources = commonServiceImpl.findAllLatest(MetaType.datasource);
-		List<BaseEntity> dsForFile = new ArrayList<>();
+		List<Datasource> dsForFile = new ArrayList<>();
 		for(Datasource datasource : datasources) {
 			if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				BaseEntity baseEntity = new BaseEntity();
+				/*BaseEntity baseEntity = new BaseEntity();
 				baseEntity.setUuid(datasource.getUuid());
 				baseEntity.setVersion(datasource.getVersion());
 				baseEntity.setName(datasource.getName());
@@ -2115,8 +2115,8 @@ public class MetadataServiceImpl {
 				baseEntity.setTags(datasource.getTags());
 				baseEntity.setActive(datasource.getActive());
 				baseEntity.setPublished(datasource.getPublished());
-				baseEntity.setAppInfo(datasource.getAppInfo());
-				dsForFile.add(baseEntity);
+				baseEntity.setAppInfo(datasource.getAppInfo());*/
+				dsForFile.add(datasource);
 			}
 		}
 		return dsForFile;

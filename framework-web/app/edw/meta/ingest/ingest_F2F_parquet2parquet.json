@@ -1,0 +1,57 @@
+{
+  "uuid": "b4f2873f-3f2b-4b2f-be5a-f30e604e89df",
+  "version": "1537856528",
+  "name": "ingest_F2F_parquet2parquet",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Tue Sep 25 11:52:08 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      }
+    }
+  ],
+  "type": "FILE-FILE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+    }
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple"
+    },
+    "value": "account.parquet"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+    }
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087"
+    }
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": "PARQUET",
+  "targetFormat": "PARQUET",
+  "header": "N",
+  "incrAttr": null
+}
