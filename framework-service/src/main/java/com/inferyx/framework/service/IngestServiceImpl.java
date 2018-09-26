@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -65,8 +64,6 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private HDFSInfo hdfsInfo;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
@@ -143,9 +140,13 @@ public class IngestServiceImpl extends RuleTemplate {
 			Datapod sourceDp = null;
 			String incrLastValue = null;
 			String latestIncrLastValue = null;
+			String incrColName = null;
 			if(sourceDpMI.getUuid() != null) {
 				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
 
+				//finding incremental column name
+				incrColName = getIncrColName(sourceDp, ingest.getIncrAttr());
+				
 				//finding last incremental value
 				incrLastValue = getLastIncrValue(ingestExec.getUuid());
 				
@@ -185,65 +186,116 @@ public class IngestServiceImpl extends RuleTemplate {
 					countRows = rsHolder.getCountRows();
 				}
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
-				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
-				if(fileNameList == null || fileNameList.isEmpty()) {
-					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-				}
-				
-				for(String fileName : fileNameList) {
-					sourceFilePathUrl = sourceFilePathUrl + fileName;					
-					String header = resolveHeader(ingest.getHeader());
-					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
-					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
-					
-					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-					
-					//applying source schema to df
-					if(header.equalsIgnoreCase("false")) {
-						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
-					}
-					
-					//writing to target
-					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
-					countRows = rsHolder.getCountRows();
-				}
-			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 
-				SqoopInput sqoopInput = new SqoopInput();
-				sqoopInput.setSourceDs(sourceDS);
-				sqoopInput.setTargetDs(targetDS);
-				String targetDir = helper.getPathByDataSource(targetDS);				
-				String sourceDir = helper.getPathByDataSource(sourceDS);
-				sqoopInput.setSourceDirectory(sourceDir);
-				sqoopInput.setTargetDirectory(targetDir);
-				sqoopInput.setTable(sourceDp.getName());
-				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-				sqoopInput.setExportDir(targetDir);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					//this is export block
+					tableName = sourceDp.getName();
+					String sourceDir = String.format("%s/%s", sourceDS.getPath(), tableName);
+					
+					SqoopInput sqoopInput = new SqoopInput();
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
-					sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-					targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
+					sqoopInput.setSourceDs(sourceDS);
+					sqoopInput.setTargetDs(targetDS);
+					sqoopInput.setSourceDirectory(sourceDir);
+					sqoopInput.setTable(targetDp.getName());
+					sqoopInput.setExportDir(sourceDir);
+					tableName = targetDp.getName();					
+					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
+					if(incrLastValue != null) {
+						sqoopInput.setIncrementalLastValue(incrLastValue);
+					}
+					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+					Map<String, String> inputParams = null;
+					if(ingest.getRunParams() != null) {
+						inputParams = getRunParams(ingest.getRunParams());
+					}
+					sqoopExecutor.execute(sqoopInput, inputParams);
+				} else {
+					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+					List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
+					if(fileNameList == null || fileNameList.isEmpty()) {
+						throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+					}
+					
+					for(String fileName : fileNameList) {
+						sourceFilePathUrl = sourceFilePathUrl + fileName;					
+						String header = resolveHeader(ingest.getHeader());
+						//reading from source
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
+						
+						//adding version column data
+						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+						
+						//applying source schema to df
+						if(header.equalsIgnoreCase("false")) {
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+						}
+						
+						//writing to target
+						sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
+						countRows = rsHolder.getCountRows();
+					}
+				}
+			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 								
+				if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					//this is import block
+					SqoopInput sqoopInput = new SqoopInput();
+					sqoopInput.setSourceDs(sourceDS);
+					sqoopInput.setTargetDs(targetDS);
+//					String targetDir = helper.getPathByDataSource(targetDS);				
+//					String sourceDir = helper.getPathByDataSource(sourceDS);
+//					sqoopInput.setSourceDirectory(sourceDir);
+//					sqoopInput.setTargetDirectory(targetDir);
+//					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
+//					sqoopInput.setExportDir(targetDir);
+					sqoopInput.setHiveImport(false);
+					sqoopInput.setImportIntended(true);
+					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+					String targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
 					logger.info("sourceDir : " + sourceDir);
+					logger.info("targetDir : " + targetDir);
 					sqoopInput.setExportDir(targetDir);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
+					if(incrLastValue != null) {
+						sqoopInput.setIncrementalLastValue(incrLastValue);
+					}
+					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+					Map<String, String> inputParams = null;
+					if(ingest.getRunParams() != null) {
+						inputParams = getRunParams(ingest.getRunParams());
+					}
+					tableName = sourceDp.getName();
+					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else {
-					sqoopInput.setExportDir(null);
-					sqoopInput.setImportIntended(true);
+					//this is export block
+					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
+//					if(targetFilePathUrl.startsWith("hdfs")) {
+//						targetFilePathUrl = "file"+targetFilePathUrl.substring(4);
+//					}
+					logger.info("sourceDir : " + sourceDir);
+					logger.info("targetDir : " + targetFilePathUrl);
+					
+					String targetTableName = String.format("%s_%s_%s", targetDp.getUuid().replaceAll("-", "_"), targetDp.getVersion(), ingestExec.getVersion());
+					String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
+					tableName = targetTableName;
+					
+					String sql = generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
+					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
+					
+					//adding version column data
+					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
+					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+
+					//writing to target				
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, targetDp.getName(), targetTableName, "append", ingest.getTargetFormat());
+					countRows = rsHolder.getCountRows();
 				}
-				sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
-				if(incrLastValue != null) {
-					sqoopInput.setIncrementalLastValue(incrLastValue);
-				}
-				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-				Map<String, String> inputParams = null;
-				if(ingest.getRunParams() != null) {
-					inputParams = getRunParams(ingest.getRunParams());
-				}
-				sqoopExecutor.execute(sqoopInput, inputParams);
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
 				sqoopInput.setSourceDs(sourceDS);
@@ -254,6 +306,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					//this is export block
 					sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
 					logger.info("sourceDir : " + sourceDir);
 					sqoopInput.setExportDir(sourceDir);
@@ -261,11 +314,14 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(false);
 					sqoopInput.setTable(targetDp.getName());
+					tableName = targetDp.getName();
+					
 //					sqoopInput.setHiveTableName(sourceDp.getName());
 //					sqoopInput.setOverwriteHiveTable("Y");
 //					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					//this is import block
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
@@ -273,6 +329,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveTableName(targetDp.getName());
 					sqoopInput.setOverwriteHiveTable("Y");
 					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+					tableName = targetDp.getName();
 				}
 				if(incrLastValue != null) {
 					sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -314,6 +371,17 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 		
 		return ingestExec;
+	}
+
+	private String getIncrColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
+		String attrName = null;
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
+				attrName = attribute.getName();
+				break;
+			}
+		}
+		return attrName;
 	}
 
 	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat) throws JsonProcessingException {
@@ -373,7 +441,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				} else {
 					IExecutor exec = execFactory.getExecutor(targetDS.getType());
 					String tableName = targetDS.getDbname()+"."+targetDp.getName();
-					String sql = generateSqlByDatasource(targetDS, tableName, limit);
+					String sql = generateSqlByDatasource(targetDS, tableName, null, null, limit);
 					data = exec.executeAndFetch(sql, appUuid);
 				}
 			}
@@ -406,11 +474,15 @@ public class IngestServiceImpl extends RuleTemplate {
 		return null;
 	}
 	
-	public String generateSqlByDatasource(Datasource  datasource, String tableName, int limit) {
+	public String generateSqlByDatasource(Datasource  datasource, String tableName, String incrColName, String incrLastValue, int limit) {
 		if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {				
-				return "SELECT * FROM " + tableName + " WHERE rownum< " + limit;
+				return "SELECT * FROM " + tableName + " WHERE "
+						+ (limit == 0 ? "" : "rownum< " + limit) 
+						+ (incrLastValue == null ? "" : " AND "+incrColName+" > "+incrLastValue);
 		} else {
-			return "SELECT * FROM " + tableName + " LIMIT " + limit;
+			return "SELECT * FROM " + tableName  
+					+ (incrLastValue == null ? "" : incrColName+" > "+incrLastValue) 
+					+ (limit == 0 ? "" : " LIMIT " + limit);
 		}
 	}
 	
@@ -437,13 +509,13 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 
 	private String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
-		String attrName = null;
-		for(Attribute attribute : datapod.getAttributes()) {
-			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
-				attrName = attribute.getName();
-				break;
-			}
-		}
+		String attrName = getIncrColName(datapod, incrAttrHolder);
+//		for(Attribute attribute : datapod.getAttributes()) {
+//			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
+//				attrName = attribute.getName();
+//				break;
+//			}
+//		}
 		
 		if(attrName == null || attrName.isEmpty() || attrName.equalsIgnoreCase("null")) {
 			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
@@ -456,11 +528,14 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	public Map<String, String> getRunParams(String runParams) {
-		Map<String, String> inputParams = new HashMap<>();
-		String[] splits = runParams.split(",");
-		for(String split : splits) {
-			String[] property = split.split("=");
-			inputParams.put(property[0], property[1]);
+		Map<String, String> inputParams = null;
+		if(runParams != null && !runParams.isEmpty()) {
+			inputParams = new HashMap<>();
+			String[] splits = runParams.split(",");
+			for(String split : splits) {
+				String[] property = split.split("=");
+				inputParams.put(property[0], property[1]);
+			}
 		}
 		return inputParams;
 	}

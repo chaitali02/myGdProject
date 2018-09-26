@@ -186,11 +186,34 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			FutureTask futureTask = null;
 			String status = null;
 			StageExec stageExec = null;
+			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
 				status = "Thread is not running";
+				// Try to set status as killed nevertheless
+				for (Stage stage : dagExec.getStages()) {
+					if (stageId.equals(stage.getStageId())) {
+						stageExec = DagExecUtil.convertToStageExec(stage);
+						synchronized (uuid) {
+							try {
+								stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Terminating, stageId);
+								if (!Helper.getLatestStatus(stageExec.getStatusList()).getStage().equals(Status.Stage.Terminating)) {
+									logger.info("Stage status : " + Helper.getLatestStatus(stageExec.getStatusList()).getStage());
+									logger.info("Status is not Terminating. So cannot proceed to kill ");
+									break;
+								}
+								for (Task task : stage.getTasks()) {
+									killTask(uuid, version, stageId, task.getTaskId());
+								}
+								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
+							} catch (Exception e) {
+								logger.error("Exception while setting terminating/kill status");
+								e.printStackTrace();
+							}
+						}
+					}
+				}	// End for
 				return status;
 			}
-			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			for (Stage stage : dagExec.getStages()) {
 				if (stageId.equals(stage.getStageId())) {
 					stageExec = DagExecUtil.convertToStageExec(stage);
@@ -245,15 +268,31 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			String status = null;
 		
+			TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 			if (!taskThreadMap.containsKey("Task_" + uuid + "_" + taskId)) {
 				status = "Thread is not running";
+				// Try to set status as killed nevertheless
+				synchronized (uuid) {
+					try {
+						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Terminating, stageId, taskId);
+						for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+							commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
+						}
+						dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+						taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
+						logger.info("Going to kill task : " + taskId + " : after getting taskExec");
+						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Killed, stageId, taskId);
+					} catch (Exception e) {
+						logger.error("Exception while setting terminating/kill status");
+						e.printStackTrace();
+					}
+				}
 				return status;
 			}
 			logger.info("Before kill Task");
 			try {
 				futureTask = (FutureTask<String>) taskThreadMap.get("Task_" + uuid + "_" + taskId);
 					logger.info("Going to kill task ###################### " + "Task_" + uuid + "_" + taskId);
-					TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 					synchronized (uuid) {
 						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Terminating, stageId, taskId);
 					}

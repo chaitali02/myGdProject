@@ -1755,32 +1755,21 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
+		df = df.na().fill(null, df.columns());
+		
 //		df.show(false);
-//		List<String> partitionColList = new ArrayList<>();
-//		if(targetDatapod != null) {
-//			for(Attribute attribute : targetDatapod.getAttributes()) {
-//				if (attribute.getPartition().equalsIgnoreCase("y"))
-//					partitionColList.add(attribute.getName());
-//			}
-//		}
 		
-		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
-		
+		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-//			if(partitionColList.size() > 0) {
 				String sessionParameters = datasource.getSessionParameters();
 				if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 					for(String sessionParam :sessionParameters.split(",")) {
 						df.sparkSession().sql("SET "+sessionParam);
 					}
 				}
-//
-//				//df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).insertInto(rsHolder.getTableName());
-//				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
-//			} else {
-				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
-//			}
+
+			df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();
