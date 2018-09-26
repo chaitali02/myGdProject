@@ -61,7 +61,8 @@ CREATE TABLE dim_date
   yyyy_mm_dd text,
   dd_mon_yyyy text,
   load_date text NOT NULL,
-  CONSTRAINT dim_date_pkey PRIMARY KEY (date_id, load_date),
+  load_id integer,
+  CONSTRAINT dim_date_pkey PRIMARY KEY (date_id),
   CONSTRAINT date_val UNIQUE (date_val, load_date)
 );
 

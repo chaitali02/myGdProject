@@ -34,7 +34,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		$scope.isAdd = true;
 	}
 
-	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" }];
+	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" },{ "text": "STREAM-FILE", "caption": "Stream - File" },{ "text": "STREAM-TABLE", "caption": "Stream - Table" }];
 	$scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.userDetail = {}
@@ -224,32 +224,32 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	
 	}
 
-	$scope.getLatestByUuid=function(uuid,type,propertyType){
-		IngestRuleService.getLatestByUuid(uuid,type).then(function (response) { onSuccessGetLatestByUuid(response.data) })
-		var onSuccessGetLatestByUuid= function (response) {
-			if(propertyType =='source'){
-				$scope.selectedSourceDatasource.type=response.type;
-				if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type == 'HIVE'){
-					$scope.isSourceFormateDisable=true;
-					$scope.selectedSourceFormate = null;
-				}else{
-					$scope.isSourceFormateDisable=false;
-					$scope.selectedSourceFormate = null;
-				}
+	// $scope.getLatestByUuid=function(uuid,type,propertyType){
+	// 	IngestRuleService.getLatestByUuid(uuid,type).then(function (response) { onSuccessGetLatestByUuid(response.data) })
+	// 	var onSuccessGetLatestByUuid= function (response) {
+	// 		if(propertyType =='source'){
+	// 			$scope.selectedSourceDatasource.type=response.type;
+	// 			if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type == 'HIVE'){
+	// 				$scope.isSourceFormateDisable=true;
+	// 				$scope.selectedSourceFormate = null;
+	// 			}else{
+	// 				$scope.isSourceFormateDisable=false;
+	// 				$scope.selectedSourceFormate = null;
+	// 			}
 				
-			}
-			if(propertyType =='target'){
-				$scope.selectedTargetDatasource.type=response.type;
-				if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type == 'HIVE'){
-					$scope.isTargetFormateDisable=true;
-					$scope.selectedTargetFormate = null;
-				}else{
-					$scope.isTargetFormateDisable=false;
-					$scope.selectedTargetFormate = null;
-				}
-			}
-		}
-	}
+	// 		}
+	// 		if(propertyType =='target'){
+	// 			$scope.selectedTargetDatasource.type=response.type;
+	// 			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type == 'HIVE'){
+	// 				$scope.isTargetFormateDisable=true;
+	// 				$scope.selectedTargetFormate = null;
+	// 			}else{
+	// 				$scope.isTargetFormateDisable=false;
+	// 				$scope.selectedTargetFormate = null;
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	$scope.onChangeSourceDataSource = function () {
 		
@@ -259,7 +259,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			$scope.getDatapodByDatasource($scope.selectedSourceDatasource.uuid, "source");
             
 		}else{
-			if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type == 'HIVE'){
+			if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type != 'FILE'){
 				$scope.isSourceFormateDisable=true;
 				$scope.selectedSourceFormate = null;
 			}else{
@@ -273,7 +273,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		$scope.ingestData.ingestChg = "Y";
 		if ($scope.selectedTargetDatasource) {
 			$scope.getDatapodByDatasource($scope.selectedTargetDatasource.uuid, "target");
-			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type == 'HIVE'){
+			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type != 'FILE'){
 				$scope.isTargetFormateDisable=true;
 				$scope.selectedTargetFormate = null;
 			}else{

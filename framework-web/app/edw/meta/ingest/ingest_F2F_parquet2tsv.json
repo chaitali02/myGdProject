@@ -10,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account_tsv.csv"
+        "value" : "account.parquet"
     },
     "targetDatasource" : {
         "ref" : {
@@ -21,15 +21,15 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "f1a20571-7190-43d9-ac37-436463ddbc75"
+            "uuid" : "f1a20571-7190-53e9-ac37-436463ddbc75"
         }
     },
-    "sourceFormat" : "TSV",
+    "sourceFormat" : "parquet",
     "targetFormat" : "TSV",
     "header" : "N",
-    "uuid" : "a7b5df81-5d37-4fa1-bc2d-7fc89e89f962",
+    "uuid" : "47b5df81-5d37-4fa1-bc2d-7fc89ed9f962",
     "version" : "1537863016",
-    "name" : "ingest_F2F_tsv2tsv",
+    "name" : "ingest_F2F_parquet2tsv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
