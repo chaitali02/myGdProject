@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS dq_rule_results;
-CREATE  TABLE IF NOT EXISTS `dq_rule_results`(
+CREATE TABLE IF NOT EXISTS `dq_rule_results`(
   `rowkey` string,
   `datapoduuid` string,
   `datapodversion` string,
