@@ -137,10 +137,43 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		var onSuccessGetDatasourceForTable = function (response) {
 			if (sourceType == "TABLE") {
 				$scope.allSourceDatasource = response;
+				if($scope.selectedSourceType == 'TABLE' && $scope.selectedTargetType == 'FILE'){
+					if($scope.allSourceDatasource && $scope.allSourceDatasource.length >0){
+						for(var i=0;i<$scope.allSourceDatasource.length;i++){
+							if($scope.allSourceDatasource[i].type == 'HIVE'){
+								if($scope.allTargetDatasource)
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i])
+								else{
+									$scope.allTargetDatasource=[];
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i])
+
+								}
+							}
+						}
+					}
+					
+				}
 			}
 			if (TargetType == "TABLE") {
 				$scope.allTargetDatasource = response;
+				if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
+					if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
+						for(var i=0;i<$scope.allTargetDatasource.length;i++){
+							if($scope.allTargetDatasource[i].type == 'HIVE'){
+								if($scope.allSourceDatasource)
+									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+								else{
+									$scope.allSourceDatasource=[];
+									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+
+								}
+							}
+						}
+					}
+					
+				}
 			}
+			
 
 		}
 	}
@@ -173,6 +206,8 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		$scope.sourceDetails = null;
 		$scope.tagetDetail = null;
 		$scope.selectedSourceFormate = null;
+		$scope.selectedTargetFormate = null;
+		$scope.selectedSourceAttrDetail=null;
 		$scope.ingestData.ingestChg = "Y";
 		$scope.selectedSourceType = $scope.selectedRuleType.split("-")[0];
 		$scope.selectedTargetType = $scope.selectedRuleType.split("-")[1];
@@ -183,22 +218,71 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 		if ($scope.selectedSourceType == 'TABLE' || $scope.selectedTargetType == 'TABLE') {
 			$scope.getDatasourceForTable($scope.selectedSourceType, $scope.selectedTargetType);
+			
+			
+		}
+	
+	}
+
+	$scope.getLatestByUuid=function(uuid,type,propertyType){
+		IngestRuleService.getLatestByUuid(uuid,type).then(function (response) { onSuccessGetLatestByUuid(response.data) })
+		var onSuccessGetLatestByUuid= function (response) {
+			if(propertyType =='source'){
+				$scope.selectedSourceDatasource.type=response.type;
+				if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type == 'HIVE'){
+					$scope.isSourceFormateDisable=true;
+					$scope.selectedSourceFormate = null;
+				}else{
+					$scope.isSourceFormateDisable=false;
+					$scope.selectedSourceFormate = null;
+				}
+				
+			}
+			if(propertyType =='target'){
+				$scope.selectedTargetDatasource.type=response.type;
+				if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type == 'HIVE'){
+					$scope.isTargetFormateDisable=true;
+					$scope.selectedTargetFormate = null;
+				}else{
+					$scope.isTargetFormateDisable=false;
+					$scope.selectedTargetFormate = null;
+				}
+			}
 		}
 	}
 
 	$scope.onChangeSourceDataSource = function () {
+		
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
 		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceDatasource) {
 			$scope.getDatapodByDatasource($scope.selectedSourceDatasource.uuid, "source");
-
+            
+		}else{
+			if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type == 'HIVE'){
+				$scope.isSourceFormateDisable=true;
+				$scope.selectedSourceFormate = null;
+			}else{
+				$scope.isSourceFormateDisable=false;
+				$scope.selectedSourceFormate = null;
+			}
 		}
+	
 	}
 	$scope.onChangeTargetDataSource = function () {
 		$scope.ingestData.ingestChg = "Y";
 		if ($scope.selectedTargetDatasource) {
 			$scope.getDatapodByDatasource($scope.selectedTargetDatasource.uuid, "target");
+			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type == 'HIVE'){
+				$scope.isTargetFormateDisable=true;
+				$scope.selectedTargetFormate = null;
+			}else{
+				$scope.isTargetFormateDisable=false;
+			    $scope.selectedTargetFormate = null;
+			}
 		}
+	
+	
 	}
 
 	$scope.onChangeSourceDetail = function () {
@@ -265,17 +349,29 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			selectedSourceDatasource.type = $scope.ingestData.sourceDatasource.ref.type;
 			selectedSourceDatasource.uuid = $scope.ingestData.sourceDatasource.ref.uuid;
 			$scope.selectedSourceDatasource = selectedSourceDatasource;
+
 			var selectedTargetDatasource = {};
 			selectedTargetDatasource.type = $scope.ingestData.targetDatasource.ref.type;
 			selectedTargetDatasource.uuid = $scope.ingestData.targetDatasource.ref.uuid;
-			$scope.selectedTargetDatasource = selectedTargetDatasource;
+			$scope.selectedTargetDatasource = selectedTargetDatasource;			
 			$scope.selectedSourceFormate = $scope.ingestData.sourceFormat;
+				if($scope.selectedSourceFormate !=null){
+					$scope.isSourceFormateDisable=false;
+				}else{
+					$scope.isSourceFormateDisable=true;				
+				}
 			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
 			if ($scope.selectedSourceType == "FILE") {
 				$scope.selectedSourceDetail = $scope.ingestData.sourceDetail.value;
 			}
 			else {
 				$scope.onChangeSourceDataSource();
+				$scope.selectedSourceFormate = $scope.ingestData.sourceFormat;
+				if($scope.selectedSourceFormate !=null){
+					$scope.isSourceFormateDisable=false;
+				}else{
+					$scope.isSourceFormateDisable=true;				
+				}
 				var selectedSourceDetail = {};
 				selectedSourceDetail.type = $scope.ingestData.sourceDetail.ref.type;
 				selectedSourceDetail.uuid = $scope.ingestData.sourceDetail.ref.uuid;
@@ -289,6 +385,12 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 
 			}
 			$scope.onChangeTargetDataSource();
+			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
+			if($scope.selectedTargetFormate !=null){
+				$scope.isTargetFormateDisable=false;
+		    }else{
+				$scope.isTargetFormateDisable=true;				
+			}
 			$scope.filterTableArray = response.filterInfo;
 			var selectedTargetDetail = {};
 			selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
