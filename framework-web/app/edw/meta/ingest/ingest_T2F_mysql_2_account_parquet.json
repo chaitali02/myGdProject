@@ -1,8 +1,8 @@
 {
 
-  "uuid": "bc30332d-a71a-4238-b2c4-ae01cb660848",
-  "version": "1537869566",
-  "name": "F2T_account_MYSQL",
+  "uuid": "919d133e-6a68-492e-a0df-efd8d62f1f42",
+  "version": "1537893843",
+  "name": "ingest_T2F_mysql_2_account_parquet",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,10 +13,8 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 05:59:26 EDT 2018",
-  "tags": [
-    "DEV"
-  ],
+  "createdOn": "Tue Sep 25 12:44:03 EDT 2018",
+  "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -30,26 +28,8 @@
       "value": null
     }
   ],
-  "type": "FILE-TABLE",
+  "type": "TABLE-FILE",
   "sourceDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
-      "version": null,
-      "name": "File_Upload"
-    },
-    "value": null
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "account.csv"
-  },
-  "targetDatasource": {
     "ref": {
       "type": "datasource",
       "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
@@ -58,7 +38,7 @@
     },
     "value": null
   },
-  "targetDetail": {
+  "sourceDetail": {
     "ref": {
       "type": "datapod",
       "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
@@ -67,10 +47,39 @@
     },
     "value": null
   },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File_Data"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
+      "version": null,
+      "name": "account_parquet"
+    },
+    "value": null
+  },
   "filterInfo": null,
   "runParams": null,
-  "sourceFormat": "CSV",
-  "targetFormat": null,
+  "sourceFormat": null,
+  "targetFormat": "PARQUET",
   "header": "N",
-  "incrAttr": null
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  }
 }

@@ -148,7 +148,7 @@
                                     </label>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <select class="form-control" select2 name="sourceds" data-ng-change="onChangeSourceDataSource()" data-ng-model="selectedSourceDatasource"
-                                            ng-options="r as r.name for r in allSourceDatasource track by r.uuid" ng-disabled="{{mode}}">
+                                            ng-options="r as r.name for r in allSourceDatasource | orderBy: 'name' track by r.uuid" ng-disabled="{{mode}}" >
                                         </select>
                                         <input type="hidden" name="sourceds" ng-model="selectedSourceDatasource.uuid" required>
                                     </div>
@@ -209,13 +209,14 @@
                                     </label>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <select class="form-control" select2 name="targetds" data-ng-change="onChangeTargetDataSource()" data-ng-model="selectedTargetDatasource"
-                                            ng-options="r as r.name for r in allTargetDatasource track by r.uuid" ng-disabled="{{mode}}">
+                                            ng-options="r as r.name for r in allTargetDatasource | orderBy: 'name'  track by r.uuid" ng-disabled="{{mode}}">
                                         </select>
                                         <input type="hidden" name="targetds" ng-model="selectedTargetDatasource.uuid" required>
                                     </div>
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
 
                                     </label>
+                                    
                                     <div class="col-md-2 col-sm-2 col-xs-12">
                                         <select title="Type" class="form-control" data-ng-disabled="isTargetFormateDisable || {{mode}}" data-ng-model="selectedTargetFormate"
                                             data-ng-options="r for r in targetFormate" ng-change="onChangeFormate()">

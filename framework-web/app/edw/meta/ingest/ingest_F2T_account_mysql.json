@@ -1,8 +1,8 @@
 {
 
-  "uuid": "7ec70868-586f-482e-b65b-8c380f31d966",
-  "version": "1537869362",
-  "name": "F2T_account_HIVE",
+  "uuid": "bc30332d-a71a-4238-b2c4-ae01cb660848",
+  "version": "1537869566",
+  "name": "ingest_F2T_account_mysql",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,8 +13,10 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 05:56:02 EDT 2018",
-  "tags": [],
+  "createdOn": "Tue Sep 25 05:59:26 EDT 2018",
+  "tags": [
+    "DEV"
+  ],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -50,18 +52,18 @@
   "targetDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
       "version": null,
-      "name": "Hive"
+      "name": "MySql"
     },
     "value": null
   },
   "targetDetail": {
     "ref": {
       "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
-      "name": "account_hive"
+      "name": "account_mysql"
     },
     "value": null
   },

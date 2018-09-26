@@ -21,15 +21,15 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "ca5908cb-10f0-4b7b-9588-44ef7011cagb"
+            "uuid" : "f1a20571-7190-53e9-ac37-436463ddbc75"
         }
     },
-    "sourceFormat" : "PARQUET",
-    "targetFormat" : "PSV",
+    "sourceFormat" : "parquet",
+    "targetFormat" : "TSV",
     "header" : "N",
-    "uuid" : "25775bbe-p12a-4ca6-93aa-935840ff3d2a",
-    "version" : "1537862857",
-    "name" : "ingest_f2f_parquet2psv",
+    "uuid" : "47b5df81-5d37-4fa1-bc2d-7fc89ed9f962",
+    "version" : "1537863016",
+    "name" : "ingest_F2F_parquet2tsv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -38,7 +38,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-25T08:07:37.000Z"),
+    "createdOn" : ISODate("2018-09-25T08:10:16.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

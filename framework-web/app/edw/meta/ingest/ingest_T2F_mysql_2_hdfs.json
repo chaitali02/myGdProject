@@ -1,8 +1,8 @@
 {
 
-  "uuid": "418e85c6-92a5-49ad-8da5-542db1120b10",
-  "version": "1537860873",
-  "name": "T2T_account_MSQL_2_HIVE",
+  "uuid": "3ca24dd8-22d5-404d-a73b-33e36c348233",
+  "version": "1537956638",
+  "name": "ingest_T2F_mysql_2_hdfs",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,10 +13,8 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 03:34:33 EDT 2018",
-  "tags": [
-    "DEMO"
-  ],
+  "createdOn": "Wed Sep 26 06:10:38 EDT 2018",
+  "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -30,7 +28,7 @@
       "value": null
     }
   ],
-  "type": "TABLE-TABLE",
+  "type": "TABLE-FILE",
   "sourceDatasource": {
     "ref": {
       "type": "datasource",

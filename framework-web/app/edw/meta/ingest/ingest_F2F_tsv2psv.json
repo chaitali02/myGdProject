@@ -10,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account.parquet"
+        "value" : "account_tsv.csv"
     },
     "targetDatasource" : {
         "ref" : {
@@ -21,15 +21,15 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "b23b11f9-74cc-4339-95eb-f28092e13451"
+            "uuid" : "b23b11f9-74cc-4339-95eb-f18091e13451"
         }
     },
-    "sourceFormat" : "PARQUET",
-    "targetFormat" : "CSV",
+    "sourceFormat" : "TSV",
+    "targetFormat" : "PSV",
     "header" : "N",
-    "uuid" : "78a5ca67-2b09-4768-a575-ed9a08c8501e",
-    "version" : "1537863154",
-    "name" : "ingest_f2f_parquet2csv",
+    "uuid" : "55785bbe-d12a-4ca6-93aa-935840ff3d2a",
+    "version" : "1537862857",
+    "name" : "ingest_F2F_tsv2psv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -38,7 +38,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-25T08:12:34.000Z"),
+    "createdOn" : ISODate("2018-09-25T08:07:37.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

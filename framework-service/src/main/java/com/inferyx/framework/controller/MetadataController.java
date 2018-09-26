@@ -1022,14 +1022,14 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getDatasourceForFile", method = RequestMethod.GET)
-	public @ResponseBody List<BaseEntity> getDatasourceForFile(
+	public @ResponseBody List<Datasource> getDatasourceForFile(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getDatasourceForFile();
 	}
 	
 	@RequestMapping(value = "/getDatasourceForTable", method = RequestMethod.GET)
-	public @ResponseBody List<BaseEntity> getDatasourceForTable( 
+	public @ResponseBody List<Datasource> getDatasourceForTable( 
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getDatasourceForTable();
