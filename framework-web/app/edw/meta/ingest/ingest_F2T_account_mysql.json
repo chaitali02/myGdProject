@@ -1,8 +1,8 @@
 {
 
-  "uuid": "418e85c6-92a5-49ad-8da5-542db1120b10",
-  "version": "1537860873",
-  "name": "ingest_T2T_account_MSQL_2_HIVE",
+  "uuid": "bc30332d-a71a-4238-b2c4-ae01cb660848",
+  "version": "1537869566",
+  "name": "ingest_F2T_account_mysql",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,9 +13,9 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 03:34:33 EDT 2018",
+  "createdOn": "Tue Sep 25 05:59:26 EDT 2018",
   "tags": [
-    "DEMO"
+    "DEV"
   ],
   "active": "Y",
   "published": "N",
@@ -30,8 +30,26 @@
       "value": null
     }
   ],
-  "type": "TABLE-TABLE",
+  "type": "FILE-TABLE",
   "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+      "version": null,
+      "name": "File_Upload"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "account.csv"
+  },
+  "targetDatasource": {
     "ref": {
       "type": "datasource",
       "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
@@ -40,48 +58,19 @@
     },
     "value": null
   },
-  "sourceDetail": {
+  "targetDetail": {
     "ref": {
       "type": "datapod",
       "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
       "name": "account_mysql"
-    },
-    "value": null
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
-      "version": null,
-      "name": "Hive"
-    },
-    "value": null
-  },
-  "targetDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
-      "version": null,
-      "name": "account_hive"
     },
     "value": null
   },
   "filterInfo": null,
   "runParams": null,
-  "sourceFormat": null,
+  "sourceFormat": "CSV",
   "targetFormat": null,
   "header": "N",
-  "incrAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
-      "version": null,
-      "name": "account_mysql"
-    },
-    "value": null,
-    "attrId": "20",
-    "attrName": "load_date",
-    "attrType": null
-  }
+  "incrAttr": null
 }

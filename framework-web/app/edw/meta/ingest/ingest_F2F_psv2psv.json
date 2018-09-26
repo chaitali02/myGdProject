@@ -29,7 +29,7 @@
     "header" : "N",
     "uuid" : "34775bbe-p12a-4ca6-93aa-935840ff3d2a",
     "version" : "1537862857",
-    "name" : "ingest_f2f_psv2psv",
+    "name" : "ingest_F2F_psv2psv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
