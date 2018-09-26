@@ -187,9 +187,14 @@ public class IngestServiceImpl extends RuleTemplate {
 				}
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					//this is export block
-					tableName = sourceDp.getName();
-					String sourceDir = String.format("%s/%s", sourceDS.getPath(), tableName);
+					//this is export block from HDFS to Table
+//					tableName = sourceDp.getName();
+					
+					tableName = ingest.getSourceDetail().getValue();
+					String sourceDir = String.format("%s/%s", sourceDS.getPath(), tableName);					
+					if(sourceDir.contains(".db")) {
+						sourceDir = sourceDir.replaceAll(".db", "");
+					}
 					
 					SqoopInput sqoopInput = new SqoopInput();
 					sqoopInput.setHiveImport(false);
@@ -201,9 +206,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setExportDir(sourceDir);
 					tableName = targetDp.getName();					
 					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-					if(incrLastValue != null) {
-						sqoopInput.setIncrementalLastValue(incrLastValue);
-					}
+//					if(incrLastValue != null) {
+//						sqoopInput.setIncrementalLastValue(incrLastValue);
+//					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
@@ -211,6 +216,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					}
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else {
+					//this is export block local file to Table
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 					List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
 					if(fileNameList == null || fileNameList.isEmpty()) {
@@ -239,7 +245,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				}
 			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 								
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					//this is import block
+					//this is import block Table to HDFS
 					SqoopInput sqoopInput = new SqoopInput();
 					sqoopInput.setSourceDs(sourceDS);
 					sqoopInput.setTargetDs(targetDS);
@@ -271,8 +277,11 @@ public class IngestServiceImpl extends RuleTemplate {
 					tableName = sourceDp.getName();
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else {
-					//this is export block
+					//this is export block Hive table to local file
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+					if(sourceDir.contains(".db")) {
+						sourceDir = sourceDir.replaceAll(".db", "");
+					}
 					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion()));
 //					if(targetFilePathUrl.startsWith("hdfs")) {
 //						targetFilePathUrl = "file"+targetFilePathUrl.substring(4);
@@ -306,7 +315,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				logger.info("sourceDir : " + sourceDir);
 				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					//this is export block
+					//this is export block Hive to other table
 					sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
 					logger.info("sourceDir : " + sourceDir);
 					sqoopInput.setExportDir(sourceDir);
@@ -321,7 +330,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //					sqoopInput.sethCatTableName(sourceDp.getName());
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-					//this is import block
+					//this is import block other table to Hive
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
