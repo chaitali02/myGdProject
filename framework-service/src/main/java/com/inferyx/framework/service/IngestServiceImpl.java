@@ -260,8 +260,8 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setImportIntended(true);
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
 					String targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
-					if(sourceDir.contains(".db")) {
-						sourceDir = sourceDir.replaceAll(".db", "");
+					if(targetDir.contains(".db")) {
+						targetDir = targetDir.replaceAll(".db", "");
 					}
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetDir);
