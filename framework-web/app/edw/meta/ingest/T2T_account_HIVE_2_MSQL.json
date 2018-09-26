@@ -1,0 +1,87 @@
+{
+
+  "uuid": "e06c3517-ad14-431b-a431-cba634ee9e20",
+  "version": "1537868034",
+  "name": "T2T_account_HIVE_2_MSQL",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Sep 25 05:33:54 EDT 2018",
+  "tags": [
+    "DEMO"
+  ],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "TABLE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "version": null,
+      "name": "Hive"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "version": null,
+      "name": "account_hive"
+    },
+    "value": null
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "MySql"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "runParams": "NUMMAPPER=6",
+  "sourceFormat": null,
+  "targetFormat": null,
+  "header": "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "version": null,
+      "name": "account_hive"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  }
+}

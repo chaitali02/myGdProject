@@ -39,5 +39,6 @@
 	"port": "3306",
 	"username": "inferyx",
 	"password": "inferyx",
+        "path": "/user/hive/warehouse/framework",
 	"sessionParameters": ""
 }
