@@ -1,19 +1,16 @@
 {
-
-  "uuid": "919d133e-6a68-492e-a0df-efd8d62f1f42",
-  "version": "1537893843",
-  "name": "ingest_T2F_mysql_2_account_parquet",
+  "uuid": "235a13bb-590c-4515-b9f7-1274985a0033",
+  "version": "1537951744",
+  "name": "account_f2t_hdfs_mysql",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
+      "version": "1464977196"
+    }
   },
-  "createdOn": "Tue Sep 25 12:44:03 EDT 2018",
+  "createdOn": "Wed Sep 26 04:49:04 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -28,8 +25,26 @@
       "value": null
     }
   ],
-  "type": "TABLE-FILE",
+  "type": "FILE-TABLE",
   "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "version": null,
+      "name": "Hive"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "account"
+  },
+  "targetDatasource": {
     "ref": {
       "type": "datasource",
       "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
@@ -38,44 +53,26 @@
     },
     "value": null
   },
-  "sourceDetail": {
+  "targetDetail": {
     "ref": {
       "type": "datapod",
       "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
       "name": "account_mysql"
-    },
-    "value": null
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File_Data"
-    },
-    "value": null
-  },
-  "targetDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
-      "version": null,
-      "name": "account_parquet"
     },
     "value": null
   },
   "filterInfo": null,
-  "runParams": null,
+  "runParams": "NUMMAPPER=6",
   "sourceFormat": null,
-  "targetFormat": "PARQUET",
+  "targetFormat": "CSV",
   "header": "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
       "version": null,
-      "name": "account_mysql"
+      "name": "account"
     },
     "value": null,
     "attrId": "20",

@@ -1,5 +1,4 @@
 {
-
     "type" : "FILE-FILE",
     "sourceDatasource" : {
         "ref" : {
@@ -11,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account.csv"
+        "value" : "account.parquet"
     },
     "targetDatasource" : {
         "ref" : {
@@ -22,15 +21,15 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+            "uuid" : "f1a20571-7190-53e9-ac37-436463ddbc75"
         }
     },
-    "sourceFormat" : "CSV",
-    "targetFormat" : "PARQUET",
-    "uuid" : "8c60df28-eb0d-4c27-8d3b-0e214aee9c4f",
-    "version" : "1536837201",
-    "name" : "ingest_File-File",
+    "sourceFormat" : "parquet",
+    "targetFormat" : "TSV",
     "header" : "N",
+    "uuid" : "47b5df81-5d37-4fa1-bc2d-7fc89ed9f962",
+    "version" : "1537863016",
+    "name" : "account_f2f_parquet_tsv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -39,7 +38,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-13T11:13:21.000Z"),
+    "createdOn" : ISODate("2018-09-25T08:10:16.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
@@ -48,7 +47,8 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
             }
         }
     ]

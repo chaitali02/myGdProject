@@ -1,8 +1,8 @@
 {
 
-  "uuid": "aa54bee5-3068-4d82-8fd6-0c88e8f82410",
-  "version": "1537960689",
-  "name": "ingest_T2F_hive_2_account_parquet",
+  "uuid": "3ca24dd8-22d5-404d-a73b-33e36c348233",
+  "version": "1537956638",
+  "name": "account_t2f_mysql_hdfs",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Sep 26 07:18:09 EDT 2018",
+  "createdOn": "Wed Sep 26 06:10:38 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,50 +32,50 @@
   "sourceDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
       "version": null,
-      "name": "Hive"
+      "name": "MySql"
     },
     "value": null
   },
   "sourceDetail": {
     "ref": {
       "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
-      "name": "account_hive"
+      "name": "account_mysql"
     },
     "value": null
   },
   "targetDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
       "version": null,
-      "name": "File_Data"
+      "name": "Hive"
     },
     "value": null
   },
   "targetDetail": {
     "ref": {
       "type": "datapod",
-      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
       "version": null,
-      "name": "account_parquet"
+      "name": "account_hive"
     },
     "value": null
   },
   "filterInfo": null,
   "runParams": null,
   "sourceFormat": null,
-  "targetFormat": "PARQUET",
+  "targetFormat": null,
   "header": "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
-      "name": "account_hive"
+      "name": "account_mysql"
     },
     "value": null,
     "attrId": "20",

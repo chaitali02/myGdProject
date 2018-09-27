@@ -1,4 +1,4 @@
-ssh -i /data/aws/Ubuntu-VDI.pem ubuntu@34.229.185.111
+ssh -i /data/aws/Ubuntu-VDI.pem ubuntu@52.200.177.119
 python3 -c "import sysconfig"
 sudo apt install python3-distutils
 curl -O https://bootstrap.pypa.io/get-pip.py

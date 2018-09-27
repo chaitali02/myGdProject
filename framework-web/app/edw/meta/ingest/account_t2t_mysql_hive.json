@@ -1,8 +1,8 @@
 {
 
-  "uuid": "7ec70868-586f-482e-b65b-8c380f31d966",
-  "version": "1537869362",
-  "name": "ingest_F2T_account_HIVE",
+  "uuid": "418e85c6-92a5-49ad-8da5-542db1120b10",
+  "version": "1537860873",
+  "name": "account_t2t_mysql_hive",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,8 +13,10 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 05:56:02 EDT 2018",
-  "tags": [],
+  "createdOn": "Tue Sep 25 03:34:33 EDT 2018",
+  "tags": [
+    "DEMO"
+  ],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -28,24 +30,24 @@
       "value": null
     }
   ],
-  "type": "FILE-TABLE",
+  "type": "TABLE-TABLE",
   "sourceDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
       "version": null,
-      "name": "File_Upload"
+      "name": "MySql"
     },
     "value": null
   },
   "sourceDetail": {
     "ref": {
-      "type": "simple",
-      "uuid": null,
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
       "version": null,
-      "name": null
+      "name": "account_mysql"
     },
-    "value": "account.csv"
+    "value": null
   },
   "targetDatasource": {
     "ref": {
@@ -67,8 +69,19 @@
   },
   "filterInfo": null,
   "runParams": null,
-  "sourceFormat": "CSV",
+  "sourceFormat": null,
   "targetFormat": null,
   "header": "N",
-  "incrAttr": null
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  }
 }

@@ -21,15 +21,15 @@
     "targetDetail" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "f1a20571-7190-41d9-ac37-436463ddbc74"
+            "uuid" : "b23b11f9-74cc-4e39-95eb-f18091e13450"
         }
     },
     "sourceFormat" : "CSV",
-    "targetFormat" : "TSV",
+    "targetFormat" : "CSV",
     "header" : "N",
-    "uuid" : "a7b5df81-5d37-4fa1-bc2d-7fc89e89f861",
-    "version" : "1537857225",
-    "name" : "ingest_F2F_csv2tsv",
+    "uuid" : "84a4ca67-1b09-4768-a575-ed9a58c8501e",
+    "version" : "1537856469",
+    "name" : "account_f2f_csv_csv",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -38,7 +38,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-25T06:33:45.000Z"),
+    "createdOn" : ISODate("2018-09-25T06:21:09.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
