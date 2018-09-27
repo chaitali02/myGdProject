@@ -1,5 +1,4 @@
 {
-
   "uuid": "3ca24dd8-22d5-404d-a73b-33e36c348233",
   "version": "1537956638",
   "name": "account_t2f_mysql_hdfs",
@@ -58,12 +57,9 @@
   },
   "targetDetail": {
     "ref": {
-      "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
-      "version": null,
-      "name": "account_hive"
+      "type": "simple"
     },
-    "value": null
+    "value": "account_hive"
   },
   "filterInfo": null,
   "runParams": null,

@@ -467,6 +467,11 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IIngestGroupExecDao iIngestGroupExecDao;
 	
+	@Autowired
+	IngestExecServiceImpl ingestExecServiceImpl;
+	
+	@Autowired
+	IngestGroupServiceImpl ingestGroupServiceImpl;
 	
 	public IIngestGroupDao getiIngestGroupDao() {
 		return iIngestGroupDao;
@@ -1406,6 +1411,16 @@ public class CommonServiceImpl <T> {
 	public void setProfileGroupExecServiceImpl(ProfileGroupExecServiceImpl profileGroupExecServiceImpl) {
 		this.profileGroupExecServiceImpl = profileGroupExecServiceImpl;
 	}
+	
+	public IngestExecServiceImpl getIngestExecServiceImpl() {
+		return ingestExecServiceImpl;
+	}
+
+	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
+		this.ingestExecServiceImpl = ingestExecServiceImpl;
+	}
+
+	
 
 	static final Logger logger = Logger.getLogger(CommonServiceImpl.class);
 	private static final String GET = "get";

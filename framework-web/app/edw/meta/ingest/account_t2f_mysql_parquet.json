@@ -39,6 +39,7 @@
     "value": null
   },
   "sourceDetail": {
+   
     "ref": {
       "type": "datapod",
       "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
@@ -57,13 +58,10 @@
     "value": null
   },
   "targetDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
-      "version": null,
-      "name": "account_parquet"
-    },
-    "value": null
+      "ref" : {
+            "type" : "simple"
+        },
+    "value": "account_parquet"
   },
   "filterInfo": null,
   "runParams": null,
