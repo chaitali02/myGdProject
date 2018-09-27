@@ -26,8 +26,10 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.IngestGroupServiceImpl;
 import com.inferyx.framework.service.IngestServiceImpl;
 
@@ -42,6 +44,8 @@ public class IngestController {
 	private IngestServiceImpl ingestServiceImpl;
 	@Autowired
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	@RequestMapping(value = "execute", method = RequestMethod.POST)
 	public IngestExec execute(@RequestParam(value = "uuid") String ingestUuid,
@@ -89,5 +93,40 @@ public class IngestController {
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return ingestServiceImpl.getResults(execUuid, execVersion, offset, limit, sortBy, order, requestId, runMode);
+	}
+	
+	@RequestMapping(value = "/restart", method = RequestMethod.POST)
+	public boolean restart(@RequestParam("uuid") String uuid,
+			@RequestParam("version") String version,
+			@RequestParam("type") String type, 
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+		try {
+			RunMode runMode = Helper.getExecutionMode(mode);
+			if (type.equalsIgnoreCase(MetaType.ingestExec.toString())) {
+				ingestServiceImpl.restart(type, uuid, version, null, runMode);
+			} else {
+				ingestGroupServiceImpl.restart(type, uuid, version, runMode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/setStatus", method = RequestMethod.PUT)
+	public boolean setStatus(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("status") String status, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		try {
+			commonServiceImpl.setStatus(type, uuid, version, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

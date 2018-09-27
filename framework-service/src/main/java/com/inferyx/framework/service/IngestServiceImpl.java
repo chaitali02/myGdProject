@@ -1,6 +1,13 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+ *
+ * This unpublished material is proprietary to Inferyx Inc.
+ * The methods and techniques described herein are considered  trade 
+ * secrets and/or confidential. Reproduction or distribution, in whole or 
+ * in part, is forbidden.
+ *
+ * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
+ *******************************************************************************/
 package com.inferyx.framework.service;
 
 import java.io.File;
@@ -168,7 +175,8 @@ public class IngestServiceImpl extends RuleTemplate {
 					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
-				targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
+				targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+//				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					sourceFilePathUrl = sourceFilePathUrl + fileName;
@@ -189,7 +197,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 				}
-				targetFilePathUrl = null;
+//				targetFilePathUrl = null;
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
 						&& targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
@@ -279,8 +287,8 @@ public class IngestServiceImpl extends RuleTemplate {
 //						sourceDir = sourceDir.replaceAll(".db", "");
 //					}
 					
-					targetFilePathUrl = String.format("%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
-
+					targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+//					targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
@@ -300,7 +308,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
-					targetFilePathUrl = null;
+//					targetFilePathUrl = null;
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					//this is import block from Table to HDFS
 					SqoopInput sqoopInput = new SqoopInput();
@@ -361,7 +369,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
-					targetFilePathUrl = null;
+//					targetFilePathUrl = null;
 				}
 			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 				SqoopInput sqoopInput = new SqoopInput();
@@ -413,14 +421,17 @@ public class IngestServiceImpl extends RuleTemplate {
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			}
-			
-			if(targetFilePathUrl != null) {
-				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-				MetaIdentifier datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
-				persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
-				
-				ingestExec.setResult(resultRef);
+
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+			MetaIdentifier datapodKey = null;
+			if(targetDp != null) {
+				datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
+			} else {
+				datapodKey = new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion());
 			}
+			persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
+			
+			ingestExec.setResult(resultRef);
 			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -632,5 +643,43 @@ public class IngestServiceImpl extends RuleTemplate {
 			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		return execute(baseRuleExec.getDependsOn().getRef().getUuid(), baseRuleExec.getDependsOn().getRef().getVersion(), (IngestExec)baseRuleExec, execParams, null, runMode);
+	}
+	
+	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws Exception {
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.ingestExec.toString());
+		try {
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) 
+				otherParams = execParams.getOtherParams();
+			
+			ingestExec = (IngestExec) parse(uuid,version, null, otherParams, null, null, runMode);
+			execute(ingestExec.getDependsOn().getRef().getUuid(),ingestExec.getDependsOn().getRef().getVersion(), ingestExec, execParams, null, runMode);
+		
+		} catch (Exception e) {
+			synchronized (ingestExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+					throw new Exception((message != null) ? message : "Can not restart Ingest.");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+			throw new Exception((message != null) ? message : "Can not restart Ingest.");
+		}
 	}
 }
