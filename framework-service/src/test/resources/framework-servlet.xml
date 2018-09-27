@@ -285,7 +285,6 @@
 	<bean id="importServiceImpl" class="com.inferyx.framework.service.ImportServiceImpl"/>
 	<bean id="messageServiceImpl" class="com.inferyx.framework.service.MessageServiceImpl"/>
 	<bean id="sessionContext" class="com.inferyx.framework.domain.SessionContext"/>
-	<bean id="logServiceImpl" class="com.inferyx.framework.service.LogServiceImpl"/>
 	<bean id="systemServiceImpl" class="com.inferyx.framework.service.SystemServiceImpl"/>
 	<bean id="dataFrameService" class="com.inferyx.framework.service.DataFrameService"/>
 	<bean id="downloadExec" class="com.inferyx.framework.domain.DownloadExec"/>
@@ -302,44 +301,9 @@
 	<bean id="ingestViewServiceImpl" class="com.inferyx.framework.service.IngestViewServiceImpl"/>
 	<bean id="ingestServiceImpl" class="com.inferyx.framework.service.IngestServiceImpl"/>
 	
-	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
-	<bean id="impalaExecutor" class="com.inferyx.framework.executor.ImpalaExecutor"/>
-	<bean id="impalaRegister" class="com.inferyx.framework.register.ImpalaRegister"/>
-	<bean id="impalaWriter" class="com.inferyx.framework.writer.ImpalaWriter"/>
-	<bean id="impalaReader" class="com.inferyx.framework.reader.ImpalaReader"/>
-	
-	<bean id="oracleConnector" class="com.inferyx.framework.connector.OracleConnector"/>
-	<bean id="oracleExecutor" class="com.inferyx.framework.executor.OracleExecutor"/>
-	<bean id="oracleWriter" class="com.inferyx.framework.writer.OracleWriter"/>
-	<bean id="oracleReader" class="com.inferyx.framework.reader.OracleReader"/>
-	<bean id="oracleRegister" class="com.inferyx.framework.register.OracleRegister"/>
-	
-	<bean id="mySqlConnector" class="com.inferyx.framework.connector.MySqlConnector"/>
-	<bean id="mySqlExecutor" class="com.inferyx.framework.executor.MySqlExecutor"/>
-	<bean id="mySqlWriter" class="com.inferyx.framework.writer.MySqlWriter"/>
-	<bean id="mySqlReader" class="com.inferyx.framework.reader.MySqlReader"/>
-	<bean id="mySqlRegister" class="com.inferyx.framework.register.MySqlRegister"/>
-	
-	<bean id="hiveConnector" class="com.inferyx.framework.connector.HiveConnector"/>
-	<bean id="hiveExecutor" class="com.inferyx.framework.executor.HiveExecutor"/>
-	<bean id="hiveWriter" class="com.inferyx.framework.writer.HiveWriter"/>
-	<bean id="hiveReader" class="com.inferyx.framework.reader.HiveReader"/>
 	<bean id="hiveRegister" class="com.inferyx.framework.register.HiveRegister"/> 
 	
 	<bean id="sparkExecutor" class="com.inferyx.framework.executor.SparkExecutor"/>
-	
-	<bean id="rConnector" class="com.inferyx.framework.connector.RConnector"/>
-	<bean id="rExecutor" class="com.inferyx.framework.executor.RExecutor"/>
-	
-	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
-	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
-	
-	<bean id="postGresConnector" class="com.inferyx.framework.connector.PostGresConnector"/>
-	<bean id="postGresExecutor" class="com.inferyx.framework.executor.PostGresExecutor"/>
-	<bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
-	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/>
-	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
-	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
 	
 	<bean id="reconOperat
 		  or" class="com.inferyx.framework.operator.ReconOperator"/>
@@ -350,10 +314,8 @@
 	<bean id="reconViewServiceImpl" class="com.inferyx.framework.service.ReconViewServiceImpl"/>
 	
 	<bean id="trainAndValidateOperator" class="com.inferyx.framework.operator.TrainAndValidateOperator"/>
-	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
-	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
 	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
 		
