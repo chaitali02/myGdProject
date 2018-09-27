@@ -3103,4 +3103,10 @@ public class SparkExecutor<T> implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+//	public ResultSetHolder registerAndPersistDataframeTOHDFS(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
+//		
+//		rsHolder.getDataFrame().write().sa
+//		return rsHolder;
+//	}
 }
