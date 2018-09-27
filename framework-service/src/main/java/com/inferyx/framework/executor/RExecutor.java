@@ -36,6 +36,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
@@ -70,6 +71,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
  * @author Ganesh
  *
  */
+@Service
 public class RExecutor implements IExecutor {
 	@Autowired
 	protected ConnectionFactory connectionFactory;

@@ -16,6 +16,7 @@ import java.text.ParseException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -28,6 +29,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
+@Service
 public class MySqlReader implements IReader {
 	@Autowired
 	protected MetadataUtil daoRegister;

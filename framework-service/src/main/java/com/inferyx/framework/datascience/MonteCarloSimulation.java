@@ -7,6 +7,7 @@ import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.spark.sql.Row;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Simulate;
@@ -15,6 +16,7 @@ import com.inferyx.framework.domain.Simulate;
  * @author Ganesh
  *
  */
+@Service
 public class MonteCarloSimulation {
 	
 	public Double[] trialValues(long seed, int numIterations, Row[] dataset, double[] factorMeans,
