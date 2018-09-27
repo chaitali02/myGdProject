@@ -255,23 +255,15 @@ public class ReconServiceImpl extends RuleTemplate {
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 		}catch (Exception e) {
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if(response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				}else
-					logger.info("HttpServletResponse response is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
@@ -298,8 +290,8 @@ public class ReconServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
-					throw new Exception((message != null) ? message : "Can not parse Recon.");
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Recon.");
+					throw new Exception((message != null) ? message : "Can not restart Recon.");
 				}
 			}
 			e.printStackTrace();
@@ -309,8 +301,8 @@ public class ReconServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
-			throw new Exception((message != null) ? message : "Can not parse Recon.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Recon.");
+			throw new Exception((message != null) ? message : "Can not restart Recon.");
 		}
 	}
 

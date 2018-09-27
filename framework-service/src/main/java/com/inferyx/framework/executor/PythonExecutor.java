@@ -36,6 +36,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
@@ -71,6 +72,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
  * @author Ganesh
  *
  */
+@Service
 public class PythonExecutor implements IExecutor {
 	@Autowired
 	protected ConnectionFactory connectionFactory;

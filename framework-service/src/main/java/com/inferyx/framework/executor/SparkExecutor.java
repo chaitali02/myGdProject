@@ -2914,17 +2914,36 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
-		IWriter datapodWriter = null;
-		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IOException("Can not write data.");
-		}		
-		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
+//		IWriter datapodWriter = null;
+//		try {
+//			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+//		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+//				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			throw new IOException("Can not write data.");
+//		}		
+//		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 
+		Dataset<Row> df = rsHolder.getDataFrame();
+//		df.show(true);
+		if(datapod !=null) {
+			if(df.columns().length != datapod.getAttributes().size())
+				throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+			
+			List<Attribute> attributes = datapod.getAttributes();
+			for(Attribute attribute : attributes){
+				df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
+			} 				
+		} 
+		df.printSchema();
+//		df.show(true);
+		if(saveMode.equalsIgnoreCase(SaveMode.Append.toString()))	{
+			df.write().mode(SaveMode.Append).parquet(filePathUrl);
+		}else if(saveMode.equalsIgnoreCase(SaveMode.Overwrite.toString())) {
+			df.write().mode(SaveMode.Overwrite).parquet(filePathUrl);
+		}
+		
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
@@ -2960,11 +2979,11 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
 		
-		if(df.columns().length != targetDp.getAttributes().size()) {
-			throw new RuntimeException("Datapod '" + targetDp.getName() + "' column size(" + targetDp.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		if(datapod != null && df.columns().length != datapod.getAttributes().size()) {
+			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
 		}
 		
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
@@ -2974,7 +2993,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "|").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
+			rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
 	}

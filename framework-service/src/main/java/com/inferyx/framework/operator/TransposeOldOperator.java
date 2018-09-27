@@ -6,6 +6,7 @@ package com.inferyx.framework.operator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.Attribute;
@@ -15,6 +16,7 @@ import com.inferyx.framework.domain.Datapod;
  * @author joy
  *
  */
+@Service
 public class TransposeOldOperator {
 	static final Logger LOGGER = Logger.getLogger(TransposeOldOperator.class);
 	/**

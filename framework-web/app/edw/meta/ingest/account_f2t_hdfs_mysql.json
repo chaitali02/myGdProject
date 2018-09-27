@@ -1,0 +1,82 @@
+{
+  "uuid": "235a13bb-590c-4515-b9f7-1274985a0033",
+  "version": "1537951744",
+  "name": "account_f2t_hdfs_mysql",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Wed Sep 26 04:49:04 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "FILE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "version": null,
+      "name": "Hive"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "account"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "MySql"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "runParams": "NUMMAPPER=6",
+  "sourceFormat": null,
+  "targetFormat": "CSV",
+  "header": "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "version": null,
+      "name": "account"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  }
+}

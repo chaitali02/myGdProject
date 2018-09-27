@@ -17,6 +17,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.Helper;
@@ -28,6 +29,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
  * @author Ganesh
  *
  */
+@Component
 public class RConnector implements IConnector {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

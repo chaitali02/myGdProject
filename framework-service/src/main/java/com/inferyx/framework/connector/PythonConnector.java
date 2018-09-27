@@ -17,9 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.CustomLogger;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.PythonExecutor;
@@ -31,6 +31,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
  * @author Ganesh
  *
  */
+@Component
 public class PythonConnector implements IConnector {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

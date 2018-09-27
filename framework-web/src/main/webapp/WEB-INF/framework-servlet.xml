@@ -127,6 +127,7 @@
 	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="batchThreadMap" name="batchThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="zkConnMap" name="zkConnThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
