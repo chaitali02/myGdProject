@@ -19,10 +19,10 @@
         }
     },
     "targetDetail" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "ca5908cb-10f0-4b6b-9588-44ef7010cafa"
-        }
+          "ref" : {
+            "type" : "simple"
+        },
+        "value" : "account_psv"
     },
     "sourceFormat" : "CSV",
     "targetFormat" : "PSV",
