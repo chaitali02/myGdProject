@@ -19,12 +19,14 @@ import java.sql.Statement;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.SecurityServiceImpl;
 
+@Component
 public class ImpalaConnector implements IConnector {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

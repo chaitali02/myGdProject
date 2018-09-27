@@ -36,6 +36,7 @@ import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -66,6 +67,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
+@Service
 public class OracleExecutor implements IExecutor {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

@@ -16,6 +16,7 @@ import java.text.ParseException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Feature;
@@ -30,6 +31,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
  * @author joy
  *
  */
+@Service
 public class SimulateMLOperator implements Serializable {
 
 	/**

@@ -12,17 +12,21 @@ package com.inferyx.framework.connector;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.SecurityServiceImpl;
 
+@Component
 public class OracleConnector implements IConnector {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

@@ -6,6 +6,8 @@ package com.inferyx.framework.operator;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
@@ -18,6 +20,7 @@ import com.inferyx.framework.enums.RunMode;
  * @author Ganesh
  *
  */
+@Service
 public class ProfilePostGresOperator extends ProfileOperator {
 	
 	public ProfilePostGresOperator() {

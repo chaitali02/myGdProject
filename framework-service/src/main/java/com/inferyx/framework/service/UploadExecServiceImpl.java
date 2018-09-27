@@ -17,12 +17,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.register.GraphRegister;
 
+@Service
 public class UploadExecServiceImpl {
 	
 	@Autowired

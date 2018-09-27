@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
@@ -49,6 +50,7 @@ import com.inferyx.framework.register.DatapodRegister;
  * @author joy
  *
  */
+@Service
 public class RunBaseRuleService implements Callable<TaskHolder> {
 	
 	protected BaseRuleExec baseRuleExec;
