@@ -2887,13 +2887,19 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
+		logger.info("Inside readAndRegisterFile....");
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		
 		//reading file
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Dataset<Row> df = null;
-		if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
+		if(format == null) {
+			JavaRDD<String> textRDD = sparkSession.sparkContext().textFile(filePath, 0).toJavaRDD();
+			JavaRDD<Row> rowRDD = textRDD.map(RowFactory :: create);
+			StructType schema = rowRDD.first().schema();
+			df = sparkSession.sqlContext().createDataFrame(rowRDD, schema);
+		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
 		} else {
 			df = sparkSession.read().parquet(filePath);
@@ -3001,16 +3007,20 @@ public class SparkExecutor<T> implements IExecutor {
 	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, header, clientContext, false).getDataFrame();
-		
-		List<Attribute> attributes = datapod.getAttributes();
-//		df.show(false);
+
 		String[] columns = df.columns();
+		List<Attribute> attributes = null;
+		if(datapod != null) {
+			attributes = datapod.getAttributes();
+		}
+		
+//		df.show(false);
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
 			int i = 0;
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(attributes.get(i).getName(), (row.getAs(column) == null ? "" :
+				object.put(attributes != null ? attributes.get(i).getName() : column, (row.getAs(column) == null ? "" :
 					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 				i++;
 			}
