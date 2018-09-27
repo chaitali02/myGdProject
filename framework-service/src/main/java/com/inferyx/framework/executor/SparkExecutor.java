@@ -2993,7 +2993,7 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		
 		if(fileFormat == null) {
-			df.write().mode(saveMode).format("csv").text(targetPath);
+			df.write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
