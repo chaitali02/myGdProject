@@ -1,8 +1,8 @@
 {
 
-  "uuid": "3ca24dd8-22d5-404d-a73b-33e36c348233",
-  "version": "1537956638",
-  "name": "ingest_T2F_mysql_2_hdfs",
+  "uuid": "aa54bee5-3068-4d82-8fd6-0c88e8f82410",
+  "version": "1537960689",
+  "name": "account_t2f_hive_parquet",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Sep 26 06:10:38 EDT 2018",
+  "createdOn": "Wed Sep 26 07:18:09 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,31 +32,13 @@
   "sourceDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
-      "version": null,
-      "name": "MySql"
-    },
-    "value": null
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
-      "version": null,
-      "name": "account_mysql"
-    },
-    "value": null
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
       "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
       "version": null,
       "name": "Hive"
     },
     "value": null
   },
-  "targetDetail": {
+  "sourceDetail": {
     "ref": {
       "type": "datapod",
       "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
@@ -65,17 +47,35 @@
     },
     "value": null
   },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File_Data"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
+      "version": null,
+      "name": "account_parquet"
+    },
+    "value": null
+  },
   "filterInfo": null,
   "runParams": null,
   "sourceFormat": null,
-  "targetFormat": null,
+  "targetFormat": "PARQUET",
   "header": "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
       "version": null,
-      "name": "account_mysql"
+      "name": "account_hive"
     },
     "value": null,
     "attrId": "20",

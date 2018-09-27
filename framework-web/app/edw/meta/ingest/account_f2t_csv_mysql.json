@@ -1,17 +1,22 @@
 {
-  "uuid": "235a13bb-590c-4515-b9f7-1274985a0033",
-  "version": "1537951744",
-  "name": "ingest_F2T_hdfs_mysql",
+
+  "uuid": "bc30332d-a71a-4238-b2c4-ae01cb660848",
+  "version": "1537869566",
+  "name": "account_f2t_csv_mysql",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
   },
-  "createdOn": "Wed Sep 26 04:49:04 EDT 2018",
-  "tags": [],
+  "createdOn": "Tue Sep 25 05:59:26 EDT 2018",
+  "tags": [
+    "DEV"
+  ],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -29,9 +34,9 @@
   "sourceDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
       "version": null,
-      "name": "Hive"
+      "name": "File_Upload"
     },
     "value": null
   },
@@ -42,7 +47,7 @@
       "version": null,
       "name": null
     },
-    "value": "account"
+    "value": "account.csv"
   },
   "targetDatasource": {
     "ref": {
@@ -63,20 +68,9 @@
     "value": null
   },
   "filterInfo": null,
-  "runParams": "NUMMAPPER=6",
-  "sourceFormat": null,
-  "targetFormat": "CSV",
+  "runParams": null,
+  "sourceFormat": "CSV",
+  "targetFormat": null,
   "header": "N",
-  "incrAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-      "version": null,
-      "name": "account"
-    },
-    "value": null,
-    "attrId": "20",
-    "attrName": "load_date",
-    "attrType": null
-  }
+  "incrAttr": null
 }

@@ -1,8 +1,8 @@
 {
 
-  "uuid": "418e85c6-92a5-49ad-8da5-542db1120b10",
-  "version": "1537860873",
-  "name": "ingest_T2T_account_mysql_2_hive",
+  "uuid": "919d133e-6a68-492e-a0df-efd8d62f1f42",
+  "version": "1537893843",
+  "name": "account_t2f_mysql_parquet",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,10 +13,8 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 03:34:33 EDT 2018",
-  "tags": [
-    "DEMO"
-  ],
+  "createdOn": "Tue Sep 25 12:44:03 EDT 2018",
+  "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -30,7 +28,7 @@
       "value": null
     }
   ],
-  "type": "TABLE-TABLE",
+  "type": "TABLE-FILE",
   "sourceDatasource": {
     "ref": {
       "type": "datasource",
@@ -52,25 +50,25 @@
   "targetDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
       "version": null,
-      "name": "Hive"
+      "name": "File_Data"
     },
     "value": null
   },
   "targetDetail": {
     "ref": {
       "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "uuid": "9f5d50cf-5673-4f0f-94c6-a88d1759b087",
       "version": null,
-      "name": "account_hive"
+      "name": "account_parquet"
     },
     "value": null
   },
   "filterInfo": null,
   "runParams": null,
   "sourceFormat": null,
-  "targetFormat": null,
+  "targetFormat": "PARQUET",
   "header": "N",
   "incrAttr": {
     "ref": {

@@ -2,7 +2,7 @@
 
   "uuid": "e06c3517-ad14-431b-a431-cba634ee9e20",
   "version": "1537868034",
-  "name": "ingest_T2T_account_hive_2_mysql",
+  "name": "account_t2t_hive_mysql",
   "desc": null,
   "createdBy": {
     "ref": {
