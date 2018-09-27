@@ -2992,7 +2992,9 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
 		}
 		
-		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
+		if(fileFormat == null) {
+			df.write().mode(saveMode).format("csv").text(targetPath);
+		} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
