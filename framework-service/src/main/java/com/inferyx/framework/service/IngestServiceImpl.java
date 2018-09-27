@@ -520,7 +520,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					data = dataStoreServiceImpl.getDatapodResults(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, limit, sortBy, order, null, runMode);
 				} else {
 					IExecutor exec = execFactory.getExecutor(targetDS.getType());
-					String tableName = targetDS.getDbname()+"."+targetDp.getName();
+					String tableName = targetDS.getDbname()+"."+ targetDp != null ? targetDp.getName() : ingest.getTargetDetail().getValue();
 					String sql = generateSqlByDatasource(targetDS, tableName, null, null, limit);
 					data = exec.executeAndFetch(sql, appUuid);
 				}
