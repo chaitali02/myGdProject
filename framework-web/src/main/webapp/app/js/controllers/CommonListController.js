@@ -183,6 +183,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'ingestExec':
         api = 'ingest';
         break;
+      case 'ingestgroupExec':
+        api = 'ingest';
+        break;
     }
     if (!api) {
       return
@@ -285,6 +288,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         api = 'batch';
         break;
       case 'ingestExec':
+        api = 'ingest';
+        break;
+      case 'ingestgroupExec':
         api = 'ingest';
         break;
     }
