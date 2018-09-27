@@ -4416,7 +4416,16 @@
 		            "name" : ""
 				},
 				"value" : null
-		},					
+		},			
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "4607be26-0f59-42f9-96d2-415e6925dd20",
+		 			"version" : null,
+		            "name" : "IngestExecExecute"
+				},
+				"value" : null
+		},				
 		{
 			"ref" : {
 					"type" : "privilege",
