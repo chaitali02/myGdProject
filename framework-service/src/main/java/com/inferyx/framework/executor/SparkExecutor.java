@@ -2960,11 +2960,11 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();
 		
-		if(df.columns().length != targetDp.getAttributes().size()) {
-			throw new RuntimeException("Datapod '" + targetDp.getName() + "' column size(" + targetDp.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		if(datapod != null && df.columns().length != datapod.getAttributes().size()) {
+			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
 		}
 		
 		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
@@ -2974,7 +2974,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "|").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
+			rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
 	}
