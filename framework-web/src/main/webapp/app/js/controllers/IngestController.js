@@ -252,7 +252,9 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	// }
 
 	$scope.onChangeSourceDataSource = function () {
-		
+		if(!$scope.selectedSourceDatasource){
+			return false;
+		}
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
 		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceDatasource) {
@@ -384,18 +386,31 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
 
 			}
-			$scope.onChangeTargetDataSource();
-			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
+
 			if($scope.selectedTargetFormate !=null){
 				$scope.isTargetFormateDisable=false;
-		    }else{
+			}else{
 				$scope.isTargetFormateDisable=true;				
 			}
+
+
+			if ($scope.selectedTargetType == "FILE") {
+				$scope.selectedTargetDetail = $scope.ingestData.targetDetail.value;
+			}
+			else {
+				$scope.onChangeTargetDataSource();
+				$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
+				if($scope.selectedTargetFormate !=null){
+					$scope.isTargetFormateDisable=false;
+		    	}else{
+					$scope.isTargetFormateDisable=true;				
+				}
+				var selectedTargetDetail = {};
+				selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
+				selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
+				$scope.selectedTargetDetail = selectedTargetDetail;
+			}
 			$scope.filterTableArray = response.filterInfo;
-			var selectedTargetDetail = {};
-			selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
-			selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
-			$scope.selectedTargetDetail = selectedTargetDetail;
 			var tags = [];
 			for (var i = 0; i < response.ingestData.tags.length; i++) {
 				var tag = {};
@@ -840,9 +855,17 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.targetFormat = $scope.selectedTargetFormate;
 		var targetDetails = {};
 		var targetDetailsRef = {};
-		targetDetailsRef.type = "datapod";
-		targetDetailsRef.uuid = $scope.selectedTargetDetail.uuid;
-		targetDetails.ref = targetDetailsRef;
+		if ($scope.selectedTargetType == "FILE") {
+			targetDetailsRef.type = "simple";
+			targetDetails.ref = targetDetailsRef;
+			targetDetails.value = $scope.selectedTargetDetail;
+		
+		} else {
+			targetDetailsRef.type = "datapod";
+			targetDetailsRef.uuid = $scope.selectedTargetDetail.uuid;
+			targetDetails.ref = targetDetailsRef;
+			
+		}
 		ingestJson.targetDetail = targetDetails;
 
 		//filterInfo

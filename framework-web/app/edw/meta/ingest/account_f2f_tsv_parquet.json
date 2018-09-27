@@ -19,10 +19,10 @@
         }
     },
     "targetDetail" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "fff1e712-ee39-4bk4-bd53-dee945e23bd3"
-        }
+         "ref" : {
+            "type" : "simple"
+        },
+        "value" : "account_parquet"
     },
     "sourceFormat" : "TSV",
     "targetFormat" : "PARQUET",

@@ -20,9 +20,9 @@
     },
     "targetDetail" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "ca5908cb-10f0-4b7b-9588-44ef7011cagb"
-        }
+            "type" : "simple"
+        },
+        "value" : "account_psv"
     },
     "sourceFormat" : "PARQUET",
     "targetFormat" : "PSV",
