@@ -208,7 +208,11 @@ public class IngestServiceImpl extends RuleTemplate {
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 					String fileName = ingest.getSourceDetail().getValue();			
 					
+					//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
 					sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
+					if(sourceFilePathUrl.contains(".db")) {
+						sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
+					}
 					logger.info("sourceFilePathUrl: "+sourceFilePathUrl);
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
@@ -295,8 +299,11 @@ public class IngestServiceImpl extends RuleTemplate {
 //						sourceDir = sourceDir.replaceAll(".db", "");
 //					}
 					
-					targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
-//					targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
+//					targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+					targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
+					if(targetFilePathUrl.contains(".db")) {
+						targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
+					}
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
@@ -358,9 +365,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //						sourceDir = sourceDir.replaceAll(".db", "");
 //					}
 					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion()));
-//					if(targetFilePathUrl.startsWith("hdfs")) {
-//						targetFilePathUrl = "file"+targetFilePathUrl.substring(4);
-//					}
+
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
