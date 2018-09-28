@@ -167,9 +167,10 @@ public class IngestServiceImpl extends RuleTemplate {
 				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			}
 
-			logger.info("mode : sconfiguration >> "+"FILE_TO_FILE : "+sourceDS.getType()+"_2_"+targetDS.getType());		
+
+			logger.info("mode : sconfiguration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
 			String tableName = null;
-			if(ingestionType.equals(IngestionType.FILETOFILE)) { 
+			if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
 				if(fileNameList == null || fileNameList.isEmpty()) {
