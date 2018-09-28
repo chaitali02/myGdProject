@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -422,6 +423,10 @@ public class IngestServiceImpl extends RuleTemplate {
 					//this is import block from other table to Hive
 
 					logger.info("this is import block from other table to Hive");
+					Map<String, String> partitions = checkPartitionsByDatapod(targetDp);
+					if(!partitions.isEmpty()) {
+						
+					}
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
@@ -429,6 +434,10 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveTableName(targetDp.getName());
 					sqoopInput.setOverwriteHiveTable("Y");
 					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+//					sqoopInput.sethCatTableName(sourceDp.getName());
+//					sqoopInput.sethCatDatabaseName(targetDS.getDbname());
+//					sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
+//					sqoopInput.sethCatalogPartitionValues(hCatalogPartitionValues);
 					tableName = targetDp.getName();
 				}
 
@@ -480,6 +489,20 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
+	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
+		Map<String, String> partitions = new TreeMap<>();
+		try {
+			for(Attribute attribute : datapod.getAttributes()) {
+				if(attribute.getPartition().equalsIgnoreCase("Y")) {
+					partitions.put(attribute.getName(), null);
+				}
+			}			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return partitions;
+	}
+
 	private String getIncrColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
 		String attrName = null;
 		for(Attribute attribute : datapod.getAttributes()) {
@@ -499,7 +522,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
-				if(fileName.endsWith("*")) {
+				if(fileName.startsWith("*") && fileName.endsWith("*")) {
 					Pattern regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
 					Matcher mtch = regex.matcher(dirFileName);
 			        if(mtch.matches()){
@@ -516,6 +539,9 @@ public class IngestServiceImpl extends RuleTemplate {
 				logger.info("Directory " + listOfFiles[i].getName());
 			}
 		}		
+//		
+//		String regex1 = "^.*" + fileName + "+";
+//		String regex2 = "^"+fileName+"[_]";
 		return fileNameList;
 	}
 	
