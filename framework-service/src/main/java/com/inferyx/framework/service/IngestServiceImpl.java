@@ -225,7 +225,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 					
 					//applying target schema to df
 					if(header.equalsIgnoreCase("false")) {
@@ -254,9 +254,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setExportDir(sourceDir);
 					tableName = targetDp.getName();					
 					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-//					if(incrLastValue != null) {
-//						sqoopInput.setIncrementalLastValue(incrLastValue);
-//					}
+					if(incrLastValue != null) {
+						sqoopInput.setIncrementalLastValue(incrLastValue);
+					}
 					targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
@@ -281,7 +281,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 						
 						//adding version column data
-						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
 						//applying target schema to df
 						if(header.equalsIgnoreCase("false")) {
@@ -300,9 +300,6 @@ public class IngestServiceImpl extends RuleTemplate {
 
 					logger.info("this is export block from Hive to HDFS");
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-//					if(sourceDir.contains(".db")) {
-//						sourceDir = sourceDir.replaceAll(".db", "");
-//					}
 					
 //					targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
 					targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
@@ -323,7 +320,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
@@ -347,9 +344,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetDir);
 					sqoopInput.setExportDir(targetDir);
-					sqoopInput.setSourceDirectory(sourceDir);
+//					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTargetDirectory(targetDir);
-					sqoopInput.setTable(ingest.getTargetDetail().getValue());
+					sqoopInput.setTable(sourceDp.getName());
 //					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -366,11 +363,10 @@ public class IngestServiceImpl extends RuleTemplate {
 
 					logger.info("this is export block from Hive table to local file");
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-//					if(sourceDir.contains(".db")) {
-//						sourceDir = sourceDir.replaceAll(".db", "");
-//					}
 					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion()));
-
+					if(targetFilePathUrl.contains(".db")) {
+						targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
+					}
 					logger.info("sourceDir : " + sourceDir);
 					logger.info("targetDir : " + targetFilePathUrl);
 					
@@ -386,7 +382,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
