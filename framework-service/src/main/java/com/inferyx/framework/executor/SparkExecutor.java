@@ -1757,11 +1757,10 @@ public class SparkExecutor<T> implements IExecutor {
 			return rsHolder;
 	}
 	
-	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod, String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
 		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df = df.na().fill(null, df.columns());	
 //		df.show(false);
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
@@ -1774,7 +1773,7 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 
-			df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
+			df.write().mode(saveMode).insertInto(rsHolder.getTableName());
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();
@@ -1786,12 +1785,12 @@ public class SparkExecutor<T> implements IExecutor {
 //			if(partitionColList.size() > 0) {
 //				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			} else {
-				df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
+				df.write().mode(saveMode).jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			}
 		}		
 		return rsHolder;
 	}
-
+	
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2077,7 +2076,7 @@ public class SparkExecutor<T> implements IExecutor {
 				|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-			persistDataframe(rsHolder, datasource, targetDp);	
+			persistDataframe(rsHolder, datasource, targetDp, null);	
 		}
 		
 		rsHolder.setTableName("tempPredictResult");
@@ -2101,7 +2100,7 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setTableName(targetTableName);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
-		rsHolder = persistDataframe(rsHolder, datasource, datapod);
+		rsHolder = persistDataframe(rsHolder, datasource, datapod, null);
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}

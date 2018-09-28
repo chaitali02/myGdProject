@@ -189,18 +189,18 @@ public class IngestServiceImpl extends RuleTemplate {
 					
 					String header = resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
 					
 					//adding version column to data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 					
 					//applying target schema to df
 					if(header.equalsIgnoreCase("false") && targetDp != null) {
-						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, false);
 					}
 					
 					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, "append", ingest.getTargetFormat());
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 				}
 //				targetFilePathUrl = null;
@@ -233,7 +233,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					}
 					
 					//writing to target
-					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
+					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
 					countRows = rsHolder.getCountRows();
 				} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 					//this is export block from HDFS to Table
@@ -251,6 +251,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setTargetDs(targetDS);
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTable(targetDp.getName());
+					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 					sqoopInput.setExportDir(sourceDir);
 					tableName = targetDp.getName();					
 					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
@@ -289,7 +290,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						}
 						
 						//writing to target
-						sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp);
+						sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
 						countRows = rsHolder.getCountRows();
 					}
 				}
@@ -317,13 +318,13 @@ public class IngestServiceImpl extends RuleTemplate {
 					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
 					
 					//registering temp table of source
-					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
+//					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
 //					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 //					targetFilePathUrl = null;
 				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
@@ -347,6 +348,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setTable(sourceDp.getName());
+					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 //					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalLastValue(incrLastValue);
@@ -379,13 +381,13 @@ public class IngestServiceImpl extends RuleTemplate {
 					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
 					
 					//registering temp table of source
-					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
+//					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
 //					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 //					targetFilePathUrl = null;
 				}
@@ -428,6 +430,8 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 					tableName = targetDp.getName();
 				}
+
+				sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 				if(incrLastValue != null) {
 					sqoopInput.setIncrementalLastValue(incrLastValue);
 				}

@@ -198,7 +198,7 @@ public class GenerateDataOperator implements IOperator {
 			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
 			rsHolder.setTableName(tableName);
-			rsHolder = sparkExecutor.persistDataframe(rsHolder, locationDpDatasource, locationDatapod);
+			rsHolder = sparkExecutor.persistDataframe(rsHolder, locationDpDatasource, locationDatapod, null);
 		}
 		rowObjList = null;
 //		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
@@ -243,7 +243,7 @@ public class GenerateDataOperator implements IOperator {
 		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
 		if(exec instanceof SparkExecutor<?> && !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			resultSetHolder.setTableName(tableName);
-			sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);
+			sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod, null);
 		} else {
 			exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());	
 		}
@@ -323,7 +323,7 @@ public class GenerateDataOperator implements IOperator {
 			if(!appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
-				sparkExecutor.persistDataframe(resultSetHolder, appDatasource, locationDatapod);
+				sparkExecutor.persistDataframe(resultSetHolder, appDatasource, locationDatapod, null);
 			} 
 			// Save result
 			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(execType), runMode);
