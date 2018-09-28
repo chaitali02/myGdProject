@@ -37,6 +37,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" },{ "text": "STREAM-FILE", "caption": "Stream - File" },{ "text": "STREAM-TABLE", "caption": "Stream - Table" }];
 	$scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
+	$scope.saveMode=["APPEND","OVERWRITE"];
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -252,7 +253,9 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	// }
 
 	$scope.onChangeSourceDataSource = function () {
-		
+		if(!$scope.selectedSourceDatasource){
+			return false;
+		}
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
 		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceDatasource) {
@@ -384,18 +387,31 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
 
 			}
-			$scope.onChangeTargetDataSource();
-			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
+
 			if($scope.selectedTargetFormate !=null){
 				$scope.isTargetFormateDisable=false;
-		    }else{
+			}else{
 				$scope.isTargetFormateDisable=true;				
 			}
+
+
+			if ($scope.selectedTargetType == "FILE") {
+				$scope.selectedTargetDetail = $scope.ingestData.targetDetail.value;
+			}
+			else {
+				$scope.onChangeTargetDataSource();
+				$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
+				if($scope.selectedTargetFormate !=null){
+					$scope.isTargetFormateDisable=false;
+		    	}else{
+					$scope.isTargetFormateDisable=true;				
+				}
+				var selectedTargetDetail = {};
+				selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
+				selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
+				$scope.selectedTargetDetail = selectedTargetDetail;
+			}
 			$scope.filterTableArray = response.filterInfo;
-			var selectedTargetDetail = {};
-			selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
-			selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
-			$scope.selectedTargetDetail = selectedTargetDetail;
 			var tags = [];
 			for (var i = 0; i < response.ingestData.tags.length; i++) {
 				var tag = {};
@@ -779,6 +795,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.header = $scope.ingestData.header;
+		ingestJson.saveMode = $scope.ingestData.saveMode;
 		if ($scope.ingestCompare == null) {
 			ingestJson.ingestChg = "Y";
 			ingestJson.filterChg = "Y";
@@ -840,9 +857,17 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.targetFormat = $scope.selectedTargetFormate;
 		var targetDetails = {};
 		var targetDetailsRef = {};
-		targetDetailsRef.type = "datapod";
-		targetDetailsRef.uuid = $scope.selectedTargetDetail.uuid;
-		targetDetails.ref = targetDetailsRef;
+		if ($scope.selectedTargetType == "FILE") {
+			targetDetailsRef.type = "simple";
+			targetDetails.ref = targetDetailsRef;
+			targetDetails.value = $scope.selectedTargetDetail;
+		
+		} else {
+			targetDetailsRef.type = "datapod";
+			targetDetailsRef.uuid = $scope.selectedTargetDetail.uuid;
+			targetDetails.ref = targetDetailsRef;
+			
+		}
 		ingestJson.targetDetail = targetDetails;
 
 		//filterInfo

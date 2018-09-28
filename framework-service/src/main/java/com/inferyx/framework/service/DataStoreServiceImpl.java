@@ -633,13 +633,20 @@ public class DataStoreServiceImpl {
 			
 			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
-			}else
+			} else
 			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = appDatasource.getDbname() + "." + reportName;
-		} 
+		} else if (metaType == MetaType.ingest) {
+			String[] list = filePath.split("/");				
+			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
+			} else {
+				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
+			}
+		}	
 		return tableName;
 	}
 

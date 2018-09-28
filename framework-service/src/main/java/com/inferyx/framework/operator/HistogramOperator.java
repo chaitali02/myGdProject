@@ -223,7 +223,7 @@ public class HistogramOperator implements IOperator {
 				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
 			resultSetHolder = exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
-			resultSetHolder = sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);
+			resultSetHolder = sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod, null);
 		}		
 		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());

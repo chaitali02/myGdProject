@@ -33,7 +33,70 @@ public class SqoopInput {
 	private FileLayout fileLayout;
 	private String overwriteHiveTable; 
 	private String hiveDatabaseName;
+	private String hCatDatabaseName;
+	private String hCatalogPartitionKeys;
+	private String hCatalogPartitionValues;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the hCatDatabaseName
+	 */
+	public String gethCatDatabaseName() {
+		return hCatDatabaseName;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param hCatDatabaseName the hCatDatabaseName to set
+	 */
+	public void sethCatDatabaseName(String hCatDatabaseName) {
+		this.hCatDatabaseName = hCatDatabaseName;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the hCatalogPartitionKeys
+	 */
+	public String gethCatalogPartitionKeys() {
+		return hCatalogPartitionKeys;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param hCatalogPartitionKeys the hCatalogPartitionKeys to set
+	 */
+	public void sethCatalogPartitionKeys(String hCatalogPartitionKeys) {
+		this.hCatalogPartitionKeys = hCatalogPartitionKeys;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the hCatalogPartitionValues
+	 */
+	public String gethCatalogPartitionValues() {
+		return hCatalogPartitionValues;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param hCatalogPartitionValues the hCatalogPartitionValues to set
+	 */
+	public void sethCatalogPartitionValues(String hCatalogPartitionValues) {
+		this.hCatalogPartitionValues = hCatalogPartitionValues;
+	}
+
 	/**
 	 *
 	 * @Ganesh

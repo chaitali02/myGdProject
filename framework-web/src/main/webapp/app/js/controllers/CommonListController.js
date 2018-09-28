@@ -16,6 +16,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     content: '',
     timeout: 3000 //time in ms
   };
+ 
   $rootScope.isCommentDisabled=true;
   $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
   var cached = cacheService.getCache('searchCriteria', $scope.select);
@@ -24,10 +25,14 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.handleGroup = -1;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-  
+  if($scope.select =="ingestexec"){
+    $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
+  }
   $scope.$on('privilegesUpdated', function (e, data) {
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-    
+  if($scope.select =="ingestexec"){
+    $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
+  }
   });
 
   $scope.updateStats = function () {
@@ -175,6 +180,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'batchexec':
         api = 'batch';
         break;
+      case 'ingestExec':
+        api = 'ingest';
+        break;
+      case 'ingestgroupExec':
+        api = 'ingest';
+        break;
     }
     if (!api) {
       return
@@ -275,6 +286,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         break;
       case 'batchexec':
         api = 'batch';
+        break;
+      case 'ingestExec':
+        api = 'ingest';
+        break;
+      case 'ingestgroupExec':
+        api = 'ingest';
         break;
     }
     if (!api) {

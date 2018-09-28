@@ -35,6 +35,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
@@ -1753,9 +1757,10 @@ public class SparkExecutor<T> implements IExecutor {
 			return rsHolder;
 	}
 	
-	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod, String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df = df.na().fill(null, df.columns());	
 //		df.show(false);
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
@@ -1768,7 +1773,7 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 
-			df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
+			df.write().mode(saveMode).insertInto(rsHolder.getTableName());
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();
@@ -1780,12 +1785,12 @@ public class SparkExecutor<T> implements IExecutor {
 //			if(partitionColList.size() > 0) {
 //				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			} else {
-				df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
+				df.write().mode(saveMode).jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			}
 		}		
 		return rsHolder;
 	}
-
+	
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2071,7 +2076,7 @@ public class SparkExecutor<T> implements IExecutor {
 				|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-			persistDataframe(rsHolder, datasource, targetDp);	
+			persistDataframe(rsHolder, datasource, targetDp, null);	
 		}
 		
 		rsHolder.setTableName("tempPredictResult");
@@ -2095,7 +2100,7 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setTableName(targetTableName);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
-		rsHolder = persistDataframe(rsHolder, datasource, datapod);
+		rsHolder = persistDataframe(rsHolder, datasource, datapod, null);
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}
@@ -2887,13 +2892,28 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
+		logger.info("Inside readAndRegisterFile....");
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		
 		//reading file
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Dataset<Row> df = null;
-		if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
+		if(format == null) {
+			RemoteIterator<LocatedFileStatus> fileStatus = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path(filePath), false);
+			
+			while(fileStatus.hasNext()) {
+				LocatedFileStatus status = fileStatus.next();
+				String fileName2 = status.getPath().getName();
+				String filePath2 = new String(filePath);
+				filePath2 = filePath2+"/"+fileName2;
+				List<String> filePaths = new ArrayList<>();
+				if(!fileName2.contains("_SUCCESS")) {
+					filePaths.add(filePath2);
+				}
+				df = sparkSession.read()/*.format("csv")*/.option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
+			}
+		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
 		} else {
 			df = sparkSession.read().parquet(filePath);
@@ -2914,17 +2934,38 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
-		IWriter datapodWriter = null;
-		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IOException("Can not write data.");
-		}		
-		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 
+		logger.info("inside method registerAndPersistDataframe");
+//		IWriter datapodWriter = null;
+//		try {
+//			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+//		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+//				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			throw new IOException("Can not write data.");
+//		}		
+//		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
+
+		Dataset<Row> df = rsHolder.getDataFrame();
+//		df.show(true);
+		if(datapod !=null) {
+			if(df.columns().length != datapod.getAttributes().size())
+				throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+			
+			List<Attribute> attributes = datapod.getAttributes();
+			for(Attribute attribute : attributes){
+				df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
+			} 				
+		} 
+		df.printSchema();
+//		df.show(true);
+		if(saveMode.equalsIgnoreCase(SaveMode.Append.toString()))	{
+			df.write().mode(SaveMode.Append).parquet(filePathUrl);
+		}else if(saveMode.equalsIgnoreCase(SaveMode.Overwrite.toString())) {
+			df.write().mode(SaveMode.Overwrite).parquet(filePathUrl);
+		}
+		
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
@@ -2935,6 +2976,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder applySchema(ResultSetHolder rsHolder, Datapod datapod, String tableName, boolean registerTempTable) throws IOException {
+
+		logger.info("inside method applySchema");
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
 //		df.printSchema();
@@ -2960,38 +3003,48 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod targetDp, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
+
+		logger.info("inside method writeFileByFormat");
 		Dataset<Row> df = rsHolder.getDataFrame();
 		
-		if(df.columns().length != targetDp.getAttributes().size()) {
-			throw new RuntimeException("Datapod '" + targetDp.getName() + "' column size(" + targetDp.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		if(datapod != null && df.columns().length != datapod.getAttributes().size()) {
+			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
 		}
 		
-		if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
+		if(fileFormat == null) {
+			df.write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
+		} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
 			df.write().mode(saveMode).option("delimiter", "|").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			rsHolder = registerAndPersistDataframe(rsHolder, targetDp, "append", targetPath, tableName, false);
+			rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 		}
 		return rsHolder;
 	}
 	
 	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
+
+		logger.info("inside method fetchIngestResult");
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, header, clientContext, false).getDataFrame();
-		
-		List<Attribute> attributes = datapod.getAttributes();
-//		df.show(false);
+
 		String[] columns = df.columns();
+		List<Attribute> attributes = null;
+		if(datapod != null) {
+			attributes = datapod.getAttributes();
+		}
+		
+//		df.show(false);
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
 			int i = 0;
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(attributes.get(i).getName(), (row.getAs(column) == null ? "" :
+				object.put(attributes != null ? attributes.get(i).getName() : column, (row.getAs(column) == null ? "" :
 					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 				i++;
 			}
@@ -3001,6 +3054,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
+
+		logger.info("inside method addVersionColToDf");
 		String[] columns = rsHolder.getDataFrame().columns();
 		List<String> columnList = Arrays.asList(columns);
 		if(!columnList.contains("version")) {
@@ -3074,4 +3129,10 @@ public class SparkExecutor<T> implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+//	public ResultSetHolder registerAndPersistDataframeTOHDFS(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
+//		
+//		rsHolder.getDataFrame().write().sa
+//		return rsHolder;
+//	}
 }

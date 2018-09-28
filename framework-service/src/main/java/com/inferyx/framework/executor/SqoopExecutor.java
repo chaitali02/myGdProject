@@ -252,6 +252,16 @@ public class SqoopExecutor {
 			sqoopOptions.setHiveDatabaseName(sqoopInput.getHiveDatabaseName());
 		}
 		
+		if(sqoopInput.gethCatDatabaseName() != null && !sqoopInput.gethCatDatabaseName().isEmpty()) {
+			sqoopOptions.setHCatDatabaseName(sqoopInput.getHiveDatabaseName());
+		}
+		if(sqoopInput.gethCatalogPartitionKeys() != null && !sqoopInput.gethCatalogPartitionKeys().isEmpty()) {
+			sqoopOptions.setHCatalogPartitionKeys(sqoopInput.gethCatalogPartitionKeys());
+		}
+		if(sqoopInput.gethCatalogPartitionValues() != null && !sqoopInput.gethCatalogPartitionValues().isEmpty()) {
+			sqoopOptions.setHCatalogPartitionValues(sqoopInput.gethCatalogPartitionValues());
+		}
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
