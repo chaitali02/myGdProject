@@ -35,6 +35,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
@@ -2897,10 +2901,19 @@ public class SparkExecutor<T> implements IExecutor {
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Dataset<Row> df = null;
 		if(format == null) {
-			JavaRDD<String> textRDD = sparkSession.sparkContext().textFile(filePath, 0).toJavaRDD();
-			JavaRDD<Row> rowRDD = textRDD.map(RowFactory :: create);
-			StructType schema = rowRDD.first().schema();
-			df = sparkSession.sqlContext().createDataFrame(rowRDD, schema);
+			RemoteIterator<LocatedFileStatus> fileStatus = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path(filePath), false);
+			
+			while(fileStatus.hasNext()) {
+				LocatedFileStatus status = fileStatus.next();
+				String fileName2 = status.getPath().getName();
+				String filePath2 = new String(filePath);
+				filePath2 = filePath2+"/"+fileName2;
+				List<String> filePaths = new ArrayList<>();
+				if(!fileName2.contains("_SUCCESS")) {
+					filePaths.add(filePath2);
+				}
+				df = sparkSession.read().format("csv").option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
+			}
 		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
 		} else {

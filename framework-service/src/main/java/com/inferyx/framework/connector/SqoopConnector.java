@@ -54,7 +54,7 @@ public class SqoopConnector implements IConnector {
 				break;
 			case "MYSQL" : 
 				connectionString = "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort()
-				+ "/" + datasource.getDbname();
+				+ "/" + datasource.getDbname()+"?useSSL=false";
 				userName = datasource.getUsername();
 				password = datasource.getPassword();
 				break;

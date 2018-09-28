@@ -44,7 +44,7 @@ public class MySqlConnector implements IConnector {
 			Connection con = null;
 			try {
 				con = DriverManager.getConnection("jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort()
-						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+						+ "/" + datasource.getDbname() + "?useSSL=false", datasource.getUsername(), datasource.getPassword());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -81,7 +81,7 @@ public class MySqlConnector implements IConnector {
 			Connection con = null;
 			try {
 				con = DriverManager.getConnection("jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort()
-				+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+				+ "/" + datasource.getDbname() + "?useSSL=false", datasource.getUsername(), datasource.getPassword());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

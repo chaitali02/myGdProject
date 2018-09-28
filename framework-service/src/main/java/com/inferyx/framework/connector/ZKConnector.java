@@ -38,6 +38,7 @@ public class ZKConnector {
 			return connHolder;
 		}
 		ZooKeeper zk = new ZooKeeper(connectionString, 10000, null);
+		zkConnMap.put(connectionString, zk);
 		connHolder.setConObject(zk);
         return connHolder;
 	}
