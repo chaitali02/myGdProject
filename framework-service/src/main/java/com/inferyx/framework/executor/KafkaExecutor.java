@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
@@ -24,10 +24,10 @@ import com.inferyx.framework.connector.KafkaConnector;
 import com.inferyx.framework.connector.ZKConnector;
 import com.inferyx.framework.domain.Datasource;
 
-/**
+*//**
  * @author joy
  *
- */
+ *//*
 @Service
 public class KafkaExecutor {
 	
@@ -36,9 +36,9 @@ public class KafkaExecutor {
 	@Autowired
 	private KafkaConnector kafkaConnector;
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	public KafkaExecutor() {
 		// TODO Auto-generated constructor stub
 	}
@@ -74,8 +74,8 @@ public class KafkaExecutor {
 
 	            if (consumerRecords.count()==0) {
 	            	break;
-	                /*if (noRecordsCount > giveUp) break;
-	                else continue;*/
+	                if (noRecordsCount > giveUp) break;
+	                else continue;
 	            }
 
 	            consumerRecords.forEach(record -> {
@@ -91,3 +91,4 @@ public class KafkaExecutor {
 	}
 
 }
+*/

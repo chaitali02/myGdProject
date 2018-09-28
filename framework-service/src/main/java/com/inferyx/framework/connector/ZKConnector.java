@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
@@ -13,19 +13,19 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Datasource;
 
-/**
+*//**
  * @author joy
  *
- */
+ *//*
 @Component
 public class ZKConnector {
 	
 	@Resource
 	ConcurrentHashMap<String, ZooKeeper> zkConnMap;
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	public ZKConnector() {
 		// TODO Auto-generated constructor stub
 	}
@@ -44,3 +44,4 @@ public class ZKConnector {
 	}
 
 }
+*/

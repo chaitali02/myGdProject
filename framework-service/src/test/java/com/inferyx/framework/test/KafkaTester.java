@@ -1,4 +1,4 @@
-package com.inferyx.framework.test;
+/*package com.inferyx.framework.test;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -28,8 +28,8 @@ public class KafkaTester {
 		ApplicationContext appContext = new ClassPathXmlApplicationContext("framework-servlet.xml");
 		KafkaExecutor kafkaExecutor = appContext.getBean(KafkaExecutor.class);
 		String topic = "test";
-		/*Datasource ds = getDatasource();
-		printTopics(kafkaExecutor, ds);*/
+		Datasource ds = getDatasource();
+		printTopics(kafkaExecutor, ds);
 		Datasource ds = getBrokerDatasource();
 		Consumer<Long, String> consumer = kafkaExecutor.createConsumer(ds, topic);
 		for (int i = 0; i < 10; i++) {
@@ -93,8 +93,9 @@ public class KafkaTester {
 		return ds;
 	}
 	
-	/*static void runConsumer(Datasource ds, String topic) {
+	static void runConsumer(Datasource ds, String topic) {
 		
-	}*/
+	}
 
 }
+*/
