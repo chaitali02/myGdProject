@@ -121,7 +121,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable ingest.");
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable ingest.");
 			throw new RuntimeException((message != null) ? message : "Can not create executable ingest.");
 		}			
 		return ingestExec;
@@ -176,7 +176,12 @@ public class IngestServiceImpl extends RuleTemplate {
 					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
-				targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+				if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+					targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+				} else {
+					targetFilePathUrl = String.format("%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
+				}
+				
 //				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
 				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
@@ -335,7 +340,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setHiveImport(false);
 					sqoopInput.setImportIntended(true);
 					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-					String targetDir = String.format("%s/%s", targetDS.getPath(), targetDp.getName());
+					String targetDir = String.format("%s/%s", targetDS.getPath(), ingest.getTargetDetail().getValue());
 					if(targetDir.contains(".db")) {
 						targetDir = targetDir.replaceAll(".db", "");
 					}
@@ -467,7 +472,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			if(message != null && message.toLowerCase().contains("duplicate entry")) {
 				message = "Duplicate entry/entries found for primary key(s).";
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
 			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
 		}
 		
@@ -554,7 +559,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -688,7 +693,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+					commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
 					throw new Exception((message != null) ? message : "Can not restart Ingest.");
 				}
 			}
@@ -699,7 +704,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
 			throw new Exception((message != null) ? message : "Can not restart Ingest.");
 		}
 	}

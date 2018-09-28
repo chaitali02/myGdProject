@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.SaveMode;
+
 /**
  * @author Ganesh
  *
@@ -31,8 +33,26 @@ public class Ingest extends BaseRule {
 	private String targetFormat; //CSV, TSV, PSV, PARQUET
 	private String header;
 	private AttributeRefHolder incrAttr;
+	private SaveMode saveMode = SaveMode.APPEND;
 	
-	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the saveMode
+	 */
+	public SaveMode getSaveMode() {
+		return saveMode;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param saveMode the saveMode to set
+	 */
+	public void setSaveMode(SaveMode saveMode) {
+		this.saveMode = saveMode;
+	}
 	/**
 	 *
 	 * @Ganesh

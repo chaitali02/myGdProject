@@ -80,6 +80,7 @@ public class IngestViewServiceImpl {
 		ingestView.setRunParams(ingest.getRunParams());
 		ingestView.setHeader(ingest.getHeader());
 		ingestView.setIncrAttr(ingest.getIncrAttr());
+		ingestView.setSaveMode(ingest.getSaveMode());
 		List<AttributeRefHolder> filterInfo = ingest.getFilterInfo();
 		Filter resolvedFilter = null;
 		if(filterInfo != null)		{
@@ -127,6 +128,7 @@ public class IngestViewServiceImpl {
 		ingest.setRunParams(ingestView.getRunParams());
 		ingest.setHeader(ingestView.getHeader());
 		ingest.setIncrAttr(ingestView.getIncrAttr());
+		ingest.setSaveMode(ingestView.getSaveMode());
 		if(ingestView.getFilter() != null) {
 			ingest.setFilterInfo(filterInfo);
 		}
