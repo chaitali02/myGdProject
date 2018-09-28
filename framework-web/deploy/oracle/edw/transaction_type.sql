@@ -5,11 +5,4 @@ CREATE TABLE "TRANSACTION_TYPE"
 	"TRANSACTION_TYPE_DESC" VARCHAR2(70 BYTE), 
 	"LOAD_DATE" VARCHAR2(70 BYTE), 
 	"LOAD_ID" NUMBER(30,0)   
-);
-
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/TRANSACTION_TYPE.ctl
+   );
