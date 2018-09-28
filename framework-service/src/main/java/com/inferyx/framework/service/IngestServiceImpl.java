@@ -350,7 +350,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setSourceDirectory(sourceDir);
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setTable(ingest.getTargetDetail().getValue());
-					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
+//					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalLastValue(incrLastValue);
 					}
