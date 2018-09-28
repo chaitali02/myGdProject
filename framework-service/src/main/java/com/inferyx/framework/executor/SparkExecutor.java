@@ -2912,7 +2912,7 @@ public class SparkExecutor<T> implements IExecutor {
 				if(!fileName2.contains("_SUCCESS")) {
 					filePaths.add(filePath2);
 				}
-				df = sparkSession.read().format("csv").option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
+				df = sparkSession.read()/*.format("csv")*/.option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
 			}
 		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);

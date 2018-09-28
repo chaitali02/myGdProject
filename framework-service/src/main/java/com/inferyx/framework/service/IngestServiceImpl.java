@@ -225,7 +225,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 					
 					//applying target schema to df
 					if(header.equalsIgnoreCase("false")) {
@@ -281,7 +281,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 						
 						//adding version column data
-						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
 						//applying target schema to df
 						if(header.equalsIgnoreCase("false")) {
@@ -320,7 +320,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
@@ -382,7 +382,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 					
 					//adding version column data
-					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+//					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, "append", ingest.getTargetFormat());
