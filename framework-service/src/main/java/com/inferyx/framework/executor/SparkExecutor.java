@@ -1754,6 +1754,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df = df.na().fill(null, df.columns());	
 //		df.show(false);
@@ -2920,6 +2922,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, boolean registerTempTable) throws IOException {
+
+		logger.info("inside method registerAndPersistDataframe");
 //		IWriter datapodWriter = null;
 //		try {
 //			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
@@ -2960,6 +2964,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder applySchema(ResultSetHolder rsHolder, Datapod datapod, String tableName, boolean registerTempTable) throws IOException {
+
+		logger.info("inside method applySchema");
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
 //		df.printSchema();
@@ -2986,6 +2992,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String fileName, String tableName, String saveMode, String fileFormat) throws IOException {
+
+		logger.info("inside method writeFileByFormat");
 		Dataset<Row> df = rsHolder.getDataFrame();
 		
 		if(datapod != null && df.columns().length != datapod.getAttributes().size()) {
@@ -3007,6 +3015,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public List<Map<String, Object>> fetchIngestResult(Datapod datapod, String tableName, String filePath, String format, String header, int rowLimit, String clientContext) throws IOException {
+
+		logger.info("inside method fetchIngestResult");
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, header, clientContext, false).getDataFrame();
 
@@ -3032,6 +3042,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
+
+		logger.info("inside method addVersionColToDf");
 		String[] columns = rsHolder.getDataFrame().columns();
 		List<String> columnList = Arrays.asList(columns);
 		if(!columnList.contains("version")) {

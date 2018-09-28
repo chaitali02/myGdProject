@@ -56,7 +56,6 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -641,10 +640,11 @@ public class DataStoreServiceImpl {
 				else
 					tableName = appDatasource.getDbname() + "." + reportName;
 		} else if (metaType == MetaType.ingest) {
+			String[] list = filePath.split("/");				
 			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
+				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
 			} else {
-				tableName = Helper.genTableName(filePath);
+				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
 			}
 		}	
 		return tableName;
