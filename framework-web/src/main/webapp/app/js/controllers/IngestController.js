@@ -37,6 +37,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" },{ "text": "STREAM-FILE", "caption": "Stream - File" },{ "text": "STREAM-TABLE", "caption": "Stream - Table" }];
 	$scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
+	$scope.saveMode=["APPEND","OVERWRITE"];
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -794,6 +795,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.header = $scope.ingestData.header;
+		ingestJson.saveMode = $scope.ingestData.saveMode;
 		if ($scope.ingestCompare == null) {
 			ingestJson.ingestChg = "Y";
 			ingestJson.filterChg = "Y";
