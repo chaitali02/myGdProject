@@ -23,6 +23,7 @@ import com.cloudera.sqoop.tool.ImportTool;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.SqoopConnector;
 import com.inferyx.framework.domain.SqoopInput;
+import com.inferyx.framework.enums.SaveMode;
 
 /**
  * @author joy
@@ -244,7 +245,7 @@ public class SqoopExecutor {
 			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
 		}
 		
-		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase("Y")) {
+		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase(SaveMode.OVERWRITE.toString())) {
 			sqoopOptions.setOverwriteHiveTable(true);
 		}
 		

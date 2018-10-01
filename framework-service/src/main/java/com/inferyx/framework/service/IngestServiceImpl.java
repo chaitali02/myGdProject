@@ -432,7 +432,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					sqoopInput.setImportIntended(true);
 					sqoopInput.setTargetDirectory(targetDir);
 					sqoopInput.setHiveTableName(targetDp.getName());
-					sqoopInput.setOverwriteHiveTable("Y");
+					sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //					sqoopInput.sethCatTableName(sourceDp.getName());
 //					sqoopInput.sethCatDatabaseName(targetDS.getDbname());
