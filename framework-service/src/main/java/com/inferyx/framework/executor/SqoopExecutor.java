@@ -24,6 +24,7 @@ import com.cloudera.sqoop.tool.ImportTool;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.SqoopConnector;
 import com.inferyx.framework.domain.SqoopInput;
+import com.inferyx.framework.enums.SaveMode;
 
 /**
  * @author joy
@@ -239,7 +240,11 @@ public class SqoopExecutor {
 		sqoopOptions.setExplicitInputDelims(sqoopInput.getExplicitInputDelims());
 		sqoopOptions.setExplicitOutputDelims(sqoopInput.getExplicitOutputDelims());
 
-		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase("Y")) {
+		if (StringUtils.isNotBlank(sqoopInput.getHiveTableName())) {
+			sqoopOptions.setHiveTableName(sqoopInput.getHiveTableName());
+		}
+		
+		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase(SaveMode.OVERWRITE.toString())) {
 			sqoopOptions.setOverwriteHiveTable(true);
 		}
 		

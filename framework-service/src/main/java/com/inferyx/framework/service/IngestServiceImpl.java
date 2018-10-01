@@ -427,7 +427,8 @@ public class IngestServiceImpl extends RuleTemplate {
 					if(!partitions.isEmpty()) {
 						
 					}
-					sqoopInput.setOverwriteHiveTable("Y");
+
+					sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
