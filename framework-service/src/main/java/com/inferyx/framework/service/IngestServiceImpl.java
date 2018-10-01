@@ -427,15 +427,15 @@ public class IngestServiceImpl extends RuleTemplate {
 					if(!partitions.isEmpty()) {
 						
 					}
+					sqoopInput.setOverwriteHiveTable("Y");
 					sqoopInput.setTable(sourceDp.getName());
 					sqoopInput.setHiveImport(true);
 					sqoopInput.setImportIntended(true);
 					sqoopInput.setTargetDirectory(targetDir);
-					sqoopInput.setHiveTableName(targetDp.getName());
-					sqoopInput.setOverwriteHiveTable("Y");
-					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
-//					sqoopInput.sethCatTableName(sourceDp.getName());
-//					sqoopInput.sethCatDatabaseName(targetDS.getDbname());
+//					sqoopInput.setHiveTableName(targetDp.getName());
+//					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+					sqoopInput.setHCatalogTableName(targetDp.getName());
+					sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
 //					sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
 //					sqoopInput.sethCatalogPartitionValues(hCatalogPartitionValues);
 					tableName = targetDp.getName();

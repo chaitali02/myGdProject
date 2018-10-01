@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hive.common.util.HiveStringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -237,31 +238,26 @@ public class SqoopExecutor {
 		}
 		sqoopOptions.setExplicitInputDelims(sqoopInput.getExplicitInputDelims());
 		sqoopOptions.setExplicitOutputDelims(sqoopInput.getExplicitOutputDelims());
-		if (StringUtils.isNotBlank(sqoopInput.getHiveTableName())) {
-			sqoopOptions.setHiveTableName(sqoopInput.getHiveTableName());
-		}
-		if (StringUtils.isNotBlank(sqoopInput.gethCatTableName())) {
-			sqoopOptions.setHCatTableName(sqoopInput.gethCatTableName());
-		}
-		
+
 		if(sqoopInput.getOverwriteHiveTable() != null && sqoopInput.getOverwriteHiveTable().equalsIgnoreCase("Y")) {
 			sqoopOptions.setOverwriteHiveTable(true);
 		}
 		
-		if(sqoopInput.getHiveDatabaseName() != null && !sqoopInput.getHiveDatabaseName().isEmpty()) {
+		if (StringUtils.isNotBlank(sqoopInput.getHiveTableName())) {
+			sqoopOptions.setHiveTableName(sqoopInput.getHiveTableName());
+		}
+		if(StringUtils.isNotBlank(sqoopInput.getHiveDatabaseName())) {
 			sqoopOptions.setHiveDatabaseName(sqoopInput.getHiveDatabaseName());
 		}
 		
-		if(sqoopInput.gethCatDatabaseName() != null && !sqoopInput.gethCatDatabaseName().isEmpty()) {
-			sqoopOptions.setHCatDatabaseName(sqoopInput.getHiveDatabaseName());
-		}
-		if(sqoopInput.gethCatalogPartitionKeys() != null && !sqoopInput.gethCatalogPartitionKeys().isEmpty()) {
-			sqoopOptions.setHCatalogPartitionKeys(sqoopInput.gethCatalogPartitionKeys());
-		}
-		if(sqoopInput.gethCatalogPartitionValues() != null && !sqoopInput.gethCatalogPartitionValues().isEmpty()) {
-			sqoopOptions.setHCatalogPartitionValues(sqoopInput.gethCatalogPartitionValues());
+		if (StringUtils.isNotBlank(sqoopInput.getHCatalogTableName())) {
+			sqoopOptions.setHCatTableName(sqoopInput.getHCatalogTableName());
 		}
 		
+		if(StringUtils.isNotBlank(sqoopInput.getHCatalogDatabaseName())) {
+			sqoopOptions.setHCatDatabaseName(sqoopInput.getHCatalogDatabaseName());
+		}
+
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
@@ -275,6 +271,9 @@ public class SqoopExecutor {
 			default : 
 			}
 		}
+		
+		sqoopOptions.setThrowOnError(true);
+		
 		if(inputParams != null && !inputParams.isEmpty()) {
 			Class sqoopOptionsClass = SqoopOptions.class;
 			Method[] methods = sqoopOptionsClass.getMethods();
@@ -352,6 +351,9 @@ public class SqoopExecutor {
 			setSqoopOptions(sqoopOptions, sqoopInput, inputParams);
 		}
 		int res;
+
+		//System.out.println("Jar File used in classpath : "+ HiveStringUtils.class.getProtectionDomain().getCodeSource().getLocation().toString());
+		
 		if (sqoopInput.getImportIntended()) {
 			res = new ImportTool().run(sqoopOptions);
 		} else {
