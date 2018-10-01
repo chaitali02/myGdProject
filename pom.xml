@@ -120,6 +120,12 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+			<version>${spark.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.xerial.snappy</groupId>
 			<artifactId>snappy-java</artifactId>
 			<version>1.1.2.1</version>
@@ -597,7 +603,7 @@
 	</dependencies>
 
 	<properties>
-		<spark.version>2.2.0.cloudera2</spark.version>
+		<spark.version>2.2.0.cloudera3</spark.version>
 		<livy.version>0.4.0-incubating</livy.version>
 		<hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
 		<hive.version>1.1.0-cdh5.13.0</hive.version>
