@@ -14,11 +14,4 @@ CREATE TABLE "CUSTOMER"
 	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
 	"LOAD_ID" NUMBER(30,0), 
 	 CONSTRAINT "CUSTOMER_PK" PRIMARY KEY ("CUSTOMER_ID", "LOAD_DATE")
-)
-
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/CUSTOMER.ctl
+   );

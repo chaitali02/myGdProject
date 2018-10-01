@@ -4,11 +4,5 @@ CREATE TABLE "PRODUCT_TYPE"
 	"PRODUCT_TYPE_CODE" VARCHAR2(70 BYTE), 
 	"PRODUCT_TYPE_DESC" VARCHAR2(70 BYTE), 
 	"LOAD_DATE" VARCHAR2(70 BYTE), 
-    "LOAD_ID" VARCHAR2(70 BYTE)
+        "LOAD_ID" VARCHAR2(70 BYTE)
    );
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/PRODUCT_TYPE.ctl

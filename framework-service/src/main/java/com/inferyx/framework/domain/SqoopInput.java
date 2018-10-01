@@ -28,14 +28,12 @@ public class SqoopInput {
 	private boolean explicitInputDelims;
 	private boolean  explicitOutputDelims;
 	private boolean importIntended;	// True - Sqoop Import; False - Sqoop Export
-	private String hiveTableName;
-	private String hCatTableName;
 	private FileLayout fileLayout;
 	private String overwriteHiveTable; 
+	private String hiveTableName;
 	private String hiveDatabaseName;
-	private String hCatDatabaseName;
-	private String hCatalogPartitionKeys;
-	private String hCatalogPartitionValues;
+	private String hCatalogTableName;
+	private String hCatalogDatabaseName;
 	
 	/**
 	 *
@@ -43,8 +41,8 @@ public class SqoopInput {
 	 *
 	 * @return the hCatDatabaseName
 	 */
-	public String gethCatDatabaseName() {
-		return hCatDatabaseName;
+	public String getHCatalogDatabaseName() {
+		return hCatalogDatabaseName;
 	}
 
 	/**
@@ -53,48 +51,8 @@ public class SqoopInput {
 	 *
 	 * @param hCatDatabaseName the hCatDatabaseName to set
 	 */
-	public void sethCatDatabaseName(String hCatDatabaseName) {
-		this.hCatDatabaseName = hCatDatabaseName;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the hCatalogPartitionKeys
-	 */
-	public String gethCatalogPartitionKeys() {
-		return hCatalogPartitionKeys;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param hCatalogPartitionKeys the hCatalogPartitionKeys to set
-	 */
-	public void sethCatalogPartitionKeys(String hCatalogPartitionKeys) {
-		this.hCatalogPartitionKeys = hCatalogPartitionKeys;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the hCatalogPartitionValues
-	 */
-	public String gethCatalogPartitionValues() {
-		return hCatalogPartitionValues;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param hCatalogPartitionValues the hCatalogPartitionValues to set
-	 */
-	public void sethCatalogPartitionValues(String hCatalogPartitionValues) {
-		this.hCatalogPartitionValues = hCatalogPartitionValues;
+	public void setHCatalogDatabaseName(String hCatalogDatabaseName) {
+		this.hCatalogDatabaseName = hCatalogDatabaseName;
 	}
 
 	/**
@@ -500,20 +458,17 @@ public class SqoopInput {
 	/**
 	 * @return the hCatTableName
 	 */
-	public String gethCatTableName() {
-		return hCatTableName;
+	public String getHCatalogTableName() {
+		return hCatalogTableName;
 	}
 
 	/**
 	 * @param hCatTableName the hCatTableName to set
 	 */
-	public void sethCatTableName(String hCatTableName) {
-		this.hCatTableName = hCatTableName;
+	public void setHCatalogTableName(String hCatalogTableName) {
+		this.hCatalogTableName = hCatalogTableName;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -525,7 +480,10 @@ public class SqoopInput {
 				+ ", exportDir=" + exportDir + ", numMappers=" + numMappers + ", linesTerminatedBy=" + linesTerminatedBy
 				+ ", fieldsTerminatedBy=" + fieldsTerminatedBy + ", explicitInputDelims=" + explicitInputDelims
 				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
-				+ ", hiveTableName=" + hiveTableName + ", hCatTableName=" + hCatTableName + "]";
+				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
+				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
+				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + "]";
 	}
+
 	
 }

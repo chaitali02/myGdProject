@@ -1,7 +1,7 @@
 /**
  * 
- *//*
-<!--package com.inferyx.framework.connector;
+ */
+package com.inferyx.framework.connector;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -18,19 +18,19 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.domain.Datasource;
 
-*//**
+/**
  * @author joy
  *
- *//*
+ */
 @Service
 public class KafkaConnector {
 	
 	@Resource
 	ConcurrentHashMap<String, Consumer> kafkaConsumerMap;
 
-	*//**
+	/**
 	 * 
-	 *//*
+	 */
 	public KafkaConnector() {
 		// TODO Auto-generated constructor stub
 	}
@@ -61,4 +61,3 @@ public class KafkaConnector {
 
 
 }
-*/

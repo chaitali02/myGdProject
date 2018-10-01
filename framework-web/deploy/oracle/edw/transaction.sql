@@ -13,11 +13,4 @@ CREATE TABLE "TRANSACTION"
 	"NOTES" VARCHAR2(90 BYTE), 
 	"LOAD_DATE" VARCHAR2(70 BYTE), 
 	"LOAD_ID" NUMBER(30,0)
-);
-
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/TRANSACTION.ctl
+   );
