@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
@@ -61,8 +60,29 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 	private String appUuid;
 	private Datasource sourceDS;
 	private Datasource targetDS;
+	private String fileName;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
 	/**
 	 *
@@ -433,10 +453,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 			String tableName = null;
 			if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
 				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-				List<String> fileNameList = ingestServiceImpl.getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
-				if(fileNameList == null || fileNameList.isEmpty()) {
-					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-				}
+//				List<String> fileNameList = ingestServiceImpl.getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
+//				if(fileNameList == null || fileNameList.isEmpty()) {
+//					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+//				}
 				
 				if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 					targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
@@ -445,7 +465,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				}
 				
 //				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
-				for(String fileName : fileNameList) {
+//				for(String fileName : fileNameList) {
 					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
 					sourceFilePathUrl = sourceFilePathUrl + fileName;
 					
@@ -464,7 +484,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
-				}
+//				}
 //				targetFilePathUrl = null;
 			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
@@ -531,12 +551,12 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 
 					logger.info("this is export block from local file to Table");
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-					List<String> fileNameList = ingestServiceImpl.getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
-					if(fileNameList == null || fileNameList.isEmpty()) {
-						throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-					}
-					
-					for(String fileName : fileNameList) {
+//					List<String> fileNameList = ingestServiceImpl.getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
+//					if(fileNameList == null || fileNameList.isEmpty()) {
+//						throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+//					}
+//					
+//					for(String fileName : fileNameList) {
 						sourceFilePathUrl = sourceFilePathUrl + fileName;					
 						String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 						//reading from source
@@ -554,7 +574,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						//writing to target
 						sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
 						countRows = rsHolder.getCountRows();
-					}
+//					}
 				}
 			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 								
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 

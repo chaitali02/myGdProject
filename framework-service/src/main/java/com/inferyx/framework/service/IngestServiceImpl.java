@@ -179,7 +179,22 @@ public class IngestServiceImpl extends RuleTemplate {
 			runIngestServiceImpl.setAppUuid(appUuid);
 			runIngestServiceImpl.setSourceDS(sourceDS);
 			runIngestServiceImpl.setTargetDS(targetDS);
-			runIngestServiceImpl.call();
+			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
+			if(ingestionType.equals(IngestionType.FILETOFILE)
+					|| (ingestionType.equals(IngestionType.FILETOTABLE)
+					&& sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
+				if(fileNameList == null || fileNameList.isEmpty()) {
+					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+				}
+				
+				for(String fileName : fileNameList) {
+					runIngestServiceImpl.setFileName(fileName);
+					runIngestServiceImpl.call();
+				}
+			} else {
+				runIngestServiceImpl.call();
+			}
 //
 //			logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
 //			String tableName = null;
@@ -554,7 +569,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		}		
 //		
 //		String regex1 = "^.*" + fileName + "+";
-//		String regex2 = "^"+fileName+"[_]";
+		String regex2 = "^"+fileName+"[_]"+"\\.[a-zA-Z]";
 		return fileNameList;
 	}
 	
