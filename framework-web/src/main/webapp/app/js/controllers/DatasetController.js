@@ -339,6 +339,29 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 	}
+    $scope.getParamByApp=function(){
+		
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+		then(function (response) { onSuccessGetParamByApp(response.data)});
+		var onSuccessGetParamByApp=function(response){
+		  $scope.allparamlistParams=[];
+		  if(response.length >0){
+			var paramsArray = [];
+			for(var i=0;i<response.length;i++){
+			  var paramjson={}
+			  var paramsjson = {};
+			  paramsjson.uuid = response[i].ref.uuid;
+			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+			  paramsjson.attributeId = response[i].paramId;
+			  paramsjson.attrType = response[i].paramType;
+			  paramsjson.paramName = response[i].paramName;
+			  paramsjson.caption = "app."+paramsjson.paramName
+			  paramsArray[i] = paramsjson
+			}
+			$scope.allparamlistParams=paramsArray;
+		  }
+		}
+	  }
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -824,30 +847,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 	}
    
-	$scope.getParamByApp=function(){
-		
-		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
-		then(function (response) { onSuccessGetParamByApp(response.data)});
-		var onSuccessGetParamByApp=function(response){
-		  $scope.allparamlistParams=[];
-		  if(response.length >0){
-			var paramsArray = [];
-			for(var i=0;i<response.length;i++){
-			  var paramjson={}
-			  var paramsjson = {};
-			  paramsjson.uuid = response[i].ref.uuid;
-			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
-			  paramsjson.attributeId = response[i].paramId;
-			  paramsjson.attrType = response[i].paramType;
-			  paramsjson.paramName = response[i].paramName;
-			  paramsjson.caption = "app."+paramsjson.paramName
-			  paramsArray[i] = paramsjson
-			}
-			$scope.allparamlistParams=paramsArray;
-		  }
-		}
-	  }
-
+	
 	$scope.checkAllAttributeRow = function () {
 		angular.forEach($scope.attributeTableArray, function (attribute) {
 			attribute.selected = $scope.selectAllAttributeRow;
