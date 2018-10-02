@@ -458,16 +458,21 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 //					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 //				}
 				
+				String targetFileName = ingest.getTargetDetail().getValue();
 				if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 					targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
 				} else {
-					targetFilePathUrl = String.format("%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
+					if(!targetFileName.toLowerCase().endsWith(".csv")) {
+						targetFileName = targetFileName.concat(".csv");
+					}
+					targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
 				}
 				
 //				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
 //				for(String fileName : fileNameList) {
-					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
-					sourceFilePathUrl = sourceFilePathUrl + fileName;
+//					String targetFileName = ingest.getTargetDetail().getValue();//fileName.substring(0, fileName.lastIndexOf("."));
+				
+//					sourceFilePathUrl = sourceFilePathUrl + fileName;
 					
 					String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 					//reading from source
@@ -482,7 +487,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					}
 					
 					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, targetFileName, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 					countRows = rsHolder.getCountRows();
 //				}
 //				targetFilePathUrl = null;

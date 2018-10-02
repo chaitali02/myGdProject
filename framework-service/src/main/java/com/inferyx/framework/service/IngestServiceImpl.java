@@ -53,11 +53,9 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.enums.SqoopIncrementalMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -183,7 +181,18 @@ public class IngestServiceImpl extends RuleTemplate {
 			if(ingestionType.equals(IngestionType.FILETOFILE)
 					|| (ingestionType.equals(IngestionType.FILETOTABLE)
 					&& sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
+				//check whether target file already exist
+					if(ingestionType.equals(IngestionType.FILETOFILE)) {
+						List<String> targetFileNameList = getFileDetailsByFileName(targetDS.getPath(), ingest.getTargetDetail().getValue(), ingest.getTargetFormat(), ingest.getIgnoreCase());
+						for(String fileName : targetFileNameList) {
+							if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
+								throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
+							}
+						}
+					}
+				
+				//get files matching the criteria
+				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
 				if(fileNameList == null || fileNameList.isEmpty()) {
 					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
@@ -517,6 +526,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
+	@SuppressWarnings("unused")
 	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();
 		try {
@@ -542,22 +552,36 @@ public class IngestServiceImpl extends RuleTemplate {
 		return attrName;
 	}
 
-	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat) throws JsonProcessingException {
+	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException {
 		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
+		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
+				
 				if(fileName.startsWith("*") && fileName.endsWith("*")) {
-					Pattern regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+					Pattern regex = null;
+					if(isCaseSensitive) {
+						regex = Pattern.compile("^.*"+fileName+".*$");
+					} else {
+						regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+					}
+					 
 					Matcher mtch = regex.matcher(dirFileName);
 			        if(mtch.matches()){
 			        	fileNameList.add(dirFileName);	
 			        }
 				} else {
-					Pattern regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+					Pattern regex = null;
+					if(isCaseSensitive) {
+						regex = Pattern.compile("^"+fileName+"$");
+					} else {
+						regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+					}
+					
 					Matcher mtch = regex.matcher(dirFileName);
 			        if(mtch.matches()){
 			        	fileNameList.add(dirFileName);	
@@ -573,6 +597,14 @@ public class IngestServiceImpl extends RuleTemplate {
 		return fileNameList;
 	}
 	
+	private boolean getCaseSensitivity(String ignoreCase) {
+		if(ignoreCase.equalsIgnoreCase("Y")) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public List<Map<String, Object>> getResults(String execUuid, String execVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -591,7 +623,14 @@ public class IngestServiceImpl extends RuleTemplate {
 			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			
 			if(ingest.getTargetFormat() != null && !ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), datastore.getLocation(), Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
+
+				String filePathUrl = null;
+				if(datastore.getLocation().endsWith("/")) {
+					filePathUrl = datastore.getLocation().concat(ingest.getTargetDetail().getValue()).concat(ingest.getTargetDetail().getValue().toLowerCase().endsWith(".csv") ? "" : ".csv");
+				} else {
+					filePathUrl = datastore.getLocation().concat("/").concat(ingest.getTargetDetail().getValue()).concat(ingest.getTargetDetail().getValue().toLowerCase().endsWith(".csv") ? "" : ".csv");
+				}
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), filePathUrl, Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
 			} else {
@@ -674,7 +713,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	public String getLastIncrValue(String igstExecUuid) throws JsonProcessingException {
 		//first getting latest ingest exec then obtaining last incremental value from it
 		IngestExec latestIngExec = (IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
-		return latestIngExec.lastIncrValue;
+		return latestIngExec.getLastIncrValue();
 	}
 
 	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {

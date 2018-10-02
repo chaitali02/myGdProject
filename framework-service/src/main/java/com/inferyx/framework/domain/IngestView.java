@@ -32,7 +32,26 @@ public class IngestView extends BaseEntity {
 	private String header;
 	private AttributeRefHolder incrAttr;
 	private SaveMode saveMode = SaveMode.APPEND;
+	private String ignoreCase = "N";
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ignoreCase
+	 */
+	public String getIgnoreCase() {
+		return ignoreCase;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ignoreCase the ignoreCase to set
+	 */
+	public void setIgnoreCase(String ignoreCase) {
+		this.ignoreCase = ignoreCase;
+	}
 	/**
 	 *
 	 * @Ganesh
