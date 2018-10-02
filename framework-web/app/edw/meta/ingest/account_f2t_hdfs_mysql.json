@@ -65,6 +65,7 @@
   "filterInfo": null,
   "runParams": "NUMMAPPER=6",
   "sourceFormat": null,
+  "saveMode" : "APPEND",
   "targetFormat": "CSV",
   "header": "N",
   "incrAttr": {
