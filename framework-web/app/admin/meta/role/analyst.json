@@ -2013,7 +2013,7 @@
 		{
 			"ref": {
 				"type": "privilege",
-				"uuid": "b5737b28-a539-4072-963a-5a1f6fe53e95",
+				"uuid": "b5737b28-a539-4072-963a-5a1f6fe53e94",
 				"version": null,
 				"name": "ProfileAdd"
 			},
