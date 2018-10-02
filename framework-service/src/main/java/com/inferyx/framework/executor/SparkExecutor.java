@@ -2911,7 +2911,7 @@ public class SparkExecutor<T> implements IExecutor {
 				if(!fileName2.contains("_SUCCESS")) {
 					filePaths.add(filePath2);
 				}
-				df = sparkSession.read()/*.format("csv")*/.option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
+				df = sparkSession.read().option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
 			}
 		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
@@ -2961,9 +2961,9 @@ public class SparkExecutor<T> implements IExecutor {
 		df.printSchema();
 //		df.show(true);
 		if(saveMode.equalsIgnoreCase(SaveMode.Append.toString()))	{
-			df.write().mode(SaveMode.Append).parquet(filePathUrl);
+			df.coalesce(1).write().mode(SaveMode.Append).parquet(filePathUrl);
 		}else if(saveMode.equalsIgnoreCase(SaveMode.Overwrite.toString())) {
-			df.write().mode(SaveMode.Overwrite).parquet(filePathUrl);
+			df.coalesce(1).write().mode(SaveMode.Overwrite).parquet(filePathUrl);
 		}
 		
 		if(registerTempTable) {
@@ -3013,13 +3013,13 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		
 		if(fileFormat == null) {
-			df.write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
+			df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", ",").csv(targetPath);
+			df.coalesce(1).write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
+			df.coalesce(1).write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
-			df.write().mode(saveMode).option("delimiter", "|").csv(targetPath);
+			df.coalesce(1).write().mode(saveMode).option("delimiter", "|").csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 		}
