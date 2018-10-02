@@ -186,7 +186,9 @@ public class IngestServiceImpl extends RuleTemplate {
 				//check whether target file already exist
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
-					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), ingest.getTargetDetail().getValue(), ingest.getTargetFormat(), ingest.getIgnoreCase());
+					String targetFileName = ingest.getTargetDetail().getValue();
+					targetFileName = targetFileName.endsWith(".csv") ? targetFileName : targetFileName.concat(".csv");
+					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetFormat(), ingest.getIgnoreCase());
 					for(String fileName : targetFileNameList) {
 						if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
 							throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
