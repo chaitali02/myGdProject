@@ -25,8 +25,6 @@ import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
-import org.apache.spark.streaming.kafka010.HasOffsetRanges;
-import org.apache.spark.streaming.kafka010.OffsetRange;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -63,7 +61,6 @@ public class StreamToTableHelper implements Serializable {
 
 			@Override
 			public void call(JavaRDD<ConsumerRecord<Long, String>> rdd) throws Exception {
-				final OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
 				Broadcast<SparkSession> broadcastSession = rdd.context().broadcast(session, ClassManifestFactory.fromClass(SparkSession.class));
 				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<Long, String>>>() {
 					@Override
@@ -85,9 +82,9 @@ public class StreamToTableHelper implements Serializable {
 						df.write().mode(saveMode).insertInto(tableName);
 						System.out.println("Hive writing ends for this partition >>>>>>>>>>>>>>>>>>>> ");
 //						df.write().mode(saveMode).jdbc(url, tableName, connectionProperties);
-						OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
-						System.out.println("RECEIVED >>> " +
-								o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
+//						OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
+//						System.out.println("RECEIVED >>> " +
+//								o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
 						
 					}
 				});
