@@ -67,6 +67,8 @@
   "runParams": null,
   "sourceFormat": null,
   "targetFormat": "PARQUET",
+  "saveMode" : "OVERWRITE",
+  "ignoreCase" : "N",
   "header": "N",
   "incrAttr": {
     "ref": {

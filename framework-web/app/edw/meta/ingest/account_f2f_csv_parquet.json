@@ -27,6 +27,8 @@
     "sourceFormat" : "CSV",
     "targetFormat" : "PARQUET",
     "header" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
     "uuid" : "790e819b-23a8-486b-86a1-b6b83cc40ff7",
     "version" : "1537857383",
     "name" : "account_f2f_csv_parquet",

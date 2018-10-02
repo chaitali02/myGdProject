@@ -37,7 +37,8 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" },{ "text": "STREAM-FILE", "caption": "Stream - File" },{ "text": "STREAM-TABLE", "caption": "Stream - Table" }];
 	$scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
-	$scope.saveMode=["APPEND","OVERWRITE"];
+	$scope.saveModeTable=["APPEND","OVERWRITE"];
+	$scope.saveModeFile=["OVERWRITE"];
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -481,10 +482,15 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			$scope.selectedTargetDetail = null;
 			var selectedTargetDetail = {};
 
-			setTimeout(function (params) {
-				selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
-				selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
-				$scope.selectedTargetDetail = selectedTargetDetail;
+			setTimeout(function () {
+				if ($scope.selectedTargetType == "FILE") {
+					$scope.selectedTargetDetail = $scope.ingestData.targetDetail.value;
+				}
+				else {
+					selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
+					selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
+					$scope.selectedTargetDetail = selectedTargetDetail;
+			    }
 			}, 100);
 
 			$scope.filterTableArray = response.filterInfo;
@@ -795,7 +801,13 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.header = $scope.ingestData.header;
-		ingestJson.saveMode = $scope.ingestData.saveMode;
+		ingestJson.ignoreCase= $scope.ingestData.ignoreCase
+		if($scope.ingestData.saveMode){
+			ingestJson.saveMode = $scope.ingestData.saveMode;
+		}
+		else{
+			ingestJson.saveMode=null;
+		}
 		if ($scope.ingestCompare == null) {
 			ingestJson.ingestChg = "Y";
 			ingestJson.filterChg = "Y";
@@ -1103,7 +1115,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
-		$state.go('ingestrulegrouplist', {
+		$state.go('ingestrulegroupdetail', {
 			id: uuid,
 			version: version,
 			mode: 'false'
@@ -1113,7 +1125,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 	$scope.showview = function (uuid, version) {
 		if (!$scope.isEdit) {
 			$scope.showPage()
-			$state.go('ingestrulegrouplist', {
+			$state.go('ingestrulegroupdetail', {
 				id: uuid,
 				version: version,
 				mode: 'true'

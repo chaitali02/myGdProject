@@ -239,12 +239,37 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
                 return response;
             })
     }
+    factory.getIngestByIngestExec = function (uuid,version) {
+        var url = $location.absUrl().split("app")[0]
+        console.log(url)
+        return $http({
+            method: 'GET',
+            url: url + "ingest/getIngestByIngestExec?type=ingestexec&action=view&uuid=" + uuid+"&version="+version,
+        }).
+            then(function (response, status, headers) {
+                return response;
+            })
+    }
     return factory;
 })
 
 
 DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory, sortFactory) {
-
+    this.getIngestByIngestExec = function (uuid,version) {
+        var deferred = $q.defer();
+        IngestRuleFactory.getIngestByIngestExec(uuid,version).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
+        var OnSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            });
+        }
+        var onError = function (response) {
+            deferred.reject({
+                data: response
+            })
+        }
+        return deferred.promise;
+    }/*End*/
     this.getDatapodByDatasource = function (uuid) {
         var deferred = $q.defer();
         IngestRuleFactory.findDatapodByDatasource(uuid).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });

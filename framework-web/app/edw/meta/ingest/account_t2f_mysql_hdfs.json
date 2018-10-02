@@ -65,6 +65,8 @@
   "runParams": null,
   "sourceFormat": null,
   "targetFormat": null,
+  "saveMode" : "OVERWRITE",
+  "ignoreCase" : "N",
   "header": "N",
   "incrAttr": {
     "ref": {

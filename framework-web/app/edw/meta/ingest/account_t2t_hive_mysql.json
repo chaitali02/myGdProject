@@ -71,6 +71,7 @@
   "runParams": "NUMMAPPER=6",
   "sourceFormat": null,
   "targetFormat": null,
+  "saveMode" : "APPEND",
   "header": "N",
   "incrAttr": {
     "ref": {

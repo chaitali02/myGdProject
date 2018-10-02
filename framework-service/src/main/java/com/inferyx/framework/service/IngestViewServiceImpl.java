@@ -140,7 +140,7 @@ public class IngestViewServiceImpl {
 	public List<AttributeRefHolder> processFilter(IngestView ingestView, String ingestUuid) throws JsonProcessingException, JSONException, ParseException {
 		Filter filter = new Filter();
 		filter.setName(ingestView.getName());
-		filter.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingestUuid, null)));
+		filter.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod, ingestView.getSourceDetail().getRef().getUuid(), null)));
 		filter.setTags(ingestView.getTags());
 		filter.setDesc(ingestView.getDesc());
 		filter.setFilterInfo(ingestView.getFilter().getFilterInfo());
