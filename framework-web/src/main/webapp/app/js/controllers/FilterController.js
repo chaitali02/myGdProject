@@ -436,7 +436,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
-
+        
 		$scope.isDependencyShow = true;
 		MetadataFilterSerivce.getAllVersionByUuid($stateParams.id, "filter").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
@@ -447,8 +447,9 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 			}
 		}//End  getAllVersionByUuid
 
-		MetadataFilterSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, 'filter').then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
+		MetadataFilterSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, 'filter').then(function (response) { onSuccessGetOneByUuidandVersion(response.data) });
+		var onSuccessGetOneByUuidandVersion = function (response) {
+			
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.filter.version;

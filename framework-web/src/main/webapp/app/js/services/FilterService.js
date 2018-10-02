@@ -457,21 +457,33 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 				    }
 				}
-				else if (response.filterInfo[i].operand[1].ref.type == "datapod"  ||  response.filterInfo[i].operand[1].ref.type == "dataset") {
+				else if ( response.filterInfo[i].operand[1].ref.type == "datapod") {
 					var rhsdatapodAttribute = {}
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
-					if(response.filterInfo[i].operand[1].ref.type == "dataset"  && response.dependsOn.ref.uuid != response.filterInfo[i].operand[1].ref.uuid){
-                    return false;
-					}
+					filterInfo.rhstype = obj;
+					filterInfo.isrhsSimple = false;
+					filterInfo.isrhsFormula = false
+					filterInfo.isrhsDatapod = true;
+					rhsdatapodAttribute.uuid =  response.filterInfo[i].operand[1].ref.uuid;
+					rhsdatapodAttribute.type =  response.filterInfo[i].operand[1].ref.type;
+					rhsdatapodAttribute.datapodname =  response.filterInfo[i].operand[1].ref.name;
+					rhsdatapodAttribute.name =  response.filterInfo[i].operand[1].attributeName;
+					rhsdatapodAttribute.dname =  response.filterInfo[i].operand[1].ref.name + "." +  response.filterInfo[i].operand[1].attributeName;
+					rhsdatapodAttribute.attributeId =  response.filterInfo[i].operand[1].attributeId;
+					filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+				}
+				else if ( response.filterInfo[i].operand[1].ref.type == "dataset" && response.dependsOn.ref.uuid ==  response.filterInfo[i].operand[1].ref.uuid) {
+					var rhsdatapodAttribute = {}
+					var obj = {}
+					obj.text = "datapod"
+					obj.caption = "attribute"
 					filterInfo.rhstype = obj;
 					filterInfo.isrhsSimple = false;
 					filterInfo.isrhsFormula = false
 					filterInfo.isrhsDatapod = true;
 					filterInfo.isrhsDataset = false;
-					filterInfo.isrhsFunction = false;
-					filterInfo.isrhsParamlist = false;
 					rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
 					rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
 					rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
@@ -554,6 +566,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 			}
 
 			filterjson.filterInfo = filterInfoArray
+			console.log(filterjson)
 			deferred.resolve({
 				data: filterjson
 			})
@@ -569,17 +582,17 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 			datasetviewjson.dataset = response;
 			var filterInfoArray = [];
 			if (response.filter != null) {
-				for (var k = 0; k < response.filter.filterInfo.length; k++) {
+				for (var k = 0; k <  response.filterInfo.length; k++) {
 					var filterInfo = {};
 					var lhsFilter = {};
-					lhsFilter.uuid = response.filter.filterInfo[k].operand[0].ref.uuid
-					lhsFilter.datapodname = response.filter.filterInfo[k].operand[0].ref.name
-					lhsFilter.attributeId = response.filter.filterInfo[k].operand[0].attributeId;
-					lhsFilter.name = response.filter.filterInfo[k].operand[0].attributeName;
-					filterInfo.logicalOperator = response.filter.filterInfo[k].logicalOperator
+					lhsFilter.uuid =  response.filterInfo[k].operand[0].ref.uuid
+					lhsFilter.datapodname =  response.filterInfo[k].operand[0].ref.name
+					lhsFilter.attributeId =  response.filterInfo[k].operand[0].attributeId;
+					lhsFilter.name =  response.filterInfo[k].operand[0].attributeName;
+					filterInfo.logicalOperator =  response.filterInfo[k].logicalOperator
 					filterInfo.lhsFilter = lhsFilter;
-					filterInfo.operator = response.filter.filterInfo[k].operator;
-					filterInfo.filtervalue = response.filter.filterInfo[k].operand[1].value;
+					filterInfo.operator =  response.filterInfo[k].operator;
+					filterInfo.filtervalue =  response.filterInfo[k].operand[1].value;
 					filterInfoArray.push(filterInfo);
 				}
 			}
