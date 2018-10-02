@@ -3,9 +3,12 @@
  */
 package com.inferyx.framework.executor;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +18,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.Metadata;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
@@ -28,7 +36,9 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.executor.helper.StreamToTableHelper;
 import com.inferyx.framework.factory.ConnectionFactory;
 
 /**
@@ -42,6 +52,8 @@ public class SparkStreamingExecutor {
 	ConnectionFactory connectionFactory;
 	@Resource
 	ConcurrentHashMap<String, JavaStreamingContext> streamingCtxMap;
+	@Autowired
+	StreamToTableHelper streamToTableHelper;
 
 	/**
 	 * 
@@ -82,6 +94,42 @@ public class SparkStreamingExecutor {
 			e.printStackTrace();
 		}
 		return stream;
+	}
+	
+	
+	/**
+	 * 
+	 * @param fieldNames
+	 * @param dataTypes
+	 * @return
+	 */
+	public StructType createStruct(String []fieldNames, DataType []dataTypes) {
+		if (fieldNames == null || dataTypes == null || fieldNames.length == 0 || dataTypes.length != fieldNames.length) {
+			return null;
+		}
+		List<StructField> structFieldsList = new ArrayList<>();
+		for (int i = 0; i < fieldNames.length; i++) {
+			structFieldsList.add(new StructField(fieldNames[i], dataTypes[i], true, Metadata.empty()));
+		}
+		return new StructType(structFieldsList.toArray(new StructField[fieldNames.length]));
+	}
+	
+	public void execute (String topic, 
+							String []fieldNames, 
+							DataType []dataTypes, 
+							Datapod datapod, 
+							SaveMode saveMode, 
+							JavaInputDStream<ConsumerRecord<Long, String>> stream) throws IOException {
+		Map<String, Object> inputMap = new HashMap<>();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//		ConnectionHolder conHolder = connector.getConnection();
+		inputMap.put("STREAM", stream);
+		inputMap.put("SCHEMA", createStruct(fieldNames, dataTypes));
+		inputMap.put("CONNECTOR", connector);
+		inputMap.put("SAVEMODE", saveMode);
+//		inputMap.put("URL", url);
+		inputMap.put("TABLE_NAME", datapod.getName());
+		streamToTableHelper.help(inputMap);
 	}
 	
 	public void start(String topic) {
