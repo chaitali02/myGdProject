@@ -13,6 +13,8 @@ package com.inferyx.framework.service;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,8 +28,10 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -177,33 +181,34 @@ public class IngestServiceImpl extends RuleTemplate {
 			runIngestServiceImpl.setAppUuid(appUuid);
 			runIngestServiceImpl.setSourceDS(sourceDS);
 			runIngestServiceImpl.setTargetDS(targetDS);
-			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
-			if(ingestionType.equals(IngestionType.FILETOFILE)
-					|| (ingestionType.equals(IngestionType.FILETOTABLE)
-					&& sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+			
+			if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				//check whether target file already exist
-					if(ingestionType.equals(IngestionType.FILETOFILE)) {
-						List<String> targetFileNameList = getFileDetailsByFileName(targetDS.getPath(), ingest.getTargetDetail().getValue(), ingest.getTargetFormat(), ingest.getIgnoreCase());
-						for(String fileName : targetFileNameList) {
-							if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
-								throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
-							}
+				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+						&& ingest.getSaveMode() == null) {
+					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), ingest.getTargetDetail().getValue(), ingest.getTargetFormat(), ingest.getIgnoreCase());
+					for(String fileName : targetFileNameList) {
+						if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
+							throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
 						}
 					}
+				}
 				
 				//get files matching the criteria
-				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
+				List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
 				if(fileNameList == null || fileNameList.isEmpty()) {
 					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
+				List<String> location = new ArrayList<>();
+				String sourceDir = sourceDS.getPath();
 				for(String fileName : fileNameList) {
-					runIngestServiceImpl.setFileName(fileName);
-					runIngestServiceImpl.call();
+					String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
+					location.add(fileLocation);
 				}
-			} else {
-				runIngestServiceImpl.call();
-			}
+				ingestExec.setLocation(location);
+			} 
+			runIngestServiceImpl.call();
 //
 //			logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
 //			String tableName = null;
@@ -552,7 +557,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		return attrName;
 	}
 
-	public List<String> getFileDetailsByFileName(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException {
+	public List<String> getMatchingFileNames(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException {
 		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
@@ -801,5 +806,46 @@ public class IngestServiceImpl extends RuleTemplate {
 			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
 			throw new Exception((message != null) ? message : "Can not restart Ingest.");
 		}
+	}
+	
+	public void moveFile(String srcLocation, String targetLocation) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		logger.info("source location: "+srcLocation);
+		logger.info("target location: "+targetLocation);
+		try {
+			FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
+		} catch (Exception e) {
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			if(message != null 
+					&& message.contains("Destination '"+targetLocation+"' already exists")) {
+				message = "Destination '"+targetLocation+"' already exists.";
+				deleteFileOrDirectory(targetLocation, false);
+				FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
+			} else {
+				message = e.toString();
+				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), message);
+				throw new RuntimeException(message);
+			}
+		}
+	}
+	
+	public String getCSVFileNameFromDir(String directory) {
+		File folder = new File(directory);
+		for (File file : folder.listFiles()) {
+			String dirFileName = file.getName();
+			if (file.isFile() && dirFileName.toLowerCase().endsWith(".csv")) {
+				return file.getAbsolutePath();
+			}
+		}
+		return null;
+	}
+	
+	public void deleteFileOrDirectory(String absolutePath, boolean isDirectory) throws IOException {
+		File file = new File(absolutePath);
+		FileUtils.forceDelete(file);
 	}
 }

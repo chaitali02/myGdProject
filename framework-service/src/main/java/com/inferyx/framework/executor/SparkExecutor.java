@@ -2891,7 +2891,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return comparisonResultMap;
 	}
 	
-	public ResultSetHolder readAndRegisterFile(String tableName, String filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
+	public ResultSetHolder readAndRegisterFile(String tableName, List<String> filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
 		logger.info("Inside readAndRegisterFile....");
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
@@ -2900,12 +2900,12 @@ public class SparkExecutor<T> implements IExecutor {
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Dataset<Row> df = null;
 		if(format == null) {
-			RemoteIterator<LocatedFileStatus> fileStatus = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path(filePath), false);
+			RemoteIterator<LocatedFileStatus> fileStatus = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path(filePath.get(0)), false);
 			
 			while(fileStatus.hasNext()) {
 				LocatedFileStatus status = fileStatus.next();
 				String fileName2 = status.getPath().getName();
-				String filePath2 = new String(filePath);
+				String filePath2 = new String(filePath.get(0));
 				filePath2 = filePath2+"/"+fileName2;
 				List<String> filePaths = new ArrayList<>();
 				if(!fileName2.contains("_SUCCESS")) {
@@ -2914,9 +2914,9 @@ public class SparkExecutor<T> implements IExecutor {
 				df = sparkSession.read().option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
 			}
 		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath);
+			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath.toArray(new String[filePath.size()]));
 		} else {
-			df = sparkSession.read().parquet(filePath);
+			df = sparkSession.read().parquet(filePath.toArray(new String[filePath.size()]));
 		}
 		
 		//creating rsHolder
@@ -3030,7 +3030,9 @@ public class SparkExecutor<T> implements IExecutor {
 
 		logger.info("inside method fetchIngestResult");
 		List<Map<String, Object>> data = new ArrayList<>();
-		Dataset<Row> df = readAndRegisterFile(tableName, filePath, format, header, clientContext, false).getDataFrame();
+		List<String> location = new ArrayList<>();
+		location.add(filePath);
+		Dataset<Row> df = readAndRegisterFile(tableName, location, format, header, clientContext, false).getDataFrame();
 
 		String[] columns = df.columns();
 		List<Attribute> attributes = null;

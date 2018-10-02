@@ -33,7 +33,7 @@ public class Ingest extends BaseRule {
 	private String targetFormat; //CSV, TSV, PSV, PARQUET
 	private String header;
 	private AttributeRefHolder incrAttr;
-	private SaveMode saveMode = SaveMode.APPEND;
+	private SaveMode saveMode;
 	private String ignoreCase = "N";
 	
 	/**

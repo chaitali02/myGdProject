@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
@@ -34,6 +37,7 @@ import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -60,29 +64,29 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 	private String appUuid;
 	private Datasource sourceDS;
 	private Datasource targetDS;
-	private String fileName;
+//	private String fileName;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param fileName the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @return the fileName
+//	 */
+//	public String getFileName() {
+//		return fileName;
+//	}
+//
+//	/**
+//	 *
+//	 * @Ganesh
+//	 *
+//	 * @param fileName the fileName to set
+//	 */
+//	public void setFileName(String fileName) {
+//		this.fileName = fileName;
+//	}
 
 	/**
 	 *
@@ -418,13 +422,6 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 
 	public IngestExec execute() throws Exception {
 		try {
-//			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString());
-//			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.InProgress);
-//			String appUuid = commonServiceImpl.getApp().getUuid();
-//			MetaIdentifier sourceDSMI = ingest.getSourceDatasource().getRef();
-//			Datasource sourceDS = (Datasource) commonServiceImpl.getLatestByUuid(sourceDSMI.getUuid(), sourceDSMI.getType().toString());
-//			MetaIdentifier targetDSMI = ingest.getTargetDatasource().getRef();
-//			Datasource targetDS = (Datasource) commonServiceImpl.getLatestByUuid(targetDSMI.getUuid(), targetDSMI.getType().toString());
 			long countRows = -1L;
 			
 			String targetFilePathUrl = helper.getPathByDataSource(targetDS);
@@ -437,8 +434,6 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			if(sourceDpMI.getUuid() != null) {
-//				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
-
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getIncrColName(sourceDp, ingest.getIncrAttr());
 				
@@ -466,6 +461,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						targetFileName = targetFileName.concat(".csv");
 					}
 					targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+					targetFilePathUrl = targetDS.getPath().concat(targetFileName);
 				}
 				
 //				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
@@ -476,7 +472,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					
 					String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, ingestExec.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
 					
 					//adding version column to data
 //					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
@@ -486,8 +482,28 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, false);
 					}
 					
+					String saveMode = null;
+					if(ingest.getSaveMode() != null) {
+						saveMode = ingest.getSaveMode().toString();
+					} else {
+						saveMode = SaveMode.OVERWRITE.toString();
+					}
+					String tempDirLocation = "temp/"+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+					logger.info("temporary location: "+tempDirLocation);
 					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, targetFileName, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
+					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
+							ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
+									, targetFileName, tableName, saveMode, ingest.getTargetFormat());
+					
+					if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+						try {
+							String srcFilePath = ingestServiceImpl.getCSVFileNameFromDir(tempDirLocation);
+							ingestServiceImpl.moveFile(srcFilePath, targetFilePathUrl);
+						} finally {
+							ingestServiceImpl.deleteFileOrDirectory("temp/"+ingestExec.getUuid(), true);
+						}						
+					}
+					
 					countRows = rsHolder.getCountRows();
 //				}
 //				targetFilePathUrl = null;
@@ -507,8 +523,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					}
 					logger.info("sourceFilePathUrl: "+sourceFilePathUrl);
 					String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
+					List<String> location = new ArrayList<>();
+					location.add(sourceFilePathUrl);
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
 					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 					
 					//adding version column data
@@ -562,10 +580,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 //					}
 //					
 //					for(String fileName : fileNameList) {
-						sourceFilePathUrl = sourceFilePathUrl + fileName;					
+//						sourceFilePathUrl = sourceFilePathUrl + fileName;					
 						String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 						//reading from source
-						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, ingestExec.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
 						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 						
 						//adding version column data
