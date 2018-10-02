@@ -2,9 +2,7 @@ package com.inferyx.framework.test;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -14,15 +12,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.spark.TaskContext;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
-import org.apache.spark.streaming.kafka010.HasOffsetRanges;
-import org.apache.spark.streaming.kafka010.OffsetRange;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
@@ -64,34 +61,13 @@ public class KafkaTester implements Serializable {
 		ds = getBrokerDatasource();
 		
 		JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(ds, topic);
-		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<Long, String>>>() {
-
-			@Override
-			public void call(JavaRDD<ConsumerRecord<Long, String>> rdd) throws Exception {
-				final OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
-				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<Long, String>>>() {
-					@Override
-					public void call(Iterator<ConsumerRecord<Long, String>> consumerRecords) {
-						consumerRecords.forEachRemaining(new Consumer<ConsumerRecord<Long, String>>() {
-
-							@Override
-							public void accept(ConsumerRecord<Long, String> t) {
-								System.out.println("RECEIVED >>>> "+ t.key() + ":" + t.value());
-							}
-						});
-						OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
-						System.out.println("RECEIVED >>> " +
-								o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
-						
-					}
-				});
-			}
-		});
-		
+		sparkStreamingExecutor.execute(topic, new String[] {"key", "value"}, new DataType[] {DataTypes.LongType, DataTypes.StringType}, getDatapod(), SaveMode.Append, stream);
+				
 		new Thread(new Runnable() {public void run() {
 			for (int i = 0; i < 10; i++) {
 				try {
 					runProducer(100, topic);
+					Thread.sleep(500);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -106,6 +82,12 @@ public class KafkaTester implements Serializable {
 			System.out.println("Count : " + streamingDataset.count());
 		}*/
 		// Test case 3 - PRINT SPARK STREAMING CONSUMER - END
+	}
+	
+	private static Datapod getDatapod () {
+		Datapod datapod = new Datapod();
+		datapod.setName("stream_data");
+		return datapod;
 	}
 	
 	/**

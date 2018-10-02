@@ -56,6 +56,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -640,11 +641,12 @@ public class DataStoreServiceImpl {
 				else
 					tableName = appDatasource.getDbname() + "." + reportName;
 		} else if (metaType == MetaType.ingest) {
-			String[] list = filePath.split("/");				
+			String[] list = filePath.split("/");	
+//			Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid( dataStore.getMetaId().getRef().getUuid(), dataStore.getMetaId().getRef().getType().toString());
 			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
+				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 			} else {
-				tableName = String.format("%s_%s_%s", list[list.length-4].replaceAll("-", "_"), list[list.length-3], list[list.length-2]);
+				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 			}
 		}	
 		return tableName;
