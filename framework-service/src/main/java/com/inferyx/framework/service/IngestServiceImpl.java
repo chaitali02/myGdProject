@@ -626,6 +626,14 @@ public class IngestServiceImpl extends RuleTemplate {
 		result = ow.writeValueAsString(ingestExecServiceImpl.findReconExecByReconGroupExec(ingestGroupExecUuid, ingestGroupExecVersion));
 		return result;
 	}
+	public String getIngestByIngestExec(String ingestUuid, String ingestversion) throws JsonProcessingException {
+		String result = null;
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestversion, MetaType.ingestExec.toString());
+		Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getDependsOn().getRef().getUuid(),ingestExec.getDependsOn().getRef().getVersion(), MetaType.ingest.toString());
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(ingest);
+		return result;
+	}
 	
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
 		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
