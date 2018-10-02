@@ -1,7 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `target_sim_linear_regression`;
-
 CREATE TABLE `target_sim_linear_regression` (
   `id` int(11) DEFAULT NULL,
   `version` int(11) DEFAULT NULL,

@@ -1,8 +1,6 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
-  `transaction_id` varchar(45) DEFAULT NULL,
+  `transaction_id` varchar(45) NOT NULL DEFAULT '0',
   `transaction_type_id` int(11) DEFAULT NULL,
   `account_id` varchar(45) DEFAULT NULL,
   `transaction_date` varchar(45) DEFAULT NULL,
@@ -13,10 +11,7 @@ CREATE TABLE `transaction` (
   `currency_code` varchar(45) DEFAULT NULL,
   `currency_rate` float DEFAULT NULL,
   `notes` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL,
-  `load_id` int(11) DEFAULT NULL
+  `load_date` varchar(45) NOT NULL DEFAULT '',
+  `load_id` bigint(20) NOT NULL DEFAULT '0',
+ PRIMARY KEY (`transaction_id`,`load_date`,`load_id`)    
 );
-ALTER TABLE `transaction` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
-LOAD DATA LOCAL INFILE '/var/lib/mysql-files/transaction.csv'  IGNORE INTO TABLE transaction FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-

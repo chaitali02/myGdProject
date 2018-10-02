@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `edw_small`;
-USE `edw_small`;
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `address_id` varchar(45) NOT NULL DEFAULT '',
@@ -14,10 +12,6 @@ CREATE TABLE `address` (
   `latitude` varchar(45) DEFAULT NULL,
   `longitude` varchar(45) DEFAULT NULL,
   `load_date` varchar(45) NOT NULL DEFAULT '',
-  `version` int(11) DEFAULT NULL,
   `load_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`address_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `address` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
-LOAD DATA LOCAL INFILE '/var/lib/mysql-files/address.csv'  IGNORE INTO TABLE address FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-

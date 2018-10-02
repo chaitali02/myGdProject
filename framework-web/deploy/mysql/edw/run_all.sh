@@ -11,17 +11,17 @@
 dbname=$1
 
 if [[ $dbname = "" ]] ; then
-        echo Usage: rull_all_medium.sh [dbname]
+        echo Usage: rull_all.sh [dbname]
         exit 1
 fi
-rm -r run_all.hql
-for file in *.hql
+rm -r create_all.sql
+for file in *.sql
 do
-        if [[ $file != "load_medium.hql" ]] ; then
-                cat $file >> run_all_medium.hql
+        if [[ $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" ]] ; then
+		echo >> create_all.sql
+                cat $file >> create_all.sql
         fi;
 done
-hive -database $1 -f run_all_medium.hql
-hive -database $1 -f load_medium.hql
-impala-shell -q "invalidate metadata"
-impala-shell -d $1 -f impala_counts.iql
+mysql -u inferyx -p -v $1 < create_all.sql
+mysql -u inferyx -p -v $1 --local-infile < load_small.sql
+mysql -u inferyx -p -v $1 < counts.sql

@@ -11,7 +11,6 @@ truncate table dq_rule_results;
 truncate table fact_account_summary_monthly;
 truncate table fact_customer_summary_monthly;
 truncate table fact_transaction;
-truncate table profile_rule_results;
 truncate table rc_rule_results;
 
 LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/account.csv' OVERWRITE INTO TABLE account PARTITION (load_date='2017-07-01', load_id='00');

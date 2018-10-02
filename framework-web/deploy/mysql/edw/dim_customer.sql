@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `dim_customer`;
 CREATE TABLE `dim_customer` (
   `customer_id` varchar(45) NOT NULL DEFAULT '',
@@ -22,4 +20,3 @@ CREATE TABLE `dim_customer` (
   PRIMARY KEY (`customer_id`,`load_date`,`load_id`),
   UNIQUE KEY `src_customer_id` (`src_customer_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `dim_customer` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

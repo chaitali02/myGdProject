@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `fact_account_summary_monthly`;
 CREATE TABLE `fact_account_summary_monthly` (
   `account_id` varchar(45) NOT NULL DEFAULT '',
@@ -13,4 +11,3 @@ CREATE TABLE `fact_account_summary_monthly` (
   `load_id` bigint(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`yyyy_mm`,`load_date`,`load_id`)
 );
-ALTER TABLE `fact_account_summary_monthly` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

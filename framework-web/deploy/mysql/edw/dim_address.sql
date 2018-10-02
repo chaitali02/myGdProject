@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `edw_small`;
-USE `edw_small`;
 DROP TABLE IF EXISTS `dim_address`;
 CREATE TABLE `dim_address` (
   `address_id` varchar(45) NOT NULL DEFAULT '',
@@ -19,4 +17,3 @@ CREATE TABLE `dim_address` (
   PRIMARY KEY (`address_id`,`load_date`,`load_id`),
   UNIQUE KEY `src_address_id` (`src_address_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `dim_address` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS model_training_set;
-
+DROP TABLE IF EXISTS `model_training_set`;
 CREATE TABLE model_training_set
 (
   customer_id int(11) DEFAULT NULL,
@@ -10,5 +9,3 @@ CREATE TABLE model_training_set
   censor int(11) DEFAULT NULL,
   version int(11) DEFAULT NULL
 );
-
-ALTER TABLE model_training_set OWNER TO inferyx;

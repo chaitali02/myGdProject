@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `rc_rule_results`;
 CREATE TABLE `rc_rule_results` (
     `sourcedatapoduuid` varchar(45) DEFAULT NULL,
@@ -17,4 +15,3 @@ CREATE TABLE `rc_rule_results` (
     `status` varchar(45) DEFAULT NULL,
     `version` int(11) DEFAULT NULL
 );
-

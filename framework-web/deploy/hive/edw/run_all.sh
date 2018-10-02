@@ -17,7 +17,7 @@ fi
 rm -r run_all.hql
 for file in *.hql
 do
-        if [[ $file != "load.hql" ]] ; then
+        if [[ $file != "load.hql" && $file != "load_medium.hql" ]] ; then
                 cat $file >> run_all.hql
         fi;
 done

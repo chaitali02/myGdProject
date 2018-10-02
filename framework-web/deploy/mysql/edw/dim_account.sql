@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `edw_small`;
-USE `edw_small`;
 DROP TABLE IF EXISTS `dim_account`;
 CREATE TABLE `dim_account` (
   `account_id` varchar(45) NOT NULL DEFAULT '',
@@ -27,4 +25,3 @@ CREATE TABLE `dim_account` (
   PRIMARY KEY (`account_id`,`load_date`,`load_id`),
   UNIQUE KEY `src_account_id` (`src_account_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `dim_account` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

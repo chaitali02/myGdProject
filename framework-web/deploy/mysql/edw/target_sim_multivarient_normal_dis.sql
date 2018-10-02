@@ -1,7 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `target_sim_multivarient_normal_dis`;
-
 CREATE TABLE `target_sim_multivarient_normal_dis` (
   `id` int(11) DEFAULT NULL,
   `interestRate` double precision,
