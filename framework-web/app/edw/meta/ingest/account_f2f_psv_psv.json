@@ -27,6 +27,8 @@
     "sourceFormat" : "PSV",
     "targetFormat" : "PSV",
     "header" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
     "uuid" : "34775bbe-p12a-4ca6-93aa-935840ff3d2a",
     "version" : "1537862857",
     "name" : "account_f2f_psv_psv",

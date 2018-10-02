@@ -27,6 +27,8 @@
     "sourceFormat" : "TSV",
     "targetFormat" : "TSV",
     "header" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
     "uuid" : "a7b5df81-5d37-4fa1-bc2d-7fc89e89f962",
     "version" : "1537863016",
     "name" : "ingest_f2f_tsv2tsv",

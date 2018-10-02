@@ -53,5 +53,7 @@
   "sourceFormat": "PARQUET",
   "targetFormat": "PARQUET",
   "header": "N",
+  "saveMode" : "OVERWRITE",
+  "ignoreCase" : "N",
   "incrAttr": null
 }
