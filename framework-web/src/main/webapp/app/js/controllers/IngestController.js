@@ -1115,7 +1115,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
-		$state.go('ingestrulegrouplist', {
+		$state.go('ingestrulegroupdetail', {
 			id: uuid,
 			version: version,
 			mode: 'false'
@@ -1125,7 +1125,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 	$scope.showview = function (uuid, version) {
 		if (!$scope.isEdit) {
 			$scope.showPage()
-			$state.go('ingestrulegrouplist', {
+			$state.go('ingestrulegroupdetail', {
 				id: uuid,
 				version: version,
 				mode: 'true'
