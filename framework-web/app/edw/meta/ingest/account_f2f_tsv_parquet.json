@@ -27,6 +27,8 @@
     "sourceFormat" : "TSV",
     "targetFormat" : "PARQUET",
     "header" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
     "uuid" : "890e829b-23a8-486b-86a1-b6b83cc40ff7",
     "version" : "1537863238",
     "name" : "account_f2f_tsv_parquet",

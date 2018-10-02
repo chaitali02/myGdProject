@@ -27,6 +27,8 @@
     "sourceFormat" : "CSV",
     "targetFormat" : "TSV",
     "header" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
     "uuid" : "a7b5df81-5d37-4fa1-bc2d-7fc89e89f861",
     "version" : "1537857225",
     "name" : "account_f2f_csv_tsv",
