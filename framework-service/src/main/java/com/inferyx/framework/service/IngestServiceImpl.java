@@ -557,10 +557,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
-		boolean isCaseSensitive = false;
-		if(getCaseSensitivity(ignoreCase) == 0) {
-			isCaseSensitive = true;
-		}
+		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
@@ -600,11 +597,11 @@ public class IngestServiceImpl extends RuleTemplate {
 		return fileNameList;
 	}
 	
-	private int getCaseSensitivity(String ignoreCase) {
+	private boolean getCaseSensitivity(String ignoreCase) {
 		if(ignoreCase.equalsIgnoreCase("Y")) {
-			return Pattern.CASE_INSENSITIVE;
+			return false;
 		} else {
-			return 0;
+			return true;
 		}
 	}
 
