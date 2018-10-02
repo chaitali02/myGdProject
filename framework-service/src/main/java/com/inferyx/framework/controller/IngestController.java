@@ -66,6 +66,14 @@ public class IngestController {
 		return ingestServiceImpl.getIngestExecByRGExec(ingestGroupExecUuid, ingestGroupExecVersion);
 	}
 	
+	@RequestMapping(value = "/getIngestByIngestExec", method = RequestMethod.GET)
+	public @ResponseBody String getIngestByIngestExec(@RequestParam("uuid") String ingestUuid,
+			@RequestParam("version") String ingestVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return ingestServiceImpl.getIngestByIngestExec(ingestUuid, ingestVersion);
+	}
+	
 	@RequestMapping(value = "/executeGroup", method = RequestMethod.POST)
 	public MetaIdentifier executeGroup(@RequestParam("uuid") String groupUuid,
 			@RequestParam("version") String groupVersion, 

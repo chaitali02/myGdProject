@@ -18,7 +18,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "ingestExec")
 public class IngestExec extends BaseRuleExec {
-	public String lastIncrValue;
+	private String lastIncrValue;
+	private String location;
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
 	/**
 	 *

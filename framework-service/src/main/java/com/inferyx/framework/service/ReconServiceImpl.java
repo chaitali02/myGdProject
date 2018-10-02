@@ -177,7 +177,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		return execute(metaExecutor, (ReconExec)baseRuleExec, datapodKey, taskList, execParams, runMode);
+		return execute(baseRuleExec.getDependsOn().getRef().getUuid(), baseRuleExec.getDependsOn().getRef().getVersion()
+				, metaExecutor, (ReconExec) baseRuleExec, null, taskList, execParams, runMode);
 	}
 	
 	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception{
