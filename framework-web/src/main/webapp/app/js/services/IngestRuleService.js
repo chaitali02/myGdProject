@@ -211,13 +211,22 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
         var url = $location.absUrl().split("app")[0]
         return $http({
             method: 'GET',
-            url: url + "metadata/getDatasourceForFile?type=" + type + "&action=view",
+            url: url + "metadata/getDatasourceForFile?type="+type+"&action=view",
         }).
             then(function (response, status, headers) {
                 return response;
             })
     }
-
+    factory.findDatasourceForStream = function (type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+            method: 'GET',
+            url: url + "metadata/getDatasourceForStream?type="+type+"&action=view",
+        }).
+            then(function (response, status, headers) {
+                return response;
+            })
+    }
     factory.findDatasourceForTable = function (type) {
         var url = $location.absUrl().split("app")[0]
         return $http({
@@ -250,6 +259,17 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
                 return response;
             })
     }
+    factory.getTopicList = function (uuid,version) {
+        var url = $location.absUrl().split("app")[0]
+        console.log(url)
+        return $http({
+            method: 'GET',
+            url: url + "ingest/getTopicList?type=datasource&action=view&uuid=" + uuid+"&version="+version,
+        }).
+            then(function (response, status, headers) {
+                return response;
+            })
+    }
     return factory;
 })
 
@@ -258,6 +278,21 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
     this.getIngestByIngestExec = function (uuid,version) {
         var deferred = $q.defer();
         IngestRuleFactory.getIngestByIngestExec(uuid,version).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
+        var OnSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            });
+        }
+        var onError = function (response) {
+            deferred.reject({
+                data: response
+            })
+        }
+        return deferred.promise;
+    }/*End*/
+    this.getTopicList = function (uuid,version) {
+        var deferred = $q.defer();
+        IngestRuleFactory.getTopicList(uuid,version).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
         var OnSuccess = function (response) {
             deferred.resolve({
                 data: response
@@ -289,6 +324,21 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
     this.getDatasourceForTable = function (type) {
         var deferred = $q.defer();
         IngestRuleFactory.findDatasourceForTable(type).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
+        var OnSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            });
+        }
+        var onError = function (response) {
+            deferred.reject({
+                data: response
+            })
+        }
+        return deferred.promise;
+    }/*End*/
+    this.getDatasourceForStream= function (type) {
+        var deferred = $q.defer();
+        IngestRuleFactory.findDatasourceForStream(type).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
         var OnSuccess = function (response) {
             deferred.resolve({
                 data: response
