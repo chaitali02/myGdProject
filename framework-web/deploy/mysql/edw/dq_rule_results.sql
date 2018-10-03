@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `dq_rule_results`;
 CREATE TABLE `dq_rule_results` (
   `rowkey` varchar(45) DEFAULT NULL,
@@ -20,4 +18,3 @@ CREATE TABLE `dq_rule_results` (
   `customcheck_pass` varchar(45) DEFAULT NULL,
   `version` int(11) DEFAULT NULL
 );
-

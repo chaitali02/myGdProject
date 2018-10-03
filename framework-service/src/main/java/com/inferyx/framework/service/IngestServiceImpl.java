@@ -77,6 +77,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -106,6 +107,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private SessionHelper sessionHelper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private KafkaExecutor kafkaExecutor;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -652,5 +655,18 @@ public class IngestServiceImpl extends RuleTemplate {
 	public void deleteFileOrDirectory(String absolutePath, boolean isDirectory) throws IOException {
 		File file = new File(absolutePath);
 		FileUtils.forceDelete(file);
+	}
+	
+	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException {
+
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsUuid, dsVersion, MetaType.datasource.toString());
+		List<String> topicList = null;
+		try {
+		 topicList =kafkaExecutor.getTopics(ds);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return topicList;
 	}
 }

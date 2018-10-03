@@ -2121,4 +2121,26 @@ public class MetadataServiceImpl {
 		}
 		return dsForFile;
 	}
+	public List<Datasource> getDatasourceForStream() {
+		@SuppressWarnings("unchecked")
+		List<Datasource> datasources = commonServiceImpl.findAllLatest(MetaType.datasource);
+		List<Datasource> dsForFile = new ArrayList<>();
+		for(Datasource datasource : datasources) {
+			if(datasource.getType().equalsIgnoreCase(ExecContext.STREAM.toString())) {
+				/*BaseEntity baseEntity = new BaseEntity();
+				baseEntity.setUuid(datasource.getUuid());
+				baseEntity.setVersion(datasource.getVersion());
+				baseEntity.setName(datasource.getName());
+				baseEntity.setDesc(datasource.getDesc());
+				baseEntity.setCreatedBy(datasource.getCreatedBy());
+				baseEntity.setCreatedOn(datasource.getCreatedOn());
+				baseEntity.setTags(datasource.getTags());
+				baseEntity.setActive(datasource.getActive());
+				baseEntity.setPublished(datasource.getPublished());
+				baseEntity.setAppInfo(datasource.getAppInfo());*/
+				dsForFile.add(datasource);
+			}
+		}
+		return dsForFile;
+	}
 }

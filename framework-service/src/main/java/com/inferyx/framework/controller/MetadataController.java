@@ -1034,6 +1034,12 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getDatasourceForTable();
 	}
+	@RequestMapping(value = "/getDatasourceForStream", method = RequestMethod.GET)
+	public @ResponseBody List<Datasource> getDatasourceForStream( 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getDatasourceForStream();
+	}
 	
 	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)
 	public @ResponseBody List<BaseEntity> getDatapodByDatasource(

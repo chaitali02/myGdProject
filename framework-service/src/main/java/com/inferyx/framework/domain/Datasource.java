@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="datasource")
 public class Datasource extends BaseEntity{
 
-	public enum DataSourceType {SPARK,FILE,HIVE,ORACLE,IMPALA,MYSQL};
+	public enum DataSourceType {SPARK,FILE,HIVE,ORACLE,IMPALA,MYSQL,STREAM};
 	
 	private String type;
 	private String access;

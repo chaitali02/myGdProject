@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `dim_transaction_type`;
 CREATE TABLE `dim_transaction_type` (
   `transaction_type_id` varchar(45) NOT NULL DEFAULT '',
@@ -11,4 +9,3 @@ CREATE TABLE `dim_transaction_type` (
   PRIMARY KEY (`transaction_type_id`,`load_date`,`load_id`),
   UNIQUE KEY `src_transaction_type_id` (`src_transaction_type_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `dim_transaction_type` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

@@ -46,8 +46,6 @@ select 'fact_customer_summary_monthly' as tabname, count(*) as cnt from fact_cus
 union
 select 'fact_transaction' as tabname, count(*) as cnt from fact_transaction
 union
-select 'profile_rule_results' as tabname, count(*) as cnt from profile_rule_results
-union
 select 'rc_rule_results' as tabname, count(*) as cnt from rc_rule_results
 ) t1
 order by tabname; 

@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `dim_date`;
 CREATE TABLE `dim_date` (
   `date_id` int(11) NOT NULL DEFAULT '0',
@@ -61,13 +59,7 @@ CREATE TABLE `dim_date` (
   `yyyy_mm_dd` varchar(45) DEFAULT NULL,
   `dd_mon_yyyy` varchar(45) DEFAULT NULL,
   `load_date` varchar(45) NOT NULL DEFAULT '',
-  PRIMARY KEY (`date_id`,`load_date`),
+  `load_id` bigint(20) NOT NULL DEFAULT '0',  
+  PRIMARY KEY (`date_id`,`load_date`,`load_id`),
   UNIQUE KEY `date_val` (`date_val`,`load_date`)
 );
-
-ALTER TABLE `dim_date` PARTITION BY KEY(load_date) PARTITIONS 1;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\n' IGNORE 1 LINES;
-
-
-
-

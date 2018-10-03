@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `fact_transaction`;
 CREATE TABLE `fact_transaction` (
   `transaction_id` int(11) NOT NULL DEFAULT '0',
@@ -21,4 +19,3 @@ CREATE TABLE `fact_transaction` (
   `load_date` varchar(45) NOT NULL DEFAULT '',
   `load_id` bigint(20) NOT NULL DEFAULT '0'
 );
-ALTER TABLE `fact_transaction` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;

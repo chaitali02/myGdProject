@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `edw_small`;
-USE `edw_small`;
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
   `account_id` varchar(45) NOT NULL DEFAULT '',
@@ -23,13 +21,6 @@ CREATE TABLE `account` (
   `interest_type` varchar(45) DEFAULT NULL,
   `interest_rate` float DEFAULT NULL,
   `load_date` varchar(45) NOT NULL DEFAULT '',
-  `version` varchar(45) DEFAULT NULL,
   `load_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`load_date`,`load_id`)
 );
-ALTER TABLE `account` PARTITION BY KEY(load_date,load_id) PARTITIONS 2;
-LOAD DATA LOCAL INFILE '/var/lib/mysql-files/account.csv'  IGNORE INTO TABLE account FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-
-
-
-

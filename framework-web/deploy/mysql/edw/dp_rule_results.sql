@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `framework`;
-USE `framework`;
 DROP TABLE IF EXISTS `dp_rule_results`;
 CREATE TABLE `dp_rule_results` (
     `datapoduuid` varchar(45) DEFAULT NULL,
@@ -22,4 +20,3 @@ CREATE TABLE `dp_rule_results` (
     `load_id` int(11) DEFAULT NULL,
     `version` int(11) DEFAULT NULL
 );
-
