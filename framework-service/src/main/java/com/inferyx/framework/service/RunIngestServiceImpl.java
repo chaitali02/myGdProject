@@ -464,7 +464,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				//finding latest incremental value
 				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 				
-				if(incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
+				if(incrLastValue != null && latestIncrLastValue != null &&incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
 					
 				}
 			}	
