@@ -600,6 +600,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					tableName = targetDp.getName();					
 					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 					if(incrLastValue != null) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 						sqoopInput.setIncrementalLastValue(incrLastValue);
 					}
 					targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
@@ -695,6 +696,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 //					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 						sqoopInput.setIncrementalLastValue(incrLastValue);
 					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
@@ -786,6 +788,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 
 				sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 				if(incrLastValue != null) {
+					sqoopInput.setIncrementalTestColumn(incrColName);
 					sqoopInput.setIncrementalLastValue(incrLastValue);
 				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
