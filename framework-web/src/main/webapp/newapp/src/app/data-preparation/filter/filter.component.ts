@@ -16,6 +16,18 @@ import { debug } from 'util';
   templateUrl: './filter.template.html',
 })
 export class FilterComponent {
+  rhsFormulaArray: any[];
+  varBoolean: boolean;
+  rhsTypeArray: { 'value': string; 'label': string; 'disabled1': boolean; }[];
+  lhsAttribute: any;
+
+  attributesArray: any[];
+  formulaArray: any[];
+  rhsType: any;
+  lhsFormulaArray: any[];
+  lhsType: any;
+  //rhsTypeArray: any[];
+  lhsTypeArray: { 'value': string; 'label': string; }[];
   selectVersion: any;
   msgs: Message[] = [];
   dependsOnType: { 'value': string; 'label': string; }[];
@@ -55,15 +67,31 @@ export class FilterComponent {
   breadcrumbDataFrom: any;
   isSubmitEnable: any;
 
-
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
-    this.operators = ["=", "<", ">"];
+    this.operators = [
+      { 'value': '<', 'label': 'LESS THAN' },
+      { 'value': '>', 'label': 'GREATER THAN' },
+      { 'value': '<=', 'label': 'LESS OR  EQUAL' },
+      { 'value': '>=', 'label': 'GREATER OR EQUAL' },
+      { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': 'BETWEEN', 'label': 'BETWEEN' },
+      { 'value': 'LIKE', 'label': 'LIKE' },
+      { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
+      { 'value': 'RLIKE', 'label': 'RLIKE' },
+      { 'value': 'EXISTS', 'label': 'EXISTS' },
+      { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+    ];
+    this.varBoolean = false;
     this.selectVersion = { "version": "" };
     this.dependsOn = { 'uuid': "", "label": "" }
     this.filterData = {};
     this.active = true;
     this.isSubmitEnable = true;
-    this.logicalOperators = [" ", "AND", "OR"]
+    this.logicalOperators = [
+      { 'value': '', 'label': '' },
+      { 'value': 'AND', 'label': 'AND' },
+      { 'value': 'OR', 'label': 'OR' }]
+
     this.showFilter = true;
     this.breadcrumbDataFrom = [{
       "caption": "Data Preparation ",
@@ -72,12 +100,10 @@ export class FilterComponent {
     {
       "caption": "Filter",
       "routeurl": "/app/list/filter"
-
     },
     {
       "caption": "",
       "routeurl": null
-
     }
     ]
     this.dependsOnType = [
@@ -85,6 +111,19 @@ export class FilterComponent {
       { 'value': 'dataset', 'label': 'dataset' },
       { 'value': 'datapod', 'label': 'datapod' }
     ];
+    this.lhsTypeArray = [
+      { 'value': 'string', 'label': 'string' },
+      { 'value': 'integer', 'label': 'integer' },
+      { 'value': 'datapod', 'label': 'attribute' },
+      { 'value': 'formula', 'label': 'formula' }
+    ];
+    this.rhsTypeArray = [
+      { 'value': 'string', 'label': 'string', 'disabled1': false },
+      { 'value': 'integer', 'label': 'integer', 'disabled1': true },
+      { 'value': 'datapod', 'label': 'attribute', 'disabled1': true },
+      { 'value': 'formula', 'label': 'formula', 'disabled1': false },
+      { 'value': 'dataset', 'label': 'dataset', 'disabled1': false }
+    ]
   }
 
   ngOnInit() {
@@ -142,13 +181,14 @@ export class FilterComponent {
     this.active = response['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.depends = response["dependsOn"]["ref"]["type"];
+
+    // this.dependsUuid = response["dependsOn"]["ref"]["uuid"]
+    // this.dependsname = response["dependsOn"]["ref"]["name"]
+
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     this.dependsOn = dependOnTemp
-
-    this.dependsUuid = response["dependsOn"]["ref"]["uuid"]
-    this.dependsname = response["dependsOn"]["ref"]["name"]
     let filterjson = {};
     filterjson["filter"] = response;
     let filterInfoArray = [];
@@ -156,39 +196,142 @@ export class FilterComponent {
       for (let k = 0; k < response.filterInfo.length; k++) {
         let filterInfo = {};
         let lhsFilter = {};
-        lhsFilter["uuid"] = response.filterInfo[k].operand[0].ref.uuid
-        lhsFilter["datapodname"] = response.filterInfo[k].operand[0].ref.name
-        lhsFilter["attributeId"] = response.filterInfo[k].operand[0].attributeId;
-        lhsFilter["name"] = response.filterInfo[k].operand[0].attributeName;
-        lhsFilter["dname"] = lhsFilter["datapodname"] + "." + lhsFilter["name"];
-        lhsFilter["id"] = lhsFilter["uuid"] + "_" + lhsFilter["attributeId"];
         filterInfo["logicalOperator"] = response.filterInfo[k].logicalOperator
-        filterInfo["lhsFilter"] = lhsFilter;
+        filterInfo["lhsType"] = response.filterInfo[k].operand[0].ref.type;
         filterInfo["operator"] = response.filterInfo[k].operator;
-        filterInfo["filtervalue"] = response.filterInfo[k].operand[1].value;
+        filterInfo["rhsType"] = response.filterInfo[k].operand[1].ref.type;
+
+        if (response.filterInfo[k].operand[0].ref.type == 'formula') {
+          this._commonService.getFormulaByType(this.dependsOn.uuid, this.depends)
+            .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+            error => console.log("Error ::", error))
+
+          let lhsAttri1 = {}
+          lhsAttri1["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
+          lhsAttri1["label"] = response.filterInfo[k].operand[0].ref.name;
+          filterInfo["lhsAttribute"] = lhsAttri1;
+        }
+
+        else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
+
+          this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends)
+            .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+            error => console.log("Error ::", error))
+          let lhsAttri = {}
+          lhsAttri["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
+          lhsAttri["label"] = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
+          lhsAttri["attributeId"] = response.filterInfo[k].operand[0].attributeId;
+          filterInfo["lhsAttribute"] = lhsAttri;
+        }
+
+        else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
+          let stringValue = response.filterInfo[k].operand[0].value;
+          let onlyNumbers = /^[0-9]+$/;
+          let result = onlyNumbers.test(stringValue);
+          if (result == true) {
+            filterInfo["lhsType"] = 'integer';
+          } else {
+            filterInfo["lhsType"] = 'string';
+          }
+          filterInfo["lhsAttribute"] = response.filterInfo[k].operand[0].value;
+        }
+
+        if (response.filterInfo[k].operand[1].ref.type == 'formula') {
+          this._commonService.getFormulaByType(this.dependsOn.uuid, this.depends)
+            .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+            error => console.log("Error ::", error))
+          //filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
+          let rhsAttri = {}
+          rhsAttri["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["label"] = response.filterInfo[k].operand[1].ref.name;
+          filterInfo["rhsAttribute"] = rhsAttri;
+        }
+
+        else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
+          this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends)
+            .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+            error => console.log("Error ::", error))
+
+          let rhsAttri = {}
+          rhsAttri["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["label"] = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+          rhsAttri["attributeId"] = response.filterInfo[k].operand[0].attributeId;
+          filterInfo["rhsAttribute"] = rhsAttri;
+        }
+
+        else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
+          let stringValue = response.filterInfo[k].operand[1].value;
+          let onlyNumbers = /^[0-9]+$/;
+          let result = onlyNumbers.test(stringValue);
+          if (result == true) {
+            filterInfo["rhsType"] = 'integer';
+          } else {
+            filterInfo["rhsType"] = 'string';
+          }
+          filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].value;
+
+          let result2 = stringValue.includes("and")
+          if (result2 == true) {
+            filterInfo["rhsType"] = 'integer';
+
+            let betweenValArray = []
+            betweenValArray = stringValue.split("and");
+            filterInfo["rhsAttribute1"] = betweenValArray[0];
+            filterInfo["rhsAttribute2"] = betweenValArray[1];
+          }
+        }
         filterInfoArray.push(filterInfo);
       }
     }
-    filterjson["filterInfo"] = filterInfoArray
-    this.filterTableArray = filterInfoArray
+    filterjson["filterInfo"] = filterInfoArray;
+    this.filterTableArray = filterInfoArray;
+    console.log(JSON.stringify(this.filterTableArray));
     this._commonService.getAllLatest(this.depends).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
-
     this.breadcrumbDataFrom[2].caption = this.filterData.name;
-
   }
+
+  onSuccessgetFormulaByLhsType(response) {
+    this.lhsFormulaArray = []
+    for (const i in response) {
+      let formulaObj = {};
+      formulaObj["label"] = response[i].name;
+      formulaObj["value"] = {};
+      formulaObj["value"]["uuid"] = response[i].uuid;
+      formulaObj["value"]["label"] = response[i].name;
+      this.lhsFormulaArray[i] = formulaObj;
+    }
+  }
+
+  onSuccessgetAllAttributeBySourceLhs(response) {
+    this.attributesArray = []
+    let temp1 = [];
+    for (const i in response) {
+      let attributeObj = {};
+      attributeObj["label"] = response[i].dname;
+      attributeObj["value"] = {};
+      attributeObj["value"]["uuid"] = response[i].uuid;
+      attributeObj["value"]["label"] = response[i].dname;
+      attributeObj["value"]["attributeId"] = response[i].attributeId;
+      temp1[i] = attributeObj
+      this.attributesArray = temp1;
+    }
+  }
+
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends).subscribe(
       response => { this.OnSuccesgetAllAttributeBySource(response) },
       error => console.log('Error :: ' + error)
     )
   }
+
   OnSuccesgetAllAttributeBySource(response) {
     //console.log(response)
     this.lhsdatapodattributefilter = response
   }
+
   OnSuccesgetAllLatest(response1) {
     let temp = []
     for (const n in response1) {
@@ -201,7 +344,6 @@ export class FilterComponent {
     }
     this.allNames = temp
     this.getAllAttributeBySource()
-
   }
   OnSuccesgetAllVersionByUuid(response) {
     var temp = []
@@ -225,8 +367,12 @@ export class FilterComponent {
     }
     //alert(this.filterTableArray.length)
     let filertable = {};
-    filertable["lhsFilter"] = this.lhsdatapodattributefilter[0]
-    filertable["operator"] = this.operators[0]
+    filertable["logicalOperator"] = ""
+    filertable["lhsType"] = ""
+    filertable["lhsAttribute"] = ""
+    filertable["operator"] = ""
+    filertable["rhsType"] = ""
+    filertable["rhsAttribute"] = ""
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
   }
   removeRow() {
@@ -253,14 +399,14 @@ export class FilterComponent {
       filter.selected = this.selectedAllFitlerRow;
     });
   }
+
   selectType() {
     this._commonService.getAllLatest(this.depends).subscribe(
-      response => { //this.dependsOn.uuid=response[0]["uuid"]
+      response => {
         this.OnSuccesgetAllLatest(response)
       },
       error => console.log('Error :: ' + error)
     )
-
   }
   changeType() {
     this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends).subscribe(
@@ -284,6 +430,68 @@ export class FilterComponent {
       this.filterData.published = 'N';
     }
   }
+
+  onChangeLhsType(index) {
+    if (this.filterTableArray[index]["lhsType"] == 'formula') {
+      this._commonService.getFormulaByType(this.dependsOn.uuid, this.depends)
+        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+        error => console.log("Error ::", error))
+    }
+
+    else if (this.filterTableArray[index]["lhsType"] == 'datapod') {
+      this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+        error => console.log("Error ::", error))
+    }
+
+    else {
+      this.filterTableArray[index]["lhsAttribute"] = null;
+    }
+  }
+
+  onChangeRhsType(index) {
+    if (this.filterTableArray[index]["rhsType"] == 'formula') {
+      this._commonService.getFormulaByType(this.dependsOn.uuid, this.depends)
+        .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+        error => console.log("Error ::", error))
+    }
+
+    else if (this.filterTableArray[index]["rhsType"] == 'datapod') {
+      this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depends)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+        error => console.log("Error ::", error))
+    }
+  }
+
+  onSuccessgetFormulaByRhsType(response) {
+    this.rhsFormulaArray = [];
+    let rhsFormulaObj = {};
+    let temp = [];
+    for (const i in response) {
+      rhsFormulaObj["label"] = response[i].name;
+      rhsFormulaObj["value"] = {};
+      rhsFormulaObj["value"]["label"] = response[i].name;
+      rhsFormulaObj["value"]["uuid"] = response[i].uuid;
+      temp[i] = rhsFormulaObj;
+    }
+    this.rhsFormulaArray = temp
+  }
+
+  onSuccessgetAllAttributeBySourceRhs(response) {
+    this.attributesArray = []
+    let temp1 = [];
+    for (const i in response) {
+      let attributeObj = {};
+      attributeObj["label"] = response[i].dname;
+      attributeObj["value"] = {};
+      attributeObj["value"]["uuid"] = response[i].uuid;
+      attributeObj["value"]["label"] = response[i].dname;
+      attributeObj["value"]["attributeId"] = response[i].attributeId;
+      temp1[i] = attributeObj
+      this.attributesArray = temp1;
+    }
+  }
+
   submitFilter() {
     this.isSubmitEnable = true;
     let filterJson = {};
@@ -294,7 +502,6 @@ export class FilterComponent {
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
         tagArray[counttag] = this.tags[counttag].value;
-
       }
     }
     filterJson['tags'] = tagArray;
@@ -308,50 +515,80 @@ export class FilterComponent {
     filterJson["dependsOn"] = dependsOn;
     filterJson["active"] = this.filterData.active
     filterJson["published"] = this.filterData.published
+
     let filterInfoArray = [];
     for (let i = 0; i < this.filterTableArray.length; i++) {
       let filterInfo = {};
-      let operand = [];
-      let operandfirst = {};
-      let reffirst = {};
-      let operandsecond = {};
-      let refsecond = {};
-      if (this.selectRelation == "dataset") {
+      filterInfo["logicalOperator"] = this.filterTableArray[i].logicalOperator;
+      filterInfo["operator"] = this.filterTableArray[i].operator;
+      filterInfo["operand"] = [];
 
-        reffirst["type"] = "dataset";
+      if (this.filterTableArray[i].lhsType == 'integer' || this.filterTableArray[i].lhsType == 'string') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "simple";
+        operatorObj["ref"] = ref;
+        operatorObj["value"] = this.filterTableArray[i].lhsAttribute;
+        filterInfo["operand"][0] = operatorObj;
       }
-      else {
-        reffirst["type"] = "datapod"
+      else if (this.filterTableArray[i].lhsType == 'formula') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "formula";
+        ref["uuid"] = this.filterTableArray[i].lhsAttribute.uuid;
+        operatorObj["ref"] = ref;
+        // operatorObj["attributeId"] = this.filterTableArray[i].lhsAttribute;
+        filterInfo["operand"][0] = operatorObj;
       }
-      reffirst["uuid"] = this.filterTableArray[i].lhsFilter.uuid
-      operandfirst["ref"] = reffirst;
-      operandfirst["attributeId"] = this.filterTableArray[i].lhsFilter.attributeId
-      operand[0] = operandfirst;
-      refsecond["type"] = "simple";
-      operandsecond["ref"] = refsecond;
-      if (typeof this.filterTableArray[i].filtervalue == "undefined") {
-        operandsecond["value"] = "";
+      else if (this.filterTableArray[i].lhsType == 'datapod') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "datapod";
+        ref["uuid"] = this.filterTableArray[i].lhsAttribute.uuid;
+        operatorObj["ref"] = ref;
+        operatorObj["attributeId"] = this.filterTableArray[i].lhsAttribute.attributeId;
+        filterInfo["operand"][0] = operatorObj;
       }
-      else {
+      if (this.filterTableArray[i].rhsType == 'integer' || this.filterTableArray[i].rhsType == 'string') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "simple";
+        operatorObj["ref"] = ref;
+        operatorObj["value"] = this.filterTableArray[i].rhsAttribute;
+        filterInfo["operand"][1] = operatorObj;
 
-        operandsecond["value"] = this.filterTableArray[i].filtervalue
+        if (this.filterTableArray[i].rhsType == 'integer' && this.filterTableArray[i].operator == 'BETWEEN') {
+          let operatorObj = {};
+          let ref = {}
+          ref["type"] = "simple";
+          operatorObj["ref"] = ref;
+          operatorObj["value"] = this.filterTableArray[i].rhsAttribute1 + "and" + this.filterTableArray[i].rhsAttribute2;
+          filterInfo["operand"][1] = operatorObj;
+        }
       }
-
-      operand[1] = operandsecond;
-      if (typeof this.filterTableArray[i].logicalOperator == "undefined") {
-        filterInfo["logicalOperator"] = ""
+      else if (this.filterTableArray[i].rhsType == 'formula') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "formula";
+        ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
+        operatorObj["ref"] = ref;
+        filterInfo["operand"][1] = operatorObj;
       }
-      else {
-        filterInfo["logicalOperator"] = this.filterTableArray[i].logicalOperator
+      else if (this.filterTableArray[i].rhsType == 'datapod') {
+        let operatorObj = {};
+        let ref = {}
+        ref["type"] = "datapod";
+        ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
+        operatorObj["ref"] = ref;
+        operatorObj["attributeId"] = this.filterTableArray[i].rhsAttribute.attributeId;
+        filterInfo["operand"][1] = operatorObj;
       }
-      filterInfo["operator"] = this.filterTableArray[i].operator
-      filterInfo["operand"] = operand;
-
       filterInfoArray[i] = filterInfo;
-
     }
-    filterJson["filterInfo"] = filterInfoArray;
-    console.log(JSON.stringify(filterJson))
+
+    filterJson["filterInfo"] = filterInfoArray
+
+    console.log(JSON.stringify(filterInfoArray))
     this._commonService.submit("filter", filterJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
