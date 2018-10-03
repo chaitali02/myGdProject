@@ -136,5 +136,13 @@ public class IngestController {
 			return false;
 		}
 		return true;
+	}	
+
+	@RequestMapping(value = "/getTopicList", method = RequestMethod.GET)
+	public List<String> getTopicList(@RequestParam("uuid") String dsUuid,
+			@RequestParam("version") String dsVersion,		
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return ingestServiceImpl.getTopicList(dsUuid, dsVersion, runMode);
 	}
 }
