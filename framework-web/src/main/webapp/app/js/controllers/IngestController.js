@@ -39,6 +39,8 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
 	$scope.saveModeTable=["APPEND","OVERWRITE"];
 	$scope.saveModeFile=["OVERWRITE"];
+	$scope.selectedRuleType=$scope.ruleTypes[0].text;
+
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -100,14 +102,14 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if (!$scope.isEdit) {
+		//if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('ingestruledetail', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-		}
+		//}
 	}
 	$scope.showGraph = function (uuid, version) {
 		$scope.showForm = false;
@@ -171,15 +173,39 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 								}
 							}
 						}
+
+						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
+							if($scope.allSourceDatasource[i].type == 'FILE'){
+								if($scope.allSourceDatasource)
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+								else{
+									$scope.allSourceDatasource=[];
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+
+								}
+							}
+						}*/
+
 					}
 					
 				}
+
 			}
 			
 
 		}
 	}
-	
+	$scope.getDatasourceForStream = function (sourceType, TargetType) {
+		IngestRuleService.getDatasourceForStream("datasource").then(function (response) { onSuccessGetDatasourceForTable(response.data) }, function (response) { onError(response.data) });
+		var onSuccessGetDatasourceForTable = function (response) {
+			if (sourceType == "STREAM") {
+				$scope.allSourceDatasource = response;
+			}
+			if (TargetType == "STREAM") {
+				$scope.allTargetDatasource = response;
+			}
+		}
+	}
 	// $scope.getAllAttributeBySource=function(){
 	// 	MetadataMapSerivce.getAllAttributeBySource($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
 	// 	var onSuccessGetAllAttributeBySourcet = function (response) {
@@ -223,6 +249,11 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			
 			
 		}
+		if ($scope.selectedSourceType == 'STREAM' || $scope.selectedTargetType == 'STREAM') {
+			$scope.getDatasourceForStream($scope.selectedSourceType, $scope.selectedTargetType);
+			
+			
+		}
 	
 	}
 
@@ -259,10 +290,14 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
-		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceDatasource) {
+		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceType != "STREAM" && $scope.selectedSourceDatasource) {
 			$scope.getDatapodByDatasource($scope.selectedSourceDatasource.uuid, "source");
             
-		}else{
+		}
+		else if($scope.selectedSourceType == "STREAM" &&  $scope.selectedSourceDatasource){
+			$scope.getTopicList($scope.selectedSourceDatasource.uuid,$scope.selectedSourceDatasource.version, "source");
+		}
+		else{
 			if($scope.selectedSourceDatasource && $scope.selectedSourceDatasource.type != 'FILE'){
 				$scope.isSourceFormateDisable=true;
 				$scope.selectedSourceFormate = null;
@@ -280,10 +315,14 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type != 'FILE'){
 				$scope.isTargetFormateDisable=true;
 				$scope.selectedTargetFormate = null;
-			}else{
+			}
+			else{
 				$scope.isTargetFormateDisable=false;
 			    $scope.selectedTargetFormate = null;
 			}
+		}
+		else if($scope.selectedTargetType != "STREAM" &&  $scope.selectedTargetDatasource){
+			$scope.getTopicList($scope.selectedTargetDatasource.uuid,$scope.selectedTargetDatasource.version, "target");
 		}
 	
 	
@@ -302,6 +341,19 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	}
 	$scope.onchangeGroble = function () {
 		$scope.ingestData.ingestChg = "Y";
+	}
+	
+	
+    $scope.getTopicList = function (uuid,version,propertyType) {
+		IngestRuleService.getTopicList(uuid,version|| "").then(function (response) { onSuccessGetDatapodByDatasource(response.data) }, function (response) { onError(response.data) });
+		var onSuccessGetDatapodByDatasource = function (response) {
+			if (propertyType == "source") {
+				$scope.sourceDetails = response;
+			}
+			if (propertyType == "target") {
+				$scope.tagetDetail = response;
+			}
+		}
 	}
 
 	$scope.getDatapodByDatasource = function (uuid, propertyType) {
@@ -365,8 +417,11 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 					$scope.isSourceFormateDisable=true;				
 				}
 			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
-			if ($scope.selectedSourceType == "FILE") {
+			if ($scope.selectedSourceType == "FILE" || $scope.selectedSourceType == "STREAM") {
 				$scope.selectedSourceDetail = $scope.ingestData.sourceDetail.value;
+				if($scope.selectedSourceType == "STREAM"){
+					$scope.onChangeSourceDataSource();
+				}
 			}
 			else {
 				$scope.onChangeSourceDataSource();
@@ -422,7 +477,10 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			}
 		}
 	}//End If
-
+    else{
+		$scope.ingestData={};
+		$scope.onChangeRuleType();
+	}
 
 
 	$scope.selectVersion = function () {
@@ -457,8 +515,16 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 
 			$scope.selectedSourceFormate = $scope.ingestData.sourceFormat;
 			$scope.selectedTargetFormate = $scope.ingestData.targetFormat;
-			if ($scope.selectedSourceType == "FILE") {
-				$scope.selectedSourceDetail = $scope.ingestData.sourceDetail.value;
+			debugger
+			if ($scope.selectedSourceType == "FILE" || $scope.selectedSourceType == "STREAM") {
+				$scope.selectedSourceDetail=null;
+				if($scope.selectedSourceType == "STREAM"){
+					$scope.onChangeSourceDataSource();
+				}
+				setTimeout(function name() {
+					$scope.selectedSourceDetail = $scope.ingestData.sourceDetail.value;
+				})
+				
 			}
 			else {
 			//	$scope.onChangeSourceDataSource();
@@ -839,7 +905,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.sourceDatasource = sourceDatasource;
 		var sourceDetails = {};
 		var sourceDetailsRef = {};
-		if ($scope.selectedSourceType == "FILE") {
+		if ($scope.selectedSourceType == "FILE" || $scope.selectedSourceType == "STREAM") {
 			sourceDetailsRef.type = "simple";
 			sourceDetails.ref = sourceDetailsRef;
 			sourceDetails.value = $scope.selectedSourceDetail;
@@ -849,7 +915,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			sourceDetails.ref = sourceDetailsRef;
 		}
 		ingestJson.sourceDetail = sourceDetails;
-        if ($scope.selectedSourceType != "FILE") {
+        if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceType != "STREAM") {
 			var sourceAttrDetail={};
 			var sourceAttrDetailRef={};
 			sourceAttrDetailRef.type="datapod";

@@ -40,14 +40,16 @@
                         </div>
                         <div class="tools">
                             <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-                                data-placement="top" tooltip ng-click="enableEdit(ingestData.uuid,ingestData.version)" ng-hide="isAdd"
+                                data-placement="top" tooltip ng-click="enableEdit(ingestData.uuid,ingestData.version)" ng-hide="isAdd" 
                                 style="height:16px;">
                                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
-                            <a title="View" data-toggle="tooltip" data-placement="top" ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+                            <!-- isEdit -->
+                            <a title="View" data-toggle="tooltip" data-placement="top"  ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
                                 tooltip ng-click="showView(ingestData.uuid,ingestData.version)" ng-hide="isAdd" style="height:16px;">
                                 <span class="glyphicon glyphicon-file" style="color: white;"></span>
                             </a>
+                             <!-- showForm==true && isEdit==false !isEdit -->
                             <a title="Knowledge Graph" data-toggle="tooltip" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                                 data-placement="top" tooltip data-ng-click="showGraph(ingestData.uuid,ingestData.version)" style="height:14px;">
                                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -169,7 +171,7 @@
                                     </label>
                                     <div class="col-md-6">
                                             <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" disable-validation-message="" -->
-                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()">
+                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName">
                                     </div>
                                 </div>
                                 <div class="form-group" ng-if="selectedSourceType =='FILE'">
@@ -184,7 +186,7 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-if="selectedSourceType !='FILE'">
+                                <div class="form-group" ng-if="selectedSourceType =='TABLE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
@@ -195,7 +197,7 @@
                                         <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-if="selectedSourceType !='FILE'">
+                                <div class="form-group" ng-if="selectedSourceType =='TABLE' ">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Incremental Key 
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
@@ -206,7 +208,18 @@
                                         <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
                                     </div>
                                 </div>
-                                
+                                <div class="form-group" ng-if="selectedSourceType =='STREAM'">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        
+                                        <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r for r in sourceDetails"
+                                            ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
+                                        </select>
+                                        <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail" required>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" ng-init="ingestData.header='N'">
@@ -255,7 +268,7 @@
                                     </label>
                                     <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" disable-validation-message="" -->
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
+                                        <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" ng-pattern="/^[a-zA-Z\d\-_.%\s]+$/" pattern-err-type="parttenFileName" required ng-change="onChangeSourceDetail()">
                                     </div>
                                 </div>
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">

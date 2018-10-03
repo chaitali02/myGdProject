@@ -940,12 +940,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
-                   
+                   debugger
                  if(isExec || isGroupExec){
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
-                     if(status && (status=='Completed') && isGroupExec!=true){
+                     if(status && (status=='Completed') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
                      }
                      else if(status && (status=='NotStarted' || status=='Resume')){
