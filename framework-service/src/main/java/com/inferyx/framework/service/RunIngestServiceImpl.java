@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 	private Datasource sourceDS;
 	private Datasource targetDS;
 //	private String fileName;
+	private List<String> location;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
@@ -87,6 +87,26 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 //	public void setFileName(String fileName) {
 //		this.fileName = fileName;
 //	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the location
+	 */
+	public List<String> getLocation() {
+		return location;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param location the location to set
+	 */
+	public void setLocation(List<String> location) {
+		this.location = location;
+	}
 
 	/**
 	 *
@@ -438,7 +458,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				incrColName = ingestServiceImpl.getIncrColName(sourceDp, ingest.getIncrAttr());
 				
 				//finding last incremental value
-				incrLastValue = ingestServiceImpl.getLastIncrValue(ingestExec.getUuid());
+				incrLastValue = ingestServiceImpl.getLastIncrValue(ingest.getUuid(), ingest.getVersion());
 				
 				//finding latest incremental value
 				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
@@ -460,7 +480,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					if(!targetFileName.toLowerCase().endsWith(".csv")) {
 						targetFileName = targetFileName.concat(".csv");
 					}
-					targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+//					targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
 					targetFilePathUrl = targetDS.getPath().concat(targetFileName);
 				}
 				
@@ -472,7 +492,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					
 					String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 					//reading from source
-					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, ingestExec.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
 					
 					//adding version column to data
 //					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
@@ -488,8 +508,11 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					} else {
 						saveMode = SaveMode.OVERWRITE.toString();
 					}
-					String tempDirLocation = "temp/"+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+					
+					String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+					String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 					logger.info("temporary location: "+tempDirLocation);
+					
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
 							ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
@@ -497,13 +520,21 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					
 					if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 						try {
+							tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 							String srcFilePath = ingestServiceImpl.getCSVFileNameFromDir(tempDirLocation);
 							ingestServiceImpl.moveFile(srcFilePath, targetFilePathUrl);
+						} catch (Exception e) {
+							e.printStackTrace();
 						} finally {
-							ingestServiceImpl.deleteFileOrDirectory("temp/"+ingestExec.getUuid(), true);
+							ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
 						}						
 					}
-					
+					if(ingestExec.getLocation() != null) {
+						String targetFilePathUrl2 = ingestExec.getLocation().concat(","+targetFilePathUrl);
+						ingestExec.setLocation(targetFilePathUrl2);
+					} else {
+						ingestExec.setLocation(targetFilePathUrl);
+					}
 					countRows = rsHolder.getCountRows();
 //				}
 //				targetFilePathUrl = null;
@@ -583,7 +614,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 //						sourceFilePathUrl = sourceFilePathUrl + fileName;					
 						String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
 						//reading from source
-						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, ingestExec.getLocation(), Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
 						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 						
 						//adding version column data

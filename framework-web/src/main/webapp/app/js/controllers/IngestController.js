@@ -173,9 +173,23 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 								}
 							}
 						}
+
+						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
+							if($scope.allSourceDatasource[i].type == 'FILE'){
+								if($scope.allSourceDatasource)
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+								else{
+									$scope.allSourceDatasource=[];
+									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+
+								}
+							}
+						}*/
+
 					}
 					
 				}
+
 			}
 			
 
