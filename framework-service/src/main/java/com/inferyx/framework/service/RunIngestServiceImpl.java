@@ -464,6 +464,9 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				//finding latest incremental value
 				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
 				
+				ingestExec.setLastIncrValue(latestIncrLastValue);
+				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+				
 				if(incrLastValue != null && latestIncrLastValue != null &&incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
 					
 				}
@@ -793,10 +796,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				sqoopExecutor.execute(sqoopInput, inputParams);
 			} 
 			
-			if(latestIncrLastValue != null) {
-				ingestExec.setLastIncrValue(latestIncrLastValue);
-				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-			}
+//			if(latestIncrLastValue != null) {
+//				ingestExec.setLastIncrValue(latestIncrLastValue);
+//				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+//			}
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = null;
