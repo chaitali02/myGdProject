@@ -10,14 +10,20 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +39,16 @@ import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +74,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -89,6 +104,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private IngestExecServiceImpl ingestExecServiceImpl;
 	@Autowired
 	private SessionHelper sessionHelper;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -183,7 +200,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			runIngestServiceImpl.setTargetDS(targetDS);
 			
 			if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				//check whether target file already exist
+				//check whether target file already exist (when save mode is null)
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
 					String targetFileName = ingest.getTargetDetail().getValue();
@@ -199,320 +216,18 @@ public class IngestServiceImpl extends RuleTemplate {
 				//get files matching the criteria
 				List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
 				if(fileNameList == null || fileNameList.isEmpty()) {
-					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+					throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
 				List<String> location = new ArrayList<>();
-				String sourceDir = sourceDS.getPath();
+				String sourceDir = "file://".concat(sourceDS.getPath());
 				for(String fileName : fileNameList) {
 					String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
 					location.add(fileLocation);
 				}
-				ingestExec.setLocation(location);
+				runIngestServiceImpl.setLocation(location);
 			} 
 			runIngestServiceImpl.call();
-//
-//			logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
-//			String tableName = null;
-//			if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
-//				tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//				List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());;
-//				if(fileNameList == null || fileNameList.isEmpty()) {
-//					throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-//				}
-//				
-//				if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-//					targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
-//				} else {
-//					targetFilePathUrl = String.format("%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
-//				}
-//				
-////				targetFilePathUrl = String.format("%s%s", targetFilePathUrl, ingest.getTargetDetail().getValue());
-//				for(String fileName : fileNameList) {
-//					String fileName2 = fileName.substring(0, fileName.lastIndexOf("."));
-//					sourceFilePathUrl = sourceFilePathUrl + fileName;
-//					
-//					String header = resolveHeader(ingest.getHeader());
-//					//reading from source
-//					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
-//					
-//					//adding version column to data
-////					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-//					
-//					//applying target schema to df
-//					if(header.equalsIgnoreCase("false") && targetDp != null) {
-//						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, false);
-//					}
-//					
-//					//writing to target				
-//					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, fileName2, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
-//					countRows = rsHolder.getCountRows();
-//				}
-////				targetFilePathUrl = null;
-//			} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
-//				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
-//						&& targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is export block from HDFS to HIVE
-//
-//					logger.info("this is export block from HDFS to HIVE");
-//					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//					String fileName = ingest.getSourceDetail().getValue();			
-//					
-//					//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
-//					sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
-//					if(sourceFilePathUrl.contains(".db")) {
-//						sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
-//					}
-//					logger.info("sourceFilePathUrl: "+sourceFilePathUrl);
-//					String header = resolveHeader(ingest.getHeader());
-//					//reading from source
-//					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
-//					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
-//					
-//					//adding version column data
-////					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-//					
-//					//applying target schema to df
-//					if(header.equalsIgnoreCase("false")) {
-//						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
-//					}
-//					
-//					//writing to target
-//					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
-//					countRows = rsHolder.getCountRows();
-//				} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is export block from HDFS to Table
-//					logger.info("this is export block from HDFS to Table");
-//					tableName = ingest.getSourceDetail().getValue();
-//					String sourceDir = String.format("%s/%s", sourceDS.getPath(), tableName);					
-//					if(sourceDir.contains(".db")) {
-//						sourceDir = sourceDir.replaceAll(".db", "");
-//					}
-//					
-//					SqoopInput sqoopInput = new SqoopInput();
-//					sqoopInput.setHiveImport(false);
-//					sqoopInput.setImportIntended(false);
-//					sqoopInput.setSourceDs(sourceDS);
-//					sqoopInput.setTargetDs(targetDS);
-//					sqoopInput.setSourceDirectory(sourceDir);
-//					sqoopInput.setTable(targetDp.getName());
-//					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-//					sqoopInput.setExportDir(sourceDir);
-//					tableName = targetDp.getName();					
-//					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-//					if(incrLastValue != null) {
-//						sqoopInput.setIncrementalLastValue(incrLastValue);
-//					}
-//					targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
-//					Map<String, String> inputParams = null;
-//					if(ingest.getRunParams() != null) {
-//						inputParams = getRunParams(ingest.getRunParams());
-//					}
-//					sqoopExecutor.execute(sqoopInput, inputParams);
-//				} else {
-//					//this is export block from local file to Table
-//
-//					logger.info("this is export block from local file to Table");
-//					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//					List<String> fileNameList = getFileDetailsByFileName(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat());
-//					if(fileNameList == null || fileNameList.isEmpty()) {
-//						throw new RuntimeException("File \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-//					}
-//					
-//					for(String fileName : fileNameList) {
-//						sourceFilePathUrl = sourceFilePathUrl + fileName;					
-//						String header = resolveHeader(ingest.getHeader());
-//						//reading from source
-//						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, sourceFilePathUrl, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
-//						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
-//						
-//						//adding version column data
-////						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-//						
-//						//applying target schema to df
-//						if(header.equalsIgnoreCase("false")) {
-//							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
-//						}
-//						
-//						//writing to target
-//						sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
-//						countRows = rsHolder.getCountRows();
-//					}
-//				}
-//			} else if(ingestionType.equals(IngestionType.TABLETOFILE)) { 								
-//				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
-//						&& targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is export block from Hive to HDFS
-//
-//					logger.info("this is export block from Hive to HDFS");
-//					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-//					
-////					targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
-//					targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
-//					if(targetFilePathUrl.contains(".db")) {
-//						targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
-//					}
-//					logger.info("sourceDir : " + sourceDir);
-//					logger.info("targetDir : " + targetFilePathUrl);
-//					
-//					String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
-//					
-//					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//					
-//					String sql = generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
-//					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
-//					
-//					//registering temp table of source
-////					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
-//					
-//					//adding version column data
-////					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-//
-//					//writing to target				
-//					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
-//					countRows = rsHolder.getCountRows();
-////					targetFilePathUrl = null;
-//				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is import block from Table to HDFS
-//
-//					logger.info("this is import block from Table to HDFS");
-//					SqoopInput sqoopInput = new SqoopInput();
-//					sqoopInput.setSourceDs(sourceDS);
-//					sqoopInput.setTargetDs(targetDS);
-//					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-//					sqoopInput.setHiveImport(false);
-//					sqoopInput.setImportIntended(true);
-//					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-//					String targetDir = String.format("%s/%s", targetDS.getPath(), ingest.getTargetDetail().getValue());
-//					if(targetDir.contains(".db")) {
-//						targetDir = targetDir.replaceAll(".db", "");
-//					}
-//					logger.info("sourceDir : " + sourceDir);
-//					logger.info("targetDir : " + targetDir);
-//					sqoopInput.setExportDir(targetDir);
-////					sqoopInput.setSourceDirectory(sourceDir);
-//					sqoopInput.setTargetDirectory(targetDir);
-//					sqoopInput.setTable(sourceDp.getName());
-//					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-////					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
-//					if(incrLastValue != null) {
-//						sqoopInput.setIncrementalLastValue(incrLastValue);
-//					}
-//					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-//					Map<String, String> inputParams = null;
-//					if(ingest.getRunParams() != null) {
-//						inputParams = getRunParams(ingest.getRunParams());
-//					}
-//					tableName = sourceDp.getName();
-//					sqoopExecutor.execute(sqoopInput, inputParams);
-//				} else {
-//					//this is export block from Hive table to local file
-//
-//					logger.info("this is export block from Hive table to local file");
-//					String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-//					targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion()));
-//					if(targetFilePathUrl.contains(".db")) {
-//						targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
-//					}
-//					logger.info("sourceDir : " + sourceDir);
-//					logger.info("targetDir : " + targetFilePathUrl);
-//					
-////					String targetTableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//					String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
-//
-//					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-//					
-//					String sql = generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
-//					ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
-//					
-//					//registering temp table of source
-////					sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
-//					
-//					//adding version column data
-////					rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-//
-//					//writing to target				
-//					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
-//					countRows = rsHolder.getCountRows();
-////					targetFilePathUrl = null;
-//				}
-//			} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
-//				SqoopInput sqoopInput = new SqoopInput();
-//				sqoopInput.setSourceDs(sourceDS);
-//				sqoopInput.setTargetDs(targetDS);
-//				String targetDir = targetDS.getPath();
-//				String sourceDir = sourceDS.getPath();
-//				logger.info("targetDir : " + targetDir);
-//				logger.info("sourceDir : " + sourceDir);
-//				sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-//				if(sourceDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is export block from Hive to other table
-//
-//					logger.info("this is export block from Hive to other table");
-//					sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
-//					logger.info("sourceDir : " + sourceDir);
-//					sqoopInput.setExportDir(sourceDir);
-//					sqoopInput.setSourceDirectory(sourceDir);
-//					sqoopInput.setHiveImport(false);
-//					sqoopInput.setImportIntended(false);
-//					sqoopInput.setTable(targetDp.getName());
-//					tableName = targetDp.getName();
-//					
-////					sqoopInput.setHiveTableName(sourceDp.getName());
-////					sqoopInput.setOverwriteHiveTable("Y");
-////					sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
-////					sqoopInput.sethCatTableName(sourceDp.getName());
-//				} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-//					//this is import block from other table to Hive
-//
-//					logger.info("this is import block from other table to Hive");
-//					Map<String, String> partitions = checkPartitionsByDatapod(targetDp);
-//					if(!partitions.isEmpty()) {
-//						
-//					}
-//
-//					sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-//					sqoopInput.setTable(sourceDp.getName());
-//					sqoopInput.setHiveImport(true);
-//					sqoopInput.setImportIntended(true);
-//					sqoopInput.setTargetDirectory(targetDir);
-////					sqoopInput.setHiveTableName(targetDp.getName());
-////					sqoopInput.setHiveDatabaseName(targetDS.getDbname());
-//					sqoopInput.setHCatalogTableName(targetDp.getName());
-//					sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
-////					sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
-////					sqoopInput.sethCatalogPartitionValues(hCatalogPartitionValues);
-//					tableName = targetDp.getName();
-//				}
-//
-//				sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-//				if(incrLastValue != null) {
-//					sqoopInput.setIncrementalLastValue(incrLastValue);
-//				}
-//				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
-//				Map<String, String> inputParams = null;
-//				if(ingest.getRunParams() != null) {
-//					inputParams = getRunParams(ingest.getRunParams());
-//				}
-//				sqoopExecutor.execute(sqoopInput, inputParams);
-//			} 
-//			
-//			if(latestIncrLastValue != null) {
-//				ingestExec.setLastIncrValue(latestIncrLastValue);
-//				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-//			}
-//
-//			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-//			MetaIdentifier datapodKey = null;
-//			if(targetDp != null) {
-//				datapodKey = new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
-//			} else {
-//				datapodKey = new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion());
-//			}
-//			persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
-//			
-//			ingestExec.setResult(resultRef);
-//			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
@@ -559,48 +274,112 @@ public class IngestServiceImpl extends RuleTemplate {
 		return attrName;
 	}
 
-	public List<String> getMatchingFileNames(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException {
+	public List<String> getMatchingFileNames(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException, ParseException {
 		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
+
+		Boolean areDatesEqual = null;
+		Pattern regex = null;
+		if(fileName.startsWith("*") && fileName.endsWith("*")) {
+			if(isCaseSensitive) {
+				regex = Pattern.compile("^.*"+fileName+".*$");
+			} else {
+				regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+			}
+		} else if(fileName.endsWith("*")) { 
+			if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileName+".*$");
+			} else {
+				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+			}
+		} /*else if(fileName.contains("%")) { 
+			String[] fileNameSplit = fileName.split("%");
+			String[] dirFileNameSplit = dirFileName.split("%");
+			//account_%mmddyyyy%.csv
+			//account_%mmddyyyy%_%hhmiss%.csv
+			if(fileNameSplit.length == 3
+					&& dirFileNameSplit.length == 3) {
+				if(isCaseSensitive) {
+					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)"+fileNameSplit[2]+"$");
+				} else {
+					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
+				}
+				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
+				Date fileNameDate = smplDateFormat.parse(fileNameSplit[1]);
+				Date dirFileNameDate = smplDateFormat.parse(fileNameSplit[1]);
+				areDatesEqual = fileNameDate.equals(dirFileNameDate);
+			} else if(fileNameSplit.length == 5
+					&& dirFileNameSplit.length == 5) {
+				if(isCaseSensitive) {
+					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)_(.*?)"+fileNameSplit[4]+"$");
+				} else {
+					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)_(.*?)"+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
+				}
+				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy hhmmss");
+				Date fileNameDate = smplDateFormat.parse(fileNameSplit[1]);
+				Date dirFileNameDate = smplDateFormat.parse(fileNameSplit[1]);
+				areDatesEqual = fileNameDate.equals(dirFileNameDate);
+			}
+		}*/ else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
+			//e.g. account_%mmddyyyy%_%hhmmss%.csv
+			String[] fileNameSplit = fileName.split("%");
+			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
+			String dateFormat = smplDateFormat.format(new Date());
+			fileName = fileName.replaceAll("%", "");
+			
+			if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$");
+			} else {
+				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
+			}
+			
+/*				if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)_(.*?)"+fileNameSplit[4]+"$");
+			} else {
+				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)_(.*?)"+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
+			}*/
+/*				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
+			Date fileNameDate = smplDateFormat.parse(smplDateFormat.format(new Date()));//smplDateFormat.parse(dirFileNameSplit[1]);
+			Date dirFileNameDate = smplDateFormat.parse(dirFileNameSplit[1]);
+			areDatesEqual = fileNameDate.equals(dirFileNameDate);
+			fileName = fileName.toLowerCase().replace("MMddyyyy", smplDateFormat.format(new Date()));*/
+		} else if(fileName.toLowerCase().contains("%mmddyyyy%")) {
+			//e.g. account_%mmddyyyy%.csv
+			String[] fileNameSplit = fileName.split("%");
+			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
+			String dateFormat = smplDateFormat.format(new Date());
+			fileName = fileName.replaceAll("%", "");
+			
+			if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$");
+			} else {
+				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
+			}
+			/*SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
+			Date fileNameDate = smplDateFormat.parse(smplDateFormat.format(new Date()));//smplDateFormat.parse(dirFileNameSplit[1]);
+			Date dirFileNameDate = smplDateFormat.parse(dirFileNameSplit[1]);
+			areDatesEqual = fileNameDate.equals(dirFileNameDate);*/
+		} else {
+			if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileName+"$");
+			} else {
+				regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+			}					
+		}
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
-				
-				if(fileName.startsWith("*") && fileName.endsWith("*")) {
-					Pattern regex = null;
-					if(isCaseSensitive) {
-						regex = Pattern.compile("^.*"+fileName+".*$");
-					} else {
-						regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
-					}
-					 
-					Matcher mtch = regex.matcher(dirFileName);
-			        if(mtch.matches()){
-			        	fileNameList.add(dirFileName);	
-			        }
-				} else {
-					Pattern regex = null;
-					if(isCaseSensitive) {
-						regex = Pattern.compile("^"+fileName+"$");
-					} else {
-						regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
-					}
-					
-					Matcher mtch = regex.matcher(dirFileName);
-			        if(mtch.matches()){
-			        	fileNameList.add(dirFileName);	
-			        }
-				}
+				Matcher mtch = regex.matcher(dirFileName);
+				if(mtch.matches()){
+		        	fileNameList.add(dirFileName);	
+		        }
 			} else if (listOfFiles[i].isDirectory()) {
 				logger.info("Directory " + listOfFiles[i].getName());
 			}
 		}		
-//		
-//		String regex1 = "^.*" + fileName + "+";
-		String regex2 = "^"+fileName+"[_]"+"\\.[a-zA-Z]";
 		return fileNameList;
 	}
 	
@@ -717,12 +496,28 @@ public class IngestServiceImpl extends RuleTemplate {
 		return mi;
 	}
 	
-	public String getLastIncrValue(String igstExecUuid) throws JsonProcessingException {
+	public String getLastIncrValue(String ingestUuid, String ingestVersion) throws JsonProcessingException {
 		//first getting latest ingest exec then obtaining last incremental value from it
-		IngestExec latestIngExec = (IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
+		IngestExec latestIngExec = getLatestIngestExecByIngest(ingestUuid, ingestVersion);//(IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
 		return latestIngExec.getLastIncrValue();
 	}
 
+	public IngestExec getLatestIngestExecByIngest(String ingestUuid, String ingestVersion) throws JsonProcessingException {
+		MatchOperation dependsOnFilter = null;
+		if(ingestVersion != null && !ingestVersion.isEmpty()) {
+			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
+		} else {
+			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
+		}
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitToOnlyFirst = limit(1);
+		Aggregation ingestAggr = newAggregation(dependsOnFilter, groupByUuid, sortByVersion, limitToOnlyFirst);
+		AggregationResults<IngestExec> ingestAggrResults = mongoTemplate.aggregate(ingestAggr, MetaType.ingestExec.toString().toLowerCase(), IngestExec.class);
+		IngestExec ingestExec = ingestAggrResults.getUniqueMappedResult();
+		return (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
+	}
+	
 	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
 		String attrName = getIncrColName(datapod, incrAttrHolder);
 //		for(Attribute attribute : datapod.getAttributes()) {
