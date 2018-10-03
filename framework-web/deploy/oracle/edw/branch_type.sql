@@ -1,13 +1,12 @@
-CREATE TABLE "BRANCH_TYPE" 
+create table "branch_type" 
    (
-   	"BRANCH_TYPE_ID" NUMBER(30,0) NOT NULL ENABLE, 
-	"BRANCH_TYPE_CODE" VARCHAR2(70 BYTE), 
-	"BRANCH_TYPE_DESC" VARCHAR2(70 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0) DEFAULT 0, 
-	 CONSTRAINT "BRANCH_TYPE_PK" PRIMARY KEY ("BRANCH_TYPE_ID", "LOAD_DATE") DISABLE
+   	"branch_type_id" number(30,0) not null enable, 
+	"branch_type_code" varchar2(70 byte), 
+	"branch_type_desc" varchar2(70 byte), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0) default 0, 
+	 constraint "branch_type_pk" primary key ("branch_type_id", "load_date", "load_id") 
 );
-
 exit
 
 su oracle

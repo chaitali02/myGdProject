@@ -1,13 +1,14 @@
-CREATE TABLE "DIM_BANK" 
+create table "dim_bank" 
    (
-   	"BANK_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"SRC_BANK_ID" VARCHAR2(70 BYTE), 
-	"BANK_CODE" VARCHAR2(70 BYTE), 
-	"BANK_NAME" VARCHAR2(70 BYTE), 
-	"BANK_ACCOUNT_NUMBER" VARCHAR2(70 BYTE), 
-	"BANK_CURRENCY_CODE" VARCHAR2(70 BYTE), 
-	"BANK_CHECK_DIGITS" NUMBER(30,0), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0), 
-	 CONSTRAINT "DIM_BANK_PK" PRIMARY KEY ("BANK_ID", "LOAD_DATE")
+   	"bank_id" varchar2(70 byte) not null enable, 
+	"src_bank_id" varchar2(70 byte), 
+	"bank_code" varchar2(70 byte), 
+	"bank_name" varchar2(70 byte), 
+	"bank_account_number" varchar2(70 byte), 
+	"bank_currency_code" varchar2(70 byte), 
+	"bank_check_digits" number(30,0), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0), 
+	 constraint "dim_bank_pk" primary key ("bank_id",  "load_date", "load_id"),
+ 	 constraint "src_bank_id_uk" unique ("src_bank_id", "load_date", "load_id")
 );

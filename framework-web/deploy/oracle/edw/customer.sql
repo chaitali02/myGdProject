@@ -1,17 +1,17 @@
-CREATE TABLE "CUSTOMER" 
+create table "customer" 
    (
-   	"CUSTOMER_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"ADDRESS_ID" VARCHAR2(70 BYTE), 
-	"BRANCH_ID" NUMBER(30,0), 
-	"TITLE" VARCHAR2(70 BYTE), 
-	"FIRST_NAME" VARCHAR2(70 BYTE), 
-	"MIDDLE_NAME" VARCHAR2(70 BYTE), 
-	"LAST_NAME" VARCHAR2(70 BYTE), 
-	"SSN" VARCHAR2(70 BYTE), 
-	"PHONE" VARCHAR2(70 BYTE), 
-	"DATE_FIRST_PURCHASE" VARCHAR2(70 BYTE), 
-	"COMMUTE_DISTANCE_MILES" NUMBER(30,0), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0), 
-	 CONSTRAINT "CUSTOMER_PK" PRIMARY KEY ("CUSTOMER_ID", "LOAD_DATE")
-   );
+   	"customer_id" varchar2(70 byte) not null enable, 
+	"address_id" varchar2(70 byte), 
+	"branch_id" number(30,0), 
+	"title" varchar2(70 byte), 
+	"first_name" varchar2(70 byte), 
+	"middle_name" varchar2(70 byte), 
+	"last_name" varchar2(70 byte), 
+	"ssn" varchar2(70 byte), 
+	"phone" varchar2(70 byte), 
+	"date_first_purchase" varchar2(70 byte), 
+	"commute_distance_miles" number(30,0), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0), 
+	 constraint "customer_pk" primary key ("customer_id", "load_date", "load_id")
+);

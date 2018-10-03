@@ -1,25 +1,22 @@
-CREATE TABLE "FACT_TRANSACTION" 
+
+create table "fact_transaction" 
    (
-   	"TRANSACTION_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"SRC_TRANSACTION_ID" VARCHAR2(70 BYTE), 
-	"TRANSACTION_TYPE_ID" VARCHAR2(70 BYTE), 
-	"TRANS_DATE_ID" NUMBER(30,0), 
-	"BANK_ID" VARCHAR2(70 BYTE), 
-	"BRANCH_ID" VARCHAR2(70 BYTE), 
-	"CUSTOMER_ID" VARCHAR2(70 BYTE), 
-	"ADDRESS_ID" VARCHAR2(70 BYTE), 
-	"ACCOUNT_ID" VARCHAR2(70 BYTE), 
-	"FROM_ACCOUNT" VARCHAR2(70 BYTE), 
-	"TO_ACCOUNT" VARCHAR2(70 BYTE), 
-	"AMOUNT_BASE_CURR" NUMBER(30,0), 
-	"AMOUNT_USD" NUMBER(30,0), 
-	"CURRENCY_CODE" VARCHAR2(70 BYTE), 
-	"CURRENCY_RATE" NUMBER(30,0), 
-	"NOTES" VARCHAR2(80 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0) NOT NULL ENABLE
+   	"transaction_id" varchar2(70 byte) not null enable, 
+	"src_transaction_id" varchar2(70 byte), 
+	"transaction_type_id" varchar2(70 byte), 
+	"trans_date_id" number(30,0), 
+	"bank_id" varchar2(70 byte), 
+	"branch_id" varchar2(70 byte), 
+	"customer_id" varchar2(70 byte), 
+	"address_id" varchar2(70 byte), 
+	"account_id" varchar2(70 byte), 
+	"from_account" varchar2(70 byte), 
+	"to_account" varchar2(70 byte), 
+	"amount_base_curr" number(30,0), 
+	"amount_usd" number(30,0), 
+	"currency_code" varchar2(70 byte), 
+	"currency_rate" number(30,0), 
+	"notes" varchar2(80 byte), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0) not null enable
 );
-
-
-
-

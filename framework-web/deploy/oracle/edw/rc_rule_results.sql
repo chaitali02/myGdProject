@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS RC_RULE_RESULTS;
-CREATE TABLE RC_RULE_RESULTS (
-    "SOURCEDATAPODUUID"  VARCHAR2(70 BYTE),
-    "SOURCEDATAPODVERSION"  VARCHAR2(70 BYTE),
-    "SOURCEDATAPODNAME"  VARCHAR2(70 BYTE),
-    "SOURCEATTRIBUTEID"  VARCHAR2(70 BYTE),
-    "SOURCEATTRIBUTENAME"  VARCHAR2(70 BYTE),
-    "SOURCEVALUE"  NUMBER(30,0),
-    "TARGETDATAPODUUID"  VARCHAR2(70 BYTE),
-    "TARGETDATAPODVERSION"  VARCHAR2(70 BYTE),
-    "TARGETDATAPODNAME"  VARCHAR2(70 BYTE),
-    "TARGETATTRIBUTEID"  VARCHAR2(70 BYTE),
-    "TARGETATTRIBUTENAME"  VARCHAR2(70 BYTE),
-    "TARGETVALUE"  NUMBER(30,0),
-    "STATUS"  VARCHAR2(70 BYTE)
+drop table if exists rc_rule_results;
+create table rc_rule_results (
+    "sourcedatapoduuid"  varchar2(70 byte),
+    "sourcedatapodversion"  varchar2(70 byte),
+    "sourcedatapodname"  varchar2(70 byte),
+    "sourceattributeid"  varchar2(70 byte),
+    "sourceattributename"  varchar2(70 byte),
+    "sourcevalue"  number(30,0),
+    "targetdatapoduuid"  varchar2(70 byte),
+    "targetdatapodversion"  varchar2(70 byte),
+    "targetdatapodname"  varchar2(70 byte),
+    "targetattributeid"  varchar2(70 byte),
+    "targetattributename"  varchar2(70 byte),
+    "targetvalue"  number(30,0),
+    "status"  varchar2(70 byte)
 );

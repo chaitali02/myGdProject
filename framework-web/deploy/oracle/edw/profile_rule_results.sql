@@ -1,21 +1,20 @@
-CREATE TABLE "PROFILE_RULE_RESULTS" 
+create table "profile_rule_results" 
    (
-   	"DATAPODUUID" VARCHAR2(70 BYTE), 
-	"DATAPODVERSION" VARCHAR2(70 BYTE), 
-	"ATTRIBUTEID" VARCHAR2(70 BYTE), 
-	"MINVAL" FLOAT(126), 
-	"MAXVAL" FLOAT(126), 
-	"AVGVAL" FLOAT(126), 
-	"MEDIANVAL" FLOAT(126), 
-	"STDDEV" FLOAT(126), 
-	"NUMDISTINCT" NUMBER(30,0), 
-	"PERDISTINCT" FLOAT(126), 
-	"NUMNULL" NUMBER(30,0), 
-	"PERNULL" FLOAT(126), 
-	"SIXSIGMA" FLOAT(126), 
-	"VERSION" NUMBER(30,0)
+   	"datapoduuid" varchar2(70 byte), 
+	"datapodversion" varchar2(70 byte), 
+	"attributeid" varchar2(70 byte), 
+	"minval" float(126), 
+	"maxval" float(126), 
+	"avgval" float(126), 
+	"medianval" float(126), 
+	"stddev" float(126), 
+	"numdistinct" number(30,0), 
+	"perdistinct" float(126), 
+	"numnull" number(30,0), 
+	"pernull" float(126), 
+	"sixsigma" float(126), 
+	"version" number(30,0)
    );
-
 
 exit
 

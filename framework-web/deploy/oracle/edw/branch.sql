@@ -1,16 +1,17 @@
-CREATE TABLE "BRANCH" 
+create table "branch" 
    (	
-    "BRANCH_ID" NUMBER(30,0) NOT NULL ENABLE, 
-	"BRANCH_TYPE_ID" NUMBER(20,0), 
-	"BANK_ID" VARCHAR2(70 BYTE), 
-	"ADDRESS_ID" VARCHAR2(70 BYTE), 
-	"BRANCH_NAME" VARCHAR2(70 BYTE), 
-	"BRANCH_DESC" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_NAME" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_PHONE" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_EMAIL" VARCHAR2(70 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE,
-	"LOAD_ID" NUMBER(30,0)
+    "branch_id" number(30,0) not null enable, 
+	"branch_type_id" number(20,0), 
+	"bank_id" varchar2(70 byte), 
+	"address_id" varchar2(70 byte), 
+	"branch_name" varchar2(70 byte), 
+	"branch_desc" varchar2(70 byte), 
+	"branch_contact_name" varchar2(70 byte), 
+	"branch_contact_phone" varchar2(70 byte), 
+	"branch_contact_email" varchar2(70 byte), 
+	"load_date" varchar2(70 byte) not null enable,
+	"load_id" number(30,0),
+	 constraint "branch_id_pk" primary key ("branch_id", "load_date", "load_id") 
 );
 
 

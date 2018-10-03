@@ -1,10 +1,11 @@
-CREATE TABLE "DIM_TRANSACTION_TYPE" 
+create table "dim_transaction_type" 
    (
-  "TRANSACTION_TYPE_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE,
-  "SRC_TRANSACTION_TYPE_ID"  VARCHAR2(70 BYTE) NOT NULL,
-  "TRANSACTION_TYPE_CODE" VARCHAR2(70 BYTE) NOT NULL,
-  "TRANSACTION_TYPE_DESC" VARCHAR2(70 BYTE) NOT NULL,
-  "LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL,
-  "LOAD_ID" NUMBER(30,0)
-);
-
+  "transaction_type_id" varchar2(70 byte) not null enable,
+  "src_transaction_type_id"  varchar2(70 byte) not null,
+  "transaction_type_code" varchar2(70 byte) not null,
+  "transaction_type_desc" varchar2(70 byte) not null,
+  "load_date" varchar2(70 byte) not null,
+  "load_id" number(30,0),
+  constraint "dim_transaction_type_id_pk" primary key ("transaction_type_id", "load_id", "load_date"),
+  constraint "src_transaction_type_id_uk" unique ("src_transaction_type_id", "load_date", "load_id")
+  );

@@ -1,12 +1,13 @@
- CREATE TABLE "ACCOUNT_TYPE" 
+create table "account_type" 
    (
-   	"ACCOUNT_TYPE_ID" NUMBER(30,0) DEFAULT 0 NOT NULL ENABLE, 
-	"ACCOUNT_TYPE_CODE" VARCHAR2(70 BYTE), 
-	"ACCOUNT_TYPE_DESC" VARCHAR2(70 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE,
-	"LOAD_ID" NUMBER(30,0) DEFAULT 0, 
-	 CONSTRAINT "ACCOUNT_TYPE_PK" PRIMARY KEY ("ACCOUNT_TYPE_ID", "LOAD_DATE")
+   	"account_type_id" number(30,0) default 0 not null enable, 
+	"account_type_code" varchar2(70 byte), 
+	"account_type_desc" varchar2(70 byte), 
+	"load_date" varchar2(70 byte) not null enable,
+	"load_id" number(30,0) default 0, 
+	 constraint "account_type_pk" primary key ("account_type_id", "load_date", "load_id")
 );
+
 
 
 exit

@@ -1,23 +1,22 @@
-
-CREATE TABLE DP_RULE_RESULTS
+create table "dp_rule_results"
 (
-  "DATAPODUUID" VARCHAR2(70 BYTE),
-  "DATAPODVERSION" VARCHAR2(70 BYTE),
-  "DATAPODNAME" VARCHAR2(70 BYTE),
-  "ATTRIBUTEID" VARCHAR2(70 BYTE),
-  "ATTRIBUTENAME" VARCHAR2(70 BYTE),
-  "NUMROWS" VARCHAR2(70 BYTE),
-  "MINVAL" NUMBER(30,0),
-  "MAXVAL" NUMBER(30,0),
-  "AVGVAL" NUMBER(30,0),
-  "MEDIANVAL" NUMBER(30,0),
-  "STDDEV" NUMBER(30,0),
-  "NUMDISTINCT" NUMBER(30,0),
-  "PERDISTINCT" NUMBER(30,0),
-  "NUMNULL" NUMBER(30,0),
-  "PERNULL" NUMBER(30,0),
-  "SIXSIGMA" NUMBER(30,0),
-  "LOAD_DATE" VARCHAR2(70 BYTE),
-  "LOAD_ID" NUMBER(30,0),
- CONSTRAINT "DP_RULE_RESULTS_PK" PRIMARY KEY ("DATAPODUUID", "LOAD_DATE")
+  "datapoduuid" varchar2(70 byte),
+  "datapodversion" varchar2(70 byte),
+  "datapodname" varchar2(70 byte),
+  "attributeid" varchar2(70 byte),
+  "attributename" varchar2(70 byte),
+  "numrows" varchar2(70 byte),
+  "minval" number(30,0),
+  "maxval" number(30,0),
+  "avgval" number(30,0),
+  "medianval" number(30,0),
+  "stddev" number(30,0),
+  "numdistinct" number(30,0),
+  "perdistinct" number(30,0),
+  "numnull" number(30,0),
+  "pernull" number(30,0),
+  "sixsigma" number(30,0),
+  "load_date" varchar2(70 byte),
+  "load_id" number(30,0),
+  "version" varchar2(70 byte)
 );

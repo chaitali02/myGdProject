@@ -1,22 +1,22 @@
-CREATE TABLE "DQ_RULE_RESULTS" 
+create table "dq_rule_results" 
    (
-   	"ROWKEY" VARCHAR2(70 BYTE), 
-	"DATAPODUUID" VARCHAR2(70 BYTE), 
-	"DATAPODVERSION" VARCHAR2(70 BYTE), 
-	"DATAPODNAME"  VARCHAR2(70 BYTE),
-	"ATTRIBUTEID" VARCHAR2(70 BYTE), 
-	"ATTRIBUTENAME" VARCHAR2(70 BYTE),
-	"ATTRIBUTEVALUE" VARCHAR2(70 BYTE), 
-	"NULLCHECK_PASS" VARCHAR2(70 BYTE), 
-	"VALUECHECK_PASS" VARCHAR2(70 BYTE), 
-	"RANGECHECK_PASS" VARCHAR2(70 BYTE), 
-	"DATATYPECHECK_PASS" VARCHAR2(70 BYTE), 
-	"DATAFORMATCHECK_PASS" VARCHAR2(70 BYTE), 
-	"LENGTHCHECK_PASS" VARCHAR2(70 BYTE), 
-	"REFINTEGRITYCHECK_PASS" VARCHAR2(70 BYTE), 
-	"DUPCHECK_PASS" VARCHAR2(70 BYTE), 
-	"CUSTOMCHECK_PASS" VARCHAR2(70 BYTE), 
-	"VERSION" VARCHAR2(70 BYTE)
+   	"rowkey" varchar2(70 byte), 
+	"datapoduuid" varchar2(70 byte), 
+	"datapodversion" varchar2(70 byte), 
+	"datapodname"  varchar2(70 byte),
+	"attributeid" varchar2(70 byte), 
+	"attributename" varchar2(70 byte),
+	"attributevalue" varchar2(70 byte), 
+	"nullcheck_pass" varchar2(70 byte), 
+	"valuecheck_pass" varchar2(70 byte), 
+	"rangecheck_pass" varchar2(70 byte), 
+	"datatypecheck_pass" varchar2(70 byte), 
+	"dataformatcheck_pass" varchar2(70 byte), 
+	"lengthcheck_pass" varchar2(70 byte), 
+	"refintegritycheck_pass" varchar2(70 byte), 
+	"dupcheck_pass" varchar2(70 byte), 
+	"customcheck_pass" varchar2(70 byte), 
+	"version" varchar2(70 byte)
    );
 
 

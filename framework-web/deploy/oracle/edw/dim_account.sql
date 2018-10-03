@@ -1,29 +1,31 @@
-CREATE TABLE "DIM_ACCOUNT" 
+create table "dim_account" 
    (
-   	"ACCOUNT_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"SRC_ACCOUNT_ID" VARCHAR2(70 BYTE), 
-	"ACCOUNT_TYPE_CODE" VARCHAR2(70 BYTE), 
-	"ACCOUNT_STATUS_CODE" VARCHAR2(70 BYTE), 
-	"PRODUCT_TYPE_CODE" VARCHAR2(70 BYTE), 
-	"PIN_NUMBER" NUMBER(30,0), 
-	"NATIONALITY" VARCHAR2(70 BYTE), 
-	"PRIMARY_IDEN_DOC" VARCHAR2(70 BYTE), 
-	"PRIMARY_IDEN_DOC_ID" VARCHAR2(70 BYTE), 
-	"SECONDARY_IDEN_DOC" VARCHAR2(70 BYTE), 
-	"SECONDARY_IDEN_DOC_ID" VARCHAR2(70 BYTE), 
-	"ACCOUNT_OPEN_DATE" VARCHAR2(70 BYTE), 
-	"ACCOUNT_NUMBER" VARCHAR2(70 BYTE), 
-	"OPENING_BALANCE" VARCHAR2(70 BYTE), 
-	"CURRENT_BALANCE" VARCHAR2(70 BYTE), 
-	"OVERDUE_BALANCE" NUMBER(30,0), 
-	"OVERDUE_DATE" VARCHAR2(70 BYTE), 
-	"CURRENCY_CODE" VARCHAR2(70 BYTE), 
-	"INTEREST_TYPE" VARCHAR2(70 BYTE), 
-	"INTEREST_RATE" FLOAT(50), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0) NOT NULL ENABLE, 
-	 CONSTRAINT "DIM_ACCOUNT_PK" PRIMARY KEY ("ACCOUNT_ID", "LOAD_DATE", "LOAD_ID")
+   	"account_id" varchar2(70 byte) not null enable, 
+	"src_account_id" varchar2(70 byte), 
+	"account_type_code" varchar2(70 byte), 
+	"account_status_code" varchar2(70 byte), 
+	"product_type_code" varchar2(70 byte), 
+	"pin_number" number(30,0), 
+	"nationality" varchar2(70 byte), 
+	"primary_iden_doc" varchar2(70 byte), 
+	"primary_iden_doc_id" varchar2(70 byte), 
+	"secondary_iden_doc" varchar2(70 byte), 
+	"secondary_iden_doc_id" varchar2(70 byte), 
+	"account_open_date" varchar2(70 byte), 
+	"account_number" varchar2(70 byte), 
+	"opening_balance" varchar2(70 byte), 
+	"current_balance" varchar2(70 byte), 
+	"overdue_balance" number(30,0), 
+	"overdue_date" varchar2(70 byte), 
+	"currency_code" varchar2(70 byte), 
+	"interest_type" varchar2(70 byte), 
+	"interest_rate" float(50), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0) not null enable, 
+	 constraint "dim_account_pk" primary key ("account_id", "load_date", "load_id"),
+	 constraint "src_account_id_uk" unique ("src_account_id", "load_date", "load_id")
 );
+
 
 exit
 

@@ -1,14 +1,15 @@
-CREATE TABLE "DIM_BRANCH" 
+create table "dim_branch" 
    (
-   	"BRANCH_ID" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"SRC_BRANCH_ID" VARCHAR2(70 BYTE), 
-	"BRANCH_TYPE_CODE" VARCHAR2(70 BYTE), 
-	"BRANCH_NAME" VARCHAR2(70 BYTE), 
-	"BRANCH_DESC" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_NAME" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_PHONE" VARCHAR2(70 BYTE), 
-	"BRANCH_CONTACT_EMAIL" VARCHAR2(70 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE, 
-	"LOAD_ID" NUMBER(30,0), 
-	 CONSTRAINT "DIM_BRANCH_UK1" UNIQUE ("SRC_BRANCH_ID", "LOAD_DATE", "LOAD_ID")
+   	"branch_id" varchar2(70 byte) not null enable, 
+	"src_branch_id" varchar2(70 byte), 
+	"branch_type_code" varchar2(70 byte), 
+	"branch_name" varchar2(70 byte), 
+	"branch_desc" varchar2(70 byte), 
+	"branch_contact_name" varchar2(70 byte), 
+	"branch_contact_phone" varchar2(70 byte), 
+	"branch_contact_email" varchar2(70 byte), 
+	"load_date" varchar2(70 byte) not null enable, 
+	"load_id" number(30,0), 
+	 constraint "dim_branch_uk1" primary key ("branch_id", "load_date", "load_id"),
+ 	 constraint "src_branch_id_uk" unique ("src_branch_id", "load_date", "load_id")
 );

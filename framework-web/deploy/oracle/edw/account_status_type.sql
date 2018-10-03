@@ -1,11 +1,11 @@
- CREATE TABLE "ACCOUNT_STATUS_TYPE" 
+ create table "account_status_type" 
    (
-   	"ACCOUNT_STATUS_ID" NUMBER(30,0) DEFAULT 0 NOT NULL ENABLE, 
-	"ACCOUNT_STATUS_CODE" VARCHAR2(70 BYTE), 
-	"ACCOUNT_STATUS_DESC" VARCHAR2(70 BYTE), 
-	"LOAD_DATE" VARCHAR2(70 BYTE) NOT NULL ENABLE,
-	"LOAD_ID" NUMBER(30,0) DEFAULT 0, 
-	 CONSTRAINT "ACCOUNT_STATUS_TYPE_PK" PRIMARY KEY ("ACCOUNT_STATUS_ID", "LOAD_DATE")
+   	"account_status_id" number(30,0) default 0 not null enable, 
+	"account_status_code" varchar2(70 byte), 
+	"account_status_desc" varchar2(70 byte), 
+	"load_date" varchar2(70 byte) not null enable,
+	"load_id" number(30,0) default 0, 
+	 constraint "account_status_type_pk" primary key ("account_status_id", "load_date", "load_id")
 );
 
 
