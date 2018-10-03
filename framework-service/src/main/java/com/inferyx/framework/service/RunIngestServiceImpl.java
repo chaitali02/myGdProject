@@ -453,6 +453,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 			String incrLastValue = null;
 			String latestIncrLastValue = null;
 			String incrColName = null;
+			
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getIncrColName(sourceDp, ingest.getIncrAttr());
@@ -462,6 +463,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				
 				//finding latest incremental value
 				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				
+				if(incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
+					
+				}
 			}	
 
 			logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
