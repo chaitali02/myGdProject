@@ -453,6 +453,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 			String incrLastValue = null;
 			String latestIncrLastValue = null;
 			String incrColName = null;
+			
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getIncrColName(sourceDp, ingest.getIncrAttr());
@@ -462,6 +463,13 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				
 				//finding latest incremental value
 				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				
+				ingestExec.setLastIncrValue(latestIncrLastValue);
+				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+				
+				if(incrLastValue != null && latestIncrLastValue != null &&incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
+					
+				}
 			}	
 
 			logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
@@ -592,6 +600,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					tableName = targetDp.getName();					
 					sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 					if(incrLastValue != null) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 						sqoopInput.setIncrementalLastValue(incrLastValue);
 					}
 					targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
@@ -687,6 +696,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 //					sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 					if(incrLastValue != null) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 						sqoopInput.setIncrementalLastValue(incrLastValue);
 					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
@@ -778,6 +788,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 
 				sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 				if(incrLastValue != null) {
+					sqoopInput.setIncrementalTestColumn(incrColName);
 					sqoopInput.setIncrementalLastValue(incrLastValue);
 				}
 				targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
@@ -788,10 +799,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				sqoopExecutor.execute(sqoopInput, inputParams);
 			} 
 			
-			if(latestIncrLastValue != null) {
-				ingestExec.setLastIncrValue(latestIncrLastValue);
-				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-			}
+//			if(latestIncrLastValue != null) {
+//				ingestExec.setLastIncrValue(latestIncrLastValue);
+//				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+//			}
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			MetaIdentifier datapodKey = null;
