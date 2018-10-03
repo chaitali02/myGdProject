@@ -359,8 +359,14 @@ public class IngestServiceImpl extends RuleTemplate {
 			if(isCaseSensitive) {
 				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$");
 			} else {
-				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
+				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
 			}
+			
+			/*if(isCaseSensitive) {
+				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$");
+			} else {
+				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
+			}*/
 			/*SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
 			Date fileNameDate = smplDateFormat.parse(smplDateFormat.format(new Date()));//smplDateFormat.parse(dirFileNameSplit[1]);
 			Date dirFileNameDate = smplDateFormat.parse(dirFileNameSplit[1]);
