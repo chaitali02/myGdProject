@@ -19,6 +19,7 @@ const routes: Routes = [
                 { path: 'DataDiscovery/dataPreparation', redirectTo: 'dataPreparation'},
                 
                 { path: 'list/:type', component: CommonListComponent, data: { name: 'impactLogin' }},
+                { path: 'list/:parentType/:type', component: CommonListComponent, data: { name: 'impactLogin' }},
                 
                 { path: 'dataVisualization', loadChildren: 'app/data-visualization/data-visualization.module#DataVisualizationModule'},
                 { path: 'list/:type/dataVisualization',redirectTo :'dataVisualization'},

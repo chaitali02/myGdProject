@@ -30,6 +30,7 @@ import { routing1 } from './data-preparation-routing.module';
 import { FunctionComponent } from './function/function.component';
 import { MapComponent } from './map/map.component';
 import { RelationComponent } from './relation/relation.component';
+import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { RelationComponent } from './relation/relation.component';
         DropdownModule,
         DataTableModule,
         SharedModule,
-        GrowlModule        
+        GrowlModule,
+        TooltipModule        
     ],
     declarations: [
         DataPreparationComponent,
