@@ -233,7 +233,6 @@ public class IngestServiceImpl extends RuleTemplate {
 			runIngestServiceImpl.call();
 		} catch (Exception e) {
 			e.printStackTrace();
-			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -243,9 +242,19 @@ public class IngestServiceImpl extends RuleTemplate {
 
 			if(message != null && message.toLowerCase().contains("duplicate entry")) {
 				message = "Duplicate entry/entries found for primary key(s).";
+			} else if(message != null && message.toLowerCase().contains("No chnage in incremental param hence skipping execution.")) {
+				message = "No chnage in incremental param hence skipping execution.";
 			}
-			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
-			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
+
+			if(message != null && message.toLowerCase().contains("no chnage in incremental param hence skipping execution.")) {
+				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
+				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No chnage in incremental param hence skipping execution.");
+				throw new RuntimeException("No chnage in incremental param hence skipping execution.");
+			} else {
+				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
+				throw new RuntimeException((message != null) ? message : "Ingest execution failed.");				
+			}
 		}
 		
 		return ingestExec;
@@ -284,7 +293,6 @@ public class IngestServiceImpl extends RuleTemplate {
 		List<String> fileNameList = new ArrayList<String>();
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
-		Boolean areDatesEqual = null;
 		Pattern regex = null;
 		if(fileName.startsWith("*") && fileName.endsWith("*")) {
 			if(isCaseSensitive) {
@@ -298,35 +306,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			} else {
 				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
 			}
-		} /*else if(fileName.contains("%")) { 
-			String[] fileNameSplit = fileName.split("%");
-			String[] dirFileNameSplit = dirFileName.split("%");
-			//account_%mmddyyyy%.csv
-			//account_%mmddyyyy%_%hhmiss%.csv
-			if(fileNameSplit.length == 3
-					&& dirFileNameSplit.length == 3) {
-				if(isCaseSensitive) {
-					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)"+fileNameSplit[2]+"$");
-				} else {
-					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
-				}
-				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
-				Date fileNameDate = smplDateFormat.parse(fileNameSplit[1]);
-				Date dirFileNameDate = smplDateFormat.parse(fileNameSplit[1]);
-				areDatesEqual = fileNameDate.equals(dirFileNameDate);
-			} else if(fileNameSplit.length == 5
-					&& dirFileNameSplit.length == 5) {
-				if(isCaseSensitive) {
-					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)_(.*?)"+fileNameSplit[4]+"$");
-				} else {
-					regex = Pattern.compile("^"+fileNameSplit[0]+"_"+"(.*?)_(.*?)"+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
-				}
-				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy hhmmss");
-				Date fileNameDate = smplDateFormat.parse(fileNameSplit[1]);
-				Date dirFileNameDate = smplDateFormat.parse(fileNameSplit[1]);
-				areDatesEqual = fileNameDate.equals(dirFileNameDate);
-			}
-		}*/ else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
+		} else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
 			//e.g. account_%mmddyyyy%_%hhmmss%.csv
 			String[] fileNameSplit = fileName.split("%");
 			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
@@ -338,17 +318,6 @@ public class IngestServiceImpl extends RuleTemplate {
 			} else {
 				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
 			}
-			
-/*				if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)_(.*?)"+fileNameSplit[4]+"$");
-			} else {
-				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)_(.*?)"+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
-			}*/
-/*				SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
-			Date fileNameDate = smplDateFormat.parse(smplDateFormat.format(new Date()));//smplDateFormat.parse(dirFileNameSplit[1]);
-			Date dirFileNameDate = smplDateFormat.parse(dirFileNameSplit[1]);
-			areDatesEqual = fileNameDate.equals(dirFileNameDate);
-			fileName = fileName.toLowerCase().replace("MMddyyyy", smplDateFormat.format(new Date()));*/
 		} else if(fileName.toLowerCase().contains("%mmddyyyy%")) {
 			//e.g. account_%mmddyyyy%.csv
 			String[] fileNameSplit = fileName.split("%");
@@ -361,16 +330,6 @@ public class IngestServiceImpl extends RuleTemplate {
 			} else {
 				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
 			}
-			
-			/*if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$");
-			} else {
-				regex = Pattern.compile("^"+fileNameSplit[0]+"(.*?)"+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
-			}*/
-			/*SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
-			Date fileNameDate = smplDateFormat.parse(smplDateFormat.format(new Date()));//smplDateFormat.parse(dirFileNameSplit[1]);
-			Date dirFileNameDate = smplDateFormat.parse(dirFileNameSplit[1]);
-			areDatesEqual = fileNameDate.equals(dirFileNameDate);*/
 		} else {
 			if(isCaseSensitive) {
 				regex = Pattern.compile("^"+fileName+"$");
