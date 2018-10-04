@@ -1,19 +1,16 @@
-DROP TABLE rc_rule_results;
-
-CREATE TABLE rc_rule_results (
-    sourcedatapoduuid text,
-    sourcedatapodversion text,
-    sourcedatapodname text,
-    sourceattributeid text,
-    sourceattributename text,
+CREATE TABLE edw_small.rc_rule_results (
+    sourcedatapoduuid VARCHAR(50),
+    sourcedatapodversion VARCHAR(50),
+    sourcedatapodname VARCHAR(50),
+    sourceattributeid VARCHAR(50),
+    sourceattributename VARCHAR(50),
     sourcevalue double precision,
-    targetdatapoduuid text,
-    targetdatapodversion text,
-    targetdatapodname text,
-    targetattributeid text,
-    targetattributename text,
+    targetdatapoduuid VARCHAR(50),
+    targetdatapodversion VARCHAR(50),
+    targetdatapodname VARCHAR(50),
+    targetattributeid VARCHAR(50),
+    targetattributename VARCHAR(50),
     targetvalue double precision,
-    status text,
+    status VARCHAR(50),
     version integer
 );
-

@@ -1,21 +1,18 @@
-DROP TABLE address;
-   
-CREATE TABLE address
+CREATE TABLE edw_small.address
 (
-  address_id text NOT NULL,
-  address_line1 text,
-  address_line2 text,
-  address_line3 text,
-  city text,
-  county text,
-  state text,
+  address_id VARCHAR(50) NOT NULL,
+  address_line1 VARCHAR(50),
+  address_line2 VARCHAR(50),
+  address_line3 VARCHAR(50),
+  city VARCHAR(50),
+  county VARCHAR(50),
+  state VARCHAR(50),
   zipcode integer,
-  country text,
-  latitude text,
-  longitude text,
-  load_date text NOT NULL,
+  country VARCHAR(50),
+  latitude VARCHAR(50),
+  longitude VARCHAR(50),
+  load_date VARCHAR(50) NOT NULL,
   load_id integer,
-  CONSTRAINT address_pkey PRIMARY KEY (address_id, load_date)
+  CONSTRAINT address_pkey PRIMARY KEY (address_id, load_date,load_id)
 );
 
-ALTER TABLE address OWNER TO inferyx;

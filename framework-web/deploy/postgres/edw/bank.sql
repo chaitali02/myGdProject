@@ -1,15 +1,14 @@
-DROP TABLE bank;
-
-CREATE TABLE bank
+CREATE TABLE edw_small.bank
 (
   bank_id integer NOT NULL,
-  bank_code text,
-  bank_name text,
-  bank_account_number text,
-  bank_currency_code text,
+  bank_code VARCHAR(50),
+  bank_name VARCHAR(50),
+  bank_account_number VARCHAR(50),
+  bank_currency_code VARCHAR(50),
   bank_check_digits integer,
-  load_date text,
-  load_id integer DEFAULT 0
+  load_date VARCHAR(50),
+  load_id integer ,
+  CONSTRAINT dim_bank_pkey PRIMARY KEY (bank_id,load_date, load_id)
+  
 );
 
-ALTER TABLE bank OWNER TO inferyx;

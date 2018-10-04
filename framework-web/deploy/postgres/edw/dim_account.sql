@@ -1,32 +1,28 @@
-DROP TABLE IF EXISTS dim_account;
-
-CREATE TABLE dim_account
+CREATE TABLE edw_small.dim_account
 (
-  account_id text NOT NULL,
-  src_account_id text,
-  account_type_code text,
-  account_status_code text,
-  product_type_code text,
+  account_id VARCHAR(50) NOT NULL,
+  src_account_id VARCHAR(50),
+  account_type_code VARCHAR(50),
+  account_status_code VARCHAR(50),
+  product_type_code VARCHAR(50),
   pin_number integer,
-  nationality text,
-  primary_iden_doc text,
-  primary_iden_doc_id text,
-  secondary_iden_doc text,
-  secondary_iden_doc_id text,
-  account_open_date text,
-  account_number text,
-  opening_balance text,
-  current_balance text,
+  nationality VARCHAR(50),
+  primary_iden_doc VARCHAR(50),
+  primary_iden_doc_id VARCHAR(50),
+  secondary_iden_doc VARCHAR(50),
+  secondary_iden_doc_id VARCHAR(50),
+  account_open_date VARCHAR(50),
+  account_number VARCHAR(50),
+  opening_balance VARCHAR(50),
+  current_balance VARCHAR(50),
   overdue_balance integer,
-  overdue_date text,
-  currency_code text,
-  interest_type text,
+  overdue_date VARCHAR(50),
+  currency_code VARCHAR(50),
+  interest_type VARCHAR(50),
   interest_rate numeric(38,2),
-  load_date text NOT NULL,
+  load_date VARCHAR(50) NOT NULL,
   load_id integer NOT NULL,
   CONSTRAINT dim_account_pkey PRIMARY KEY (account_id, load_date, load_id),
   CONSTRAINT src_account_id UNIQUE (src_account_id, load_date, load_id)
 );
-ALTER TABLE dim_account OWNER TO inferyx;
-
 

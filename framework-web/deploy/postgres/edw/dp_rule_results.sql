@@ -1,13 +1,11 @@
-DROP TABLE dp_rule_results;
-
-CREATE TABLE dp_rule_results
+CREATE TABLE edw_small.dp_rule_results
 (
-  datapoduuid text,
-  datapodversion text,
-  datapodname text,
-  attributeid text,
-  attributename text,
-  numrows text,
+  datapoduuid VARCHAR(50),
+  datapodversion VARCHAR(50),
+  datapodname VARCHAR(50),
+  attributeid VARCHAR(50),
+  attributename VARCHAR(50),
+  numrows VARCHAR(50),
   minval double precision,
   maxval double precision,
   avgval double precision,
@@ -18,8 +16,9 @@ CREATE TABLE dp_rule_results
   numnull integer,
   pernull double precision,
   sixsigma double precision,
-  load_date text,
+  load_date VARCHAR(50),
   load_id integer,
   version integer
-)
+);
+
 

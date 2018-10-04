@@ -1,30 +1,26 @@
-DROP TABLE account;
-   
-CREATE TABLE account
+CREATE TABLE edw_small.account
 (
-  account_id text NOT NULL,
+  account_id VARCHAR(50) NOT NULL,
   account_type_id integer,
   account_status_id integer,
   product_type_id integer,
-  customer_id text,
+  customer_id VARCHAR(50),
   pin_number integer,
-  nationality text,
-  primary_iden_doc text,
-  primary_iden_doc_id text,
-  secondary_iden_doc text,
-  secondary_iden_doc_id text,
-  account_open_date text,
-  account_number text,
-  opening_balance text,
-  current_balance text,
+  nationality VARCHAR(50),
+  primary_iden_doc VARCHAR(50),
+  primary_iden_doc_id VARCHAR(50),
+  secondary_iden_doc VARCHAR(50),
+  secondary_iden_doc_id VARCHAR(50),
+  account_open_date VARCHAR(50),
+  account_number VARCHAR(50),
+  opening_balance VARCHAR(50),
+  current_balance VARCHAR(50),
   overdue_balance integer,
-  overdue_date text,
-  currency_code text,
-  interest_type text,
+  overdue_date VARCHAR(50),
+  currency_code VARCHAR(50),
+  interest_type VARCHAR(50),
   interest_rate double precision,
-  load_date text NOT NULL,
+  load_date VARCHAR(50) NOT NULL,
   load_id integer,
-  CONSTRAINT account_pkey PRIMARY KEY (account_id, load_date)
+  CONSTRAINT account_pkey PRIMARY KEY (account_id,load_date,load_id)
 );
-ALTER TABLE account OWNER TO inferyx;
-

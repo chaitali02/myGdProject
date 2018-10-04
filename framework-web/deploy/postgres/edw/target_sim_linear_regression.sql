@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS target_sim_linear_regression;
-
-CREATE TABLE target_sim_linear_regression (
+CREATE TABLE edw_small.target_sim_linear_regression (
   id integer NOT NULL,
   version integer NOT NULL,
   interest_rate double precision,

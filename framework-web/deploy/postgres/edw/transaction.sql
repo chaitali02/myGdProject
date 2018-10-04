@@ -1,20 +1,19 @@
-DROP TABLE transaction;
-
-CREATE TABLE transaction
+CREATE TABLE edw_small.transaction
 (
-  transaction_id text,
-  transaction_type_id text,
-  account_id text,
-  transaction_date text,
-  from_account text,
-  to_account text,
+  transaction_id VARCHAR(50),
+  transaction_type_id VARCHAR(50),
+  account_id VARCHAR(50),
+  transaction_date VARCHAR(50),
+  from_account VARCHAR(50),
+  to_account VARCHAR(50),
   amount_base_curr numeric(30,2),
   amount_usd numeric(30,2),
-  currency_code text,
+  currency_code VARCHAR(50),
   currency_rate double precision,
-  notes text,
-  load_date text,
-  load_id integer
+  notes VARCHAR(100),
+  load_date VARCHAR(50),
+  load_id integer,
+  CONSTRAINT transaction_pkey PRIMARY KEY (transaction_id, load_date, load_id)
 );
 
 

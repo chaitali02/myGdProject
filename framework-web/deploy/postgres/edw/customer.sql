@@ -1,21 +1,19 @@
-DROP TABLE customer;  
-
-CREATE TABLE customer
+CREATE TABLE edw_small.customer
 (
-  customer_id text NOT NULL,
-  address_id text,
+  customer_id VARCHAR(50) NOT NULL,
+  address_id VARCHAR(50),
   branch_id integer,
-  title text,
-  first_name text,
-  middle_name text,
-  last_name text,
-  ssn text,
-  phone text,
-  date_first_purchase text,
+  title VARCHAR(50),
+  first_name VARCHAR(50),
+  middle_name VARCHAR(50),
+  last_name VARCHAR(50),
+  ssn VARCHAR(50),
+  phone VARCHAR(50),
+  date_first_purchase VARCHAR(50),
   commute_distance_miles integer,
-  load_date text NOT NULL,
+  load_date VARCHAR(50) NOT NULL,
   load_id integer,
-  CONSTRAINT customer_pkey PRIMARY KEY (customer_id, load_date)
+  CONSTRAINT customer_pkey PRIMARY KEY (customer_id,load_date,load_id)
 );
 
-ALTER TABLE customer OWNER TO inferyx;
+
