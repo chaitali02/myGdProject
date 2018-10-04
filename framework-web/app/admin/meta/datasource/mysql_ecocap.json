@@ -1,7 +1,7 @@
 {
 	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73034",
 	"version": "1464977196",
-	"name": "MySql_ecocap",
+	"name": "mysql_ecocap",
 	"desc": "MySql_ecocap Data Source",
 	"createdBy": {
 		"ref": {

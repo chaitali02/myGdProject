@@ -1,15 +1,15 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73030",
     "version" : "1464977196",
-    "name" : "File_Upload",
-    "desc" : "File Data Source to upload file",
+    "name" : "hive_ecocap",
+    "desc" : "Hive_ecocap Data Source",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" : ISODate("2018-09-21T05:05:03.045Z"),
+    "createdOn" : ISODate("2018-08-07T13:31:24.877Z"),
     "active" : "Y",
     "appInfo" : [ 
         {
@@ -37,14 +37,14 @@
             }
         }
     ],
-    "type" : "FILE",
-    "access" : "OS",
-    "driver" : "",
+    "type" : "HIVE",
+    "access" : "JDBC",
+    "driver" : "org.apache.hive.jdbc.HiveDriver",
     "host" : "localhost",
-    "dbname" : "",
-    "port" : "",
-    "username" : "",
+    "dbname" : "ecocap",
+    "port" : "10000",
+    "username" : "inferyx",
     "password" : "",
-    "path" : "/user/hive/warehouse/framework/upload/",
+    "path": "/user/hive/warehouse/ecocap.db",
     "sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

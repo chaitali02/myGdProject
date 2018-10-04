@@ -1,7 +1,7 @@
 {
 	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
 	"version": "1464977196",
-	"name": "File_Data",
+	"name": "file_data",
 	"desc": "File Data Source to store file data",
 	"createdBy": {
 		"ref": {

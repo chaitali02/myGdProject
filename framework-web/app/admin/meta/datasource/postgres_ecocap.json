@@ -1,21 +1,33 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73030",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73038",
     "version" : "1464977196",
-    "name" : "Hive_ecocap",
-    "desc" : "Hive_ecocap Data Source",
+    "name" : "postgres_ecocap",
+    "desc" : "PostGres_ecocap Data Source",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" : ISODate("2018-08-07T13:31:24.877Z"),
+    "createdOn" : ISODate("2018-05-14T13:15:49.822Z"),
     "active" : "Y",
     "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
         {
@@ -37,14 +49,14 @@
             }
         }
     ],
-    "type" : "HIVE",
+    "type" : "POSTGRES",
     "access" : "JDBC",
-    "driver" : "org.apache.hive.jdbc.HiveDriver",
+    "driver" : "org.postgresql.Driver",
     "host" : "localhost",
     "dbname" : "ecocap",
-    "port" : "10000",
+    "port" : "5432",
     "username" : "inferyx",
-    "password" : "",
-    "path": "/user/hive/warehouse/ecocap.db",
-    "sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
+    "password" : "inferyx",
+    "path": "/user/hive/warehouse/ecocap/",
+    "sessionParameters" : ""
 }

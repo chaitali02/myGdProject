@@ -1,7 +1,7 @@
 {
     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73036",
     "version" : "1464977196",
-    "name" : "Oracle_ecocap",
+    "name" : "oracle_ecocap",
     "desc" : "Oracle_ecocap Data Source",
     "createdBy" : {
         "ref" : {

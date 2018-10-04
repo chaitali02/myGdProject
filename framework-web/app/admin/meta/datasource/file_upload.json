@@ -1,33 +1,21 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
     "version" : "1464977196",
-    "name" : "PostGres",
-    "desc" : "PostGres Data Source",
+    "name" : "file_upload",
+    "desc" : "File Data Source to upload file",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" : ISODate("2018-05-14T13:15:49.822Z"),
+    "createdOn" : ISODate("2018-09-21T05:05:03.045Z"),
     "active" : "Y",
     "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
         {
@@ -49,14 +37,14 @@
             }
         }
     ],
-    "type" : "POSTGRES",
-    "access" : "JDBC",
-    "driver" : "org.postgresql.Driver",
+    "type" : "FILE",
+    "access" : "OS",
+    "driver" : "",
     "host" : "localhost",
-    "dbname" : "framework",
-    "port" : "5432",
-    "username" : "inferyx",
-    "password" : "inferyx",
-    "path": "/user/hive/warehouse/framwork/",
-    "sessionParameters" : ""
+    "dbname" : "",
+    "port" : "",
+    "username" : "",
+    "password" : "",
+    "path" : "/user/hive/warehouse/framework/upload/",
+    "sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

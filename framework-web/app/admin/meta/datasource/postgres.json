@@ -1,8 +1,8 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73038",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028",
     "version" : "1464977196",
-    "name" : "PostGres_ecocap",
-    "desc" : "PostGres_ecocap Data Source",
+    "name" : "postgres",
+    "desc" : "PostGres Data Source",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -53,10 +53,10 @@
     "access" : "JDBC",
     "driver" : "org.postgresql.Driver",
     "host" : "localhost",
-    "dbname" : "ecocap",
+    "dbname" : "framework",
     "port" : "5432",
     "username" : "inferyx",
     "password" : "inferyx",
-    "path": "/user/hive/warehouse/ecocap/",
+    "path": "/user/hive/warehouse/framwork/",
     "sessionParameters" : ""
 }

@@ -1,8 +1,8 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73022",
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
 	"version": "1464977196",
-	"name": "Impala",
-	"desc": "Impala Data Source",
+	"name": "mysql",
+	"desc": "MySql Data Source",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -23,16 +23,22 @@
 				"type": "application",
 				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
+		},
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
 		}
 	],
-	"type": "IMPALA",
+	"type": "MYSQL",
 	"access": "JDBC",
-	"driver": "com.cloudera.impala.jdbc41.Driver",
+	"driver": "com.mysql.jdbc.Driver",
 	"host": "localhost",
 	"dbname": "framework",
-	"port": "21050",
+	"port": "3306",
 	"username": "inferyx",
-	"password": "",
-        "path": "/user/hive/warehouse/framework.db",
+	"password": "inferyx",
+    "path": "/user/hive/warehouse/framework",
 	"sessionParameters": ""
 }

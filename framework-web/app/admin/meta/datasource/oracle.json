@@ -1,7 +1,7 @@
 {
     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026",
     "version" : "1464977196",
-    "name" : "Oracle",
+    "name" : "oracle",
     "desc" : "Oracle Data Source",
     "createdBy" : {
         "ref" : {

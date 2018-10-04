@@ -1,8 +1,8 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
 	"version": "1464977196",
-	"name": "MySql",
-	"desc": "MySql Data Source",
+	"name": "hive",
+	"desc": "Hive Data Source",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -31,14 +31,14 @@
 			}
 		}
 	],
-	"type": "MYSQL",
+	"type": "HIVE",
 	"access": "JDBC",
-	"driver": "com.mysql.jdbc.Driver",
+	"driver": "org.apache.hive.jdbc.HiveDriver",
 	"host": "localhost",
 	"dbname": "framework",
-	"port": "3306",
+	"port": "10000",
 	"username": "inferyx",
-	"password": "inferyx",
-        "path": "/user/hive/warehouse/framework",
-	"sessionParameters": ""
+	"password": "",
+	"path": "/user/hive/warehouse/framework.db",
+	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }
