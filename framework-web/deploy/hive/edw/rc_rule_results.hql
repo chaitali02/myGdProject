@@ -13,5 +13,5 @@ CREATE TABLE rc_rule_results (
     `targetattributename` string,
     `targetvalue` BIGINT,
     `status` string,
-    `version` int
+    `version` string
 );

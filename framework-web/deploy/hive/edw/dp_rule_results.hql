@@ -18,6 +18,6 @@ CREATE TABLE dp_rule_results
   `pernull` BIGINT,
   `sixsigma` BIGINT,
   `load_date` string,
-  `load_id` int,
-  `version` int
+  `load_id` string,
+  `version` string
 );

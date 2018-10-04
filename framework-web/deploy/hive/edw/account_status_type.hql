@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `account_status_type`(
   `account_status_desc` string)
    PARTITIONED BY ( 
   `load_date` string,
-  `load_id` int)
+  `load_id` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
 
   

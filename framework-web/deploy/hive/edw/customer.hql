@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS customer;
 CREATE  TABLE IF NOT EXISTS `customer`(
   `customer_id` string, 
   `address_id` string, 
-  `branch_id` int, 
+  `branch_id` string, 
   `title` string, 
   `first_name` string, 
   `middle_name` string, 
@@ -13,5 +13,5 @@ CREATE  TABLE IF NOT EXISTS `customer`(
   `commute_distance_miles` int)
   PARTITIONED BY (
   `load_date` string,
-  `load_id` int)
+  `load_id` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
