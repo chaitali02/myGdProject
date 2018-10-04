@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS `account`(
   `interest_rate` float)
    PARTITIONED BY ( 
   `load_date` string,
-  `load_id` int)
+  `load_id` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

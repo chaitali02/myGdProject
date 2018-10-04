@@ -28,6 +28,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1027,6 +1028,8 @@ public class Helper {
 			case "file-table" : return IngestionType.FILETOTABLE;
 			case "table-file" : return IngestionType.TABLETOFILE;
 			case "table-table" : return IngestionType.TABLETOTABLE;
+			case "stream-table" : return IngestionType.STREAMTOTABLE;
+			case "stream-file" : return IngestionType.STREAMTOFILE;
 			}
 		}
 		return null;
@@ -1042,6 +1045,14 @@ public class Helper {
 			}
 		}
 		return null;
+	}
+	
+	public static SaveMode getSparkSaveMode(com.inferyx.framework.enums.SaveMode saveMode) {
+		switch(saveMode) {
+		case APPEND : return SaveMode.Append;
+		case OVERWRITE : return SaveMode.Overwrite;
+		default : return null;
+		}
 	}
 	
 	public String getPathByDataSource(Datasource datasource) {

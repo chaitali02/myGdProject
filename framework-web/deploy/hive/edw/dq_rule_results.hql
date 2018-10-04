@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS `dq_rule_results`(
   `refintegritycheck_pass` string,
   `dupcheck_pass` string,
   `customcheck_pass` string,
-  `version` int);
+  `version` string);

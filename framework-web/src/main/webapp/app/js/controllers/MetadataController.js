@@ -61,7 +61,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar'];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;

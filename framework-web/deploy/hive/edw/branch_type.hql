@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `branch_type`(
   `branch_type_desc` string)
 PARTITIONED BY (
   `load_date` string,
-  `load_id` bigint)
+  `load_id` string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
