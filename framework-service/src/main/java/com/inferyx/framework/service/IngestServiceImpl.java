@@ -79,6 +79,7 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
@@ -109,6 +110,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private KafkaExecutor kafkaExecutor;
+	@Autowired
+	private SparkStreamingExecutor sparkStreamingExecutor;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -201,6 +204,8 @@ public class IngestServiceImpl extends RuleTemplate {
 			runIngestServiceImpl.setAppUuid(appUuid);
 			runIngestServiceImpl.setSourceDS(sourceDS);
 			runIngestServiceImpl.setTargetDS(targetDS);
+			runIngestServiceImpl.setKafkaExecutor(kafkaExecutor);
+			runIngestServiceImpl.setSparkStreamingExecutor(sparkStreamingExecutor);
 			
 			if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				//check whether target file already exist (when save mode is null)
@@ -242,14 +247,14 @@ public class IngestServiceImpl extends RuleTemplate {
 
 			if(message != null && message.toLowerCase().contains("duplicate entry")) {
 				message = "Duplicate entry/entries found for primary key(s).";
-			} else if(message != null && message.toLowerCase().contains("No chnage in incremental param hence skipping execution.")) {
-				message = "No chnage in incremental param hence skipping execution.";
+			} else if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
+				message = "No change in incremental param hence skipping execution.";
 			}
 
-			if(message != null && message.toLowerCase().contains("no chnage in incremental param hence skipping execution.")) {
+			if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
 				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
-				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No chnage in incremental param hence skipping execution.");
-				throw new RuntimeException("No chnage in incremental param hence skipping execution.");
+				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No change in incremental param hence skipping execution.");
+				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {
 				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
 				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
@@ -632,15 +637,14 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException {
-
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsUuid, dsVersion, MetaType.datasource.toString());
 		List<String> topicList = null;
 		try {
-		 topicList =kafkaExecutor.getTopics(ds);
+		 topicList = kafkaExecutor.getTopics(ds);
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Can not get topic(s).");
 		}
-
 		return topicList;
 	}
 }

@@ -18,7 +18,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.streaming.api.java.JavaInputDStream;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
@@ -42,7 +46,9 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 
 /**
@@ -68,6 +74,8 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 	private Datasource targetDS;
 //	private String fileName;
 	private List<String> location;
+	private KafkaExecutor kafkaExecutor;
+	private SparkStreamingExecutor sparkStreamingExecutor;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
@@ -90,6 +98,46 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 //	public void setFileName(String fileName) {
 //		this.fileName = fileName;
 //	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the kafkaExecutor
+	 */
+	public KafkaExecutor getKafkaExecutor() {
+		return kafkaExecutor;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param kafkaExecutor the kafkaExecutor to set
+	 */
+	public void setKafkaExecutor(KafkaExecutor kafkaExecutor) {
+		this.kafkaExecutor = kafkaExecutor;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sparkStreamingExecutor
+	 */
+	public SparkStreamingExecutor getSparkStreamingExecutor() {
+		return sparkStreamingExecutor;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sparkStreamingExecutor the sparkStreamingExecutor to set
+	 */
+	public void setSparkStreamingExecutor(SparkStreamingExecutor sparkStreamingExecutor) {
+		this.sparkStreamingExecutor = sparkStreamingExecutor;
+	}
 
 	/**
 	 *
@@ -438,7 +486,20 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 			execute();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("No chnage in incremental param hence skipping execution.");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			if(message != null && message.toLowerCase().contains("duplicate entry")) {
+				message = "Duplicate entry/entries found for primary key(s).";
+			} else if(message != null && message.toLowerCase().contains("no change in incremental param hence skipping execution.")) {
+				message = "No change in incremental param hence skipping execution.";
+			}
+			
+			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
 		return taskHolder;
@@ -470,16 +531,13 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-				if(incrLastValue != null && latestIncrLastValue != null && !incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
-					
-				}
 			}	
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
-				Message messageInfo = new Message("300", "No chnage in incremental param hence skipping execution.", new Date());
+				Message messageInfo = new Message("300", "No change in incremental param hence skipping execution.", new Date());
 				ingestExec.setMessageInfo(messageInfo);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-				throw new RuntimeException("No chnage in incremental param hence skipping execution.");
+				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {				
 				logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
 				String tableName = null;
@@ -604,10 +662,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						sqoopInput.setExportDir(sourceDir);
 						tableName = targetDp.getName();					
 						sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
-						if(incrLastValue != null) {
-							sqoopInput.setIncrementalTestColumn(incrColName);
-							sqoopInput.setIncrementalLastValue(incrLastValue);
-						}
+//						if(incrLastValue != null) {
+//							sqoopInput.setIncrementalTestColumn(incrColName);
+//							sqoopInput.setIncrementalLastValue(incrLastValue);
+//						}
 						targetFilePathUrl = targetFilePathUrl+ingest.getSourceDetail().getValue();
 						Map<String, String> inputParams = null;
 						if(ingest.getRunParams() != null) {
@@ -700,10 +758,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
-						if(incrLastValue != null) {
-							sqoopInput.setIncrementalTestColumn(incrColName);
-							sqoopInput.setIncrementalLastValue(incrLastValue);
-						}
+//						if(incrLastValue != null) {
+//							sqoopInput.setIncrementalTestColumn(incrColName);
+//							sqoopInput.setIncrementalLastValue(incrLastValue);
+//						}
 						targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 						Map<String, String> inputParams = null;
 						if(ingest.getRunParams() != null) {
@@ -792,17 +850,49 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 					}
 
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-					if(incrLastValue != null) {
-						sqoopInput.setIncrementalTestColumn(incrColName);
-						sqoopInput.setIncrementalLastValue(incrLastValue);
-					}
+//					if(incrLastValue != null) {
+//						sqoopInput.setIncrementalTestColumn(incrColName);
+//						sqoopInput.setIncrementalLastValue(incrLastValue);
+//					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
 						inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 					}
 					sqoopExecutor.execute(sqoopInput, inputParams);
-				} 
+				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
+					for(int i=0; i<60000; i++) {
+						String topicName = ingest.getSourceDetail().getValue();
+						JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
+						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
+						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
+						sparkStreamingExecutor.execute(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
+//						stream.map(record->(record.value())).print();
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								sparkStreamingExecutor.start(topicName);							
+							}
+						});
+						Thread.sleep(1500);
+					}
+				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
+					while(true) {
+						String topicName = ingest.getSourceDetail().getValue();
+						JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
+						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
+						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
+						sparkStreamingExecutor.execute(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
+//						stream.map(record->(record.value())).print();
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								sparkStreamingExecutor.start(topicName);							
+							}
+						});
+						Thread.sleep(2000);
+					}
+				}
 				
 //				if(latestIncrLastValue != null) {
 //					ingestExec.setLastIncrValue(latestIncrLastValue);
@@ -833,8 +923,8 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 
 //			if(message != null && message.toLowerCase().contains("duplicate entry")) {
 //				message = "Duplicate entry/entries found for primary key(s).";
-//			} else if(message != null && message.toLowerCase().contains("No chnage in incremental param hence skipping execution.")) {
-//				message = "No chnage in incremental param hence skipping execution.";
+//			} else if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
+//				message = "No change in incremental param hence skipping execution.";
 //			}
 //			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
 			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
