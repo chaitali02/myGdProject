@@ -299,17 +299,25 @@ public class IngestServiceImpl extends RuleTemplate {
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
 		Pattern regex = null;
-		if(fileName.startsWith("*") && fileName.endsWith("*")) {
+//		if(fileName.startsWith("*") && fileName.endsWith("*")) {
+//			if(isCaseSensitive) {
+//				regex = Pattern.compile("^.*"+fileName+".*$");
+//			} else {
+//				regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+//			}
+//		} else if(fileName.endsWith("*")) { 
+//			if(isCaseSensitive) {
+//				regex = Pattern.compile("^"+fileName+".*$");
+//			} else {
+//				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+//			}
+		fileName = fileName.replace(".","\\.").replace("*",".*");
+		
+		if( !fileName.contains("%") ) {
 			if(isCaseSensitive) {
-				regex = Pattern.compile("^.*"+fileName+".*$");
+				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
 			} else {
-				regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
-			}
-		} else if(fileName.endsWith("*")) { 
-			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileName+".*$");
-			} else {
-				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
+				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
 			}
 		} else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
 			//e.g. account_%mmddyyyy%_%hhmmss%.csv
@@ -337,9 +345,9 @@ public class IngestServiceImpl extends RuleTemplate {
 			}
 		} else {
 			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileName+"$");
+				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
 			} else {
-				regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
 			}					
 		}
 		for (int i = 0; i < listOfFiles.length; i++) {
@@ -353,6 +361,9 @@ public class IngestServiceImpl extends RuleTemplate {
 				logger.info("Directory " + listOfFiles[i].getName());
 			}
 		}		
+		for (String file : fileNameList) {
+			logger.info("Found matching file : " + file);									
+		}
 		return fileNameList;
 	}
 	

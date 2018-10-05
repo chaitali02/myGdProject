@@ -552,10 +552,24 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
 					} else {
-						if(!targetFileName.toLowerCase().endsWith(".csv")) {
+						if (ingest.getTargetFormat().toString().toLowerCase().equals("csv")) {
 							targetFileName = targetFileName.concat(".csv");
 						}
-//						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+						else if (ingest.getTargetFormat().toString().toLowerCase().equals("tsv")) {
+							targetFileName = targetFileName.concat(".tsv");
+						}
+						else if (ingest.getTargetFormat().toString().toLowerCase().equals("psv")) {
+							targetFileName = targetFileName.concat(".psv");
+						}
+						else {
+							logger.info("Invalid target format type : "+ingest.getTargetFormat().toString());						
+						}
+								
+//						if(!targetFileName.toLowerCase().endsWith(".csv")) {
+//							targetFileName = targetFileName.concat(".csv");
+//						}
+
+						//						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
 						targetFilePathUrl = targetDS.getPath().concat(targetFileName);
 					}
 					
