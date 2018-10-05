@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.executor.helper.StreamToTableHelper;
@@ -62,7 +60,7 @@ public class SparkStreamingExecutor<T, K> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public JavaInputDStream<ConsumerRecord<T, K>> stream(Datasource ds, String topic, StreamInput<T, K> streamInput) {
+	public JavaInputDStream<ConsumerRecord<T, K>> stream(Datasource ds, StreamInput<T, K> streamInput) {
 		// Dataset<Row> lines = null;
 		JavaReceiverInputDStream<String> lines = null;
 		JavaInputDStream<ConsumerRecord<T, K>> stream = null;
@@ -79,7 +77,7 @@ public class SparkStreamingExecutor<T, K> {
 //			kafkaParams.put("auto.offset.reset", "latest");
 //			kafkaParams.put("enable.auto.commit", false);
 
-			Collection<String> topics = Arrays.asList(topic);
+			Collection<String> topics = Arrays.asList(streamInput.getTopicName());
 			JavaStreamingContext streamingContext = new JavaStreamingContext(
 					JavaSparkContext
 							.fromSparkContext(((SparkSession) conHolder.getStmtObject()).sparkContext().getOrCreate()),
@@ -89,7 +87,7 @@ public class SparkStreamingExecutor<T, K> {
 					streamingContext, LocationStrategies.PreferConsistent(),
 					ConsumerStrategies.<T, K>Subscribe(topics, kafkaParams));
 
-			streamingCtxMap.put(topic, streamingContext);
+			streamingCtxMap.put(streamInput.getTopicName(), streamingContext);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,22 +113,22 @@ public class SparkStreamingExecutor<T, K> {
 		return new StructType(structFieldsList.toArray(new StructField[fieldNames.length]));
 	}
 	
-	public void write(String topic, 
-							String []fieldNames, 
-							DataType []dataTypes, 
-							Datapod datapod, 
-							SaveMode saveMode, 
+	public void write(StreamInput streamInput, 
 							JavaInputDStream<ConsumerRecord<T, K>> stream) throws IOException {
-		Map<String, Object> inputMap = new HashMap<>();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		streamInput.setConnector(connector);
+		String []fieldNames = getKafkaFieldNames();
+		DataType []dataTypes = getKafkaFieldNamesDataType();
 //		ConnectionHolder conHolder = connector.getConnection();
-		inputMap.put("SCHEMA", createStruct(fieldNames, dataTypes));
-		inputMap.put("CONNECTOR", connector);
-		inputMap.put("SAVEMODE", saveMode);
+		Map<String, Object> runParams = streamInput.getRunParams();
+		runParams.put("SCHEMA", createStruct(fieldNames, dataTypes));
+//		inputMap.put("CONNECTOR", connector);
+//		inputMap.put("SAVEMODE", saveMode);
 //		inputMap.put("URL", url);
-		inputMap.put("TABLE_NAME", datapod.getName());
+//		inputMap.put("TABLE_NAME", datapod.getName());
+//		inputMap.put("TABLE_NAME", streamInput);
 		JavaInputDStream stream2 = stream;
-		streamToTableHelper.help(stream2, inputMap);
+		streamToTableHelper.help(stream2, streamInput);
 	}
 	
 	/**

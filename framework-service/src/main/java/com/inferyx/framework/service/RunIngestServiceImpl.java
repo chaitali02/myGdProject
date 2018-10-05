@@ -865,30 +865,47 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					}
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
-						String topicName = ingest.getSourceDetail().getValue();
 						StreamInput streamInput = getKafkaStreamInput();
-						JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, topicName, streamInput);
 						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
-						sparkStreamingExecutor.write(topicName, sparkStreamingExecutor.getKafkaFieldNames(), sparkStreamingExecutor.getKafkaFieldNamesDataType(), targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
+						streamInput.setTargetTableName(targetTableName);
+						streamInput.setSaveMode(ingest.getSaveMode().toString());
+						streamInput.setTargetType(targetDS.getType());
+						streamInput.setSourceDS(sourceDS);
+						streamInput.setTargetDS(targetDS);
+						streamInput.setSourceDP(sourceDp);
+						streamInput.setTargetDP(targetDp);
+						streamInput.setTopicName(ingest.getSourceDetail().getValue());
+						JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, streamInput);
+						sparkStreamingExecutor.write(streamInput, stream);
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								sparkStreamingExecutor.start(topicName);							
+								sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
 							}
 						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
-						String topicName = ingest.getSourceDetail().getValue();
-						StreamInput streamInput = getKafkaStreamInput();
-						JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, topicName, streamInput);
-						sparkStreamingExecutor.write(topicName, sparkStreamingExecutor.getKafkaFieldNames(), sparkStreamingExecutor.getKafkaFieldNamesDataType(), targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
-//						stream.map(record->(record.value())).print();
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								sparkStreamingExecutor.start(topicName);							
-							}
-						}).start();
-					}
+					String targetDir = "file://"+targetDS.getPath();
+					StreamInput streamInput = getKafkaStreamInput();
+//					String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+//					streamInput.setTargetTableName(targetTableName);
+					streamInput.setSaveMode(ingest.getSaveMode().toString());
+					streamInput.setTargetType(targetDS.getType());
+					streamInput.setSourceDS(sourceDS);
+					streamInput.setTargetDS(targetDS);
+					streamInput.setSourceDP(sourceDp);
+					streamInput.setTargetDP(targetDp);
+					streamInput.setTopicName(ingest.getSourceDetail().getValue());
+					streamInput.setTargetDir(targetDir);
+					streamInput.setFileFormat(ingest.getTargetFormat());
+					JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, streamInput);
+					sparkStreamingExecutor.write(streamInput, stream);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+						}
+					}).start();
+				}
 				
 //				if(latestIncrLastValue != null) {
 //					ingestExec.setLastIncrValue(latestIncrLastValue);
