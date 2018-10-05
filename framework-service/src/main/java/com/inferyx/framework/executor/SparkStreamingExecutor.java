@@ -15,8 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Resource;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
@@ -38,6 +36,7 @@ import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.executor.helper.StreamToTableHelper;
 import com.inferyx.framework.factory.ConnectionFactory;
 
@@ -46,7 +45,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
  *
  */
 @Service
-public class SparkStreamingExecutor {
+public class SparkStreamingExecutor<T, K> {
 
 	@Autowired
 	ConnectionFactory connectionFactory;
@@ -62,21 +61,21 @@ public class SparkStreamingExecutor {
 		// TODO Auto-generated constructor stub
 	}
 
-	public JavaInputDStream<ConsumerRecord<Long, String>> stream(Datasource ds, String topic) {
+	public JavaInputDStream<ConsumerRecord<T, K>> stream(Datasource ds, String topic, StreamInput<T, K> streamInput) {
 		// Dataset<Row> lines = null;
 		JavaReceiverInputDStream<String> lines = null;
-		JavaInputDStream<ConsumerRecord<Long, String>> stream = null;
+		JavaInputDStream<ConsumerRecord<T, K>> stream = null;
 		try {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
 
-			Map<String, Object> kafkaParams = new HashMap<>();
+			Map<String, Object> kafkaParams = (Map<String, Object>) streamInput.getRunParams().get("KAFKA_PARAMS");
 			kafkaParams.put("bootstrap.servers", ds.getHost() + ":" + ds.getPort());
-			kafkaParams.put("key.deserializer", LongDeserializer.class);
-			kafkaParams.put("value.deserializer", StringDeserializer.class);
-			kafkaParams.put("group.id", "use_a_separate_group_id_for_each_stream");
-			kafkaParams.put("auto.offset.reset", "latest");
-			kafkaParams.put("enable.auto.commit", false);
+//			kafkaParams.put("key.deserializer", LongDeserializer.class);
+//			kafkaParams.put("value.deserializer", StringDeserializer.class);
+//			kafkaParams.put("group.id", "use_a_separate_group_id_for_each_stream");
+//			kafkaParams.put("auto.offset.reset", "latest");
+//			kafkaParams.put("enable.auto.commit", false);
 
 			Collection<String> topics = Arrays.asList(topic);
 			JavaStreamingContext streamingContext = new JavaStreamingContext(
@@ -86,7 +85,7 @@ public class SparkStreamingExecutor {
 
 			stream = KafkaUtils.createDirectStream(
 					streamingContext, LocationStrategies.PreferConsistent(),
-					ConsumerStrategies.<Long, String>Subscribe(topics, kafkaParams));
+					ConsumerStrategies.<T, K>Subscribe(topics, kafkaParams));
 
 			streamingCtxMap.put(topic, streamingContext);
 		} catch (Exception e) {
@@ -114,24 +113,27 @@ public class SparkStreamingExecutor {
 		return new StructType(structFieldsList.toArray(new StructField[fieldNames.length]));
 	}
 	
-	public void execute (String topic, 
+	public void write (String topic, 
 							String []fieldNames, 
 							DataType []dataTypes, 
 							Datapod datapod, 
 							SaveMode saveMode, 
-							JavaInputDStream<ConsumerRecord<Long, String>> stream) throws IOException {
+							JavaInputDStream<ConsumerRecord<T, K>> stream) throws IOException {
 		Map<String, Object> inputMap = new HashMap<>();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 //		ConnectionHolder conHolder = connector.getConnection();
-		inputMap.put("STREAM", stream);
 		inputMap.put("SCHEMA", createStruct(fieldNames, dataTypes));
 		inputMap.put("CONNECTOR", connector);
 		inputMap.put("SAVEMODE", saveMode);
 //		inputMap.put("URL", url);
 		inputMap.put("TABLE_NAME", datapod.getName());
-		streamToTableHelper.help(inputMap);
+		streamToTableHelper.help(stream, inputMap);
 	}
 	
+	/**
+	 * Start streaming
+	 * @param topic
+	 */
 	public void start(String topic) {
 		JavaStreamingContext streamingContext = streamingCtxMap.get(topic);
 		streamingContext.start();
@@ -140,6 +142,18 @@ public class SparkStreamingExecutor {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param topic
+	 */
+	public void stop(String topic) {
+		JavaStreamingContext streamingContext = streamingCtxMap.get(topic);
+		if (streamingContext == null) {
+			return;
+		}
+		streamingContext.stop(Boolean.TRUE, Boolean.TRUE);
 	}
 
 }
