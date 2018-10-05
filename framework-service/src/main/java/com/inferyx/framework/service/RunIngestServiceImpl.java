@@ -13,12 +13,15 @@ package com.inferyx.framework.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.LongDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
@@ -41,6 +44,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
@@ -860,39 +864,48 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 					}
 					sqoopExecutor.execute(sqoopInput, inputParams);
-				} /*else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
-					for(int i=0; i<60000; i++) {
-						String topicName = ingest.getSourceDetail().getValue();
-						JavaInputDStream<ConsumerRecord<T, K>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
-						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
-						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
-						sparkStreamingExecutor.write(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
-//						stream.map(record->(record.value())).print();
+				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
+						StreamInput streamInput = getKafkaStreamInput();
+						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+						streamInput.setTargetTableName(targetTableName);
+						streamInput.setSaveMode(ingest.getSaveMode().toString());
+						streamInput.setTargetType(targetDS.getType());
+						streamInput.setSourceDS(sourceDS);
+						streamInput.setTargetDS(targetDS);
+						streamInput.setSourceDP(sourceDp);
+						streamInput.setTargetDP(targetDp);
+						streamInput.setTopicName(ingest.getSourceDetail().getValue());
+						JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, streamInput);
+						sparkStreamingExecutor.write(streamInput, stream);
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								sparkStreamingExecutor.start(topicName);							
+								sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
 							}
-						});
-						Thread.sleep(1500);
-					}
+						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
-					while(true) {
-						String topicName = ingest.getSourceDetail().getValue();
-						JavaInputDStream<ConsumerRecord<T, K>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
-						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
-						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
-						sparkStreamingExecutor.write(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
-//						stream.map(record->(record.value())).print();
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								sparkStreamingExecutor.start(topicName);							
-							}
-						});
-						Thread.sleep(2000);
-					}
-				}*/
+					String targetDir = "file://"+targetDS.getPath();
+					StreamInput streamInput = getKafkaStreamInput();
+//					String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+//					streamInput.setTargetTableName(targetTableName);
+					streamInput.setSaveMode(ingest.getSaveMode().toString());
+					streamInput.setTargetType(targetDS.getType());
+					streamInput.setSourceDS(sourceDS);
+					streamInput.setTargetDS(targetDS);
+					streamInput.setSourceDP(sourceDp);
+					streamInput.setTargetDP(targetDp);
+					streamInput.setTopicName(ingest.getSourceDetail().getValue());
+					streamInput.setTargetDir(targetDir);
+					streamInput.setFileFormat(ingest.getTargetFormat());
+					JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, streamInput);
+					sparkStreamingExecutor.write(streamInput, stream);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+						}
+					}).start();
+				}
 				
 //				if(latestIncrLastValue != null) {
 //					ingestExec.setLastIncrValue(latestIncrLastValue);
@@ -933,7 +946,24 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 		return ingestExec;
 	}
 
-	private String generateFileName(String fileName) {
+	public StreamInput getKafkaStreamInput() {
+		// Prepare kafka params
+		StreamInput streamInput = new StreamInput<T, K>(); 
+		Map<String, Object> kafkaParams = new HashMap<>();
+		kafkaParams.put("key.deserializer", LongDeserializer.class);
+		kafkaParams.put("value.deserializer", StringDeserializer.class);
+		kafkaParams.put("group.id", "use_a_separate_group_id_for_each_stream");
+		kafkaParams.put("auto.offset.reset", "latest");
+		kafkaParams.put("enable.auto.commit", false);
+		
+		// Prepare run Params 
+		Map<String, Object> runParams = new HashMap<>();
+		runParams.put("KAFKA_PARAMS", kafkaParams);
+		streamInput.setRunParams(runParams);
+		return streamInput;
+	}
+	
+	public String generateFileName(String fileName) {
 		if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
 			String pattern = null;
 			if(fileName.contains("MMddyyyy_HHmmss")) {
@@ -963,7 +993,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 		}
 	}
 
-	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
+	public Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();
 		try {
 			for(Attribute attribute : datapod.getAttributes()) {
