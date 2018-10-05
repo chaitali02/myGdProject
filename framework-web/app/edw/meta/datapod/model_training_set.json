@@ -66,16 +66,6 @@
             "partition" : "N",
             "dispName" : "censor",
             "active" : "Y"
-        }, 
-        {
-            "attributeId" : 6,
-            "name" : "version",
-            "type" : "integer",
-            "desc" : "version",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "version",
-            "active" : "Y"
         }
     ],
     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
