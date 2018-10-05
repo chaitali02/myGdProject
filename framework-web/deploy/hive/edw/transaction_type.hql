@@ -1,9 +1,11 @@
-DROP TABLE IF EXISTS transaction_type;
-CREATE TABLE IF NOT EXISTS `transaction_type`(
-  `transaction_type_id` string, 
-  `transaction_type_code` string, 
-  `transaction_type_desc` string)
-PARTITIONED BY (
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS TRANSACTION_TYPE;
+CREATE TABLE TRANSACTION_TYPE(	
+
+TRANSACTION_TYPE_ID STRING,
+TRANSACTION_TYPE_CODE STRING,
+TRANSACTION_TYPE_DESC STRING
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

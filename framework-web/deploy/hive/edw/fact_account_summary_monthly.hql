@@ -1,13 +1,15 @@
-DROP TABLE IF EXISTS fact_account_summary_monthly;
-CREATE TABLE IF NOT EXISTS `fact_account_summary_monthly`(
-  `account_id` string, 
-  `yyyy_mm` string, 
-  `total_trans_count` bigint, 
-  `total_trans_amount_usd` DECIMAL(38,2), 
-  `avg_trans_amount` DECIMAL(38,2), 
-  `min_amount` DECIMAL(38,2), 
-  `max_amount` DECIMAL(38,2))
-PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS FACT_ACCOUNT_SUMMARY_MONTHLY;
+CREATE TABLE FACT_ACCOUNT_SUMMARY_MONTHLY(	
+
+ACCOUNT_ID STRING,
+YYYY_MM STRING,
+TOTAL_TRANS_COUNT INT,
+TOTAL_TRANS_AMOUNT_USD INT,
+AVG_TRANS_AMOUNT INT,
+MIN_AMOUNT DECIMAL,
+MAX_AMOUNT INT
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

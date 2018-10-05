@@ -1,17 +1,19 @@
-DROP TABLE IF EXISTS customer;
-CREATE  TABLE IF NOT EXISTS `customer`(
-  `customer_id` string, 
-  `address_id` string, 
-  `branch_id` string, 
-  `title` string, 
-  `first_name` string, 
-  `middle_name` string, 
-  `last_name` string, 
-  `ssn` string, 
-  `phone` string, 
-  `date_first_purchase` string, 
-  `commute_distance_miles` int)
-  PARTITIONED BY (
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS CUSTOMER;
+CREATE TABLE CUSTOMER(	
+
+CUSTOMER_ID STRING,
+ADDRESS_ID STRING,
+BRANCH_ID STRING,
+TITLE STRING,
+FIRST_NAME STRING,
+MIDDLE_NAME STRING,
+LAST_NAME STRING,
+SSN STRING,
+PHONE STRING,
+DATE_FIRST_PURCHASE STRING,
+COMMUTE_DISTANCE_MILES INT
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

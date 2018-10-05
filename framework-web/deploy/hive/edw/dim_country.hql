@@ -1,10 +1,12 @@
-DROP TABLE IF EXISTS dim_country;
-CREATE TABLE IF NOT EXISTS `dim_country`(
-  `country_code` string,
-  `country_name` string,
-  `country_population` int, 
-  `version` int)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS DIM_COUNTRY;
+CREATE TABLE DIM_COUNTRY(	
+
+COUNTRY_ID STRING,
+COUNTRY_CODE STRING,
+COUNTRY_NAME STRING,
+COUNTRY_POPULATION INT
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

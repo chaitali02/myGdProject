@@ -1,22 +1,25 @@
-DROP TABLE IF EXISTS fact_transaction;
-CREATE  TABLE IF NOT EXISTS `fact_transaction`(
-  `transaction_id` string,
-  `src_transaction_id` string,
-  `transaction_type_id` string, 
-  `trans_date_id` string, 
-  `bank_id` string, 
-  `branch_id` string, 
-  `customer_id` string, 
-  `address_id` string, 
-  `account_id` string, 
-  `from_account` string, 
-  `to_account` string, 
-  `amount_base_curr` int, 
-  `amount_usd` int, 
-  `currency_code` string, 
-  `currency_rate` bigint, 
-  `notes` string)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS FACT_TRANSACTION;
+CREATE TABLE FACT_TRANSACTION(	
+
+TRANSACTION_ID STRING,
+SRC_TRANSACTION_ID STRING,
+TRANSACTION_TYPE_ID INT,
+TRANS_DATE_ID INT,
+BANK_ID INT,
+BRANCH_ID INT,
+CUSTOMER_ID STRING,
+ADDRESS_ID STRING,
+ACCOUNT_ID STRING,
+FROM_ACCOUNT STRING,
+TO_ACCOUNT STRING,
+AMOUNT_BASE_CURR INT,
+AMOUNT_USD INT,
+CURRENCY_CODE STRING,
+CURRENCY_RATE INT,
+NOTES STRING
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+

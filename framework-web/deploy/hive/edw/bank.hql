@@ -1,12 +1,14 @@
-DROP TABLE IF EXISTS bank;
-CREATE TABLE IF NOT EXISTS `bank`(
-  `bank_id` string, 
-  `bank_code` string, 
-  `bank_name` string, 
-  `bank_account_number` string, 
-  `bank_currency_code` string, 
-  `bank_check_digits` int)
-PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS BANK;
+CREATE TABLE BANK(	
+
+BANK_ID STRING,
+BANK_CODE STRING,
+BANK_NAME STRING,
+BANK_ACCOUNT_NUMBER STRING,
+BANK_CURRENCY_CODE STRING,
+BANK_CHECK_DIGITS INT
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
