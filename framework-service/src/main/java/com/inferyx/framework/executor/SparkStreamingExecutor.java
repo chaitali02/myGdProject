@@ -52,7 +52,7 @@ public class SparkStreamingExecutor<T, K> {
 	@Resource
 	ConcurrentHashMap<String, JavaStreamingContext> streamingCtxMap;
 	@Autowired
-	StreamToTableHelper streamToTableHelper;
+	StreamToTableHelper<?, ?> streamToTableHelper;
 
 	/**
 	 * 
@@ -69,6 +69,7 @@ public class SparkStreamingExecutor<T, K> {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
 
+			@SuppressWarnings("unchecked")
 			Map<String, Object> kafkaParams = (Map<String, Object>) streamInput.getRunParams().get("KAFKA_PARAMS");
 			kafkaParams.put("bootstrap.servers", ds.getHost() + ":" + ds.getPort());
 //			kafkaParams.put("key.deserializer", LongDeserializer.class);
@@ -113,7 +114,7 @@ public class SparkStreamingExecutor<T, K> {
 		return new StructType(structFieldsList.toArray(new StructField[fieldNames.length]));
 	}
 	
-	public void write (String topic, 
+	public void write(String topic, 
 							String []fieldNames, 
 							DataType []dataTypes, 
 							Datapod datapod, 
@@ -127,7 +128,7 @@ public class SparkStreamingExecutor<T, K> {
 		inputMap.put("SAVEMODE", saveMode);
 //		inputMap.put("URL", url);
 		inputMap.put("TABLE_NAME", datapod.getName());
-		streamToTableHelper.help(stream, inputMap);
+//		streamToTableHelper.help(stream, inputMap);
 	}
 	
 	/**
@@ -155,5 +156,4 @@ public class SparkStreamingExecutor<T, K> {
 		}
 		streamingContext.stop(Boolean.TRUE, Boolean.TRUE);
 	}
-
 }

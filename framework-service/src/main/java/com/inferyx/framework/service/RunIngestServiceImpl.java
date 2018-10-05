@@ -55,7 +55,7 @@ import com.inferyx.framework.executor.SqoopExecutor;
  * @author Ganesh
  *
  */
-public class RunIngestServiceImpl implements Callable<TaskHolder> {
+public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	private CommonServiceImpl<?> commonServiceImpl;
 	private SparkExecutor<?> sparkExecutor;
 	private Helper helper;
@@ -74,8 +74,8 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 	private Datasource targetDS;
 //	private String fileName;
 	private List<String> location;
-	private KafkaExecutor kafkaExecutor;
-	private SparkStreamingExecutor sparkStreamingExecutor;
+	private KafkaExecutor<?, ?> kafkaExecutor;
+	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
@@ -860,13 +860,13 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 					}
 					sqoopExecutor.execute(sqoopInput, inputParams);
-				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
+				} /*else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 					for(int i=0; i<60000; i++) {
 						String topicName = ingest.getSourceDetail().getValue();
-						JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
+						JavaInputDStream<ConsumerRecord<T, K>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
 						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
 						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
-						sparkStreamingExecutor.execute(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
+						sparkStreamingExecutor.write(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
 //						stream.map(record->(record.value())).print();
 						new Thread(new Runnable() {
 							@Override
@@ -879,10 +879,10 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
 					while(true) {
 						String topicName = ingest.getSourceDetail().getValue();
-						JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
+						JavaInputDStream<ConsumerRecord<T, K>> stream = sparkStreamingExecutor.stream(sourceDS, topicName);
 						String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp", "timestamptype"};
 						DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.TimestampType, DataTypes.IntegerType};
-						sparkStreamingExecutor.execute(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
+						sparkStreamingExecutor.write(topicName, fieldNames, dataTypes, targetDp, Helper.getSparkSaveMode(ingest.getSaveMode()), stream);
 //						stream.map(record->(record.value())).print();
 						new Thread(new Runnable() {
 							@Override
@@ -892,7 +892,7 @@ public class RunIngestServiceImpl implements Callable<TaskHolder> {
 						});
 						Thread.sleep(2000);
 					}
-				}
+				}*/
 				
 //				if(latestIncrLastValue != null) {
 //					ingestExec.setLastIncrValue(latestIncrLastValue);
