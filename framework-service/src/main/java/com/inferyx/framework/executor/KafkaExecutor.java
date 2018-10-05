@@ -4,37 +4,40 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.apache.kafka.common.serialization.LongDeserializer;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.KafkaConnector;
 import com.inferyx.framework.connector.ZKConnector;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.StreamInput;
 
 /**
  * @author joy
  *
  */
 @Service
-public class KafkaExecutor {
+public class KafkaExecutor<T, K> {
 	
 	@Autowired
 	private ZKConnector zkConnector;
 	@Autowired
 	private KafkaConnector kafkaConnector;
+	@Autowired
+	private ConcurrentHashMap<String, Consumer> kafkaConsumerMap;
 
 	/**
 	 * 
@@ -59,15 +62,32 @@ public class KafkaExecutor {
         return topics;
 	}
 	
-	public Consumer<Long, String> createConsumer(Datasource ds, String topic) {
-		Consumer<Long, String> consumer = kafkaConnector.createConsumer(ds, topic);
+	public Consumer<T, K> stream(Datasource ds, String topic, StreamInput<T, K> streamInput) {
+		Consumer<T, K> consumer = kafkaConnector.createConsumer(ds, topic, streamInput);
 		return consumer;
 	  }
 	
 	
-	public void consumer(Consumer consumer, Datasource ds, String topic) {
+	public void write (String topic, 
+			String []fieldNames, 
+			DataType []dataTypes, 
+			Datapod datapod, 
+			SaveMode saveMode, 
+			JavaInputDStream<ConsumerRecord<T, K>> stream) throws IOException {
+		// not implemented here
+	}
+	
+	/**
+	 * 
+	 * @param ds
+	 * @param topic
+	 */
+	public void read(Datasource ds, String topic) {
 		
-		final int giveUp = 100;   int noRecordsCount = 0;
+		Consumer consumer = kafkaConsumerMap.get(topic);
+		
+		final int giveUp = 100;   
+		int noRecordsCount = 0;
 		 while (true) {
 	            final ConsumerRecords<Long, String> consumerRecords =
 	                    consumer.poll(100);
@@ -88,6 +108,23 @@ public class KafkaExecutor {
 	        }
 //	        consumer.close();
 	        System.out.println("DONE");
+	}
+	
+	/**
+	 * 
+	 * @param topic
+	 */
+	public void start(String topic) {
+		// Not implemented here
+	}
+	
+	/**
+	 * Close consumer
+	 * @param topic
+	 */
+	public void close(String topic) {
+		Consumer consumer = kafkaConsumerMap.get(topic);
+		consumer.close();
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author joy
@@ -19,6 +20,21 @@ public class StreamInput<T, K> {
 	}
 	
 	private Map<String, Object> runParams;
+	private Properties props;
+
+	/**
+	 * @return the props
+	 */
+	public Properties getProps() {
+		return props;
+	}
+
+	/**
+	 * @param props the props to set
+	 */
+	public void setProps(Properties props) {
+		this.props = props;
+	}
 
 	/**
 	 * @return the runParams

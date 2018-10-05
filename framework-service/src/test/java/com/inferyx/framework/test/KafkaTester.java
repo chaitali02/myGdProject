@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -55,10 +56,21 @@ public class KafkaTester implements Serializable {
 		
 		// Test case 2 - PRINT KAFKA CONSUMER - START 
 		Datasource ds = getBrokerDatasource();
-		/*Consumer<Long, String> consumer = kafkaExecutor.createConsumer(ds, topic);
+		
+		// Prepare kafka params
+		/*StreamInput<Long, String> streamInput = new StreamInput<Long, String>();
+		Properties props = new Properties();
+		props.put(ConsumerConfig.GROUP_ID_CONFIG,
+                "KafkaExampleConsumer");
+		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		LongDeserializer.class.getName());
+		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class.getName());
+		streamInput.setProps(props);
+		Consumer<Long, String> consumer = kafkaExecutor.stream(ds, topic, streamInput);
 		for (int i = 0; i < 10; i++) {
 			runProducer(100, topic);
-			kafkaExecutor.consumer(consumer, ds, topic);
+			kafkaExecutor.read(consumer, ds, topic);
 		}*/
 		// Test case 2 - PRINT KAFKA CONSUMER - END
 		
