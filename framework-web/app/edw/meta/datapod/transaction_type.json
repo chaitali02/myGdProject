@@ -53,15 +53,6 @@
 			"dispName": "load_id",
 			"partition": "Y",
 			"active": "Y"
-		},
-		{
-			"attributeId": 5,
-			"name": "version",
-			"type": "Integer",
-			"desc": "version",
-			"dispName": "version",
-			"partition": "N",
-			"active": "Y"
 		}
 	],
 	"uuid": "b51a6e3d-792a-4298-a8de-c216d0c5424e",
