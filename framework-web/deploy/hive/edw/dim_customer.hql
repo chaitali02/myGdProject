@@ -1,21 +1,23 @@
-DROP TABLE IF EXISTS dim_customer;
-CREATE TABLE IF NOT EXISTS `dim_customer`(
-  `customer_id` string, 
-  `src_customer_id` string,
-  `title` string, 
-  `first_name` string, 
-  `middle_name` string, 
-  `last_name` string, 
-  `address_line1` string, 
-  `address_line2` string, 
-  `phone` string, 
-  `date_first_purchase` string, 
-  `commute_distance` int, 
-  `city` string, 
-  `state` string, 
-  `postal_code` int, 
-  `country` string)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS DIM_CUSTOMER;
+CREATE TABLE DIM_CUSTOMER(	
+
+CUSTOMER_ID STRING,
+SRC_CUSTOMER_ID STRING,
+TITLE STRING,
+FIRST_NAME STRING,
+MIDDLE_NAME STRING,
+LAST_NAME STRING,
+ADDRESS_LINE1 STRING,
+ADDRESS_LINE2 STRING,
+PHONE STRING,
+DATE_FIRST_PURCHASE STRING,
+COMMUTE_DISTANCE INT,
+CITY STRING,
+STATE STRING,
+POSTAL_CODE STRING,
+COUNTRY STRING
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

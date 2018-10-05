@@ -1,19 +1,23 @@
-DROP TABLE IF EXISTS dq_rule_results;
-CREATE TABLE IF NOT EXISTS `dq_rule_results`(
-  `rowkey` string,
-  `datapoduuid` string,
-  `datapodversion` string,
-  `datapodname` string,
-  `attributeid` string,
-  `attributename` string,  
-  `attributevalue` string,
-  `nullcheck_pass` string,
-  `valuecheck_pass` string,
-  `rangecheck_pass` string,
-  `datatypecheck_pass` string,
-  `dataformatcheck_pass` string,
-  `lengthcheck_pass` string,
-  `refintegritycheck_pass` string,
-  `dupcheck_pass` string,
-  `customcheck_pass` string,
-  `version` string);
+
+DROP TABLE IF EXISTS DQ_RULE_RESULT;
+CREATE TABLE DQ_RULE_RESULT(	
+
+ROWKEY STRING,
+DATAPODUUID STRING,
+DATAPODVERSION STRING,
+DATAPODNAME STRING,
+ATTRIBUTEID STRING,
+ATTRIBUTENAME STRING,
+ATTRIBUTEVALUE STRING,
+NULLCHECK_PASS STRING,
+VALUECHECK_PASS STRING,
+RANGECHECK_PASS STRING,
+DATATYPECHECK_PASS STRING,
+DATAFORMATCHECK_PASS STRING,
+LENGTHCHECK_PASS STRING,
+REFINTEGRITYCHECK_PASS STRING,
+DUPCHECK_PASS STRING,
+CUSTOMCHECK_PASS STRING,
+VERSION INT
+
+);

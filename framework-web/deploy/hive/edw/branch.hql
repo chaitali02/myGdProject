@@ -1,15 +1,17 @@
-DROP TABLE IF EXISTS branch;
-CREATE TABLE IF NOT EXISTS `branch`(
-  `branch_id` string, 
-  `branch_type_id` string, 
-  `bank_id` string, 
-  `address_id` string, 
-  `branch_name` string, 
-  `branch_desc` string, 
-  `branch_contact_name` string, 
-  `branch_contact_phone` string, 
-  `branch_contact_email` string)
-  PARTITIONED BY (
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS BRANCH;
+CREATE TABLE BRANCH(	
+
+BRANCH_ID STRING,
+BRANCH_TYPE_ID STRING,
+BANK_ID STRING,
+ADDRESS_ID STRING,
+BRANCH_NAME STRING,
+BRANCH_DESC STRING,
+BRANCH_CONTACT_NAME STRING,
+BRANCH_CONTACT_PHONE STRING,
+BRANCH_CONTACT_EMAIL STRING
+)
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+

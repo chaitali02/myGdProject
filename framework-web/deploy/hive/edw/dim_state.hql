@@ -1,11 +1,13 @@
-DROP TABLE IF EXISTS dim_state;
-CREATE TABLE IF NOT EXISTS `dim_state`(
-  `state_code` string,
-  `state_name` string,
-  `country_code` string, 
-  `state_population` int,
-  `version` int)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS DIM_STATE;
+CREATE TABLE DIM_STATE(	
+
+STATE_ID STRING,
+STATE_CODE STRING,
+STATE_NAME STRING,
+COUNTRY_CODE STRING,
+STATE_POPULATION INT
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

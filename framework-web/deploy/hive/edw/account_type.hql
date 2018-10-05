@@ -1,9 +1,11 @@
-DROP TABLE IF EXISTS account_type;
-CREATE TABLE IF NOT EXISTS `account_type`(
-  `account_type_id` string, 
-  `account_type_code` string, 
-  `account_type_desc` string)
-PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS ACCOUNT_TYPE;
+CREATE TABLE ACCOUNT_TYPE(	
+
+ACCOUNT_TYPE_ID STRING,
+ACCOUNT_TYPE_CODE STRING,
+ACCOUNT_TYPE_DESC STRING
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

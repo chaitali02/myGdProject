@@ -1,26 +1,28 @@
-DROP TABLE IF EXISTS dim_account;
-CREATE  TABLE IF NOT EXISTS `dim_account`(
-  `account_id` string, 
-  `src_account_id` string,
-  `account_type_code` string, 
-  `account_status_code` string, 
-  `product_type_code` string, 
-  `pin_number` int, 
-  `nationality` string, 
-  `primary_iden_doc` string, 
-  `primary_iden_doc_id` string, 
-  `secondary_iden_doc` string, 
-  `secondary_iden_doc_id` string, 
-  `account_open_date` string, 
-  `account_number` string, 
-  `opening_balance` string, 
-  `current_balance` string, 
-  `overdue_balance` int, 
-  `overdue_date` string, 
-  `currency_code` string, 
-  `interest_type` string, 
-  `interest_rate` float)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` string)
+
+DROP TABLE IF EXISTS DIM_ACCOUNT;
+CREATE TABLE DIM_ACCOUNT(
+	
+ACCOUNT_ID STRING,
+SRC_ACCOUNT_ID STRING,
+ACCOUNT_TYPE_CODE STRING,
+ACCOUNT_STATUS_CODE STRING,
+PRODUCT_TYPE_CODE STRING,
+PIN_NUMBER INT,
+NATIONALITY STRING,
+PRIMARY_IDEN_DOC STRING,
+PRIMARY_IDEN_DOC_ID STRING,
+SECONDARY_IDEN_DOC STRING,
+SECONDARY_IDEN_DOC_ID STRING,
+ACCOUNT_OPEN_DATE STRING,
+ACCOUNT_NUMBER STRING,
+OPENING_BALANCE INT,
+CURRENT_BALANCE INT,
+OVERDUE_BALANCE INT,
+OVERDUE_DATE STRING,
+CURRENCY_CODE STRING,
+INTEREST_TYPE STRING,
+INTEREST_RATE DECIMAL
+)
+
+PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
