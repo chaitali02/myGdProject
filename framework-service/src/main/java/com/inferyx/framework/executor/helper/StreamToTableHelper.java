@@ -35,7 +35,7 @@ import scala.reflect.ClassManifestFactory;
  *
  */
 @Service
-public class StreamToTableHelper implements Serializable {
+public class StreamToTableHelper<T, K> implements Serializable {
 
 	/**
 	 * 
@@ -44,8 +44,7 @@ public class StreamToTableHelper implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void help(Map<String, Object> inputMap) throws IOException {
-		JavaInputDStream<ConsumerRecord<Long, String>>stream = (JavaInputDStream<ConsumerRecord<Long, String>>) inputMap.get("STREAM");
+	public void help(JavaInputDStream<ConsumerRecord<T, K>> stream, Map<String, Object> inputMap) throws IOException {
 		StructType schema = (StructType) inputMap.get("SCHEMA");
 		IConnector connector = (IConnector) inputMap.get("CONNECTOR");
 		ConnectionHolder conHolder = connector.getConnection();
@@ -55,19 +54,19 @@ public class StreamToTableHelper implements Serializable {
 		String url = (String) inputMap.get("URL");
 		String tableName = (String) inputMap.get("TABLE_NAME");
 		Properties connectionProperties = (Properties) inputMap.get("CONN_PROPS");
-		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<Long, String>>>() {
+		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
 
 			@Override
-			public void call(JavaRDD<ConsumerRecord<Long, String>> rdd) throws Exception {
+			public void call(JavaRDD<ConsumerRecord<T, K>> rdd) throws Exception {
 				Broadcast<SparkSession> broadcastSession = rdd.context().broadcast(session, ClassManifestFactory.fromClass(SparkSession.class));
-				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<Long, String>>>() {
+				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<T, K>>>() {
 					@Override
-					public void call(Iterator<ConsumerRecord<Long, String>> consumerRecords) {
+					public void call(Iterator<ConsumerRecord<T, K>> consumerRecords) {
 						List<Row> rowsList = new ArrayList<>();
-						consumerRecords.forEachRemaining(new Consumer<ConsumerRecord<Long, String>>() {
+						consumerRecords.forEachRemaining(new Consumer<ConsumerRecord<T, K>>() {
 
 							@Override
-							public void accept(ConsumerRecord<Long, String> t) {
+							public void accept(ConsumerRecord<T, K> t) {
 								System.out.println("RECEIVED >>>> "+ t.key() + ":" + t.value());
 								// Save in hive
 								Row row = RowFactory.create(t.key(), t.value());

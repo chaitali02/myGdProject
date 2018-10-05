@@ -17,13 +17,14 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.StreamInput;
 
 /**
  * @author joy
  *
  */
 @Service
-public class KafkaConnector {
+public class KafkaConnector<T, K> {
 	
 	@Resource
 	ConcurrentHashMap<String, Consumer> kafkaConsumerMap;
@@ -35,22 +36,22 @@ public class KafkaConnector {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Consumer<Long, String> createConsumer(Datasource ds, String topic) {
+	public Consumer<T, K> createConsumer(Datasource ds, String topic, StreamInput<T, K> streamInput) {
 		  if (kafkaConsumerMap.containsKey(topic)) {
 			  return kafkaConsumerMap.get(topic);
 		  }
-		  final Properties props = new Properties();
+		  Properties props = streamInput.getProps();
 	      props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
 	                                  ds.getHost()+":"+ds.getPort());
-	      props.put(ConsumerConfig.GROUP_ID_CONFIG,
+	      /*props.put(ConsumerConfig.GROUP_ID_CONFIG,
 	                                  "KafkaExampleConsumer");
 	      props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
 	              LongDeserializer.class.getName());
 	      props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-	              StringDeserializer.class.getName());
+	              StringDeserializer.class.getName());*/
 
 	      // Create the consumer using props.
-	      final Consumer<Long, String> consumer =
+	      final Consumer<T, K> consumer =
 	                                  new KafkaConsumer<>(props);
 
 	      // Subscribe to the topic.
