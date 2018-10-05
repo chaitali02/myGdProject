@@ -70,7 +70,7 @@ public class KafkaTester implements Serializable {
 		Consumer<Long, String> consumer = kafkaExecutor.stream(ds, topic, streamInput);
 		for (int i = 0; i < 10; i++) {
 			runProducer(100, topic);
-			kafkaExecutor.read(consumer, ds, topic);
+			kafkaExecutor.read(ds, topic);
 		}*/
 		// Test case 2 - PRINT KAFKA CONSUMER - END
 		
@@ -116,11 +116,6 @@ public class KafkaTester implements Serializable {
 		// API 4 - Stop if still running
 		sparkStreamingExecutor.stop(topic);
 		
-		
-//		streamingDataset.foreachRDD(t -> System.out.println("RECEIVED >>> " + t));
-		/*while (streamingDataset.isStreaming()) {
-			System.out.println("Count : " + streamingDataset.count());
-		}*/
 		// Test case 3 - PRINT SPARK STREAMING CONSUMER - END
 	}
 	
