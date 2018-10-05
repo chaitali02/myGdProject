@@ -1,26 +1,28 @@
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE `account` (
-  `account_id` varchar(45) NOT NULL DEFAULT '',
-  `account_type_id` int(11) DEFAULT NULL,
-  `account_status_id` int(11) DEFAULT NULL,
-  `product_type_id` int(11) DEFAULT NULL,
-  `customer_id` varchar(45) DEFAULT NULL,
-  `pin_number` int(11) DEFAULT NULL,
-  `nationality` varchar(45) DEFAULT NULL,
-  `primary_iden_doc` varchar(45) DEFAULT NULL,
-  `primary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `account_open_date` varchar(45) DEFAULT NULL,
-  `account_number` varchar(45) DEFAULT NULL,
-  `opening_balance` varchar(45) DEFAULT NULL,
-  `current_balance` varchar(45) DEFAULT NULL,
-  `overdue_balance` int(11) DEFAULT NULL,
-  `overdue_date` varchar(45) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `interest_type` varchar(45) DEFAULT NULL,
-  `interest_rate` float DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`load_date`,`load_id`)
-);
+
+DROP TABLE ACCOUNT;
+CREATE TABLE ACCOUNT(	
+	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	ACCOUNT_TYPE_ID VARCHAR(50),
+	ACCOUNT_STATUS_ID VARCHAR(50),
+	PRODUCT_TYPE_ID VARCHAR(50),
+	CUSTOMER_ID VARCHAR(50),
+	PIN_NUMBER INTEGER(10),
+	NATIONALITY VARCHAR(50),
+	PRIMARY_IDEN_DOC VARCHAR(50),
+	PRIMARY_IDEN_DOC_ID VARCHAR(50),
+	SECONDARY_IDEN_DOC VARCHAR(50),
+	SECONDARY_IDEN_DOC_ID VARCHAR(50),
+	ACCOUNT_OPEN_DATE VARCHAR(10),
+	ACCOUNT_NUMBER VARCHAR(50),
+	OPENING_BALANCE INTEGER(20),
+	CURRENT_BALANCE INTEGER(20),
+	OVERDUE_BALANCE INTEGER(20),
+	OVERDUE_DATE VARCHAR(10),
+	CURRENCY_CODE VARCHAR(10),
+	INTEREST_TYPE VARCHAR(10),
+	INTEREST_RATE DECIMAL(10,2),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE ACCOUNT PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

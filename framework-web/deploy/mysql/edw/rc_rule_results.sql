@@ -1,17 +1,17 @@
-DROP TABLE IF EXISTS `rc_rule_results`;
-CREATE TABLE `rc_rule_results` (
-    `sourcedatapoduuid` varchar(45) DEFAULT NULL,
-    `sourcedatapodversion` varchar(45) DEFAULT NULL,
-    `sourcedatapodname` varchar(45) DEFAULT NULL,
-    `sourceattributeid` varchar(45) DEFAULT NULL,
-    `sourceattributename` varchar(45) DEFAULT NULL,
-    `sourcevalue` double DEFAULT NULL,
-    `targetdatapoduuid` varchar(45) DEFAULT NULL,
-    `targetdatapodversion` varchar(45) DEFAULT NULL,
-    `targetdatapodname` varchar(45) DEFAULT NULL,
-    `targetattributeid` varchar(45) DEFAULT NULL,
-    `targetattributename` varchar(45) DEFAULT NULL,
-    `targetvalue`  double DEFAULT NULL,
-    `status` varchar(45) DEFAULT NULL,
-    `version` int(11) DEFAULT NULL
+DROP TABLE RC_RULE_RESULTS;
+CREATE TABLE RC_RULE_RESULTS(	
+	SOURCEUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SOURCEVERSION VARCHAR(50),
+	SOURCENAME VARCHAR(100),
+	SOURCEATTRIBUTEID VARCHAR(50),
+	SOURCEATTRIBUTENAME VARCHAR(100),
+	SOURCEVALUE DECIMAL(10,2),
+	TARGETUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+	TARGETVERSION VARCHAR(50),
+	TARGETNAME VARCHAR(100),
+	TARGETATTRIBUTEID VARCHAR(50),
+	TARGETATTRIBUTENAME VARCHAR(100),
+	TARGETVALUE DECIMAL(10,2),
+	STATUS VARCHAR(50),
+	VERSION INTEGER(10)
 );

@@ -1,19 +1,19 @@
-DROP TABLE IF EXISTS `dim_address`;
-CREATE TABLE `dim_address` (
-  `address_id` varchar(45) NOT NULL DEFAULT '',
-  `src_address_id` varchar(45) DEFAULT NULL,
-  `address_line1` varchar(45) DEFAULT NULL,
-  `address_line2` varchar(45) DEFAULT NULL,
-  `address_line3` varchar(45) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `county` varchar(45) DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
-  `zipcode` int(11) DEFAULT NULL,
-  `country` varchar(45) DEFAULT NULL,
-  `latitude` varchar(45) DEFAULT NULL,
-  `longtitude` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`address_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_address_id` (`src_address_id`,`load_date`,`load_id`)
-);
+DROP TABLE DIM_ADDRESS;
+CREATE TABLE DIM_ADDRESS(	
+	ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_ADDRESS_ID VARCHAR(50),
+	ADDRESS_LINE1 VARCHAR(50),
+	ADDRESS_LINE2 VARCHAR(50),
+	ADDRESS_LINE3 VARCHAR(50),
+	CITY VARCHAR(100),
+	COUNTY VARCHAR(100),
+	STATE VARCHAR(100),
+	ZIPCODE INTEGER(10),
+	COUNTRY VARCHAR(100),
+	LATITUDE VARCHAR(50),
+	LONGTITUDE VARCHAR(50),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_ADDRESS PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

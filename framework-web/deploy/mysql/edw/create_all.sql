@@ -1,481 +1,433 @@
+DROP TABLE ACCOUNT;
+CREATE TABLE ACCOUNT(	
+ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+ACCOUNT_TYPE_ID VARCHAR(50),
+ACCOUNT_STATUS_ID VARCHAR(50),
+PRODUCT_TYPE_ID VARCHAR(50),
+CUSTOMER_ID VARCHAR(50),
+PIN_NUMBER INTEGER(10),
+NATIONALITY VARCHAR(50),
+PRIMARY_IDEN_DOC VARCHAR(50),
+PRIMARY_IDEN_DOC_ID VARCHAR(50),
+SECONDARY_IDEN_DOC VARCHAR(50),
+SECONDARY_IDEN_DOC_ID VARCHAR(50),
+ACCOUNT_OPEN_DATE VARCHAR(10),
+ACCOUNT_NUMBER VARCHAR(50),
+OPENING_BALANCE INTEGER(20),
+CURRENT_BALANCE INTEGER(20),
+OVERDUE_BALANCE INTEGER(20),
+OVERDUE_DATE VARCHAR(10),
+CURRENCY_CODE VARCHAR(10),
+INTEREST_TYPE VARCHAR(10),
+INTEREST_RATE DECIMAL(10,2),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE ACCOUNT PARTITION BY KEY(LOAD_DATE,LOAD_ID);
 
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE `account` (
-  `account_id` varchar(45) NOT NULL DEFAULT '',
-  `account_type_id` int(11) DEFAULT NULL,
-  `account_status_id` int(11) DEFAULT NULL,
-  `product_type_id` int(11) DEFAULT NULL,
-  `customer_id` varchar(45) DEFAULT NULL,
-  `pin_number` int(11) DEFAULT NULL,
-  `nationality` varchar(45) DEFAULT NULL,
-  `primary_iden_doc` varchar(45) DEFAULT NULL,
-  `primary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `account_open_date` varchar(45) DEFAULT NULL,
-  `account_number` varchar(45) DEFAULT NULL,
-  `opening_balance` varchar(45) DEFAULT NULL,
-  `current_balance` varchar(45) DEFAULT NULL,
-  `overdue_balance` int(11) DEFAULT NULL,
-  `overdue_date` varchar(45) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `interest_type` varchar(45) DEFAULT NULL,
-  `interest_rate` float DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`load_date`,`load_id`)
+DROP TABLE ACCOUNT_STATUS_TYPE;
+CREATE TABLE ACCOUNT_STATUS_TYPE(	
+ACCOUNT_STATUS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+ACCOUNT_STATUS_CODE VARCHAR(10),
+ACCOUNT_STATUS_DESC VARCHAR(500),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_STATUS_ID_PK  PRIMARY KEY(ACCOUNT_STATUS_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE ACCOUNT_STATUS_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE       ACCOUNT_TYPE;
+CREATE TABLE ACCOUNT_TYPE(	
+ACCOUNT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+ACCOUNT_TYPE_CODE VARCHAR(10),
+ACCOUNT_TYPE_DESC VARCHAR(500),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_TYPE_ID_PK  PRIMARY KEY(ACCOUNT_TYPE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE ACCOUNT_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE ADDRESS;
+CREATE TABLE ADDRESS(	
+ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+ADDRESS_LINE1 VARCHAR(50),
+ADDRESS_LINE2 VARCHAR(50),
+ADDRESS_LINE3 VARCHAR(50),
+CITY VARCHAR(100),
+COUNTY VARCHAR(100),
+STATE VARCHAR(100),
+ZIPCODE INTEGER(10),
+COUNTRY VARCHAR(100),
+LATITUDE VARCHAR(50),
+LONGITUDE VARCHAR(50),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE ADDRESS PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE BANK;
+CREATE TABLE BANK(	
+BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+BANK_CODE VARCHAR(10),
+BANK_NAME VARCHAR(100),
+BANK_ACCOUNT_NUMBER VARCHAR(50),
+BANK_CURRENCY_CODE VARCHAR(10),
+BANK_CHECK_DIGITS INTEGER(10),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE BANK PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE BRANCH;
+CREATE TABLE BRANCH(	
+BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+BRANCH_TYPE_ID VARCHAR(50),
+BANK_ID VARCHAR(50),
+ADDRESS_ID VARCHAR(50),
+BRANCH_NAME VARCHAR(100),
+BRANCH_DESC VARCHAR(500),
+BRANCH_CONTACT_NAME VARCHAR(100),
+BRANCH_CONTACT_PHONE VARCHAR(100),
+BRANCH_CONTACT_EMAIL VARCHAR(100),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE BRANCH PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE       BRANCH_TYPE;
+CREATE TABLE BRANCH_TYPE(	
+BRANCH_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+BRANCH_TYPE_CODE VARCHAR(10),
+BRANCH_TYPE_DESC VARCHAR(500),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT BRANCH_TYPE_ID_PK  PRIMARY KEY(BRANCH_TYPE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE BRANCH_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE CUSTOMER;
+CREATE TABLE CUSTOMER(	
+CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+ADDRESS_ID VARCHAR(50),
+BRANCH_ID VARCHAR(50),
+TITLE VARCHAR(100),
+FIRST_NAME VARCHAR(100),
+MIDDLE_NAME VARCHAR(100),
+LAST_NAME VARCHAR(100),
+SSN VARCHAR(100),
+PHONE VARCHAR(100),
+DATE_FIRST_PURCHASE VARCHAR(10),
+COMMUTE_DISTANCE_MILES INTEGER(10),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE CUSTOMER PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE  DIM_ACCOUNT;
+CREATE TABLE DIM_ACCOUNT(	
+ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+SRC_ACCOUNT_ID VARCHAR(50),
+ACCOUNT_TYPE_CODE VARCHAR(10),
+ACCOUNT_STATUS_CODE VARCHAR(10),
+PRODUCT_TYPE_CODE VARCHAR(10),
+PIN_NUMBER INTEGER(10),
+NATIONALITY VARCHAR(100),
+PRIMARY_IDEN_DOC VARCHAR(100),
+PRIMARY_IDEN_DOC_ID VARCHAR(50),
+SECONDARY_IDEN_DOC VARCHAR(100),
+SECONDARY_IDEN_DOC_ID VARCHAR(50),
+ACCOUNT_OPEN_DATE VARCHAR(10),
+ACCOUNT_NUMBER VARCHAR(50),
+OPENING_BALANCE INTEGER(20),
+CURRENT_BALANCE INTEGER(20),
+OVERDUE_BALANCE INTEGER(20),
+OVERDUE_DATE VARCHAR(10),
+CURRENCY_CODE VARCHAR(10),
+INTEREST_TYPE VARCHAR(50),
+INTEREST_RATE DECIMAL(10,2),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_ACCOUNT PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE DIM_ADDRESS;
+CREATE TABLE DIM_ADDRESS(	
+ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+SRC_ADDRESS_ID VARCHAR(50),
+ADDRESS_LINE1 VARCHAR(50),
+ADDRESS_LINE2 VARCHAR(50),
+ADDRESS_LINE3 VARCHAR(50),
+CITY VARCHAR(100),
+COUNTY VARCHAR(100),
+STATE VARCHAR(100),
+ZIPCODE INTEGER(10),
+COUNTRY VARCHAR(100),
+LATITUDE VARCHAR(50),
+LONGTITUDE VARCHAR(50),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_ADDRESS PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE  DIM_BANK;
+CREATE TABLE DIM_BANK(	
+BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+SRC_BANK_ID VARCHAR(50),
+BANK_CODE VARCHAR(10),
+BANK_NAME VARCHAR(100),
+BANK_ACCOUNT_NUMBER VARCHAR(50),
+BANK_CURRENCY_CODE VARCHAR(50),
+BANK_CHECK_DIGITS INTEGER(20),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_BANK PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE DIM_BRANCH;
+CREATE TABLE DIM_BRANCH(	
+BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+SRC_BRANCH_ID VARCHAR(50),
+BRANCH_TYPE_CODE VARCHAR(10),
+BRANCH_NAME VARCHAR(100),
+BRANCH_DESC VARCHAR(500),
+BRANCH_CONTACT_NAME VARCHAR(100),
+BRANCH_CONTACT_PHONE VARCHAR(100),
+BRANCH_CONTACT_EMAIL VARCHAR(100),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_BRANCH PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE DIM_COUNTRY;
+CREATE TABLE DIM_COUNTRY(	
+	COUNTRY_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	COUNTRY_CODE VARCHAR(10),
+	COUNTRY_NAME VARCHAR(100),
+	COUNTRY_POPULATION INTEGER(10),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT COUNTRY_ID_PK  PRIMARY KEY(COUNTRY_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_COUNTRY PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE DIM_CUSTOMER;
+CREATE TABLE DIM_CUSTOMER(	
+CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+SRC_CUSTOMER_ID VARCHAR(50),
+TITLE VARCHAR(100),
+FIRST_NAME VARCHAR(100),
+MIDDLE_NAME VARCHAR(100),
+LAST_NAME VARCHAR(100),
+ADDRESS_LINE1 VARCHAR(50),
+ADDRESS_LINE2 VARCHAR(50),
+PHONE VARCHAR(50),
+DATE_FIRST_PURCHASE VARCHAR(10),
+COMMUTE_DISTANCE INTEGER(10),
+CITY VARCHAR(100),
+STATE VARCHAR(100),
+POSTAL_CODE VARCHAR(10),
+COUNTRY VARCHAR(100),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_CUSTOMER PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE  DIM_DATE;
+CREATE TABLE DIM_DATE(	
+DATE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+DATE_TYPE VARCHAR(45),
+DATE_VAL VARCHAR(45),
+DAY_NUM_OF_WEEK INTEGER(10),
+DAY_NUM_OF_MONTH INTEGER(10),
+DAY_NUM_OF_QUARTER INTEGER(10),
+DAY_NUM_OF_YEAR INTEGER(10),
+DAY_NUM_ABSOLUTE INTEGER(10),
+DAY_OF_WEEK_NAME VARCHAR(100),
+DAY_OF_WEEK_ABBREVIATION VARCHAR(45),
+JULIAN_DAY_NUM_OF_YEAR INTEGER(10),
+JULIAN_DAY_NUM_ABSOLUTE INTEGER(10),
+IS_WEEKDAY VARCHAR(50),
+IS_USA_CIVIL_HOLIDAY VARCHAR(50),
+IS_LAST_DAY_OF_WEEK VARCHAR(50),
+IS_LAST_DAY_OF_MONTH VARCHAR(50),
+IS_LAST_DAY_OF_QUARTER VARCHAR(50),
+IS_LAST_DAY_OF_YEAR VARCHAR(50),
+IS_LAST_DAY_OF_FISCAL_MONTH VARCHAR(50),
+IS_LAST_DAY_OF_FISCAL_QUARTER VARCHAR(50),
+IS_LAST_DAY_OF_FISCAL_YEAR VARCHAR(50),
+WEEK_OF_YEAR_BEGIN_DATE VARCHAR(10),
+WEEK_OF_YEAR_BEGIN_DATE_KEY INTEGER(10),
+WEEK_OF_YEAR_END_DATE VARCHAR(10),
+WEEK_OF_YEAR_END_DATE_KEY INTEGER(10),
+WEEK_OF_MONTH_BEGIN_DATE VARCHAR(10),
+WEEK_OF_MONTH_BEGIN_DATE_KEY INTEGER(10),
+WEEK_OF_MONTH_END_DATE VARCHAR(10),
+WEEK_OF_MONTH_END_DATE_KEY INTEGER(10),
+WEEK_OF_QUARTER_BEGIN_DATE VARCHAR(10),
+WEEK_OF_QUARTER_BEGIN_DATE_KEY INTEGER(10),
+WEEK_OF_QUARTER_END_DATE VARCHAR(10),
+WEEK_OF_QUARTER_END_DATE_KEY INTEGER(10),
+WEEK_NUM_OF_MONTH INTEGER(10),
+WEEK_NUM_OF_QUARTER INTEGER(10),
+WEEK_NUM_OF_YEAR INTEGER(10),
+MONTH_NUM_OF_YEAR INTEGER(10),
+MONTH_NUM_OVERALL VARCHAR(50),
+MONTH_NAME VARCHAR(100),
+MONTH_NAME_ABBREVIATION VARCHAR(100),
+MONTH_BEGIN_DATE VARCHAR(10),
+MONTH_BEGIN_DATE_KEY INTEGER(10),
+MONTH_END_DATE VARCHAR(10),
+MONTH_END_DATE_KEY INTEGER(10),
+QUARTER_NUM_OF_YEAR INTEGER(10),
+QUARTER_NUM_OVERALL INTEGER(10),
+QUARTER_BEGIN_DATE VARCHAR(10),
+QUARTER_BEGIN_DATE_KEY INTEGER(10),
+QUARTER_END_DATE VARCHAR(10),
+QUARTER_END_DATE_KEY INTEGER(10),
+YEAR_NUM INTEGER(10),
+YEAR_BEGIN_DATE VARCHAR(10),
+YEAR_BEGIN_DATE_KEY INTEGER(10),
+YEAR_END_DATE VARCHAR(10),
+YEAR_END_DATE_KEY INTEGER(10),
+YYYY_MM VARCHAR(50),
+YYYY_MM_DD VARCHAR(50),
+DD_MON_YYYY VARCHAR(50),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT DATE_ID_PK  PRIMARY KEY(DATE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_DATE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE DIM_TRANSACTION_TYPE;
+CREATE TABLE DIM_TRANSACTION_TYPE(	
+	TRANSACTION_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_TRANSACTION_TYPE_ID VARCHAR(50),
+	TRANSACTION_TYPE_CODE VARCHAR(10),
+	TRANSACTION_TYPE_DESC VARCHAR(500),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT LOAD_ID_PK  PRIMARY KEY(TRANSACTION_TYPE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_TRANSACTION_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE       DP_RULE_RESULTS;
+CREATE TABLE DP_RULE_RESULTS(	
+DATAPODUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+DATAPODVERSION VARCHAR(50),
+DATAPODNAME VARCHAR(100),
+ATTRIBUTEID VARCHAR(50),
+ATTRIBUTENAME VARCHAR(100),
+NUMROWS VARCHAR(50),
+MINVAL DECIMAL(10,2),
+MAXVAL DECIMAL(10,2),
+AVGVAL DECIMAL(10,3),
+MEDIANVAL DECIMAL(10,3),
+STDDEV DECIMAL(10,4),
+NUMDISTINCT INTEGER(10),
+PERDISTINCT DECIMAL(10,2),
+NUMNULL INTEGER(10),
+PERNULL DECIMAL(10,2),
+SIXSIGMA DECIMAL(10,2),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50),
+VERSION INTEGER(10));
+
+DROP TABLE DQ_RULE_RESULT;
+CREATE TABLE DQ_RULE_RESULT(	
+	ROWKEY VARCHAR(50),
+	DATAPODUUID VARCHAR(50),
+	DATAPODVERSION VARCHAR(50),
+	DATAPODNAME VARCHAR(100),
+	ATTRIBUTEID VARCHAR(50),
+	ATTRIBUTENAME VARCHAR(100),
+	ATTRIBUTEVALUE VARCHAR(50),
+	NULLCHECK_PASS VARCHAR(50),
+	VALUECHECK_PASS VARCHAR(50),
+	RANGECHECK_PASS VARCHAR(50),
+	DATATYPECHECK_PASS VARCHAR(50),
+	DATAFORMATCHECK_PASS VARCHAR(50),
+	LENGTHCHECK_PASS VARCHAR(50),
+	REFINTEGRITYCHECK_PASS VARCHAR(50),
+	DUPCHECK_PASS VARCHAR(50),
+	CUSTOMCHECK_PASS VARCHAR(50),
+	VERSION INTEGER(10)
 );
-DROP TABLE IF EXISTS `account_status_type`;
-CREATE TABLE `account_status_type` (
-  `account_status_id` int(11) NOT NULL DEFAULT '0',
-  `account_status_code` varchar(45) DEFAULT NULL,
-  `account_status_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_status_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `account_type`;
-CREATE TABLE `account_type` (
-  `account_type_id` int(11) NOT NULL DEFAULT '0',
-  `account_type_code` varchar(45) DEFAULT NULL,
-  `account_type_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_type_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE `address` (
-  `address_id` varchar(45) NOT NULL DEFAULT '',
-  `address_line1` varchar(45) DEFAULT NULL,
-  `address_line2` varchar(45) DEFAULT NULL,
-  `address_line3` varchar(45) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `county` varchar(45) DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
-  `zipcode` int(11) DEFAULT NULL,
-  `country` varchar(45) DEFAULT NULL,
-  `latitude` varchar(45) DEFAULT NULL,
-  `longitude` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`address_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `bank`;
-CREATE TABLE `bank` (
-  `bank_id` int(11) NOT NULL DEFAULT '0',
-  `bank_code` varchar(45) DEFAULT NULL,
-  `bank_name` varchar(45) DEFAULT NULL,
-  `bank_account_number` varchar(45) DEFAULT NULL,
-  `bank_currency_code` varchar(45) DEFAULT NULL,
-  `bank_check_digits` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`bank_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `branch`;
-CREATE TABLE `branch` (
-  `branch_id` int(11) NOT NULL DEFAULT '0',
-  `branch_type_id` int(11) DEFAULT NULL,
-  `bank_id` varchar(45) DEFAULT NULL,
-  `address_id` varchar(45) DEFAULT NULL,
-  `branch_name` varchar(45) DEFAULT NULL,
-  `branch_desc` varchar(45) DEFAULT NULL,
-  `branch_contact_name` varchar(45) DEFAULT NULL,
-  `branch_contact_phone` varchar(45) DEFAULT NULL,
-  `branch_contact_email` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`branch_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `branch_type`;
-CREATE TABLE `branch_type` (
-  `branch_type_id` int(11) NOT NULL DEFAULT '0',
-  `branch_type_code` varchar(45) DEFAULT NULL,
-  `branch_type_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`branch_type_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `customer`;
-CREATE TABLE `customer` (
-  `customer_id` varchar(45) NOT NULL DEFAULT '',
-  `address_id` varchar(45) DEFAULT NULL,
-  `branch_id` int(11) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `first_name` varchar(45) DEFAULT NULL,
-  `middle_name` varchar(45) DEFAULT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `ssn` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `date_first_purchase` varchar(45) DEFAULT NULL,
-  `commute_distance_miles` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dim_account`;
-CREATE TABLE `dim_account` (
-  `account_id` varchar(45) NOT NULL DEFAULT '',
-  `src_account_id` varchar(45) DEFAULT NULL,
-  `account_type_code` varchar(45) DEFAULT NULL,
-  `account_status_code` varchar(45) DEFAULT NULL,
-  `product_type_code` varchar(45) DEFAULT NULL,
-  `pin_number` int(11) DEFAULT NULL,
-  `nationality` varchar(45) DEFAULT NULL,
-  `primary_iden_doc` varchar(45) DEFAULT NULL,
-  `primary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `account_open_date` varchar(45) DEFAULT NULL,
-  `account_number` varchar(45) DEFAULT NULL,
-  `opening_balance` varchar(45) DEFAULT NULL,
-  `current_balance` varchar(45) DEFAULT NULL,
-  `overdue_balance` int(11) DEFAULT NULL,
-  `overdue_date` varchar(45) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `interest_type` varchar(45) DEFAULT NULL,
-  `interest_rate` float DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_account_id` (`src_account_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dim_address`;
-CREATE TABLE `dim_address` (
-  `address_id` varchar(45) NOT NULL DEFAULT '',
-  `src_address_id` varchar(45) DEFAULT NULL,
-  `address_line1` varchar(45) DEFAULT NULL,
-  `address_line2` varchar(45) DEFAULT NULL,
-  `address_line3` varchar(45) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `county` varchar(45) DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
-  `zipcode` int(11) DEFAULT NULL,
-  `country` varchar(45) DEFAULT NULL,
-  `latitude` varchar(45) DEFAULT NULL,
-  `longtitude` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`address_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_address_id` (`src_address_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dim_bank`;
-CREATE TABLE `dim_bank` (
-  `bank_id` varchar(45) NOT NULL DEFAULT '',
-  `src_bank_id` varchar(45) DEFAULT NULL,
-  `bank_code` varchar(45) DEFAULT NULL,
-  `bank_name` varchar(45) DEFAULT NULL,
-  `bank_account_number` varchar(45) DEFAULT NULL,
-  `bank_currency_code` varchar(45) DEFAULT NULL,
-  `bank_check_digits` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`bank_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_bank_id` (`src_bank_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dim_branch`;
-CREATE TABLE `dim_branch` (
-  `branch_id` varchar(45) NOT NULL DEFAULT '',
-  `src_branch_id` varchar(45) DEFAULT NULL,
-  `branch_type_code` varchar(45) DEFAULT NULL,
-  `branch_name` varchar(45) DEFAULT NULL,
-  `branch_desc` varchar(45) DEFAULT NULL,
-  `branch_contact_name` varchar(45) DEFAULT NULL,
-  `branch_contact_phone` varchar(45) DEFAULT NULL,
-  `branch_contact_email` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`branch_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_branch_id` (`src_branch_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS dim_country;
-CREATE TABLE IF NOT EXISTS `dim_country`(
-  `country_code` varchar(45) NOT NULL DEFAULT '',
-  `country_name` varchar(45) NOT NULL DEFAULT '',
-  `country_population` int(10) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`country_code`,`load_date`,`load_id`)
-  );
-DROP TABLE IF EXISTS `dim_customer`;
-CREATE TABLE `dim_customer` (
-  `customer_id` varchar(45) NOT NULL DEFAULT '',
-  `src_customer_id` varchar(45) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `first_name` varchar(45) DEFAULT NULL,
-  `middle_name` varchar(45) DEFAULT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `address_line1` varchar(45) DEFAULT NULL,
-  `address_line2` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `date_first_purchase` varchar(45) DEFAULT NULL,
-  `commute_distance` int(11) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
-  `postal_code` varchar(45) DEFAULT NULL,
-  `country` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_customer_id` (`src_customer_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dim_date`;
-CREATE TABLE `dim_date` (
-  `date_id` int(11) NOT NULL DEFAULT '0',
-  `date_type` varchar(45) DEFAULT NULL,
-  `date_val` varchar(45) DEFAULT NULL,
-  `day_num_of_week` int(11) DEFAULT NULL,
-  `day_num_of_month` int(11) DEFAULT NULL,
-  `day_num_of_quarter` int(11) DEFAULT NULL,
-  `day_num_of_year` int(11) DEFAULT NULL,
-  `day_num_absolute` int(11) DEFAULT NULL,
-  `day_of_week_name` varchar(45) DEFAULT NULL,
-  `day_of_week_abbreviation` varchar(45) DEFAULT NULL,
-  `julian_day_num_of_year` int(11) DEFAULT NULL,
-  `julian_day_num_absolute` int(11) DEFAULT NULL,
-  `is_weekday` varchar(45) DEFAULT NULL,
-  `is_usa_civil_holiday` varchar(45) DEFAULT NULL,
-  `is_last_day_of_week` varchar(45) DEFAULT NULL,
-  `is_last_day_of_month` varchar(45) DEFAULT NULL,
-  `is_last_day_of_quarter` varchar(45) DEFAULT NULL,
-  `is_last_day_of_year` varchar(45) DEFAULT NULL,
-  `is_last_day_of_fiscal_month` varchar(45) DEFAULT NULL,
-  `is_last_day_of_fiscal_quarter` varchar(45) DEFAULT NULL,
-  `is_last_day_of_fiscal_year` varchar(45) DEFAULT NULL,
-  `week_of_year_begin_date` varchar(45) DEFAULT NULL,
-  `week_of_year_begin_date_key` int(11) DEFAULT NULL,
-  `week_of_year_end_date` varchar(45) DEFAULT NULL,
-  `week_of_year_end_date_key` int(11) DEFAULT NULL,
-  `week_of_month_begin_date` varchar(45) DEFAULT NULL,
-  `week_of_month_begin_date_key` int(11) DEFAULT NULL,
-  `week_of_month_end_date` varchar(45) DEFAULT NULL,
-  `week_of_month_end_date_key` int(11) DEFAULT NULL,
-  `week_of_quarter_begin_date` varchar(45) DEFAULT NULL,
-  `week_of_quarter_begin_date_key` int(11) DEFAULT NULL,
-  `week_of_quarter_end_date` varchar(45) DEFAULT NULL,
-  `week_of_quarter_end_date_key` int(11) DEFAULT NULL,
-  `week_num_of_month` int(11) DEFAULT NULL,
-  `week_num_of_quarter` int(11) DEFAULT NULL,
-  `week_num_of_year` int(11) DEFAULT NULL,
-  `month_num_of_year` int(11) DEFAULT NULL,
-  `month_num_overall` varchar(45) DEFAULT NULL,
-  `month_name` varchar(45) DEFAULT NULL,
-  `month_name_abbreviation` varchar(45) DEFAULT NULL,
-  `month_begin_date` varchar(45) DEFAULT NULL,
-  `month_begin_date_key` int(11) DEFAULT NULL,
-  `month_end_date` varchar(45) DEFAULT NULL,
-  `month_end_date_key` int(11) DEFAULT NULL,
-  `quarter_num_of_year` int(11) DEFAULT NULL,
-  `quarter_num_overall` int(11) DEFAULT NULL,
-  `quarter_begin_date` varchar(45) DEFAULT NULL,
-  `quarter_begin_date_key` int(11) DEFAULT NULL,
-  `quarter_end_date` varchar(45) DEFAULT NULL,
-  `quarter_end_date_key` int(11) DEFAULT NULL,
-  `year_num` int(11) DEFAULT NULL,
-  `year_begin_date` varchar(45) DEFAULT NULL,
-  `year_begin_date_key` int(11) DEFAULT NULL,
-  `year_end_date` varchar(45) DEFAULT NULL,
-  `year_end_date_key` int(11) DEFAULT NULL,
-  `yyyy_mm` varchar(45) DEFAULT NULL,
-  `yyyy_mm_dd` varchar(45) DEFAULT NULL,
-  `dd_mon_yyyy` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',  
-  PRIMARY KEY (`date_id`,`load_date`,`load_id`),
-  UNIQUE KEY `date_val` (`date_val`,`load_date`)
-);
-DROP TABLE IF EXISTS dim_state;
-CREATE TABLE IF NOT EXISTS `dim_state`(
-  `state_code` varchar(45) NOT NULL DEFAULT '',
-  `state_name` varchar(45) NOT NULL DEFAULT '',
-  `country_code` varchar(45) NOT NULL DEFAULT '', 
-  `state_population` int(10) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`state_code`,`load_date`,`load_id`)
-  );
-DROP TABLE IF EXISTS `dim_transaction_type`;
-CREATE TABLE `dim_transaction_type` (
-  `transaction_type_id` varchar(45) NOT NULL DEFAULT '',
-  `src_transaction_type_id` int(11) DEFAULT NULL,
-  `transaction_type_code` varchar(45) DEFAULT NULL,
-  `transaction_type_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`transaction_type_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_transaction_type_id` (`src_transaction_type_id`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `dp_rule_results`;
-CREATE TABLE `dp_rule_results` (
-    `datapoduuid` varchar(45) DEFAULT NULL,
-    `datapodversion` varchar(45) DEFAULT NULL,
-    `datapodname` varchar(45) DEFAULT NULL,
-    `attributeid` varchar(45) DEFAULT NULL,
-    `attributename` varchar(45) DEFAULT NULL,
-    `numrows` varchar(45) DEFAULT NULL,
-    `minval` double precision,
-    `maxval` double precision,
-    `avgval` double precision,
-    `medianval` double precision,
-    `stddev` double precision,
-    `numdistinct` int(11) DEFAULT NULL,
-    `perdistinct` double precision,
-    `numnull` int(11) DEFAULT NULL,
-    `pernull` double precision,
-    `sixsigma` double precision,
-    `load_date` VARCHAR(45) DEFAULT NULL,
-    `load_id` int(11) DEFAULT NULL,
-    `version` int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `dq_rule_results`;
-CREATE TABLE `dq_rule_results` (
-  `rowkey` varchar(45) DEFAULT NULL,
-  `datapoduuid` varchar(45) DEFAULT NULL,
-  `datapodversion` varchar(45) DEFAULT NULL,  
-  `datapodname` varchar(45) DEFAULT NULL,
-  `attributeid` varchar(45) DEFAULT NULL,
-  `attributename` varchar(45) DEFAULT NULL,
-  `attributevalue` varchar(45) DEFAULT NULL,
-  `nullcheck_pass` varchar(45) DEFAULT NULL,
-  `valuecheck_pass` varchar(45) DEFAULT NULL,
-  `rangecheck_pass` varchar(45) DEFAULT NULL,
-  `datatypecheck_pass` varchar(45) DEFAULT NULL,
-  `dataformatcheck_pass` varchar(45) DEFAULT NULL,
-  `lengthcheck_pass` varchar(45) DEFAULT NULL,
-  `refintegritycheck_pass` varchar(45) DEFAULT NULL,
-  `dupcheck_pass` varchar(45) DEFAULT NULL,
-  `customcheck_pass` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `fact_account_summary_monthly`;
-CREATE TABLE `fact_account_summary_monthly` (
-  `account_id` varchar(45) NOT NULL DEFAULT '',
-  `yyyy_mm` varchar(45) NOT NULL DEFAULT '',
-  `total_trans_count` bigint(20) DEFAULT NULL,
-  `total_trans_amount_usd` int(11) DEFAULT NULL,
-  `avg_trans_amount` int(11) DEFAULT NULL,
-  `min_amount` decimal(38,2) DEFAULT NULL,
-  `max_amount` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`yyyy_mm`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `fact_customer_summary_monthly`;
-CREATE TABLE `fact_customer_summary_monthly` (
-  `customer_id` varchar(45) NOT NULL DEFAULT '',
-  `yyyy_mm` varchar(45) NOT NULL DEFAULT '',
-  `total_trans_count` varchar(45) DEFAULT NULL,
-  `total_trans_amount_usd` int(11) DEFAULT NULL,
-  `avg_trans_amount` int(11) DEFAULT NULL,
-  `min_amount` decimal(38,2) DEFAULT NULL,
-  `max_amount` decimal(38,2) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_id`,`yyyy_mm`,`load_date`,`load_id`)
-);
-DROP TABLE IF EXISTS `fact_transaction`;
-CREATE TABLE `fact_transaction` (
-  `transaction_id` int(11) NOT NULL DEFAULT '0',
-  `src_transaction_id` varchar(45) DEFAULT NULL,
-  `transaction_type_id` int(11) DEFAULT NULL,
-  `trans_date_id` int(11) DEFAULT NULL,
-  `bank_id` int(11) DEFAULT NULL,
-  `branch_id` int(11) DEFAULT NULL,
-  `customer_id` varchar(45) DEFAULT NULL,
-  `address_id` varchar(45) DEFAULT NULL,
-  `account_id` varchar(45) DEFAULT NULL,
-  `from_account` varchar(45) DEFAULT NULL,
-  `to_account` varchar(45) DEFAULT NULL,
-  `amount_base_curr` int(11) DEFAULT NULL,
-  `amount_usd` int(11) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `currency_rate` bigint(20) DEFAULT NULL,
-  `notes` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0'
-);
-DROP TABLE IF EXISTS `model_training_set`;
-CREATE TABLE model_training_set
-(
-  customer_id int(11) DEFAULT NULL,
-  address_id int(11) DEFAULT NULL,
-  branch_id int(11) DEFAULT NULL,
-  commute_distance_miles int(11) DEFAULT NULL,
-  label int(11) DEFAULT NULL,
-  censor int(11) DEFAULT NULL,
-  version int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `product_type`;
-CREATE TABLE `product_type` (
-  `product_type_id` int(11) NOT NULL DEFAULT '0',
-  `product_type_code` varchar(45) DEFAULT NULL,
-  `product_type_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`product_type_id`,`load_date`,`load_id`)  
-);
-DROP TABLE IF EXISTS `rc_rule_results`;
-CREATE TABLE `rc_rule_results` (
-    `sourcedatapoduuid` varchar(45) DEFAULT NULL,
-    `sourcedatapodversion` varchar(45) DEFAULT NULL,
-    `sourcedatapodname` varchar(45) DEFAULT NULL,
-    `sourceattributeid` varchar(45) DEFAULT NULL,
-    `sourceattributename` varchar(45) DEFAULT NULL,
-    `sourcevalue` double DEFAULT NULL,
-    `targetdatapoduuid` varchar(45) DEFAULT NULL,
-    `targetdatapodversion` varchar(45) DEFAULT NULL,
-    `targetdatapodname` varchar(45) DEFAULT NULL,
-    `targetattributeid` varchar(45) DEFAULT NULL,
-    `targetattributename` varchar(45) DEFAULT NULL,
-    `targetvalue`  double DEFAULT NULL,
-    `status` varchar(45) DEFAULT NULL,
-    `version` int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `target_gen_data_uniform_dist`;
-CREATE TABLE `target_gen_data_uniform_dist` (
-  `id` int(11) DEFAULT NULL,
-  `col1` double precision,
-  `version` int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `target_sim_linear_regression`;
-CREATE TABLE `target_sim_linear_regression` (
-  `id` int(11) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL,
-  `interest_rate` double precision,
-  `account_type_id` double precision,
-  `account_status_id` double precision
-);
-DROP TABLE IF EXISTS `target_sim_multivarient_normal_dis`;
-CREATE TABLE `target_sim_multivarient_normal_dis` (
-  `id` int(11) DEFAULT NULL,
-  `interestRate` double precision,
-  `col2` double precision,
-  `col3` double precision,
-  `version` int(11) DEFAULT NULL
-);
-DROP TABLE IF EXISTS `transaction`;
-CREATE TABLE `transaction` (
-  `transaction_id` varchar(45) NOT NULL DEFAULT '0',
-  `transaction_type_id` int(11) DEFAULT NULL,
-  `account_id` varchar(45) DEFAULT NULL,
-  `transaction_date` varchar(45) DEFAULT NULL,
-  `from_account` varchar(45) DEFAULT NULL,
-  `to_account` varchar(45) DEFAULT NULL,
-  `amount_base_curr` decimal(30,2) DEFAULT NULL,
-  `amount_usd` decimal(30,2) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `currency_rate` float DEFAULT NULL,
-  `notes` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`transaction_id`,`load_date`,`load_id`)    
-);
-DROP TABLE IF EXISTS `transaction_type`;
-CREATE TABLE `transaction_type` (
-  `transaction_type_id` varchar(45) NOT NULL DEFAULT '0',
-  `transaction_type_code` varchar(45) DEFAULT NULL,
-  `transaction_type_desc` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`transaction_type_id`,`load_date`,`load_id`)  
-);
+
+DROP TABLE FACT_ACCOUNT_SUMMARY_MONTHLY;
+CREATE TABLE FACT_ACCOUNT_SUMMARY_MONTHLY(	
+	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
+	TOTAL_TRANS_COUNT INTEGER(10),
+	TOTAL_TRANS_AMOUNT_USD INTEGER(10),
+	AVG_TRANS_AMOUNT INTEGER(10),
+	MIN_AMOUNT DECIMAL(10,2),
+	MAX_AMOUNT INTEGER(10),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE FACT_ACCOUNT_SUMMARY_MONTHLY PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE       FACT_CUSTOMER_SUMMARY_MONTHLY;
+CREATE TABLE FACT_CUSTOMER_SUMMARY_MONTHLY(	
+CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
+TOTAL_TRANS_COUNT VARCHAR(50),
+TOTAL_TRANS_AMOUNT_USD INTEGER(10),
+AVG_TRANS_AMOUNT INTEGER(10),
+MIN_AMOUNT DECIMAL(10,2),
+MAX_AMOUNT DECIMAL(10,2),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE FACT_CUSTOMER_SUMMARY_MONTHLY PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+
+DROP TABLE PRODUCT_TYPE;
+CREATE TABLE PRODUCT_TYPE(	
+PRODUCT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+PRODUCT_TYPE_CODE VARCHAR(10),
+PRODUCT_TYPE_DESC VARCHAR(500),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT LOAD_ID_PK  PRIMARY KEY(PRODUCT_TYPE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE PRODUCT_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE RC_RULE_RESULTS;
+CREATE TABLE RC_RULE_RESULTS(	
+SOURCEUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+SOURCEVERSION VARCHAR(50),
+SOURCENAME VARCHAR(100),
+SOURCEATTRIBUTEID VARCHAR(50),
+SOURCEATTRIBUTENAME VARCHAR(100),
+SOURCEVALUE DECIMAL(10,2),
+TARGETUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+TARGETVERSION VARCHAR(50),
+TARGETNAME VARCHAR(100),
+TARGETATTRIBUTEID VARCHAR(50),
+TARGETATTRIBUTENAME VARCHAR(100),
+TARGETVALUE DECIMAL(10,2),
+STATUS VARCHAR(50),
+VERSION INTEGER(10));
+
+DROP TABLE TRANSACTION;
+CREATE TABLE TRANSACTION(	
+TRANSACTION_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+TRANSACTION_TYPE_ID VARCHAR(50),
+ACCOUNT_ID VARCHAR(50),
+TRANSACTION_DATE VARCHAR(10),
+FROM_ACCOUNT VARCHAR(50),
+TO_ACCOUNT VARCHAR(50),
+AMOUNT_BASE_CURR DECIMAL(10,2),
+AMOUNT_USD DECIMAL(10,2),
+CURRENCY_CODE VARCHAR(10),
+CURRENCY_RATE DECIMAL(10,2),
+NOTES VARCHAR(100),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT TRANSACTION_ID_PK  PRIMARY KEY(TRANSACTION_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE TRANSACTION PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
+DROP TABLE TRANSACTION_TYPE;
+CREATE TABLE TRANSACTION_TYPE(	
+TRANSACTION_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+TRANSACTION_TYPE_CODE VARCHAR(10),
+TRANSACTION_TYPE_DESC VARCHAR(500),
+LOAD_DATE VARCHAR(10),
+LOAD_ID INTEGER(50), 
+CONSTRAINT TRANSACTION_TYPE_ID_PK  PRIMARY KEY(TRANSACTION_TYPE_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE TRANSACTION_TYPE PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

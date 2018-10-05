@@ -1,22 +1,21 @@
-DROP TABLE IF EXISTS `dim_customer`;
-CREATE TABLE `dim_customer` (
-  `customer_id` varchar(45) NOT NULL DEFAULT '',
-  `src_customer_id` varchar(45) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `first_name` varchar(45) DEFAULT NULL,
-  `middle_name` varchar(45) DEFAULT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `address_line1` varchar(45) DEFAULT NULL,
-  `address_line2` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `date_first_purchase` varchar(45) DEFAULT NULL,
-  `commute_distance` int(11) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
-  `postal_code` varchar(45) DEFAULT NULL,
-  `country` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_customer_id` (`src_customer_id`,`load_date`,`load_id`)
-);
+DROP TABLE DIM_CUSTOMER;
+CREATE TABLE DIM_CUSTOMER(	
+	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_CUSTOMER_ID VARCHAR(50),
+	TITLE VARCHAR(100),
+	FIRST_NAME VARCHAR(100),
+	MIDDLE_NAME VARCHAR(100),
+	LAST_NAME VARCHAR(100),
+	ADDRESS_LINE1 VARCHAR(50),
+	ADDRESS_LINE2 VARCHAR(50),
+	PHONE VARCHAR(50),
+	DATE_FIRST_PURCHASE VARCHAR(10),
+	COMMUTE_DISTANCE INTEGER(10),
+	CITY VARCHAR(100),
+	STATE VARCHAR(100),
+	POSTAL_CODE VARCHAR(10),
+	COUNTRY VARCHAR(100),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_CUSTOMER PARTITION BY KEY(LOAD_DATE,LOAD_ID);

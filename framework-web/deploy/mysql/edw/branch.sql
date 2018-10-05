@@ -1,15 +1,17 @@
-DROP TABLE IF EXISTS `branch`;
-CREATE TABLE `branch` (
-  `branch_id` int(11) NOT NULL DEFAULT '0',
-  `branch_type_id` int(11) DEFAULT NULL,
-  `bank_id` varchar(45) DEFAULT NULL,
-  `address_id` varchar(45) DEFAULT NULL,
-  `branch_name` varchar(45) DEFAULT NULL,
-  `branch_desc` varchar(45) DEFAULT NULL,
-  `branch_contact_name` varchar(45) DEFAULT NULL,
-  `branch_contact_phone` varchar(45) DEFAULT NULL,
-  `branch_contact_email` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`branch_id`,`load_date`,`load_id`)
-);
+
+DROP TABLE BRANCH;
+CREATE TABLE BRANCH(	
+	BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	BRANCH_TYPE_ID VARCHAR(50),
+	BANK_ID VARCHAR(50),
+	ADDRESS_ID VARCHAR(50),
+	BRANCH_NAME VARCHAR(100),
+	BRANCH_DESC VARCHAR(500),
+	BRANCH_CONTACT_NAME VARCHAR(100),
+	BRANCH_CONTACT_PHONE VARCHAR(100),
+	BRANCH_CONTACT_EMAIL VARCHAR(100),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE BRANCH PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

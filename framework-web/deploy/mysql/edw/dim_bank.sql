@@ -1,14 +1,15 @@
-DROP TABLE IF EXISTS `dim_bank`;
-CREATE TABLE `dim_bank` (
-  `bank_id` varchar(45) NOT NULL DEFAULT '',
-  `src_bank_id` varchar(45) DEFAULT NULL,
-  `bank_code` varchar(45) DEFAULT NULL,
-  `bank_name` varchar(45) DEFAULT NULL,
-  `bank_account_number` varchar(45) DEFAULT NULL,
-  `bank_currency_code` varchar(45) DEFAULT NULL,
-  `bank_check_digits` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`bank_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_bank_id` (`src_bank_id`,`load_date`,`load_id`)
-);
+
+DROP TABLE  DIM_BANK;
+CREATE TABLE DIM_BANK(	
+	BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_BANK_ID VARCHAR(50),
+	BANK_CODE VARCHAR(10),
+	BANK_NAME VARCHAR(100),
+	BANK_ACCOUNT_NUMBER VARCHAR(50),
+	BANK_CURRENCY_CODE VARCHAR(50),
+	BANK_CHECK_DIGITS INTEGER(20),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_BANK PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+
