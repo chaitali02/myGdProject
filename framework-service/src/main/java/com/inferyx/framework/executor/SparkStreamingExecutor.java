@@ -19,6 +19,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
@@ -128,7 +129,8 @@ public class SparkStreamingExecutor<T, K> {
 		inputMap.put("SAVEMODE", saveMode);
 //		inputMap.put("URL", url);
 		inputMap.put("TABLE_NAME", datapod.getName());
-//		streamToTableHelper.help(stream, inputMap);
+		JavaInputDStream stream2 = stream;
+		streamToTableHelper.help(stream2, inputMap);
 	}
 	
 	/**
@@ -155,5 +157,15 @@ public class SparkStreamingExecutor<T, K> {
 			return;
 		}
 		streamingContext.stop(Boolean.TRUE, Boolean.TRUE);
+	}
+	
+	public String[] getKafkaFieldNames() {
+		String[] fieldNames = new String[] {"key", "value", "topic", "partition", "offset", "timestamp"/*, "timestamptype"*/};
+		return fieldNames;
+	}
+	
+	public DataType[] getKafkaFieldNamesDataType() {
+		DataType[] dataTypes = new DataType[] {DataTypes.LongType, DataTypes.StringType, DataTypes.StringType, DataTypes.IntegerType, DataTypes.LongType, DataTypes.LongType/*, DataTypes.TimestampType*/};
+		return dataTypes;
 	}
 }

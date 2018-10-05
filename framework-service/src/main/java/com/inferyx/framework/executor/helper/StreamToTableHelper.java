@@ -40,6 +40,11 @@ public class StreamToTableHelper<T, K> implements Serializable {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = -7365327320185201373L;
+
+	/**
+	 * 
+	 */
 	public StreamToTableHelper() {
 		// TODO Auto-generated constructor stub
 	}
@@ -67,16 +72,18 @@ public class StreamToTableHelper<T, K> implements Serializable {
 
 							@Override
 							public void accept(ConsumerRecord<T, K> t) {
-								System.out.println("RECEIVED >>>> "+ t.key() + ":" + t.value());
+								System.out.println("RECEIVED >>>> "+ t.key() + ":" + t.value() + ":" + t.topic() + ":" + t.partition() + ":" + t.offset() + ":" + t.timestamp() );
 								// Save in hive
-								Row row = RowFactory.create(t.key(), t.value());
+								Row row = RowFactory.create(t.key(), t.value(), t.topic(), t.partition(), t.offset(), t.timestamp());
 								rowsList.add(row);
 							}
 						});
 						// Create dataframe
 						Dataset<Row> df = broadcastSession.getValue().createDataFrame(rowsList, schema);
 						System.out.println("Hive writing starts for this partition >>>>>>>>>>>>>>>>>>>> ");
-						df.write().mode(saveMode).insertInto(tableName);
+//						df.printSchema();
+//						df.show(false);
+						df.write().mode(SaveMode.Append).insertInto(tableName);
 						System.out.println("Hive writing ends for this partition >>>>>>>>>>>>>>>>>>>> ");
 //						df.write().mode(saveMode).jdbc(url, tableName, connectionProperties);
 //						OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
