@@ -21,8 +21,8 @@
 ./update_createdOn.sh localhost
 
 rm -r /user/hive/warehouse/framework/*
-mkdir -p /user/hive/warehouse/framework/
-cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework
+mkdir -p /user/hive/warehouse/framework/data/
+cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework/data/
 
 
 mkdir /user/hive/warehouse/framework/train
@@ -38,6 +38,5 @@ mkdir /user/hive/warehouse/framework/export
 mkdir /user/hive/warehouse/framework/script
 mkdir /user/hive/warehouse/framework/script/r
 mkdir /user/hive/warehouse/framework/script/py
-mkdir /user/hive/warehouse/framework/data
 cp -r ../app/*/data/csv/noheader/* /user/hive/warehouse/framework/upload/
 
