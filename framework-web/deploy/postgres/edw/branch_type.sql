@@ -1,9 +1,8 @@
-CREATE TABLE edw_small.branch_type
-(
-  branch_type_id integer NOT NULL,
-  branch_type_code VARCHAR(50),
-  branch_type_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT branch_type_pkey PRIMARY KEY (branch_type_id, load_date,load_id)
-);
+
+DROP TABLE EDW_SMALL.branch_type;
+CREATE TABLE EDW_SMALL.branch_type(	BRANCH_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	BRANCH_TYPE_CODE VARCHAR(10),
+	BRANCH_TYPE_DESC VARCHAR(500),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT BRANCH_TYPE_ID_PK  PRIMARY KEY(BRANCH_TYPE_ID,LOAD_DATE,LOAD_ID));

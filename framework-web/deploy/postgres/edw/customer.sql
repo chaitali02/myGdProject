@@ -1,19 +1,16 @@
-CREATE TABLE edw_small.customer
-(
-  customer_id VARCHAR(50) NOT NULL,
-  address_id VARCHAR(50),
-  branch_id integer,
-  title VARCHAR(50),
-  first_name VARCHAR(50),
-  middle_name VARCHAR(50),
-  last_name VARCHAR(50),
-  ssn VARCHAR(50),
-  phone VARCHAR(50),
-  date_first_purchase VARCHAR(50),
-  commute_distance_miles integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT customer_pkey PRIMARY KEY (customer_id,load_date,load_id)
-);
 
-
+DROP TABLE EDW_SMALL.customer;
+CREATE TABLE EDW_SMALL.customer(CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	ADDRESS_ID VARCHAR(50),
+	BRANCH_ID VARCHAR(50),
+	TITLE VARCHAR(100),
+	FIRST_NAME VARCHAR(100),
+	MIDDLE_NAME VARCHAR(100),
+	LAST_NAME VARCHAR(100),
+	SSN VARCHAR(100),
+	PHONE VARCHAR(100),
+	DATE_FIRST_PURCHASE VARCHAR(10),
+	COMMUTE_DISTANCE_MILES INTEGER,
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));

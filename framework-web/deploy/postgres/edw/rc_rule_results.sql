@@ -1,16 +1,16 @@
-CREATE TABLE edw_small.rc_rule_results (
-    sourcedatapoduuid VARCHAR(50),
-    sourcedatapodversion VARCHAR(50),
-    sourcedatapodname VARCHAR(50),
-    sourceattributeid VARCHAR(50),
-    sourceattributename VARCHAR(50),
-    sourcevalue double precision,
-    targetdatapoduuid VARCHAR(50),
-    targetdatapodversion VARCHAR(50),
-    targetdatapodname VARCHAR(50),
-    targetattributeid VARCHAR(50),
-    targetattributename VARCHAR(50),
-    targetvalue double precision,
-    status VARCHAR(50),
-    version integer
-);
+
+DROP TABLE EDW_SMALL.rc_rule_results;
+CREATE TABLE EDW_SMALL.rc_rule_results(	SOURCEUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SOURCEVERSION VARCHAR(50),
+	SOURCENAME VARCHAR(100),
+	SOURCEATTRIBUTEID VARCHAR(50),
+	SOURCEATTRIBUTENAME VARCHAR(100),
+	SOURCEVALUE DECIMAL(10,2),
+	TARGETUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+	TARGETVERSION VARCHAR(50),
+	TARGETNAME VARCHAR(100),
+	TARGETATTRIBUTEID VARCHAR(50),
+	TARGETATTRIBUTENAME VARCHAR(100),
+	TARGETVALUE DECIMAL(10,2),
+	STATUS VARCHAR(50),
+	VERSION INTEGER);

@@ -1,26 +1,27 @@
-CREATE TABLE edw_small.account
-(
-  account_id VARCHAR(50) NOT NULL,
-  account_type_id integer,
-  account_status_id integer,
-  product_type_id integer,
-  customer_id VARCHAR(50),
-  pin_number integer,
-  nationality VARCHAR(50),
-  primary_iden_doc VARCHAR(50),
-  primary_iden_doc_id VARCHAR(50),
-  secondary_iden_doc VARCHAR(50),
-  secondary_iden_doc_id VARCHAR(50),
-  account_open_date VARCHAR(50),
-  account_number VARCHAR(50),
-  opening_balance VARCHAR(50),
-  current_balance VARCHAR(50),
-  overdue_balance integer,
-  overdue_date VARCHAR(50),
-  currency_code VARCHAR(50),
-  interest_type VARCHAR(50),
-  interest_rate double precision,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT account_pkey PRIMARY KEY (account_id,load_date,load_id)
-);
+
+
+
+DROP TABLE EDW_SMALL.account;
+CREATE TABLE EDW_SMALL.ACCOUNT(	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	ACCOUNT_TYPE_ID VARCHAR(50),
+	ACCOUNT_STATUS_ID VARCHAR(50),
+	PRODUCT_TYPE_ID VARCHAR(50),
+	CUSTOMER_ID VARCHAR(50),
+	PIN_NUMBER INTEGER,
+	NATIONALITY VARCHAR(50),
+	PRIMARY_IDEN_DOC VARCHAR(50),
+	PRIMARY_IDEN_DOC_ID VARCHAR(50),
+	SECONDARY_IDEN_DOC VARCHAR(50),
+	SECONDARY_IDEN_DOC_ID VARCHAR(50),
+	ACCOUNT_OPEN_DATE VARCHAR(10),
+	ACCOUNT_NUMBER VARCHAR(50),
+	OPENING_BALANCE INTEGER,
+	CURRENT_BALANCE INTEGER,
+	OVERDUE_BALANCE INTEGER,
+	OVERDUE_DATE VARCHAR(10),
+	CURRENCY_CODE VARCHAR(10),
+	INTEREST_TYPE VARCHAR(10),
+	INTEREST_RATE DECIMAL(10,2),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID));

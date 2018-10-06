@@ -1,10 +1,7 @@
-CREATE TABLE edw_small.product_type
-(
-  product_type_id integer,
-  product_type_code VARCHAR(50),
-  product_type_desc VARCHAR(50),
-  load_date VARCHAR(50),
-  load_id integer,
-  CONSTRAINT product_type_pkey PRIMARY KEY (product_type_id, load_date, load_id)
-);
-
+DROP TABLE EDW_SMALL.product_type;
+CREATE TABLE EDW_SMALL.product_type(	PRODUCT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	PRODUCT_TYPE_CODE VARCHAR(10),
+	PRODUCT_TYPE_DESC VARCHAR(500),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT LOAD_ID_PK  PRIMARY KEY(PRODUCT_TYPE_ID,LOAD_DATE,LOAD_ID));

@@ -1,19 +1,11 @@
-CREATE TABLE edw_small.fact_account_summary_monthly
-(
-  account_id VARCHAR(50) NOT NULL,
-  yyyy_mm VARCHAR(50) NOT NULL,
-  total_trans_count integer,
-  total_trans_amount_usd integer,
-  avg_trans_amount integer,
-  min_amount numeric(38,2),
-  max_amount integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT fact_account_summary_monthly_pkey PRIMARY KEY (account_id, yyyy_mm, load_date,load_id)
-);
-
-
-
-
-
-
+DROP TABLE EDW_SMALL.fact_account_summary_monthly;
+CREATE TABLE EDW_SMALL.fact_account_summary_monthly(	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
+	TOTAL_TRANS_COUNT INTEGER,
+	TOTAL_TRANS_AMOUNT_USD INTEGER,
+	AVG_TRANS_AMOUNT INTEGER,
+	MIN_AMOUNT DECIMAL(10,2),
+	MAX_AMOUNT INTEGER,
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT ACCOUNT_ID_FACT_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
