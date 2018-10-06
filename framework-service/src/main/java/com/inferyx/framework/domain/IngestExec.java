@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -19,27 +21,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "ingestexec")
 public class IngestExec extends BaseRuleExec {
 	private String lastIncrValue;
-	private String location;
-//	private List<String> location;
+	private List<String> fileInfo;
 
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @return the location
+	 * @return the fileInfo
 	 */
-	public String getLocation() {
-		return location;
+	public List<String> getFileInfo() {
+		return fileInfo;
 	}
 
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param location the location to set
+	 * @param fileInfo the fileInfo to set
 	 */
-	public void setLocation(String location) {
-		this.location = location;
+	public void setFileInfo(List<String> fileInfo) {
+		this.fileInfo = fileInfo;
 	}
 
 	/**

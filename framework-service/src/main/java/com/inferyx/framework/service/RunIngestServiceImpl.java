@@ -11,7 +11,6 @@
 package com.inferyx.framework.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestExec;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -546,7 +544,13 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					
 					String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
 					String targetExtension = ingest.getTargetExtn();
-					targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+					
+					if(targetExtension != null) {
+						targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+					} else {
+						targetExtension = ingest.getTargetFormat();
+					}
+					
 					if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
@@ -615,12 +619,6 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							} finally {
 								ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
 							}						
-						}
-						if(ingestExec.getLocation() != null) {
-							String targetFilePathUrl2 = ingestExec.getLocation().concat(","+targetFilePathUrl);
-							ingestExec.setLocation(targetFilePathUrl2);
-						} else {
-							ingestExec.setLocation(targetFilePathUrl);
 						}
 						countRows = rsHolder.getCountRows();
 //					}
@@ -864,12 +862,6 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							} finally {
 								ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
 							}						
-						}
-						if(ingestExec.getLocation() != null) {
-							String targetFilePathUrl2 = ingestExec.getLocation().concat(","+targetFilePathUrl);
-							ingestExec.setLocation(targetFilePathUrl2);
-						} else {
-							ingestExec.setLocation(targetFilePathUrl);
 						}
 						
 						//writing to target				

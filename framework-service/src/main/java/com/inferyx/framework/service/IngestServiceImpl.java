@@ -209,11 +209,17 @@ public class IngestServiceImpl extends RuleTemplate {
 				//check whether target file already exist (when save mode is null)
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
-					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
-					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
-					for(String fileName : targetFileNameList) {
-						if(fileName.equalsIgnoreCase(targetFileName)) {
-							throw new RuntimeException("Target file \'"+targetFileName+"\' already exists.");								
+					String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+					List<String> targetFileOrDirList = null;
+					if(ingest.getTargetExtn() == null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+						targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+					} else {
+						targetFileOrDirList = getMatchingDirNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+					}
+					
+					for(String fileName : targetFileOrDirList) {
+						if(fileName.equalsIgnoreCase(targetFileOrDirName)) {
+							throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' already exists.");								
 						}
 					}
 				}
@@ -224,17 +230,17 @@ public class IngestServiceImpl extends RuleTemplate {
 					throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
 				
-				List<String> location = new ArrayList<>();
+				List<String> fileInfo = new ArrayList<>();
 				String sourceDir = "file://".concat(sourceDS.getPath());
 				String sourceFileLocation = "";
 				for(String fileName : fileNameList) {
 					String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
-					location.add(fileLocation);
+					fileInfo.add(fileLocation);
 					sourceFileLocation = sourceFileLocation.concat(fileLocation).concat(",");
 				}
 				sourceFileLocation = sourceFileLocation.substring(0, sourceFileLocation.lastIndexOf(","));
-				ingestExec.setLocation(sourceFileLocation);
-				runIngestServiceImpl.setLocation(location);
+				ingestExec.setFileInfo(fileInfo);
+				runIngestServiceImpl.setLocation(fileInfo);
 			} 
 			runIngestServiceImpl.call();
 		} catch (Exception e) {
@@ -339,69 +345,6 @@ public class IngestServiceImpl extends RuleTemplate {
 		regex = Helper.getRegexByFileInfo(fileName, fileExtn, fileFormat, isCaseSensitive);
 		logger.info("Final regex : " + regex);
 
-//		// Make regex compatible
-//		fileName = fileName.replace(".","\\.").replace("*",".*");
-//		
-//		// Replace tokens
-//		int occurences = StringUtils.countMatches(fileName,"[");
-//		for (int i=0 ; i < occurences ; i++) {
-//			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
-//			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
-//			String dateFormat = smplDateFormat.format(new Date());
-//			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
-//		}
-//		
-//		//Apply Regex
-//		if(isCaseSensitive) {
-//			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$");
-//		} else {
-//			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
-//		}
-
-//		if(fileName.startsWith("*") && fileName.endsWith("*")) {
-//			if(isCaseSensitive) {
-//				regex = Pattern.compile("^.*"+fileName+".*$");
-//			} else {
-//				regex = Pattern.compile("^.*"+fileName+".*$", Pattern.CASE_INSENSITIVE);
-//			}
-//		} else if(fileName.endsWith("*")) { 
-//			if(isCaseSensitive) {
-//				regex = Pattern.compile("^"+fileName+".*$");
-//			} else {
-//				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
-//			}
-//		} else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
-//			//e.g. account_%mmddyyyy%_%hhmmss%.csv
-//			String[] fileNameSplit = fileName.split("%");
-//			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
-//			String dateFormat = smplDateFormat.format(new Date());
-//			fileName = fileName.replaceAll("%", "");
-//			
-//			if(isCaseSensitive) {
-//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$");
-//			} else {
-//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
-//			}
-//		} else if(fileName.toLowerCase().contains("%mmddyyyy%")) {
-//			//e.g. account_%mmddyyyy%.csv
-//			String[] fileNameSplit = fileName.split("%");
-//			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
-//			String dateFormat = smplDateFormat.format(new Date());
-//			fileName = fileName.replaceAll("%", "");
-//			
-//			if(isCaseSensitive) {
-//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$");
-//			} else {
-//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
-//			}
-//		} else {
-//			if(isCaseSensitive) {
-//				regex = Pattern.compile("^"+fileName+"$");
-//			} else {
-//				regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
-//			}					
-//		}
-
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
@@ -419,6 +362,36 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 		
 		return fileNameList;		
+	}
+	
+	public List<String> getMatchingDirNames(String filePath, String dirName, String fileExtn, String ignoreCase, String fileFormat) throws JsonProcessingException, ParseException {
+		logger.info("filePath : dirName : fileExtn : fileFormat : " + filePath + ":" + dirName + ":" + fileExtn + ":" + fileFormat);
+		File folder = new File(filePath);
+		File[] listOfFiles = folder.listFiles();
+		List<String> dirNameList = new ArrayList<String>();
+		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
+
+		Pattern regex = null;
+		regex = Helper.getRegexByFileInfo(dirName, fileExtn, fileFormat, isCaseSensitive);
+		logger.info("Final regex : " + regex);
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				logger.info("Directory " + listOfFiles[i].getName());
+			} else if (listOfFiles[i].isDirectory()) {
+				String dirFileName = listOfFiles[i].getName();
+				Matcher mtch = regex.matcher(dirFileName);
+				if(mtch.matches()){
+		        	dirNameList.add(dirFileName);	
+		        }
+			}
+		}		
+
+		for (String dir : dirNameList) {
+			logger.info("Found matching directory : " + dir);									
+		}
+		
+		return dirNameList;		
 	}
 	
 	private boolean getCaseSensitivity(String ignoreCase) {

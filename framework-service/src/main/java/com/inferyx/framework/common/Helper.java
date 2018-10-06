@@ -1073,14 +1073,17 @@ public class Helper {
 			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
 		}
 		
-		fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
+		if(fileExtn != null) {
+			fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
+			fileName = fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase());
+		}
 		
 		//Apply Regex
 		Pattern regex = null;
 		if(isCaseSensitive) {
-			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase())+"$");
+			regex = Pattern.compile("^"+fileName+"$");
 		} else {
-			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
+			regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
 		}
 		return regex;
 	}
