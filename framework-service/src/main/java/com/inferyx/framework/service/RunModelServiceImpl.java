@@ -31,6 +31,7 @@ import org.apache.spark.sql.SaveMode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -676,10 +677,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
 				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String filePath = "/model/train"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 
-				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
 
 				Datasource datasource = commonServiceImpl.getDatasourceByApp();
 				IExecutor exec = execFactory.getExecutor(datasource.getType());
