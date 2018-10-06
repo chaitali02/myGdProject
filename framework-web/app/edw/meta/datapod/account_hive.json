@@ -1,6 +1,6 @@
 {
   "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
-  "version": "1538842714",
+  "version": "1538854245",
   "name": "account_hive",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Oct 06 12:18:34 EDT 2018",
+  "createdOn": "Sat Oct 06 15:30:45 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,7 @@
   "datasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "4db1cc8f-089f-442b-8e47-3eaa82c48805",
-      "version": null,
-      "name": "hive_edw_small"
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
     },
     "value": null
   },
