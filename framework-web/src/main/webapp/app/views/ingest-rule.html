@@ -175,8 +175,16 @@
                                             <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left: 0; padding-right: 0;">
                                                 <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
                                             </div>
-                                            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-left: 10px; padding-right: 0;">
-                                                <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                            
+                                            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-left: 2px; padding-right: 0;">
+                                                    <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left: 0px; padding-right: 0;">
+                                                            <span>.</span>
+                                                    </div>
+                                                    <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 0px; padding-right: 5px;">
+                                                            <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                                        </div>
+                                                
+                                               
                                             </div>
                                         </div>
                                        
@@ -291,8 +299,14 @@
                                     <div class="col-md-5" style="padding-right:0px">
                                         <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
                                     </div>
-                                    <div class="col-md-1" style="padding-left:10px">
-                                        <input type="text" class="form-control" name="tagetDetail" ng-model="$parent.ingestData.targetExtn" required>
+                                    <div class="col-md-1" style="padding-left:2px">
+                                            <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left: 0px; padding-right: 0;">
+                                                    <span>.</span>
+                                            </div>
+                                            <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 0px; padding-right: 0;">
+                                                    <input type="text" class="form-control" name="tagetDetail" ng-model="$parent.ingestData.targetExtn" required>
+                                            </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">
