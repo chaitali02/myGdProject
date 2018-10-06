@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,6 +63,7 @@ public class SparkStreamingExecutor<T, K> {
 		// Dataset<Row> lines = null;
 		JavaReceiverInputDStream<String> lines = null;
 		JavaInputDStream<ConsumerRecord<T, K>> stream = null;
+		JavaStreamingContext streamingContext = null;
 		try {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
@@ -78,16 +78,20 @@ public class SparkStreamingExecutor<T, K> {
 //			kafkaParams.put("enable.auto.commit", false);
 
 			Collection<String> topics = Arrays.asList(streamInput.getTopicName());
-			JavaStreamingContext streamingContext = new JavaStreamingContext(
-					JavaSparkContext
-							.fromSparkContext(((SparkSession) conHolder.getStmtObject()).sparkContext().getOrCreate()),
-					Durations.seconds(5));
+			if (streamingCtxMap.containsKey(ds.getHost() + "_" + ds.getPort())) {
+				streamingContext = streamingCtxMap.get(ds.getHost() + "_" + ds.getPort());
+			} else {
+				streamingContext = new JavaStreamingContext(
+						JavaSparkContext
+								.fromSparkContext(((SparkSession) conHolder.getStmtObject()).sparkContext().getOrCreate()),
+						Durations.seconds(5));
+				streamingCtxMap.put(ds.getHost() + "_" + ds.getPort(), streamingContext);
+			}
 
 			stream = KafkaUtils.createDirectStream(
 					streamingContext, LocationStrategies.PreferConsistent(),
 					ConsumerStrategies.<T, K>Subscribe(topics, kafkaParams));
 
-			streamingCtxMap.put(streamInput.getTopicName(), streamingContext);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,8 +139,8 @@ public class SparkStreamingExecutor<T, K> {
 	 * Start streaming
 	 * @param topic
 	 */
-	public void start(String topic) {
-		JavaStreamingContext streamingContext = streamingCtxMap.get(topic);
+	public void start(Datasource ds) {
+		JavaStreamingContext streamingContext = streamingCtxMap.get(ds.getHost() + "_" + ds.getPort());
 		streamingContext.start();
 		try {
 			streamingContext.awaitTermination();
@@ -149,8 +153,8 @@ public class SparkStreamingExecutor<T, K> {
 	 * 
 	 * @param topic
 	 */
-	public void stop(String topic) {
-		JavaStreamingContext streamingContext = streamingCtxMap.get(topic);
+	public void stop(Datasource ds) {
+		JavaStreamingContext streamingContext = streamingCtxMap.get(ds.getHost() + "_" + ds.getPort());
 		if (streamingContext == null) {
 			return;
 		}

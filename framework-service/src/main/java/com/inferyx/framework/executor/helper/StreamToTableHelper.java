@@ -5,10 +5,7 @@ package com.inferyx.framework.executor.helper;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,23 +21,18 @@ import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FileType;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.StreamInput;
-import com.inferyx.framework.executor.ExecContext;
 
 import scala.reflect.ClassManifestFactory;
 
@@ -164,6 +156,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 							if(fileFormat == null) {
 								df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 							} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
+								System.out.println(df + ":" + targetPath + ":" + saveMode);
 								df.coalesce(1).write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 							} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
 								df.coalesce(1).write().mode(saveMode).option("delimiter", "\t").csv(targetPath);

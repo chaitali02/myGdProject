@@ -894,7 +894,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+								sparkStreamingExecutor.start(sourceDS);							
 							}
 						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
@@ -916,7 +916,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+							sparkStreamingExecutor.start(sourceDS);							
 						}
 					}).start();
 				}
