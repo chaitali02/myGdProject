@@ -212,9 +212,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
 					List<String> targetFileOrDirList = null;
 					if(ingest.getTargetExtn() == null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-						targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
-					} else {
 						targetFileOrDirList = getMatchingDirNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+					} else {
+						targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
 					}
 					
 					for(String fileName : targetFileOrDirList) {
