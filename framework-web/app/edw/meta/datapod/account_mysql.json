@@ -1,6 +1,6 @@
 {
   "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
-  "version": "1538524544",
+  "version": "1538842527",
   "name": "account_mysql",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Oct 02 19:55:44 EDT 2018",
+  "createdOn": "Sat Oct 06 12:15:27 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,9 @@
   "datasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73034",
       "version": null,
-      "name": "mysql_ecocap"
+      "name": "mysql_edw_small"
     },
     "value": null
   },

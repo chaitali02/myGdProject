@@ -1,7 +1,7 @@
 {
   "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4",
   "version": "1538728909",
-  "name": "ACCOUNT_ORACLE",
+  "name": "account_oracle",
   "desc": null,
   "createdBy": {
     "ref": {
