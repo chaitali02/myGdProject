@@ -534,9 +534,9 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 			}	
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
-				Message messageInfo = new Message("300", "No change in incremental param hence skipping execution.", new Date());
-				ingestExec.setMessageInfo(messageInfo);
-				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
+//				new Message("300", MessageStatus.FAIL.toString(),"No change in incremental param hence skipping execution.");
+//				ingestExec.setMessageInfo(messageInfo);
+//				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {				
 				logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
