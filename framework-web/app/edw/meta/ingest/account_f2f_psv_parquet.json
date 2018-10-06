@@ -27,7 +27,7 @@
     "sourceFormat" : "PSV",
     "targetFormat" : "PARQUET",
     "sourceExtn":"PSV",
-    "targetExtn":"PARQUET",
+    "targetExtn":null,
     "header" : "N",
     "saveMode" : "OVERWRITE",
     "ignoreCase" : "N",

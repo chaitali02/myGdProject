@@ -66,7 +66,7 @@
   "filterInfo": null,
   "runParams": null,
   "sourceFormat": null,
-  "targetFormat": "PARQUET",
+  "targetFormat": null,
   "saveMode" : "OVERWRITE",
   "ignoreCase" : "N",
   "header": "N",

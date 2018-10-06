@@ -169,8 +169,22 @@
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Source Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
-                                    <div class="col-md-3 col-sm-3 col-xs-12">
-                                        <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName" -->
+                                     <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName" -->
+                                    <div class="col-md-5" style="padding-right:0px">
+                                        <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
+                                    </div>
+                                    <div class="col-md-1" style="padding-left:2px">
+                                            <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left: 0px; padding-right: 0;">
+                                                    <span>.</span>
+                                            </div>
+                                            <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 0px; padding-right: 0;">
+                                                <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-if=" selectedSourceFormate != null && selectedSourceFormate !='PARQUET'" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                                <input type="text"  class="form-control" ng-disabled="true" ng-if="selectedSourceFormate == null|| selectedSourceFormate =='PARQUET'" ng-model="$parent.ingestData.sourceExtn"  ng-change="onChangeSourceDetail()" >
+                                            </div>
+                                        
+                                    </div>
+                                    <!-- <div class="col-md-3 col-sm-3 col-xs-12">
+                                       
                                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 0; padding-right: 0;">
                                             <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left: 0; padding-right: 0;">
                                                 <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
@@ -181,7 +195,7 @@
                                                             <span>.</span>
                                                     </div>
                                                     <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 0px; padding-right: 5px;">
-                                                            <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                                            <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.ingestData.sourceExtn.toLowerCase()" required ng-change="onChangeSourceDetail()" >
                                                         </div>
                                                 
                                                
@@ -189,8 +203,8 @@
                                         </div>
                                        
                                         
-                                    </div>
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
+                                    </div> -->
+                                    <!-- <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
                                     </label>
                                     <div class="col-md-2 col-sm-2 col-xs-12">
                                         <div class="mt-checkbox-list" style="margin-top:-7px">
@@ -200,9 +214,9 @@
                                             </label>
                                           </div>
 
-                                    </div>
+                                    </div> -->
                                 </div>
-                                <!-- <div class="form-group" ng-if="selectedSourceType =='FILE'">
+                                <div class="form-group" ng-if="selectedSourceType =='FILE'">
                                     <label class="col-md-3 control-label">Ignore Case</label>
                                     <div class="col-md-9">
                                       <div class="mt-checkbox-list" style="margin-top:-7px">
@@ -213,7 +227,7 @@
                                         </label>
                                       </div>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="form-group" ng-if="selectedSourceType =='TABLE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
                                         <span class="required" aria-required="true"> * </span>
@@ -304,8 +318,10 @@
                                                     <span>.</span>
                                             </div>
                                             <div class="col-md-11 col-sm-11 col-xs-11" style="padding-left: 0px; padding-right: 0;">
-                                                    <input type="text" class="form-control" name="tagetDetail" ng-model="$parent.ingestData.targetExtn" required>
-                                            </div>
+                                                    <input type="text" class="form-control" name="tagetDetail" ng-disabled="{{mode}}"  ng-if=" selectedTargetFormate != null &&  selectedTargetFormate !='PARQUET'" ng-model="$parent.ingestData.targetExtn" required>
+                                                    <input type="text" class="form-control" name="tagetDetail" ng-disabled="true"  ng-if="selectedTargetFormate == null || selectedTargetFormate =='PARQUET'" ng-model="$parent.ingestData.targetExtn">
+
+                                                </div>
                                         
                                     </div>
                                 </div>

@@ -338,12 +338,24 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 
 	$scope.onChangeFormate = function () {
 		$scope.ingestData.ingestChg = "Y";
-		$scope.ingestData.sourceExtn="."+$scope.selectedSourceFormate;
+		if($scope.selectedSourceFormate !="PARQUET"){
+			$scope.ingestData.sourceExtn=$scope.selectedSourceFormate;
+			$scope.ingestData.sourceExtn=$scope.ingestData.sourceExtn.toLowerCase();
+		}
+		else{
+			$scope.ingestData.sourceExtn=null;
+		}
 	}
 	$scope.onChangeTargetFormate = function () {
 		$scope.ingestData.ingestChg = "Y";
-		$scope.ingestData.targetExtn="."+$scope.selectedTargetFormate;
-	}
+		if($scope.selectedTargetFormate !="PARQUET"){
+			$scope.ingestData.targetExtn=$scope.selectedTargetFormate;
+			$scope.ingestData.targetExtn=$scope.ingestData.targetExtn.toLowerCase();
+		}
+		else{
+			$scope.ingestData.targetExtn=null;
+		}
+	}  
 	$scope.onchangeGroble = function () {
 		$scope.ingestData.ingestChg = "Y";
 	}
