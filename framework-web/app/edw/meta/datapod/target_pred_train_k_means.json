@@ -67,18 +67,9 @@
             "dispName" : "censor",
             "active" : "Y"
         }, 
+      
         {
             "attributeId" : 6,
-            "name" : "version",
-            "type" : "integer",
-            "desc" : "version",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "version",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 7,
             "name" : "features",
             "type" : "string",
             "desc" : "features",
@@ -88,7 +79,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 8,
+            "attributeId" : 7,
             "name" : "prediction",
             "type" : "integer",
             "desc" : "prediction",

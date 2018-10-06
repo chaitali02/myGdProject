@@ -74,6 +74,7 @@ import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.AnalysisException;
+import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -1299,11 +1300,19 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
 
-		Object obj = conHolder.getStmtObject();
-		if (obj instanceof SparkSession) {
-			ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			df = rsHolder.getDataFrame();
-		}
+//		Object obj = conHolder.getStmtObject();
+//		if (obj instanceof SparkSession) {
+//			ResultSetHolder rsHolder = iReader.read(datastore.getLocation(), obj);
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			DataFrameReader reader = sparkSession.read();
+			df = reader.load(datastore.getLocation());
+			String tableName = Helper.genTableName(datastore.getLocation());
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(df);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setTableName(tableName);
+//		}
 		
 //		df.show(false);
 		String[] columns = df.columns();
