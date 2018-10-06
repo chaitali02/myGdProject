@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
@@ -110,9 +107,9 @@ public class IngestServiceImpl extends RuleTemplate {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
-	private KafkaExecutor kafkaExecutor;
+	private KafkaExecutor<?, ?> kafkaExecutor;
 	@Autowired
-	private SparkStreamingExecutor sparkStreamingExecutor;
+	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -188,7 +185,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			}
 
-			RunIngestServiceImpl runIngestServiceImpl = new RunIngestServiceImpl();
+			RunIngestServiceImpl<?, ?> runIngestServiceImpl = new RunIngestServiceImpl<>();
 			runIngestServiceImpl.setCommonServiceImpl(commonServiceImpl);
 			runIngestServiceImpl.setExecParams(execParams);
 			runIngestServiceImpl.setHelper(helper);
@@ -212,17 +209,16 @@ public class IngestServiceImpl extends RuleTemplate {
 				//check whether target file already exist (when save mode is null)
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
-					String targetFileName = ingest.getTargetDetail().getValue();
-					targetFileName = targetFileName.endsWith(".csv") ? targetFileName : targetFileName.concat(".csv");
+					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
 					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetFormat(), ingest.getIgnoreCase());
 					for(String fileName : targetFileNameList) {
-						if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
-							throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
+						if(fileName.equalsIgnoreCase(targetFileName)) {
+							throw new RuntimeException("Target file \'"+targetFileName+"\' already exists.");								
 						}
 					}
 				}
 				
-				//get files matching the criteria
+				//get source files matching the criteria
 				List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
 				if(fileNameList == null || fileNameList.isEmpty()) {
 					throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
@@ -230,10 +226,14 @@ public class IngestServiceImpl extends RuleTemplate {
 				
 				List<String> location = new ArrayList<>();
 				String sourceDir = "file://".concat(sourceDS.getPath());
+				String sourceFileLocation = "";
 				for(String fileName : fileNameList) {
 					String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
 					location.add(fileLocation);
+					sourceFileLocation = sourceFileLocation.concat(fileLocation).concat(",");
 				}
+				sourceFileLocation = sourceFileLocation.substring(0, sourceFileLocation.lastIndexOf(","));
+				ingestExec.setLocation(sourceFileLocation);
 				runIngestServiceImpl.setLocation(location);
 			} 
 			runIngestServiceImpl.call();
@@ -266,6 +266,42 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
+	public String generateFileName(String fileName, String fileFormat) {
+
+		Pattern regex = Helper.getRegexByFileName(fileName, fileFormat, false);
+		fileName = regex.pattern();
+		fileName = fileName.substring(1, fileName.length()-1);
+		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
+		return fileName;
+		/*if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
+			String pattern = null;
+			if(fileName.contains("MMddyyyy_HHmmss")) {
+				pattern = "MMddyyyy_HHmmss";
+			} else if(fileName.contains("mmddyyyy_HHmmss")) {
+				pattern = "mmddyyyy_HHmmss";
+			} else if(fileName.contains("MMddyyyy_hhmmss")) {
+				pattern = "MMddyyyy_hhmmss";
+			} else {
+				pattern = "mmddyyyy_hhmmss";
+			}	
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
+			String formatedDate = dateFormat.format(new Date());
+			return fileName.replaceAll(pattern, formatedDate);
+		} else if(fileName != null && fileName.toLowerCase().contains("mmddyyyy")) {
+			String pattern = null;
+			if(fileName.contains("MMddyyyy")) {
+				pattern = "MMddyyyy";
+			} else {
+				pattern = "mmddyyyy";
+			}			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
+			String formatedDate = dateFormat.format(new Date());
+			return fileName.replaceAll(pattern, formatedDate);
+		} else {
+			return fileName;
+		}*/
+	}
+	
 	@SuppressWarnings("unused")
 	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();
@@ -300,26 +336,27 @@ public class IngestServiceImpl extends RuleTemplate {
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
 		Pattern regex = null;
-
-		// Make regex compatible
-		fileName = fileName.replace(".","\\.").replace("*",".*");
-		
-		// Replace tokens
-		int occurences = StringUtils.countMatches(fileName,"[");
-		for (int i=0 ; i < occurences ; i++) {
-			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
-			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
-			String dateFormat = smplDateFormat.format(new Date());
-			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
-		}
-		
-		//Apply Regex
-		if(isCaseSensitive) {
-			regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
-		} else {
-			regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
-		}
+		regex = Helper.getRegexByFileName(fileName, fileFormat, isCaseSensitive);
 		logger.info("Final regex : " + regex);
+
+//		// Make regex compatible
+//		fileName = fileName.replace(".","\\.").replace("*",".*");
+//		
+//		// Replace tokens
+//		int occurences = StringUtils.countMatches(fileName,"[");
+//		for (int i=0 ; i < occurences ; i++) {
+//			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
+//			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
+//			String dateFormat = smplDateFormat.format(new Date());
+//			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
+//		}
+//		
+//		//Apply Regex
+//		if(isCaseSensitive) {
+//			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$");
+//		} else {
+//			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
+//		}
 
 //		if(fileName.startsWith("*") && fileName.endsWith("*")) {
 //			if(isCaseSensitive) {
@@ -381,8 +418,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			logger.info("Found matching file : " + file);									
 		}
 		
-		return fileNameList;
-		
+		return fileNameList;		
 	}
 	
 	private boolean getCaseSensitivity(String ignoreCase) {

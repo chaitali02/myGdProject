@@ -34,7 +34,7 @@
     "ref": {
       "type": "simple"
     },
-    "value": "account.csv"
+    "value": "account"
   },
   "targetDatasource": {
     "ref": {
@@ -52,6 +52,8 @@
   "runParams": null,
   "sourceFormat": "CSV",
   "targetFormat": null,
+  "sourceExtn":".CSV",
+  "targetExtn":null,
   "header": "N",
   "incrAttr": null,
   "saveMode": "APPEND",

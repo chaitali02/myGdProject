@@ -33,7 +33,45 @@ public class IngestView extends BaseEntity {
 	private AttributeRefHolder incrAttr;
 	private SaveMode saveMode = SaveMode.APPEND;
 	private String ignoreCase = "N";
+	private String sourceExtn;
+	private String targetExtn;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceExtn
+	 */
+	public String getSourceExtn() {
+		return sourceExtn;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceExtn the sourceExtn to set
+	 */
+	public void setSourceExtn(String sourceExtn) {
+		this.sourceExtn = sourceExtn;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the targetExtn
+	 */
+	public String getTargetExtn() {
+		return targetExtn;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param targetExtn the targetExtn to set
+	 */
+	public void setTargetExtn(String targetExtn) {
+		this.targetExtn = targetExtn;
+	}
 	/**
 	 *
 	 * @Ganesh

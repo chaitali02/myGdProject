@@ -10,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account_tsv.csv"
+        "value" : "account_tsv"
     },
     "targetDatasource" : {
         "ref" : {
@@ -26,6 +26,8 @@
     },
     "sourceFormat" : "TSV",
     "targetFormat" : "TSV",
+     "sourceExtn":".TSV",
+    "targetExtn":".TSV",
     "header" : "N",
     "saveMode" : "OVERWRITE",
     "ignoreCase" : "N",
