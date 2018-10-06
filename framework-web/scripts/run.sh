@@ -40,6 +40,6 @@ mkdir /user/hive/warehouse/framework/script/r
 mkdir /user/hive/warehouse/framework/script/py
 mkdir /user/hive/warehouse/framework/deploy
 
-cp -r ../app/*/data/csv/noheader/* /user/hive/warehouse/framework/upload/
+cp -r ../app/*/data/csv/header/* /user/hive/warehouse/framework/upload/
 cp -r ../deploy/* /user/hive/warehouse/framework/deploy/
 
