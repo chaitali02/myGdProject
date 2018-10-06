@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `model_training_set`;
+DROP TABLE IF EXISTS model_training_set;
 CREATE TABLE model_training_set
 (
   customer_id int(11) DEFAULT NULL,

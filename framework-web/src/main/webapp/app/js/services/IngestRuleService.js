@@ -515,6 +515,12 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
         var onSuccess = function (response) {
             var ingestJSOn = {};
             ingestJSOn.ingestData = response;
+            if(ingestJSOn.ingestData.sourceExtn !=null){
+            ingestJSOn.ingestData.sourceExtn=ingestJSOn.ingestData.sourceExtn.toLowerCase();
+            }
+            if(ingestJSOn.ingestData.targetExtn !=null){
+                ingestJSOn.ingestData.targetExtn=ingestJSOn.ingestData.targetExtn.toLowerCase();
+            }
             var filterInfoArray = [];
             if (response.filter != null) {
                 for (i = 0; i < response.filter.filterInfo.length; i++) {

@@ -27,7 +27,7 @@
     "sourceFormat" : "CSV",
     "targetFormat" : "PARQUET",
     "sourceExtn":"CSV",
-    "targetExtn":"PARQUET",
+    "targetExtn":null,
     "header" : "N",
     "saveMode" : "OVERWRITE",
     "ignoreCase" : "N",
