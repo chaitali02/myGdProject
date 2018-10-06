@@ -68,7 +68,7 @@
   "saveMode" : "APPEND",
   "targetFormat": "CSV",
   "sourceExtn":null,
-  "targetExtn":".CSV",
+  "targetExtn":"CSV",
   "header": "N",
   "incrAttr": {
     "ref": {
