@@ -791,7 +791,13 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						
 						String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
 						String targetExtension = ingest.getTargetExtn();
-						targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+						
+						if(targetExtension != null) {
+							targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+						} else {
+							targetExtension = ingest.getTargetFormat();
+						}
+						
 						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 						} else {
