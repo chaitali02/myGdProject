@@ -18,7 +18,7 @@ public class BaseExec extends BaseEntity {
 	protected MetaIdentifierHolder result;
 	protected List<MetaIdentifier> refKeyList;
 	protected ExecParams execParams;	
-	protected Message messageInfo;
+//	protected Message messageInfo;
 
 	/**
 	 *
@@ -26,9 +26,9 @@ public class BaseExec extends BaseEntity {
 	 *
 	 * @return the messageInfo
 	 */
-	public Message getMessageInfo() {
-		return messageInfo;
-	}
+//	public Message getMessageInfo() {
+//		return messageInfo;
+//	}
 
 	/**
 	 *
@@ -36,9 +36,9 @@ public class BaseExec extends BaseEntity {
 	 *
 	 * @param messageInfo the messageInfo to set
 	 */
-	public void setMessageInfo(Message messageInfo) {
-		this.messageInfo = messageInfo;
-	}
+//	public void setMessageInfo(Message messageInfo) {
+//		this.messageInfo = messageInfo;
+//	}
 
 	/**
 	 * 

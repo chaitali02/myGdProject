@@ -71,7 +71,7 @@
   "runParams": null,
   "sourceFormat": "CSV",
   "targetFormat": null,
-  "sourceExtn":".CSV",
+  "sourceExtn":"CSV",
   "targetExtn":null,
   "header": "N",
   "incrAttr": null,
