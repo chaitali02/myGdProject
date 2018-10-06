@@ -1,12 +1,8 @@
-CREATE TABLE edw_small.account_status_type
-(
-  account_status_id integer NOT NULL,
-  account_status_code VARCHAR(50),
-  account_status_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT account_status_type_pkey PRIMARY KEY (account_status_id, load_date,load_id)
-);
 
-
-
+DROP TABLE EDW_SMALL.account_status_type;
+CREATE TABLE EDW_SMALL.account_status_type(	ACCOUNT_STATUS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	ACCOUNT_STATUS_CODE VARCHAR(10),
+	ACCOUNT_STATUS_DESC VARCHAR(500),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT ACCOUNT_STATUS_ID_PK  PRIMARY KEY(ACCOUNT_STATUS_ID,LOAD_DATE,LOAD_ID));

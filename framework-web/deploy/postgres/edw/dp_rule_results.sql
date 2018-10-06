@@ -1,24 +1,20 @@
-CREATE TABLE edw_small.dp_rule_results
-(
-  datapoduuid VARCHAR(50),
-  datapodversion VARCHAR(50),
-  datapodname VARCHAR(50),
-  attributeid VARCHAR(50),
-  attributename VARCHAR(50),
-  numrows VARCHAR(50),
-  minval double precision,
-  maxval double precision,
-  avgval double precision,
-  medianval double precision,
-  stddev double precision,
-  numdistinct integer,
-  perdistinct double precision,
-  numnull integer,
-  pernull double precision,
-  sixsigma double precision,
-  load_date VARCHAR(50),
-  load_id integer,
-  version integer
-);
-
-
+DROP TABLE EDW_SMALL.dp_rule_results;
+CREATE TABLE EDW_SMALL.dp_rule_results(	DATAPODUUID VARCHAR(50) DEFAULT 0 NOT NULL,
+	DATAPODVERSION VARCHAR(50),
+	DATAPODNAME VARCHAR(100),
+	ATTRIBUTEID VARCHAR(50),
+	ATTRIBUTENAME VARCHAR(100),
+	NUMROWS VARCHAR(50),
+	MINVAL DECIMAL(10,2),
+	MAXVAL DECIMAL(10,2),
+	AVGVAL DECIMAL(10,3),
+	MEDIANVAL DECIMAL(10,3),
+	STDDEV DECIMAL(10,4),
+	NUMDISTINCT INTEGER,
+	PERDISTINCT DECIMAL(10,2),
+	NUMNULL INTEGER,
+	PERNULL DECIMAL(10,2),
+	SIXSIGMA DECIMAL(10,2),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER,
+	VERSION INTEGER);

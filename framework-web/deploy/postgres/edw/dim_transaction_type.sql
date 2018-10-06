@@ -1,12 +1,9 @@
-CREATE TABLE edw_small.dim_transaction_type
-(
-  transaction_type_id VARCHAR(50) NOT NULL,
-  src_transaction_type_id VARCHAR(50),
-  transaction_type_code VARCHAR(50),
-  transaction_type_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_transaction_type_pkey PRIMARY KEY (transaction_type_id, load_date, load_id),
-  CONSTRAINT src_transaction_type_id UNIQUE (src_transaction_type_id, load_date, load_id)
-
-);
+DROP TABLE EDW_SMALL.dim_transaction_type;
+CREATE TABLE EDW_SMALL.dim_transaction_type(	TRANSACTION_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_TRANSACTION_TYPE_ID VARCHAR(50),
+	TRANSACTION_TYPE_CODE VARCHAR(10),
+	TRANSACTION_TYPE_DESC VARCHAR(500),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT TRANSACTION_TYPE_ID_DIM__PK  PRIMARY KEY(TRANSACTION_TYPE_ID,LOAD_DATE,LOAD_ID),
+CONSTRAINT SRC_TRANSACTION_TYPE_ID_UK  UNIQUE (SRC_TRANSACTION_TYPE_ID,LOAD_DATE,LOAD_ID));

@@ -1,14 +1,11 @@
-CREATE TABLE edw_small.bank
-(
-  bank_id integer NOT NULL,
-  bank_code VARCHAR(50),
-  bank_name VARCHAR(50),
-  bank_account_number VARCHAR(50),
-  bank_currency_code VARCHAR(50),
-  bank_check_digits integer,
-  load_date VARCHAR(50),
-  load_id integer ,
-  CONSTRAINT dim_bank_pkey PRIMARY KEY (bank_id,load_date, load_id)
-  
-);
 
+DROP TABLE EDW_SMALL.bank;
+CREATE TABLE EDW_SMALL.bank(	BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	BANK_CODE VARCHAR(10),
+	BANK_NAME VARCHAR(100),
+	BANK_ACCOUNT_NUMBER VARCHAR(50),
+	BANK_CURRENCY_CODE VARCHAR(10),
+	BANK_CHECK_DIGITS INTEGER,
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID,LOAD_DATE,LOAD_ID));

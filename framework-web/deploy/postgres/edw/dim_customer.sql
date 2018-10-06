@@ -1,23 +1,20 @@
-CREATE TABLE edw_small.dim_customer
-(
-  customer_id VARCHAR(50) NOT NULL,
-  src_customer_id VARCHAR(50),
-  title VARCHAR(50),
-  first_name VARCHAR(50),
-  middle_name VARCHAR(50),
-  last_name VARCHAR(50),
-  address_line1 VARCHAR(50),
-  address_line2 VARCHAR(50),
-  phone VARCHAR(50),
-  date_first_purchase VARCHAR(50),
-  commute_distance integer,
-  city VARCHAR(50),
-  state VARCHAR(50),
-  postal_code VARCHAR(50),
-  country VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_customer_pkey PRIMARY KEY (customer_id, load_date, load_id),
-  CONSTRAINT src_customer_id UNIQUE (src_customer_id, load_date, load_id)
-);
-
+DROP TABLE EDW_SMALL.dim_customer;
+CREATE TABLE EDW_SMALL.dim_customer(	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_CUSTOMER_ID VARCHAR(50),
+	TITLE VARCHAR(100),
+	FIRST_NAME VARCHAR(100),
+	MIDDLE_NAME VARCHAR(100),
+	LAST_NAME VARCHAR(100),
+	ADDRESS_LINE1 VARCHAR(50),
+	ADDRESS_LINE2 VARCHAR(50),
+	PHONE VARCHAR(50),
+	DATE_FIRST_PURCHASE VARCHAR(10),
+	COMMUTE_DISTANCE INTEGER,
+	CITY VARCHAR(100),
+	STATE VARCHAR(100),
+	POSTAL_CODE VARCHAR(10),
+	COUNTRY VARCHAR(100),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER, 
+CONSTRAINT CUSTOMER_ID_DIM__PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID),
+CONSTRAINT SRC_CUSTOMER_ID_UK  UNIQUE (SRC_CUSTOMER_ID,LOAD_DATE,LOAD_ID));
