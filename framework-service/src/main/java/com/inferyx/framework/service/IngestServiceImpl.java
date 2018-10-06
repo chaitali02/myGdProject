@@ -209,8 +209,8 @@ public class IngestServiceImpl extends RuleTemplate {
 				//check whether target file already exist (when save mode is null)
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
-					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
-					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetFormat(), ingest.getIgnoreCase());
+					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
 					for(String fileName : targetFileNameList) {
 						if(fileName.equalsIgnoreCase(targetFileName)) {
 							throw new RuntimeException("Target file \'"+targetFileName+"\' already exists.");								
@@ -219,7 +219,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				}
 				
 				//get source files matching the criteria
-				List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceFormat(), ingest.getIgnoreCase());
+				List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat());
 				if(fileNameList == null || fileNameList.isEmpty()) {
 					throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
 				}
@@ -266,9 +266,9 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
-	public String generateFileName(String fileName, String fileFormat) {
+	public String generateFileName(String fileName, String fileExtn, String fileFormat) {
 
-		Pattern regex = Helper.getRegexByFileName(fileName, fileFormat, false);
+		Pattern regex = Helper.getRegexByFileInfo(fileName, fileExtn, fileFormat, false);
 		fileName = regex.pattern();
 		fileName = fileName.substring(1, fileName.length()-1);
 		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
@@ -328,15 +328,15 @@ public class IngestServiceImpl extends RuleTemplate {
 		return attrName;
 	}
 
-	public List<String> getMatchingFileNames(String filePath, String fileName, String fileFormat, String ignoreCase) throws JsonProcessingException, ParseException {
-		logger.info("filePath : fileName : fileFormat : " + filePath + ":" + fileName + ":" + fileFormat);
+	public List<String> getMatchingFileNames(String filePath, String fileName, String fileExtn, String ignoreCase, String fileFormat) throws JsonProcessingException, ParseException {
+		logger.info("filePath : fileName : fileExtn : fileFormat : " + filePath + ":" + fileName + ":" + fileExtn + ":" + fileFormat);
 		File folder = new File(filePath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> fileNameList = new ArrayList<String>();
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
 		Pattern regex = null;
-		regex = Helper.getRegexByFileName(fileName, fileFormat, isCaseSensitive);
+		regex = Helper.getRegexByFileInfo(fileName, fileExtn, fileFormat, isCaseSensitive);
 		logger.info("Final regex : " + regex);
 
 //		// Make regex compatible

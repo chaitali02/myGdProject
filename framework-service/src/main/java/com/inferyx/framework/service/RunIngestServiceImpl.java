@@ -544,21 +544,23 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 				if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 					
-					String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
-					if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+					String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+					String targetExtension = ingest.getTargetExtn();
+					targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+					if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
-						if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
+						if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
 						}
-						else if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
 						}
-						else if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
+						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
 						}
 						else {
-							logger.info("Invalid target format type : "+ingest.getTargetFormat().toString());						
+							logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
 						}
 								
 //						if(!targetFileName.toLowerCase().endsWith(".csv")) {
@@ -788,7 +790,35 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 
 						logger.info("this is export block from Hive table to local file");
 						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
-						targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion()));
+						
+						String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+						String targetExtension = ingest.getTargetExtn();
+						targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
+							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
+						} else {
+							if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
+							}
+							else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
+							}
+							else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
+							}
+							else {
+								logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
+							}
+									
+//							if(!targetFileName.toLowerCase().endsWith(".csv")) {
+//								targetFileName = targetFileName.concat(".csv");
+//							}
+
+							//						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+							targetFilePathUrl = targetDS.getPath().concat(targetFileName);
+						}					
+						
+//						targetFilePathUrl = String.format("%s%s", targetFilePathUrl, String.format("%s/%s/%s", ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion()));
 						if(targetFilePathUrl.contains(".db")) {
 							targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
 						}
@@ -809,8 +839,41 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						//adding version column data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
+						String saveMode = null;
+						if(ingest.getSaveMode() != null) {
+							saveMode = ingest.getSaveMode().toString();
+						} else {
+							saveMode = SaveMode.OVERWRITE.toString();
+						}
+						
+						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+						logger.info("temporary location: "+tempDirLocation);
+						
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
+								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
+										, targetFileName, tableName, saveMode, ingest.getTargetFormat());
+						
+						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+							try {
+								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+								String srcFilePath = ingestServiceImpl.getCSVFileNameFromDir(tempDirLocation);
+								ingestServiceImpl.moveFile(srcFilePath, targetFilePathUrl);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} finally {
+								ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
+							}						
+						}
+						if(ingestExec.getLocation() != null) {
+							String targetFilePathUrl2 = ingestExec.getLocation().concat(","+targetFilePathUrl);
+							ingestExec.setLocation(targetFilePathUrl2);
+						} else {
+							ingestExec.setLocation(targetFilePathUrl);
+						}
+						
 						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
+//						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
 						countRows = rsHolder.getCountRows();
 //						targetFilePathUrl = null;
 					}
