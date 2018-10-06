@@ -1,0 +1,70 @@
+{
+  "uuid": "910064b0-a9eb-4770-b450-b0c478b8c4a8",
+  "version": "1538724485",
+  "name": "account_t2t_hive_postgres",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Fri Oct 05 07:28:05 GMT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      }
+    }
+  ],
+  "type": "TABLE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
+    }
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
+    }
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028"
+    }
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "7c8117cb-67bf-440f-bb32-e5a46a253047"
+    }
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": null,
+  "targetFormat": null,
+  "header": "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
+      "version": null,
+      "name": "account_hive"
+    },
+    "value": null,
+    "attrId": "20",
+    "attrName": "load_date",
+    "attrType": null
+  },
+  "saveMode": "APPEND",
+  "ignoreCase": "N"
+}

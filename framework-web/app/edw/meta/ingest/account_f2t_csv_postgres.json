@@ -1,0 +1,59 @@
+{
+  "uuid": "06c3c84f-987a-40c8-a317-d358fc9e22d2",
+  "version": "1538722181",
+  "name": "account_f2t_csv_postgres",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }   
+  },
+  "createdOn": "Fri Oct 05 06:49:41 GMT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      }
+    }
+  ],
+  "type": "FILE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+    }
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple"
+    },
+    "value": "account.csv"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028"
+    }
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "7c8117cb-67bf-440f-bb32-e5a46a253047"
+    }
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": "CSV",
+  "targetFormat": null,
+  "header": "N",
+  "incrAttr": null,
+  "saveMode": "APPEND",
+  "ignoreCase": "N"
+}

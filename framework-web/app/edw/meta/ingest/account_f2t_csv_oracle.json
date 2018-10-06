@@ -1,0 +1,59 @@
+{
+  "uuid": "05f13a2c-90ae-406d-a6fb-e2eca923bf58",
+  "version": "1538737507",
+  "name": "account_f2t_csv_oracle",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Fri Oct 05 11:05:07 GMT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      }
+    }
+  ],
+  "type": "FILE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+    }
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple"
+    },
+    "value": "account.csv"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
+    }
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4"
+    }
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": "CSV",
+  "targetFormat": null,
+  "header": "N",
+  "incrAttr": null,
+  "saveMode": "APPEND",
+  "ignoreCase": "N"
+}
