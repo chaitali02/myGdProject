@@ -29,7 +29,9 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
         timeout: 3000 //time in ms
       };
     $scope.searchForm.modelType=$scope.allModelType[0].name;
-    $scope.searchForm.modelTypeObj=$scope.allModelType[0]
+   
+    $scope.searchForm.modelTypeObj=$scope.allModelType[0];
+    $scope.newType=$scope.searchForm.modelTypeObj.name
     $scope.getGridStyle = function() {
         var style = {
           'margin-top': '10px',
@@ -146,6 +148,7 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
     $scope.onChangeModelType=function(type){
         $scope.searchForm.modelType=type
         $scope.getAllLatest();
+        $scope.newType=type;
         $scope.getBaseEntityStatusByCriteria(false);
         
     }
