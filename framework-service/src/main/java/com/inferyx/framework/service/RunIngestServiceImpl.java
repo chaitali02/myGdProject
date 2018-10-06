@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.LongDeserializer;
@@ -548,18 +549,18 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 				if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 					
-					String targetFileName = generateFileName(ingest.getTargetDetail().getValue());
+					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
 					if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
-						if (ingest.getTargetFormat().toString().toLowerCase().equals("csv")) {
-							targetFileName = targetFileName.concat(".csv");
+						if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
+							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
 						}
-						else if (ingest.getTargetFormat().toString().toLowerCase().equals("tsv")) {
-							targetFileName = targetFileName.concat(".tsv");
+						else if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
 						}
-						else if (ingest.getTargetFormat().toString().toLowerCase().equals("psv")) {
-							targetFileName = targetFileName.concat(".psv");
+						else if (ingest.getTargetFormat().toString().toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
+							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
 						}
 						else {
 							logger.info("Invalid target format type : "+ingest.getTargetFormat().toString());						
@@ -977,8 +978,14 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 		return streamInput;
 	}
 	
-	public String generateFileName(String fileName) {
-		if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
+	public String generateFileName(String fileName, String fileFormat) {
+
+		Pattern regex = Helper.getRegexByFileName(fileName, fileFormat, false);
+		fileName = regex.pattern();
+		fileName = fileName.substring(1, fileName.length()-1);
+		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
+		return fileName;
+		/*if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
 			String pattern = null;
 			if(fileName.contains("MMddyyyy_HHmmss")) {
 				pattern = "MMddyyyy_HHmmss";
@@ -1004,7 +1011,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 			return fileName.replaceAll(pattern, formatedDate);
 		} else {
 			return fileName;
-		}
+		}*/
 	}
 
 	public Map<String, String> checkPartitionsByDatapod(Datapod datapod) {

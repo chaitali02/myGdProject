@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -1057,5 +1058,27 @@ public class Helper {
 	
 	public String getPathByDataSource(Datasource datasource) {
 		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
+	}
+	
+	public static Pattern getRegexByFileName(String fileName, String fileFormat, boolean isCaseSensitive) {
+		// Make regex compatible
+		fileName = fileName.replace(".","\\.").replace("*",".*");
+		
+		// Replace tokens
+		int occurences = StringUtils.countMatches(fileName,"[");
+		for (int i=0 ; i < occurences ; i++) {
+			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
+			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
+			String dateFormat = smplDateFormat.format(new Date());
+			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
+		}
+		//Apply Regex
+		Pattern regex = null;
+		if(isCaseSensitive) {
+			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$");
+		} else {
+			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
+		}
+		return regex;
 	}
 }
