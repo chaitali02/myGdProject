@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
@@ -299,6 +300,27 @@ public class IngestServiceImpl extends RuleTemplate {
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
 		Pattern regex = null;
+
+		// Make regex compatible
+		fileName = fileName.replace(".","\\.").replace("*",".*");
+		
+		// Replace tokens
+		int occurences = StringUtils.countMatches(fileName,"[");
+		for (int i=0 ; i < occurences ; i++) {
+			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
+			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
+			String dateFormat = smplDateFormat.format(new Date());
+			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
+		}
+		
+		//Apply Regex
+		if(isCaseSensitive) {
+			regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
+		} else {
+			regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
+		}
+		logger.info("Final regex : " + regex);
+
 //		if(fileName.startsWith("*") && fileName.endsWith("*")) {
 //			if(isCaseSensitive) {
 //				regex = Pattern.compile("^.*"+fileName+".*$");
@@ -311,45 +333,38 @@ public class IngestServiceImpl extends RuleTemplate {
 //			} else {
 //				regex = Pattern.compile("^"+fileName+".*$", Pattern.CASE_INSENSITIVE);
 //			}
-		fileName = fileName.replace(".","\\.").replace("*",".*");
-		
-		if( !fileName.contains("%") ) {
-			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
-			} else {
-				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
-			}
-		} else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
-			//e.g. account_%mmddyyyy%_%hhmmss%.csv
-			String[] fileNameSplit = fileName.split("%");
-			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
-			String dateFormat = smplDateFormat.format(new Date());
-			fileName = fileName.replaceAll("%", "");
-			
-			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$");
-			} else {
-				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
-			}
-		} else if(fileName.toLowerCase().contains("%mmddyyyy%")) {
-			//e.g. account_%mmddyyyy%.csv
-			String[] fileNameSplit = fileName.split("%");
-			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
-			String dateFormat = smplDateFormat.format(new Date());
-			fileName = fileName.replaceAll("%", "");
-			
-			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$");
-			} else {
-				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
-			}
-		} else {
-			if(isCaseSensitive) {
-				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$");
-			} else {
-				regex = Pattern.compile("^"+fileName+"\\."+fileFormat.toLowerCase()+"$", Pattern.CASE_INSENSITIVE);
-			}					
-		}
+//		} else if(fileName.toLowerCase().contains("%mmddyyyy%_%hhmmss%")) {
+//			//e.g. account_%mmddyyyy%_%hhmmss%.csv
+//			String[] fileNameSplit = fileName.split("%");
+//			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy"+"_"+"HHmmss");
+//			String dateFormat = smplDateFormat.format(new Date());
+//			fileName = fileName.replaceAll("%", "");
+//			
+//			if(isCaseSensitive) {
+//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$");
+//			} else {
+//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[4]+"$", Pattern.CASE_INSENSITIVE);
+//			}
+//		} else if(fileName.toLowerCase().contains("%mmddyyyy%")) {
+//			//e.g. account_%mmddyyyy%.csv
+//			String[] fileNameSplit = fileName.split("%");
+//			SimpleDateFormat smplDateFormat = new SimpleDateFormat("MMddyyyy");
+//			String dateFormat = smplDateFormat.format(new Date());
+//			fileName = fileName.replaceAll("%", "");
+//			
+//			if(isCaseSensitive) {
+//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$");
+//			} else {
+//				regex = Pattern.compile("^"+fileNameSplit[0]+dateFormat+fileNameSplit[2]+"$", Pattern.CASE_INSENSITIVE);
+//			}
+//		} else {
+//			if(isCaseSensitive) {
+//				regex = Pattern.compile("^"+fileName+"$");
+//			} else {
+//				regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+//			}					
+//		}
+
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
@@ -361,10 +376,13 @@ public class IngestServiceImpl extends RuleTemplate {
 				logger.info("Directory " + listOfFiles[i].getName());
 			}
 		}		
+
 		for (String file : fileNameList) {
 			logger.info("Found matching file : " + file);									
 		}
+		
 		return fileNameList;
+		
 	}
 	
 	private boolean getCaseSensitivity(String ignoreCase) {
