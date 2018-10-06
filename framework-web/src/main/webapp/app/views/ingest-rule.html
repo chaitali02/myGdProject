@@ -165,16 +165,27 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group" ng-if="selectedSourceType =='FILE'" style="margin-bottom:0px;">
+                                <div class="form-group" ng-if="selectedSourceType =='FILE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Source Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
-                                    <div class="col-md-6">
-                                            <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" disable-validation-message="" -->
-                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName">
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName" -->
+                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
+                                    </div>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <div class="mt-checkbox-list" style="margin-top:-7px">
+                                            <label class="mt-checkbox mt-checkbox-outline">
+                                              <input ng-disabled="{{mode}}" type="checkbox" ng-model="$parent.ingestData.ignoreCase" ng-true-value="'Y'" ng-false-value="'N'">
+                                              <span ng-disabled="{{mode}}"></span>
+                                            </label>
+                                          </div>
+
                                     </div>
                                 </div>
-                                <div class="form-group" ng-if="selectedSourceType =='FILE'">
+                                <!-- <div class="form-group" ng-if="selectedSourceType =='FILE'">
                                     <label class="col-md-3 control-label">Ignore Case</label>
                                     <div class="col-md-9">
                                       <div class="mt-checkbox-list" style="margin-top:-7px">
@@ -185,7 +196,7 @@
                                         </label>
                                       </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group" ng-if="selectedSourceType =='TABLE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
                                         <span class="required" aria-required="true"> * </span>
@@ -266,9 +277,9 @@
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Target Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
-                                    <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" disable-validation-message="" -->
+                                    <!-- ng-pattern="/^[a-zA-Z\d\-_.%\s]+$/" pattern-err-type="parttenFileName" -->
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" ng-pattern="/^[a-zA-Z\d\-_.%\s]+$/" pattern-err-type="parttenFileName" required ng-change="onChangeSourceDetail()">
+                                        <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
                                     </div>
                                 </div>
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">
