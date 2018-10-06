@@ -171,7 +171,16 @@
                                     </label>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName" -->
-                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
+                                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 0; padding-right: 0;">
+                                            <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left: 0; padding-right: 0;">
+                                                <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
+                                            </div>
+                                            <div class="col-md-4 col-sm-4 col-xs-12" style="padding-left: 10px; padding-right: 0;">
+                                                <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                            </div>
+                                        </div>
+                                       
+                                        
                                     </div>
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
                                     </label>
@@ -256,7 +265,7 @@
                                     
                                     <div class="col-md-2 col-sm-2 col-xs-12">
                                         <select title="Type" class="form-control" data-ng-disabled="isTargetFormateDisable || {{mode}}" data-ng-model="selectedTargetFormate"
-                                            data-ng-options="r for r in targetFormate" ng-change="onChangeFormate()">
+                                            data-ng-options="r for r in targetFormate" ng-change="onChangeTargetFormate()">
                                         </select>
                                     </div>
 
@@ -272,14 +281,18 @@
                                         </select>
                                         <input type="hidden" name="tagetDetail" ng-model="$parent.selectedTargetDetail.uuid" required>
                                     </div>
+                                   
                                 </div>
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Target Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <!-- ng-pattern="/^[a-zA-Z\d\-_.%\s]+$/" pattern-err-type="parttenFileName" -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-5" style="padding-right:0px">
                                         <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
+                                    </div>
+                                    <div class="col-md-1" style="padding-left:10px">
+                                        <input type="text" class="form-control" name="tagetDetail" ng-model="$parent.ingestData.targetExtn" required>
                                     </div>
                                 </div>
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">

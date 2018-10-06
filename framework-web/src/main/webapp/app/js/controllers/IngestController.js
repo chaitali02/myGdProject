@@ -338,6 +338,11 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 
 	$scope.onChangeFormate = function () {
 		$scope.ingestData.ingestChg = "Y";
+		$scope.ingestData.sourceExtn="."+$scope.selectedSourceFormate;
+	}
+	$scope.onChangeTargetFormate = function () {
+		$scope.ingestData.ingestChg = "Y";
+		$scope.ingestData.targetExtn="."+$scope.selectedTargetFormate;
 	}
 	$scope.onchangeGroble = function () {
 		$scope.ingestData.ingestChg = "Y";
@@ -867,7 +872,9 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.header = $scope.ingestData.header;
-		ingestJson.ignoreCase= $scope.ingestData.ignoreCase
+		ingestJson.ignoreCase= $scope.ingestData.ignoreCase;
+		ingestJson.sourceExtn=$scope.ingestData.sourceExtn;
+		ingestJson.targetExtn=$scope.ingestData.targetExtn;
 		if($scope.ingestData.saveMode){
 			ingestJson.saveMode = $scope.ingestData.saveMode;
 		}

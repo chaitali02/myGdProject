@@ -68,18 +68,9 @@
             "dispName" : "censor",
             "active" : "Y"
         }, 
+       
         {
             "attributeId" : 6,
-            "name" : "version",
-            "type" : "integer",
-            "desc" : "version",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "version",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 7,
             "name" : "features",
             "type" : "string",
             "desc" : "features",
@@ -89,7 +80,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 8,
+            "attributeId" : 7,
             "name" : "rawPrediction",
             "type" : "string",
             "desc" : "rawPrediction",
@@ -99,7 +90,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 9,
+            "attributeId" :8,
             "name" : "probability",
             "type" : "string",
             "desc" : "probability",
@@ -109,7 +100,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 10,
+            "attributeId" : 9,
             "name" : "prediction",
             "type" : "integer",
             "desc" : "prediction",
