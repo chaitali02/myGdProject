@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
@@ -212,12 +209,11 @@ public class IngestServiceImpl extends RuleTemplate {
 				//check whether target file already exist (when save mode is null)
 				if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						&& ingest.getSaveMode() == null) {
-					String targetFileName = ingest.getTargetDetail().getValue();
-					targetFileName = targetFileName.endsWith(".csv") ? targetFileName : targetFileName.concat(".csv");
+					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
 					List<String> targetFileNameList = getMatchingFileNames(targetDS.getPath(), targetFileName, ingest.getTargetFormat(), ingest.getIgnoreCase());
 					for(String fileName : targetFileNameList) {
-						if(fileName.equalsIgnoreCase(ingest.getTargetDetail().getValue().concat(".csv"))) {
-							throw new RuntimeException("Target file \'"+ingest.getTargetDetail().getValue().concat(".csv")+"\' already exists.");								
+						if(fileName.equalsIgnoreCase(targetFileName)) {
+							throw new RuntimeException("Target file \'"+targetFileName+"\' already exists.");								
 						}
 					}
 				}
@@ -270,6 +266,42 @@ public class IngestServiceImpl extends RuleTemplate {
 		return ingestExec;
 	}
 
+	public String generateFileName(String fileName, String fileFormat) {
+
+		Pattern regex = Helper.getRegexByFileName(fileName, fileFormat, false);
+		fileName = regex.pattern();
+		fileName = fileName.substring(1, fileName.length()-1);
+		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
+		return fileName;
+		/*if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
+			String pattern = null;
+			if(fileName.contains("MMddyyyy_HHmmss")) {
+				pattern = "MMddyyyy_HHmmss";
+			} else if(fileName.contains("mmddyyyy_HHmmss")) {
+				pattern = "mmddyyyy_HHmmss";
+			} else if(fileName.contains("MMddyyyy_hhmmss")) {
+				pattern = "MMddyyyy_hhmmss";
+			} else {
+				pattern = "mmddyyyy_hhmmss";
+			}	
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
+			String formatedDate = dateFormat.format(new Date());
+			return fileName.replaceAll(pattern, formatedDate);
+		} else if(fileName != null && fileName.toLowerCase().contains("mmddyyyy")) {
+			String pattern = null;
+			if(fileName.contains("MMddyyyy")) {
+				pattern = "MMddyyyy";
+			} else {
+				pattern = "mmddyyyy";
+			}			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
+			String formatedDate = dateFormat.format(new Date());
+			return fileName.replaceAll(pattern, formatedDate);
+		} else {
+			return fileName;
+		}*/
+	}
+	
 	@SuppressWarnings("unused")
 	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();

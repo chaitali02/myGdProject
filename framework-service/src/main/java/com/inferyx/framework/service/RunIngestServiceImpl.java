@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,14 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
-import java.util.regex.Pattern;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 
 import com.inferyx.framework.common.Helper;
@@ -110,7 +105,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	 *
 	 * @return the kafkaExecutor
 	 */
-	public KafkaExecutor getKafkaExecutor() {
+	public KafkaExecutor<?, ?> getKafkaExecutor() {
 		return kafkaExecutor;
 	}
 
@@ -120,7 +115,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	 *
 	 * @param kafkaExecutor the kafkaExecutor to set
 	 */
-	public void setKafkaExecutor(KafkaExecutor kafkaExecutor) {
+	public void setKafkaExecutor(KafkaExecutor<?, ?> kafkaExecutor) {
 		this.kafkaExecutor = kafkaExecutor;
 	}
 
@@ -130,7 +125,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	 *
 	 * @return the sparkStreamingExecutor
 	 */
-	public SparkStreamingExecutor getSparkStreamingExecutor() {
+	public SparkStreamingExecutor<?, ?> getSparkStreamingExecutor() {
 		return sparkStreamingExecutor;
 	}
 
@@ -140,7 +135,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	 *
 	 * @param sparkStreamingExecutor the sparkStreamingExecutor to set
 	 */
-	public void setSparkStreamingExecutor(SparkStreamingExecutor sparkStreamingExecutor) {
+	public void setSparkStreamingExecutor(SparkStreamingExecutor<?, ?> sparkStreamingExecutor) {
 		this.sparkStreamingExecutor = sparkStreamingExecutor;
 	}
 
@@ -549,7 +544,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 				if(ingestionType.equals(IngestionType.FILETOFILE)) { 	
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 					
-					String targetFileName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
+					String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetFormat());
 					if(ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
@@ -978,41 +973,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 		return streamInput;
 	}
 	
-	public String generateFileName(String fileName, String fileFormat) {
-
-		Pattern regex = Helper.getRegexByFileName(fileName, fileFormat, false);
-		fileName = regex.pattern();
-		fileName = fileName.substring(1, fileName.length()-1);
-		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
-		return fileName;
-		/*if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
-			String pattern = null;
-			if(fileName.contains("MMddyyyy_HHmmss")) {
-				pattern = "MMddyyyy_HHmmss";
-			} else if(fileName.contains("mmddyyyy_HHmmss")) {
-				pattern = "mmddyyyy_HHmmss";
-			} else if(fileName.contains("MMddyyyy_hhmmss")) {
-				pattern = "MMddyyyy_hhmmss";
-			} else {
-				pattern = "mmddyyyy_hhmmss";
-			}	
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
-			String formatedDate = dateFormat.format(new Date());
-			return fileName.replaceAll(pattern, formatedDate);
-		} else if(fileName != null && fileName.toLowerCase().contains("mmddyyyy")) {
-			String pattern = null;
-			if(fileName.contains("MMddyyyy")) {
-				pattern = "MMddyyyy";
-			} else {
-				pattern = "mmddyyyy";
-			}			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
-			String formatedDate = dateFormat.format(new Date());
-			return fileName.replaceAll(pattern, formatedDate);
-		} else {
-			return fileName;
-		}*/
-	}
+	
 
 	public Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();
