@@ -10,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account.parquet"
+        "value" : "account"
     },
     "targetDatasource" : {
         "ref" : {
@@ -26,6 +26,8 @@
     },
     "sourceFormat" : "parquet",
     "targetFormat" : "TSV",
+    "sourceExtn":".PARQUET",
+    "targetExtn":".TSV",
     "header" : "N",
     "saveMode" : "OVERWRITE",
     "ignoreCase" : "N",

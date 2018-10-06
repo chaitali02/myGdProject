@@ -10,7 +10,7 @@
         "ref" : {
             "type" : "simple"
         },
-        "value" : "account.csv"
+        "value" : "account"
     },
     "targetDatasource" : {
         "ref" : {
@@ -26,6 +26,8 @@
     },
     "sourceFormat" : "CSV",
     "targetFormat" : "PARQUET",
+    "sourceExtn":".CSV",
+    "targetExtn":".PARQUET",
     "header" : "N",
     "saveMode" : "OVERWRITE",
     "ignoreCase" : "N",
