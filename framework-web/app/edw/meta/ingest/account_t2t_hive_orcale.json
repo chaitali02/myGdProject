@@ -1,0 +1,66 @@
+{
+  "uuid": "01689fe6-9099-414d-97af-e170953fe71a",
+  "version": "1538756541",
+  "name": "account_t2t_hive_orcale",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Fri Oct 05 16:22:21 GMT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+      }
+    }
+  ],
+  "type": "TABLE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
+    }
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
+    }
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
+    }
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4"
+    }
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": null,
+  "targetFormat": null,
+  "header": "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
+    },
+    "value": null,
+    "attrId": "1",
+    "attrName": "account_type_id",
+    "attrType": null
+  },
+  "saveMode": "APPEND",
+  "ignoreCase": "N"
+}
