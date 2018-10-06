@@ -1,17 +1,18 @@
-DROP TABLE IF EXISTS `customer`;
-CREATE TABLE `customer` (
-  `customer_id` varchar(45) NOT NULL DEFAULT '',
-  `address_id` varchar(45) DEFAULT NULL,
-  `branch_id` int(11) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `first_name` varchar(45) DEFAULT NULL,
-  `middle_name` varchar(45) DEFAULT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `ssn` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `date_first_purchase` varchar(45) DEFAULT NULL,
-  `commute_distance_miles` int(11) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_id`,`load_date`,`load_id`)
-);
+DROP TABLE CUSTOMER;
+CREATE TABLE CUSTOMER(	
+	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	ADDRESS_ID VARCHAR(50),
+	BRANCH_ID VARCHAR(50),
+	TITLE VARCHAR(100),
+	FIRST_NAME VARCHAR(100),
+	MIDDLE_NAME VARCHAR(100),
+	LAST_NAME VARCHAR(100),
+	SSN VARCHAR(100),
+	PHONE VARCHAR(100),
+	DATE_FIRST_PURCHASE VARCHAR(10),
+	COMMUTE_DISTANCE_MILES INTEGER(10),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE CUSTOMER PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

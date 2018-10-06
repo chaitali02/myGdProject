@@ -1,27 +1,28 @@
-DROP TABLE IF EXISTS `dim_account`;
-CREATE TABLE `dim_account` (
-  `account_id` varchar(45) NOT NULL DEFAULT '',
-  `src_account_id` varchar(45) DEFAULT NULL,
-  `account_type_code` varchar(45) DEFAULT NULL,
-  `account_status_code` varchar(45) DEFAULT NULL,
-  `product_type_code` varchar(45) DEFAULT NULL,
-  `pin_number` int(11) DEFAULT NULL,
-  `nationality` varchar(45) DEFAULT NULL,
-  `primary_iden_doc` varchar(45) DEFAULT NULL,
-  `primary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc` varchar(45) DEFAULT NULL,
-  `secondary_iden_doc_id` varchar(45) DEFAULT NULL,
-  `account_open_date` varchar(45) DEFAULT NULL,
-  `account_number` varchar(45) DEFAULT NULL,
-  `opening_balance` varchar(45) DEFAULT NULL,
-  `current_balance` varchar(45) DEFAULT NULL,
-  `overdue_balance` int(11) DEFAULT NULL,
-  `overdue_date` varchar(45) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `interest_type` varchar(45) DEFAULT NULL,
-  `interest_rate` float DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`load_date`,`load_id`),
-  UNIQUE KEY `src_account_id` (`src_account_id`,`load_date`,`load_id`)
-);
+
+DROP TABLE  DIM_ACCOUNT;
+CREATE TABLE DIM_ACCOUNT(	
+	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	SRC_ACCOUNT_ID VARCHAR(50),
+	ACCOUNT_TYPE_CODE VARCHAR(10),
+	ACCOUNT_STATUS_CODE VARCHAR(10),
+	PRODUCT_TYPE_CODE VARCHAR(10),
+	PIN_NUMBER INTEGER(10),
+	NATIONALITY VARCHAR(100),
+	PRIMARY_IDEN_DOC VARCHAR(100),
+	PRIMARY_IDEN_DOC_ID VARCHAR(50),
+	SECONDARY_IDEN_DOC VARCHAR(100),
+	SECONDARY_IDEN_DOC_ID VARCHAR(50),
+	ACCOUNT_OPEN_DATE VARCHAR(10),
+	ACCOUNT_NUMBER VARCHAR(50),
+	OPENING_BALANCE INTEGER(20),
+	CURRENT_BALANCE INTEGER(20),
+	OVERDUE_BALANCE INTEGER(20),
+	OVERDUE_DATE VARCHAR(10),
+	CURRENCY_CODE VARCHAR(10),
+	INTEREST_TYPE VARCHAR(50),
+	INTEREST_RATE DECIMAL(10,2),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE DIM_ACCOUNT PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

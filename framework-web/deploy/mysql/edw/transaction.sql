@@ -1,17 +1,18 @@
-DROP TABLE IF EXISTS `transaction`;
-CREATE TABLE `transaction` (
-  `transaction_id` varchar(45) NOT NULL DEFAULT '0',
-  `transaction_type_id` int(11) DEFAULT NULL,
-  `account_id` varchar(45) DEFAULT NULL,
-  `transaction_date` varchar(45) DEFAULT NULL,
-  `from_account` varchar(45) DEFAULT NULL,
-  `to_account` varchar(45) DEFAULT NULL,
-  `amount_base_curr` decimal(30,2) DEFAULT NULL,
-  `amount_usd` decimal(30,2) DEFAULT NULL,
-  `currency_code` varchar(45) DEFAULT NULL,
-  `currency_rate` float DEFAULT NULL,
-  `notes` varchar(45) DEFAULT NULL,
-  `load_date` varchar(45) NOT NULL DEFAULT '',
-  `load_id` bigint(20) NOT NULL DEFAULT '0',
- PRIMARY KEY (`transaction_id`,`load_date`,`load_id`)    
-);
+DROP TABLE TRANSACTION;
+CREATE TABLE TRANSACTION(	
+	TRANSACTION_ID VARCHAR(50) DEFAULT 0 NOT NULL,
+	TRANSACTION_TYPE_ID VARCHAR(50),
+	ACCOUNT_ID VARCHAR(50),
+	TRANSACTION_DATE VARCHAR(10),
+	FROM_ACCOUNT VARCHAR(50),
+	TO_ACCOUNT VARCHAR(50),
+	AMOUNT_BASE_CURR DECIMAL(10,2),
+	AMOUNT_USD DECIMAL(10,2),
+	CURRENCY_CODE VARCHAR(10),
+	CURRENCY_RATE DECIMAL(10,2),
+	NOTES VARCHAR(100),
+	LOAD_DATE VARCHAR(10),
+	LOAD_ID INTEGER(50), 
+CONSTRAINT TRANSACTION_ID_PK  PRIMARY KEY(TRANSACTION_ID,LOAD_DATE,LOAD_ID));
+ALTER TABLE TRANSACTION PARTITION BY KEY(LOAD_DATE,LOAD_ID);
+

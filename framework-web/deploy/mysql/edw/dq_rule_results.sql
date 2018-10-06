@@ -1,20 +1,21 @@
-DROP TABLE IF EXISTS `dq_rule_results`;
-CREATE TABLE `dq_rule_results` (
-  `rowkey` varchar(45) DEFAULT NULL,
-  `datapoduuid` varchar(45) DEFAULT NULL,
-  `datapodversion` varchar(45) DEFAULT NULL,  
-  `datapodname` varchar(45) DEFAULT NULL,
-  `attributeid` varchar(45) DEFAULT NULL,
-  `attributename` varchar(45) DEFAULT NULL,
-  `attributevalue` varchar(45) DEFAULT NULL,
-  `nullcheck_pass` varchar(45) DEFAULT NULL,
-  `valuecheck_pass` varchar(45) DEFAULT NULL,
-  `rangecheck_pass` varchar(45) DEFAULT NULL,
-  `datatypecheck_pass` varchar(45) DEFAULT NULL,
-  `dataformatcheck_pass` varchar(45) DEFAULT NULL,
-  `lengthcheck_pass` varchar(45) DEFAULT NULL,
-  `refintegritycheck_pass` varchar(45) DEFAULT NULL,
-  `dupcheck_pass` varchar(45) DEFAULT NULL,
-  `customcheck_pass` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
+
+DROP TABLE DQ_RULE_RESULT;
+CREATE TABLE DQ_RULE_RESULT(	
+	ROWKEY VARCHAR(50),
+	DATAPODUUID VARCHAR(50),
+	DATAPODVERSION VARCHAR(50),
+	DATAPODNAME VARCHAR(100),
+	ATTRIBUTEID VARCHAR(50),
+	ATTRIBUTENAME VARCHAR(100),
+	ATTRIBUTEVALUE VARCHAR(50),
+	NULLCHECK_PASS VARCHAR(50),
+	VALUECHECK_PASS VARCHAR(50),
+	RANGECHECK_PASS VARCHAR(50),
+	DATATYPECHECK_PASS VARCHAR(50),
+	DATAFORMATCHECK_PASS VARCHAR(50),
+	LENGTHCHECK_PASS VARCHAR(50),
+	REFINTEGRITYCHECK_PASS VARCHAR(50),
+	DUPCHECK_PASS VARCHAR(50),
+	CUSTOMCHECK_PASS VARCHAR(50),
+	VERSION INTEGER(10)
 );
