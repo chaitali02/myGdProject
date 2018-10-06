@@ -868,10 +868,10 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					}
 
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-//					if(incrLastValue != null) {
-//						sqoopInput.setIncrementalTestColumn(incrColName);
-//						sqoopInput.setIncrementalLastValue(incrLastValue);
-//					}
+					if(incrLastValue != null) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
+						sqoopInput.setIncrementalLastValue(incrLastValue);
+					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
@@ -894,7 +894,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+								sparkStreamingExecutor.start(sourceDS);							
 							}
 						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
@@ -916,7 +916,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							sparkStreamingExecutor.start(ingest.getSourceDetail().getValue());							
+							sparkStreamingExecutor.start(sourceDS);							
 						}
 					}).start();
 				}
