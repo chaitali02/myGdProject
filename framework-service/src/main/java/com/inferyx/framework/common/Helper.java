@@ -1060,7 +1060,7 @@ public class Helper {
 		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
 	}
 	
-	public static Pattern getRegexByFileName(String fileName, String fileFormat, boolean isCaseSensitive) {
+	public static Pattern getRegexByFileInfo(String fileName, String fileExtn, String fileFormat, boolean isCaseSensitive) {
 		// Make regex compatible
 		fileName = fileName.replace(".","\\.").replace("*",".*");
 		
@@ -1072,12 +1072,15 @@ public class Helper {
 			String dateFormat = smplDateFormat.format(new Date());
 			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
 		}
+		
+		fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
+		
 		//Apply Regex
 		Pattern regex = null;
 		if(isCaseSensitive) {
-			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$");
+			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase())+"$");
 		} else {
-			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileFormat.toLowerCase()) ? "" : "\\."+fileFormat.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
+			regex = Pattern.compile("^"+fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase())+"$", Pattern.CASE_INSENSITIVE);
 		}
 		return regex;
 	}
