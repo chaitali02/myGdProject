@@ -21,7 +21,6 @@ do
                 cat $file >> run_all.hql
         fi;
 done
-hive -database $1 -f run_all.hql
-hive -database $1 -f load.hql
-impala-shell -q "invalidate metadata"
-impala-shell -d $1 -f impala_counts.iql
+hive -verbose -database $1 -f run_all.hql
+hive -verbose -database $1 -f load.hql
+hive -verbose -database $1 -f counts.hql
