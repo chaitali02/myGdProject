@@ -560,7 +560,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 						datapod.getDatasource().getRef().getVersion(), 
 						datapod.getDatasource().getRef().getType().toString());
 				if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", appUuid);
+					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", true, appUuid);
 				} else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
 					exec.executeSql(sql, appUuid);

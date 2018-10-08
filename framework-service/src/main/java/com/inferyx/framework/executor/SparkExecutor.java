@@ -632,8 +632,11 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException {
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			String saveMode, boolean formPath, String clientContext) throws IOException {
+		String filePathUrl = filePath;
+		if(formPath) {
+			filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		} 
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
@@ -652,7 +655,7 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new IOException("Can not write data.");
 			}
-//			rsHolder.getDataFrame().show(false);
+			rsHolder.getDataFrame().show(false);
 			datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -1295,8 +1298,8 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod");
 			throw new Exception();
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
 
@@ -1527,6 +1530,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
@@ -1536,7 +1540,7 @@ public class SparkExecutor<T> implements IExecutor {
 			fieldArray = df.columns();
 
 		df.printSchema();
-//		df.show(true);
+		df.show(false);
 		
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
@@ -2969,11 +2973,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} 
 		df.printSchema();
 //		df.show(true);
-		if(saveMode.equalsIgnoreCase(SaveMode.Append.toString()))	{
-			df.coalesce(1).write().mode(SaveMode.Append).parquet(filePathUrl);
-		}else if(saveMode.equalsIgnoreCase(SaveMode.Overwrite.toString())) {
-			df.coalesce(1).write().mode(SaveMode.Overwrite).parquet(filePathUrl);
-		}
+		df.coalesce(1).write().mode(saveMode).parquet(filePathUrl);
 		
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -3146,4 +3146,15 @@ public class SparkExecutor<T> implements IExecutor {
 //		rsHolder.getDataFrame().write().sa
 //		return rsHolder;
 //	}
+	
+	public ResultSetHolder writeResult(String sql, ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode, String tableName, String clientContext) throws IOException {
+		if(rsHolder == null && sql == null) {
+			throw new RuntimeException("Please provide source(sql or ResultSetHolder) source to presist.");
+		} else if(sql != null && !sql.isEmpty()) {
+			rsHolder = executeSql(sql, clientContext);
+			rsHolder.setTableName(tableName);
+		} 
+		rsHolder = registerAndPersistDataframe(rsHolder, datapod, saveMode, filePathUrl, tableName, true);
+		return rsHolder;
+	}
 }

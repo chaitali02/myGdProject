@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -950,10 +949,10 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
-//						sqoopInput.setHiveTableName(targetDp.getName());
-//						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
-						sqoopInput.setHCatalogTableName(targetDp.getName());
-						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
+						sqoopInput.setHiveTableName(targetDp.getName());
+						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+//						sqoopInput.setHCatalogTableName(targetDp.getName());
+//						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
 //						sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
 //						sqoopInput.sethCatalogPartitionValues(hCatalogPartitionValues);
 						tableName = targetDp.getName();
