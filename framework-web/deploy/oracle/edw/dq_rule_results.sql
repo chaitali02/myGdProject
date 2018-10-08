@@ -1,27 +1,22 @@
-create table "dq_rule_results" 
-   (
-   	"rowkey" varchar2(70 byte), 
-	"datapoduuid" varchar2(70 byte), 
-	"datapodversion" varchar2(70 byte), 
-	"datapodname"  varchar2(70 byte),
-	"attributeid" varchar2(70 byte), 
-	"attributename" varchar2(70 byte),
-	"attributevalue" varchar2(70 byte), 
-	"nullcheck_pass" varchar2(70 byte), 
-	"valuecheck_pass" varchar2(70 byte), 
-	"rangecheck_pass" varchar2(70 byte), 
-	"datatypecheck_pass" varchar2(70 byte), 
-	"dataformatcheck_pass" varchar2(70 byte), 
-	"lengthcheck_pass" varchar2(70 byte), 
-	"refintegritycheck_pass" varchar2(70 byte), 
-	"dupcheck_pass" varchar2(70 byte), 
-	"customcheck_pass" varchar2(70 byte), 
-	"version" varchar2(70 byte)
-   );
 
+CREATE TABLE DQ_RULE_RESULTS 
+  ( 
+     ROWKEY                 VARCHAR2(50), 
+     DATAPODUUID            VARCHAR2(50), 
+     DATAPODVERSION         VARCHAR2(50), 
+     DATAPODNAME            VARCHAR2(100), 
+     ATTRIBUTEID            VARCHAR2(50), 
+     ATTRIBUTENAME          VARCHAR2(100), 
+     ATTRIBUTEVALUE         VARCHAR2(50), 
+     NULLCHECK_PASS         VARCHAR2(50), 
+     VALUECHECK_PASS        VARCHAR2(50), 
+     RANGECHECK_PASS        VARCHAR2(50), 
+     DATATYPECHECK_PASS     VARCHAR2(50), 
+     DATAFORMATCHECK_PASS   VARCHAR2(50), 
+     LENGTHCHECK_PASS       VARCHAR2(50), 
+     REFINTEGRITYCHECK_PASS VARCHAR2(50), 
+     DUPCHECK_PASS          VARCHAR2(50), 
+     CUSTOMCHECK_PASS       VARCHAR2(50), 
+     VERSION                INTEGER 
+  ); 
 
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/DQ_RULE_RESULTS.ctl

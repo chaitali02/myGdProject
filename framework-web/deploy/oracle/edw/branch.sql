@@ -1,23 +1,16 @@
-create table "branch" 
-   (	
-    "branch_id" number(30,0) not null enable, 
-	"branch_type_id" number(20,0), 
-	"bank_id" varchar2(70 byte), 
-	"address_id" varchar2(70 byte), 
-	"branch_name" varchar2(70 byte), 
-	"branch_desc" varchar2(70 byte), 
-	"branch_contact_name" varchar2(70 byte), 
-	"branch_contact_phone" varchar2(70 byte), 
-	"branch_contact_email" varchar2(70 byte), 
-	"load_date" varchar2(70 byte) not null enable,
-	"load_id" number(30,0),
-	 constraint "branch_id_pk" primary key ("branch_id", "load_date", "load_id") 
-);
 
-
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/BRANCH.ctl
+CREATE TABLE BRANCH 
+  ( 
+     BRANCH_ID            VARCHAR2(50) NOT NULL, 
+     BRANCH_TYPE_ID       VARCHAR2(50), 
+     BANK_ID              VARCHAR2(50), 
+     ADDRESS_ID           VARCHAR2(50), 
+     BRANCH_NAME          VARCHAR2(100), 
+     BRANCH_DESC          VARCHAR2(500), 
+     BRANCH_CONTACT_NAME  VARCHAR2(100), 
+     BRANCH_CONTACT_PHONE VARCHAR2(100), 
+     BRANCH_CONTACT_EMAIL VARCHAR2(100), 
+     LOAD_DATE            VARCHAR2(10), 
+     LOAD_ID              INTEGER, 
+     CONSTRAINT BRANCH_PK PRIMARY KEY (BRANCH_ID) 
+  ); 

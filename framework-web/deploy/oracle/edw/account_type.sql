@@ -1,17 +1,10 @@
-create table "account_type" 
-   (
-   	"account_type_id" number(30,0) default 0 not null enable, 
-	"account_type_code" varchar2(70 byte), 
-	"account_type_desc" varchar2(70 byte), 
-	"load_date" varchar2(70 byte) not null enable,
-	"load_id" number(30,0) default 0, 
-	 constraint "account_type_pk" primary key ("account_type_id", "load_date", "load_id")
-);
 
-
-
-exit
-
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/ACCOUNT_TYPE.ctl
+CREATE TABLE ACCOUNT_TYPE 
+  ( 
+     ACCOUNT_TYPE_ID   VARCHAR2(50) NOT NULL, 
+     ACCOUNT_TYPE_CODE VARCHAR2(10), 
+     ACCOUNT_TYPE_DESC VARCHAR2(500), 
+     LOAD_DATE         VARCHAR2(10), 
+     LOAD_ID           INTEGER, 
+     CONSTRAINT ACCOUNT_TYPE_PK PRIMARY KEY (ACCOUNT_TYPE_ID) 
+  ); 

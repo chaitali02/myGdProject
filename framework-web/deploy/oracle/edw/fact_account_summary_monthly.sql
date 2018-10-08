@@ -1,14 +1,14 @@
-create table "fact_account_summary_monthly" 
-   (
-   	"account_id" varchar2(70 byte) not null enable, 
-	"yyyy_mm" varchar2(70 byte), 
-	"total_trans_count" number(30,0), 
-	"total_trans_amount_usd" number(30,0), 
-	"avg_trans_amount" number(30,0), 
-	"min_amount" number(30,2), 
-	"max_amount" number(30,0), 
-	"load_date" varchar2(70 byte) not null enable, 
-	"load_id" number(30,0), 
-	 constraint "fact_account_summary_month_pk" primary key ("account_id","yyyy_mm","load_date","load_id")
-);
 
+CREATE TABLE FACT_ACCOUNT_SUMMARY_MONTHLY 
+  ( 
+     ACCOUNT_ID             VARCHAR2(50) NOT NULL, 
+     YYYY_MM                VARCHAR2(50) NOT NULL, 
+     TOTAL_TRANS_COUNT      INTEGER, 
+     TOTAL_TRANS_AMOUNT_USD INTEGER, 
+     AVG_TRANS_AMOUNT       INTEGER, 
+     MIN_AMOUNT             DECIMAL(10, 2), 
+     MAX_AMOUNT             INTEGER, 
+     LOAD_DATE              VARCHAR2(10), 
+     LOAD_ID                INTEGER, 
+     CONSTRAINT FACT_ACCOUNT_SUMMARY_MONTHLY_PK PRIMARY KEY (ACCOUNT_ID) 
+  ); 

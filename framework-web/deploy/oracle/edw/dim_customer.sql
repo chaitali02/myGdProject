@@ -1,22 +1,22 @@
-create table "dim_customer" 
-   (
-   	"customer_id" varchar2(70 byte) not null enable, 
-	"src_customer_id" varchar2(70 byte), 
-	"title" varchar2(70 byte), 
-	"first_name" varchar2(70 byte), 
-	"middle_name" varchar2(70 byte), 
-	"last_name" varchar2(70 byte), 
-	"address_line1" varchar2(70 byte), 
-	"address_line2" varchar2(70 byte), 
-	"phone" varchar2(70 byte), 
-	"date_first_purchase" varchar2(70 byte), 
-	"commute_distance" number(30,0), 
-	"city" varchar2(70 byte), 
-	"state" varchar2(70 byte), 
-	"postal_code" varchar2(70 byte), 
-	"country" varchar2(70 byte), 
-	"load_date" varchar2(70 byte) not null enable, 
-	"load_id" number(30,0) not null enable, 
-	 constraint "dim_customer_pk" primary key ("customer_id", "load_id", "load_date"),
- 	 constraint "src_customer_id_uk" unique ("src_customer_id", "load_date", "load_id")
-);
+
+CREATE TABLE DIM_CUSTOMER 
+  ( 
+     CUSTOMER_ID         VARCHAR2(50) NOT NULL, 
+     SRC_CUSTOMER_ID     VARCHAR2(50), 
+     TITLE               VARCHAR2(100), 
+     FIRST_NAME          VARCHAR2(100), 
+     MIDDLE_NAME         VARCHAR2(100), 
+     LAST_NAME           VARCHAR2(100), 
+     ADDRESS_LINE1       VARCHAR2(50), 
+     ADDRESS_LINE2       VARCHAR2(50), 
+     PHONE               VARCHAR2(50), 
+     DATE_FIRST_PURCHASE VARCHAR2(10), 
+     COMMUTE_DISTANCE    INTEGER, 
+     CITY                VARCHAR2(100), 
+     STATE               VARCHAR2(100), 
+     POSTAL_CODE         VARCHAR2(10), 
+     COUNTRY             VARCHAR2(100), 
+     LOAD_DATE           VARCHAR2(10), 
+     LOAD_ID             INTEGER, 
+     CONSTRAINT DIM_CUSTOMER_PK PRIMARY KEY (CUSTOMER_ID) 
+  ); 

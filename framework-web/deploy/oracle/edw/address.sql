@@ -1,18 +1,18 @@
-create table "address" 
-   (
-   	"address_id" varchar2(70 byte) not null enable, 
-	"address_line1" varchar2(70 byte), 
-	"address_line2" varchar2(70 byte), 
-	"address_line3" varchar2(70 byte), 
-	"city" varchar2(70 byte), 
-	"county" varchar2(70 byte), 
-	"state" varchar2(70 byte), 
-	"zipcode" number(30,0), 
-	"country" varchar2(70 byte), 
-	"latitude" varchar2(70 byte), 
-	"longitude" varchar2(70 byte), 
-	"load_date" varchar2(70 byte) not null enable,
-	"load_id" number(30,0), 
-	 constraint "address_pk" primary key ("address_id", "load_date", "load_id")
-);
 
+CREATE TABLE ACCOUNT 
+  ( 
+     ADDRESS_ID    VARCHAR2(50) NOT NULL, 
+     ADDRESS_LINE1 VARCHAR2(50), 
+     ADDRESS_LINE2 VARCHAR2(50), 
+     ADDRESS_LINE3 VARCHAR2(50), 
+     CITY          VARCHAR2(100), 
+     COUNTY        VARCHAR2(100), 
+     STATE         VARCHAR2(100), 
+     ZIPCODE       INTEGER, 
+     COUNTRY       VARCHAR2(100), 
+     LATITUDE      VARCHAR2(50), 
+     LONGITUDE     VARCHAR2(50), 
+     LOAD_DATE     VARCHAR2(10), 
+     LOAD_ID       INTEGER, 
+     CONSTRAINT ADDRESS_PK PRIMARY KEY (ADDRESS_ID) 
+  ); 
