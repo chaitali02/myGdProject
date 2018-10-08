@@ -1,7 +1,7 @@
 {
   "uuid": "4db1cc8f-089f-442b-8e47-3eaa82c48805",
   "version": "1538842683",
-  "name": "hive_edw_small",
+  "name": "hive_edw",
   "desc": "Hive Data Source",
   "createdBy": {
     "ref": {
@@ -31,7 +31,7 @@
   "access": "JDBC",
   "driver": "org.apache.hive.jdbc.HiveDriver",
   "host": "localhost",
-  "dbname": "edw_small",
+  "dbname": "edw",
   "port": "10000",
   "username": "inferyx",
   "password": "",

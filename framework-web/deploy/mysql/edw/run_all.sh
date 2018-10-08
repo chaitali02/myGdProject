@@ -23,5 +23,5 @@ do
         fi;
 done
 mysql -u inferyx -p -v $1 < create_all.sql
-mysql -u inferyx -p -v $1 --local-infile < load_small.sql
+mysql -u inferyx -p -v $1 --local-infile < load.sql
 mysql -u inferyx -p -v $1 < counts.sql

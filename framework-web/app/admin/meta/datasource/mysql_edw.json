@@ -1,7 +1,7 @@
 {
   "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73034",
   "version": "1538842468",
-  "name": "mysql_edw_small",
+  "name": "mysql_edw",
   "desc": "MySql_ecocap Data Source",
   "createdBy": {
     "ref": {
@@ -31,7 +31,7 @@
   "access": "JDBC",
   "driver": "com.mysql.jdbc.Driver",
   "host": "localhost",
-  "dbname": "edw_small",
+  "dbname": "edw",
   "port": "3306",
   "username": "inferyx",
   "password": "inferyx",

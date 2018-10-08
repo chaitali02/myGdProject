@@ -509,33 +509,33 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	public String getLastIncrValue(String ingestUuid, String ingestVersion) throws JsonProcessingException {
 		//first getting latest ingest exec then obtaining last incremental value from it
-		List<IngestExec> ingestExecList = getIngestExecByIngest(ingestUuid, ingestVersion, 2);//(IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
-		if(ingestExecList != null && (ingestExecList.isEmpty() || ingestExecList.size() <=1)) {
-			return null;
-		} else {
-			return ingestExecList.get(1).getLastIncrValue();
-		}
+		IngestExec ingestExec = getIngestExecByIngest(ingestUuid, ingestVersion, 2);//(IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
+		return ingestExec.getLastIncrValue();
 	}
 
-	public List<IngestExec> getIngestExecByIngest(String ingestUuid, String ingestVersion, long linit) throws JsonProcessingException {
+	public IngestExec getIngestExecByIngest(String ingestUuid, String ingestVersion, long linit) throws JsonProcessingException {
 		MatchOperation dependsOnFilter = null;
+		MatchOperation dependsOnFilter2 = null;
 		if(ingestVersion != null && !ingestVersion.isEmpty()) {
-			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
+			//dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
+		    dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
+		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Failed.toString()));
 		} else {
 			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
 		}
 		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
-		LimitOperation limitToOnlyFirst = limit(2);
-		Aggregation ingestAggr = newAggregation(dependsOnFilter, groupByUuid, sortByVersion, limitToOnlyFirst);
+		LimitOperation limitToOnlyFirst = limit(1);
+		Aggregation ingestAggr = newAggregation(dependsOnFilter,dependsOnFilter2, groupByUuid, sortByVersion, limitToOnlyFirst);
 		AggregationResults<IngestExec> ingestAggrResults = mongoTemplate.aggregate(ingestAggr, MetaType.ingestExec.toString().toLowerCase(), IngestExec.class);
-		List<IngestExec> ingestExecList = ingestAggrResults.getMappedResults();
-		List<IngestExec> resolvedIngestExecList = new ArrayList<>();
-		for(IngestExec ingestExec : ingestExecList) {
-			IngestExec resolvedIngestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
-			resolvedIngestExecList.add(resolvedIngestExec);
-		}
-		return resolvedIngestExecList;
+		IngestExec ingestExec = ingestAggrResults.getUniqueMappedResult();
+		IngestExec resolvedIngestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
+//		List<IngestExec> resolvedIngestExecList = new ArrayList<>();
+//		for(IngestExec ingestExec : ingestExecList) {
+//			IngestExec resolvedIngestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
+//			resolvedIngestExecList.add(resolvedIngestExec);
+//		}
+		return resolvedIngestExec;
 	}
 	
 	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {

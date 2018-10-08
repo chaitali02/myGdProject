@@ -93,10 +93,11 @@ public class KafkaTester implements Serializable {
 //		 API 1 - Define the streaming context
 		streamInput.setTopicName(topic);
 		streamInput.setSaveMode(SaveMode.APPEND.toString());
-		streamInput.setTargetDS(getHiveDatasource());
+		streamInput.setTargetDS(getMySqlDatasource());
 		streamInput.setTargetDir("/user/stream/file1");
-		streamInput.setTargetType("FILE");
+		streamInput.setTargetType("MYSQL");
 		streamInput.setFileFormat("CSV");
+		streamInput.setTargetTableName("stream_dump");
 		JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(ds, streamInput);
 //		 API 2 - Write the logic to execute
 		sparkStreamingExecutor.write(streamInput, stream);
@@ -233,6 +234,21 @@ public class KafkaTester implements Serializable {
 	public static Datasource getHiveDatasource() {
 		Datasource ds = new Datasource();
 		ds.setType("HIVE");
+		return ds;
+	}
+	
+	
+	public static Datasource getMySqlDatasource() {
+		Datasource ds = new Datasource();
+		ds.setType("MYSQL");
+		ds.setDbname("framework");
+		ds.setDriver("com.mysql.jdbc.Driver");
+		ds.setHost("localhost");
+		ds.setSid("framework");
+		ds.setPort("3306");
+		ds.setUsername("inferyx");
+		ds.setPassword("inferyx");
+		ds.setPath("/user/hive/warehouse/framework");
 		return ds;
 	}
 	

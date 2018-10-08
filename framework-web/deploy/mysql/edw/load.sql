@@ -1,0 +1,27 @@
+TRUNCATE TABLE dim_account;
+TRUNCATE TABLE dim_address;
+TRUNCATE TABLE dim_bank;
+TRUNCATE TABLE dim_branch; 
+TRUNCATE TABLE dim_country;
+TRUNCATE TABLE dim_customer;
+TRUNCATE TABLE dim_state;
+TRUNCATE TABLE dim_transaction_type;
+TRUNCATE TABLE dp_rule_results;
+TRUNCATE TABLE dq_rule_results;
+TRUNCATE TABLE fact_account_summary_monthly;
+TRUNCATE TABLE fact_customer_summary_monthly;
+TRUNCATE TABLE fact_transaction;
+TRUNCATE TABLE rc_rule_results;
+
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/account2.csv' IGNORE INTO TABLE account FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/account_status_type.csv' IGNORE INTO TABLE account_status_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/account_type.csv' IGNORE INTO TABLE account_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/address.csv' IGNORE INTO TABLE address FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/bank.csv' IGNORE INTO TABLE bank FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/branch.csv' IGNORE INTO TABLE branch FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/branch_type.csv' IGNORE INTO TABLE branch_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/customer.csv' IGNORE INTO TABLE customer FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/product_type.csv' IGNORE INTO TABLE product_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/transaction.csv' IGNORE INTO TABLE transaction FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/transaction_type.csv' IGNORE INTO TABLE transaction_type FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
