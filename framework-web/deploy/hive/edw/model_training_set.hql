@@ -1,13 +1,12 @@
-DROP TABLE IF EXISTS model_training_set;
+DROP TABLE IF EXISTS MODEL_TRAINING_SET;
 
-CREATE TABLE IF NOT EXISTS model_training_set
+CREATE TABLE IF NOT EXISTS MODEL_TRAINING_SET
 (
-  customer_id string,
-  address_id string,
-  branch_id string,
-  commute_distance_miles int,
-  label int,
-  censor int,
-  version string
+  CUSTOMER_ID STRING,
+  ADDRESS_ID STRING,
+  BRANCH_ID STRING,
+  COMMUTE_DISTANCE_MILES INT,
+  LABEL INT,
+  CENSOR INT,
+  VERSION STRING
 );
-
