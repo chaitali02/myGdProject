@@ -510,7 +510,12 @@ public class IngestServiceImpl extends RuleTemplate {
 	public String getLastIncrValue(String ingestUuid, String ingestVersion) throws JsonProcessingException {
 		//first getting latest ingest exec then obtaining last incremental value from it
 		IngestExec ingestExec = getIngestExecByIngest(ingestUuid, ingestVersion, 2);//(IngestExec) commonServiceImpl.getLatestByUuid(igstExecUuid, MetaType.ingestExec.toString());
-		return ingestExec.getLastIncrValue();
+		if(ingestExec != null) {
+			return ingestExec.getLastIncrValue();
+		} else {
+			return null;
+		}
+//		return ingestExec.getLastIncrValue();
 	}
 
 	public IngestExec getIngestExecByIngest(String ingestUuid, String ingestVersion, long linit) throws JsonProcessingException {
@@ -519,7 +524,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		if(ingestVersion != null && !ingestVersion.isEmpty()) {
 			//dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
 		    dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
-		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Failed.toString()));
+		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString()));
 		} else {
 			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
 		}
@@ -529,13 +534,17 @@ public class IngestServiceImpl extends RuleTemplate {
 		Aggregation ingestAggr = newAggregation(dependsOnFilter,dependsOnFilter2, groupByUuid, sortByVersion, limitToOnlyFirst);
 		AggregationResults<IngestExec> ingestAggrResults = mongoTemplate.aggregate(ingestAggr, MetaType.ingestExec.toString().toLowerCase(), IngestExec.class);
 		IngestExec ingestExec = ingestAggrResults.getUniqueMappedResult();
-		IngestExec resolvedIngestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
+		if(ingestExec != null) {
+			return (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
+		} else {
+			return null;
+		}
 //		List<IngestExec> resolvedIngestExecList = new ArrayList<>();
 //		for(IngestExec ingestExec : ingestExecList) {
 //			IngestExec resolvedIngestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(ingestExec.getId(), ingestExec.getVersion(), MetaType.ingestExec.toString());
 //			resolvedIngestExecList.add(resolvedIngestExec);
 //		}
-		return resolvedIngestExec;
+//		return resolvedIngestExec;
 	}
 	
 	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {

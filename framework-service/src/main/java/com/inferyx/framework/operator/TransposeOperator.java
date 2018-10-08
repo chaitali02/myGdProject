@@ -297,7 +297,7 @@ public class TransposeOperator implements IOperator {
 		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
-			resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+			resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), true, commonServiceImpl.getApp().getUuid());
 		} else {
 			String query = helper.buildInsertQuery(appDatasource.getType(), tableName, locationDatapod, sql);
 			resultSetHolder = exec.executeSql(query);

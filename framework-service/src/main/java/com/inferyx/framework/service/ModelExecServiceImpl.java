@@ -661,11 +661,12 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), simulateExec.getDependsOn().getRef().getType().toString());
 			String targetTable = null;
+			Datapod targetDp = null;
 			if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-				Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(simulate.getTarget().getRef().getUuid(), simulate.getTarget().getRef().getVersion(), simulate.getTarget().getRef().getType().toString());
+				targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(simulate.getTarget().getRef().getUuid(), simulate.getTarget().getRef().getVersion(), simulate.getTarget().getRef().getType().toString());
 				targetTable = datasource.getDbname()+"."+targetDp.getName();
 			}
-			List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
+			List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
 	
 			return strList;
 		} catch (Exception e) {

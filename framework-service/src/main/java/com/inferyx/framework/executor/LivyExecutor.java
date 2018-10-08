@@ -160,7 +160,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException {
+			String saveMode, boolean formPath, String clientContext) throws IOException {
 		logger.info("Inside executeAndFetch sql >>>> " + sql);
 		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 		LivyClient livyClient = null;

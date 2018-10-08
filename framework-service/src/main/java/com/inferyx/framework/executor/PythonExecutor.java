@@ -133,7 +133,7 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException {
+			String saveMode, boolean formPath, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

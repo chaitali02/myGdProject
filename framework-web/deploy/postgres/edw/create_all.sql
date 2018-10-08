@@ -1,540 +1,518 @@
-  
-CREATE TABLE edw_small.account
-(
-  account_id VARCHAR(50) NOT NULL,
-  account_type_id integer,
-  account_status_id integer,
-  product_type_id integer,
-  customer_id VARCHAR(50),
-  pin_number integer,
-  nationality VARCHAR(50),
-  primary_iden_doc VARCHAR(50),
-  primary_iden_doc_id VARCHAR(50),
-  secondary_iden_doc VARCHAR(50),
-  secondary_iden_doc_id VARCHAR(50),
-  account_open_date VARCHAR(50),
-  account_number VARCHAR(50),
-  opening_balance VARCHAR(50),
-  current_balance VARCHAR(50),
-  overdue_balance integer,
-  overdue_date VARCHAR(50),
-  currency_code VARCHAR(50),
-  interest_type VARCHAR(50),
-  interest_rate double precision,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT account_pkey PRIMARY KEY (account_id,load_date,load_id)
-);
-
-
-CREATE TABLE edw_small.account_status_type
-(
-  account_status_id integer NOT NULL,
-  account_status_code VARCHAR(50),
-  account_status_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT account_status_type_pkey PRIMARY KEY (account_status_id, load_date,load_id)
-);
-
-CREATE TABLE edw_small.account_type
-(
-  account_type_id integer NOT NULL,
-  account_type_code VARCHAR(50),
-  account_type_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT account_type_pkey PRIMARY KEY (account_type_id,load_date,load_id)
-);
-
-CREATE TABLE edw_small.address
-(
-  address_id VARCHAR(50) NOT NULL,
-  address_line1 VARCHAR(50),
-  address_line2 VARCHAR(50),
-  address_line3 VARCHAR(50),
-  city VARCHAR(50),
-  county VARCHAR(50),
-  state VARCHAR(50),
-  zipcode integer,
-  country VARCHAR(50),
-  latitude VARCHAR(50),
-  longitude VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT address_pkey PRIMARY KEY (address_id, load_date,load_id)
-);
-
-
-
-CREATE TABLE edw_small.bank
-(
-  bank_id integer NOT NULL,
-  bank_code VARCHAR(50),
-  bank_name VARCHAR(50),
-  bank_account_number VARCHAR(50),
-  bank_currency_code VARCHAR(50),
-  bank_check_digits integer,
-  load_date VARCHAR(50),
-  load_id integer ,
-  CONSTRAINT dim_bank_pkey PRIMARY KEY (bank_id,load_date, load_id)
-  
-);
-
-
-CREATE TABLE edw_small.branch
-(
-  branch_id integer NOT NULL,
-  branch_type_id integer,
-  bank_id VARCHAR(50),
-  address_id VARCHAR(50),
-  branch_name VARCHAR(50),
-  branch_desc VARCHAR(50),
-  branch_contact_name VARCHAR(50),
-  branch_contact_phone VARCHAR(50),
-  branch_contact_email VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT branch_pkey PRIMARY KEY (branch_id, load_date,load_id)
-);
-
-
-CREATE TABLE edw_small.branch_type
-(
-  branch_type_id integer NOT NULL,
-  branch_type_code VARCHAR(50),
-  branch_type_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT branch_type_pkey PRIMARY KEY (branch_type_id, load_date,load_id)
-);
-
-
-CREATE TABLE edw_small.customer
-(
-  customer_id VARCHAR(50) NOT NULL,
-  address_id VARCHAR(50),
-  branch_id integer,
-  title VARCHAR(50),
-  first_name VARCHAR(50),
-  middle_name VARCHAR(50),
-  last_name VARCHAR(50),
-  ssn VARCHAR(50),
-  phone VARCHAR(50),
-  date_first_purchase VARCHAR(50),
-  commute_distance_miles integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT customer_pkey PRIMARY KEY (customer_id,load_date,load_id)
-);
-
-
-
-CREATE TABLE edw_small.dim_account
-(
-  account_id VARCHAR(50) NOT NULL,
-  src_account_id VARCHAR(50),
-  account_type_code VARCHAR(50),
-  account_status_code VARCHAR(50),
-  product_type_code VARCHAR(50),
-  pin_number integer,
-  nationality VARCHAR(50),
-  primary_iden_doc VARCHAR(50),
-  primary_iden_doc_id VARCHAR(50),
-  secondary_iden_doc VARCHAR(50),
-  secondary_iden_doc_id VARCHAR(50),
-  account_open_date VARCHAR(50),
-  account_number VARCHAR(50),
-  opening_balance VARCHAR(50),
-  current_balance VARCHAR(50),
-  overdue_balance integer,
-  overdue_date VARCHAR(50),
-  currency_code VARCHAR(50),
-  interest_type VARCHAR(50),
-  interest_rate numeric(38,2),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_account_pkey PRIMARY KEY (account_id, load_date, load_id),
-  CONSTRAINT src_account_id UNIQUE (src_account_id, load_date, load_id)
-);
-
-CREATE TABLE edw_small.dim_address
-(
-  address_id VARCHAR(50) NOT NULL,
-  src_address_id VARCHAR(50),
-  address_line1 VARCHAR(50),
-  address_line2 VARCHAR(50),
-  address_line3 VARCHAR(50),
-  city VARCHAR(50),
-  county VARCHAR(50),
-  state VARCHAR(50),
-  zipcode integer,
-  country VARCHAR(50),
-  latitude VARCHAR(50),
-  longtitude VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_address_pkey PRIMARY KEY (address_id, load_date, load_id),
-  CONSTRAINT src_address_id UNIQUE (src_address_id, load_date, load_id)
-);
-
-
-CREATE TABLE edw_small.dim_bank
-(
-  bank_id VARCHAR(50) NOT NULL,
-  src_bank_id VARCHAR(50),
-  bank_code VARCHAR(50),
-  bank_name VARCHAR(50),
-  bank_account_number VARCHAR(50),
-  bank_currency_code VARCHAR(50),
-  bank_check_digits integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_bank_ppkey PRIMARY KEY (bank_id, load_date, load_id),
-  CONSTRAINT src_bank_id_uk UNIQUE (src_bank_id, load_date, load_id)
-);
-
-CREATE TABLE edw_small.dim_branch
-(
-  branch_id VARCHAR(50) NOT NULL,
-  src_branch_id integer,
-  branch_type_code VARCHAR(50),
-  branch_name VARCHAR(50),
-  branch_desc VARCHAR(50),
-  branch_contact_name VARCHAR(50),
-  branch_contact_phone VARCHAR(50),
-  branch_contact_email VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_branch_pkey PRIMARY KEY (branch_id, load_date, load_id),
-  CONSTRAINT src_branch_id UNIQUE (src_branch_id, load_date, load_id)
-);
-
-
-CREATE TABLE edw_small.dim_country(
-  country_code VARCHAR(50) NOT NULL,
-  country_name VARCHAR(50),
-  country_population integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_country_pkey PRIMARY KEY (country_code,load_date, load_id)
-  );
-
-
-CREATE TABLE edw_small.dim_customer
-(
-  customer_id VARCHAR(50) NOT NULL,
-  src_customer_id VARCHAR(50),
-  title VARCHAR(50),
-  first_name VARCHAR(50),
-  middle_name VARCHAR(50),
-  last_name VARCHAR(50),
-  address_line1 VARCHAR(50),
-  address_line2 VARCHAR(50),
-  phone VARCHAR(50),
-  date_first_purchase VARCHAR(50),
-  commute_distance integer,
-  city VARCHAR(50),
-  state VARCHAR(50),
-  postal_code VARCHAR(50),
-  country VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_customer_pkey PRIMARY KEY (customer_id, load_date, load_id),
-  CONSTRAINT src_customer_id UNIQUE (src_customer_id, load_date, load_id)
-);
-
-
-CREATE TABLE edw_small.dim_date
-(
-  date_id integer NOT NULL,
-  date_type VARCHAR(50),
-  date_val VARCHAR(50),
-  day_num_of_week integer,
-  day_num_of_month integer,
-  day_num_of_quarter integer,
-  day_num_of_year integer,
-  day_num_absolute integer,
-  day_of_week_name VARCHAR(50),
-  day_of_week_abbreviation VARCHAR(50),
-  julian_day_num_of_year integer,
-  julian_day_num_absolute integer,
-  is_weekday VARCHAR(50),
-  is_usa_civil_holiday VARCHAR(50),
-  is_last_day_of_week VARCHAR(50),
-  is_last_day_of_month VARCHAR(50),
-  is_last_day_of_quarter VARCHAR(50),
-  is_last_day_of_year VARCHAR(50),
-  is_last_day_of_fiscal_month VARCHAR(50),
-  is_last_day_of_fiscal_quarter VARCHAR(50),
-  is_last_day_of_fiscal_year VARCHAR(50),
-  week_of_year_begin_date VARCHAR(50),
-  week_of_year_begin_date_key integer,
-  week_of_year_end_date VARCHAR(50),
-  week_of_year_end_date_key integer,
-  week_of_month_begin_date VARCHAR(50),
-  week_of_month_begin_date_key integer,
-  week_of_month_end_date VARCHAR(50),
-  week_of_month_end_date_key integer,
-  week_of_quarter_begin_date VARCHAR(50),
-  week_of_quarter_begin_date_key integer,
-  week_of_quarter_end_date VARCHAR(50),
-  week_of_quarter_end_date_key integer,
-  week_num_of_month integer,
-  week_num_of_quarter integer,
-  week_num_of_year integer,
-  month_num_of_year integer,
-  month_num_overall VARCHAR(50),
-  month_name VARCHAR(50),
-  month_name_abbreviation VARCHAR(50),
-  month_begin_date VARCHAR(50),
-  month_begin_date_key integer,
-  month_end_date VARCHAR(50),
-  month_end_date_key integer,
-  quarter_num_of_year integer,
-  quarter_num_overall integer,
-  quarter_begin_date VARCHAR(50),
-  quarter_begin_date_key integer,
-  quarter_end_date VARCHAR(50),
-  quarter_end_date_key integer,
-  year_num integer,
-  year_begin_date VARCHAR(50),
-  year_begin_date_key integer,
-  year_end_date VARCHAR(50),
-  year_end_date_key integer,
-  yyyy_mm VARCHAR(50),
-  yyyy_mm_dd VARCHAR(50),
-  dd_mon_yyyy VARCHAR(50),
-  load_date VARCHAR(50),
-  load_id integer,
-  CONSTRAINT dim_date_pkey PRIMARY KEY (date_id),
-  CONSTRAINT date_val UNIQUE (date_val, load_date)
-);
-
-CREATE TABLE edw_small.dim_state(
-  state_code VARCHAR(50),
-  state_name VARCHAR(50),
-  country_code VARCHAR(50), 
-  state_population integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_state_pkey PRIMARY KEY (state_code,load_date,load_id)
-  );
-
-
-
-
-CREATE TABLE edw_small.dim_transaction_type
-(
-  transaction_type_id VARCHAR(50) NOT NULL,
-  src_transaction_type_id VARCHAR(50),
-  transaction_type_code VARCHAR(50),
-  transaction_type_desc VARCHAR(50),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer NOT NULL,
-  CONSTRAINT dim_transaction_type_pkey PRIMARY KEY (transaction_type_id, load_date, load_id),
-  CONSTRAINT src_transaction_type_id UNIQUE (src_transaction_type_id, load_date, load_id)
-
-);
-
-CREATE TABLE edw_small.dp_rule_results
-(
-  datapoduuid VARCHAR(50),
-  datapodversion VARCHAR(50),
-  datapodname VARCHAR(50),
-  attributeid VARCHAR(50),
-  attributename VARCHAR(50),
-  numrows VARCHAR(50),
-  minval double precision,
-  maxval double precision,
-  avgval double precision,
-  medianval double precision,
-  stddev double precision,
-  numdistinct integer,
-  perdistinct double precision,
-  numnull integer,
-  pernull double precision,
-  sixsigma double precision,
-  load_date VARCHAR(50),
-  load_id integer,
-  version integer
-);
-
-
-CREATE TABLE edw_small.dq_rule_results
-(
-  rowkey VARCHAR(50),
-  datapoduuid VARCHAR(50),
-  datapodversion VARCHAR(50),
-  datapodname VARCHAR(50),
-  attributeid VARCHAR(50),
-  attributename VARCHAR(50),
-  attributevalue VARCHAR(50),
-  nullcheck_pass VARCHAR(50),
-  valuecheck_pass VARCHAR(50),
-  rangecheck_pass VARCHAR(50),
-  datatypecheck_pass VARCHAR(50),
-  dataformatcheck_pass VARCHAR(50),
-  lengthcheck_pass VARCHAR(50),
-  refintegritycheck_pass VARCHAR(50),
-  dupcheck_pass VARCHAR(50),
-  customcheck_pass VARCHAR(50),
-  version integer
-);
-
-
-CREATE TABLE edw_small.fact_account_summary_monthly
-(
-  account_id VARCHAR(50) NOT NULL,
-  yyyy_mm VARCHAR(50) NOT NULL,
-  total_trans_count integer,
-  total_trans_amount_usd integer,
-  avg_trans_amount integer,
-  min_amount numeric(38,2),
-  max_amount integer,
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT fact_account_summary_monthly_pkey PRIMARY KEY (account_id, yyyy_mm, load_date,load_id)
-);
-
-
-CREATE TABLE edw_small.fact_customer_summary_monthly
-(
-  customer_id VARCHAR(50) NOT NULL,
-  yyyy_mm VARCHAR(50) NOT NULL,
-  total_trans_count VARCHAR(50),
-  total_trans_amount_usd integer,
-  avg_trans_amount integer,
-  min_amount numeric(38,2),
-  max_amount numeric(38,2),
-  load_date VARCHAR(50) NOT NULL,
-  load_id integer,
-  CONSTRAINT fact_customer_summary_monthly_pkey PRIMARY KEY (customer_id, yyyy_mm, load_date,load_id)
-);
-
-
-CREATE TABLE edw_small.fact_transaction
-(
-  transaction_id VARCHAR(50),
-  src_transaction_id VARCHAR(50),
-  transaction_type_id VARCHAR(50),
-  trans_date_id integer,
-  bank_id VARCHAR(50),
-  branch_id VARCHAR(50),
-  customer_id VARCHAR(50),
-  address_id VARCHAR(50),
-  account_id VARCHAR(50),
-  from_account VARCHAR(50),
-  to_account VARCHAR(50),
-  amount_base_curr integer,
-  amount_usd integer,
-  currency_code VARCHAR(50),
-  currency_rate integer,
-  notes VARCHAR(50),
-  load_date VARCHAR(50),
-  load_id integer
-);
-
-
-CREATE TABLE edw_small.model_training_set
-(
-  customer_id integer NOT NULL,
-  address_id integer NOT NULL,
-  branch_id integer NOT NULL,
-  commute_distance_miles integer NOT NULL,
-  label integer NOT NULL,
-  censor integer NOT NULL,
-  version integer NOT NULL
-);
-
-
-CREATE TABLE edw_small.product_type
-(
-  product_type_id integer,
-  product_type_code VARCHAR(50),
-  product_type_desc VARCHAR(50),
-  load_date VARCHAR(50),
-  load_id integer,
-  CONSTRAINT product_type_pkey PRIMARY KEY (product_type_id, load_date, load_id)
-
-);
-
-
-CREATE TABLE edw_small.rc_rule_results (
-    sourcedatapoduuid VARCHAR(50),
-    sourcedatapodversion VARCHAR(50),
-    sourcedatapodname VARCHAR(50),
-    sourceattributeid VARCHAR(50),
-    sourceattributename VARCHAR(50),
-    sourcevalue double precision,
-    targetdatapoduuid VARCHAR(50),
-    targetdatapodversion VARCHAR(50),
-    targetdatapodname VARCHAR(50),
-    targetattributeid VARCHAR(50),
-    targetattributename VARCHAR(50),
-    targetvalue double precision,
-    status VARCHAR(50),
-    version integer
-);
-
-
-CREATE TABLE edw_small.target_gen_data_uniform_dist (
-  id integer NOT NULL,
-  col1 double precision,
-  version integer NOT NULL
-);
-
-CREATE TABLE edw_small.target_sim_linear_regression (
-  id integer NOT NULL,
-  version integer NOT NULL,
-  interest_rate double precision,
-  account_type_id double precision,
-  account_status_id double precision
-);
-
-
-CREATE TABLE edw_small.target_sim_multivarient_normal_dis (
-  id integer NOT NULL,
-  interestRate double precision,
-  col2 double precision,
-  col3 double precision,
-  version integer NOT NULL  
-);
-
-
-
-CREATE TABLE edw_small.transaction
-(
-  transaction_id VARCHAR(50),
-  transaction_type_id VARCHAR(50),
-  account_id VARCHAR(50),
-  transaction_date VARCHAR(50),
-  from_account VARCHAR(50),
-  to_account VARCHAR(50),
-  amount_base_curr numeric(30,2),
-  amount_usd numeric(30,2),
-  currency_code VARCHAR(50),
-  currency_rate double precision,
-  notes VARCHAR(100),
-  load_date VARCHAR(50),
-  load_id integer,
-  CONSTRAINT transaction_pkey PRIMARY KEY (transaction_id, load_date, load_id)
-);
-
-CREATE TABLE edw_small.transaction_type
-(
-  transaction_type_id VARCHAR(50),
-  transaction_type_code VARCHAR(50),
-  transaction_type_desc VARCHAR(50),
-  load_date VARCHAR(50),
-  load_id integer,
-  CONSTRAINT transaction_type_pkey PRIMARY KEY (transaction_type_id, load_date, load_id)
-);
-
-
-
-
-
-
-
-
+DROP TABLE IF EXISTS ACCOUNT;
+
+CREATE TABLE IF EXISTS ACCOUNT( 
+  ( 
+     ACCOUNT_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     ACCOUNT_TYPE_ID       VARCHAR(50),
+     ACCOUNT_STATUS_ID     VARCHAR(50),
+     PRODUCT_TYPE_ID       VARCHAR(50),
+     CUSTOMER_ID           VARCHAR(50),
+     PIN_NUMBER            INTEGER,
+     NATIONALITY           VARCHAR(50),
+     PRIMARY_IDEN_DOC      VARCHAR(50),
+     PRIMARY_IDEN_DOC_ID   VARCHAR(50),
+     SECONDARY_IDEN_DOC    VARCHAR(50),
+     SECONDARY_IDEN_DOC_ID VARCHAR(50),
+     ACCOUNT_OPEN_DATE     VARCHAR(10),
+     ACCOUNT_NUMBER        VARCHAR(50),
+     OPENING_BALANCE       INTEGER,
+     CURRENT_BALANCE       INTEGER,
+     OVERDUE_BALANCE       INTEGER,
+     OVERDUE_DATE          VARCHAR(10),
+     CURRENCY_CODE         VARCHAR(10),
+     INTEREST_TYPE         VARCHAR(10),
+     INTEREST_RATE         DECIMAL(10,2),
+     LOAD_DATE             VARCHAR(10),
+     LOAD_ID               INTEGER,
+     CONSTRAINT ACCOUNT_ID_PK PRIMARY KEY(ACCOUNT_ID) 
+  ); 
+
+DROP TABLE IF EXISTS ACCOUNT_STATUS_TYPE; 
+
+CREATE TABLE IF EXISTS ACCOUNT_STATUS_TYPE 
+  ( 
+     ACCOUNT_STATUS_ID   VARCHAR(50) DEFAULT 0 NOT NULL,
+     ACCOUNT_STATUS_CODE VARCHAR(10),
+     ACCOUNT_STATUS_DESC VARCHAR(500),
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT ACCOUNT_STATUS_ID_PK PRIMARY KEY(ACCOUNT_STATUS_ID) 
+  ); 
+
+DROP TABLE IF EXISTS ACCOUNT_TYPE; 
+
+CREATE TABLE IF EXISTS ACCOUNT_TYPE 
+  ( 
+     ACCOUNT_TYPE_ID   VARCHAR(50) DEFAULT 0 NOT NULL,
+     ACCOUNT_TYPE_CODE VARCHAR(10),
+     ACCOUNT_TYPE_DESC VARCHAR(500),
+     LOAD_DATE         VARCHAR(10),
+     LOAD_ID           INTEGER,
+     CONSTRAINT ACCOUNT_TYPE_ID_PK PRIMARY KEY(ACCOUNT_TYPE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS ADDRESS; 
+
+CREATE TABLE IF EXISTS ADDRESS 
+  ( 
+     ADDRESS_ID    VARCHAR(50) DEFAULT 0 NOT NULL,
+     ADDRESS_LINE1 VARCHAR(50),
+     ADDRESS_LINE2 VARCHAR(50),
+     ADDRESS_LINE3 VARCHAR(50),
+     CITY          VARCHAR(100),
+     COUNTY        VARCHAR(100),
+     STATE         VARCHAR(100),
+     ZIPCODE       INTEGER,
+     COUNTRY       VARCHAR(100),
+     LATITUDE      VARCHAR(50),
+     LONGITUDE     VARCHAR(50),
+     LOAD_DATE     VARCHAR(10),
+     LOAD_ID       INTEGER,
+     CONSTRAINT ADDRESS_ID_PK PRIMARY KEY(ADDRESS_ID) 
+  ); 
+
+DROP TABLE IF EXISTS BANK; 
+
+CREATE TABLE IF EXISTS BANK 
+  ( 
+     BANK_ID             VARCHAR(50) DEFAULT 0 NOT NULL,
+     BANK_CODE           VARCHAR(10),
+     BANK_NAME           VARCHAR(100),
+     BANK_ACCOUNT_NUMBER VARCHAR(50),
+     BANK_CURRENCY_CODE  VARCHAR(10),
+     BANK_CHECK_DIGITS   INTEGER,
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT BANK_ID_PK PRIMARY KEY(BANK_ID) 
+  ); 
+
+DROP TABLE IF EXISTS BRANCH; 
+
+CREATE TABLE IF EXISTS BRANCH 
+  ( 
+     BRANCH_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     BRANCH_TYPE_ID       VARCHAR(50),
+     BANK_ID              VARCHAR(50),
+     ADDRESS_ID           VARCHAR(50),
+     BRANCH_NAME          VARCHAR(100),
+     BRANCH_DESC          VARCHAR(500),
+     BRANCH_CONTACT_NAME  VARCHAR(100),
+     BRANCH_CONTACT_PHONE VARCHAR(100),
+     BRANCH_CONTACT_EMAIL VARCHAR(100),
+     LOAD_DATE            VARCHAR(10),
+     LOAD_ID              INTEGER,
+     CONSTRAINT BRANCH_ID_PK PRIMARY KEY(BRANCH_ID) 
+  ); 
+
+DROP TABLE IF EXISTS BRANCH_TYPE; 
+
+CREATE TABLE IF EXISTS BRANCH_TYPE 
+  ( 
+     BRANCH_TYPE_ID   VARCHAR(50) DEFAULT 0 NOT NULL,
+     BRANCH_TYPE_CODE VARCHAR(10),
+     BRANCH_TYPE_DESC VARCHAR(500),
+     LOAD_DATE        VARCHAR(10),
+     LOAD_ID          INTEGER,
+     CONSTRAINT BRANCH_TYPE_ID_PK PRIMARY KEY(BRANCH_TYPE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS CUSTOMER; 
+
+CREATE TABLE IF EXISTS CUSTOMER 
+  ( 
+     CUSTOMER_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     ADDRESS_ID             VARCHAR(50),
+     BRANCH_ID              VARCHAR(50),
+     TITLE                  VARCHAR(100),
+     FIRST_NAME             VARCHAR(100),
+     MIDDLE_NAME            VARCHAR(100),
+     LAST_NAME              VARCHAR(100),
+     SSN                    VARCHAR(100),
+     PHONE                  VARCHAR(100),
+     DATE_FIRST_PURCHASE    VARCHAR(10),
+     COMMUTE_DISTANCE_MILES INTEGER,
+     LOAD_DATE              VARCHAR(10),
+     LOAD_ID                INTEGER,
+     CONSTRAINT CUSTOMER_ID_PK PRIMARY KEY(CUSTOMER_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_ACCOUNT; 
+
+CREATE TABLE IF EXISTS DIM_ACCOUNT 
+  ( 
+     ACCOUNT_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_ACCOUNT_ID        VARCHAR(50),
+     ACCOUNT_TYPE_CODE     VARCHAR(10),
+     ACCOUNT_STATUS_CODE   VARCHAR(10),
+     PRODUCT_TYPE_CODE     VARCHAR(10),
+     PIN_NUMBER            INTEGER,
+     NATIONALITY           VARCHAR(100),
+     PRIMARY_IDEN_DOC      VARCHAR(100),
+     PRIMARY_IDEN_DOC_ID   VARCHAR(50),
+     SECONDARY_IDEN_DOC    VARCHAR(100),
+     SECONDARY_IDEN_DOC_ID VARCHAR(50),
+     ACCOUNT_OPEN_DATE     VARCHAR(10),
+     ACCOUNT_NUMBER        VARCHAR(50),
+     OPENING_BALANCE       INTEGER,
+     CURRENT_BALANCE       INTEGER,
+     OVERDUE_BALANCE       INTEGER,
+     OVERDUE_DATE          VARCHAR(10),
+     CURRENCY_CODE         VARCHAR(10),
+     INTEREST_TYPE         VARCHAR(50),
+     INTEREST_RATE         DECIMAL(10,2),
+     LOAD_DATE             VARCHAR(10),
+     LOAD_ID               INTEGER,
+     CONSTRAINT ACCOUNT_ID_DIM_PK PRIMARY KEY(ACCOUNT_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_ADDRESS; 
+
+CREATE TABLE IF EXISTS DIM_ADDRESS 
+  ( 
+     ADDRESS_ID     VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_ADDRESS_ID VARCHAR(50),
+     ADDRESS_LINE1  VARCHAR(50),
+     ADDRESS_LINE2  VARCHAR(50),
+     ADDRESS_LINE3  VARCHAR(50),
+     CITY           VARCHAR(100),
+     COUNTY         VARCHAR(100),
+     STATE          VARCHAR(100),
+     ZIPCODE        INTEGER,
+     COUNTRY        VARCHAR(100),
+     LATITUDE       VARCHAR(50),
+     LONGTITUDE     VARCHAR(50),
+     LOAD_DATE      VARCHAR(10),
+     LOAD_ID        INTEGER,
+     CONSTRAINT ADDRESS_ID_DIM__PK PRIMARY KEY(ADDRESS_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_BANK; 
+
+CREATE TABLE IF EXISTS DIM_BANK 
+  ( 
+     BANK_ID             VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_BANK_ID         VARCHAR(50),
+     BANK_CODE           VARCHAR(10),
+     BANK_NAME           VARCHAR(100),
+     BANK_ACCOUNT_NUMBER VARCHAR(50),
+     BANK_CURRENCY_CODE  VARCHAR(50),
+     BANK_CHECK_DIGITS   INTEGER,
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT BANK_ID_DIM__PK PRIMARY KEY(BANK_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_BRANCH; 
+
+CREATE TABLE IF EXISTS DIM_BRANCH 
+  ( 
+     BRANCH_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_BRANCH_ID        VARCHAR(50),
+     BRANCH_TYPE_CODE     VARCHAR(10),
+     BRANCH_NAME          VARCHAR(100),
+     BRANCH_DESC          VARCHAR(500),
+     BRANCH_CONTACT_NAME  VARCHAR(100),
+     BRANCH_CONTACT_PHONE VARCHAR(100),
+     BRANCH_CONTACT_EMAIL VARCHAR(100),
+     LOAD_DATE            VARCHAR(10),
+     LOAD_ID              INTEGER,
+     CONSTRAINT BRANCH_ID_DIM__PK PRIMARY KEY(BRANCH_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_COUNTRY; 
+
+CREATE TABLE IF EXISTS DIM_COUNTRY 
+  ( 
+     COUNTRY_ID         VARCHAR(50) DEFAULT 0 NOT NULL,
+     COUNTRY_CODE       VARCHAR(10),
+     COUNTRY_NAME       VARCHAR(100),
+     COUNTRY_POPULATION INTEGER,
+     LOAD_DATE          VARCHAR(10),
+     LOAD_ID            INTEGER,
+     CONSTRAINT COUNTRY_ID_DIM__PK PRIMARY KEY(COUNTRY_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_CUSTOMER; 
+
+CREATE TABLE IF EXISTS DIM_CUSTOMER 
+  ( 
+     CUSTOMER_ID         VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_CUSTOMER_ID     VARCHAR(50),
+     TITLE               VARCHAR(100),
+     FIRST_NAME          VARCHAR(100),
+     MIDDLE_NAME         VARCHAR(100),
+     LAST_NAME           VARCHAR(100),
+     ADDRESS_LINE1       VARCHAR(50),
+     ADDRESS_LINE2       VARCHAR(50),
+     PHONE               VARCHAR(50),
+     DATE_FIRST_PURCHASE VARCHAR(10),
+     COMMUTE_DISTANCE    INTEGER,
+     CITY                VARCHAR(100),
+     STATE               VARCHAR(100),
+     POSTAL_CODE         VARCHAR(10),
+     COUNTRY             VARCHAR(100),
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT CUSTOMER_ID_DIM__PK PRIMARY KEY(CUSTOMER_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_DATE; 
+
+CREATE TABLE IF EXISTS DIM_DATE 
+  ( 
+     DATE_ID                        VARCHAR(50) DEFAULT 0 NOT NULL,
+     DATE_TYPE                      VARCHAR(45),
+     DATE_VAL                       VARCHAR(45),
+     DAY_NUM_OF_WEEK                INTEGER,
+     DAY_NUM_OF_MONTH               INTEGER,
+     DAY_NUM_OF_QUARTER             INTEGER,
+     DAY_NUM_OF_YEAR                INTEGER,
+     DAY_NUM_ABSOLUTE               INTEGER,
+     DAY_OF_WEEK_NAME               VARCHAR(100),
+     DAY_OF_WEEK_ABBREVIATION       VARCHAR(45),
+     JULIAN_DAY_NUM_OF_YEAR         INTEGER,
+     JULIAN_DAY_NUM_ABSOLUTE        INTEGER,
+     IS_WEEKDAY                     VARCHAR(50),
+     IS_USA_CIVIL_HOLIDAY           VARCHAR(50),
+     IS_LAST_DAY_OF_WEEK            VARCHAR(50),
+     IS_LAST_DAY_OF_MONTH           VARCHAR(50),
+     IS_LAST_DAY_OF_QUARTER         VARCHAR(50),
+     IS_LAST_DAY_OF_YEAR            VARCHAR(50),
+     IS_LAST_DAY_OF_FISCAL_MONTH    VARCHAR(50),
+     IS_LAST_DAY_OF_FISCAL_QUARTER  VARCHAR(50),
+     IS_LAST_DAY_OF_FISCAL_YEAR     VARCHAR(50),
+     WEEK_OF_YEAR_BEGIN_DATE        VARCHAR(10),
+     WEEK_OF_YEAR_BEGIN_DATE_KEY    INTEGER,
+     WEEK_OF_YEAR_END_DATE          VARCHAR(10),
+     WEEK_OF_YEAR_END_DATE_KEY      INTEGER,
+     WEEK_OF_MONTH_BEGIN_DATE       VARCHAR(10),
+     WEEK_OF_MONTH_BEGIN_DATE_KEY   INTEGER,
+     WEEK_OF_MONTH_END_DATE         VARCHAR(10),
+     WEEK_OF_MONTH_END_DATE_KEY     INTEGER,
+     WEEK_OF_QUARTER_BEGIN_DATE     VARCHAR(10),
+     WEEK_OF_QUARTER_BEGIN_DATE_KEY INTEGER,
+     WEEK_OF_QUARTER_END_DATE       VARCHAR(10),
+     WEEK_OF_QUARTER_END_DATE_KEY   INTEGER,
+     WEEK_NUM_OF_MONTH              INTEGER,
+     WEEK_NUM_OF_QUARTER            INTEGER,
+     WEEK_NUM_OF_YEAR               INTEGER,
+     MONTH_NUM_OF_YEAR              INTEGER,
+     MONTH_NUM_OVERALL              VARCHAR(50),
+     MONTH_NAME                     VARCHAR(100),
+     MONTH_NAME_ABBREVIATION        VARCHAR(100),
+     MONTH_BEGIN_DATE               VARCHAR(10),
+     MONTH_BEGIN_DATE_KEY           INTEGER,
+     MONTH_END_DATE                 VARCHAR(10),
+     MONTH_END_DATE_KEY             INTEGER,
+     QUARTER_NUM_OF_YEAR            INTEGER,
+     QUARTER_NUM_OVERALL            INTEGER,
+     QUARTER_BEGIN_DATE             VARCHAR(10),
+     QUARTER_BEGIN_DATE_KEY         INTEGER,
+     QUARTER_END_DATE               VARCHAR(10),
+     QUARTER_END_DATE_KEY           INTEGER,
+     YEAR_NUM                       INTEGER,
+     YEAR_BEGIN_DATE                VARCHAR(10),
+     YEAR_BEGIN_DATE_KEY            INTEGER,
+     YEAR_END_DATE                  VARCHAR(10),
+     YEAR_END_DATE_KEY              INTEGER,
+     YYYY_MM                        VARCHAR(50),
+     YYYY_MM_DD                     VARCHAR(50),
+     DD_MON_YYYY                    VARCHAR(50),
+     LOAD_DATE                      VARCHAR(10),
+     LOAD_ID                        INTEGER,
+     CONSTRAINT DATE_ID_DIM__PK PRIMARY KEY(DATE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_STATE; 
+
+CREATE TABLE IF EXISTS DIM_STATE 
+  ( 
+     STATE_ID         VARCHAR(50) DEFAULT 0 NOT NULL,
+     STATE_CODE       VARCHAR(10),
+     STATE_NAME       VARCHAR(100),
+     COUNTRY_CODE     VARCHAR(10),
+     STATE_POPULATION INTEGER,
+     LOAD_DATE        VARCHAR(10),
+     LOAD_ID          INTEGER,
+     CONSTRAINT STATE_ID_DIM__PK PRIMARY KEY(STATE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DIM_TRANSACTION_TYPE; 
+
+CREATE TABLE IF EXISTS DIM_TRANSACTION_TYPE 
+  ( 
+     TRANSACTION_TYPE_ID     VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_TRANSACTION_TYPE_ID VARCHAR(50),
+     TRANSACTION_TYPE_CODE   VARCHAR(10),
+     TRANSACTION_TYPE_DESC   VARCHAR(500),
+     LOAD_DATE               VARCHAR(10),
+     LOAD_ID                 INTEGER,
+     CONSTRAINT TRANSACTION_TYPE_ID_DIM__PK PRIMARY KEY(TRANSACTION_TYPE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS DP_RULE_RESULTS; 
+
+CREATE TABLE IF EXISTS DP_RULE_RESULTS 
+  ( 
+     DATAPODUUID    VARCHAR(50) DEFAULT 0 NOT NULL,
+     DATAPODVERSION VARCHAR(50),
+     DATAPODNAME    VARCHAR(100),
+     ATTRIBUTEID    VARCHAR(50),
+     ATTRIBUTENAME  VARCHAR(100),
+     NUMROWS        VARCHAR(50),
+     MINVAL         DECIMAL(10,2),
+     MAXVAL         DECIMAL(10,2),
+     AVGVAL         DECIMAL(10,3),
+     MEDIANVAL      DECIMAL(10,3),
+     STDDEV         DECIMAL(10,4),
+     NUMDISTINCT    INTEGER,
+     PERDISTINCT    DECIMAL(10,2),
+     NUMNULL        INTEGER,
+     PERNULL        DECIMAL(10,2),
+     SIXSIGMA       DECIMAL(10,2),
+     VERSION        INTEGER 
+  ); 
+
+DROP TABLE IF EXISTS DQ_RULE_RESULTS; 
+
+CREATE TABLE IF EXISTS DQ_RULE_RESULTS 
+  ( 
+     ROWKEY                 VARCHAR(50),
+     DATAPODUUID            VARCHAR(50),
+     DATAPODVERSION         VARCHAR(50),
+     DATAPODNAME            VARCHAR(100),
+     ATTRIBUTEID            VARCHAR(50),
+     ATTRIBUTENAME          VARCHAR(100),
+     ATTRIBUTEVALUE         VARCHAR(50),
+     NULLCHECK_PASS         VARCHAR(50),
+     VALUECHECK_PASS        VARCHAR(50),
+     RANGECHECK_PASS        VARCHAR(50),
+     DATATYPECHECK_PASS     VARCHAR(50),
+     DATAFORMATCHECK_PASS   VARCHAR(50),
+     LENGTHCHECK_PASS       VARCHAR(50),
+     REFINTEGRITYCHECK_PASS VARCHAR(50),
+     DUPCHECK_PASS          VARCHAR(50),
+     CUSTOMCHECK_PASS       VARCHAR(50),
+     VERSION                INTEGER 
+  ); 
+
+DROP TABLE IF EXISTS FACT_ACCOUNT_SUMMARY_MONTHLY; 
+
+CREATE TABLE IF EXISTS FACT_ACCOUNT_SUMMARY_MONTHLY 
+  ( 
+     ACCOUNT_ID             VARCHAR(50) DEFAULT 0 NOT NULL,
+     YYYY_MM                VARCHAR(50) DEFAULT 0 NOT NULL,
+     TOTAL_TRANS_COUNT      INTEGER,
+     TOTAL_TRANS_AMOUNT_USD INTEGER,
+     AVG_TRANS_AMOUNT       INTEGER,
+     MIN_AMOUNT             DECIMAL(10,2),
+     MAX_AMOUNT             INTEGER,
+     LOAD_DATE              VARCHAR(10),
+     LOAD_ID                INTEGER,
+     CONSTRAINT ACCOUNT_ID_FACT_PK PRIMARY KEY(ACCOUNT_ID) 
+  ); 
+
+DROP TABLE IF EXISTS FACT_CUSTOMER_SUMMARY_MONTHLY; 
+
+CREATE TABLE IF EXISTS FACT_CUSTOMER_SUMMARY_MONTHLY 
+  ( 
+     CUSTOMER_ID            VARCHAR(50) DEFAULT 0 NOT NULL,
+     YYYY_MM                VARCHAR(50) DEFAULT 0 NOT NULL,
+     TOTAL_TRANS_COUNT      VARCHAR(50),
+     TOTAL_TRANS_AMOUNT_USD INTEGER,
+     AVG_TRANS_AMOUNT       INTEGER,
+     MIN_AMOUNT             DECIMAL(10,2),
+     MAX_AMOUNT             DECIMAL(10,2),
+     LOAD_DATE              VARCHAR(10),
+     LOAD_ID                INTEGER,
+     CONSTRAINT CUSTOMER_ID_FACT_PK PRIMARY KEY(CUSTOMER_ID) 
+  ); 
+
+DROP TABLE IF EXISTS FACT_TRANSACTION; 
+
+CREATE TABLE IF EXISTS FACT_TRANSACTION 
+  ( 
+     TRANSACTION_ID      VARCHAR(50) DEFAULT 0 NOT NULL,
+     SRC_TRANSACTION_ID  VARCHAR(50),
+     TRANSACTION_TYPE_ID INTEGER,
+     TRANS_DATE_ID       INTEGER,
+     BANK_ID             INTEGER,
+     BRANCH_ID           INTEGER,
+     CUSTOMER_ID         VARCHAR(50),
+     ADDRESS_ID          VARCHAR(50),
+     ACCOUNT_ID          VARCHAR(50),
+     FROM_ACCOUNT        VARCHAR(50),
+     TO_ACCOUNT          VARCHAR(50),
+     AMOUNT_BASE_CURR    INTEGER,
+     AMOUNT_USD          INTEGER,
+     CURRENCY_CODE       VARCHAR(10),
+     CURRENCY_RATE       INTEGER,
+     NOTES               VARCHAR(50),
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT TRANSACTION_ID_FACT_PK PRIMARY KEY(TRANSACTION_ID) 
+  ); 
+
+DROP TABLE IF EXISTS PRODUCT_TYPE; 
+
+CREATE TABLE IF EXISTS PRODUCT_TYPE 
+  ( 
+     PRODUCT_TYPE_ID   VARCHAR(50) DEFAULT 0 NOT NULL,
+     PRODUCT_TYPE_CODE VARCHAR(10),
+     PRODUCT_TYPE_DESC VARCHAR(500),
+     LOAD_DATE         VARCHAR(10),
+     LOAD_ID           INTEGER,
+     CONSTRAINT LOAD_ID_PK PRIMARY KEY(PRODUCT_TYPE_ID) 
+  ); 
+
+DROP TABLE IF EXISTS RC_RULE_RESULTS; 
+
+CREATE TABLE IF EXISTS RC_RULE_RESULTS 
+  ( 
+     SOURCEUUID          VARCHAR(50) DEFAULT 0 NOT NULL,
+     SOURCEVERSION       VARCHAR(50),
+     SOURCENAME          VARCHAR(100),
+     SOURCEATTRIBUTEID   VARCHAR(50),
+     SOURCEATTRIBUTENAME VARCHAR(100),
+     SOURCEVALUE         DECIMAL(10,2),
+     TARGETUUID          VARCHAR(50) DEFAULT 0 NOT NULL,
+     TARGETVERSION       VARCHAR(50),
+     TARGETNAME          VARCHAR(100),
+     TARGETATTRIBUTEID   VARCHAR(50),
+     TARGETATTRIBUTENAME VARCHAR(100),
+     TARGETVALUE         DECIMAL(10,2),
+     STATUS              VARCHAR(50),
+     VERSION             INTEGER 
+  ); 
+
+DROP TABLE IF EXISTS TRANSACTION; 
+
+CREATE TABLE IF EXISTS TRANSACTION 
+  ( 
+     TRANSACTION_ID      VARCHAR(50) DEFAULT 0 NOT NULL,
+     TRANSACTION_TYPE_ID VARCHAR(50),
+     ACCOUNT_ID          VARCHAR(50),
+     TRANSACTION_DATE    VARCHAR(10),
+     FROM_ACCOUNT        VARCHAR(50),
+     TO_ACCOUNT          VARCHAR(50),
+     AMOUNT_BASE_CURR    DECIMAL(10,2),
+     AMOUNT_USD          DECIMAL(10,2),
+     CURRENCY_CODE       VARCHAR(10),
+     CURRENCY_RATE       DECIMAL(10,2),
+     NOTES               VARCHAR(100),
+     LOAD_DATE           VARCHAR(10),
+     LOAD_ID             INTEGER,
+     CONSTRAINT TRANSACTION_ID_PK PRIMARY KEY(TRANSACTION_ID) 
+  ); 
+
+DROP TABLE IF EXISTS TRANSACTION_TYPE; 
+
+CREATE TABLE IF EXISTS TRANSACTION_TYPE 
+  ( 
+     TRANSACTION_TYPE_ID   VARCHAR(50) DEFAULT 0 NOT NULL,
+     TRANSACTION_TYPE_CODE VARCHAR(10),
+     TRANSACTION_TYPE_DESC VARCHAR(500),
+     LOAD_DATE             VARCHAR(10),
+     LOAD_ID               INTEGER,
+     CONSTRAINT TRANSACTION_TYPE_ID_PK PRIMARY KEY(TRANSACTION_TYPE_ID) 
+  ); 
