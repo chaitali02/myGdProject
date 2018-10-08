@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -552,6 +553,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					}
 					
 					if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
+						targetFilePathUrl = targetDS.getPath();
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, ingest.getTargetDetail().getValue(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
 						if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
@@ -571,7 +573,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //							targetFileName = targetFileName.concat(".csv");
 //						}
 
-						//						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+//						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
 						targetFilePathUrl = targetDS.getPath().concat(targetFileName);
 					}
 					
@@ -605,20 +607,36 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						logger.info("temporary location: "+tempDirLocation);
 						
 						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
-								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-										, targetFileName, tableName, saveMode, ingest.getTargetFormat());
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+																	targetFileName, tableName, saveMode, ingest.getTargetFormat());
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
 								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getCSVFileNameFromDir(tempDirLocation);
-								ingestServiceImpl.moveFile(srcFilePath, targetFilePathUrl);
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
 							} catch (Exception e) {
-								e.printStackTrace();
+//								e.printStackTrace();
 							} finally {
-								ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
 							}						
+						} else {
+							try {
+								String targetDirName = ingest.getTargetDetail().getValue();
+								String targetDirPath = targetDS.getPath();
+								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
+					
+								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+							} catch (Exception e) {
+								// TODO: handle exception
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}
 						}
 						countRows = rsHolder.getCountRows();
 //					}
@@ -861,13 +879,30 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
 								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getCSVFileNameFromDir(tempDirLocation);
-								ingestServiceImpl.moveFile(srcFilePath, targetFilePathUrl);
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
 							} catch (Exception e) {
-								e.printStackTrace();
+//								e.printStackTrace();
 							} finally {
-								ingestServiceImpl.deleteFileOrDirectory(tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid(), true);
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
 							}						
+						} else {
+							try {
+								String targetDirName = ingest.getTargetDetail().getValue();
+								String targetDirPath = targetDS.getPath();
+								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
+					
+								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+							} catch (Exception e) {
+								// TODO: handle exception
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}					
 						}
 						
 						//writing to target				

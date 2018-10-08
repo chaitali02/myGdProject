@@ -150,12 +150,10 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 								else{
 									$scope.allTargetDatasource=[];
 									$scope.allTargetDatasource.push($scope.allSourceDatasource[i])
-
 								}
 							}
 						}
 					}
-					
 				}
 			}
 			if (TargetType == "TABLE") {
@@ -169,11 +167,9 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 								else{
 									$scope.allSourceDatasource=[];
 									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
-
 								}
 							}
 						}
-
 						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
 							if($scope.allSourceDatasource[i].type == 'FILE'){
 								if($scope.allSourceDatasource)
@@ -181,17 +177,28 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 								else{
 									$scope.allSourceDatasource=[];
 									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-
 								}
 							}
 						}*/
-
-					}
-					
+					}	
 				}
-
 			}
-			
+			debugger
+			if(sourceType =="STREAM" && TargetType =="FILE"){
+				if(response && response.length >0){
+					for(var i=0;i<response.length;i++){
+						if(response[i].type == 'HIVE'){
+							if($scope.allTargetDatasource)
+								$scope.allTargetDatasource.push(response[i])
+							else{
+								$scope.allTargetDatasource=[];
+								$scope.allTargetDatasource.push(response[i])
+							}
+						}
+					}
+				}
+			}
+
 
 		}
 	}
@@ -224,7 +231,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			if (TargetType == "FILE") {
 				$scope.allTargetDatasource = response;
 			}
-
+            
 		}
 	}
 
@@ -251,8 +258,11 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 		if ($scope.selectedSourceType == 'STREAM' || $scope.selectedTargetType == 'STREAM') {
 			$scope.getDatasourceForStream($scope.selectedSourceType, $scope.selectedTargetType);
-			
-			
+		}
+		debugger
+
+		if ($scope.selectedSourceType == 'STREAM' && $scope.selectedTargetType == 'FILE') {
+			$scope.getDatasourceForTable($scope.selectedSourceType,$scope.selectedTargetType);	
 		}
 	
 	}

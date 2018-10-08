@@ -170,6 +170,20 @@
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                      <!-- ng-pattern="/^[a-zA-Z\d\-_.%*\s]+$/" pattern-err-type="parttenFileName" -->
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
+                                    </div>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Extension
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-if=" selectedSourceFormate != null && selectedSourceFormate !='PARQUET'" ng-model="$parent.ingestData.sourceExtn" required ng-change="onChangeSourceDetail()" >
+                                        <input type="text"  class="form-control" ng-disabled="true" ng-if="selectedSourceFormate == null|| selectedSourceFormate =='PARQUET'" ng-model="$parent.ingestData.sourceExtn"  ng-change="onChangeSourceDetail()" >
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group" ng-if="selectedSourceType =='FILE'">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Source Name
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
                                     <div class="col-md-5" style="padding-right:0px">
                                         <input type="text"  class="form-control" ng-disabled="{{mode}}" ng-model="$parent.selectedSourceDetail" required ng-change="onChangeSourceDetail()" >
                                     </div>
@@ -182,7 +196,7 @@
                                                 <input type="text"  class="form-control" ng-disabled="true" ng-if="selectedSourceFormate == null|| selectedSourceFormate =='PARQUET'" ng-model="$parent.ingestData.sourceExtn"  ng-change="onChangeSourceDetail()" >
                                             </div>
                                         
-                                    </div>
+                                    </div> -->
                                     <!-- <div class="col-md-3 col-sm-3 col-xs-12">
                                        
                                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 0; padding-right: 0;">
@@ -215,19 +229,8 @@
                                           </div>
 
                                     </div> -->
-                                </div>
-                                <div class="form-group" ng-if="selectedSourceType =='FILE'">
-                                    <label class="col-md-3 control-label">Ignore Case</label>
-                                    <div class="col-md-9">
-                                      <div class="mt-checkbox-list" style="margin-top:-7px">
-                                        <label class="mt-checkbox mt-checkbox-outline">
-                                            
-                                          <input ng-disabled="{{mode}}" type="checkbox" ng-model="$parent.ingestData.ignoreCase" ng-true-value="'Y'" ng-false-value="'N'">
-                                          <span ng-disabled="{{mode}}"></span>
-                                        </label>
-                                      </div>
-                                    </div>
-                                </div>
+                                
+                                
                                 <div class="form-group" ng-if="selectedSourceType =='TABLE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
                                         <span class="required" aria-required="true"> * </span>
@@ -262,15 +265,27 @@
                                         <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail" required>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-if="selectedSourceType =='FILE'"> 
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12" ng-init="ingestData.header='N'">
+                                    <div class="col-md-3 col-sm-3 col-xs-12" ng-init="ingestData.header='N'">
                                         <div class="btn-group">
                                             <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
                                             <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                         </div>
                                     </div>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <div class="mt-checkbox-list" style="margin-top:-7px">
+                                            <label class="mt-checkbox mt-checkbox-outline">
+                                              <input ng-disabled="{{mode}}" type="checkbox" ng-model="$parent.ingestData.ignoreCase" ng-true-value="'Y'" ng-false-value="'N'">
+                                              <span ng-disabled="{{mode}}"></span>
+                                            </label>
+                                          </div>
+                                    </div>
+
                                 </div>
+
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Target DS
                                         <span class="required" aria-required="true"> * </span>
@@ -305,11 +320,27 @@
                                     </div>
                                    
                                 </div>
+
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Target Name
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <!-- ng-pattern="/^[a-zA-Z\d\-_.%\s]+$/" pattern-err-type="parttenFileName" -->
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
+                                    </div>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;"> Extension
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <input type="text" class="form-control" name="tagetDetail" ng-disabled="{{mode}}"  ng-if=" selectedTargetFormate != null &&  selectedTargetFormate !='PARQUET'" ng-model="$parent.ingestData.targetExtn" required>
+                                        <input type="text" class="form-control" name="tagetDetail" ng-disabled="true"  ng-if="selectedTargetFormate == null || selectedTargetFormate =='PARQUET'" ng-model="$parent.ingestData.targetExtn">
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group" ng-if="selectedTargetType =='FILE'">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Target Name
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
                                     <div class="col-md-5" style="padding-right:0px">
                                         <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="$parent.selectedTargetDetail" required ng-change="onChangeSourceDetail()">
                                     </div>
@@ -324,7 +355,7 @@
                                                 </div>
                                         
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group" ng-if="selectedTargetType =='FILE'">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Save Mode 
                                        
