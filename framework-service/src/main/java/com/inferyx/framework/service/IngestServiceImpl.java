@@ -519,7 +519,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		if(ingestVersion != null && !ingestVersion.isEmpty()) {
 			//dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
 		    dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
-		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Failed.toString()));
+		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString()));
 		} else {
 			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
 		}
