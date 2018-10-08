@@ -178,7 +178,7 @@ public class MatrixMultOperator implements IOperator {
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
 				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
-			rsHolder2 = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+			rsHolder2 = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), true, commonServiceImpl.getApp().getUuid());
 		} else {
 			rsHolder2 = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod, null);
 		}

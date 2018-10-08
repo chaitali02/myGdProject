@@ -246,7 +246,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 								datasource);
 						String sql = transposeOldOperator.generateSql(datapod, tabName);
 						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod,
-								SaveMode.Append.toString(), appUuid);
+								SaveMode.Append.toString(), true, appUuid);
 					}
 				}
 			}

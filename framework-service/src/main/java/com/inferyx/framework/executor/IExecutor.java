@@ -92,12 +92,13 @@ public interface IExecutor {
 	 * 
 	 * @param sql
 	 * @param tableName
+	 * @param formPath TODO
 	 * @param clientContext
 	 * @return
 	 * @throws IOException
 	 */
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException;
+			String saveMode, boolean formPath, String clientContext) throws IOException;
 
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName);
 

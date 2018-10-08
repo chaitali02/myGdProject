@@ -368,7 +368,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 																								targetDatapod.getDatasource().getRef().getType().toString());
 			if(/*datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					||*/ targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), appUuid);
+				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), true, appUuid);
 			else
 				rsHolder = exec.executeSql(sql);
 			
