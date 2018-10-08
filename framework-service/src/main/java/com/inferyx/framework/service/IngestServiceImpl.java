@@ -633,11 +633,15 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public void moveFile(String srcLocation, String targetLocation) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public void moveFileTOFileOrDir(String srcLocation, String targetLocation, boolean moveToDir) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		logger.info("source location: "+srcLocation);
 		logger.info("target location: "+targetLocation);
 		try {
-			FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
+			if(moveToDir) {
+				FileUtils.moveFileToDirectory(new File(srcLocation), new File(targetLocation), true);
+			} else {
+				FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
+			}			
 		} catch (Exception e) {
 			String message = null;
 			try {
@@ -658,11 +662,26 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public String getCSVFileNameFromDir(String directory) {
+	public String getFileNameFromDir(String directory, String fileExt, String fileFormat) {
 		File folder = new File(directory);
 		for (File file : folder.listFiles()) {
 			String dirFileName = file.getName();
-			if (file.isFile() && dirFileName.toLowerCase().endsWith(".csv")) {
+			if(fileExt != null) {
+				fileExt = fileExt.startsWith(".") ? fileExt.substring(1) : fileExt;
+			} else {
+				fileExt = fileFormat;
+			}
+			
+			if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
+				fileExt = FileType.PARQUET.toString().toLowerCase();
+			} else {
+				//assigning file extension to csv b'coz as of now we are using this method
+				//to get files from the directory where sqpark have saved the csv files
+				//and spark saves csv files with extension .csv for for all type csv delimetres
+				fileExt = FileType.CSV.toString().toLowerCase();				
+			}
+			
+			if (file.isFile() && dirFileName.toLowerCase().endsWith("."+fileExt)) {
 				return file.getAbsolutePath();
 			}
 		}
@@ -671,7 +690,9 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	public void deleteFileOrDirectory(String absolutePath, boolean isDirectory) throws IOException {
 		File file = new File(absolutePath);
-		FileUtils.forceDelete(file);
+		if(file.exists()) {
+			FileUtils.forceDelete(file);
+		}
 	}
 	
 	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException {
