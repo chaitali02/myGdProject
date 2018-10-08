@@ -1,6 +1,6 @@
 DROP TABLE profile_rule_results;
 	   
-	CREATE TABLE profile_rule_results
+CREATE TABLE profile_rule_results
 	(
 	  datapoduuid text,
 	  datapodversion text,
