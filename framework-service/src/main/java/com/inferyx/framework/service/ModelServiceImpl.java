@@ -102,6 +102,7 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -179,7 +180,9 @@ public class ModelServiceImpl {
 	@Autowired
 	private Helper helper;
 	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
+	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -1105,7 +1108,7 @@ public class ModelServiceImpl {
 						
 						String sql = "SELECT * FROM " + tableName_3;					
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1122,7 +1125,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1137,7 +1140,8 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, appUuid);
+//					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;						
 					count = rsHolder.getCountRows();
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
@@ -1177,7 +1181,7 @@ public class ModelServiceImpl {
 
 						String sql = "SELECT * FROM " + tableName_3;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1194,7 +1198,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1209,18 +1213,18 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;	
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, appUuid);
+//					ResultSetHolder rsHolder = exec.cczexecuteRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;
 					count = rsHolder.getCountRows();
 				}
 			}
 
-				createDatastore(filePathUrl, modelName,
-						new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
-						new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
-						simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-						Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
-		
+			createDatastore(filePathUrl, modelName,
+					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
+					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
+					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
 
 			simulateExec.setLocation(filePathUrl);
 			simulateExec.setResult(resultRef);
@@ -1769,7 +1773,6 @@ public class ModelServiceImpl {
 			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 
-			String dsadasd = Helper.getPropertyValue("framework.model.predict.path");
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -1788,16 +1791,16 @@ public class ModelServiceImpl {
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, target, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder;					
 					count = rsHolder.getCountRows();
-					createDatastore(filePath, predict.getName(), 
+					createDatastore(filePathUrl, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				} else {
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder;					
 					count = rsHolder.getCountRows();
 				}
@@ -1814,16 +1817,16 @@ public class ModelServiceImpl {
 				String query = "SELECT * FROM " + rsHolder.getTableName();
 				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePathUrl, target, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder2;
 					count = rsHolder2.getCountRows();
-					createDatastore(filePath, predict.getName(), 
+					createDatastore(filePathUrl, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				} else {
-					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder2;					
 					count = rsHolder2.getCountRows();
 				}
@@ -1973,7 +1976,7 @@ public class ModelServiceImpl {
 					sql = predictQuery;
 				}				
 //				sql = "INSERT INTO framework.account(interest_rate, account_id) VALUES((SELECT interest_rate AS interestRate FROM framework.account account1), (SELECT sqrt ( account.interest_rate ) * 0.9 AS account_id FROM framework.account account2))";
-				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, target, SaveMode.Append.toString(), appUuid);
+				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, target, SaveMode.Append.toString(), true, appUuid);
 				result = rsHolder;					
 				count = rsHolder.getCountRows();
 				
@@ -2002,7 +2005,7 @@ public class ModelServiceImpl {
 						|| dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 						|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 					String query = "SELECT * FROM " + rsHolder.getTableName();					
-					rsHolder = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+					rsHolder = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), true, appUuid);
 				}
 				
 				result = rsHolder;
@@ -2211,7 +2214,7 @@ public class ModelServiceImpl {
 						
 						String sql = "SELECT * FROM " + tableName_3;					
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2228,7 +2231,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2243,7 +2246,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), true, appUuid);	
 					result = rsHolder;						
 					count = rsHolder.getCountRows();
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
@@ -2292,7 +2295,7 @@ public class ModelServiceImpl {
 								targetTable = datasource.getDbname() + "." + datapod.getName();
 								sql = helper.buildInsertQuery(datasource.getType(), targetTable, datapod, sql);
 							}
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2310,7 +2313,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2325,7 +2328,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;	
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), true, appUuid);	
 					result = rsHolder;
 					count = rsHolder.getCountRows();
 				}
