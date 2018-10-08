@@ -1,4 +1,4 @@
-
+DROP TABLE DIM_DATE;
 CREATE TABLE DIM_DATE 
   ( 
      DATE_ID                        VARCHAR2(50) NOT NULL, 

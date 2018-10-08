@@ -1,11 +1,11 @@
-
-create table "model_training_set"
+DROP TABLE MODEL_TRAINING_SET;
+CREATE TABLE MODEL_TRAINING_SET
 (
-  customer_id number(30,0),
-  address_id number(30,0),
-  branch_id number(30,0),
-  commute_distance_miles number(30,0),
-  label number(30,0),
-  censor number(30,0),
-  version number(30,0)
+  CUSTOMER_ID 			INTEGER,
+  ADDRESS_ID 			INTEGER,
+  BRANCH_ID 			INTEGER,
+  COMMUTE_DISTANCE_MILES INTEGER,
+  LABEL 				INTEGER,
+  CENSOR 				INTEGER,
+  VERSION 				INTEGER
 );

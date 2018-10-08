@@ -1,4 +1,4 @@
-
+DROP TABLE BANK;
 CREATE TABLE BANK 
   ( 
      BANK_ID             VARCHAR2(50) NOT NULL, 
