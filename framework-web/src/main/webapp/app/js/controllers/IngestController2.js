@@ -1,101 +1,109 @@
 DataIngestionModule = angular.module('DataIngestionModule');
+DataIngestionModule.controller('IngestRuleDetailController2', function ($state, $stateParams, $rootScope, $scope, $timeout, $filter, dagMetaDataService, privilegeSvc,IngestRuleService, CommonService, CF_FILTER) {
 
-DataIngestionModule.controller('IngestRuleDetailController', function (CommonService, $state, $timeout, $filter, $stateParams, $rootScope, $scope, IngestRuleService, privilegeSvc, CF_FILTER) {
-	if ($stateParams.mode == 'true') {
-		$scope.isEdit = false;
-		$scope.isversionEnable = false;
-		$scope.isAdd = false;
-		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-		$scope.$on('privilegesUpdated', function (e, data) {
-			var privileges = privilegeSvc.privileges['comment'] || [];
-			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+    if ($stateParams.mode == 'true') {
+        $scope.isEdit = false;
+        $scope.isversionEnable = false;
+        $scope.isAdd = false;
+        var privileges = privilegeSvc.privileges['comment'] || [];
+        $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+        $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+        $scope.$on('privilegesUpdated', function (e, data) {
+            var privileges = privilegeSvc.privileges['comment'] || [];
+            $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+            $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 
-		});
-	}
-	else if ($stateParams.mode == 'false') {
-		$scope.isEdit = true;
-		$scope.isversionEnable = true;
-		$scope.isAdd = false;
-		$scope.isPanelActiveOpen = true;
-		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-		$scope.$on('privilegesUpdated', function (e, data) {
-			var privileges = privilegeSvc.privileges['comment'] || [];
-			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+        });
+    }
+    else if ($stateParams.mode == 'false') {
+        $scope.isEdit = true;
+        $scope.isversionEnable = true;
+        $scope.isAdd = false;
+        $scope.isPanelActiveOpen = true;
+        var privileges = privilegeSvc.privileges['comment'] || [];
+        $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+        $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+        $scope.$on('privilegesUpdated', function (e, data) {
+            var privileges = privilegeSvc.privileges['comment'] || [];
+            $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+            $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 
-		});
-	}
-	else {
-		$scope.isAdd = true;
-	}
-
-	$scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" },{ "text": "STREAM-FILE", "caption": "Stream - File" },{ "text": "STREAM-TABLE", "caption": "Stream - Table" }];
-	$scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
-	$scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
-	$scope.saveModeTable=["APPEND","OVERWRITE"];
-	$scope.saveModeFile=["OVERWRITE"];
-	$scope.selectedRuleType=$scope.ruleTypes[0].text;
-
-	$scope.userDetail = {}
-	$scope.userDetail.uuid = $rootScope.setUseruuid;
-	$scope.userDetail.name = $rootScope.setUserName;
-	$scope.tags = null;
-	$scope.mode = "false"
-	$scope.ingestData;
-	$scope.showForm = true;
-	$scope.showGraphDiv = false
-	$scope.filterTableArray = [];
-	$scope.ingest = {};
-	$scope.ingest.versions = [];
-	$scope.isDependencyShow = false;
-	$scope.logicalOperator = ["AND", "OR"];
-	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
-	$scope.operator = CF_FILTER.operator;
-	$scope.privileges = [];
-	$scope.privileges = privilegeSvc.privileges['ingest'] || [];
-	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
-	$scope.$on('privilegesUpdated', function (e, data) {
-		$scope.privileges = privilegeSvc.privileges['ingest'] || [];
-		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
-	});
-	$scope.lhsType = [
-		{ "text": "string", "caption": "string" },
-		{ "text": "string", "caption": "integer" },
+        });
+    }
+    else {
+        $scope.isAdd = true;
+    }
+    $scope.continueCount=1;
+    $scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" }, { "text": "STREAM-FILE", "caption": "Stream - File" }, { "text": "STREAM-TABLE", "caption": "Stream - Table" }];
+    $scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
+    $scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
+    $scope.saveModeTable = ["APPEND", "OVERWRITE"];
+    $scope.saveModeFile = ["OVERWRITE"];
+	$scope.allAutoMapTable=["By Name","By Order"];
+	$scope.allAutoMapFile=["From Source","From Target"];
+    $scope.sourceAttributeTypes =
+		[{ "text": "string", "caption": "string" },
 		{ "text": "datapod", "caption": "attribute" },
-		{ "text": "formula", "caption": "formula" }];
-	$scope.rhsType = [
-		{ "text": "string", "caption": "string", "disabled": false },
-		{ "text": "string", "caption": "integer", "disabled": false },
-		{ "text": "datapod", "caption": "attribute", "disabled": false },
-		{ "text": "formula", "caption": "formula", "disabled": false },
-		{ "text": "dataset", "caption": "dataset", "disabled": false },
-		{ "text": "paramlist", "caption": "paramlist", "disabled": false },
-		{ "text": "function", "caption": "function", "disabled": false }]
-	$scope.getLovByType = function () {
-		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetLovByType = function (response) {
-			console.log(response)
-			$scope.lobTag = response[0].value
-		}
-	}
-	$scope.loadTag = function (query) {
-		return $timeout(function () {
-			return $filter('filter')($scope.lobTag, query);
-		});
-	};
-	$scope.getLovByType();
-	$scope.showPage = function () {
+		{ "text": "formula", "caption": "formula" },
+		{ "text": "function", "caption": "function" }];
+  //  $scope.selectedRuleType = $scope.ruleTypes[0].text;
+    $scope.userDetail = {}
+    $scope.userDetail.uuid = $rootScope.setUseruuid;
+    $scope.userDetail.name = $rootScope.setUserName;
+    $scope.tags = null;
+    $scope.mode = "false"
+    $scope.ingestData;
+    $scope.showForm = true;
+    $scope.showGraphDiv = false
+    $scope.filterTableArray = [];
+    $scope.ingest = {};
+    $scope.ingest.versions = [];
+    $scope.isDependencyShow = false;
+    $scope.logicalOperator = ["AND", "OR"];
+    $scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+    $scope.operator = CF_FILTER.operator;
+    $scope.privileges = [];
+    $scope.privileges = privilegeSvc.privileges['ingest'] || [];
+    $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+    $scope.$on('privilegesUpdated', function (e, data) {
+        $scope.privileges = privilegeSvc.privileges['ingest'] || [];
+        $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+    });
+    $scope.lhsType = [
+        { "text": "string", "caption": "string" },
+        { "text": "string", "caption": "integer" },
+        { "text": "datapod", "caption": "attribute" },
+        { "text": "formula", "caption": "formula" }];
+    $scope.rhsType = [
+        { "text": "string", "caption": "string", "disabled": false },
+        { "text": "string", "caption": "integer", "disabled": false },
+        { "text": "datapod", "caption": "attribute", "disabled": false },
+        { "text": "formula", "caption": "formula", "disabled": false },
+        { "text": "dataset", "caption": "dataset", "disabled": false },
+        { "text": "paramlist", "caption": "paramlist", "disabled": false },
+        { "text": "function", "caption": "function", "disabled": false }]
+    $scope.getLovByType = function () {
+        CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+        var onSuccessGetLovByType = function (response) {
+            console.log(response)
+            $scope.lobTag = response[0].value
+        }
+    }
+
+    $scope.loadTag = function (query) {
+        return $timeout(function () {
+            return $filter('filter')($scope.lobTag, query);
+        });
+    };
+
+    $scope.getLovByType();
+    $scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
-		$state.go('ingestruledetail', {
+		$state.go('ingestruledetail2', {
 			id: uuid,
 			version: version,
 			mode: 'false'
@@ -104,7 +112,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.showView = function (uuid, version) {
 		//if (!$scope.isEdit) {
 			$scope.showPage()
-			$state.go('ingestruledetail', {
+			$state.go('ingestruledetail2', {
 				id: uuid,
 				version: version,
 				mode: 'true'
@@ -124,19 +132,30 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		timeout: 3000 //time in ms
 	};
 
-
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
 			$state.go($rootScope.previousState.name, $rootScope.previousState.params);
 		}
 		else {
-			$state.go('ingestrulelist');
+			$state.go('ingestrulelist2');
 		}
 	}
+    $scope.countContinue = function () {
+        $scope.continueCount = $scope.continueCount + 1;
+        if ($scope.continueCount >= 4) {
+            $scope.isSubmitShow = true;
+        } else {
+            $scope.isSubmitShow = false;
+        }
+    }
 
+    $scope.countBack = function () {
+        $scope.continueCount = $scope.continueCount - 1;
+        $scope.isSubmitShow = false;
+    }
     
-	$scope.getDatasourceForTable = function (sourceType, TargetType) {
+    $scope.getDatasourceForTable = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForTable("datasource").then(function (response) { onSuccessGetDatasourceForTable(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatasourceForTable = function (response) {
 			if (sourceType == "TABLE") {
@@ -214,7 +233,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 	}
 	// $scope.getAllAttributeBySource=function(){
-	// 	MetadataMapSerivce.getAllAttributeBySource($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
+	// 	IngestRuleService.getAllAttributeBySource($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
 	// 	var onSuccessGetAllAttributeBySourcet = function (response) {
 	// 		
 	// 		$scope.allSourceAttribute = response;
@@ -395,17 +414,178 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 	}
 
-	$scope.getAllAttributeBySource = function () {
+	$scope.getAllAttributeBySource = function (data) {
 		if ($scope.selectedSourceDetail) {
 			IngestRuleService.getAllAttributeBySource($scope.selectedSourceDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
 				$scope.sourcedatapodattribute = response;
 				$scope.allSourceAttribute = response;
 				$scope.lhsdatapodattributefilter = response;
+				if (typeof $stateParams.id != "undefined" && data.length >0) {
+                    $scope.ingestTableInfo=$scope.allSourceAttribute;
+                }
+			}
+		}
+    }
+    $scope.getAllAttributeByTarget = function (data) {
+		if ($scope.selectedTargetDetail) {
+			IngestRuleService.getAllAttributeBySource($scope.selectedTargetDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
+			var onSuccessGetAllAttributeBySource = function (response) {
+                $scope.allTargetAttribute = response;
+                if (typeof $stateParams.id != "undefined" && data.length >0) {
+                    $scope.ingestTableInfo=$scope.allTargetAttribute;
+                }
+		
 			}
 		}
 	}
 
+    $scope.onChangeAutoMode=function(){
+        $scope.ingestTableArray=[];
+        if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "TABLE" &&  $scope.selectedAutoMode == "By Order"){
+            if($scope.allTargetAttribute){
+                $scope.ingestTableArray=[];
+                $scope.ingestTableInfo=$scope.allTargetAttribute;
+                for(var i=0;i<$scope.allTargetAttribute.length;i++){
+                    var mapInfo = {};
+                    var obj = {}
+                    obj.text = "datapod";
+                    obj.caption = "attribute";
+                    mapInfo.isSourceAtributeSimple = false;
+                    mapInfo.isSourceAtributeDatapod = true;
+                    mapInfo.isSourceAtributeFormula = false;
+                    mapInfo.isSourceAtributeExpression = false;
+                    mapInfo.sourceAttributeType = obj;
+                    mapInfo.sourceattribute=$scope.allSourceAttribute[i];
+                    $scope.ingestTableArray[i] = mapInfo;
+                }
+            }
+        }
+        else if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "TABLE" &&  $scope.selectedAutoMode == "By Name"){
+            var allSourceAttribute={};
+            $scope.ingestTableArray=[];
+            $scope.ingestTableInfo=$scope.allTargetAttribute;
+            angular.forEach($scope.allSourceAttribute, function (val, key) {
+                allSourceAttribute[val.name] = val;
+            });
+            for(var i=0;i<$scope.allTargetAttribute.length;i++){
+                var mapInfo = {};
+                var obj = {}
+                obj.text = "datapod";
+                obj.caption = "attribute";
+                mapInfo.isSourceAtributeSimple = false;
+                mapInfo.isSourceAtributeDatapod = true;
+                mapInfo.isSourceAtributeFormula = false;
+                mapInfo.isSourceAtributeExpression = false;
+                mapInfo.sourceAttributeType = obj;
+                mapInfo.sourceattribute=allSourceAttribute[$scope.allTargetAttribute[i].name];
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+          //  console.log(allSourceAttribute);
+		}
+		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "TABLE" && $scope.selectedAutoMode == "From Target"){
+			var allSourceAttribute={};
+            $scope.ingestTableArray=[];
+			$scope.ingestTableInfo=$scope.allTargetAttribute;
+			for(var i=0;i<$scope.allTargetAttribute.length;i++){
+                var mapInfo = {};
+                var obj = {}
+                obj.text = "string";
+                obj.caption = "string";
+                mapInfo.isSourceAtributeSimple = true;
+                mapInfo.isSourceAtributeDatapod = false;
+                mapInfo.isSourceAtributeFormula = false;
+                mapInfo.isSourceAtributeExpression = false;
+                mapInfo.sourceAttributeType = obj;
+				mapInfo.sourcesimple=$scope.allTargetAttribute[i].name;
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+		}
+		else if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
+			var allSourceAttribute={};
+            $scope.ingestTableArray=[];
+			$scope.ingestTableInfo=$scope.allSourceAttribute;
+			for(var i=0;i<$scope.allSourceAttribute.length;i++){
+                var mapInfo = {};
+                var obj = {}
+				obj.text = "datapod";
+                obj.caption = "attribute";
+                mapInfo.isSourceAtributeSimple = false;
+                mapInfo.isSourceAtributeDatapod = true;
+                mapInfo.isSourceAtributeFormula = false;
+                mapInfo.isSourceAtributeExpression = false;
+                mapInfo.sourceAttributeType = obj;
+				mapInfo.targetsimple=$scope.allSourceAttribute[i].name;
+				mapInfo.sourceattribute=$scope.allSourceAttribute[i];
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+		}
+	
+		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
+			for(var i=0;i<$scope.ingestTableInfo.length;i++){
+                var mapInfo = {};
+                var obj = {}
+				var mapInfo = {};
+                var obj = {}
+				obj.text = "string";
+                obj.caption = "string";
+                mapInfo.isSourceAtributeSimple = true;
+                mapInfo.isSourceAtributeDatapod = false;
+                mapInfo.isSourceAtributeFormula = false;
+				mapInfo.isSourceAtributeExpression = false;
+				mapInfo.sourceAttributeType = obj;
+				mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcesimple;
+				mapInfo.sourcesimple=$scope.ingestTableInfo[i].sourcesimple;
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+		}
+        else{
+            $scope.ingestTableArray=[];
+        }
+	}
+	
+	
+    $scope.checkAllAttributeRow = function () {
+		
+	
+		angular.forEach($scope.ingestTableInfo, function (filter) {
+			filter.selected = $scope.selectedAllAttributeRow;
+		});
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+	}
+
+	$scope.addAttribute = function () {
+		if ($scope.ingestTableInfo == null) {
+			$scope.ingestTableInfo = [];
+		}
+		var mapInfo = {};
+		var obj = {}
+		obj.text = "string";
+		obj.caption = "string";
+		mapInfo.isSourceAtributeSimple = true;
+		mapInfo.isSourceAtributeDatapod = false;
+		mapInfo.isSourceAtributeFormula = false;
+		mapInfo.isSourceAtributeExpression = false;
+		mapInfo.sourceAttributeType = obj;
+		mapInfo.targetsimple;
+		$scope.ingestTableInfo.splice($scope.ingestTableInfo.length, 0, mapInfo);
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+		console.log($scope.ingestTableInfo);
+	}
+	$scope.removeAttribute = function () {
+		var newDataList = [];
+		$scope.selectedAllAttributeRow=false;
+		$scope.checkAll = false;
+		angular.forEach($scope.ingestTableInfo, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+
+	
+		$scope.ingestTableInfo = newDataList;
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+	}
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
@@ -462,12 +642,13 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				selectedSourceDetail.type = $scope.ingestData.sourceDetail.ref.type;
 				selectedSourceDetail.uuid = $scope.ingestData.sourceDetail.ref.uuid;
 				$scope.selectedSourceDetail = selectedSourceDetail;
-				$scope.getAllAttributeBySource();
+				$scope.getAllAttributeBySource(response.ingesttabalearray);
 				$scope.getParamByApp();
 				var selectedSourceAttrDetail={};
 				selectedSourceAttrDetail.uuid=$scope.ingestData.incrAttr.ref.uuid;
 				selectedSourceAttrDetail.attributeId=$scope.ingestData.incrAttr.attrId;
-				$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
+                $scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
+                
 
 			}
 
@@ -492,9 +673,15 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 				var selectedTargetDetail = {};
 				selectedTargetDetail.type = $scope.ingestData.targetDetail.ref.type;
 				selectedTargetDetail.uuid = $scope.ingestData.targetDetail.ref.uuid;
-				$scope.selectedTargetDetail = selectedTargetDetail;
+                $scope.selectedTargetDetail = selectedTargetDetail;
+                $scope.getAllAttributeByTarget(response.ingesttabalearray);
 			}
-			$scope.filterTableArray = response.filterInfo;
+            $scope.filterTableArray = response.filterInfo;
+			$scope.ingestTableArray=response.ingesttabalearray;
+			if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE"){
+				$scope.ingestTableInfo=$scope.ingestTableArray;
+			}
+            
 			var tags = [];
 			for (var i = 0; i < response.ingestData.tags.length; i++) {
 				var tag = {};
@@ -506,7 +693,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	}//End If
     else{
 		$scope.ingestData={};
-		$scope.onChangeRuleType();
+	//	$scope.onChangeRuleType();
 	}
 
 
@@ -858,7 +1045,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 	}
 
-
+    
 	$scope.onChangeSimple = function () {
 		if ($scope.ingestCompare != null) {
 			$scope.ingestCompare.filterChg = "y"
@@ -882,7 +1069,67 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 			$scope.ingestCompare.filterChg = "y"
 		}
 	}
+    $scope.onChangeSourceAttribute = function (type, index) {
+		if (type == "string") {
+			$scope.ingestTableArray[index].isSourceAtributeSimple = true;
+			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
+			$scope.ingestTableArray[index].isSourceAtributeFormula = false;
+			$scope.ingestTableArray[index].sourcesimple = "''";
+			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
 
+		}
+		else if (type == "datapod") {
+
+			$scope.ingestTableArray[index].isSourceAtributeSimple = false;
+			$scope.ingestTableArray[index].isSourceAtributeDatapod = true;
+			$scope.ingestTableArray[index].isSourceAtributeFormula = false;
+			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
+		}
+		else if (type == "formula") {
+
+			$scope.ingestTableArray[index].isSourceAtributeSimple = false;
+			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
+			$scope.ingestTableArray[index].isSourceAtributeFormula = true;
+			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
+			IngestRuleService.getFormulaByType($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessExpression(response.data) });
+			var onSuccessExpression = function (response) {
+
+				$scope.allMapLodeFormula = response.data
+			}
+		}
+		else if (type == "expression") {
+
+			$scope.ingestTableArray[index].isSourceAtributeSimple = false;
+			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
+			$scope.ingestTableArray[index].isSourceAtributeFormula = false;
+			$scope.ingestTableArray[index].isSourceAtributeExpression = true;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
+			IngestRuleService.getExpressionByType($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessExpression(response.data) });
+			var onSuccessExpression = function (response) {
+
+				$scope.allMapLodeExpression = response
+			}
+
+		}
+		else if (type == "function") {
+
+			$scope.ingestTableArray[index].isSourceAtributeSimple = false;
+			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
+			$scope.ingestTableArray[index].isSourceAtributeFormula = false;
+			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = true;
+			$scope.ingestTableArray[index].isSourceAtributeFunction = true;
+			IngestRuleService.getAllLatestFunction("function", "N").then(function (response) { onSuccessFunction(response.data) });
+			var onSuccessFunction = function (response) {
+				$scope.ruleLodeFunction = response
+			}
+
+		}
+
+	}
 	$scope.submit = function () {
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -1087,7 +1334,75 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 		}
 		if ($scope.ingestData.filterChg == "Y") {
 			ingestJson.filterChg = "y";
-		}
+        }
+        
+        var attributemaparray = [];
+        if($scope.ingestTableArray){
+            for (var i = 0; i < $scope.ingestTableInfo.length; i++) {
+                var attributemap = {};
+                attributemap.attrMapId = i;
+                var sourceAttr = {};
+                var sourceref = {};
+                var targetAttr = {};
+                var targetref = {};
+                if ($scope.ingestTableArray[i].sourceAttributeType.text == "string") {
+                    sourceref.type = "simple";
+                    sourceAttr.ref = sourceref;
+                    if (typeof $scope.ingestTableArray[i].sourcesimple == "undefined") {
+                        sourceAttr.value = "";
+                    }
+                    else {
+                        sourceAttr.value = $scope.ingestTableArray[i].sourcesimple;
+                    }
+                    attributemap.sourceAttr = sourceAttr;
+                }
+                else if ($scope.ingestTableArray[i].sourceAttributeType.text == "datapod") {
+                    sourceref.uuid = $scope.ingestTableArray[i].sourceattribute.uuid;
+                    sourceref.type=$scope.ingestTableArray[i].sourceattribute.type;
+                    sourceAttr.ref = sourceref;
+                    sourceAttr.attrId = $scope.ingestTableArray[i].sourceattribute.attributeId;
+                    attributemap.sourceAttr = sourceAttr;
+                }
+                else if ($scope.ingestTableArray[i].sourceAttributeType.text == "expression") {
+
+                    sourceref.type = "expression";
+                    sourceref.uuid = $scope.ingestTableArray[i].sourceexpression.uuid;
+                    sourceAttr.ref = sourceref;
+                    attributemap.sourceAttr = sourceAttr;
+
+                }
+                else if ($scope.ingestTableArray[i].sourceAttributeType.text == "formula") {
+
+                    sourceref.type = "formula";
+                    sourceref.uuid = $scope.ingestTableArray[i].sourceformula.uuid;
+                    sourceAttr.ref = sourceref;
+                    attributemap.sourceAttr = sourceAttr;
+
+                }
+                else if ($scope.ingestTableArray[i].sourceAttributeType.text == "function") {
+
+                    sourceref.type = "function";
+                    sourceref.uuid = $scope.ingestTableArray[i].sourcefunction.uuid;
+                    sourceAttr.ref = sourceref;
+                    attributemap.sourceAttr = sourceAttr;
+
+				}
+				if($scope.selectedTargetType != "FILE"){
+                	targetref.uuid = $scope.ingestTableInfo[i].uuid;
+                	targetref.type =$scope.ingestTableInfo[i].type;
+                	targetAttr.ref = targetref;
+					targetAttr.attrId = $scope.ingestTableInfo[i].attributeId;
+				}
+				else{
+					targetref.type ="simple"
+                	targetAttr.ref = targetref;
+					targetAttr.value =$scope.ingestTableArray[i].targetsimple;
+				}
+                attributemap.targetAttr = targetAttr;
+                attributemaparray[i] = attributemap;
+            }
+        }
+		ingestJson.attributeMap = attributemaparray;
 
 		console.log(JSON.stringify(ingestJson))
 		IngestRuleService.submit(ingestJson, 'ingestview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -1112,547 +1427,9 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	$scope.oksave = function () {
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			setTimeout(function () { $state.go('ingestrulelist'); }, 2000);
+			setTimeout(function () { $state.go('ingestrulelist2'); }, 2000);
 		}
 	}
 
-});
-
-DataIngestionModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc, dagMetaDataService, CommonService) {
-
-	$scope.select = 'rules group';
-	if ($stateParams.mode == 'true') {
-		$scope.isEdit = false;
-		$scope.isversionEnable = false;
-		$scope.isAdd = false;
-		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-		$scope.$on('privilegesUpdated', function (e, data) {
-			var privileges = privilegeSvc.privileges['comment'] || [];
-			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-
-		});
-	}
-	else if ($stateParams.mode == 'false') {
-		$scope.isEdit = true;
-		$scope.isversionEnable = true;
-		$scope.isAdd = false;
-		$scope.isPanelActiveOpen = true;
-		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-		$scope.$on('privilegesUpdated', function (e, data) {
-			var privileges = privilegeSvc.privileges['comment'] || [];
-			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-
-		});
-	}
-	else {
-		$scope.isAdd = true;
-	}
-	$scope.showForm = true;
-	$scope.userDetail = {}
-	$scope.userDetail.uuid = $rootScope.setUseruuid;
-	$scope.userDetail.name = $rootScope.setUserName;
-	$scope.mode = " ";
-	$scope.rulegroup = {};
-	$scope.rulegroup.versions = []
-	$scope.isDependencyShow = false;
-	$scope.privileges = [];
-	$scope.privileges = privilegeSvc.privileges['ingestgroup'] || [];
-	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
-	$scope.$on('privilegesUpdated', function (e, data) {
-		$scope.privileges = privilegeSvc.privileges['ingestgroup'] || [];
-		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
-	});
-	var notify = {
-		type: 'success',
-		title: 'Success',
-		content: '',
-		timeout: 3000 //time in ms
-	};
-	$scope.getLovByType = function () {
-		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetLovByType = function (response) {
-			console.log(response)
-			$scope.lobTag = response[0].value
-		}
-	}
-	$scope.loadTag = function (query) {
-		return $timeout(function () {
-			return $filter('filter')($scope.lobTag, query);
-		});
-	};
-	$scope.getLovByType();
-	$scope.close = function () {
-		if ($stateParams.returnBack == "true" && $rootScope.previousState) {
-			$state.go($rootScope.previousState.name, $rootScope.previousState.params);
-		} else {
-			$scope.statedetail = {};
-			$scope.statedetail.name = dagMetaDataService.elementDefs['ingestgroup'].listState
-			$scope.statedetail.params = {}
-			$state.go($scope.statedetail.name, $scope.statedetail.params)
-		}
-	}
-	$scope.showPage = function () {
-		$scope.showForm = true;
-		$scope.showGraphDiv = false;
-
-	}
-
-	$scope.showGraph = function (uuid, version) {
-		$scope.showForm = false;
-		$scope.showGraphDiv = true;
-	}
-
-	$scope.enableEdit = function (uuid, version) {
-		$scope.showPage()
-		$state.go('ingestrulegroupdetail', {
-			id: uuid,
-			version: version,
-			mode: 'false'
-		});
-	}
-
-	$scope.showview = function (uuid, version) {
-		if (!$scope.isEdit) {
-			$scope.showPage()
-			$state.go('ingestrulegroupdetail', {
-				id: uuid,
-				version: version,
-				mode: 'true'
-			});
-		}
-	}
-
-	RuleGroupService.getAllLatest('ingest').then(function (response) { onSuccess(response.data) });
-	var onSuccess = function (response) {
-		var rullArray = [];
-		for (var i = 0; i < response.data.length; i++) {
-			var rulljosn = {};
-			rulljosn.uuid = response.data[i].uuid;
-			rulljosn.id = response.data[i].uuid //+ "_" + response.data[i].version
-			rulljosn.name = response.data[i].name;
-			rulljosn.version = response.data[i].version;
-			rullArray[i] = rulljosn;
-		}
-		$scope.rullall = rullArray;
-	}
-
-
-	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode;
-		$scope.isDependencyShow = true;
-		RuleGroupService.getAllVersionByUuid($stateParams.id, "ingestgroup").then(function (response) { onGetAllVersionByUuid(response.data) });
-		var onGetAllVersionByUuid = function (response) {
-			for (var i = 0; i < response.length; i++) {
-				var rulegroupversion = {};
-				rulegroupversion.version = response[i].version;
-				$scope.rulegroup.versions[i] = rulegroupversion;
-			}
-		}
-		RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
-		var onsuccess = function (response) {
-			$scope.ruleGroupDetail = response;
-			$scope.tags = response.tags
-			$scope.checkboxModelparallel = response.inParallel;
-			var defaultversion = {};
-			defaultversion.version = response.version;
-			defaultversion.uuid = response.uuid;
-			$scope.rulegroup.defaultVersion = defaultversion;
-			var ruleTagArray = [];
-			for (var i = 0; i < response.ruleInfo.length; i++) {
-				var ruletag = {};
-				ruletag.uuid = response.ruleInfo[i].ref.uuid;
-				ruletag.name = response.ruleInfo[i].ref.name;
-				ruletag.id = response.ruleInfo[i].ref.uuid// + "_" + response.ruleInfo[i].ref.version;
-				ruletag.version = response.ruleInfo[i].ref.version;
-				ruleTagArray[i] = ruletag;
-			}
-			$scope.ruleTags = ruleTagArray
-		}
-	}
-
-	$scope.selectVersion = function () {
-		$scope.myform.$dirty = false;
-		RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
-		var onsuccess = function (response) {
-			$scope.ruleGroupDetail = response;
-			$scope.tags = response.tags
-			var defaultversion = {};
-			defaultversion.version = response.version;
-			defaultversion.uuid = response.uuid;
-			$scope.rulegroup.defaultVersion = defaultversion;
-			var ruleTagArray = [];
-			for (var i = 0; i < response.ruleInfo.length; i++) {
-				var ruletag = {};
-				ruletag.uuid = response.ruleInfo[i].ref.uuid;
-				ruletag.name = response.ruleInfo[i].ref.name;
-				ruletag.id = response.ruleInfo[i].ref.uuid
-				ruletag.version = response.ruleInfo[i].ref.version;
-				ruleTagArray[i] = ruletag;
-			}
-			$scope.ruleTags = ruleTagArray
-		}
-	}
-
-	$scope.loadRules = function (query) {
-		return $timeout(function () {
-			return $filter('filter')($scope.rullall, query);
-		});
-	};
-
-	$scope.oksave = function () {
-		var hidemode = "yes";
-		if (hidemode == 'yes') {
-			setTimeout(function () {
-				$state.go('ingestrulegrouplist');
-			}, 2000);
-		}
-	}
-
-	$scope.submitRuleGroup = function () {
-		var upd_tag = "N"
-		$scope.isSubmitProgess = true;
-		$scope.myform.$dirty = false;
-		var options = {}
-		options.execution = $scope.checkboxModelexecution;
-		var ruleGroupJson = {}
-		ruleGroupJson.uuid = $scope.ruleGroupDetail.uuid;
-		ruleGroupJson.name = $scope.ruleGroupDetail.name;
-		ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
-		ruleGroupJson.active = $scope.ruleGroupDetail.active;
-		ruleGroupJson.published = $scope.ruleGroupDetail.published;
-		var tagArray = [];
-		if ($scope.tags != null) {
-			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
-				tagArray[counttag] = $scope.tags[counttag].text;
-			}
-			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if (result == false) {
-				upd_tag = "Y"
-			}
-		}
-		ruleGroupJson.tags = tagArray;
-		var ruleInfoArray = [];
-		for (var i = 0; i < $scope.ruleTags.length; i++) {
-			var ruleInfo = {}
-			var ref = {};
-			ref.type = "ingest"
-			ref.uuid = $scope.ruleTags[i].uuid;
-			ruleInfo.ref = ref;
-			ruleInfoArray[i] = ruleInfo;
-		}
-
-		ruleGroupJson.ruleInfo = ruleInfoArray;
-		ruleGroupJson.inParallel = $scope.checkboxModelparallel
-		console.log(JSON.stringify(ruleGroupJson))
-		RuleGroupService.submit(ruleGroupJson, "ingestgroup", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
-		var onSuccess = function (response) {
-
-			if (options.execution == "YES") {
-				RuleGroupService.getOneById(response.data, "ingestgroup").then(function (response) { onSuccessGetOneById(response.data) });
-				var onSuccessGetOneById = function (result) {
-					RuleGroupService.execute(result.data.uuid, result.data.version).then(function (response) { onSuccess(response.data) });
-					var onSuccess = function (response) {
-						console.log(JSON.stringify(response))
-						$scope.isSubmitProgess = false;
-						$scope.saveMessage = "Rule Group Saved and Submitted Successfully"
-						notify.type = 'success',
-						notify.title = 'Success',
-						notify.content = $scope.saveMessage
-						$scope.$emit('notify', notify);
-						$scope.oksave();
-					}
-				}
-			} //End If
-			else {
-				$scope.isSubmitProgess = false;
-				$scope.saveMessage = "Rule Group Saved Successfully"
-				notify.title = 'Success',
-				notify.content = $scope.saveMessage
-				$scope.$emit('notify', notify);
-				$scope.oksave();
-			} //End else
-		} //End Submit Api Function
-		var onError = function (response) {
-			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
-			$scope.$emit('notify', notify);
-		}
-	} //End Submit Function
-});
-
-DataIngestionModule.controller('IngestResultController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService, privilegeSvc, CF_DOWNLOAD) {
-	$scope.select = $stateParams.type;
-	$scope.type = { text: $scope.select == 'ingestgroupexec' ? 'ingestgroup' : 'ingest' };
-	$scope.showprogress = false;
-	$scope.isRuleExec = false;
-	$scope.isRuleResult = false;
-	$scope.showZoom = false;
-	$scope.isD3RuleEexecGraphShow = false;
-	$scope.isD3RGEexecGraphShow = false;
-	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
-	$scope.download = {};
-	$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-	$scope.download.formates = CF_DOWNLOAD.formate;
-	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-	$scope.download.limit_to = CF_DOWNLOAD.limit_to;
-	// ui grid
-	var notify = {
-		type: 'success',
-		title: 'Success',
-		content: '',
-		timeout: 3000 //time in ms
-	};
-	$scope.getGridStyle = function () {
-		var style = {
-			'margin-top': '10px',
-			'height': '40px'
-		}
-		if ($scope.filteredRows) {
-			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 80) + 'px';
-		}
-		return style;
-	}
-	var privileges = privilegeSvc.privileges['comment'] || [];
-	$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-	$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-	$scope.$on('privilegesUpdated', function (e, data) {
-		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-
-	});
-	$scope.metaType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
-	$scope.userDetail = {}
-	$scope.userDetail.uuid = $rootScope.setUseruuid;
-	$scope.userDetail.name = $rootScope.setUserName;
-	$scope.filteredRows = [];
-	$scope.gridOptions.onRegisterApi = function (gridApi) {
-		$scope.gridApi = gridApi;
-		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-	};
-
-	$scope.refreshRuleExecData = function () {
-		$scope.gridOptionsRule.data = $filter('filter')($scope.orignalRuleExecData, $scope.searchruletext, undefined);
-	}
-
-	$scope.refreshRGExecData = function () {
-		$scope.gridOptionsRuleGroup.data = $filter('filter')($scope.orignalRGExecData, $scope.searchrGtext, undefined);
-	}
-	// ui grid
-
-	//For Breadcrum
-	$scope.$on('daggroupExecChanged', function (e, groupExecName) {
-		$scope.daggroupExecName = groupExecName;
-	})
-
-	$scope.$on('resultExecChanged', function (e, resultExecName) {
-		$scope.resultExecName = resultExecName;
-	})
-	//For Breadcrum
-
-	$scope.onClickRuleResult = function () {
-		$scope.isRuleExec = true;
-		$scope.isRuleResult = false;
-		$scope.isD3RuleEexecGraphShow = false;
-		$scope.execDetail = $scope.ingestGroupLastParams
-		$scope.metaType = dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
-		$scope.$emit('resultExecChanged', false);//Update Breadcrum
-	}
-
-
-	$scope.getIngestExec = function (data) {
-		$scope.execDetail = data;
-		$scope.metaType = dagMetaDataService.elementDefs["ingest"].execType;
-		var uuid = data.uuid;
-		var version = data.version;
-		var name = data.name;
-		$scope.ruleExecUuid = uuid;
-		$scope.ruleExecVersion = version;
-		var params = { "id": uuid, "name": name, "elementType": "ingest", "version": version, "type": "ingest", "typeLabel": "Ingest" }
-		window.showResult(params);
-	}
-
-	$scope.$watch("zoomSize", function (newData, oldData) {
-		$scope.$broadcast('zoomChange', newData);
-	});
-
-	window.navigateTo = function (url) {
-		var state = JSON.parse(url);
-		$rootScope.previousState = { name: $state.current.name, params: $state.params };
-		var ispresent = false;
-		if (ispresent != true) {
-			var stateTab = {};
-			stateTab.route = state.state;
-			stateTab.param = state.params;
-			stateTab.active = false;
-			$rootScope.$broadcast('onAddTab', stateTab);
-		}
-		$state.go(state.state, state.params);
-	}
-
-	window.showResult = function (params) {
-		App.scrollTop();
-		$scope.lastParams = params;
-		if (params.type.slice(-5).toLowerCase() == 'group') {
-			$scope.isRuleExec = true;
-			$scope.isIngestGroupExec = true;
-			$scope.$broadcast('generateGroupGraph', params);
-		}
-		else {
-			$scope.isRuleResult = true;
-			$scope.isRuleExec = false;
-			$scope.isDataInpogress = true;
-			$scope.spinner = true;
-			$scope.execDetail = params;
-			$scope.execDetail.uuid = params.id;
-			$scope.metaType = dagMetaDataService.elementDefs["ingest"].execType;
-
-			setTimeout(function () {
-				$scope.$apply();
-				$scope.ruleExecUuid = params.id;
-				$scope.ruleExecVersion = params.version;
-				$scope.$broadcast('generateResults', params);
-				$scope.$emit('resultExecChanged', params.name);  //For Breadcrum
-			}, 100);
-		}
-	}
-	$scope.refreshData = function (searchtext) {
-		$scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
-	};
-
-	window.refreshResultfunction = function () {
-		$scope.isD3RuleEexecGraphShow = false;
-		window.showResult($scope.lastParams);
-	}
-
-	$scope.ruleExecshowGraph = function () {
-		$scope.isD3RuleEexecGraphShow = true;
-	}
-
-	$scope.rGExecshowGraph = function () {
-		$scope.isIngestGroupExec = false;
-		$scope.isD3RGEexecGraphShow = true;
-	}
-	$scope.ingestGroupExec = function (data) {
-		if ($scope.type.text == 'ingest') {
-			$scope.getIngestExec(data);
-			return
-		}
-		$scope.execDetail = data;
-		$scope.metaType = dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
-		$scope.ingestGroupLastParams = data;
-		$scope.zoomSize = 7;
-		var uuid = data.uuid;
-		var version = data.version;
-		var name = data.name;
-		$scope.rGExecUuid = uuid;
-		$scope.rGExecVersion = version;
-		$scope.isRuleSelect = false;
-		$scope.isRuleGroupExec = false;
-		$scope.isRuleExec = true;
-		if ($scope.type.text == 'ingestgroup') {
-			$scope.isIngestGroupExec = true;
-		}
-		else {
-			$scope.isIngestGroupExec = false;
-		}
-		var params = { "id": uuid, "name": name, "elementType": "ingestgroup", "version": version, "type": "ingestgroup", "typeLabel": "IngestGroup", "url": "ingest/getIngestExecByRGExec?", "ref": { "type": "ingestgroupExec", "uuid": uuid, "version": version, "name": name } }
-		setTimeout(function () {
-			$scope.$broadcast('generateGroupGraph', params);
-		}, 100);
-	}
-	$scope.getExec = $scope.ingestGroupExec;
-	$scope.getExec({
-		uuid: $stateParams.id,
-		version: $stateParams.version,
-		name: $stateParams.name
-	});
-
-	$scope.reGroupExecute = function () {
-		$('#reExModal').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-
-	}
-	$scope.okReGroupExecute = function () {
-		$('#reExModal').modal('hide');
-		$scope.executionmsg = "Rule Group Restarted Successfully"
-		notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = $scope.executionmsg
-		$rootScope.$emit('notify', notify);
-		CommonService.restartExec("ingestgroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-			//$scope.refreshRuleGroupExecFunction();
-		}
-		$scope.refreshRuleGroupExecFunction();
-	}
-
-	$scope.refreshRuleGroupExecFunction = function () {
-		$scope.isD3RGEexecGraphShow = false;
-		$scope.ingestGroupExec($scope.ingestGroupLastParams);
-	}
-
-	$scope.toggleZoom = function () {
-		$scope.showZoom = !$scope.showZoom;
-	}
-
-	$scope.submitDownload = function () {
-		var uuid = $scope.download.data.uuid;
-		var version = $scope.download.data.version;
-		var url = $location.absUrl().split("app")[0];
-		$('#downloadSample').modal("hide");
-		$http({
-			method: 'GET',
-			url: url + "ingest/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows,
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-
-			headers = headers();
-			var filename = headers['filename'];
-			var contentType = headers['content-type'];
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", filename);
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			console.log(data);
-		});
-	}
-
-	$scope.downloadFilePofile = function (data) {
-		if ($scope.isD3RuleEexecGraphShow) {
-			return false;
-		}
-		$scope.download.data = data;
-		$('#downloadSample').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-
-	};
 
 });
