@@ -219,24 +219,6 @@
         }, 
         {
             "attributeId" : 16,
-            "name" : "load_date",
-            "type" : "string",
-            "desc" : "load_date",
-            "dispName" : "load_date",
-            "partition" : "N",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 17,
-            "name" : "load_id",
-            "type" : "Integer",
-            "desc" : "load_id",
-            "dispName" : "load_id",
-            "partition" : "N",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 18,
             "name" : "version",
             "type" : "Integer",
             "desc" : "version",

@@ -10,9 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +34,6 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
