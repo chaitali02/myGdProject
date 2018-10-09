@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.IngestExecServiceImpl;
 import com.inferyx.framework.service.IngestGroupServiceImpl;
 import com.inferyx.framework.service.IngestServiceImpl;
 
@@ -46,6 +47,8 @@ public class IngestController {
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private IngestExecServiceImpl ingestExecServiceImpl;
 	
 	@RequestMapping(value = "execute", method = RequestMethod.POST)
 	public IngestExec execute(@RequestParam(value = "uuid") String ingestUuid,
@@ -130,7 +133,7 @@ public class IngestController {
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		try {
-			commonServiceImpl.setStatus(type, uuid, version, status);
+			ingestExecServiceImpl.kill(uuid, version, null, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

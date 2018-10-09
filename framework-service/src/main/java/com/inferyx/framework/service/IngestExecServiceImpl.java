@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestExec;
@@ -30,6 +32,8 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.IngestionType;
+import com.inferyx.framework.executor.SparkStreamingExecutor;
 
 /**
  * @author Ganesh
@@ -40,14 +44,32 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 	
 	@Autowired
 	private MetadataUtil daoRegister;
+	@Autowired
+	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
 	
 	/**
 	 * Kill meta thread if In Progress
 	 * @param uuid
 	 * @param version
+	 * @param status TODO
+	 * @param type TODO
+	 * @throws Exception 
+	 * @throws JsonProcessingException 
 	 */
-	public void kill (String uuid, String version) {
-		super.kill(uuid, version, MetaType.ingestExec);
+	public void kill(String uuid, String version, String status, String type) throws JsonProcessingException, Exception {
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.ingestExec.toString());
+		MetaIdentifier dependsOnMI = ingestExec.getDependsOn().getRef();
+		Ingest ingest =  (Ingest) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
+		IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
+		
+		if(ingestionType.equals(IngestionType.STREAMTOFILE)
+				|| ingestionType.equals(IngestionType.STREAMTOTABLE)) {
+			MetaIdentifier sourceDSMI = ingest.getSourceDatasource().getRef();
+			Datasource sourceDS = (Datasource) commonServiceImpl.getLatestByUuid(sourceDSMI.getUuid(), sourceDSMI.getType().toString());
+			sparkStreamingExecutor.stop(sourceDS);
+		} else {
+			commonServiceImpl.setStatus(type, uuid, version, status);	
+		}
 	}
 	
 	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
