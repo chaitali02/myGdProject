@@ -1,5 +1,8 @@
-DROP TABLE IF EXISTS portfolio_expected_sum;
-CREATE  TABLE IF NOT EXISTS `portfolio_expected_sum`(
-  `expected_sum` decimal,
-  `reporting_date` string,
-  `version` int);
+DROP TABLE IF EXISTS PORTFOLIO_EXPECTED_SUM; 
+
+CREATE TABLE PORTFOLIO_EXPECTED_SUM 
+  ( 
+     EXPECTED_SUM   DECIMAL, 
+     REPORTING_DATE STRING, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

@@ -1,8 +1,11 @@
-DROP TABLE IF EXISTS industry_factor_simulation_stage;
-CREATE TABLE IF NOT EXISTS `industry_factor_simulation_stage`(
-  `iteration_id` int, 
-  `factor1` double, 
-  `factor2` double, 
-  `factor3` double, 
-  `factor4` double,
-  `version` int);
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION_STAGE; 
+
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION_STAGE 
+  ( 
+     ITERATION_ID INT, 
+     FACTOR1      DECIMAL, 
+     FACTOR2      DECIMAL, 
+     FACTOR3      DECIMAL, 
+     FACTOR4      DECIMAL, 
+     VERSION      INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

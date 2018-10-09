@@ -1,6 +1,10 @@
-DROP TABLE IF EXISTS portfolio_loss_histogram;
-CREATE  TABLE IF NOT EXISTS `portfolio_loss_histogram`(
-  `reporting_date` string,
-  `bucket` string, 
-  `frequency` int, 
-  `version` int);
+
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_HISTOGRAM; 
+
+CREATE TABLE PORTFOLIO_LOSS_HISTOGRAM 
+  ( 
+     REPORTING_DATE STRING, 
+     BUCKET         STRING, 
+     FREQUENCY      INT, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

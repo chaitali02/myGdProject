@@ -1,8 +1,11 @@
-DROP TABLE IF EXISTS portfolio_loss_aggr_es;
-CREATE  TABLE IF NOT EXISTS `portfolio_loss_aggr_es`(
-  `expected_loss` decimal, 
-  `value_at_risk` decimal, 
-  `economic_capital` decimal,
-  `expected_sum` decimal,
-  `reporting_date` string,
-  `version` int);
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_AGGR_ES; 
+
+CREATE TABLE PORTFOLIO_LOSS_AGGR_ES 
+  ( 
+     EXPECTED_LOSS    DECIMAL, 
+     VALUE_AT_RISK    DECIMAL, 
+     ECONOMIC_CAPITAL DECIMAL, 
+     EXPECTED_SUM     DECIMAL, 
+     REPORTING_DATE   STRING, 
+     VERSION          INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

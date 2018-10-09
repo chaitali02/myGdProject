@@ -1,6 +1,10 @@
-DROP TABLE IF EXISTS portfolio_loss_simulation;
-CREATE  TABLE IF NOT EXISTS `portfolio_loss_simulation`(
-  `iterationid` int, 
-  `portfolio_loss` bigint, 
-  `reporting_date` string,
-  `version` int);
+
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION; 
+
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION 
+  ( 
+     ITERATIONID    INT, 
+     PORTFOLIO_LOSS DECIMAL, 
+     REPORTING_DATE STRING, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

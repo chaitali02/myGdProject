@@ -1,19 +1,17 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `customer_portfolio_ul_calc`;
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC; 
 
-CREATE TABLE `customer_portfolio_ul_calc` (
-  `cust_id1` varchar(45) DEFAULT NULL,
-  `industry1` varchar(45) DEFAULT NULL,
-  `correlation1` double DEFAULT NULL,
-  `unexpected_loss1` double DEFAULT NULL,
-  `cust_id2` double DEFAULT NULL,
-  `industry2` varchar(45) DEFAULT NULL,
-  `correlation2` double DEFAULT NULL,
-  `unexpected_loss2` double DEFAULT NULL,
-  `factor_value` double DEFAULT NULL,
-  `portfolio_ul_calc` double DEFAULT NULL,
-  `reporting_date` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC 
+  ( 
+     CUST_ID1          VARCHAR(50), 
+     INDUSTRY1         VARCHAR(50), 
+     CORRELATION1      DECIMAL(10, 2), 
+     UNEXPECTED_LOSS1  DECIMAL(10, 2), 
+     CUST_ID2          VARCHAR(50), 
+     INDUSTRY2         VARCHAR(50), 
+     CORRELATION2      DECIMAL(10, 2), 
+     UNEXPECTED_LOSS2  DECIMAL(10, 2), 
+     FACTOR_VALUE      DECIMAL(10, 2), 
+     PORTFOLIO_UL_CALC DECIMAL(10, 2), 
+     REPORTING_DATE    VARCHAR(50), 
+     VERSION           INTEGER(50) 
+  ); 

@@ -935,15 +935,38 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //						sqoopInput.setOverwriteHiveTable("Y");
 //						sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //						sqoopInput.sethCatTableName(sourceDp.getName());
+					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						//this is import block from ORACLE table to HIVE
+						logger.info("this is import block from ORACLE table to HIVE");
+						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
+						sqoopInput.setTable(sourceDp.getName().toUpperCase());
+						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
+						sqoopInput.setHiveImport(true);
+						sqoopInput.setImportIntended(true);
+						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setHiveTableName(targetDp.getName());
+						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+//						sqoopInput.setHCatalogTableName(targetDp.getName());
+//						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
+					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+						//this is export block from POSTGRES to other table
+
+						logger.info("this is export block from POSTGRES to other table");
+//						sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
+//						logger.info("sourceDir : " + sourceDir);
+						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setHiveImport(true);
+						sqoopInput.setImportIntended(true);
+						tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+						sqoopInput.setTable(tableName);
+						
+						sqoopInput.setHiveTableName(targetDp.getName());
+						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+//						sqoopInput.sethCatTableName(sourceDp.getName());
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-						//this is import block from other table to Hive
+						//this is import block from other table to HIVE
 
-						logger.info("this is import block from other table to Hive");
-						Map<String, String> partitions = checkPartitionsByDatapod(targetDp);
-						if(!partitions.isEmpty()) {
-							
-						}
-
+						logger.info("this is import block from other table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setHiveImport(true);
@@ -956,12 +979,16 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //						sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
 //						sqoopInput.sethCatalogPartitionValues(hCatalogPartitionValues);
 						tableName = targetDp.getName();
-					}
+					} 
 
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalTestColumn(incrColName);
-						sqoopInput.setIncrementalLastValue(incrLastValue);
+						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							sqoopInput.setIncrementalLastValue(incrLastValue);
+						}
+					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
@@ -971,9 +998,14 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 						StreamInput streamInput = getKafkaStreamInput();
+						streamInput.setIngestionType(IngestionType.STREAMTOTABLE.toString());
 						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 						streamInput.setTargetTableName(targetTableName);
-						streamInput.setSaveMode(ingest.getSaveMode().toString());
+						SaveMode saveMode = ingest.getSaveMode();
+						if(saveMode == null) {
+							saveMode = SaveMode.APPEND;
+						}
+						streamInput.setSaveMode(saveMode.toString());
 						streamInput.setTargetType(targetDS.getType());
 						streamInput.setSourceDS(sourceDS);
 						streamInput.setTargetDS(targetDS);
@@ -989,11 +1021,26 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							}
 						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
-					String targetDir = "file://"+targetDS.getPath();
+					String url = null;
+					if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+						url = "hdfs://";
+					} else {
+						url = "file://";
+					}
+					String targetDir = url+targetDS.getPath();
+					targetDir = targetDir.endsWith("/") ? targetDir+ingest.getTargetDetail().getValue() : targetDir+"/"+ingest.getTargetDetail().getValue(); 
+					if(targetDir.contains(".db")) {
+						targetDir = targetDir.replaceAll(".db", "");
+					}
 					StreamInput streamInput = getKafkaStreamInput();
 //					String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 //					streamInput.setTargetTableName(targetTableName);
-					streamInput.setSaveMode(ingest.getSaveMode().toString());
+					streamInput.setIngestionType(IngestionType.STREAMTOFILE.toString());
+					SaveMode saveMode = ingest.getSaveMode();
+					if(saveMode == null) {
+						saveMode = SaveMode.APPEND;
+					}
+					streamInput.setSaveMode(saveMode.toString());
 					streamInput.setTargetType(targetDS.getType());
 					streamInput.setSourceDS(sourceDS);
 					streamInput.setTargetDS(targetDS);
@@ -1049,6 +1096,12 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 		}
 		
 		return ingestExec;
+	}
+
+	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
+		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " AND $CONDITIONS";
+		logger.info("query: "+query);
+		return query;
 	}
 
 	public StreamInput getKafkaStreamInput() {

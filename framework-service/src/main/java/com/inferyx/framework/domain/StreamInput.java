@@ -38,6 +38,27 @@ public class StreamInput<T, K> {
 	private String sourceDir;
 	private String targetDir;
 	private String fileFormat;
+	private String ingestionType;
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestionType
+	 */
+	public String getIngestionType() {
+		return ingestionType;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestionType the ingestionType to set
+	 */
+	public void setIngestionType(String ingestionType) {
+		this.ingestionType = ingestionType;
+	}
 
 	/**
 	 *

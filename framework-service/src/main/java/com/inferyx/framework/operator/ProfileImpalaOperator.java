@@ -53,8 +53,8 @@ public class ProfileImpalaOperator extends ProfileOperator {
 				+ "cast(count(" + attrName + ") AS INT) AS numNull, "
 				+ "count(" + attrName + ") / count(" + attrName + ")*100 AS perNull, "
 				+ "count(" + attrName + ") / count(" + attrName + ") AS sixSigma, " 
-				+ "to_date(now()) AS load_date, " 
-				+ "unix_timestamp() AS load_id, "
+//				+ "to_date(now()) AS load_date, " 
+//				+ "unix_timestamp() AS load_id, "
 				+ "'"+ profileExec.getVersion() + "' AS version from " + profileTableName;
 		logger.info("query is : " + sql);
 		return sql;
