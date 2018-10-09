@@ -1,12 +1,10 @@
+DROP TABLE IF EXISTS CUSTOMER_LOSS_SIMULATION;
 
-DROP TABLE ecocap.customer_loss_simulation;
-
-CREATE TABLE ecocap.customer_loss_simulation(
-    cust_id text,
-    iterationid integer,
-    customer_loss  numeric(30,2)
-    reporting_date  text,
-    version integer    
-);
-
-
+CREATE TABLE CUSTOMER_LOSS_SIMULATION
+             ( 
+                          CUST_ID        VARCHAR(50), 
+                          ITERATIONID    INTEGER, 
+                          CUSTOMER_LOSS  DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );

@@ -1,8 +1,8 @@
-DROP TABLE ecocap.portfolio_expected_sum;
+DROP TABLE IF EXISTS PORTFOLIO_EXPECTED_SUM;
 
-CREATE TABLE  ecocap.portfolio_expected_sum(
-expected_sum  numeric(30,2)
-reporting_date text,
-version integer
-);
-
+CREATE TABLE PORTFOLIO_EXPECTED_SUM 
+             ( 
+                          EXPECTED_SUM   DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );

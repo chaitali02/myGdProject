@@ -1,9 +1,8 @@
-DROP TABLE ecocap.customer_generate_data;
+DROP TABLE IF EXISTS CUSTOMER_GENERATE_DATA;
 
-CREATE TABLE ecocap.customer_generate_data (
-    id  integer,
-    data double precision,
-    version integer
-);
-
-
+CREATE TABLE CUSTOMER_GENERATE_DATA 
+             ( 
+                          ID      INTEGER, 
+                          DATA    DECIMAL(10,2), 
+                          VERSION INTEGER 
+             );

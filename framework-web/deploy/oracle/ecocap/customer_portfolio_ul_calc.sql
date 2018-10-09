@@ -1,14 +1,17 @@
-CREATE TABLE "customer_portfolio_ul_calc" (
-  "cust_id1" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "industry1" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "correlation1" NUMBER(20,2) DEFAULT NULL,
-  "unexpected_loss1" NUMBER(20,2) DEFAULT NULL,
-  "cust_id2" NUMBER(20,2) DEFAULT NULL,
-  "industry2" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "correlation2" NUMBER(20,2) DEFAULT NULL,
-  "unexpected_loss2" NUMBER(20,2) DEFAULT NULL,
-  "factor_value" NUMBER(20,2) DEFAULT NULL,
-  "portfolio_ul_calc" NUMBER(20,2) DEFAULT NULL,
-  "reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "version" NUMBER(30,0) DEFAULT NULL
-);
+DROP TABLE CUSTOMER_PORTFOLIO_UL_CALC;
+
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC
+             ( 
+                          CUST_ID1          VARCHAR(50), 
+                          INDUSTRY1         VARCHAR(50), 
+                          CORRELATION1      DECIMAL(10,2), 
+                          UNEXPECTED_LOSS1  DECIMAL(10,2), 
+                          CUST_ID2          VARCHAR(50), 
+                          INDUSTRY2         VARCHAR(50), 
+                          CORRELATION2      DECIMAL(10,2), 
+                          UNEXPECTED_LOSS2  DECIMAL(10,2), 
+                          FACTOR_VALUE      DECIMAL(10,2), 
+                          PORTFOLIO_UL_CALC DECIMAL(10,2), 
+                          REPORTING_DATE    VARCHAR(50), 
+                          VERSION           INTEGER 
+             );

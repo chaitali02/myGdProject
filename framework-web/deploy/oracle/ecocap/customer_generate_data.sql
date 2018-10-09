@@ -1,7 +1,8 @@
-CREATE TABLE "customer_generate_data" (
-  "ID"  NUMBER(30,0) DEFAULT NULL,
-  "DATA"  NUMBER(20,2) DEFAULT NULL,
-  "VERSION"  NUMBER(30,0) DEFAULT NULL
-);
+DROP TABLE CUSTOMER_GENERATE_DATA;
 
-
+CREATE TABLE CUSTOMER_GENERATE_DATA 
+             ( 
+                          ID      INTEGER, 
+                          DATA    DECIMAL(10,2), 
+                          VERSION INTEGER 
+             );

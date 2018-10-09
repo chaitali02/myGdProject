@@ -1,17 +1,16 @@
+DROP TABLE CUSTOMER_PORTFOLIO_CLONE;
 
-CREATE TABLE "customer_portfolio_clone" (
-"cust_id" VARCHAR2(70 BYTE) DEFAULT NULL,
-"industry" VARCHAR2(70 BYTE) DEFAULT NULL,
-"pd" NUMBER(20,2) DEFAULT NULL,
-"exposure" NUMBER(30,0) DEFAULT NULL,
-"lgd"  NUMBER(20,2) DEFAULT NULL,
-"lgd_var"  NUMBER(30,0) DEFAULT NULL,
-"correlation"  NUMBER(20,2) DEFAULT NULL,
-"sqrt_correlation"  NUMBER(20,2) DEFAULT NULL,
-"def_point"  NUMBER(20,2) DEFAULT NULL,
-"reporting_date"  VARCHAR2(70 BYTE) DEFAULT NULL,
-"version"  NUMBER(30,0) DEFAULT NULL
-);
-
-
-
+CREATE TABLE CUSTOMER_PORTFOLIO_CLONE
+             ( 
+                          CUST_ID          VARCHAR(50), 
+                          INDUSTRY         VARCHAR(50), 
+                          PD               DECIMAL(10,2), 
+                          EXPOSURE         INTEGER, 
+                          LGD              DECIMAL(10,2), 
+                          LGD_VAR          INTEGER, 
+                          CORRELATION      DECIMAL(10,2), 
+                          SQRT_CORRELATION DECIMAL(10,2), 
+                          DEF_POINT        DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

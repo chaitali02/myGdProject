@@ -1,7 +1,11 @@
-CREATE TABLE "portfolio_loss_aggr" (
-  "expected_loss" DECIMAL(10,0) DEFAULT NULL,
-  "value_at_risk" DECIMAL(10,0) DEFAULT NULL,
-  "economic_capital" DECIMAL(10,0) DEFAULT NULL,
-  "reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "version" NUMBER(30,0) DEFAULT NULL
-);
+DROP TABLE PORTFOLIO_LOSS_AGGR_ES;
+
+CREATE TABLE PORTFOLIO_LOSS_AGGR_ES 
+             ( 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          EXPECTED_SUM     DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

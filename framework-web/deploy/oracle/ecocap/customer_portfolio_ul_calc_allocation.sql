@@ -1,9 +1,9 @@
+DROP TABLE CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION;
 
-CREATE TABLE "customer_portfolio_ul_calc_allocation" (
-  "cust_id" varchar(45) DEFAULT NULL,
-  "portfolio_ul_cust_allocation" double DEFAULT NULL,
-  "reporting_date" varchar(45) DEFAULT NULL,
-  "version" int(11) DEFAULT NULL
-);
-
-
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION
+             ( 
+                          CUST_ID                      VARCHAR(50), 
+                          PORTFOLIO_UL_CUST_ALLOCATION DECIMAL(10,2), 
+                          REPORTING_DATE               VARCHAR(50), 
+                          VERSION                      INTEGER 
+             );

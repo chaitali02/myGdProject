@@ -1,11 +1,10 @@
-DROP TABLE ecocap.industry_factor_correlation_transpose;
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION_TRANSPOSE;
 
-CREATE TABLE  ecocap.industry_factor_correlation_transpose(
-factor_x text,
-reporting_date text,
-factor_y  text,
-factor_value  double precision,
-version integer
-);
-
-
+CREATE TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE
+             ( 
+                          FACTOR_X       VARCHAR(50), 
+                          REPORTING_DATE VARCHAR(50), 
+                          FACTOR_Y       VARCHAR(50), 
+                          FACTOR_VALUE   DECIMAL(10,2), 
+                          VERSION        INTEGER 
+             );
