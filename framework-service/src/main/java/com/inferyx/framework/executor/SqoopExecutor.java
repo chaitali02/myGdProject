@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hive.common.util.HiveStringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +17,8 @@ import org.springframework.stereotype.Service;
 import com.cloudera.sqoop.SqoopOptions;
 import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.cloudera.sqoop.SqoopOptions.IncrementalMode;
-import com.cloudera.sqoop.tool.BaseSqoopTool;
 import com.cloudera.sqoop.tool.ExportTool;
 import com.cloudera.sqoop.tool.ImportTool;
-import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.SqoopConnector;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.enums.SaveMode;
@@ -30,13 +27,14 @@ import com.inferyx.framework.enums.SaveMode;
  * @author joy
  *
  */
+@SuppressWarnings("deprecation")
 @Service
 public class SqoopExecutor {
 	
 	@Autowired
 	private SqoopConnector sqoopConnector;
 	
-	private Map<String, String> keyConverter = new HashMap<>();
+//	private Map<String, String> keyConverter = new HashMap<>();
 	
 	static final Logger logger = Logger.getLogger(SqoopExecutor.class);
 
@@ -47,7 +45,7 @@ public class SqoopExecutor {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private void populateKeyConverter() {
+//	private void populateKeyConverter() {
 		/*this.keyConverter.put(BaseSqoopTool.CONNECT_STRING_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.CONN_MANAGER_CLASS_NAME  ,);
 		this.keyConverter.put(BaseSqoopTool.CONNECT_PARAM_FILE  ,);
@@ -185,7 +183,7 @@ public class SqoopExecutor {
 		this.keyConverter.put(BaseSqoopTool.OLD_DATASET_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.MERGE_KEY_ARG  ,);
 		this.keyConverter.put(BaseSqoopTool.AUTORESET_TO_ONE_MAPPER ,);*/
-	}
+//	}
 	
 	private void setSqoopOptions(SqoopOptions sqoopOptions, SqoopInput sqoopInput, Map<String, String> inputParams) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		sqoopOptions.setHiveImport(sqoopInput.getHiveImport());
@@ -284,7 +282,7 @@ public class SqoopExecutor {
 		sqoopOptions.setThrowOnError(true);
 		
 		if(inputParams != null && !inputParams.isEmpty()) {
-			Class sqoopOptionsClass = SqoopOptions.class;
+			Class<SqoopOptions> sqoopOptionsClass = SqoopOptions.class;
 			Method[] methods = sqoopOptionsClass.getMethods();
 			// populate all methods in Set
 			Map<String, Method> methodMap = new HashMap<>();
@@ -347,7 +345,7 @@ public class SqoopExecutor {
 	public Object execute(Object input, Map<String, String> inputParams) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SqoopInput sqoopInput = null;
 		SqoopOptions sqoopOptions = new SqoopOptions();
-		ConnectionHolder connHolder = null;
+//		ConnectionHolder connHolder = null;
 		if (input == null) {
 			return null;
 		}
