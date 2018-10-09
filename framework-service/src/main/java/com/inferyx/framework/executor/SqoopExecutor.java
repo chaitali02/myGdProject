@@ -302,7 +302,7 @@ public class SqoopExecutor {
 			}
 		}		
 	    logger.info("SqoopInput : " + sqoopInput);
-	    logger.info("SqoopInput : " + sqoopOptions);
+//	    logger.info("SqoopInput : " + sqoopOptions);
 	}
 	
 	public Object resolveArgument(Method method , String argument) {

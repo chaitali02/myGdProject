@@ -490,6 +490,9 @@ public class SqoopInput {
 		this.hCatalogTableName = hCatalogTableName;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -503,8 +506,6 @@ public class SqoopInput {
 				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
 				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
 				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
-				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + "]";
-	}
-
-	
+				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + "]";
+	}	
 }

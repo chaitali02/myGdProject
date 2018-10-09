@@ -982,10 +982,13 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					} 
 
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-					if(incrLastValue != null
-							&& !sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					if(incrLastValue != null) {
 						sqoopInput.setIncrementalTestColumn(incrColName);
-						sqoopInput.setIncrementalLastValue(incrLastValue);
+						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							sqoopInput.setIncrementalLastValue(incrLastValue);
+						}
+					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						sqoopInput.setIncrementalTestColumn(incrColName);
 					}
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
@@ -1076,7 +1079,9 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 	}
 
 	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
-		return "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + "AND $CONDITIONS";
+		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " AND $CONDITIONS";
+		logger.info("query: "+query);
+		return query;
 	}
 
 	public StreamInput getKafkaStreamInput() {
