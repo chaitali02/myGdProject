@@ -939,7 +939,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						//this is import block from ORACLE table to HIVE
 						logger.info("this is import block from ORACLE table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-//						sqoopInput.setTable(sourceDp.getName());
+						sqoopInput.setTable(sourceDp.getName().toUpperCase());
 						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
@@ -998,9 +998,14 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 						StreamInput streamInput = getKafkaStreamInput();
+						streamInput.setIngestionType(IngestionType.STREAMTOTABLE.toString());
 						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 						streamInput.setTargetTableName(targetTableName);
-						streamInput.setSaveMode(ingest.getSaveMode().toString());
+						SaveMode saveMode = ingest.getSaveMode();
+						if(saveMode == null) {
+							saveMode = SaveMode.APPEND;
+						}
+						streamInput.setSaveMode(saveMode.toString());
 						streamInput.setTargetType(targetDS.getType());
 						streamInput.setSourceDS(sourceDS);
 						streamInput.setTargetDS(targetDS);
@@ -1016,11 +1021,26 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							}
 						}).start();
 				} else if(ingestionType.equals(IngestionType.STREAMTOFILE)) { 
-					String targetDir = "file://"+targetDS.getPath();
+					String url = null;
+					if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+						url = "hdfs://";
+					} else {
+						url = "file://";
+					}
+					String targetDir = url+targetDS.getPath();
+					targetDir = targetDir.endsWith("/") ? targetDir+ingest.getTargetDetail().getValue() : targetDir+"/"+ingest.getTargetDetail().getValue(); 
+					if(targetDir.contains(".db")) {
+						targetDir = targetDir.replaceAll(".db", "");
+					}
 					StreamInput streamInput = getKafkaStreamInput();
 //					String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 //					streamInput.setTargetTableName(targetTableName);
-					streamInput.setSaveMode(ingest.getSaveMode().toString());
+					streamInput.setIngestionType(IngestionType.STREAMTOFILE.toString());
+					SaveMode saveMode = ingest.getSaveMode();
+					if(saveMode == null) {
+						saveMode = SaveMode.APPEND;
+					}
+					streamInput.setSaveMode(saveMode.toString());
 					streamInput.setTargetType(targetDS.getType());
 					streamInput.setSourceDS(sourceDS);
 					streamInput.setTargetDS(targetDS);

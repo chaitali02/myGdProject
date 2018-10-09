@@ -1,12 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `industry_factor_transpose`;
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_TRANSPOSE; 
 
-CREATE TABLE `industry_factor_transpose` (
-  `iteration_id` int(11) DEFAULT NULL,
-  `reporting_date` varchar(45) DEFAULT NULL,
-  `factor` varchar(45) DEFAULT NULL,
-  `factor_value` double DEFAULT NULL,
-  `version` varchar(45) DEFAULT NULL
-);
-
+CREATE TABLE INDUSTRY_FACTOR_TRANSPOSE 
+  ( 
+     ITERATION_ID   INTEGER(50), 
+     REPORTING_DATE VARCHAR(50), 
+     FACTOR         VARCHAR(50), 
+     FACTOR_VALUE   DECIMAL(10, 2), 
+     VERSION        INTEGER(50) 
+  );

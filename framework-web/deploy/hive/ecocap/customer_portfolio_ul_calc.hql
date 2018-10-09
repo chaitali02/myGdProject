@@ -1,14 +1,17 @@
-DROP TABLE IF EXISTS customer_portfolio_ul_calc;
-CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc`(
-  `cust_id1` string, 
-  `industry1` string, 
-  `correlation1` double, 
-  `unexpected_loss1` double,
-  `cust_id2` string, 
-  `industry2` string, 
-  `correlation2` double, 
-  `unexpected_loss2` double, 
-  `factor_value` double, 
-  `portfolio_ul_calc` double, 
-  `reporting_date` string, 
-  `version` int);
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC; 
+
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC 
+  ( 
+     CUST_ID1          STRING, 
+     INDUSTRY1         STRING, 
+     CORRELATION1      DECIMAL, 
+     UNEXPECTED_LOSS1  DECIMAL, 
+     CUST_ID2          STRING, 
+     INDUSTRY2         STRING, 
+     CORRELATION2      DECIMAL, 
+     UNEXPECTED_LOSS2  DECIMAL, 
+     FACTOR_VALUE      DECIMAL, 
+     PORTFOLIO_UL_CALC DECIMAL, 
+     REPORTING_DATE    STRING, 
+     VERSION           INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

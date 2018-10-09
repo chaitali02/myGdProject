@@ -36,6 +36,8 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.StreamInput;
+import com.inferyx.framework.enums.IngestionType;
+import com.inferyx.framework.executor.ExecContext;
 
 import scala.reflect.ClassManifestFactory;
 
@@ -130,12 +132,18 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		String targetPath = streamInput.getTargetDir();
 		String targetType = streamInput.getTargetType();
 		String fileFormat = streamInput.getFileFormat();
-		String[] dataTypes = new String[] {"integer", "varchar(70)", "varchar(70)"
-				, "integer", "integer", "integer"};
-		String[] attributeList = new String[targetDP.getAttributes().size()];
-		for(int i=0; i<targetDP.getAttributes().size(); i++) {
-			attributeList[i] = targetDP.getAttributes().get(i).getName();
+		String ingestionType = streamInput.getIngestionType();
+		String[] dataTypes =  new String[] {"integer", "varchar(70)", "varchar(70)"
+				, "integer", "integer", "integer"};;
+		String[] attributeList2 = null;
+		if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString()) 
+				&& targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+			attributeList2 = new String[targetDP.getAttributes().size()];
+			for(int i=0; i<targetDP.getAttributes().size(); i++) {
+				attributeList2[i] = targetDP.getAttributes().get(i).getName();
+			}
 		}
+		final String[] attributeList = attributeList2;
 		
 		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
 			@Override
@@ -161,16 +169,16 @@ public class StreamToTableHelper<T, K> implements Serializable {
 //						df.show(false);
 //						System.out.println("columns: "+df.columns());
 						logger.info("Hive writing starts for this partition >>>>>>>>>>>>>>>>>>>> ");
-						if(!targetType.equalsIgnoreCase("FILE")) {
-							int i = 0;
+						if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOTABLE.toString())) {
+							//int i = 0;
 							String[] dfColumns =  df.columns();							 
-							for(String attrName : attributeList){
-								df = df.withColumnRenamed(dfColumns[i], attrName);
-								df = df.withColumn(attrName, df.col(attrName).cast(dataTypes[i]));
-								i++;
+							for(int i=0; i<attributeList.length; i++){
+								df = df.withColumnRenamed(dfColumns[i], attributeList[i]);
+								df = df.withColumn(attributeList[i], df.col(attributeList[i]).cast(dataTypes[i]));
+								//i++;
 							} 
 							persistDataframe(df, tableName, datasourceType, sessionParameters, url, driver, userName, password, saveMode);							
-						} else {
+						} else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
 							if(fileFormat == null) {
 								df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 							} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {

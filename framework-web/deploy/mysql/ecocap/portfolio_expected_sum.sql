@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `portfolio_expected_sum`;
+DROP TABLE IF EXISTS PORTFOLIO_EXPECTED_SUM; 
 
-CREATE TABLE `portfolio_expected_sum` (
-  `expected_sum` decimal(10,0) DEFAULT NULL,
-  `reporting_date` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-
+CREATE TABLE PORTFOLIO_EXPECTED_SUM 
+  ( 
+     EXPECTED_SUM   DECIMAL(10, 2), 
+     REPORTING_DATE VARCHAR(50), 
+     VERSION        INTEGER(50) 
+  ); 

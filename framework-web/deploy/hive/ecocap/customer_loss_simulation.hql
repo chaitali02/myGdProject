@@ -1,7 +1,10 @@
-DROP TABLE IF EXISTS customer_loss_simulation;
-CREATE  TABLE IF NOT EXISTS `customer_loss_simulation`(
-  `cust_id` string, 
-  `iterationid` int, 
-  `customer_loss` decimal, 
-  `reporting_date` string,
-  `version` int);
+DROP TABLE IF EXISTS CUSTOMER_LOSS_SIMULATION; 
+
+CREATE TABLE CUSTOMER_LOSS_SIMULATION 
+  ( 
+     CUST_ID        STRING, 
+     ITERATIONID    INT, 
+     CUSTOMER_LOSS  DECIMAL, 
+     REPORTING_DATE STRING, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

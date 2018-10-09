@@ -1,14 +1,12 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `portfolio_loss_simulation_el`;
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_EL; 
 
-CREATE TABLE `portfolio_loss_simulation_el` (
-  `iterationid` int(11) DEFAULT NULL,
-  `portfolio_loss` decimal(10,0) DEFAULT NULL,
-  `expected_loss` decimal(10,0) DEFAULT NULL,
-  `value_at_risk` decimal(10,0) DEFAULT NULL,
-  `economic_capital` decimal(10,0) DEFAULT NULL,
-  `reporting_date` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_EL 
+  ( 
+     ITERATIONID      INTEGER(50), 
+     PORTFOLIO_LOSS   DECIMAL(10, 2), 
+     EXPECTED_LOSS    DECIMAL(10, 2), 
+     VALUE_AT_RISK    DECIMAL(10, 2), 
+     ECONOMIC_CAPITAL DECIMAL(10, 2), 
+     REPORTING_DATE   VARCHAR(50), 
+     VERSION          INTEGER(50) 
+  ); 

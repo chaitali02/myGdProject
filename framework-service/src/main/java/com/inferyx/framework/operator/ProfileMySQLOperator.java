@@ -50,8 +50,8 @@ public class ProfileMySQLOperator extends ProfileOperator {
 				+ "count(if(" + attrName + " is null,1,0)) AS numNull,"
 				+ "count(if(" + attrName + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, "
 				+ "count(if(" + attrName + " is null,1,0)) / count(" + attrName + ") AS sixSigma, "
-				+ "CURDATE() AS load_date, "
-				+ "unix_timestamp() AS load_id, '" 
+//				+ "CURDATE() AS load_date, "
+//				+ "unix_timestamp() AS load_id, '" 
 				+ profileExec.getVersion() + "' AS version from " + profileTableName;
     	logger.info("\n query is : " + sql);
 		return sql;

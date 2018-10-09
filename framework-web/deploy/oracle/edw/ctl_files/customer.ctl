@@ -1,7 +1,7 @@
 OPTIONS (DIRECT=TRUE, ERRORS=50, rows=1000000)
 UNRECOVERABLE
 LOAD DATA
-INFILE '/user/hive/warehouse/framework/upload/customer.csv'
+INFILE '/user/hive/warehouse/framework/app/edw/data/csv/noheader/customer.csv'
 TRUNCATE
 INTO TABLE CUSTOMER
 FIELDS TERMINATED BY ','

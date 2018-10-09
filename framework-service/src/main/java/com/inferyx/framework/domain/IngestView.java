@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import com.inferyx.framework.enums.SaveMode;
 
 /**
@@ -35,6 +37,7 @@ public class IngestView extends BaseEntity {
 	private String ignoreCase = "N";
 	private String sourceExtn;
 	private String targetExtn;
+	private List<AttributeMap> attributeMap;
 	
 	/**
 	 *
@@ -359,5 +362,12 @@ public class IngestView extends BaseEntity {
 	 */
 	public void setSourceChg(String sourceChg) {
 		this.sourceChg = sourceChg;
+	}
+	
+	public List<AttributeMap> getAttributeMap() {
+		return attributeMap;
+	}
+	public void setAttributeMap(List<AttributeMap> attributeMap) {
+		this.attributeMap = attributeMap;
 	}
 }

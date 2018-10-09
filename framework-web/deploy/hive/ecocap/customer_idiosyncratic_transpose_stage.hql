@@ -1,6 +1,9 @@
-DROP TABLE IF EXISTS customer_idiosyncratic_transpose_stage;
-CREATE  TABLE IF NOT EXISTS `customer_idiosyncratic_transpose_stage`(
-  `iterationid` int, 
-  `customer` string, 
-  `pd` double, 
-  `version` int);
+DROP TABLE IF EXISTS CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE; 
+
+CREATE TABLE CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE 
+  ( 
+     ITERATIONID INT, 
+     CUSTOMER    STRING, 
+     PD          DECIMAL, 
+     VERSION     INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 
