@@ -34,7 +34,28 @@ public class SqoopInput {
 	private String hiveDatabaseName;
 	private String hCatalogTableName;
 	private String hCatalogDatabaseName;
+	private String sqlQuery;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sqlQuery
+	 */
+	public String getSqlQuery() {
+		return sqlQuery;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sqlQuery the sqlQuery to set
+	 */
+	public void setSqlQuery(String sqlQuery) {
+		this.sqlQuery = sqlQuery;
+	}
+
 	/**
 	 *
 	 * @Ganesh

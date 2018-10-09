@@ -263,6 +263,10 @@ public class SqoopExecutor {
 			sqoopOptions.setHCatDatabaseName(sqoopInput.getHCatalogDatabaseName());
 		}
 
+		if(sqoopInput.getSqlQuery() != null && StringUtils.isNotBlank(sqoopInput.getSqlQuery())) {
+			sqoopOptions.setSqlQuery(sqoopInput.getSqlQuery());
+		}
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
@@ -298,6 +302,7 @@ public class SqoopExecutor {
 			}
 		}		
 	    logger.info("SqoopInput : " + sqoopInput);
+	    logger.info("SqoopInput : " + sqoopOptions);
 	}
 	
 	public Object resolveArgument(Method method , String argument) {
