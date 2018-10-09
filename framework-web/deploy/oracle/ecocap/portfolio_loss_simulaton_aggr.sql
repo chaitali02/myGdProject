@@ -1,7 +1,11 @@
-CREATE TABLE "portfolio_loss_simulaton_aggr" (
-    "expected_loss" NUMBER(30,0) DEFAULT NULL,
-    "value_at_risk" NUMBER(30,0) DEFAULT NULL,
-    "economic_capital" NUMBER(30,0) DEFAULT NULL,
-    "reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL  , 
-    "version" NUMBER(30,0) DEFAULT NULL 
-);
+
+DROP TABLE IF EXISTS ECO_SMALL.PORTFOLIO_LOSS_SIMULATION_AGGR;
+
+CREATE TABLE  ECO_SMALL.PORTFOLIO_LOSS_SIMULATION_AGGR
+             ( 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

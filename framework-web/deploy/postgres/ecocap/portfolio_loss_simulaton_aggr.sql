@@ -1,8 +1,11 @@
-DROP TABLE ecocap.portfolio_loss_simulaton_aggr;
 
-CREATE TABLE ecocap.portfolio_loss_simulaton_aggr (
-    expected_loss  numeric(30,2),
-    value_at_risk    numeric(30,2),
-    economic_capital   numeric(30,2),
-    reporting_date  text  , 
-    version integer );
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_AGGR;
+
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_AGGR
+             ( 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

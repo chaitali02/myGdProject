@@ -1,9 +1,10 @@
-DROP TABLE ecocap.customer_portfolio_ul_calc_summary;
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY;
 
-CREATE TABLE  ecocap.customer_portfolio_ul_calc_summary(
-cust_id  text,
-portfolio_ul_cust_sum  double precision,
-portfolio_ul_total_sum  double precision,
-reporting_date text,
-version integer
-);
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY
+             ( 
+                          CUST_ID                VARCHAR(50), 
+                          PORTFOLIO_UL_CUST_SUM  DECIMAL(10,2), 
+                          PORTFOLIO_UL_TOTAL_SUM DECIMAL(10,2), 
+                          REPORTING_DATE         VARCHAR(50), 
+                          VERSION                INTEGER 
+             );

@@ -1,7 +1,10 @@
-CREATE TABLE "industry_factor_correlation_transpose" (
-  "factor_x" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "factor_y" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "factor_value" NUMBER(20,2) DEFAULT NULL,
-  "version" NUMBER(30,0) DEFAULT NULL
-);
+DROP TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE;
+
+CREATE TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE
+             ( 
+                          FACTOR_X       VARCHAR(50), 
+                          REPORTING_DATE VARCHAR(50), 
+                          FACTOR_Y       VARCHAR(50), 
+                          FACTOR_VALUE   DECIMAL(10,2), 
+                          VERSION        INTEGER 
+             );

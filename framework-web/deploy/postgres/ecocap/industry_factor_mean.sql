@@ -1,8 +1,9 @@
-DROP TABLE ecocap.industry_factor_mean;
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_MEAN;
 
-CREATE TABLE  ecocap.industry_factor_mean (
-id  text,
-mean double precision,
-reporting_date text,
-version integer
-);
+CREATE TABLE INDUSTRY_FACTOR_MEAN 
+             ( 
+                          ID             VARCHAR(50), 
+                          MEAN           DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );

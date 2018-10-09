@@ -1,12 +1,10 @@
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_TRANSPOSE;
 
-DROP TABLE ecocap.industry_factor_transpose;
-
-CREATE TABLE  ecocap.industry_factor_transpose(
-iteration_id integer,
-reporting_date text,
-factor  text,
-factor_value  double precision,
-version integer
-);
-
-
+CREATE TABLE INDUSTRY_FACTOR_TRANSPOSE
+             ( 
+                          ITERATION_ID   INTEGER, 
+                          REPORTING_DATE VARCHAR(50), 
+                          FACTOR         VARCHAR(50), 
+                          FACTOR_VALUE   DECIMAL(10,2), 
+                          VERSION        INTEGER 
+             );

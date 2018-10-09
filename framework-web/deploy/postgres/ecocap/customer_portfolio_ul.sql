@@ -1,19 +1,17 @@
-DROP TABLE ecocap.customer_portfolio_ul;
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL;
 
-CREATE TABLE  ecocap.customer_portfolio_ul (
-cust_id   text,
-industry  text,
-pd  double precision,
-exposure  integer,
-lgd    double precision,
-lgd_var   integer,
-correlation double precision,
-sqrt_correlation double precision,
-def_point  double precision,
-unexpected_loss  double precision,
-reporting_date text,
-version integer
-);
-
-
-
+CREATE TABLE CUSTOMER_PORTFOLIO_UL 
+             ( 
+                          CUST_ID          VARCHAR(50), 
+                          INDUSTRY         VARCHAR(50), 
+                          PD               DECIMAL(10,2), 
+                          EXPOSURE         INTEGER, 
+                          LGD              DECIMAL(10,2), 
+                          LGD_VAR          INTEGER, 
+                          CORRELATION      DECIMAL(10,2), 
+                          SQRT_CORRELATION DECIMAL(10,2), 
+                          DEF_POINT        DECIMAL(10,2), 
+                          UNEXPECTED_LOSS  DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );
