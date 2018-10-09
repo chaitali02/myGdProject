@@ -270,11 +270,32 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
                 return response;
             })
     }
+    factory.findAllLatest = function (type, inputFlag) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "common/getAllLatest?action=view&type=" + type + "&inputFlag=" + inputFlag,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
     return factory;
 })
 
 
 DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory, sortFactory) {
+    this.getAllLatestFunction = function (type, inputFlag) {
+		var deferred = $q.defer();
+		IngestRuleFactory.findAllLatest(type, inputFlag).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
     this.getIngestByIngestExec = function (uuid,version) {
         var deferred = $q.defer();
         IngestRuleFactory.getIngestByIngestExec(uuid,version).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
@@ -668,6 +689,102 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
             }
 
             ingestJSOn.filterInfo = filterInfoArray
+            var attributeArray = [];
+            if(response.attributeMap){
+                for (var i = 0; i < response.attributeMap.length; i++) {
+                    var attributemapjson = {};
+                    if (response.attributeMap[i].sourceAttr.ref.type == "datapod" || response.attributeMap[i].sourceAttr.ref.type == "dataset" || response.attributeMap[i].sourceAttr.ref.type == "rule") {
+                        var sourceattribute = {}
+                        sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+                        sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
+                        sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+                        var obj = {}
+                        obj.text = "datapod"
+                        obj.caption = "attribute"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = true;
+                        attributemapjson.isSourceAtributeFormula = false;
+                        attributemapjson.isSourceAtributeExpression = false;
+
+                    }
+                    else if (response.attributeMap[i].sourceAttr.ref.type == "simple") {
+                        var obj = {}
+                        obj.text = "string"
+                        obj.caption = "string"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.isSourceAtributeSimple = true;
+                        attributemapjson.sourcesimple = response.attributeMap[i].sourceAttr.value
+                        attributemapjson.isSourceAtributeDatapod = false;
+                        attributemapjson.isSourceAtributeFormula = false;
+                        attributemapjson.isSourceAtributeExpression = false;
+                        attributemapjson.isSourceAtributeFunction = false;
+
+                    }
+                    if (response.attributeMap[i].sourceAttr.ref.type == "expression") {
+                        var sourceexpression = {};
+                        sourceexpression.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+                        sourceexpression.name = "";
+                        var obj = {}
+                        obj.text = "expression"
+                        obj.caption = "expression"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.sourceexpression = sourceexpression;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = false;
+                        attributemapjson.isSourceAtributeFormula = false;
+                        attributemapjson.isSourceAtributeExpression = true;
+                        attributemapjson.isSourceAtributeFunction = false;
+                    }
+                    if (response.attributeMap[i].sourceAttr.ref.type == "formula") {
+                        var sourceformula = {};
+                        sourceformula.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+                        sourceformula.name = "";
+                        var obj = {}
+                        obj.text = "formula"
+                        obj.caption = "formula"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.sourceformula = sourceformula;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = false;
+                        attributemapjson.isSourceAtributeFormula = true;
+                        attributemapjson.isSourceAtributeExpression = false;
+                        attributemapjson.isSourceAtributeFunction = false;
+                    }
+                    if (response.attributeMap[i].sourceAttr.ref.type == "function") {
+                        var sourcefunction = {};
+                        sourcefunction.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+                        sourcefunction.name = "";
+                        var obj = {}
+                        obj.text = "function"
+                        obj.caption = "function"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.sourcefunction = sourcefunction;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = false;
+                        attributemapjson.isSourceAtributeFormula = false;
+                        attributemapjson.isSourceAtributeExpression = false;
+                        attributemapjson.isSourceAtributeFunction = true;
+                    }
+                    attributemapjson.sourceattribute = sourceattribute;
+                    
+                    if(response.attributeMap[i].targetAttr.ref.type !="simple"){
+                        var targetattribute = {}
+                        targetattribute.uuid = response.attributeMap[i].targetAttr.ref.uuid;
+                        targetattribute.type = response.attributeMap[i].targetAttr.ref.type;
+                        targetattribute.attributeId = response.attributeMap[i].targetAttr.attrId;
+                        attributemapjson.targetattribute = targetattribute;
+                    }else{
+                        var targetsimple=response.attributeMap[i].targetAttr.value;
+                        attributemapjson.targetsimple = targetsimple;
+
+                    }
+                    
+                    attributeArray[i] = attributemapjson
+                }
+            }
+            ingestJSOn.ingesttabalearray = attributeArray;
+            console.log(ingestJSOn.ingesttabalearray)
             deferred.resolve({
                 data: ingestJSOn
             })

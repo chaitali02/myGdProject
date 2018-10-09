@@ -37,6 +37,7 @@ public class Ingest extends BaseRule {
 	private String ignoreCase = "N";
 	private String sourceExtn;
 	private String targetExtn;
+	private List<AttributeMap> attributeMap;
 	
 	/**
 	 *
@@ -64,6 +65,12 @@ public class Ingest extends BaseRule {
 	 */
 	public String getTargetExtn() {
 		return targetExtn;
+	}
+	public List<AttributeMap> getAttributeMap() {
+		return attributeMap;
+	}
+	public void setAttributeMap(List<AttributeMap> attributeMap) {
+		this.attributeMap = attributeMap;
 	}
 	/**
 	 *
