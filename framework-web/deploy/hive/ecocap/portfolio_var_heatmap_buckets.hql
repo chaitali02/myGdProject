@@ -1,6 +1,9 @@
-DROP TABLE IF EXISTS portfolio_var_heatmap_buckets;
-CREATE  TABLE IF NOT EXISTS `portfolio_var_heatmap_buckets`(
-  `portfolio_pd_bucket` string, 
-  `portfolio_lgd_bucket` string, 
-  `version` string)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+DROP TABLE IF EXISTS PORTFOLIO_VAR_HEATMAP_BUCKETS; 
+
+CREATE TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS 
+  ( 
+     PORTFOLIO_PD_BUCKET  STRING, 
+     PORTFOLIO_LGD_BUCKET STRING, 
+     VERSION              STRING 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

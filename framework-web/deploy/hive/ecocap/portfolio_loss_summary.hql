@@ -1,15 +1,18 @@
-DROP TABLE IF EXISTS portfolio_loss_summary;
-CREATE  TABLE IF NOT EXISTS `portfolio_loss_summary`(
-  `portfolio_avg_pd` int, 
-  `portfolio_avg_lgd` bigint, 
-  `portfolio_total_ead` double,
-  `portfolio_expected_loss` double,
-  `portfolio_value_at_risk` double,
-  `portfolio_economic_capital` double,
-  `portfolio_expected_sum` double,
-  `portfolio_es_percentage` double,
-  `portfolio_val_percentage` double,
-  `portfolio_el_percentage` double,
-  `portfolio_ec_percentage` double,
-  `reporting_date` string,
-  `version` int);
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SUMMARY; 
+
+CREATE TABLE PORTFOLIO_LOSS_SUMMARY 
+  ( 
+     PORTFOLIO_AVG_PD           DECIMAL, 
+     PORTFOLIO_AVG_LGD          DECIMAL, 
+     PORTFOLIO_TOTAL_EAD        DECIMAL, 
+     PORTFOLIO_EXPECTED_LOSS    DECIMAL, 
+     PORTFOLIO_VALUE_AT_RISK    DECIMAL, 
+     PORTFOLIO_ECONOMIC_CAPITAL DECIMAL, 
+     PORTFOLIO_EXPECTED_SUM     DECIMAL, 
+     PORTFOLIO_ES_PERCENTAGE    DECIMAL, 
+     PORTFOLIO_VAL_PERCENTAGE   DECIMAL, 
+     PORTFOLIO_EL_PERCENTAGE    DECIMAL, 
+     PORTFOLIO_EC_PERCENTAGE    DECIMAL, 
+     REPORTING_DATE             STRING, 
+     VERSION                    INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

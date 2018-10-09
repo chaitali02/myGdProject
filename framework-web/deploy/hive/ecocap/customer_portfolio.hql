@@ -1,14 +1,16 @@
-DROP TABLE IF EXISTS customer_portfolio;
-CREATE  TABLE IF NOT EXISTS `customer_portfolio`(
-  `cust_id` string, 
-  `industry` string, 
-  `pd` double, 
-  `exposure` int, 
-  `lgd` double, 
-  `lgd_var` int, 
-  `correlation` double, 
-  `sqrt_correlation` double, 
-  `def_point` double, 
-  `reporting_date` string, 
-  `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO; 
+
+CREATE TABLE CUSTOMER_PORTFOLIO 
+  ( 
+     CUST_ID          STRING, 
+     INDUSTRY         STRING, 
+     PD               DECIMAL, 
+     EXPOSURE         INT, 
+     LGD              DECIMAL, 
+     LGD_VAR          INT, 
+     CORRELATION      DECIMAL, 
+     SQRT_CORRELATION DECIMAL, 
+     DEF_POINT        DECIMAL, 
+     REPORTING_DATE   STRING, 
+     VERSION          INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

@@ -1,8 +1,10 @@
-DROP TABLE IF EXISTS industry_factor_correlation_transpose;
-CREATE  TABLE IF NOT EXISTS `industry_factor_correlation_transpose`(
-  `factor_x` string, 
-  `reporting_date` string, 
-  `factor_y` string, 
-  `factor_value` double, 
-  `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION_TRANSPOSE; 
+
+CREATE TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE 
+  ( 
+     FACTOR_X       STRING, 
+     REPORTING_DATE STRING, 
+     FACTOR_Y       STRING, 
+     FACTOR_VALUE   DECIMAL, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

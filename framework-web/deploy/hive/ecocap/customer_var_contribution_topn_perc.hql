@@ -1,6 +1,10 @@
-DROP TABLE IF EXISTS customer_var_contribution_topn_perc;
-CREATE  TABLE IF NOT EXISTS `customer_var_contribution_topn_perc`(
-  `reporting_date` string, 
-  `top_n` string, 
-  `var_contribution_perc` double,
-  `version` string);
+
+DROP TABLE IF EXISTS CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC; 
+
+CREATE TABLE CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC 
+  ( 
+     REPORTING_DATE        STRING, 
+     TOP_N                 STRING, 
+     VAR_CONTRIBUTION_PERC DECIMAL, 
+     VERSION               INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

@@ -1,11 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `customer_generate_data`;
+DROP TABLE IF EXISTS CUSTOMER_GENERATE_DATA; 
 
-CREATE TABLE `customer_generate_data` (
-  `id` int(11) DEFAULT NULL,
-  `data` double DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-
-
+CREATE TABLE CUSTOMER_GENERATE_DATA 
+  ( 
+     ID      INTEGER(50), 
+     DATA    DECIMAL(10, 2), 
+     VERSION INTEGER(50) 
+  ); 

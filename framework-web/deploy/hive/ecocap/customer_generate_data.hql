@@ -1,5 +1,8 @@
-DROP TABLE IF EXISTS customer_generate_data;
-CREATE  TABLE IF NOT EXISTS `customer_generate_data`(
-  `id` int, 
-  `data` double,
-  `version` int);
+DROP TABLE IF EXISTS CUSTOMER_GENERATE_DATA; 
+
+CREATE TABLE CUSTOMER_GENERATE_DATA 
+  ( 
+     ID      INT, 
+     DATA    DECIMAL, 
+     VERSION INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';

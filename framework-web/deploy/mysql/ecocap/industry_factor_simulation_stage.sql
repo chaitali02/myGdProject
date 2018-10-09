@@ -1,17 +1,11 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE `industry_factor_simulation_stage`;
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION_STAGE; 
 
-CREATE TABLE  `industry_factor_simulation_stage`(
-`iteration_id` int(11) DEFAULT NULL,
-`factor1` double DEFAULT NULL,
-`factor2` double DEFAULT NULL,
-`factor3` double DEFAULT NULL,
-`factor4` double DEFAULT NULL,
-`reporting_date` varchar(45) DEFAULT NULL,
-`version` int(11) DEFAULT NULL
-);
-
-
-
-
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION_STAGE 
+  ( 
+     ITERATION_ID INTEGER(50), 
+     FACTOR1      DECIMAL(10, 2), 
+     FACTOR2      DECIMAL(10, 2), 
+     FACTOR3      DECIMAL(10, 2), 
+     FACTOR4      DECIMAL(10, 2), 
+     VERSION      INTEGER(50) 
+  );
