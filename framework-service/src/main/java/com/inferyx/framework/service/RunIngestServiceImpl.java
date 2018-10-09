@@ -1001,7 +1001,11 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						streamInput.setIngestionType(IngestionType.STREAMTOTABLE.toString());
 						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 						streamInput.setTargetTableName(targetTableName);
-						streamInput.setSaveMode(ingest.getSaveMode().toString());
+						SaveMode saveMode = ingest.getSaveMode();
+						if(saveMode == null) {
+							saveMode = SaveMode.APPEND;
+						}
+						streamInput.setSaveMode(saveMode.toString());
 						streamInput.setTargetType(targetDS.getType());
 						streamInput.setSourceDS(sourceDS);
 						streamInput.setTargetDS(targetDS);
@@ -1032,7 +1036,11 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //					String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
 //					streamInput.setTargetTableName(targetTableName);
 					streamInput.setIngestionType(IngestionType.STREAMTOFILE.toString());
-					streamInput.setSaveMode(ingest.getSaveMode().toString());
+					SaveMode saveMode = ingest.getSaveMode();
+					if(saveMode == null) {
+						saveMode = SaveMode.APPEND;
+					}
+					streamInput.setSaveMode(saveMode.toString());
 					streamInput.setTargetType(targetDS.getType());
 					streamInput.setSourceDS(sourceDS);
 					streamInput.setTargetDS(targetDS);
