@@ -3,8 +3,9 @@ CommonModule = angular.module('CommonModule');
 CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
-  $scope.select = $stateParams.type.toLowerCase();
-  $scope.newType = $stateParams.type.toLowerCase();
+  $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+ 
   $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;
@@ -55,7 +56,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.addMode = function () {
     cacheService.searchCriteria = {};
-    var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    var stateName;
+    if($stateParams.type.toLowerCase() =="ingest2"){
+      stateName = dagMetaDataService.elementDefs['ingest2'].detailState;  
+    }else{
+      stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    }
+   // var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }
@@ -108,8 +115,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.action = function (data, mode, privilege) {
     $scope.setActivity(data.uuid, data.version, $scope.select, mode);
-    
-    var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    var stateName;
+    if($stateParams.type.toLowerCase() =="ingest2"){
+      stateName = dagMetaDataService.elementDefs['ingest2'].detailState;  
+    }else{
+      stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    }
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }

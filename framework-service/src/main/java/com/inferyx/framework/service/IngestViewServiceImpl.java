@@ -93,6 +93,7 @@ public class IngestViewServiceImpl {
 			}
 		}
 		ingestView.setFilter(resolvedFilter);		
+		ingestView.setAttributeMap(ingest.getAttributeMap());
 		return ingestView;
 	}
 
@@ -135,6 +136,7 @@ public class IngestViewServiceImpl {
 		ingest.setIgnoreCase(ingestView.getIgnoreCase());
 		ingest.setSourceExtn(ingestView.getSourceExtn());
 		ingest.setTargetExtn(ingestView.getTargetExtn());
+		ingest.setAttributeMap(ingestView.getAttributeMap());
 		if(ingestView.getFilter() != null) {
 			ingest.setFilterInfo(filterInfo);
 		}

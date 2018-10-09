@@ -34,7 +34,28 @@ public class SqoopInput {
 	private String hiveDatabaseName;
 	private String hCatalogTableName;
 	private String hCatalogDatabaseName;
+	private String sqlQuery;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sqlQuery
+	 */
+	public String getSqlQuery() {
+		return sqlQuery;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sqlQuery the sqlQuery to set
+	 */
+	public void setSqlQuery(String sqlQuery) {
+		this.sqlQuery = sqlQuery;
+	}
+
 	/**
 	 *
 	 * @Ganesh
@@ -469,6 +490,9 @@ public class SqoopInput {
 		this.hCatalogTableName = hCatalogTableName;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -482,8 +506,6 @@ public class SqoopInput {
 				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
 				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
 				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
-				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + "]";
-	}
-
-	
+				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + "]";
+	}	
 }
