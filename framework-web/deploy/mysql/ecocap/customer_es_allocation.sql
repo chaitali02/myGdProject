@@ -1,11 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `customer_es_allocation`;
-CREATE TABLE `customer_es_allocation` (
-  `cust_id` varchar(50) DEFAULT NULL,
-  `es_contribution` decimal(10,0) DEFAULT NULL,
-  `es_allocation` decimal(10,0) DEFAULT NULL,
-  `reporting_date` varchar(50) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
+DROP TABLE IF EXISTS CUSTOMER_ES_ALLOCATION; 
 
+CREATE TABLE CUSTOMER_ES_ALLOCATION 
+  ( 
+     CUST_ID         VARCHAR(50), 
+     ES_CONTRIBUTION DECIMAL(10, 2), 
+     ES_ALLOCATION   DECIMAL(10, 2), 
+     REPORTING_DATE  VARCHAR(50), 
+     VERSION         INTEGER(50) 
+  ); 

@@ -1,10 +1,13 @@
-DROP TABLE IF EXISTS industry_factor_simulation;
-CREATE  TABLE IF NOT EXISTS `industry_factor_simulation`(
-  `iteration_id` int, 
-  `factor1` double, 
-  `factor2` double, 
-  `factor3` double, 
-  `factor4` double,
-  `reporting_date` string,
-  `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION; 
+
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION 
+  ( 
+     ITERATION_ID   INT, 
+     FACTOR1        DECIMAL, 
+     FACTOR2        DECIMAL, 
+     FACTOR3        DECIMAL, 
+     FACTOR4        DECIMAL, 
+     REPORTING_DATE STRING, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

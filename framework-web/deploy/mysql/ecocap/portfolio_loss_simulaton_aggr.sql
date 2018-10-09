@@ -1,12 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE `portfolio_loss_simulaton_aggr`;
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_AGGR; 
 
-CREATE TABLE `portfolio_loss_simulaton_aggr` (
-    `expected_loss` int(11) DEFAULT NULL,
-    `value_at_risk` int(11) DEFAULT NULL,
-    `economic_capital` int(11) DEFAULT NULL,
-    `reporting_date` varchar(45) DEFAULT NULL  , 
-    `version` int(11) DEFAULT NULL 
-);
-
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_AGGR 
+  ( 
+     EXPECTED_LOSS    DECIMAL(10, 2), 
+     VALUE_AT_RISK    DECIMAL(10, 2), 
+     ECONOMIC_CAPITAL DECIMAL(10, 2), 
+     REPORTING_DATE   VARCHAR(50), 
+     VERSION          INTEGER(50) 
+  );

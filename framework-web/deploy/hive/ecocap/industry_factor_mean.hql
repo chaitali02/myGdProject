@@ -1,7 +1,9 @@
-DROP TABLE IF EXISTS industry_factor_mean;
-CREATE TABLE IF NOT EXISTS `industry_factor_mean`(
-  `id` string, 
-  `mean` double, 
-  `reporting_date` string,
-  `version` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_MEAN; 
+
+CREATE TABLE INDUSTRY_FACTOR_MEAN 
+  ( 
+     ID             STRING, 
+     MEAN           DECIMAL, 
+     REPORTING_DATE STRING, 
+     VERSION        INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

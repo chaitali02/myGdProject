@@ -1,13 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `ecocap`;
-USE `ecocap`;
-DROP TABLE IF EXISTS `customer_loss_simulation`;
+DROP TABLE IF EXISTS CUSTOMER_LOSS_SIMULATION; 
 
-CREATE TABLE `customer_loss_simulation` (
-  `cust_id` varchar(45) DEFAULT NULL,
-  `iterationid` int(11) DEFAULT NULL,
-  `customer_loss` decimal(10,0) DEFAULT NULL,
-  `reporting_date` varchar(45) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-);
-
-
+CREATE TABLE CUSTOMER_LOSS_SIMULATION 
+  ( 
+     CUST_ID        VARCHAR(50), 
+     ITERATIONID    INTEGER(50), 
+     CUSTOMER_LOSS  DECIMAL(10, 2), 
+     REPORTING_DATE VARCHAR(50), 
+     VERSION        INTEGER(50) 
+  ); 

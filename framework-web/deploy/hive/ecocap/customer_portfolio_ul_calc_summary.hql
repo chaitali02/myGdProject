@@ -1,7 +1,11 @@
-DROP TABLE IF EXISTS customer_portfolio_ul_calc_summary;
-CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc_summary`(
-  `cust_id` string,
-  `portfolio_ul_cust_sum` double, 
-  `portfolio_ul_total_sum` double,
-  `reporting_date` string,
-  `version` int);
+
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY; 
+
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY 
+  ( 
+     CUST_ID                STRING, 
+     PORTFOLIO_UL_CUST_SUM  DECIMAL, 
+     PORTFOLIO_UL_TOTAL_SUM DECIMAL, 
+     REPORTING_DATE         STRING, 
+     VERSION                INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 

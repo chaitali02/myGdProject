@@ -1,6 +1,10 @@
-DROP TABLE IF EXISTS customer_portfolio_ul_calc_allocation;
-CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc_allocation`(
-  `cust_id` string, 
-  `portfolio_ul_cust_allocation` double, 
-  `reporting_date` string,
-  `version` int);
+
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION; 
+
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION 
+  ( 
+     CUST_ID                      STRING, 
+     PORTFOLIO_UL_CUST_ALLOCATION DECIMAL, 
+     REPORTING_DATE               STRING, 
+     VERSION                      INT 
+  ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','; 
