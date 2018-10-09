@@ -29,9 +29,9 @@ TRUNCATE TABLE PORTFOLIO_LOSS_SUMMARY;
 TRUNCATE TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS;
 
 
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/customer_portfolio_1000.csv' IGNORE INTO TABLE customer_portfolio FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/industry_factor_correlation_transpose.csv' IGNORE INTO TABLE industry_factor_correlation_transpose FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/industry_factor_correlation.csv' IGNORE INTO TABLE industry_factor_correlation FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/industry_factor_mean.csv' IGNORE INTO TABLE industry_factor_mean FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/lkp_reporting_date.csv' IGNORE INTO TABLE lkp_reporting_date FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/portfolio_var_heatmap_buckets.csv' IGNORE INTO TABLE portfolio_var_heatmap_buckets FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/customer_portfolio_1000.csv' IGNORE INTO TABLE CUSTOMER_PORTFOLIO FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/industry_factor_correlation_transpose.csv' IGNORE INTO TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r';
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/industry_factor_correlation.csv' IGNORE INTO TABLE INDUSTRY_FACTOR_CORRELATION FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r';
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/industry_factor_mean.csv' IGNORE INTO TABLE INDUSTRY_FACTOR_MEAN FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r';
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/lkp_reporting_date.csv' IGNORE INTO TABLE LKP_REPORTING_DATE FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r';
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/portfolio_var_heatmap_buckets.csv' IGNORE INTO TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r';
