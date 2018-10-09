@@ -54,8 +54,9 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "COUNT(" + attrName1 + ") AS numNull,"				
 					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
 					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ") AS sixSigma," 
-					+ "CURRENT_DATE AS load_date, " 
-					+ "UNIX_TIMESTAMP() AS load_id, " + profileExec.getVersion() + " AS version"
+//					+ "CURRENT_DATE AS load_date, " 
+//					+ "UNIX_TIMESTAMP() AS load_id, "
+					+ profileExec.getVersion() + " AS version"
 					+ " FROM " + profileTableName;
 //		else 
 //			sql = null;

@@ -58,7 +58,9 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ attrName + ",'0'),0 , 1))*100  AS perDistinct, cast(count(" + attrName
 				+ ") as decimal) AS numNull,count(" + attrName + ") / count(REPLACE(nvl(" + attrName
 				+ ",'0'),0 , 1))*100 AS perNull, count(" + attrName + ") / count(REPLACE(nvl(" + attrName
-				+ ",'0'),0 , 1)) AS sixSigma, " + " To_CHAR(sysdate,'yyyy/mm/dd' ) AS load_date, " + " SELECT (sysdate - to_date('01-Jan-1970', 'dd-Mon-yyyy')) *24*60*60*1000 FROM dual AS load_id, " 
+				+ ",'0'),0 , 1)) AS sixSigma, " 
+//				+ " To_CHAR(sysdate,'yyyy/mm/dd' ) AS load_date, " 
+//				+ " SELECT (sysdate - to_date('01-Jan-1970', 'dd-Mon-yyyy')) *24*60*60*1000 FROM dual AS load_id, " 
 				+ profileExec.getVersion() + " AS version from " + profileTableName;
 		//}
 		logger.info("query is : " + sql);
