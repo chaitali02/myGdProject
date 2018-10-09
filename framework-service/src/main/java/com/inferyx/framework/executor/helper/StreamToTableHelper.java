@@ -22,6 +22,8 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FileType;
@@ -127,8 +130,14 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		String targetPath = streamInput.getTargetDir();
 		String targetType = streamInput.getTargetType();
 		String fileFormat = streamInput.getFileFormat();
+		String[] dataTypes = new String[] {"integer", "varchar(70)", "varchar(70)"
+				, "integer", "integer", "integer"};
+		String[] attributeList = new String[targetDP.getAttributes().size()];
+		for(int i=0; i<targetDP.getAttributes().size(); i++) {
+			attributeList[i] = targetDP.getAttributes().get(i).getName();
+		}
+		
 		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
-
 			@Override
 			public void call(JavaRDD<ConsumerRecord<T, K>> rdd) throws Exception {
 				Broadcast<SparkSession> broadcastSession = rdd.context().broadcast(session, ClassManifestFactory.fromClass(SparkSession.class));
@@ -148,15 +157,23 @@ public class StreamToTableHelper<T, K> implements Serializable {
 						});
 						// Create dataframe
 						Dataset<Row> df = broadcastSession.getValue().createDataFrame(rowsList, schema);
-						
+//						df.printSchema();
+//						df.show(false);
+//						System.out.println("columns: "+df.columns());
 						logger.info("Hive writing starts for this partition >>>>>>>>>>>>>>>>>>>> ");
 						if(!targetType.equalsIgnoreCase("FILE")) {
+							int i = 0;
+							String[] dfColumns =  df.columns();							 
+							for(String attrName : attributeList){
+								df = df.withColumnRenamed(dfColumns[i], attrName);
+								df = df.withColumn(attrName, df.col(attrName).cast(dataTypes[i]));
+								i++;
+							} 
 							persistDataframe(df, tableName, datasourceType, sessionParameters, url, driver, userName, password, saveMode);							
 						} else {
 							if(fileFormat == null) {
 								df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 							} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
-								System.out.println(df + ":" + targetPath + ":" + saveMode);
 								df.coalesce(1).write().mode(saveMode).option("delimiter", ",").csv(targetPath);
 							} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
 								df.coalesce(1).write().mode(saveMode).option("delimiter", "\t").csv(targetPath);
@@ -195,7 +212,6 @@ public class StreamToTableHelper<T, K> implements Serializable {
 						df.sparkSession().sql("SET "+sessionParam);
 					}
 				}
-
 			df.write().mode(saveMode).insertInto(tableName);
 		} else {
 			Properties connectionProperties = new Properties();
