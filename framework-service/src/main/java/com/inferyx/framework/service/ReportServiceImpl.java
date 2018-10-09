@@ -316,8 +316,7 @@ public class ReportServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 		
-		List<Map<String, Object>> data = datastoreServiceImpl.getDatapodResults(datastore.getUuid(), datastore.getVersion(), null,
-				0, rowLimit, response, rowLimit, null, null, null, runMode);		
+		List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rowLimit, null, null);		
 
 	    DownloadExec downloadExec = new DownloadExec();
 		

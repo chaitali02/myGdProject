@@ -442,7 +442,6 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
     $scope.onChangeAutoMode=function(){
         $scope.ingestTableArray=[];
-        $scope.ingestTableInfo=[];
         if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "TABLE" &&  $scope.selectedAutoMode == "By Order"){
             if($scope.allTargetAttribute){
                 $scope.ingestTableArray=[];
@@ -521,10 +520,72 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 $scope.ingestTableArray[i] = mapInfo;
             }
 		}
+	
+		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
+			for(var i=0;i<$scope.ingestTableInfo.length;i++){
+                var mapInfo = {};
+                var obj = {}
+				var mapInfo = {};
+                var obj = {}
+				obj.text = "string";
+                obj.caption = "string";
+                mapInfo.isSourceAtributeSimple = true;
+                mapInfo.isSourceAtributeDatapod = false;
+                mapInfo.isSourceAtributeFormula = false;
+				mapInfo.isSourceAtributeExpression = false;
+				mapInfo.sourceAttributeType = obj;
+				mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcesimple;
+				mapInfo.sourcesimple=$scope.ingestTableInfo[i].sourcesimple;
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+		}
         else{
             $scope.ingestTableArray=[];
         }
-    }
+	}
+	
+	
+    $scope.checkAllAttributeRow = function () {
+		
+	
+		angular.forEach($scope.ingestTableInfo, function (filter) {
+			filter.selected = $scope.selectedAllAttributeRow;
+		});
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+	}
+
+	$scope.addAttribute = function () {
+		if ($scope.ingestTableInfo == null) {
+			$scope.ingestTableInfo = [];
+		}
+		var mapInfo = {};
+		var obj = {}
+		obj.text = "string";
+		obj.caption = "string";
+		mapInfo.isSourceAtributeSimple = true;
+		mapInfo.isSourceAtributeDatapod = false;
+		mapInfo.isSourceAtributeFormula = false;
+		mapInfo.isSourceAtributeExpression = false;
+		mapInfo.sourceAttributeType = obj;
+		mapInfo.targetsimple;
+		$scope.ingestTableInfo.splice($scope.ingestTableInfo.length, 0, mapInfo);
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+		console.log($scope.ingestTableInfo);
+	}
+	$scope.removeAttribute = function () {
+		var newDataList = [];
+		$scope.selectedAllAttributeRow=false;
+		$scope.checkAll = false;
+		angular.forEach($scope.ingestTableInfo, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+
+	
+		$scope.ingestTableInfo = newDataList;
+		$scope.ingestTableArray=$scope.ingestTableInfo;
+	}
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
@@ -616,7 +677,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 $scope.getAllAttributeByTarget(response.ingesttabalearray);
 			}
             $scope.filterTableArray = response.filterInfo;
-            $scope.ingestTableArray=response.ingesttabalearray;
+			$scope.ingestTableArray=response.ingesttabalearray;
+			if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE"){
+				$scope.ingestTableInfo=$scope.ingestTableArray;
+			}
             
 			var tags = [];
 			for (var i = 0; i < response.ingestData.tags.length; i++) {
