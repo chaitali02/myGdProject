@@ -1,10 +1,9 @@
-
-create table "product_type" 
-   (
-   	"product_type_id" number(30,0), 
-	"product_type_code" varchar2(70 byte), 
-	"product_type_desc" varchar2(70 byte), 
-	"load_date" varchar2(70 byte), 
-         "load_id" varchar2(70 byte),
-	constraint "product_type_id_pk" primary key ("product_type_id", "load_id", "load_date")
-   );
+DROP TABLE PRODUCT_TYPE;
+CREATE TABLE PRODUCT_TYPE 
+  ( 
+     PRODUCT_TYPE_ID   VARCHAR2(50) NOT NULL, 
+     PRODUCT_TYPE_CODE VARCHAR2(10), 
+     PRODUCT_TYPE_DESC VARCHAR2(500), 
+     LOAD_DATE         VARCHAR2(10), 
+     LOAD_ID           INTEGER 
+  ); 

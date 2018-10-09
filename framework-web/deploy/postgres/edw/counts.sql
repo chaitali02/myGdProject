@@ -1,4 +1,4 @@
-invalidate metadata;
+
 select tabname,cnt from
 (
 select 'account' as tabname, count(*) as cnt from account

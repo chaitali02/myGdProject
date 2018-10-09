@@ -1,22 +1,23 @@
-
-create table "fact_transaction" 
-   (
-   	"transaction_id" varchar2(70 byte) not null enable, 
-	"src_transaction_id" varchar2(70 byte), 
-	"transaction_type_id" varchar2(70 byte), 
-	"trans_date_id" number(30,0), 
-	"bank_id" varchar2(70 byte), 
-	"branch_id" varchar2(70 byte), 
-	"customer_id" varchar2(70 byte), 
-	"address_id" varchar2(70 byte), 
-	"account_id" varchar2(70 byte), 
-	"from_account" varchar2(70 byte), 
-	"to_account" varchar2(70 byte), 
-	"amount_base_curr" number(30,0), 
-	"amount_usd" number(30,0), 
-	"currency_code" varchar2(70 byte), 
-	"currency_rate" number(30,0), 
-	"notes" varchar2(80 byte), 
-	"load_date" varchar2(70 byte) not null enable, 
-	"load_id" number(30,0) not null enable
-);
+DROP TABLE FACT_TRANSACTION;
+CREATE TABLE FACT_TRANSACTION 
+  ( 
+     TRANSACTION_ID      VARCHAR2(50) NOT NULL, 
+     SRC_TRANSACTION_ID  VARCHAR2(50), 
+     TRANSACTION_TYPE_ID INTEGER, 
+     TRANS_DATE_ID       INTEGER, 
+     BANK_ID             INTEGER, 
+     BRANCH_ID           INTEGER, 
+     CUSTOMER_ID         VARCHAR2(50), 
+     ADDRESS_ID          VARCHAR2(50), 
+     ACCOUNT_ID          VARCHAR2(50), 
+     FROM_ACCOUNT        VARCHAR2(50), 
+     TO_ACCOUNT          VARCHAR2(50), 
+     AMOUNT_BASE_CURR    INTEGER, 
+     AMOUNT_USD          INTEGER, 
+     CURRENCY_CODE       VARCHAR2(10), 
+     CURRENCY_RATE       INTEGER, 
+     NOTES               VARCHAR2(50), 
+     LOAD_DATE           VARCHAR2(10), 
+     LOAD_ID             INTEGER, 
+     CONSTRAINT FACT_TRANSACTION_PK PRIMARY KEY (TRANSACTION_ID) 
+  ); 

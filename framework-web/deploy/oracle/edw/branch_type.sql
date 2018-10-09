@@ -1,14 +1,11 @@
-create table "branch_type" 
-   (
-   	"branch_type_id" number(30,0) not null enable, 
-	"branch_type_code" varchar2(70 byte), 
-	"branch_type_desc" varchar2(70 byte), 
-	"load_date" varchar2(70 byte) not null enable, 
-	"load_id" number(30,0) default 0, 
-	 constraint "branch_type_pk" primary key ("branch_type_id", "load_date", "load_id") 
-);
-exit
+DROP TABLE BRANCH_TYPE;
+CREATE TABLE BRANCH_TYPE 
+  ( 
+     BRANCH_TYPE_ID   VARCHAR2(50) NOT NULL, 
+     BRANCH_TYPE_CODE VARCHAR2(10), 
+     BRANCH_TYPE_DESC VARCHAR2(500), 
+     LOAD_DATE        VARCHAR2(10), 
+     LOAD_ID          INTEGER, 
+     CONSTRAINT BRANCH_TYPE_PK PRIMARY KEY (BRANCH_TYPE_ID) 
+  ); 
 
-su oracle
-
-sqlldr xe/admin /opt/oracle/app/controlLoadFile/BRANCH_TYPE.ctl

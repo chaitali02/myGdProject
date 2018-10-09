@@ -1,13 +1,13 @@
-create table "bank" 
-   (
-   	"bank_id" varchar2(70 byte) not null enable, 
-	"bank_code" varchar2(70 byte), 
-	"bank_name" varchar2(70 byte), 
-	"bank_account_number" varchar2(70 byte), 
-	"bank_currency_code" varchar2(70 byte), 
-	"bank_check_digits" number(30,0), 
-	"load_date" varchar2(70 byte) not null enable,
-	"load_id" number(30,0), 
-	 constraint "bank_pk" primary key ("bank_id", "load_date", "load_id")
-);
-
+DROP TABLE BANK;
+CREATE TABLE BANK 
+  ( 
+     BANK_ID             VARCHAR2(50) NOT NULL, 
+     BANK_CODE           VARCHAR2(10), 
+     BANK_NAME           VARCHAR2(100), 
+     BANK_ACCOUNT_NUMBER VARCHAR2(50), 
+     BANK_CURRENCY_CODE  VARCHAR2(10), 
+     BANK_CHECK_DIGITS   INTEGER, 
+     LOAD_DATE           VARCHAR2(10), 
+     LOAD_ID             INTEGER, 
+     CONSTRAINT BANK_PK PRIMARY KEY (BANK_ID) 
+  ); 

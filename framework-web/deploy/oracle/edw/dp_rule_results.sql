@@ -1,22 +1,21 @@
-create table "dp_rule_results"
-(
-  "datapoduuid" varchar2(70 byte),
-  "datapodversion" varchar2(70 byte),
-  "datapodname" varchar2(70 byte),
-  "attributeid" varchar2(70 byte),
-  "attributename" varchar2(70 byte),
-  "numrows" varchar2(70 byte),
-  "minval" number(30,0),
-  "maxval" number(30,0),
-  "avgval" number(30,0),
-  "medianval" number(30,0),
-  "stddev" number(30,0),
-  "numdistinct" number(30,0),
-  "perdistinct" number(30,0),
-  "numnull" number(30,0),
-  "pernull" number(30,0),
-  "sixsigma" number(30,0),
-  "load_date" varchar2(70 byte),
-  "load_id" number(30,0),
-  "version" varchar2(70 byte)
-);
+DROP TABLE DP_RULE_RESULTS;
+CREATE TABLE DP_RULE_RESULTS 
+  ( 
+     DATAPODUUID    VARCHAR2(50) NOT NULL, 
+     DATAPODVERSION VARCHAR2(50), 
+     DATAPODNAME    VARCHAR2(100), 
+     ATTRIBUTEID    VARCHAR2(50), 
+     ATTRIBUTENAME  VARCHAR2(100), 
+     NUMROWS        VARCHAR2(50), 
+     MINVAL         DECIMAL(10, 2), 
+     MAXVAL         DECIMAL(10, 2), 
+     AVGVAL         DECIMAL(10, 3), 
+     MEDIANVAL      DECIMAL(10, 3), 
+     STDDEV         DECIMAL(10, 4), 
+     NUMDISTINCT    INTEGER, 
+     PERDISTINCT    DECIMAL(10, 2), 
+     NUMNULL        INTEGER, 
+     PERNULL        DECIMAL(10, 2), 
+     SIXSIGMA       DECIMAL(10, 2), 
+     VERSION        INTEGER 
+  ); 

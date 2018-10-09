@@ -1,17 +1,18 @@
-create table "transaction" 
-   (
-   	"transaction_id" varchar2(70 byte), 
-	"transaction_type_id" number(30,0), 
-	"account_id" varchar2(70 byte), 
-	"transaction_date" varchar2(70 byte), 
-	"from_account" varchar2(70 byte), 
-	"to_account" varchar2(70 byte), 
-	"amount_base_curr" number(30,2), 
-	"amount_usd" number(30,2), 
-	"currency_code" varchar2(70 byte), 
-	"currency_rate" float(126), 
-	"notes" varchar2(90 byte), 
-	"load_date" varchar2(70 byte), 
-	"load_id" number(30,0),
-	constraint "transaction_id_pk" primary key ("transaction_id", "load_id", "load_date")
-);
+DROP TABLE TRANSACTION;
+CREATE TABLE TRANSACTION 
+  ( 
+     TRANSACTION_ID      VARCHAR2(50) NOT NULL, 
+     TRANSACTION_TYPE_ID VARCHAR2(50), 
+     ACCOUNT_ID          VARCHAR2(50), 
+     TRANSACTION_DATE    VARCHAR2(10), 
+     FROM_ACCOUNT        VARCHAR2(50), 
+     TO_ACCOUNT          VARCHAR2(50), 
+     AMOUNT_BASE_CURR    DECIMAL(10, 2), 
+     AMOUNT_USD          DECIMAL(10, 2), 
+     CURRENCY_CODE       VARCHAR2(10), 
+     CURRENCY_RATE       DECIMAL(10, 2), 
+     NOTES               VARCHAR2(100), 
+     LOAD_DATE           VARCHAR2(10), 
+     LOAD_ID             INTEGER, 
+     CONSTRAINT TRANSACTION_PK PRIMARY KEY (TRANSACTION_ID) 
+  ); 

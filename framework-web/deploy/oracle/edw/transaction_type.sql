@@ -1,9 +1,10 @@
-create table "transaction_type" 
-   (
-   	"transaction_type_id" varchar2(70 byte), 
-	"transaction_type_code" varchar2(70 byte), 
-	"transaction_type_desc" varchar2(70 byte), 
-	"load_date" varchar2(70 byte), 
-	"load_id" number(30,0),
-	constraint "transaction_type_id_pk" primary key ("transaction_type_id", "load_id", "load_date")  
-);
+DROP TABLE TRANSACTION_TYPE;
+CREATE TABLE TRANSACTION_TYPE 
+  ( 
+     TRANSACTION_TYPE_ID   VARCHAR2(50) NOT NULL, 
+     TRANSACTION_TYPE_CODE VARCHAR2(10), 
+     TRANSACTION_TYPE_DESC VARCHAR2(500), 
+     LOAD_DATE             VARCHAR2(10), 
+     LOAD_ID               INTEGER, 
+     CONSTRAINT TRANSACTION_TYPE_PK PRIMARY KEY (TRANSACTION_TYPE_ID) 
+  ); 
