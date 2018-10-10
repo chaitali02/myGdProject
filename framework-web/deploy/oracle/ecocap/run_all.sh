@@ -25,12 +25,12 @@ done
 
 
 sqlplus $1/$1 < create_all.sql
-sqlplus $1/$1 < truncate.sql
+sqlplus $1/$1 < truncate_wi.sql
 
 
 IFS=$'\n'       # make newlines the only separator
 set -f          # disable globbing
-for i in $(cat < load.sql); do
+for i in $(cat < load_wi.sql); do
   echo "sqlldr $1/$1  $i"
 sqlldr $1/$1  $i
 done
