@@ -17,11 +17,21 @@ fi
 rm -r create_all.sql
 for file in *.sql
 do
-        if [[ $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql" ]] ; then
+        if [[ $file != "truncate.sql" && $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql" ]] ; then
 		echo >> create_all.sql
                 cat $file >> create_all.sql
         fi;
 done
-mysql -u inferyx -p -v $1 < create_all.sql
-mysql -u inferyx -p -v $1 --local-infile < load.sql
-mysql -u inferyx -p -v $1 < counts.sql
+
+
+sqlplus $1/$1 < create_all.sql
+sqlplus $1/$1 < truncate.sql
+
+
+IFS=$'\n'       # make newlines the only separator
+set -f          # disable globbing
+for i in $(cat < load.sql); do
+  echo "sqlldr $1/$1  $i"
+sqlldr $1/$1  $i
+done
+sqlplus $1/$1 < counts.sql

@@ -506,6 +506,7 @@ DataIngestionModule.controller('IngestRuleDetailController', function (CommonSer
 	}//End If
     else{
 		$scope.ingestData={};
+		$scope.ingestData.header="N"
 		$scope.onChangeRuleType();
 	}
 

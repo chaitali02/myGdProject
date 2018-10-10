@@ -692,7 +692,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	}//End If
     else{
+		
 		$scope.ingestData={};
+		$scope.ingestData.header="N"
 	//	$scope.onChangeRuleType();
 	}
 
