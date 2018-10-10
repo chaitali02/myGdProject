@@ -17,7 +17,7 @@ fi
 rm -r create_all.sql
 for file in *.sql
 do
-        if [[ $file != "truncate.sql" && $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql" ]] ; then
+        if [[ $file != "truncate_wi.sql" && "truncate_wo.sql" && $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql"  && $file != "load_wi.sql"  && $file != "load_wo.sql" ]] ; then
 		echo >> create_all.sql
                 cat $file >> create_all.sql
         fi;
