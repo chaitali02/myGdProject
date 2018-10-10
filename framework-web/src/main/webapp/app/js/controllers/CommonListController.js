@@ -3,9 +3,15 @@ CommonModule = angular.module('CommonModule');
 CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
-  $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
-  $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
- 
+  debugger
+  if($stateParams.type.indexOf("exec")){
+    $scope.select = $stateParams.type;
+    $scope.newType = $stateParams.type;
+   }else{
+    $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+    $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType; 
+  }
+  
   $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;

@@ -42,9 +42,8 @@ public class ProfileHiveOperator extends ProfileOperator {
 					+ ") AS numDistinct, count(distinct " + attrName + ")/count(" + attrName
 					+ ")*100 AS perDistinct, count(if(" + attrName + " is null,1,0)) AS numNull,count(if(" + attrName
 					+ "" + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, count(if(" + attrName
-					+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, "
-//					+" current_date() AS load_date, "
-//					+" unix_timestamp() AS load_id, '" 
+					+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, '"
+//					+" current_date() AS load_date, "+" unix_timestamp() AS load_id, '" 
 					+ profileExec.getVersion()+ "' AS version from " + profileTableName;
 			
 			logger.info("query is : " + sql);
