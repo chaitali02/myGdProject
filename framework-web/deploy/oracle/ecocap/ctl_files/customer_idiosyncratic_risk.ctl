@@ -1,7 +1,7 @@
 OPTIONS (DIRECT=TRUE, ERRORS=50, rows=1000000)
 UNRECOVERABLE
 LOAD DATA
-INFILE '/user/hive/warehouse/framework/app/edw/data/csv/noheader/customer_idiosyncratic_risk.csv'
+INFILE '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/customer_idiosyncratic_risk.csv'
 TRUNCATE
 INTO TABLE customer_idiosyncratic_risk
 FIELDS TERMINATED BY ','
