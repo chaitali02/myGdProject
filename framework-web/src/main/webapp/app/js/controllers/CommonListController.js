@@ -3,10 +3,10 @@ CommonModule = angular.module('CommonModule');
 CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
-  debugger
-  if($stateParams.type.indexOf("exec")){
-    $scope.select = $stateParams.type;
-    $scope.newType = $stateParams.type;
+  debugger;
+  if($stateParams.type.indexOf("exec")|| $stateParams.type.indexOf("Exec")){
+    $scope.select = $stateParams.type.toLowerCase();
+    $scope.newType = $stateParams.type.toLowerCase();
    }else{
     $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
     $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType; 
