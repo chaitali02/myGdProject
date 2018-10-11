@@ -32,7 +32,7 @@ sed -i 's/DROP TABLE IF EXISTS /DROP TABLE IF EXISTS '$1'./g' create_all_bck.sql
 sed -i 's/ACCOUNT( /ACCOUNT/g' create_all_bck.sql
 sed -i 's/CREATE TABLE /CREATE TABLE '$1'./g' create_all_bck.sql
 sed -i 's/TRUNCATE TABLE /TRUNCATE TABLE '$1'./g' load_bck.sql
-sed -i 's/from /from '$1'./g' counts_bck.sql
+sed -i 's/FROM /FROM '$1'./g' counts_bck.sql
 sed -i 's/Copy /Copy '$1'./g' load_bck.sql
 		 
 psql -U postgres -d $1 < create_all_bck.sql
