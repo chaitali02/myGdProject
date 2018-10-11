@@ -9,6 +9,7 @@
 # Written by Yogesh Palrecha <ypalrecha@gridedge.com>
 #*******************************************************************************
 dbname=$1
+dbuser='inferyx'
 
 if [[ $dbname = "" ]] ; then
         echo Usage: rull_all.sh [dbname]
@@ -27,16 +28,16 @@ do
 			 
         fi;
 done
-#cp create_all.sql create_all_bck.sql
-sed -i 's/DROP TABLE IF EXISTS /DROP TABLE IF EXISTS '$1'./g' create_all_bck.sql
-sed -i 's/CREATE TABLE /CREATE TABLE '$1'./g' create_all_bck.sql
-sed -i 's/TRUNCATE TABLE /TRUNCATE TABLE '$1'./g' load_bck.sql
-sed -i 's/FROM /FROM '$1'./g' counts_bck.sql
-sed -i 's/Copy /Copy '$1'./g' load_bck.sql
-		 
-psql -U postgres -d $1 < create_all_bck.sql
-psql -U postgres -d $1 < load_bck.sql
-psql -U postgres -d $1 < counts_bck.sql
+cp create_all.sql create_all_bck.sql
+sed -i 's/DROP TABLE IF EXISTS /DROP TABLE IF EXISTS '$dbname'./g' create_all_bck.sql
+sed -i 's/CREATE TABLE /CREATE TABLE '$dbname'./g' create_all_bck.sql
+sed -i 's/TRUNCATE TABLE /TRUNCATE TABLE '$dbname'./g' load_bck.sql
+sed -i 's/FROM /FROM '$dbname'./g' counts_bck.sql
+sed -i 's/Copy /Copy '$dbname'./g' load_bck.sql
+		
+psql -U $dbuser -d $dbname < create_all_bck.sql
+psql -U $dbuser -d $dbname < load_bck.sql
+psql -U $dbuser -d $dbname < counts_bck.sql
 
 rm create_all_bck.sql
 rm load_bck.sql
