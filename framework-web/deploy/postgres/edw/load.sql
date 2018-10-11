@@ -13,7 +13,6 @@ TRUNCATE TABLE FACT_CUSTOMER_SUMMARY_MONTHLY;
 TRUNCATE TABLE FACT_TRANSACTION;
 TRUNCATE TABLE RC_RULE_RESULTS;
 
-Copy ACCOUNT FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' With csv delimiter ',';
 
 Copy ACCOUNT FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' With csv delimiter ',';
 
