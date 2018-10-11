@@ -66,6 +66,8 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -81,6 +83,8 @@ import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.FormulaOperator;
+import com.inferyx.framework.operator.FunctionOperator;
 
 /**
  * @author Ganesh
@@ -111,6 +115,10 @@ public class IngestServiceImpl extends RuleTemplate {
 	private KafkaExecutor<?, ?> kafkaExecutor;
 	@Autowired
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
+	@Autowired
+	private FunctionOperator functionOperator;
+	@Autowired
+	private FormulaOperator formulaOperator;	
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -783,12 +791,38 @@ public class IngestServiceImpl extends RuleTemplate {
 
 
 	/**
-	 * @param attributeMap
+	 * @param attributeMapList
 	 * @return
+	 * @throws JsonProcessingException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public String[] resolveMappedAttributes(List<AttributeMap> attributeMap) {
-		String[] mappedAttributes = new String[attributeMap.size()];
+	public String resolveAttribute(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
+				return attrRefHolder.getAttrName();
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
+				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDpMI.getUuid(), sourceDpMI.getVersion(), sourceDpMI.getType().toString());
+				for(Attribute attribute : datapod.getAttributes()) {
+					if(attrRefHolder.getAttrId().equalsIgnoreCase(attribute.getAttributeId().toString())) {
+						return attribute.getName();
+					}
+				}
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.function)) {
+				MetaIdentifier functionMI = attrRefHolder.getRef();
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString());
+				return functionOperator.generateSql(function, null, null);
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.formula)) {
+				MetaIdentifier formulaMI = attrRefHolder.getRef();
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMI.getUuid(), formulaMI.getVersion(), formulaMI.getType().toString());
+				return formulaOperator.generateSql(formula, null, null, null);
+			}
 		
-		return mappedAttributes;
+		return null;
 	}
 }

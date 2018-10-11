@@ -10,8 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,9 +25,11 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Logger;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeMap;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -518,7 +523,23 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			String[] attributeMap = ingestServiceImpl.resolveMappedAttributes(ingest.getAttributeMap());
+			Map<String, String> resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap());
+			String[] mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);	
+			
+			boolean areAllAttrs = false;
+			for(String attrType : resolvedAttrMap.values()) {
+				if(attrType.equalsIgnoreCase(MetaType.simple.toString()) 
+						|| attrType.equalsIgnoreCase(MetaType.formula.toString())
+						|| attrType.equalsIgnoreCase(MetaType.function.toString())) {
+					areAllAttrs = true;
+				} 
+			}
+			
+			String query = null;
+			if(!areAllAttrs) {
+				String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+				query = getSqlQuery(mappedAttrs, tableName, incrColName, latestIncrLastValue);
+			}
 			
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
@@ -789,11 +810,15 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setTargetDirectory(targetDir);
-						sqoopInput.setTable(sourceDp.getName());
+						if(mappedAttrs != null && areAllAttrs) {
+							sqoopInput.setTable(sourceDp.getName());
+						}
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
-						if(attributeMap != null) {
-							sqoopInput.setAttributeMap(attributeMap);
+						if(mappedAttrs != null && areAllAttrs) {
+							sqoopInput.setAttributeMap(mappedAttrs);
+						} else if(mappedAttrs != null && !areAllAttrs) {
+							sqoopInput.setSqlQuery(query);
 						}
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 //						if(incrLastValue != null) {
@@ -954,12 +979,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
-						sqoopInput.setHiveTableName(targetDp.getName());
+						if(mappedAttrs != null && areAllAttrs) {
+							sqoopInput.setHiveTableName(targetDp.getName());
+						}
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
 					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-						//this is export block from POSTGRES to other table
+						//this is import block from POSTGRES to HIVE table
 
 						logger.info("this is export block from POSTGRES to other table");
 //						sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
@@ -967,8 +994,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setTargetDirectory(targetDir);
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
-						tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
-						sqoopInput.setTable(tableName);
+						if(mappedAttrs != null && areAllAttrs) {
+							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+							sqoopInput.setTable(tableName);
+						}
 						
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
@@ -978,7 +1007,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 
 						logger.info("this is import block from other table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-						sqoopInput.setTable(sourceDp.getName());
+						if(mappedAttrs != null && areAllAttrs) {
+							sqoopInput.setTable(sourceDp.getName());
+						} 
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
@@ -992,8 +1023,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					} 
 
 					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
-					if(attributeMap != null) {
-						sqoopInput.setAttributeMap(attributeMap);
+					if(mappedAttrs != null && areAllAttrs) {
+						sqoopInput.setAttributeMap(mappedAttrs);
+					} else if(mappedAttrs != null && !areAllAttrs) {
+						sqoopInput.setSqlQuery(query);
 					}
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 					if(incrLastValue != null) {
@@ -1112,10 +1145,51 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		return ingestExec;
 	}
 
+	/**
+	 * @param attributeMaps
+	 * @return
+	 * @throws JsonProcessingException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	private Map<String, String> resolveMappedAttributes(List<AttributeMap> attributeMaps) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		 Map<String, String> mappedAttributes = new LinkedHashMap<>();
+		for(AttributeMap attributeMap : attributeMaps) {
+			AttributeRefHolder sourceAttrHolder = attributeMap.getSourceAttr();
+			String resolvedAttr= ingestServiceImpl.resolveAttribute(sourceAttrHolder);
+			mappedAttributes.put(resolvedAttr, sourceAttrHolder.getRef().getType().toString());
+		}
+		return mappedAttributes;
+	}
+
 	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
 		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " AND $CONDITIONS";
 		logger.info("query: "+query);
 		return query;
+	}
+	
+	private String getSqlQuery(String[] mappedAttrs, String tableName, String incrColName, String incrLastValue) {
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("SELECT ");
+		for(int i=0; i<mappedAttrs.length; i++) {
+			queryBuilder.append(mappedAttrs[i]);
+			if(i<mappedAttrs.length-1) {
+				queryBuilder.append(",");
+			}
+		}
+		queryBuilder.append(" FROM ");
+		queryBuilder.append(tableName);
+		queryBuilder.append(" WHERE ");
+		queryBuilder.append(incrLastValue != null ? incrColName+">"+incrLastValue : "1=1");
+		queryBuilder.append(" AND $CONDITIONS");
+		
+		logger.info("sqoop select query: "+queryBuilder.toString());
+		return queryBuilder.toString();
 	}
 
 	public StreamInput getKafkaStreamInput() {
