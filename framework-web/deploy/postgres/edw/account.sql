@@ -23,5 +23,6 @@ CREATE TABLE ACCOUNT
      INTEREST_TYPE         VARCHAR(10),
      INTEREST_RATE         DECIMAL(10,2),
      LOAD_DATE             VARCHAR(10),
-     LOAD_ID               INTEGER
+     LOAD_ID               INTEGER,
+     CONSTRAINT ACCOUNT_PK PRIMARY KEY (ACCOUNT_ID) 
   );
