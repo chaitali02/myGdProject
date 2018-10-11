@@ -53,17 +53,20 @@
   "sourceFormat": null,
   "targetFormat": null,
   "header": "N",
-  "incrAttr": {
+    "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4",
-      "version": null,
-      "name": "ACCOUNT"
+      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4"
     },
-    "value": null,
-    "attrId": "1",
-    "attrName": "account_type_id",
-    "attrType": null
+    "attrId": "21"
+   
+  },
+   "splitBy": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4"
+    },
+    "attrId": "0"
   },
   "saveMode": "APPEND",
   "ignoreCase": "N"

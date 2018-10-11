@@ -1,5 +1,7 @@
 select tabname,cnt from
 (
+select 'account_hive' as tabname, count(*) as cnt from account_hive
+union all
 select 'account' as tabname, count(*) as cnt from account
 union all
 select 'account_status_type' as tabname, count(*) as cnt from account_status_type

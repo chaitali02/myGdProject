@@ -76,13 +76,15 @@
   "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd",
-      "version": null,
-      "name": "account_hive"
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
     },
-    "value": null,
-    "attrId": "20",
-    "attrName": "load_date",
-    "attrType": null
+    "attrId": "21"
+  },
+   "splitBy": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
+    },
+    "attrId": "0"
   }
 }

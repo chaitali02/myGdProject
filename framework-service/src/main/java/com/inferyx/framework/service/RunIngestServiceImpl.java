@@ -783,7 +783,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						}
 						logger.info("sourceDir : " + sourceDir);
 						logger.info("targetDir : " + targetDir);
-						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
+						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setTargetDirectory(targetDir);
@@ -985,7 +985,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						tableName = targetDp.getName();
 					} 
 
-					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
+					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalTestColumn(incrColName);

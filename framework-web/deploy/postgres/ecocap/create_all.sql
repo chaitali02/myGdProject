@@ -1,7 +1,6 @@
-
 DROP TABLE IF EXISTS CUSTOMER_ES_ALLOCATION;
 
-CREATE TABLE  CUSTOMER_ES_ALLOCATION 
+CREATE TABLE CUSTOMER_ES_ALLOCATION 
              ( 
                           CUST_ID         VARCHAR(50), 
                           ES_CONTRIBUTION DECIMAL(10,2), 
@@ -9,16 +8,14 @@ CREATE TABLE  CUSTOMER_ES_ALLOCATION
                           REPORTING_DATE  VARCHAR(50), 
                           VERSION         INTEGER 
              );
+DROP TABLE IF EXISTS CUSTOMER_GENERATE_DATA;
 
-DROP TABLE IF EXISTS ECUSTOMER_GENERATE_DATA;
-
-CREATE TABLE  CUSTOMER_GENERATE_DATA 
+CREATE TABLE CUSTOMER_GENERATE_DATA 
              ( 
                           ID      INTEGER, 
                           DATA    DECIMAL(10,2), 
                           VERSION INTEGER 
              );
-
 DROP TABLE IF EXISTS CUSTOMER_IDIOSYNCRATIC_RISK;
 
 CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_RISK
@@ -124,19 +121,9 @@ CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_RISK
                           VERSION        INTEGER 
              );
 
-DROP TABLE IF EXISTS CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE;
-
-CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE
-             ( 
-                          ITERATIONID INTEGER, 
-                          CUSTOMER    VARCHAR(50), 
-                          PD          DECIMAL(10,2), 
-                          VERSION     INTEGER 
-             );
-
 DROP TABLE IF EXISTS CUSTOMER_IDIOSYNCRATIC_TRANSPOSE;
 
-CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_TRANSPOSE
+CREATE TABLE CUSTOMER_IDIOSYNCRATIC_TRANSPOSE
              ( 
                           ITERATIONID    INTEGER, 
                           REPORTING_DATE VARCHAR(50), 
@@ -144,10 +131,18 @@ CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_TRANSPOSE
                           PD             DECIMAL(10,2), 
                           VERSION        INTEGER 
              );
+DROP TABLE IF EXISTS CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE;
 
+CREATE TABLE CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE
+             ( 
+                          ITERATIONID INTEGER, 
+                          CUSTOMER    VARCHAR(50), 
+                          PD          DECIMAL(10,2), 
+                          VERSION     INTEGER 
+             );
 DROP TABLE IF EXISTS CUSTOMER_LOSS_SIMULATION;
 
-CREATE TABLE  CUSTOMER_LOSS_SIMULATION
+CREATE TABLE CUSTOMER_LOSS_SIMULATION
              ( 
                           CUST_ID        VARCHAR(50), 
                           ITERATIONID    INTEGER, 
@@ -155,10 +150,9 @@ CREATE TABLE  CUSTOMER_LOSS_SIMULATION
                           REPORTING_DATE VARCHAR(50), 
                           VERSION        INTEGER 
              );
-
 DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_CLONE;
 
-CREATE TABLE  CUSTOMER_PORTFOLIO_CLONE
+CREATE TABLE CUSTOMER_PORTFOLIO_CLONE
              ( 
                           CUST_ID          VARCHAR(50), 
                           INDUSTRY         VARCHAR(50), 
@@ -172,31 +166,34 @@ CREATE TABLE  CUSTOMER_PORTFOLIO_CLONE
                           REPORTING_DATE   VARCHAR(50), 
                           VERSION          INTEGER 
              );
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO;
 
+CREATE TABLE CUSTOMER_PORTFOLIO 
+             ( 
+                          CUST_ID          VARCHAR(50), 
+                          INDUSTRY         VARCHAR(50), 
+                          PD               DECIMAL(10,2), 
+                          EXPOSURE         INTEGER, 
+                          LGD              DECIMAL(10,2), 
+                          LGD_VAR          INTEGER, 
+                          CORRELATION      DECIMAL(10,2), 
+                          SQRT_CORRELATION DECIMAL(10,2), 
+                          DEF_POINT        DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );
 DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION;
 
-CREATE TABLE  CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION
              ( 
                           CUST_ID                      VARCHAR(50), 
                           PORTFOLIO_UL_CUST_ALLOCATION DECIMAL(10,2), 
                           REPORTING_DATE               VARCHAR(50), 
                           VERSION                      INTEGER 
              );
-
-DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY;
-
-CREATE TABLE  CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY
-             ( 
-                          CUST_ID                VARCHAR(50), 
-                          PORTFOLIO_UL_CUST_SUM  DECIMAL(10,2), 
-                          PORTFOLIO_UL_TOTAL_SUM DECIMAL(10,2), 
-                          REPORTING_DATE         VARCHAR(50), 
-                          VERSION                INTEGER 
-             );
-
 DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC;
 
-CREATE TABLE  CUSTOMER_PORTFOLIO_UL_CALC
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC
              ( 
                           CUST_ID1          VARCHAR(50), 
                           INDUSTRY1         VARCHAR(50), 
@@ -211,10 +208,19 @@ CREATE TABLE  CUSTOMER_PORTFOLIO_UL_CALC
                           REPORTING_DATE    VARCHAR(50), 
                           VERSION           INTEGER 
              );
+DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY;
 
+CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_SUMMARY
+             ( 
+                          CUST_ID                VARCHAR(50), 
+                          PORTFOLIO_UL_CUST_SUM  DECIMAL(10,2), 
+                          PORTFOLIO_UL_TOTAL_SUM DECIMAL(10,2), 
+                          REPORTING_DATE         VARCHAR(50), 
+                          VERSION                INTEGER 
+             );
 DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL;
 
-CREATE TABLE  CUSTOMER_PORTFOLIO_UL 
+CREATE TABLE CUSTOMER_PORTFOLIO_UL 
              ( 
                           CUST_ID          VARCHAR(50), 
                           INDUSTRY         VARCHAR(50), 
@@ -229,48 +235,18 @@ CREATE TABLE  CUSTOMER_PORTFOLIO_UL
                           REPORTING_DATE   VARCHAR(50), 
                           VERSION          INTEGER 
              );
-
-DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO;
-
-CREATE TABLE  CUSTOMER_PORTFOLIO 
-             ( 
-                          CUST_ID          VARCHAR(50), 
-                          INDUSTRY         VARCHAR(50), 
-                          PD               DECIMAL(10,2), 
-                          EXPOSURE         INTEGER, 
-                          LGD              DECIMAL(10,2), 
-                          LGD_VAR          INTEGER, 
-                          CORRELATION      DECIMAL(10,2), 
-                          SQRT_CORRELATION DECIMAL(10,2), 
-                          DEF_POINT        DECIMAL(10,2), 
-                          REPORTING_DATE   VARCHAR(50), 
-                          VERSION          INTEGER 
-             );
-
 DROP TABLE IF EXISTS CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC;
 
-CREATE TABLE  CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC
+CREATE TABLE CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC
              ( 
                           REPORTING_DATE        VARCHAR(50), 
                           TOP_N                 VARCHAR(50), 
                           VAR_CONTRIBUTION_PERC DECIMAL(10,2), 
                           VERSION               INTEGER 
              );
-
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION_TRANSPOSE;
-
-CREATE TABLE  INDUSTRY_FACTOR_CORRELATION_TRANSPOSE
-             ( 
-                          FACTOR_X       VARCHAR(50), 
-                          REPORTING_DATE VARCHAR(50), 
-                          FACTOR_Y       VARCHAR(50), 
-                          FACTOR_VALUE   DECIMAL(10,2), 
-                          VERSION        INTEGER 
-             );
-
 DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION;
 
-CREATE TABLE  INDUSTRY_FACTOR_CORRELATION
+CREATE TABLE INDUSTRY_FACTOR_CORRELATION
              ( 
                           FACTOR         VARCHAR(50), 
                           FACTOR1        DECIMAL(10,2), 
@@ -280,20 +256,40 @@ CREATE TABLE  INDUSTRY_FACTOR_CORRELATION
                           REPORTING_DATE VARCHAR(50), 
                           VERSION        INTEGER 
              );
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION_TRANSPOSE;
 
+CREATE TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE
+             ( 
+                          FACTOR_X       VARCHAR(50), 
+                          REPORTING_DATE VARCHAR(50), 
+                          FACTOR_Y       VARCHAR(50), 
+                          FACTOR_VALUE   DECIMAL(10,2), 
+                          VERSION        INTEGER 
+             );
 DROP TABLE IF EXISTS INDUSTRY_FACTOR_MEAN;
 
-CREATE TABLE  INDUSTRY_FACTOR_MEAN 
+CREATE TABLE INDUSTRY_FACTOR_MEAN 
              ( 
                           ID             VARCHAR(50), 
                           MEAN           DECIMAL(10,2), 
                           REPORTING_DATE VARCHAR(50), 
                           VERSION        INTEGER 
              );
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION;
 
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION
+             ( 
+                          ITERATION_ID   INTEGER, 
+                          FACTOR1        DECIMAL(10,2), 
+                          FACTOR2        DECIMAL(10,2), 
+                          FACTOR3        DECIMAL(10,2), 
+                          FACTOR4        DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );
 DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION_STAGE;
 
-CREATE TABLE  INDUSTRY_FACTOR_SIMULATION_STAGE
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION_STAGE
              ( 
                           ITERATION_ID INTEGER, 
                           FACTOR1      DECIMAL(10,2), 
@@ -302,23 +298,9 @@ CREATE TABLE  INDUSTRY_FACTOR_SIMULATION_STAGE
                           FACTOR4      DECIMAL(10,2), 
                           VERSION      INTEGER 
              );
-
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION;
-
-CREATE TABLE  INDUSTRY_FACTOR_SIMULATION
-             ( 
-                          ITERATION_ID   INTEGER, 
-                          FACTOR1        DECIMAL(10,2), 
-                          FACTOR2        DECIMAL(10,2), 
-                          FACTOR3        DECIMAL(10,2), 
-                          FACTOR4        DECIMAL(10,2), 
-                          REPORTING_DATE VARCHAR(50), 
-                          VERSION        INTEGER 
-             );
-
 DROP TABLE IF EXISTS INDUSTRY_FACTOR_TRANSPOSE;
 
-CREATE TABLE  INDUSTRY_FACTOR_TRANSPOSE
+CREATE TABLE INDUSTRY_FACTOR_TRANSPOSE
              ( 
                           ITERATION_ID   INTEGER, 
                           REPORTING_DATE VARCHAR(50), 
@@ -326,27 +308,24 @@ CREATE TABLE  INDUSTRY_FACTOR_TRANSPOSE
                           FACTOR_VALUE   DECIMAL(10,2), 
                           VERSION        INTEGER 
              );
-
 DROP TABLE IF EXISTS LKP_REPORTING_DATE;
 
-CREATE TABLE  LKP_REPORTING_DATE 
+CREATE TABLE LKP_REPORTING_DATE 
              ( 
                           REPORTING_DATE VARCHAR(50), 
                           VERSION        INTEGER 
              );
-
 DROP TABLE IF EXISTS PORTFOLIO_EXPECTED_SUM;
 
-CREATE TABLE  PORTFOLIO_EXPECTED_SUM 
+CREATE TABLE PORTFOLIO_EXPECTED_SUM 
              ( 
                           EXPECTED_SUM   DECIMAL(10,2), 
                           REPORTING_DATE VARCHAR(50), 
                           VERSION        INTEGER 
              );
-
 DROP TABLE IF EXISTS PORTFOLIO_LOSS_AGGR_ES;
 
-CREATE TABLE  PORTFOLIO_LOSS_AGGR_ES 
+CREATE TABLE PORTFOLIO_LOSS_AGGR_ES 
              ( 
                           EXPECTED_LOSS    DECIMAL(10,2), 
                           VALUE_AT_RISK    DECIMAL(10,2), 
@@ -355,27 +334,45 @@ CREATE TABLE  PORTFOLIO_LOSS_AGGR_ES
                           REPORTING_DATE   VARCHAR(50), 
                           VERSION          INTEGER 
              );
-
 DROP TABLE IF EXISTS PORTFOLIO_LOSS_HISTOGRAM_PERCENTAGE;
 
-CREATE TABLE  PORTFOLIO_LOSS_HISTOGRAM_PERCENTAGE
+CREATE TABLE PORTFOLIO_LOSS_HISTOGRAM_PERCENTAGE
              ( 
                           REPORTING_DATE VARCHAR(50), 
                           BUCKET         VARCHAR(50), 
                           FREQUENCY      INTEGER, 
                           VERSION        INTEGER 
              );
-
 DROP TABLE IF EXISTS PORTFOLIO_LOSS_HISTOGRAM;
 
-CREATE TABLE  PORTFOLIO_LOSS_HISTOGRAM
+CREATE TABLE PORTFOLIO_LOSS_HISTOGRAM
              ( 
                           REPORTING_DATE VARCHAR(50), 
                           BUCKET         VARCHAR(50), 
                           FREQUENCY      INTEGER, 
                           VERSION        INTEGER 
              );
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_EL;
 
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_EL
+             ( 
+                          ITERATIONID      INTEGER, 
+                          PORTFOLIO_LOSS   DECIMAL(10,2), 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION;
+
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION
+             ( 
+                          ITERATIONID    INTEGER, 
+                          PORTFOLIO_LOSS DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );
 DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_AGGR;
 
 CREATE TABLE  PORTFOLIO_LOSS_SIMULATION_AGGR
@@ -386,33 +383,9 @@ CREATE TABLE  PORTFOLIO_LOSS_SIMULATION_AGGR
                           REPORTING_DATE   VARCHAR(50), 
                           VERSION          INTEGER 
              );
-
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_EL;
-
-CREATE TABLE  PORTFOLIO_LOSS_SIMULATION_EL
-             ( 
-                          ITERATIONID      INTEGER, 
-                          PORTFOLIO_LOSS   DECIMAL(10,2), 
-                          EXPECTED_LOSS    DECIMAL(10,2), 
-                          VALUE_AT_RISK    DECIMAL(10,2), 
-                          ECONOMIC_CAPITAL DECIMAL(10,2), 
-                          REPORTING_DATE   VARCHAR(50), 
-                          VERSION          INTEGER 
-             );
-
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION;
-
-CREATE TABLE  PORTFOLIO_LOSS_SIMULATION
-             ( 
-                          ITERATIONID    INTEGER, 
-                          PORTFOLIO_LOSS DECIMAL(10,2), 
-                          REPORTING_DATE VARCHAR(50), 
-                          VERSION        INTEGER 
-             );
-
 DROP TABLE IF EXISTS PORTFOLIO_LOSS_SUMMARY;
 
-CREATE TABLE  PORTFOLIO_LOSS_SUMMARY 
+CREATE TABLE PORTFOLIO_LOSS_SUMMARY 
              ( 
                           PORTFOLIO_AVG_PD           DECIMAL(10,2), 
                           PORTFOLIO_AVG_LGD          DECIMAL(10,2), 
@@ -428,10 +401,9 @@ CREATE TABLE  PORTFOLIO_LOSS_SUMMARY
                           REPORTING_DATE             VARCHAR(50), 
                           VERSION                    INTEGER 
              );
-
 DROP TABLE IF EXISTS PORTFOLIO_VAR_HEATMAP_BUCKETS;
 
-CREATE TABLE  PORTFOLIO_VAR_HEATMAP_BUCKETS
+CREATE TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS
              ( 
                           PORTFOLIO_PD_BUCKET  VARCHAR(50), 
                           PORTFOLIO_LGD_BUCKET VARCHAR(50), 
