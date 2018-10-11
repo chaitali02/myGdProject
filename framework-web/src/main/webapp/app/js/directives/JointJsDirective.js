@@ -216,7 +216,8 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        $scope.downloadTrainData=function(uuid){
          var linkElement = document.createElement('a');
          try {
-             var blob = new Blob([$scope.trainData], {
+          var jsonobj = angular.toJson($scope.trainData, true);
+             var blob = new Blob([jsonobj], {
                  type: "text/xml"
              });
              var url = window.URL.createObjectURL(blob);
@@ -325,7 +326,8 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                url:url,
                
              }).success(function(data, status, headers) {
-               if(data.customeFlag =="N"){
+              
+               if(data.customFlag =="N" ){
                  $scope.downloadTrainData(uuid);
                  return false;
                }

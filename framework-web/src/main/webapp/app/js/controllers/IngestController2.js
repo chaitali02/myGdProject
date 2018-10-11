@@ -647,7 +647,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				var selectedSourceAttrDetail={};
 				selectedSourceAttrDetail.uuid=$scope.ingestData.incrAttr.ref.uuid;
 				selectedSourceAttrDetail.attributeId=$scope.ingestData.incrAttr.attrId;
-                $scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
+				$scope.selectedSourceAttrDetail=selectedSourceAttrDetail;
+				var selectedSplitBy={};
+				selectedSplitBy.uuid=$scope.ingestData.splitBy.ref.uuid;
+				selectedSplitBy.attributeId=$scope.ingestData.splitBy.attrId;
+				$scope.selectedSplitBy=selectedSplitBy;
                 
 
 			}
@@ -1201,8 +1205,16 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			sourceAttrDetail.ref=sourceAttrDetailRef;
 			sourceAttrDetail.attrId=$scope.selectedSourceAttrDetail.attributeId;
 			ingestJson.incrAttr=sourceAttrDetail;
+			var splitBy={};
+			var splitByRef={};
+			splitByRef.type="datapod";
+			splitByRef.uuid=$scope.selectedSplitBy.uuid;
+			splitBy.ref=splitByRef;
+			splitBy.attrId=$scope.selectedSplitBy.attributeId;
+			ingestJson.splitBy=splitBy;
 		}else{
 			ingestJson.incrAttr=null;
+			ingestJson.splitBy=null;
 		}
 		var targetDatasource = {};
 		var targetDatasourceRef = {};

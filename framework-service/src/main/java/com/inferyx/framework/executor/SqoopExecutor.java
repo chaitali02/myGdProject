@@ -265,6 +265,10 @@ public class SqoopExecutor {
 			sqoopOptions.setSqlQuery(sqoopInput.getSqlQuery());
 		}
 		
+		if(sqoopInput.getSplitByCol() != null && StringUtils.isNotBlank(sqoopInput.getSplitByCol())) {
+			sqoopOptions.setSplitByCol(sqoopInput.getSplitByCol());
+		}
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);

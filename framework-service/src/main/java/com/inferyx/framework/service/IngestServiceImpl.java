@@ -323,7 +323,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		return partitions;
 	}
 
-	public String getIncrColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
+	public String getColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
 		String attrName = null;
 		for(Attribute attribute : datapod.getAttributes()) {
 			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
@@ -548,7 +548,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
-		String attrName = getIncrColName(datapod, incrAttrHolder);
+		String attrName = getColName(datapod, incrAttrHolder);
 //		for(Attribute attribute : datapod.getAttributes()) {
 //			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
 //				attrName = attribute.getName();

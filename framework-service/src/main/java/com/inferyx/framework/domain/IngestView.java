@@ -38,6 +38,7 @@ public class IngestView extends BaseEntity {
 	private String sourceExtn;
 	private String targetExtn;
 	private List<AttributeMap> attributeMap;
+	private AttributeRefHolder splitBy ;
 	
 	/**
 	 *
@@ -369,5 +370,12 @@ public class IngestView extends BaseEntity {
 	}
 	public void setAttributeMap(List<AttributeMap> attributeMap) {
 		this.attributeMap = attributeMap;
+	}
+	
+	public AttributeRefHolder getSplitBy() {
+		return splitBy;
+	}
+	public void setSplitBy(AttributeRefHolder splitBy) {
+		this.splitBy = splitBy;
 	}
 }

@@ -80,6 +80,7 @@ public class IngestViewServiceImpl {
 		ingestView.setRunParams(ingest.getRunParams());
 		ingestView.setHeader(ingest.getHeader());
 		ingestView.setIncrAttr(ingest.getIncrAttr());
+		ingestView.setSplitBy(ingest.getSplitBy());
 		ingestView.setSaveMode(ingest.getSaveMode());
 		ingestView.setIgnoreCase(ingest.getIgnoreCase());
 		ingestView.setSourceExtn(ingest.getSourceExtn());
@@ -132,6 +133,7 @@ public class IngestViewServiceImpl {
 		ingest.setRunParams(ingestView.getRunParams());
 		ingest.setHeader(ingestView.getHeader());
 		ingest.setIncrAttr(ingestView.getIncrAttr());
+		ingest.setSplitBy(ingestView.getSplitBy());
 		ingest.setSaveMode(ingestView.getSaveMode());
 		ingest.setIgnoreCase(ingestView.getIgnoreCase());
 		ingest.setSourceExtn(ingestView.getSourceExtn());
