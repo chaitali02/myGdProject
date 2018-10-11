@@ -26,8 +26,8 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function($fil
     $rootScope.previousState.params = {};
     $rootScope.previousState.params.id = $stateParams.id;
     $rootScope.previousState.params.mode = true;
-    var type = data.operators[0].operatorInfo.ref.type
-    var uuid = data.operators[0].operatorInfo.ref.uuid
+    var type = data.operators[0].operatorInfo[0].ref.type
+    var uuid = data.operators[0].operatorInfo[0].ref.uuid
     var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
     var stageparam = {};
     stageparam.id = uuid;

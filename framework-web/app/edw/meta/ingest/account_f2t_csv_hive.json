@@ -71,7 +71,7 @@
   "targetFormat": null,
   "sourceExtn":"CSV",
   "targetExtn":null,
-  "header": "N",
+  "header": "Y",
   "incrAttr": null,
   "saveMode" : "APPEND"
 }
