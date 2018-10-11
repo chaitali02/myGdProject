@@ -1,11 +1,12 @@
-CREATE TABLE edw_small.model_training_set
+DROP TABLE IF EXISTS MODEL_TRAINING_SET; 
+CREATE TABLE MODEL_TRAINING_SET
 (
-  customer_id integer NOT NULL,
-  address_id integer NOT NULL,
-  branch_id integer NOT NULL,
-  commute_distance_miles integer NOT NULL,
-  label integer NOT NULL,
-  censor integer NOT NULL,
-  version integer NOT NULL
+  CUSTOMER_ID INTEGER NOT NULL,
+  ADDRESS_ID INTEGER NOT NULL,
+  BRANCH_ID INTEGER NOT NULL,
+  COMMUTE_DISTANCE_MILES INTEGER NOT NULL,
+  LABEL INTEGER NOT NULL,
+  CENSOR INTEGER NOT NULL,
+  VERSION INTEGER NOT NULL
 );
 

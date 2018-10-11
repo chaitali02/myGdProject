@@ -1,7 +1,8 @@
-CREATE TABLE edw_small.target_sim_multivarient_normal_dis (
-  id integer NOT NULL,
-  interestRate double precision,
-  col2 double precision,
-  col3 double precision,
-  version integer NOT NULL  
+DROP TABLE IF EXISTS TARGET_SIM_LINEAR_REGRESSION;
+CREATE TABLE TARGET_SIM_MULTIVARIENT_NORMAL_DIS (
+  ID INTEGER NOT NULL,
+  INTERESTRATE DOUBLE PRECISION,
+  COL2 DOUBLE PRECISION,
+  COL3 DOUBLE PRECISION,
+  VERSION INTEGER NOT NULL  
 );

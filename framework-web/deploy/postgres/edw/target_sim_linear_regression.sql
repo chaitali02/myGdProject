@@ -1,7 +1,8 @@
-CREATE TABLE edw_small.target_sim_linear_regression (
-  id integer NOT NULL,
-  version integer NOT NULL,
-  interest_rate double precision,
-  account_type_id double precision,
-  account_status_id double precision
+DROP TABLE IF EXISTS TARGET_SIM_LINEAR_REGRESSION;
+CREATE TABLE TARGET_SIM_LINEAR_REGRESSION (
+  ID INTEGER NOT NULL,
+  VERSION INTEGER NOT NULL,
+  INTEREST_RATE DOUBLE PRECISION,
+  ACCOUNT_TYPE_ID DOUBLE PRECISION,
+  ACCOUNT_STATUS_ID DOUBLE PRECISION
 );

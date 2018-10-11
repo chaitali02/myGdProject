@@ -1,8 +1,8 @@
-
-CREATE TABLE edw_small.target_gen_data_uniform_dist
+DROP TABLE IF EXISTS TARGET_GEN_DATA_UNIFORM_DIST;
+CREATE TABLE TARGET_GEN_DATA_UNIFORM_DIST
 (
-  id integer NOT NULL,
-  col1 double precision,
-  version integer NOT NULL
+  ID INTEGER NOT NULL,
+  COL1 DOUBLE PRECISION,
+  VERSION INTEGER NOT NULL
 );
 

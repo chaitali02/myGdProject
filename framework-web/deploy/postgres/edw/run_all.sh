@@ -22,7 +22,7 @@ cp counts.sql counts_bck.sql
 
 for file in *.sql
 do
-        if [[ $file != "load_small.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql" ]] ; then
+        if [[ $file != "load_small.sql" && $file != "load_bck.sql"  && $file != "counts_bck.sql" && $file != "load_medium.hql" && $file != "create_db_user.sql" && $file != "counts.sql" && $file != "load.sql" ]] ; then
         #echo >> create_all.sql
             cat $file >> create_all.sql            
 			 
