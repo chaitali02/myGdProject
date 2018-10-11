@@ -9,7 +9,7 @@
 # Written by Yogesh Palrecha <ypalrecha@gridedge.com>
 #*******************************************************************************
 dbname=$1
-dbuser='postgres'
+dbuser='inferyx'
 
 if [[ $dbname = "" ]] ; then
         echo Usage: rull_all.sh [dbname]
