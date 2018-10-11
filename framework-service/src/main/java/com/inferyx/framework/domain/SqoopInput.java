@@ -35,7 +35,28 @@ public class SqoopInput {
 	private String hCatalogTableName;
 	private String hCatalogDatabaseName;
 	private String sqlQuery;
+	private String splitByCol;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the splitByCol
+	 */
+	public String getSplitByCol() {
+		return splitByCol;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param splitByCol the splitByCol to set
+	 */
+	public void setSplitByCol(String splitByCol) {
+		this.splitByCol = splitByCol;
+	}
+
 	/**
 	 *
 	 * @Ganesh
@@ -490,9 +511,6 @@ public class SqoopInput {
 		this.hCatalogTableName = hCatalogTableName;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -506,6 +524,26 @@ public class SqoopInput {
 				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
 				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
 				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
-				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + "]";
-	}	
+				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + ", splitByCol="
+				+ splitByCol + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+//	@Override
+//	public String toString() {
+//		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
+//				+ sourceDirectory + ", targetDirectory=" + targetDirectory + ", hiveImport=" + hiveImport
+//				+ ", partitionKey=" + partitionKey + ", partitionValue=" + partitionValue + ", whereClause="
+//				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn=" + checkColumn
+//				+ ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode=" + incrementalMode
+//				+ ", incrementalTestColumn=" + incrementalTestColumn + ", incrementalLastValue=" + incrementalLastValue
+//				+ ", exportDir=" + exportDir + ", numMappers=" + numMappers + ", linesTerminatedBy=" + linesTerminatedBy
+//				+ ", fieldsTerminatedBy=" + fieldsTerminatedBy + ", explicitInputDelims=" + explicitInputDelims
+//				+ ", explicitOutputDelims=" + explicitOutputDelims + ", importIntended=" + importIntended
+//				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
+//				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
+//				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + "]";
+//	}	
 }

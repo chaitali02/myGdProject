@@ -13,6 +13,7 @@ truncate table fact_customer_summary_monthly;
 truncate table fact_transaction;
 truncate table rc_rule_results;
 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' OVERWRITE INTO TABLE account_hive;
 LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' OVERWRITE INTO TABLE account PARTITION (load_date='2017-07-01', load_id='00');
 LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account_status_type.csv' OVERWRITE INTO TABLE account_status_type PARTITION (load_date='2017-07-01', load_id='00');
 LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account_type.csv' OVERWRITE INTO TABLE account_type PARTITION (load_date='2017-07-01', load_id='00');

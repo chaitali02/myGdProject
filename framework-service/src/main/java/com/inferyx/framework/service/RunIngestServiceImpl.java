@@ -519,7 +519,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 			
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
-				incrColName = ingestServiceImpl.getIncrColName(sourceDp, ingest.getIncrAttr());
+				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
 				
 				//finding last incremental value
 				incrLastValue = ingestServiceImpl.getLastIncrValue(ingest.getUuid(), ingest.getVersion());
@@ -783,6 +783,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						}
 						logger.info("sourceDir : " + sourceDir);
 						logger.info("targetDir : " + targetDir);
+						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setTargetDirectory(targetDir);
@@ -984,6 +985,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						tableName = targetDp.getName();
 					} 
 
+					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 					if(incrLastValue != null) {
 						sqoopInput.setIncrementalTestColumn(incrColName);

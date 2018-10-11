@@ -56,10 +56,15 @@
       "type": "datapod",
       "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
     },
-    "value": null,
-    "attrId": "1",
-    "attrName": "account_type_id",
-    "attrType": null
+    "attrId": "21"
+   
+  },
+   "splitBy": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "f634fadb-b22a-4925-a69c-6bfb05affacd"
+    },
+    "attrId": "0"
   },
   "saveMode": "APPEND",
   "ignoreCase": "N"

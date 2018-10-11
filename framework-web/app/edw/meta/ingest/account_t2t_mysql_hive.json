@@ -74,14 +74,17 @@
   "incrAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
-      "version": null,
-      "name": "account"
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
     },
-    "value": null,
-    "attrId": "20",
-    "attrName": "load_date",
-    "attrType": null
+    "attrId": "21"
+   
+  },
+   "splitBy": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+    },
+    "attrId": "0"
   },
   "saveMode": "APPEND",
   "ignoreCase": "N",
