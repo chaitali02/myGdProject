@@ -109,6 +109,7 @@
 	<bean id="zkConnMap" name="zkConnMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="kafkaConsumerMap" name="kafkaConsumerMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="streamingCtxMap" name="streamingCtxMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="streamMap" name="streamMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />

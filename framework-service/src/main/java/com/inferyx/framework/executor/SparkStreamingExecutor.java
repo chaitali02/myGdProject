@@ -49,8 +49,10 @@ public class SparkStreamingExecutor<T, K> {
 	ConnectionFactory connectionFactory;
 	@Resource
 	ConcurrentHashMap<String, JavaStreamingContext> streamingCtxMap;
+	@Resource
+	ConcurrentHashMap<String, JavaInputDStream<ConsumerRecord<T, K>>> streamMap;
 	@Autowired
-	StreamToTableHelper<?, ?> streamToTableHelper;
+	StreamToTableHelper<T, K> streamToTableHelper;
 
 	/**
 	 * 
@@ -91,9 +93,12 @@ public class SparkStreamingExecutor<T, K> {
 			stream = KafkaUtils.createDirectStream(
 					streamingContext, LocationStrategies.PreferConsistent(),
 					ConsumerStrategies.<T, K>Subscribe(topics, kafkaParams));
+			
+			for (String topic : topics) {
+				streamMap.put(topic, stream);
+			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return stream;
@@ -159,6 +164,18 @@ public class SparkStreamingExecutor<T, K> {
 			return;
 		}
 		streamingContext.stop(Boolean.TRUE, Boolean.TRUE);
+		streamingCtxMap.remove(ds.getHost() + "_" + ds.getPort());
+	}
+
+	/**
+	 * 
+	 * @param topic
+	 * @throws IOException
+	 */
+	public void stop (String topic) throws IOException {
+		if (streamMap.containsKey(topic)) {
+			streamToTableHelper.stop(streamMap.get(topic));
+		} 
 	}
 	
 	public String[] getKafkaFieldNames() {
