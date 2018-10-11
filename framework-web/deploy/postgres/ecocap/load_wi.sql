@@ -15,5 +15,5 @@ Copy INDUSTRY_FACTOR_MEAN FROM '/user/hive/warehouse/framework/app/ecocap/data/c
 
 Copy LKP_REPORTING_DATE (REPORTING_DATE) FROM '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/lkp_reporting_date.csv' delimiter ',';
 
-Copy PORTFOLIO_VAR_HEATMAP_BUCKETS ( PORTFOLIO_PD_BUCKET, PORTFOLIO_LGD_BUCKET) FROM '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/portfolio_var_heatmap_buckets.csv' delimiter ',';
+Copy PORTFOLIO_VAR_HEATMAP_BUCKETS (PORTFOLIO_PD_BUCKET, PORTFOLIO_LGD_BUCKET) FROM '/user/hive/warehouse/framework/app/ecocap/data/csv/noheader/portfolio_var_heatmap_buckets.csv' delimiter ',';
 
