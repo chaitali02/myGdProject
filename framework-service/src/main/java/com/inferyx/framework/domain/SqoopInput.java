@@ -35,7 +35,28 @@ public class SqoopInput {
 	private String hCatalogTableName;
 	private String hCatalogDatabaseName;
 	private String sqlQuery;
+	private String splitByCol;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the splitByCol
+	 */
+	public String getSplitByCol() {
+		return splitByCol;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param splitByCol the splitByCol to set
+	 */
+	public void setSplitByCol(String splitByCol) {
+		this.splitByCol = splitByCol;
+	}
+
 	/**
 	 *
 	 * @Ganesh
