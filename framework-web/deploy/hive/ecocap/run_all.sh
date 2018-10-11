@@ -17,7 +17,7 @@ fi
 rm -r run_all.hql
 for file in *.hql
 do
-        if [[ $file != "load_wi.hql" ]] && [[ $file != "load_wo.hql" ]] ; then
+        if [[ $file != "load_wi.hql" ]] && [[ $file != "load_wo.hql" ]] && [[ $file != "load_wo.hql" ]] ; then
                 cat $file >> run_all.hql
         fi;
 done
@@ -25,3 +25,9 @@ hive -database $1 -f run_all.hql
 hive -database $1 -f load_wi.hql
 impala-shell -q "invalidate metadata"
 impala-shell -d $1 -f impala_counts.iql
+
+
+
+
+
+
