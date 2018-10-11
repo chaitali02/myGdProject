@@ -1,15 +1,11 @@
-DROP TABLE ecocap.industry_factor_simulation_stage;
+DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION_STAGE;
 
-CREATE TABLE  ecocap.industry_factor_simulation_stage(
-iteration_id integer,
-factor1 double precision,
-factor2 double precision,
-factor3 double precision,
-factor4 double precision,
-reporting_date text,
-version integer
-);
-
-
-
-
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION_STAGE
+             ( 
+                          ITERATION_ID INTEGER, 
+                          FACTOR1      DECIMAL(10,2), 
+                          FACTOR2      DECIMAL(10,2), 
+                          FACTOR3      DECIMAL(10,2), 
+                          FACTOR4      DECIMAL(10,2), 
+                          VERSION      INTEGER 
+             );

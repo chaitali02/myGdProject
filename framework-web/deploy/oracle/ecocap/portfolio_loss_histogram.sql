@@ -1,5 +1,9 @@
-CREATE  TABLE "portfolio_loss_histogram"(
-  "reporting_date" VARCHAR2(70 BYTE),
-  "bucket" VARCHAR2(70 BYTE), 
-  "frequency" NUMBER(30,0), 
-  "version" NUMBER(30,0));
+DROP TABLE PORTFOLIO_LOSS_HISTOGRAM;
+
+CREATE TABLE PORTFOLIO_LOSS_HISTOGRAM
+             ( 
+                          REPORTING_DATE VARCHAR(50), 
+                          BUCKET         VARCHAR(50), 
+                          FREQUENCY      INTEGER, 
+                          VERSION        INTEGER 
+             );

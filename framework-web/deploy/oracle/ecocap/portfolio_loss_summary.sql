@@ -1,17 +1,18 @@
+DROP TABLE PORTFOLIO_LOSS_SUMMARY;
 
-CREATE TABLE  "portfolio_loss_summary" (
-"portfolio_avg_pd" NUMBER(30,0) DEFAULT NULL,
-"portfolio_avg_lgd" NUMBER(30,0) DEFAULT NULL,
-"portfolio_total_ead" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_expected_loss" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_value_at_risk" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_economic_capital"  DECIMAL(10,0) DEFAULT NULL,
-"portfolio_expected_sum"  DECIMAL(10,0) DEFAULT NULL,
-"portfolio_es_percentage" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_val_percentage" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_el_percentage" DECIMAL(10,0) DEFAULT NULL,
-"portfolio_ec_percentage" DECIMAL(10,0) DEFAULT NULL,
-"reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL,
-"version" NUMBER(30,0) DEFAULT NULL
-);
-
+CREATE TABLE PORTFOLIO_LOSS_SUMMARY 
+             ( 
+                          PORTFOLIO_AVG_PD           DECIMAL(10,2), 
+                          PORTFOLIO_AVG_LGD          DECIMAL(10,2), 
+                          PORTFOLIO_TOTAL_EAD        DECIMAL(10,2), 
+                          PORTFOLIO_EXPECTED_LOSS    DECIMAL(10,2), 
+                          PORTFOLIO_VALUE_AT_RISK    DECIMAL(10,2), 
+                          PORTFOLIO_ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          PORTFOLIO_EXPECTED_SUM     DECIMAL(10,2), 
+                          PORTFOLIO_ES_PERCENTAGE    DECIMAL(10,2), 
+                          PORTFOLIO_VAL_PERCENTAGE   DECIMAL(10,2), 
+                          PORTFOLIO_EL_PERCENTAGE    DECIMAL(10,2), 
+                          PORTFOLIO_EC_PERCENTAGE    DECIMAL(10,2), 
+                          REPORTING_DATE             VARCHAR(50), 
+                          VERSION                    INTEGER 
+             );

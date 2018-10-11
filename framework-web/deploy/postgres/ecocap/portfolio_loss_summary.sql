@@ -1,16 +1,18 @@
-DROP TABLE ecocap.portfolio_loss_summary;
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SUMMARY;
 
-CREATE TABLE  ecocap.portfolio_loss_summary (
-portfolio_avg_pd integer,
-portfolio_avg_lgd integer,
-portfolio_total_ead double precision,
-portfolio_expected_loss double precision,
-portfolio_value_at_risk double precision,
-portfolio_economic_capital  double precision,
-portfolio_expected_sum  double precision,
-portfolio_es_percentage double precision,
-portfolio_val_percentage double precision,
-portfolio_el_percentage double precision,
-reporting_date text,
-version integer
-);
+CREATE TABLE PORTFOLIO_LOSS_SUMMARY 
+             ( 
+                          PORTFOLIO_AVG_PD           DECIMAL(10,2), 
+                          PORTFOLIO_AVG_LGD          DECIMAL(10,2), 
+                          PORTFOLIO_TOTAL_EAD        DECIMAL(10,2), 
+                          PORTFOLIO_EXPECTED_LOSS    DECIMAL(10,2), 
+                          PORTFOLIO_VALUE_AT_RISK    DECIMAL(10,2), 
+                          PORTFOLIO_ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          PORTFOLIO_EXPECTED_SUM     DECIMAL(10,2), 
+                          PORTFOLIO_ES_PERCENTAGE    DECIMAL(10,2), 
+                          PORTFOLIO_VAL_PERCENTAGE   DECIMAL(10,2), 
+                          PORTFOLIO_EL_PERCENTAGE    DECIMAL(10,2), 
+                          PORTFOLIO_EC_PERCENTAGE    DECIMAL(10,2), 
+                          REPORTING_DATE             VARCHAR(50), 
+                          VERSION                    INTEGER 
+             );

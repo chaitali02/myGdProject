@@ -1,6 +1,12 @@
-CREATE TABLE "portfolio_loss_simulation" (
-  "iterationid" NUMBER(30,0) DEFAULT NULL,
-  "portfolio_loss" NUMBER(30,0) DEFAULT NULL,
-  "reporting_date" VARCHAR2(70 BYTE) DEFAULT NULL,
-  "version" NUMBER(30,0) DEFAULT NULL
-);
+DROP TABLE PORTFOLIO_LOSS_SIMULATION_EL;
+
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_EL
+             ( 
+                          ITERATIONID      INTEGER, 
+                          PORTFOLIO_LOSS   DECIMAL(10,2), 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

@@ -1,11 +1,12 @@
+DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_EL;
 
-DROP TABLE ecocap.portfolio_loss_simulation_el;
-
-CREATE TABLE ecocap.portfolio_loss_simulation_el (
-iterationid integer,
-portfolio_loss numeric(30,2),
-expected_loss  numeric(30,2),
-value_at_risk    numeric(30,2),
-economic_capital   numeric(30,2),
-reporting_date  text  , 
-version integer );
+CREATE TABLE PORTFOLIO_LOSS_SIMULATION_EL
+             ( 
+                          ITERATIONID      INTEGER, 
+                          PORTFOLIO_LOSS   DECIMAL(10,2), 
+                          EXPECTED_LOSS    DECIMAL(10,2), 
+                          VALUE_AT_RISK    DECIMAL(10,2), 
+                          ECONOMIC_CAPITAL DECIMAL(10,2), 
+                          REPORTING_DATE   VARCHAR(50), 
+                          VERSION          INTEGER 
+             );

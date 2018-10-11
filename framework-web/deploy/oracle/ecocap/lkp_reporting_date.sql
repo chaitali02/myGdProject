@@ -1,5 +1,7 @@
+DROP TABLE LKP_REPORTING_DATE;
 
-CREATE  TABLE "lkp_reporting_date"(
-  "reporting_date"  VARCHAR2(70 BYTE),
-  "version" NUMBER(30,0));
-
+CREATE TABLE LKP_REPORTING_DATE 
+             ( 
+                          REPORTING_DATE VARCHAR(50), 
+                          VERSION        INTEGER 
+             );

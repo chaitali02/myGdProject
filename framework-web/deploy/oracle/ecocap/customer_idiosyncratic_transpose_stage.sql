@@ -1,9 +1,9 @@
+DROP TABLE CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE;
 
-CREATE TABLE "customer_idiosyncratic_transpose_stage"(
-  "iterationid"  NUMBER(30,0) DEFAULT NULL, 
-  "customer" VARCHAR2(70 BYTE) DEFAULT NULL, 
-  "pd" NUMBER(20,2) DEFAULT NULL, 
-  "version"  NUMBER(30,0) DEFAULT NULL
-);
-
-  
+CREATE TABLE CUSTOMER_IDIOSYNCRATIC_TRANSPOSE_STAGE
+             ( 
+                          ITERATIONID INTEGER, 
+                          CUSTOMER    VARCHAR(50), 
+                          PD          DECIMAL(10,2), 
+                          VERSION     INTEGER 
+             );

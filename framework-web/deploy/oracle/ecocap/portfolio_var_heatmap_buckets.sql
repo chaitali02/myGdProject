@@ -1,5 +1,8 @@
+DROP TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS;
 
-CREATE  TABLE "portfolio_var_heatmap_buckets"(
-  "portfolio_pd_bucket" VARCHAR2(70 BYTE), 
-  "portfolio_lgd_bucket" VARCHAR2(70 BYTE), 
-  "version" VARCHAR2(70 BYTE));
+CREATE TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS
+             ( 
+                          PORTFOLIO_PD_BUCKET  VARCHAR(50), 
+                          PORTFOLIO_LGD_BUCKET VARCHAR(50), 
+                          VERSION              VARCHAR(50)
+             );

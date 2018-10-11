@@ -24,6 +24,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.StreamInput;
+import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
@@ -93,11 +94,14 @@ public class KafkaTester implements Serializable {
 //		 API 1 - Define the streaming context
 		streamInput.setTopicName(topic);
 		streamInput.setSaveMode(SaveMode.APPEND.toString());
-		streamInput.setTargetDS(getMySqlDatasource());
+//		streamInput.setTargetDS(getMySqlDatasource());
+		streamInput.setTargetDS(getHiveDatasource());
 		streamInput.setTargetDir("/user/stream/file1");
-		streamInput.setTargetType("MYSQL");
+//		streamInput.setTargetType("MYSQL");
+		streamInput.setTargetType("FILE");
 		streamInput.setFileFormat("CSV");
-		streamInput.setTargetTableName("stream_dump");
+//		streamInput.setTargetTableName("stream_dump");
+		streamInput.setIngestionType(IngestionType.STREAMTOFILE.toString());
 		JavaInputDStream<ConsumerRecord<Long, String>> stream = sparkStreamingExecutor.stream(ds, streamInput);
 //		 API 2 - Write the logic to execute
 		sparkStreamingExecutor.write(streamInput, stream);
@@ -113,6 +117,7 @@ public class KafkaTester implements Serializable {
 		streamInput.setTargetDir("/user/stream/file2/");
 		streamInput.setTargetType("FILE");
 		streamInput.setFileFormat("CSV");
+		streamInput.setIngestionType(IngestionType.STREAMTOFILE.toString());
 		stream = sparkStreamingExecutor.stream(ds, streamInput);
 //		 API 2 - Write the logic to execute
 		sparkStreamingExecutor.write(streamInput, stream);

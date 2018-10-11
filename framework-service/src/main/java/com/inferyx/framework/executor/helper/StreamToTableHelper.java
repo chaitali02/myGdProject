@@ -148,6 +148,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
 			@Override
 			public void call(JavaRDD<ConsumerRecord<T, K>> rdd) throws Exception {
+				System.out.println("DO SOMETHING ...");
 				Broadcast<SparkSession> broadcastSession = rdd.context().broadcast(session, ClassManifestFactory.fromClass(SparkSession.class));
 				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<T, K>>>() {
 					@Override
@@ -206,6 +207,21 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		});
 	}
 	
+	/**
+	 * 
+	 * @param stream
+	 * @throws IOException
+	 */
+	public void stop (JavaInputDStream<ConsumerRecord<T, K>> stream) throws IOException {
+		
+		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
+			@Override
+			public void call(JavaRDD<ConsumerRecord<T, K>> t) throws Exception {
+				System.out.println("DO NOTHING ...");
+			}
+		});
+	}
+	
 	public void persistDataframe(Dataset<Row> df, String tableName, String datasourceType, 
 			String sessionParameters, String url, String driver, 
 			String userName, String password, String saveMode) {
@@ -233,4 +249,5 @@ public class StreamToTableHelper<T, K> implements Serializable {
 //			}
 		}	
 	}
+
 }

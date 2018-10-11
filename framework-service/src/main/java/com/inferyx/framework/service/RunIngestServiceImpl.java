@@ -928,9 +928,12 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setHiveImport(false);
 						sqoopInput.setImportIntended(false);
-						sqoopInput.setTable(targetDp.getName());
-						tableName = targetDp.getName();
-						
+						if(targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())){
+							tableName = targetDp.getName().toUpperCase();
+						}else {
+							tableName = targetDp.getName();
+						}
+						sqoopInput.setTable(tableName);
 //						sqoopInput.setHiveTableName(sourceDp.getName());
 //						sqoopInput.setOverwriteHiveTable("Y");
 //						sqoopInput.setHiveDatabaseName(sourceDS.getDbname());

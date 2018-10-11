@@ -1,11 +1,10 @@
-DROP TABLE ecocap.customer_es_allocation;
+DROP TABLE IF EXISTS CUSTOMER_ES_ALLOCATION;
 
-CREATE TABLE ecocap.customer_es_allocation (
-    cust_id  text,
-    es_contribution  numeric(30,2),
-    es_allocation    numeric(30,2),
-    reporting_date  text  , 
-    version integer
-);
-
-
+CREATE TABLE CUSTOMER_ES_ALLOCATION 
+             ( 
+                          CUST_ID         VARCHAR(50), 
+                          ES_CONTRIBUTION DECIMAL(10,2), 
+                          ES_ALLOCATION   DECIMAL(10,2), 
+                          REPORTING_DATE  VARCHAR(50), 
+                          VERSION         INTEGER 
+             );

@@ -122,7 +122,7 @@ public class KafkaExecutor<T, K> {
 	 * Close consumer
 	 * @param topic
 	 */
-	public void close(String topic) {
+	public void stop(String topic) {
 		Consumer consumer = kafkaConsumerMap.get(topic);
 		consumer.close();
 	}

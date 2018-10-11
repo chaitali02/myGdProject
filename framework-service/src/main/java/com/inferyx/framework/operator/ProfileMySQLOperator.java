@@ -49,7 +49,7 @@ public class ProfileMySQLOperator extends ProfileOperator {
 				+ "count(distinct " + attrName + ")/count(" + attrName + ")*100 AS perDistinct, "
 				+ "count(if(" + attrName + " is null,1,0)) AS numNull,"
 				+ "count(if(" + attrName + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, "
-				+ "count(if(" + attrName + " is null,1,0)) / count(" + attrName + ") AS sixSigma, "
+				+ "count(if(" + attrName + " is null,1,0)) / count(" + attrName + ") AS sixSigma, '"
 //				+ "CURDATE() AS load_date, "
 //				+ "unix_timestamp() AS load_id, '" 
 				+ profileExec.getVersion() + "' AS version from " + profileTableName;
