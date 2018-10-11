@@ -38,6 +38,7 @@ public class Ingest extends BaseRule {
 	private String sourceExtn;
 	private String targetExtn;
 	private List<AttributeMap> attributeMap;
+	private AttributeRefHolder splitBy ;
 	
 	/**
 	 *
@@ -314,5 +315,12 @@ public class Ingest extends BaseRule {
 	 */
 	public void setTargetFormat(String targetFormat) {
 		this.targetFormat = targetFormat;
+	}
+	
+	public AttributeRefHolder getSplitBy() {
+		return splitBy;
+	}
+	public void setSplitBy(AttributeRefHolder splitBy) {
+		this.splitBy = splitBy;
 	}
 }
