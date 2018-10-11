@@ -36,7 +36,28 @@ public class SqoopInput {
 	private String hCatalogDatabaseName;
 	private String sqlQuery;
 	private String splitByCol;
+	private String[] attributeMap;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the attributeMap
+	 */
+	public String[] getAttributeMap() {
+		return attributeMap;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param attributeMap the attributeMap to set
+	 */
+	public void setAttributeMap(String[] attributeMap) {
+		this.attributeMap = attributeMap;
+	}
+
 	/**
 	 *
 	 * @Ganesh
