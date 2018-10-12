@@ -200,7 +200,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			}
 			
-			if(ingest.getAttributeMap() != null){
+			if(ingest.getAttributeMap() == null || ingest.getAttributeMap().isEmpty()){
 				RunIngestServiceImpl<?, ?> runIngestServiceImpl = new RunIngestServiceImpl<>();
 				runIngestServiceImpl.setCommonServiceImpl(commonServiceImpl);
 				runIngestServiceImpl.setExecParams(execParams);
@@ -728,10 +728,13 @@ public class IngestServiceImpl extends RuleTemplate {
 			if(moveToDir) {
 				FileUtils.moveFileToDirectory(new File(srcLocation), new File(targetLocation), true);
 			} else {
-				FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
+				File abc=new File(targetLocation);
+				FileUtils.moveFile(new File(srcLocation),abc);
+				System.out.println("target absolute path: " + abc.getAbsolutePath());
 			}			
 		} catch (Exception e) {
 			String message = null;
+			
 			try {
 				message = e.getMessage();
 			}catch (Exception e2) {

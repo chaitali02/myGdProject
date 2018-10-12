@@ -1,5 +1,7 @@
 package com.inferyx.framework.domain;
 
+import java.util.Arrays;
+
 import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 
@@ -532,6 +534,7 @@ public class SqoopInput {
 		this.hCatalogTableName = hCatalogTableName;
 	}
 
+
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -546,7 +549,7 @@ public class SqoopInput {
 				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
 				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
 				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + ", splitByCol="
-				+ splitByCol + "]";
+				+ splitByCol + ", attributeMap=" + Arrays.toString(attributeMap) + "]";
 	}
 
 	/* (non-Javadoc)

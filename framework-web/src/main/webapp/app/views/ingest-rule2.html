@@ -267,10 +267,19 @@
 
 
                                         <div class="form-group" ng-if="selectedSourceType =='TABLE'">
-                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
+                                           
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Source Type
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
-                                            <div class="col-md-6">
+                                           
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control"  name="" data-ng-model="$parent.selectedSourceDetailType" ng-options="r  for r in sourceTypes"
+                                                ng-disabled="{{mode}}" ng-change="onChangeSourceType()">
+                                                </select>                                            </div>
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Name
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r as r.name for r in sourceDetails track by r.uuid"
                                                     ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
                                                 </select>
@@ -308,15 +317,15 @@
                                                 <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r for r in sourceDetails"
                                                     ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
                                                 </select>
-                                                <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail" required>
+                                                <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail">
                                             </div>
                                         </div>
                                         <div class="form-group" ng-if="selectedSourceType =='FILE'">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> Source Header</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <div class="btn-group">
-                                                    <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.sourceHeader" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.sourceHeader" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
@@ -384,6 +393,16 @@
                                                 <input type="text" class="form-control" name="tagetDetail" ng-disabled="true" ng-if="selectedTargetFormate == null || selectedTargetFormate =='PARQUET'"
                                                     ng-model="$parent.ingestData.targetExtn">
                                             </div>
+                                        </div>
+                                        <div class="form-group" ng-if="selectedTargetType =='FILE'">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> Target Header</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-default" ng-model="ingestData.targetHeader" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.targetHeader" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="form-group" ng-if="selectedTargetType =='FILE'">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Save Mode
@@ -634,8 +653,8 @@
                                                 <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                     <div class="x_title" style="padding:10px;">
                                                     <div class="x_title" style="padding:10px;">
-                                                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}"></button>
-                                                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}"></button>
+                                                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="isAttributeMapDisable"></button>
+                                                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="isAttributeMapDisable"></button>
                                                     </div>
                                                     </div>
                                                 </div>
@@ -670,7 +689,7 @@
                                                             <tr>
                                                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllAttributeRow" ng-click="checkAllAttributeRow()"
+                                                                        <input ng-disabled="isAttributeMapDisable" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllAttributeRow" ng-click="checkAllAttributeRow()"
                                                                         />
                                                                     </span>
                                                                 </th>
@@ -682,10 +701,13 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr ng-repeat="tabledata in ingestTableInfo">
+                                                            
+                                                            <tr ng-repeat="tabledata in ingestTableArray">
+                                                               
                                                                 <td class="chek" style="text-align:center;Vertical-align:middle;" >
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                                                        
+                                                                        <input ng-disabled="isAttributeMapDisable" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                                                                     </span>
                                                                 </td>
                                                                 <td>
@@ -731,9 +753,22 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input type="text" ng-if="selectedTargetType != 'FILE'" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
-                                                                        <input type="text" ng-if="selectedTargetType == 'FILE'" ng-model="ingestTableArray[$index].targetsimple" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
+                                                                        <!-- <input type="text" ng-if="selectedTargetType != 'FILE'" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
+                                                                        <!-- <input type="text" ng-if="selectedTargetType == 'FILE'" ng-model="ingestTableArray[$index].targetsimple" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
+                                                                        <input type="text" class="form-control" ng-model="ingestTableArray[$index].targetsimple" ng-show="ingestTableArray[$index].isTargetAtributeSimple"
+                                                                            ng-disabled="{{mode}}">
                                                                     </span>
+                                                                    <div ng-show="(ingestTableArray[$index].isTargetAtributeDatapod) && (selectedSourceType !='STREAM' || selectedTargetType !='TABLE')">
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <input type="text" ng-model="ingestTableArray[$index].targetattribute.dname" title="{{ingestTableArray[$index].targetattribute.dname}}" ng-disabled="true" class="form-control">
+                                                                            <!-- <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select> -->
+                                                                        </span>
+                                                                    </div>
+                                                                    <div ng-show="ingestTableArray[$index].isTargetAtributeDatapod && selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE'">
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select>
+                                                                        </span>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

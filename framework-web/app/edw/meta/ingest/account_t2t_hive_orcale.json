@@ -50,7 +50,8 @@
   "runParams": null,
   "sourceFormat": null,
   "targetFormat": null,
-  "header": "N",
+  "sourceHeader" : "N",
+  "targetHeader" : "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",

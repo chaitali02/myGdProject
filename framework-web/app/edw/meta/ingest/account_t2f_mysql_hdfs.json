@@ -67,7 +67,8 @@
   "targetFormat": null,
   "saveMode" : "OVERWRITE",
   "ignoreCase" : "N",
-  "header": "N",
+  "sourceHeader" : "Y",
+   "targetHeader" : "N",
    "incrAttr": {
     "ref": {
       "type": "datapod",

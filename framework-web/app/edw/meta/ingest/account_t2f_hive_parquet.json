@@ -68,7 +68,8 @@
   "saveMode" : "OVERWRITE",
   "ignoreCase" : "N",
   "targetFormat": "PARQUET",
-  "header": "N",
+  "sourceHeader" : "Y",
+  "targetHeader" : "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",

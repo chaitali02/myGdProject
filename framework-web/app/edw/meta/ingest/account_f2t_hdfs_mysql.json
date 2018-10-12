@@ -69,7 +69,8 @@
   "targetFormat": "CSV",
   "sourceExtn":null,
   "targetExtn":"CSV",
-  "header": "Y",
+  "sourceHeader" : "Y",
+  "targetHeader" : "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",
