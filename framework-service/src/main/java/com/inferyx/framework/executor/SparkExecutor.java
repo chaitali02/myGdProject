@@ -3169,6 +3169,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder mapSchema(ResultSetHolder rsHolder, List<String> columnList, String tableName, boolean registerTempTable) throws IOException {
 		logger.info("inside method mapSchema");
 		Dataset<Row> df = rsHolder.getDataFrame();
+		df.printSchema();
+		
 		List<Column> columns = new ArrayList<>();
 		for(String colName : columnList) {
 			columns.add(new Column(colName));
