@@ -499,7 +499,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				} else {
 					filePathUrl = datastore.getLocation().concat("/").concat(ingest.getTargetDetail().getValue()).concat(ingest.getTargetDetail().getValue().toLowerCase().endsWith(".csv") ? "" : ".csv");
 				}
-				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), filePathUrl, Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
+				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), filePathUrl, Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getSourceHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order);
 			} else {
@@ -804,7 +804,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 */
 	public String resolveAttribute(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
-				return attrRefHolder.getAttrName();
+				return attrRefHolder.getValue();
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
 				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
 				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDpMI.getUuid(), sourceDpMI.getVersion(), sourceDpMI.getType().toString());
@@ -821,6 +821,42 @@ public class IngestServiceImpl extends RuleTemplate {
 				MetaIdentifier formulaMI = attrRefHolder.getRef();
 				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMI.getUuid(), formulaMI.getVersion(), formulaMI.getType().toString());
 				return formulaOperator.generateSql(formula, null, null, null);
+			}
+		
+		return null;
+	}
+	
+	/**
+	 * @param attributeMapList
+	 * @return
+	 * @throws JsonProcessingException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public String getAttrAliseNmae(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
+				return attrRefHolder.getValue();
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
+				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDpMI.getUuid(), sourceDpMI.getVersion(), sourceDpMI.getType().toString());
+				for(Attribute attribute : datapod.getAttributes()) {
+					if(attrRefHolder.getAttrId().equalsIgnoreCase(attribute.getAttributeId().toString())) {
+						return attribute.getName();
+					}
+				}
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.function)) {
+				MetaIdentifier functionMI = attrRefHolder.getRef();
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString());
+				return function.getName();
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.formula)) {
+				MetaIdentifier formulaMI = attrRefHolder.getRef();
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMI.getUuid(), formulaMI.getVersion(), formulaMI.getType().toString());
+				return formula.getName();
 			}
 		
 		return null;
