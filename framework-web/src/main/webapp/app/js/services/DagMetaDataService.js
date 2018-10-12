@@ -1224,8 +1224,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
    'operator':{
     name : 'operator',
     caption :'Operator',
-    execType:'Operatorexec',
-    metaType:'Operator',
+    execType:'operatorexec',
+    metaType:'operator',
     iconPath : 'assets/layouts/layout/img/operator.svg',
     color : '#DCEDC8',
     parentIconCaption:'Operator',

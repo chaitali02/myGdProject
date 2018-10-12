@@ -698,6 +698,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
                         sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+                        attributemapjson.sourceattribute=sourceattribute;
                         var obj = {}
                         obj.text = "datapod"
                         obj.caption = "attribute"
@@ -771,12 +772,19 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     if(response.attributeMap[i].targetAttr.ref.type !="simple"){
                         var targetattribute = {}
                         targetattribute.uuid = response.attributeMap[i].targetAttr.ref.uuid;
+                        targetattribute.name = response.attributeMap[i].targetAttr.ref.name;
+                        targetattribute.dname = response.attributeMap[i].targetAttr.ref.name+"."+response.attributeMap[i].targetAttr.attrName;
                         targetattribute.type = response.attributeMap[i].targetAttr.ref.type;
                         targetattribute.attributeId = response.attributeMap[i].targetAttr.attrId;
+                        targetattribute.attrName=response.attributeMap[i].targetAttr.attrName;
                         attributemapjson.targetattribute = targetattribute;
+                        attributemapjson.isTargetAtributeSimple = false;
+                        attributemapjson.isTargetAtributeDatapod = true;
                     }else{
                         var targetsimple=response.attributeMap[i].targetAttr.value;
                         attributemapjson.targetsimple = targetsimple;
+                        attributemapjson.isTargetAtributeSimple = true;
+                        attributemapjson.isTargetAtributeDatapod = false;
 
                     }
                     
@@ -891,6 +899,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     attributedetail.datapodname = response[j].ref.name;
                     attributedetail.name = response[j].attrName;
                     attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+                    attributedetail.attrName =response[j].attrName;
                     attributedetail.attributeId = response[j].attrId;
                     attributes.push(attributedetail)
                 }

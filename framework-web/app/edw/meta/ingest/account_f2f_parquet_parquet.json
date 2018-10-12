@@ -54,7 +54,8 @@
   "targetFormat": "PARQUET",
    "sourceExtn":"PARQUET",
   "targetExtn":"PARQUET",
-  "header": "N",
+   "sourceHeader" : "N",
+   "targetHeader" : "N",
   "saveMode" : "OVERWRITE",
   "ignoreCase" : "N",
   "incrAttr": null
