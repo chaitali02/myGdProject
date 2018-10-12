@@ -698,7 +698,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     else{
 		
 		$scope.ingestData={};
-		$scope.ingestData.header="N"
+		$scope.ingestData.sourceHeader="N"
 	//	$scope.onChangeRuleType();
 	}
 
@@ -1146,7 +1146,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		ingestJson.active = $scope.ingestData.active;
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
-		ingestJson.header = $scope.ingestData.header;
+		ingestJson.sourceHeader = $scope.ingestData.sourceHeader;
 		ingestJson.ignoreCase= $scope.ingestData.ignoreCase;
 		ingestJson.sourceExtn=$scope.ingestData.sourceExtn;
 		ingestJson.targetExtn=$scope.ingestData.targetExtn;

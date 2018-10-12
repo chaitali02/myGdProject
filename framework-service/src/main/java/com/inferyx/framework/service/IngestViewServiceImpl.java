@@ -78,13 +78,14 @@ public class IngestViewServiceImpl {
 		ingestView.setTargetDetail(ingest.getTargetDetail());
 		ingestView.setTargetFormat(ingest.getTargetFormat());
 		ingestView.setRunParams(ingest.getRunParams());
-		ingestView.setHeader(ingest.getHeader());
+		ingestView.setSourceHeader(ingest.getSourceHeader());
 		ingestView.setIncrAttr(ingest.getIncrAttr());
 		ingestView.setSplitBy(ingest.getSplitBy());
 		ingestView.setSaveMode(ingest.getSaveMode());
 		ingestView.setIgnoreCase(ingest.getIgnoreCase());
 		ingestView.setSourceExtn(ingest.getSourceExtn());
 		ingestView.setTargetExtn(ingest.getTargetExtn());
+		ingestView.setTargetHeader(ingest.getTargetHeader());
 		List<AttributeRefHolder> filterInfo = ingest.getFilterInfo();
 		Filter resolvedFilter = null;
 		if(filterInfo != null)		{
@@ -131,7 +132,7 @@ public class IngestViewServiceImpl {
 		ingest.setTargetDetail(ingestView.getTargetDetail());
 		ingest.setTargetFormat(ingestView.getTargetFormat());
 		ingest.setRunParams(ingestView.getRunParams());
-		ingest.setHeader(ingestView.getHeader());
+		ingest.setSourceHeader(ingestView.getSourceHeader());
 		ingest.setIncrAttr(ingestView.getIncrAttr());
 		ingest.setSplitBy(ingestView.getSplitBy());
 		ingest.setSaveMode(ingestView.getSaveMode());
@@ -139,6 +140,7 @@ public class IngestViewServiceImpl {
 		ingest.setSourceExtn(ingestView.getSourceExtn());
 		ingest.setTargetExtn(ingestView.getTargetExtn());
 		ingest.setAttributeMap(ingestView.getAttributeMap());
+		ingest.setTargetHeader(ingestView.getTargetHeader());
 		if(ingestView.getFilter() != null) {
 			ingest.setFilterInfo(filterInfo);
 		}

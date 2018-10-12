@@ -31,7 +31,7 @@ public class IngestView extends BaseEntity {
 	private Filter filter;	
 	private String filterChg;
 	private String sourceChg;
-	private String header;
+	private String sourceHeader;
 	private AttributeRefHolder incrAttr;
 	private SaveMode saveMode = SaveMode.APPEND;
 	private String ignoreCase = "N";
@@ -39,7 +39,44 @@ public class IngestView extends BaseEntity {
 	private String targetExtn;
 	private List<AttributeMap> attributeMap;
 	private AttributeRefHolder splitBy ;
+	private String targetHeader;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceHeader
+	 */
+	public String getSourceHeader() {
+		return sourceHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceHeader the sourceHeader to set
+	 */
+	public void setSourceHeader(String sourceHeader) {
+		this.sourceHeader = sourceHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the targetHeader
+	 */
+	public String getTargetHeader() {
+		return targetHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param targetHeader the targetHeader to set
+	 */
+	public void setTargetHeader(String targetHeader) {
+		this.targetHeader = targetHeader;
+	}
 	/**
 	 *
 	 * @Ganesh
@@ -129,24 +166,6 @@ public class IngestView extends BaseEntity {
 	 */
 	public void setIncrAttr(AttributeRefHolder incrAttr) {
 		this.incrAttr = incrAttr;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the header
-	 */
-	public String getHeader() {
-		return header;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param header the header to set
-	 */
-	public void setHeader(String header) {
-		this.header = header;
 	}
 	/**
 	 *

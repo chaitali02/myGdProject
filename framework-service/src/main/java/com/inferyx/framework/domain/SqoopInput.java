@@ -1,5 +1,7 @@
 package com.inferyx.framework.domain;
 
+import java.util.Arrays;
+
 import com.cloudera.sqoop.SqoopOptions.FileLayout;
 import com.inferyx.framework.enums.SqoopIncrementalMode;
 
@@ -36,7 +38,28 @@ public class SqoopInput {
 	private String hCatalogDatabaseName;
 	private String sqlQuery;
 	private String splitByCol;
+	private String[] attributeMap;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the attributeMap
+	 */
+	public String[] getAttributeMap() {
+		return attributeMap;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param attributeMap the attributeMap to set
+	 */
+	public void setAttributeMap(String[] attributeMap) {
+		this.attributeMap = attributeMap;
+	}
+
 	/**
 	 *
 	 * @Ganesh
@@ -511,6 +534,7 @@ public class SqoopInput {
 		this.hCatalogTableName = hCatalogTableName;
 	}
 
+
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
@@ -525,7 +549,7 @@ public class SqoopInput {
 				+ ", fileLayout=" + fileLayout + ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName="
 				+ hiveTableName + ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
 				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + ", splitByCol="
-				+ splitByCol + "]";
+				+ splitByCol + ", attributeMap=" + Arrays.toString(attributeMap) + "]";
 	}
 
 	/* (non-Javadoc)

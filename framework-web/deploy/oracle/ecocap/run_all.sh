@@ -35,3 +35,5 @@ for i in $(cat < load_wi.sql); do
 sqlldr $1/$1  $i
 done
 sqlplus $1/$1 < counts.sql
+rm *.log
+
