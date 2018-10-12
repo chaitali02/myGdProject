@@ -61,6 +61,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -181,11 +182,16 @@ public class IngestServiceImpl extends RuleTemplate {
 
 			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
 			Datapod sourceDp = null;
+			DataSet sourceDataset = null;
 //			String incrLastValue = null;
 //			String latestIncrLastValue = null;
 //			String incrColName = null;
 			if(sourceDpMI.getUuid() != null) {
-				sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+				if(sourceDpMI.getType().equals(MetaType.datapod)) {
+					sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+				} else if(sourceDpMI.getType().equals(MetaType.dataset)) {
+					sourceDataset = (DataSet) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+				}
 			}			
 			
 			MetaIdentifier targetDpMI = ingest.getTargetDetail().getRef();
@@ -274,6 +280,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				runIngestServiceImpl2.setTargetDS(targetDS);
 				runIngestServiceImpl2.setKafkaExecutor(kafkaExecutor);
 				runIngestServiceImpl2.setSparkStreamingExecutor(sparkStreamingExecutor);
+				runIngestServiceImpl2.setSourceDataset(sourceDataset);
 				
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					//check whether target file already exist (when save mode is null)

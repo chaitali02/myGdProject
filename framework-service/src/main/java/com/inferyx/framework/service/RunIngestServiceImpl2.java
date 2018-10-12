@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -81,6 +83,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	private List<String> location;
 	private KafkaExecutor<?, ?> kafkaExecutor;
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
+	private DataSet sourceDataset;
 	
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
@@ -103,6 +106,26 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //	public void setFileName(String fileName) {
 //		this.fileName = fileName;
 //	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceDataset
+	 */
+	public DataSet getSourceDataset() {
+		return sourceDataset;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceDataset the sourceDataset to set
+	 */
+	public void setSourceDataset(DataSet sourceDataset) {
+		this.sourceDataset = sourceDataset;
+	}
 
 	/**
 	 *
@@ -527,14 +550,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			Map<String, String> resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
 			String[] mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);	
 			
-			boolean areAllAttrs = false;
-			for(String attrType : resolvedAttrMap.values()) {
-				if(attrType.equalsIgnoreCase(MetaType.simple.toString()) 
-						|| attrType.equalsIgnoreCase(MetaType.formula.toString())
-						|| attrType.equalsIgnoreCase(MetaType.function.toString())) {
-					areAllAttrs = true;
-				} 
-			}
+			boolean areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 			
 			String query = null;
 			if(!areAllAttrs) {
@@ -616,8 +632,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
-						//map schema to source mappedAttrs						
-						rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+						//map schema to source mappedAttrs	
+						if(sourceHeader.equalsIgnoreCase("true")) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+						}
 						
 						//applying target schema to df
 						Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
@@ -695,8 +713,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//adding version column data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
-						//map schema to source mappedAttrs						
-						rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+						//map schema to source mappedAttrs	
+						if(sourceHeader.equalsIgnoreCase("true")) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+						}
 						
 						//applying target schema to df
 						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, false);		
@@ -754,8 +774,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							//adding version column data
 //							rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
-							//map schema to source mappedAttrs						
-							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+							//map schema to source mappedAttrs	
+							if(sourceHeader.equalsIgnoreCase("true")) {
+								rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+							}
 							
 							//applying target schema to df
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, true);
@@ -1157,6 +1179,34 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		}
 		
 		return ingestExec;
+	}
+
+	/**
+	 * @param values
+	 * @return
+	 */
+	private boolean areAllAttrs(Collection<String> values) {
+		boolean isSimple = false;
+		boolean isFormula = false;
+		boolean isFunction = false;
+		boolean isDatapod = false;
+		
+		for(String attrType : values) {
+			if(attrType.equalsIgnoreCase(MetaType.simple.toString())) {
+				isSimple = true;
+			} else if(attrType.equalsIgnoreCase(MetaType.formula.toString())) {
+				isFormula = true;
+			} else if(attrType.equalsIgnoreCase(MetaType.function.toString())) {
+				isFunction = true;
+			} else if(attrType.equalsIgnoreCase(MetaType.datapod.toString())) {
+				isDatapod = true;
+			}
+		}
+		if(isSimple || isFormula || isFunction) {
+			return false;
+		} else {
+			return isDatapod;
+		}
 	}
 
 	/**
