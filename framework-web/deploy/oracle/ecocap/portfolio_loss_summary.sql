@@ -13,6 +13,6 @@ CREATE TABLE PORTFOLIO_LOSS_SUMMARY
                           PORTFOLIO_VAL_PERCENTAGE   DECIMAL(10,2), 
                           PORTFOLIO_EL_PERCENTAGE    DECIMAL(10,2), 
                           PORTFOLIO_EC_PERCENTAGE    DECIMAL(10,2), 
-                          REPORTING_DATE             VARCHAR(50), 
+                          REPORTING_DATE             VARCHAR2(50), 
                           VERSION                    INTEGER 
              );

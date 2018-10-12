@@ -99,7 +99,7 @@ CREATE TABLE  CUSTOMER_IDIOSYNCRATIC_RISK
                           CUST94         DECIMAL(10,2), 
                           CUST95         DECIMAL(10,2), 
                           CUST96         DECIMAL(10,2), 
-                          REPORTING_DATE VARCHAR(50), 
+                          REPORTING_DATE VARCHAR2(50), 
                           VERSION        INTEGER 
              );
 
