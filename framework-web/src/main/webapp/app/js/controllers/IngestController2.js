@@ -421,8 +421,26 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.sourcedatapodattribute = response;
 				$scope.allSourceAttribute = response;
 				$scope.lhsdatapodattributefilter = response;
-				if (typeof $stateParams.id != "undefined" && data.length >0) {
-                    $scope.ingestTableInfo=$scope.allSourceAttribute;
+				if (typeof $stateParams.id == "undefined" && $scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "FILE") {
+					$scope.ingestTableArray=[];
+					$scope.ingestTableInfo=$scope.allSourceAttribute;
+					for(var i=0;i <$scope.allSourceAttribute.length;i++){
+						var attributemapjson={};
+						var obj = {}
+						obj.text = "string"
+						obj.caption = "string"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = true;
+                        attributemapjson.isSourceAtributeFormula = false;
+						attributemapjson.isSourceAtributeExpression = false;
+						attributemapjson.sourceattribute=$scope.allSourceAttribute[i];
+						$scope.ingestTableArray[i]=attributemapjson;
+						
+						$scope.ingestTableArray[i].isTargetAtributeSimple = true;
+						$scope.ingestTableArray[i].isTargetAtributeDatapod = false;
+					}
+					$scope.ingestTableInfo=$scope.ingestTableArray;
                 }
 			}
 		}
@@ -431,9 +449,40 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		if ($scope.selectedTargetDetail) {
 			IngestRuleService.getAllAttributeBySource($scope.selectedTargetDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
+				
                 $scope.allTargetAttribute = response;
-                if (typeof $stateParams.id != "undefined" && data.length >0) {
-                    $scope.ingestTableInfo=$scope.allTargetAttribute;
+                if (typeof $stateParams.id == "undefined") {
+					$scope.ingestTableArray=[];
+					$scope.ingestTableInfo=$scope.allTargetAttribute;
+					for(var i=0;i <$scope.allTargetAttribute.length;i++){
+						var attributemapjson={};
+						var obj = {}
+						if($scope.selectedSourceType == "TABLE"){
+                        	obj.text = "datapod"
+							obj.caption = "attribute"
+						}
+						else{
+							obj.text = "string"
+							obj.caption = "string"
+						}
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.isSourceAtributeSimple = false;
+                        attributemapjson.isSourceAtributeDatapod = true;
+                        attributemapjson.isSourceAtributeFormula = false;
+						attributemapjson.isSourceAtributeExpression = false;
+						$scope.ingestTableArray[i]=attributemapjson;
+						var targetattribute = {}
+                        targetattribute.uuid = $scope.allTargetAttribute[i].uuid;
+                        targetattribute.name =  $scope.allTargetAttribute[i].name;
+                        targetattribute.dname =  $scope.allTargetAttribute[i].dname;
+                        targetattribute.type =  $scope.allTargetAttribute[i].type;
+                        targetattribute.attributeId =  $scope.allTargetAttribute[i].attributeId;
+						targetattribute.attrName= $scope.allTargetAttribute[i].attrName;
+						$scope.ingestTableArray[i].targetattribute = targetattribute;
+						$scope.ingestTableArray[i].isTargetAtributeSimple = false;
+						$scope.ingestTableArray[i].isTargetAtributeDatapod = true;
+					}
+					$scope.ingestTableInfo=$scope.ingestTableArray;
                 }
 		
 			}
@@ -445,8 +494,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
         if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "TABLE" &&  $scope.selectedAutoMode == "By Order"){
             if($scope.allTargetAttribute){
                 $scope.ingestTableArray=[];
-                $scope.ingestTableInfo=$scope.allTargetAttribute;
-                for(var i=0;i<$scope.allTargetAttribute.length;i++){
+               // $scope.ingestTableInfo=$scope.allTargetAttribute;
+                for(var i=0;i<$scope.ingestTableInfo.length;i++){
                     var mapInfo = {};
                     var obj = {}
                     obj.text = "datapod";
@@ -456,7 +505,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                     mapInfo.isSourceAtributeFormula = false;
                     mapInfo.isSourceAtributeExpression = false;
                     mapInfo.sourceAttributeType = obj;
-                    mapInfo.sourceattribute=$scope.allSourceAttribute[i];
+					mapInfo.sourceattribute=$scope.allSourceAttribute[i];
+					mapInfo.targetattribute = $scope.ingestTableInfo[i].targetattribute;
+					mapInfo.isTargetAtributeSimple = false;
+					mapInfo.isTargetAtributeDatapod = true;
                     $scope.ingestTableArray[i] = mapInfo;
                 }
             }
@@ -464,11 +516,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
         else if($scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "TABLE" &&  $scope.selectedAutoMode == "By Name"){
             var allSourceAttribute={};
             $scope.ingestTableArray=[];
-            $scope.ingestTableInfo=$scope.allTargetAttribute;
+          //  $scope.ingestTableInfo=$scope.allTargetAttribute;
             angular.forEach($scope.allSourceAttribute, function (val, key) {
                 allSourceAttribute[val.name] = val;
             });
-            for(var i=0;i<$scope.allTargetAttribute.length;i++){
+            for(var i=0;i<$scope.ingestTableInfo.length;i++){
                 var mapInfo = {};
                 var obj = {}
                 obj.text = "datapod";
@@ -478,7 +530,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 mapInfo.isSourceAtributeFormula = false;
                 mapInfo.isSourceAtributeExpression = false;
                 mapInfo.sourceAttributeType = obj;
-                mapInfo.sourceattribute=allSourceAttribute[$scope.allTargetAttribute[i].name];
+				mapInfo.sourceattribute=allSourceAttribute[$scope.ingestTableInfo[i].targetattribute.attrName];
+				mapInfo.targetattribute = $scope.ingestTableInfo[i].targetattribute;
+				mapInfo.isTargetAtributeSimple = false;
+				mapInfo.isTargetAtributeDatapod = true;
                 $scope.ingestTableArray[i] = mapInfo;
             }
           //  console.log(allSourceAttribute);
@@ -486,8 +541,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "TABLE" && $scope.selectedAutoMode == "From Target"){
 			var allSourceAttribute={};
             $scope.ingestTableArray=[];
-			$scope.ingestTableInfo=$scope.allTargetAttribute;
-			for(var i=0;i<$scope.allTargetAttribute.length;i++){
+		//	$scope.ingestTableInfo=$scope.allTargetAttribute;
+			for(var i=0;i<$scope.ingestTableInfo.length;i++){
                 var mapInfo = {};
                 var obj = {}
                 obj.text = "string";
@@ -498,6 +553,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 mapInfo.isSourceAtributeExpression = false;
                 mapInfo.sourceAttributeType = obj;
 				mapInfo.sourcesimple=$scope.allTargetAttribute[i].name;
+				mapInfo.targetattribute = $scope.ingestTableInfo[i].targetattribute;
+				mapInfo.isTargetAtributeSimple = false;
+				mapInfo.isTargetAtributeDatapod = true;
                 $scope.ingestTableArray[i] = mapInfo;
             }
 		}
