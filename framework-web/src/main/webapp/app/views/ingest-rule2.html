@@ -267,10 +267,19 @@
 
 
                                         <div class="form-group" ng-if="selectedSourceType =='TABLE'">
-                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
+                                           
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Source Type
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
-                                            <div class="col-md-6">
+                                           
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control"  name="" data-ng-model="$parent.selectedSourceDetailType" ng-options="r  for r in sourceTypes"
+                                                ng-disabled="{{mode}}" ng-change="onChangeSourceType()">
+                                                </select>                                            </div>
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Name
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r as r.name for r in sourceDetails track by r.uuid"
                                                     ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
                                                 </select>

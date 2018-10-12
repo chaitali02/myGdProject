@@ -326,18 +326,28 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
         }
         return deferred.promise;
     }/*End*/
-    this.getDatapodByDatasource = function (uuid) {
+    this.getDatapodOrDatasetByDatasource = function (uuid,type) {
         var deferred = $q.defer();
-        IngestRuleFactory.findDatapodByDatasource(uuid).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
-        var OnSuccess = function (response) {
-            deferred.resolve({
-                data: response
-            });
+        if(type =="datapod"){
+            IngestRuleFactory.findDatapodByDatasource(uuid).then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
+            var OnSuccess = function (response) {
+                deferred.resolve({
+                    data: response
+                });
+            }
+            var onError = function (response) {
+                deferred.reject({
+                    data: response
+                })
+            }
         }
-        var onError = function (response) {
-            deferred.reject({
-                data: response
-            })
+        else if(type =="dataset"){
+            IngestRuleFactory.findAllLatest(type,null).then(function (response) { onSuccess(response.data) });
+            var onSuccess = function (response) {
+                deferred.resolve({
+				data: response
+			})
+		    }
         }
         return deferred.promise;
     }/*End*/

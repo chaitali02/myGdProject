@@ -41,6 +41,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     $scope.saveModeFile = ["OVERWRITE"];
 	$scope.allAutoMapTable=["By Name","By Order"];
 	$scope.allAutoMapFile=["From Source","From Target"];
+	$scope.sourceTypes = ["datapod","dataset"];
     $scope.sourceAttributeTypes =
 		[{ "text": "string", "caption": "string" },
 		{ "text": "datapod", "caption": "attribute" },
@@ -331,6 +332,18 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	// 		}
 	// 	}
 	// }
+	
+	$scope.onChangeSourceType=function(){
+		if(!$scope.selectedSourceDatasource){
+			return false;
+		}
+		$scope.ingestData.ingestChg = "Y";
+		$scope.ingestData.filterChg = "Y";
+		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceType != "STREAM" && $scope.selectedSourceDatasource) {
+			$scope.getDatapodOrDatasetByDatasource($scope.selectedSourceDatasource.uuid, "source",$scope.selectedSourceDetailType);
+            
+		}
+	}
 
 	$scope.onChangeSourceDataSource = function () {
 		if(!$scope.selectedSourceDatasource){
@@ -339,7 +352,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$scope.ingestData.ingestChg = "Y";
 		$scope.ingestData.filterChg = "Y";
 		if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceType != "STREAM" && $scope.selectedSourceDatasource) {
-			$scope.getDatapodByDatasource($scope.selectedSourceDatasource.uuid, "source");
+			//$scope.getDatapodOrDatasetByDatasource($scope.selectedSourceDatasource.uuid, "source",$scope.selectedSourceDetailType);
             
 		}
 		else if($scope.selectedSourceType == "STREAM" &&  $scope.selectedSourceDatasource){
@@ -359,7 +372,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	$scope.onChangeTargetDataSource = function () {
 		$scope.ingestData.ingestChg = "Y";
 		if ($scope.selectedTargetDatasource) {
-			$scope.getDatapodByDatasource($scope.selectedTargetDatasource.uuid, "target");
+			$scope.getDatapodOrDatasetByDatasource($scope.selectedTargetDatasource.uuid, "target","datapod");
 			if( $scope.selectedTargetDatasource && $scope.selectedTargetDatasource.type != 'FILE'){
 				$scope.isTargetFormateDisable=true;
 				$scope.selectedTargetFormate = null;
@@ -421,8 +434,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	}
 
-	$scope.getDatapodByDatasource = function (uuid, propertyType) {
-		IngestRuleService.getDatapodByDatasource(uuid).then(function (response) { onSuccessGetDatapodByDatasource(response.data) }, function (response) { onError(response.data) });
+	$scope.getDatapodOrDatasetByDatasource = function (uuid, propertyType,type) {
+		IngestRuleService.getDatapodOrDatasetByDatasource(uuid,type).then(function (response) { onSuccessGetDatapodByDatasource(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatapodByDatasource = function (response) {
 			if (propertyType == "source") {
 				$scope.sourceDetails = response;
@@ -435,7 +448,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 	$scope.getAllAttributeBySource = function (data) {
 		if ($scope.selectedSourceDetail) {
-			IngestRuleService.getAllAttributeBySource($scope.selectedSourceDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
+			IngestRuleService.getAllAttributeBySource($scope.selectedSourceDetail.uuid,$scope.selectedSourceDetailType).then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
 				$scope.sourcedatapodattribute = response;
 				$scope.allSourceAttribute = response;
@@ -735,6 +748,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			selectedSourceDatasource.uuid = $scope.ingestData.sourceDatasource.ref.uuid;
 			$scope.selectedSourceDatasource = selectedSourceDatasource;
 
+           
 			var selectedTargetDatasource = {};
 			selectedTargetDatasource.type = $scope.ingestData.targetDatasource.ref.type;
 			selectedTargetDatasource.uuid = $scope.ingestData.targetDatasource.ref.uuid;
@@ -764,6 +778,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				selectedSourceDetail.type = $scope.ingestData.sourceDetail.ref.type;
 				selectedSourceDetail.uuid = $scope.ingestData.sourceDetail.ref.uuid;
 				$scope.selectedSourceDetail = selectedSourceDetail;
+				$scope.selectedSourceDetailType=$scope.ingestData.sourceDetail.ref.type;
+				$scope.onChangeSourceType();
 				$scope.getAllAttributeBySource(response.ingesttabalearray);
 				$scope.getFormulaByType();
 				$scope.getParamByApp();
@@ -805,6 +821,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			}
             $scope.filterTableArray = response.filterInfo;
 			$scope.ingestTableArray=response.ingesttabalearray;
+			$scope.ingestTableInfo=$scope.ingestTableArray;
 			if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE"){
 				$scope.ingestTableInfo=$scope.ingestTableArray;
 			}
@@ -1317,7 +1334,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			sourceDetails.ref = sourceDetailsRef;
 			sourceDetails.value = $scope.selectedSourceDetail;
 		} else {
-			sourceDetailsRef.type = "datapod";
+			sourceDetailsRef.type =$scope.selectedSourceDetailType;
 			sourceDetailsRef.uuid = $scope.selectedSourceDetail.uuid;
 			sourceDetails.ref = sourceDetailsRef;
 		}
@@ -1325,14 +1342,14 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
         if ($scope.selectedSourceType != "FILE" && $scope.selectedSourceType != "STREAM") {
 			var sourceAttrDetail={};
 			var sourceAttrDetailRef={};
-			sourceAttrDetailRef.type="datapod";
+			sourceAttrDetailRef.type=$scope.selectedSourceDetailType;;
 			sourceAttrDetailRef.uuid=$scope.selectedSourceAttrDetail.uuid;
 			sourceAttrDetail.ref=sourceAttrDetailRef;
 			sourceAttrDetail.attrId=$scope.selectedSourceAttrDetail.attributeId;
 			ingestJson.incrAttr=sourceAttrDetail;
 			var splitBy={};
 			var splitByRef={};
-			splitByRef.type="datapod";
+			splitByRef.type=$scope.selectedSourceDetailType;;
 			splitByRef.uuid=$scope.selectedSplitBy.uuid;
 			splitBy.ref=splitByRef;
 			splitBy.attrId=$scope.selectedSplitBy.attributeId;
