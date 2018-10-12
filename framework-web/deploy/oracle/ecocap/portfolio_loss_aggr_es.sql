@@ -6,6 +6,6 @@ CREATE TABLE PORTFOLIO_LOSS_AGGR_ES
                           VALUE_AT_RISK    DECIMAL(10,2), 
                           ECONOMIC_CAPITAL DECIMAL(10,2), 
                           EXPECTED_SUM     DECIMAL(10,2), 
-                          REPORTING_DATE   VARCHAR(50), 
+                          REPORTING_DATE   VARCHAR2(50), 
                           VERSION          INTEGER 
              );
