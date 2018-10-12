@@ -48,6 +48,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		{ "text": "formula", "caption": "formula" },
 		{ "text": "function", "caption": "function" }];
   //  $scope.selectedRuleType = $scope.ruleTypes[0].text;
+    $scope.streamColumn=["kye","value","topic","partition","offset","timestamp"];
     $scope.userDetail = {}
     $scope.userDetail.uuid = $rootScope.setUseruuid;
     $scope.userDetail.name = $rootScope.setUserName;
@@ -367,6 +368,47 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.selectedSourceFormate = null;
 			}
 		}
+
+		if($scope.selectedSourceType =="STREAM" && $scope.selectedTargetType =="FILE" && $scope.ingestTableArray.length ==0){
+			for(var i=0;i<$scope.streamColumn.length;i++){
+				var attributemapjson={};
+				var obj = {}				
+				obj.text = "string"
+				obj.caption = "string"
+				attributemapjson.isSourceAtributeDatapod = false;
+				attributemapjson.isSourceAtributeSimple = true;
+				attributemapjson.sourceAttributeType = obj;
+				attributemapjson.isSourceAtributeFormula = false;
+				attributemapjson.isSourceAtributeExpression = false;
+				$scope.ingestTableArray[i]=attributemapjson;
+				attributemapjson.sourcesimple=$scope.streamColumn[i];
+				attributemapjson.targetsimple="";
+				$scope.ingestTableArray[i].isTargetAtributeSimple = true;
+				$scope.ingestTableArray[i].isTargetAtributeDatapod =false;
+			}
+			$scope.ingestTableInfo=$scope.ingestTableArray;
+			
+		}
+		if($scope.selectedSourceType =="STREAM" && $scope.selectedTargetType =="TABLE" && $scope.ingestTableArray.length ==0){
+			for(var i=0;i<$scope.streamColumn.length;i++){
+				var attributemapjson={};
+				var obj = {}				
+				obj.text = "string"
+				obj.caption = "string"
+				attributemapjson.isSourceAtributeDatapod = false;
+				attributemapjson.isSourceAtributeSimple = true;
+				attributemapjson.sourceAttributeType = obj;
+				attributemapjson.isSourceAtributeFormula = false;
+				attributemapjson.isSourceAtributeExpression = false;
+				$scope.ingestTableArray[i]=attributemapjson;
+				attributemapjson.sourcesimple=$scope.streamColumn[i];
+				attributemapjson.targetsimple="";
+				$scope.ingestTableArray[i].isTargetAtributeSimple = false;
+				$scope.ingestTableArray[i].isTargetAtributeDatapod =true;
+			}
+			$scope.ingestTableInfo=$scope.ingestTableArray;
+			
+		}
 	
 	}
 	$scope.onChangeTargetDataSource = function () {
@@ -635,7 +677,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 $scope.ingestTableArray[i] = mapInfo;
             }
 		}
-		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
+		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Target"){
 			for(var i=0;i<$scope.ingestTableInfo.length;i++){
                 var mapInfo = {};
                 var obj = {}
@@ -655,6 +697,27 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 $scope.ingestTableArray[i] = mapInfo;
             }
 		}
+		else if($scope.selectedSourceType == "STREAM" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
+			for(var i=0;i<$scope.ingestTableInfo.length;i++){
+                var mapInfo = {};
+                var obj = {}
+				var mapInfo = {};
+                var obj = {}
+				obj.text = "string";
+                obj.caption = "string";
+                mapInfo.isSourceAtributeSimple = true;
+                mapInfo.isSourceAtributeDatapod = false;
+                mapInfo.isSourceAtributeFormula = false;
+				mapInfo.isSourceAtributeExpression = false;
+				mapInfo.sourceAttributeType = obj;
+				mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcesimple;
+				mapInfo.isTargetAtributeSimple = true;
+				mapInfo.isTargetAtributeDatapod = false;
+				mapInfo.sourcesimple=$scope.ingestTableInfo[i].sourcesimple;
+                $scope.ingestTableArray[i] = mapInfo;
+            }
+		}
+		
         else{
             $scope.ingestTableArray=[];
         }

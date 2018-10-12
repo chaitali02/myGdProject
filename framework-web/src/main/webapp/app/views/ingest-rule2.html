@@ -758,10 +758,15 @@
                                                                         <input type="text" class="form-control" ng-model="ingestTableArray[$index].targetsimple" ng-show="ingestTableArray[$index].isTargetAtributeSimple"
                                                                             ng-disabled="{{mode}}">
                                                                     </span>
-                                                                    <div ng-show="ingestTableArray[$index].isTargetAtributeDatapod">
+                                                                    <div ng-show="(ingestTableArray[$index].isTargetAtributeDatapod) && (selectedSourceType !='STREAM' || selectedTargetType !='TABLE')">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <input type="text" ng-model="ingestTableArray[$index].targetattribute.dname" title="{{ingestTableArray[$index].targetattribute.dname}}" ng-disabled="true" class="form-control">
                                                                             <!-- <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select> -->
+                                                                        </span>
+                                                                    </div>
+                                                                    <div ng-show="ingestTableArray[$index].isTargetAtributeDatapod && selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE'">
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select>
                                                                         </span>
                                                                     </div>
                                                                 </td>
