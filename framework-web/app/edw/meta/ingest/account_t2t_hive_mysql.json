@@ -72,7 +72,8 @@
   "sourceFormat": null,
   "targetFormat": null,
   "saveMode" : "APPEND",
-  "header": "N",
+  "sourceHeader" : "N",
+  "targetHeader" : "N",
   "incrAttr": {
     "ref": {
       "type": "datapod",

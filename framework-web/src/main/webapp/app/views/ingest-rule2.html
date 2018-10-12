@@ -308,15 +308,15 @@
                                                 <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r for r in sourceDetails"
                                                     ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
                                                 </select>
-                                                <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail" required>
+                                                <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail">
                                             </div>
                                         </div>
                                         <div class="form-group" ng-if="selectedSourceType =='FILE'">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Header</label>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> Source Header</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <div class="btn-group">
-                                                    <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="ingestData.header" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.sourceHeader" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.sourceHeader" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Ignore Case
@@ -384,6 +384,16 @@
                                                 <input type="text" class="form-control" name="tagetDetail" ng-disabled="true" ng-if="selectedTargetFormate == null || selectedTargetFormate =='PARQUET'"
                                                     ng-model="$parent.ingestData.targetExtn">
                                             </div>
+                                        </div>
+                                        <div class="form-group" ng-if="selectedTargetType =='FILE'">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> Target Header</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-default" ng-model="ingestData.targetHeader" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="ingestData.targetHeader" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="form-group" ng-if="selectedTargetType =='FILE'">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Save Mode

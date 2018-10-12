@@ -262,13 +262,13 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$scope.selectedSourceFormate = null;
 		$scope.selectedTargetFormate = null;
 		$scope.selectedSourceAttrDetail=null;
+		$scope.ingestTableArray=[];
 		$scope.ingestData.ingestChg = "Y";
 		$scope.selectedSourceType = $scope.selectedRuleType.split("-")[0];
 		$scope.selectedTargetType = $scope.selectedRuleType.split("-")[1];
 		$scope.isSourceFormateDisable = $scope.selectedSourceType == 'FILE' ? false : true;
 		$scope.isTargetFormateDisable = $scope.selectedTargetType == 'FILE' ? false : true;
-		debugger;
-
+		
 		if($scope.selectedSourceType == 'FILE'  && $scope.selectedTargetType == 'FILE' && $scope.mode =="true"){
 			$scope.isAttributeMapDisable=true;
 		}
@@ -440,7 +440,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.sourcedatapodattribute = response;
 				$scope.allSourceAttribute = response;
 				$scope.lhsdatapodattributefilter = response;
-				if (typeof $stateParams.id == "undefined" && $scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "FILE") {
+				if ($scope.ingestTableArray.length == 0  && $scope.selectedSourceType == "TABLE" && $scope.selectedTargetType == "FILE") {
 					$scope.ingestTableArray=[];
 					$scope.ingestTableInfo=$scope.allSourceAttribute;
 					for(var i=0;i <$scope.allSourceAttribute.length;i++){
@@ -468,9 +468,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		if ($scope.selectedTargetDetail) {
 			IngestRuleService.getAllAttributeBySource($scope.selectedTargetDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
-				
                 $scope.allTargetAttribute = response;
-                if (typeof $stateParams.id == "undefined") {
+                if ($scope.ingestTableArray.length == 0 &&   $scope.selectedSourceType != "STREAM") {
 					$scope.ingestTableArray=[];
 					$scope.ingestTableInfo=$scope.allTargetAttribute;
 					for(var i=0;i <$scope.allTargetAttribute.length;i++){
@@ -822,7 +821,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     else{
 		
 		$scope.ingestData={};
-		$scope.ingestData.header="N"
+		$scope.ingestData.sourceHeader="N";
+		$scope.ingestData.targetHeader="N"
 	//	$scope.onChangeRuleType();
 	}
 
@@ -1270,7 +1270,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		ingestJson.active = $scope.ingestData.active;
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
-	//	ingestJson.header = $scope.ingestData.header;
+		ingestJson.sourceHeader = $scope.ingestData.sourceHeader;
+		ingestJson.targetHeader = $scope.ingestData.targetHeader;
 		ingestJson.ignoreCase= $scope.ingestData.ignoreCase;
 		ingestJson.sourceExtn=$scope.ingestData.sourceExtn;
 		ingestJson.targetExtn=$scope.ingestData.targetExtn;
