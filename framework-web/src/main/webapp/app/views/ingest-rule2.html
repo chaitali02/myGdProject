@@ -634,8 +634,8 @@
                                                 <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                     <div class="x_title" style="padding:10px;">
                                                     <div class="x_title" style="padding:10px;">
-                                                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}"></button>
-                                                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}"></button>
+                                                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="isAttributeMapDisable"></button>
+                                                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="isAttributeMapDisable"></button>
                                                     </div>
                                                     </div>
                                                 </div>
@@ -670,7 +670,7 @@
                                                             <tr>
                                                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllAttributeRow" ng-click="checkAllAttributeRow()"
+                                                                        <input ng-disabled="isAttributeMapDisable" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllAttributeRow" ng-click="checkAllAttributeRow()"
                                                                         />
                                                                     </span>
                                                                 </th>
@@ -688,7 +688,7 @@
                                                                 <td class="chek" style="text-align:center;Vertical-align:middle;" >
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         
-                                                                        <input ng-disabled="(selectedSourceType !='FILE' && selectedTargetType !='FILE')?true:false  || {{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                                                        <input ng-disabled="isAttributeMapDisable" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                                                                     </span>
                                                                 </td>
                                                                 <td>
@@ -735,7 +735,7 @@
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <!-- <input type="text" ng-if="selectedTargetType != 'FILE'" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
-                                                                        <input type="text" ng-if="selectedTargetType == 'FILE'" ng-model="ingestTableArray[$index].targetsimple" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
+                                                                        <!-- <input type="text" ng-if="selectedTargetType == 'FILE'" ng-model="ingestTableArray[$index].targetsimple" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
                                                                         <input type="text" class="form-control" ng-model="ingestTableArray[$index].targetsimple" ng-show="ingestTableArray[$index].isTargetAtributeSimple"
                                                                             ng-disabled="{{mode}}">
                                                                     </span>
