@@ -1140,7 +1140,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, appUuid);
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, "false", appUuid);
 //					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;						
 					count = rsHolder.getCountRows();
@@ -1213,7 +1213,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;	
-					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, appUuid);
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, null, appUuid);
 //					ResultSetHolder rsHolder = exec.cczexecuteRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;
 					count = rsHolder.getCountRows();

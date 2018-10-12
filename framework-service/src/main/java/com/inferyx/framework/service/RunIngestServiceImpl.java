@@ -582,16 +582,17 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 					
 //						sourceFilePathUrl = sourceFilePathUrl + fileName;
 						
-						String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
+						String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
+						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						//reading from source
-						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, false);
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, false);
 						
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
 						//applying target schema to df
-						if(header.equalsIgnoreCase("false") && targetDp != null) {
-							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, false);
+						if(sourceHeader.equalsIgnoreCase("false") && targetDp != null) {
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, false);
 						}
 						
 						String saveMode = null;
@@ -607,7 +608,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						
 						//writing to target				
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-																	targetFileName, tableName, saveMode, ingest.getTargetFormat());
+																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), null);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
@@ -655,19 +656,20 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
 						}
 						logger.info("sourceFilePathUrl: "+sourceFilePathUrl);
-						String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
+						String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
+						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						List<String> location = new ArrayList<>();
 						location.add(sourceFilePathUrl);
 						//reading from source
-						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
 						rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 						
 						//adding version column data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
 						//applying target schema to df
-						if(header.equalsIgnoreCase("false")) {
-							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+						if(sourceHeader.equalsIgnoreCase("false")) {
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, true);
 						}
 						
 						//writing to target
@@ -715,17 +717,18 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //						
 //						for(String fileName : fileNameList) {
 //							sourceFilePathUrl = sourceFilePathUrl + fileName;					
-							String header = ingestServiceImpl.resolveHeader(ingest.getHeader());
+							String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
+							String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 							//reading from source
-							ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), header, appUuid, true);
+							ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
 							rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
 							
 							//adding version column data
 //							rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 							
 							//applying target schema to df
-							if(header.equalsIgnoreCase("false")) {
-								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, tableName, true);
+							if(sourceHeader.equalsIgnoreCase("false")) {
+								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, true);
 							}
 							
 							//writing to target
@@ -763,7 +766,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat(), null);
 						countRows = rsHolder.getCountRows();
 //						targetFilePathUrl = null;
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
@@ -874,7 +877,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
 								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-										, targetFileName, tableName, saveMode, ingest.getTargetFormat());
+										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), null);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {

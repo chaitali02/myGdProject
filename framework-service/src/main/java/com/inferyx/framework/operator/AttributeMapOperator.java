@@ -96,10 +96,9 @@ public class AttributeMapOperator {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String comma = "";
+		
 		// add select attribute
 		for (AttributeMap attr : attrMapList) {
-//			if(attr.getSourceAttr().getAttrName().equalsIgnoreCase("reporting_date"))
-//				System.out.println();
 			builder.append(comma);
 			builder.append(mapSql(attr, mapSource, refKeyMap, otherParams, execParams));
 			comma = ",";

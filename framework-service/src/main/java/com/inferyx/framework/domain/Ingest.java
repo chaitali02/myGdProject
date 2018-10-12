@@ -31,7 +31,6 @@ public class Ingest extends BaseRule {
 	private String runParams;
 	private String sourceFormat; //CSV, TSV, PSV, PARQUET
 	private String targetFormat; //CSV, TSV, PSV, PARQUET
-	private String header;
 	private AttributeRefHolder incrAttr;
 	private SaveMode saveMode;
 	private String ignoreCase = "N";
@@ -39,7 +38,45 @@ public class Ingest extends BaseRule {
 	private String targetExtn;
 	private List<AttributeMap> attributeMap;
 	private AttributeRefHolder splitBy ;
+	private String sourceHeader;
+	private String targetHeader;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceHeader
+	 */
+	public String getSourceHeader() {
+		return sourceHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceHeader the sourceHeader to set
+	 */
+	public void setSourceHeader(String sourceHeader) {
+		this.sourceHeader = sourceHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the targetHeader
+	 */
+	public String getTargetHeader() {
+		return targetHeader;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param targetHeader the targetHeader to set
+	 */
+	public void setTargetHeader(String targetHeader) {
+		this.targetHeader = targetHeader;
+	}
 	/**
 	 *
 	 * @Ganesh
@@ -135,24 +172,6 @@ public class Ingest extends BaseRule {
 	 */
 	public void setIncrAttr(AttributeRefHolder incrAttr) {
 		this.incrAttr = incrAttr;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the header
-	 */
-	public String getHeader() {
-		return header;
-	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param header the header to set
-	 */
-	public void setHeader(String header) {
-		this.header = header;
 	}
 	/**
 	 *
