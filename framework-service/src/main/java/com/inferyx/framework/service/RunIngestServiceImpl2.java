@@ -628,7 +628,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						//reading from source
 						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, false);
-						rsHolder.getDataFrame().show(false);
+						
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
@@ -656,7 +656,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//writing to target				
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
 																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
-						rsHolder.getDataFrame().show(false);
+						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
 								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
