@@ -1103,6 +1103,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setTable(sourceDp.getName());
 						} 
+						sqoopInput.setExportDir(sourceDir);
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
