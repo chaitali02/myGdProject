@@ -724,30 +724,30 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input type="text" class="form-control" ng-model="ingestTableArray[$index].sourcesimple" ng-show="ingestTableArray[$index].isSourceAtributeSimple"
-                                                                            ng-disabled="{{mode}}">
+                                                                        <input type="text" class="form-control" ng-model="ingestTableArray[$index].sourcesimple" ng-if="ingestTableArray[$index].isSourceAtributeSimple"
+                                                                            ng-disabled="{{mode}}" required disable-validation-message="">
                                                                     </span>
-                                                                    <div ng-show="ingestTableArray[$index].isSourceAtributeDatapod">
+                                                                    <div ng-if="ingestTableArray[$index].isSourceAtributeDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allSourceAttribute track by r.uuid+r.attributeId"></select>
+                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allSourceAttribute track by r.uuid+r.attributeId"  required disable-validation-message="" ></select>
                                                                         </span>
                                                                     </div>
-                                                                    <div ng-show="ingestTableArray[$index].isSourceAtributeFormula">
+                                                                    <div ng-if="ingestTableArray[$index].isSourceAtributeFormula">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-model="ingestTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-                                                                                style="font-family: 'FontAwesome', Helvetica;">
+                                                                                style="font-family: 'FontAwesome', Helvetica;"  required disable-validation-message="" >
                                                                             </select>
                                                                         </span>
                                                                     </div>
-                                                                    <div ng-show="ingestTableArray[$index].isSourceAtributeExpression">
+                                                                    <div ng-if="ingestTableArray[$index].isSourceAtributeExpression">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-model="ingestTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
                                                                         </span>
                                                                     </div>
-                                                                    <div ng-show="ingestTableArray[$index].isSourceAtributeFunction">
+                                                                    <div ng-if="ingestTableArray[$index].isSourceAtributeFunction">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-model="ingestTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-                                                                                ng-change="onChangeFunction(ingestTableArray[$index].sourcefunction,$index)"></select>
+                                                                                ng-change="onChangeFunction(ingestTableArray[$index].sourcefunction,$index)"  required disable-validation-message="" ></select>
                                                                         </span>
                                                                     </div>
                                                                 </td>
@@ -755,18 +755,18 @@
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <!-- <input type="text" ng-if="selectedTargetType != 'FILE'" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
                                                                         <!-- <input type="text" ng-if="selectedTargetType == 'FILE'" ng-model="ingestTableArray[$index].targetsimple" title="{{tabledata.dname}}" ng-disabled="true" class="form-control"> -->
-                                                                        <input type="text" class="form-control" ng-model="ingestTableArray[$index].targetsimple" ng-show="ingestTableArray[$index].isTargetAtributeSimple"
-                                                                            ng-disabled="{{mode}}">
+                                                                        <input type="text" class="form-control" ng-model="ingestTableArray[$index].targetsimple" ng-if="ingestTableArray[$index].isTargetAtributeSimple"
+                                                                            ng-disabled="{{mode}}" required disable-validation-message="">
                                                                     </span>
-                                                                    <div ng-show="(ingestTableArray[$index].isTargetAtributeDatapod) && (selectedSourceType !='STREAM' || selectedTargetType !='TABLE')">
+                                                                    <div ng-if="(ingestTableArray[$index].isTargetAtributeDatapod) && (selectedSourceType !='STREAM' || selectedTargetType !='TABLE')">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <input type="text" ng-model="ingestTableArray[$index].targetattribute.dname" title="{{ingestTableArray[$index].targetattribute.dname}}" ng-disabled="true" class="form-control">
+                                                                            <input type="text" ng-model="ingestTableArray[$index].targetattribute.dname" title="{{ingestTableArray[$index].targetattribute.dname}}" ng-disabled="true" class="form-control" required disable-validation-message="">
                                                                             <!-- <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select> -->
                                                                         </span>
                                                                     </div>
-                                                                    <div ng-show="ingestTableArray[$index].isTargetAtributeDatapod && selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE'">
+                                                                    <div ng-if="ingestTableArray[$index].isTargetAtributeDatapod && selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE'">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId"></select>
+                                                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-model="ingestTableArray[$index].targetattribute" ng-options="r as r.dname for r in allTargetAttribute track by r.uuid+r.attributeId" required disable-validation-message=""></select>
                                                                         </span>
                                                                     </div>
                                                                 </td>
