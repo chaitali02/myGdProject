@@ -1101,9 +1101,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("this is import block from other table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setTable(sourceDp.getName());
+							
 						} 
-						sqoopInput.setExportDir(sourceDir);
+						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
@@ -1136,6 +1136,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					if(ingest.getRunParams() != null) {
 						inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 					}
+					
 					sqoopExecutor.execute(sqoopInput, inputParams);
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 						StreamInput streamInput = getKafkaStreamInput();
