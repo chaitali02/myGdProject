@@ -496,8 +496,8 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "name": "ingest",
         "class": "fa fa-random",
         "submenu": [
-            { "name": "ingestrulelist", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
-            { "name": "ingestrulelist2", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule2" },
+            // { "name": "ingestrulelist", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
+            { "name": "ingestrulelist2", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
             { "name": "ingestrulegrouplist", "type": "ingestgroup", "typeCount": "ingestgroup","uuid": "null", "caption": "Rule Group" },
             { "name": "ingestrulerestultlist", "type": "ingestexec",  "typeCount": "ingestexec","uuid": "null", "caption": "Rule Results" }
         ]
