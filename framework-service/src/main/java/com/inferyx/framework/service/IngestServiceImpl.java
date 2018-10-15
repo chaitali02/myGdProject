@@ -200,67 +200,67 @@ public class IngestServiceImpl extends RuleTemplate {
 				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(targetDpMI.getUuid(), targetDpMI.getType().toString());
 			}
 			
-			if(ingest.getAttributeMap() == null || ingest.getAttributeMap().isEmpty()){
-				RunIngestServiceImpl<?, ?> runIngestServiceImpl = new RunIngestServiceImpl<>();
-				runIngestServiceImpl.setCommonServiceImpl(commonServiceImpl);
-				runIngestServiceImpl.setExecParams(execParams);
-				runIngestServiceImpl.setHelper(helper);
-				runIngestServiceImpl.setIngest(ingest);
-				runIngestServiceImpl.setIngestExec(ingestExec);
-				runIngestServiceImpl.setIngestServiceImpl(this);
-				runIngestServiceImpl.setName(MetaType.ingestExec+"_"+ingestExec.getUuid()+"_"+ingestExec.getVersion());
-				runIngestServiceImpl.setRunMode(runMode);
-				runIngestServiceImpl.setSessionContext(sessionHelper.getSessionContext());
-				runIngestServiceImpl.setSourceDp(sourceDp);
-				runIngestServiceImpl.setSparkExecutor(sparkExecutor);
-				runIngestServiceImpl.setSqoopExecutor(sqoopExecutor);
-				runIngestServiceImpl.setTargetDp(targetDp);
-				runIngestServiceImpl.setAppUuid(appUuid);
-				runIngestServiceImpl.setSourceDS(sourceDS);
-				runIngestServiceImpl.setTargetDS(targetDS);
-				runIngestServiceImpl.setKafkaExecutor(kafkaExecutor);
-				runIngestServiceImpl.setSparkStreamingExecutor(sparkStreamingExecutor);
-				
-				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					//check whether target file already exist (when save mode is null)
-					if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-							&& ingest.getSaveMode() == null) {
-						String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
-						List<String> targetFileOrDirList = null;
-						if(ingest.getTargetExtn() == null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-							targetFileOrDirList = getMatchingDirNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
-						} else {
-							targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
-						}
-						
-						for(String fileName : targetFileOrDirList) {
-							if(fileName.equalsIgnoreCase(targetFileOrDirName)) {
-								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' already exists.");								
-							}
-						}
-					}
-					
-					//get source files matching the criteria
-					List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat());
-					if(fileNameList == null || fileNameList.isEmpty()) {
-						throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
-					}
-					
-					List<String> fileInfo = new ArrayList<>();
-					String sourceDir = "file://".concat(sourceDS.getPath());
-					String sourceFileLocation = "";
-					for(String fileName : fileNameList) {
-						String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
-						fileInfo.add(fileLocation);
-						sourceFileLocation = sourceFileLocation.concat(fileLocation).concat(",");
-					}
-					sourceFileLocation = sourceFileLocation.substring(0, sourceFileLocation.lastIndexOf(","));
-					ingestExec.setFileInfo(fileInfo);
-					runIngestServiceImpl.setLocation(fileInfo);
-				} 
-				
-				runIngestServiceImpl.call();
-			} else {
+//			if(ingest.getAttributeMap() == null || ingest.getAttributeMap().isEmpty()){
+//				RunIngestServiceImpl<?, ?> runIngestServiceImpl = new RunIngestServiceImpl<>();
+//				runIngestServiceImpl.setCommonServiceImpl(commonServiceImpl);
+//				runIngestServiceImpl.setExecParams(execParams);
+//				runIngestServiceImpl.setHelper(helper);
+//				runIngestServiceImpl.setIngest(ingest);
+//				runIngestServiceImpl.setIngestExec(ingestExec);
+//				runIngestServiceImpl.setIngestServiceImpl(this);
+//				runIngestServiceImpl.setName(MetaType.ingestExec+"_"+ingestExec.getUuid()+"_"+ingestExec.getVersion());
+//				runIngestServiceImpl.setRunMode(runMode);
+//				runIngestServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+//				runIngestServiceImpl.setSourceDp(sourceDp);
+//				runIngestServiceImpl.setSparkExecutor(sparkExecutor);
+//				runIngestServiceImpl.setSqoopExecutor(sqoopExecutor);
+//				runIngestServiceImpl.setTargetDp(targetDp);
+//				runIngestServiceImpl.setAppUuid(appUuid);
+//				runIngestServiceImpl.setSourceDS(sourceDS);
+//				runIngestServiceImpl.setTargetDS(targetDS);
+//				runIngestServiceImpl.setKafkaExecutor(kafkaExecutor);
+//				runIngestServiceImpl.setSparkStreamingExecutor(sparkStreamingExecutor);
+//				
+//				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//					//check whether target file already exist (when save mode is null)
+//					if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//							&& ingest.getSaveMode() == null) {
+//						String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+//						List<String> targetFileOrDirList = null;
+//						if(ingest.getTargetExtn() == null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+//							targetFileOrDirList = getMatchingDirNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+//						} else {
+//							targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+//						}
+//						
+//						for(String fileName : targetFileOrDirList) {
+//							if(fileName.equalsIgnoreCase(targetFileOrDirName)) {
+//								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' already exists.");								
+//							}
+//						}
+//					}
+//					
+//					//get source files matching the criteria
+//					List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat());
+//					if(fileNameList == null || fileNameList.isEmpty()) {
+//						throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+//					}
+//					
+//					List<String> fileInfo = new ArrayList<>();
+//					String sourceDir = "file://".concat(sourceDS.getPath());
+//					String sourceFileLocation = "";
+//					for(String fileName : fileNameList) {
+//						String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
+//						fileInfo.add(fileLocation);
+//						sourceFileLocation = sourceFileLocation.concat(fileLocation).concat(",");
+//					}
+//					sourceFileLocation = sourceFileLocation.substring(0, sourceFileLocation.lastIndexOf(","));
+//					ingestExec.setFileInfo(fileInfo);
+//					runIngestServiceImpl.setLocation(fileInfo);
+//				} 
+//				
+//				runIngestServiceImpl.call();
+//			} else {
 				RunIngestServiceImpl2<?, ?> runIngestServiceImpl2 = new RunIngestServiceImpl2<>();
 				runIngestServiceImpl2.setCommonServiceImpl(commonServiceImpl);
 				runIngestServiceImpl2.setExecParams(execParams);
@@ -321,7 +321,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				} 
 
 				runIngestServiceImpl2.call();
-			}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
