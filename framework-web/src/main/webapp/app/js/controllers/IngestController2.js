@@ -660,20 +660,24 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
 			for(var i=0;i<$scope.ingestTableInfo.length;i++){
                 var mapInfo = {};
-                var obj = {}
-				var mapInfo = {};
-                var obj = {}
-				obj.text = "string";
-                obj.caption = "string";
-                mapInfo.isSourceAtributeSimple = true;
+				mapInfo.isSourceAtributeSimple = false;
                 mapInfo.isSourceAtributeDatapod = false;
                 mapInfo.isSourceAtributeFormula = false;
 				mapInfo.isSourceAtributeExpression = false;
-				mapInfo.sourceAttributeType = obj;
-				mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcesimple;
+				mapInfo.sourceAttributeType =$scope.ingestTableInfo[i].sourceAttributeType;
+				if($scope.ingestTableInfo[i].sourceAttributeType.text =="string"){
+					mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcesimple;
+					mapInfo.sourcesimple=$scope.ingestTableInfo[i].sourcesimple;
+					mapInfo.isSourceAtributeSimple = true;
+				}else{
+					mapInfo.sourcefunction=$scope.ingestTableInfo[i].sourcefunction;
+					mapInfo.targetsimple=$scope.ingestTableInfo[i].sourcefunction.name;
+					mapInfo.isSourceAtributeFunction=true
+				}
+				
 				mapInfo.isTargetAtributeSimple = true;
 				mapInfo.isTargetAtributeDatapod = false;
-				mapInfo.sourcesimple=$scope.ingestTableInfo[i].sourcesimple;
+				
                 $scope.ingestTableArray[i] = mapInfo;
             }
 		}
@@ -1341,8 +1345,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 	}
 	$scope.submit = function () {
-		$scope.dataLoading = true;
-		$scope.iSSubmitEnable = false;
+		$scope.isSubmitProgess = true;
+		$scope.isSubmitDisable = true;
 		var ingestJson = {};
 		ingestJson.uuid = $scope.ingestData.uuid;
 		ingestJson.name = $scope.ingestData.name;
@@ -1627,9 +1631,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		console.log(JSON.stringify(ingestJson))
 		IngestRuleService.submit(ingestJson, 'ingestview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isshowmodel = true;
-			$scope.dataLoading = false;
-			$scope.iSSubmitEnable = true;
+			$scope.isSubmitProgess = false;
+			$scope.isSubmitDisable = true;
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = 'Rule Saved Successfully'
@@ -1637,6 +1640,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.oksave();
 		}
 		var onError = function (response) {
+			$scope.isSubmitProgess = false;
 			notify.type = 'error',
 			notify.title = 'Error',
 			notify.content = "Some Error Occurred"
