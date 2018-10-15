@@ -547,18 +547,22 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			Map<String, String> resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
-			String[] mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);	
-			
-			boolean areAllAttrs = areAllAttrs(resolvedAttrMap.values());
-			
+			Map<String, String> resolvedAttrMap = null; 
+			String[] mappedAttrs = null; 
+			boolean areAllAttrs = false;
 			String query = null;
-			if(!areAllAttrs && sourceDp != null) {
-				String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
-				List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
-				query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
+			if(ingest.getAttributeMap() != null || !ingest.getAttributeMap().isEmpty()) {
+				resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
+				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);			
+				
+				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
+				
+				if(!areAllAttrs && sourceDp != null) {
+					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+					List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
+					query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
+				}
 			}
-			
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
@@ -633,17 +637,16 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 						//map schema to source mappedAttrs	
-						if(sourceHeader.equalsIgnoreCase("true")) {
+						if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
 							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
 						}
 						
 						//applying target schema to df
-						if(targetHeader.equalsIgnoreCase("true")) {
+						if(targetHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
 							Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
 							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
-						}
-												
+						}					
 						
 //						rsHolder.getDataFrame().show(false);
 						
