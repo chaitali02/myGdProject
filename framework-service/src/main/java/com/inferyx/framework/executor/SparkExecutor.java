@@ -3166,17 +3166,23 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder mapSchema(ResultSetHolder rsHolder, List<String> columnList, String tableName, boolean registerTempTable) throws IOException {
+	public ResultSetHolder mapSchema(ResultSetHolder rsHolder, String query, List<String> columnList, String tableName, boolean registerTempTable) throws IOException {
 		logger.info("inside method mapSchema");
-		Dataset<Row> df = rsHolder.getDataFrame();
-		df.printSchema();
-		
-		List<Column> columns = new ArrayList<>();
-		for(String colName : columnList) {
-			columns.add(new Column(colName));
-		}
-		
-		df = df.select(columns.toArray(new Column[columns.size()]));		
+		Dataset<Row> df = null;
+		if(query != null) {
+			rsHolder = executeSql(query, null);
+		} else {
+			df = rsHolder.getDataFrame();
+			df.printSchema();
+			
+			List<Column> columns = new ArrayList<>();
+			for(String colName : columnList) {
+				columns.add(new Column(colName));
+			}
+			
+			df = df.select(columns.toArray(new Column[columns.size()]));
+			rsHolder.setDataFrame(df);
+		}		
 	 
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -3184,7 +3190,6 @@ public class SparkExecutor<T> implements IExecutor {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		}
-		rsHolder.setDataFrame(df);
 		return rsHolder;
 	}
 }

@@ -57,6 +57,7 @@ import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.operator.IngestOperator;
 
 /**
  * @author Ganesh
@@ -84,7 +85,30 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	private KafkaExecutor<?, ?> kafkaExecutor;
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
 	private DataSet sourceDataset;
+	private IngestOperator ingestOperator;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestOperator
+	 */
+	public IngestOperator getIngestOperator() {
+		return ingestOperator;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestOperator the ingestOperator to set
+	 */
+	public void setIngestOperator(IngestOperator ingestOperator) {
+		this.ingestOperator = ingestOperator;
+	}
+
+
+
 	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
 
 //	/**
@@ -547,22 +571,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			Map<String, String> resolvedAttrMap = null; 
-			String[] mappedAttrs = null; 
-			boolean areAllAttrs = false;
-			String query = null;
-			if(ingest.getAttributeMap() != null || !ingest.getAttributeMap().isEmpty()) {
-				resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
-				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);			
-				
-				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
-				
-				if(!areAllAttrs && sourceDp != null) {
-					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
-					List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
-					query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
-				}
-			}
 			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
@@ -576,6 +584,30 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			}	
+
+			Map<String, String> resolvedAttrMap = null; 
+			String[] mappedAttrs = null; 
+			boolean areAllAttrs = false;
+			String query = null;
+			if(ingest.getAttributeMap() != null || !ingest.getAttributeMap().isEmpty()) {
+				resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
+				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);			
+				
+				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
+				
+				if(!areAllAttrs && sourceDp != null) {
+					String tableName = null;
+					if(ingestionType.equals(IngestionType.FILETOFILE)) { 
+						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+					} else {
+						tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+					}
+					
+//					List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
+//					query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+				}
+			}
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
 //				new Message("300", MessageStatus.FAIL.toString(),"No change in incremental param hence skipping execution.");
@@ -631,14 +663,19 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						//reading from source
-						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, false);
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
 //						rsHolder.getDataFrame().show(false);
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
+						//applying source schema when source header is not allowed
+						if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
+						}
+						
 						//map schema to source mappedAttrs	
 						if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
 						}
 						
 						//applying target schema to df
@@ -723,9 +760,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//adding version column data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 						
+						//applying source schema when source header is not allowed
+						if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
+						}
+						
 						//map schema to source mappedAttrs	
-						if(sourceHeader.equalsIgnoreCase("true")) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+						if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
 						}
 						
 						//applying target schema to df
@@ -784,9 +826,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							//adding version column data
 //							rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
+							//applying source schema when source header is not allowed
+							if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
+								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
+							}
+							
 							//map schema to source mappedAttrs	
-							if(sourceHeader.equalsIgnoreCase("true")) {
-								rsHolder = sparkExecutor.mapSchema(rsHolder, Arrays.asList(mappedAttrs), tableName, false);
+							if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
+								rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
 							}
 							
 							//applying target schema to df
@@ -858,7 +905,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							sqoopInput.setTable(sourceDp.getName());
 						}
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
+						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setAttributeMap(mappedAttrs);
 						} else if(mappedAttrs != null && !areAllAttrs) {
@@ -991,7 +1038,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					SqoopInput sqoopInput = new SqoopInput();
 					sqoopInput.setSourceDs(sourceDS);
 					sqoopInput.setTargetDs(targetDS);
-					String targetDir = targetDS.getPath();
+					String targetDir = targetDS.getPath()+ (targetDS.getPath().endsWith("/") ? targetDp.getName() : "/"+targetDp.getName());
 					String sourceDir = sourceDS.getPath();
 					logger.info("targetDir : " + targetDir);
 					logger.info("sourceDir : " + sourceDir);
@@ -1068,7 +1115,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						tableName = targetDp.getName();
 					} 
 
-					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr()));
+					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 					if(mappedAttrs != null && areAllAttrs) {
 						sqoopInput.setAttributeMap(mappedAttrs);
 					} else if(mappedAttrs != null && !areAllAttrs) {

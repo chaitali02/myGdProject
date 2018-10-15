@@ -86,6 +86,7 @@ import com.inferyx.framework.executor.SqoopExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.FunctionOperator;
+import com.inferyx.framework.operator.IngestOperator;
 
 /**
  * @author Ganesh
@@ -120,6 +121,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private FunctionOperator functionOperator;
 	@Autowired
 	private FormulaOperator formulaOperator;	
+	@Autowired
+	private IngestOperator ingestOperator;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -281,6 +284,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				runIngestServiceImpl2.setKafkaExecutor(kafkaExecutor);
 				runIngestServiceImpl2.setSparkStreamingExecutor(sparkStreamingExecutor);
 				runIngestServiceImpl2.setSourceDataset(sourceDataset);
+				runIngestServiceImpl2.setIngestOperator(ingestOperator);
 				
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					//check whether target file already exist (when save mode is null)
