@@ -628,7 +628,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						//reading from source
 						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, false);
-						
+//						rsHolder.getDataFrame().show(false);
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
@@ -638,9 +638,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						
 						//applying target schema to df
-						Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
-						String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
-						rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);						
+						if(targetHeader.equalsIgnoreCase("true")) {
+							Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
+							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
+						}
+												
+						
+//						rsHolder.getDataFrame().show(false);
 						
 						String saveMode = null;
 						if(ingest.getSaveMode() != null) {
@@ -656,6 +661,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//writing to target				
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
 																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+						
+//						rsHolder.getDataFrame().show(false);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
@@ -1011,7 +1018,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("this is import block from ORACLE table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 						sqoopInput.setTable(sourceDp.getName().toUpperCase());
-						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
+//						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
@@ -1251,7 +1258,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		}
 		return mappedAttrAlises;
 	}
-	
+
+	/********************** UNUSED **********************/
+	@SuppressWarnings("unused")
 	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
 		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " AND $CONDITIONS";
 		logger.info("query: "+query);
@@ -1273,7 +1282,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		queryBuilder.append(tableName);
 		queryBuilder.append(" WHERE ");
 		queryBuilder.append(incrLastValue != null ? incrColName+">"+incrLastValue : "1=1");
-		queryBuilder.append(" AND $CONDITIONS");
+//		queryBuilder.append(" AND $CONDITIONS");
 		
 		logger.info("sqoop select query: "+queryBuilder.toString());
 		return queryBuilder.toString();
