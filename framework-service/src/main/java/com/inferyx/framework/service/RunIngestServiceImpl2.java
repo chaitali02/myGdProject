@@ -13,7 +13,6 @@ package com.inferyx.framework.service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -589,24 +588,37 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String[] mappedAttrs = null; 
 			boolean areAllAttrs = false;
 			String query = null;
+			List<String> colAliaseNames = null;
 			if(ingest.getAttributeMap() != null || !ingest.getAttributeMap().isEmpty()) {
 				resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
 				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);			
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
-				
-				if(!areAllAttrs && sourceDp != null) {
+				if(ingestionType.equals(IngestionType.FILETOFILE) && ingest.getAttributeMap() != null && !ingest.getAttributeMap().isEmpty()) {
 					String tableName = null;
-					if(ingestionType.equals(IngestionType.FILETOFILE)) { 
-						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-					} else {
-						tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+					for(AttributeMap attributeMap : ingest.getAttributeMap()) {
+						attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
 					}
-					
-//					List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
-//					query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+					colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
+				} else if(!areAllAttrs && sourceDp != null) {
+					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
 					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
 				}
+				
+//				if(!areAllAttrs && sourceDp != null) {
+//					String tableName = null;
+//					if(ingestionType.equals(IngestionType.FILETOFILE)) { 
+//						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+//					} else {
+//						tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+//					}
+//					
+////					List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
+////					query = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, incrColName, latestIncrLastValue);
+//					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+//				}
 			}
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
@@ -664,28 +676,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						//reading from source
 						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
-//						rsHolder.getDataFrame().show(false);
+						
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
-						//applying source schema when source header is not allowed
-						if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
-							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
-						}
-						
 						//map schema to source mappedAttrs	
-						if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
+						if(sourceHeader.equalsIgnoreCase("true") && colAliaseNames != null) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 						}
-						
 						//applying target schema to df
-						if(targetHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
+						if(targetHeader.equalsIgnoreCase("true") && colAliaseNames != null) {
 							Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
 							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
 						}					
-						
-//						rsHolder.getDataFrame().show(false);
 						
 						String saveMode = null;
 						if(ingest.getSaveMode() != null) {
@@ -701,8 +705,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//writing to target				
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
 																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
-						
-//						rsHolder.getDataFrame().show(false);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
@@ -759,15 +761,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						
 						//adding version column data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-						
-						//applying source schema when source header is not allowed
-						if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
-							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
-						}
-						
+												
 						//map schema to source mappedAttrs	
-						if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
+						if(sourceHeader.equalsIgnoreCase("true") && colAliaseNames != null) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 						}
 						
 						//applying target schema to df
@@ -825,15 +822,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							
 							//adding version column data
 //							rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-
-							//applying source schema when source header is not allowed
-							if(sourceHeader.equalsIgnoreCase("false") && mappedAttrs != null) {
-								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, mappedAttrs, tableName, false);
-							}
 							
 							//map schema to source mappedAttrs	
-							if(sourceHeader.equalsIgnoreCase("true") && mappedAttrs != null) {
-								rsHolder = sparkExecutor.mapSchema(rsHolder, query, Arrays.asList(mappedAttrs), tableName, false);
+							if(sourceHeader.equalsIgnoreCase("true") && colAliaseNames != null) {
+								rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 							}
 							
 							//applying target schema to df
@@ -860,14 +852,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("sourceDir : " + sourceDir);
 						logger.info("targetDir : " + targetFilePathUrl);
 						
-						String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
+//						String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
 						
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
 //						String sql = ingestServiceImpl.generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
-						List<String> colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
-						String sql = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), sourceTableName, incrColName, latestIncrLastValue);;
-						ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
+						colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), false);
+//						String sql = getSqlQuery(mappedAttrs, colAliaseNames.toArray(new String[colAliaseNames.size()]), sourceTableName, incrColName, latestIncrLastValue);;
+						ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(query, sourceDS, appUuid);
 						
 						//registering temp table of source
 //						sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
@@ -1295,7 +1287,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	}
 
 	private List<String> getMappedAttrAliaseName(List<AttributeMap> attributeMaps, boolean resolveSource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		 List<String> mappedAttrAlises = new ArrayList();
+		 List<String> mappedAttrAlises = new ArrayList<>();
 		for(AttributeMap attributeMap : attributeMaps) {
 			AttributeRefHolder attrRefHolder = null;
 			if(resolveSource) {
@@ -1303,7 +1295,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			} else{
 				attrRefHolder = attributeMap.getTargetAttr();
 			}
-			String attrAliaseName= ingestServiceImpl.resolveAttribute(attrRefHolder);
+			String attrAliaseName= ingestServiceImpl.getAttrAliseName(attrRefHolder);
 			mappedAttrAlises.add(attrAliaseName);
 		}
 		return mappedAttrAlises;
@@ -1317,6 +1309,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		return query;
 	}
 	
+	/********************** UNUSED **********************/
+	@SuppressWarnings("unused")
 	private String getSqlQuery(String[] mappedAttrs, String[] mappedAttrsAliaseName, String tableName, String incrColName, String incrLastValue) {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("SELECT ");

@@ -142,15 +142,24 @@ public class AttributeMapOperator {
 		String alias = null;
 		try {
 			if (attrMap.getTargetAttr() != null && attrMap.getTargetAttr().getRef() != null) { // Set attribute alias as corrs. target attribute
-				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(attrMap.getTargetAttr().getRef(), refKeyMap));
-				alias = datapod.getAttribute(Integer.parseInt(attrMap.getTargetAttr().getAttrId())).getName();
+				if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.simple)) {
+					//special handling for ingest 
+					alias = attrMap.getTargetAttr().getValue();
+				} else {
+					datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(attrMap.getTargetAttr().getRef(), refKeyMap));
+					alias = datapod.getAttribute(Integer.parseInt(attrMap.getTargetAttr().getAttrId())).getName();
+				}
 			} else { // If target attribute is not present, set attribute alias as source attribute alias appended by attributeid (as two source attrs. may have the same name
 				alias = attrMap.getSourceAttr().getAttrName();
 				//alias = sourceAttrAlias(daoRegister, mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams);
 						//.concat(attrMap.getSourceAttr().get(0).getAttributeId().toString());
 			} 
 			if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
-				return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();
+				if(attrMap.getSourceAttr().getAttrName() != null) {
+					return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
+				} else {
+					return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();
+				}				
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
 				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
 //				boolean isNumber = Helper.isNumber(value);			

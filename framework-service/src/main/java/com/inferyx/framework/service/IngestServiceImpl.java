@@ -852,7 +852,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public String getAttrAliseNmae(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getAttrAliseName(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
 				return attrRefHolder.getValue();
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
