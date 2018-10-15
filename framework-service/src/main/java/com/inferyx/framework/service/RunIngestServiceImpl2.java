@@ -1285,7 +1285,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		queryBuilder.append(tableName);
 		queryBuilder.append(" WHERE ");
 		queryBuilder.append(incrLastValue != null ? incrColName+">"+incrLastValue : "1=1");
-//		queryBuilder.append(" AND $CONDITIONS");
+		queryBuilder.append(" AND $CONDITIONS");
 		
 		logger.info("sqoop select query: "+queryBuilder.toString());
 		return queryBuilder.toString();
