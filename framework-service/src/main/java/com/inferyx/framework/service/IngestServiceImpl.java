@@ -431,6 +431,9 @@ public class IngestServiceImpl extends RuleTemplate {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				String dirFileName = listOfFiles[i].getName();
+				if(dirFileName.equalsIgnoreCase("account_status_type_wi.parquet")) {
+					System.out.println("account_status_type_wi");
+				}
 				Matcher mtch = regex.matcher(dirFileName);
 				if(mtch.matches()){
 		        	fileNameList.add(dirFileName);	
@@ -560,7 +563,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						+ (limit == 0 ? "" : "rownum< " + limit) 
 						+ (incrLastValue == null ? "" : " AND "+incrColName+" > "+incrLastValue);
 		} else {
-			return "SELECT * FROM " + tableName  
+			return "SELECT * FROM " + tableName + " WHERE "  
 					+ (incrLastValue == null ? "" : incrColName+" > "+incrLastValue) 
 					+ (limit == 0 ? "" : " LIMIT " + limit);
 		}

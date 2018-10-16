@@ -1072,11 +1072,18 @@ public class Helper {
 			String dateFormat = smplDateFormat.format(new Date());
 			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
 		}
-		
-		if(fileExtn != null) {
+
+		if (fileExtn != null) {
 			fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
-			fileName = fileName+(fileName.toLowerCase().endsWith("."+fileExtn.toLowerCase()) ? "" : "\\."+fileExtn.toLowerCase());
+			fileName = fileName + (fileName.toLowerCase().endsWith("." + fileExtn.toLowerCase()) ? ""
+					: "\\." + fileExtn.toLowerCase());
+		} else {
+			fileFormat = fileFormat.startsWith(".") ? fileFormat.substring(1) : fileFormat;
+			fileName = fileName + (fileName.toLowerCase().endsWith("." + fileFormat.toLowerCase()) ? ""
+					: "\\." + fileFormat.toLowerCase());
+
 		}
+
 		
 		//Apply Regex
 		Pattern regex = null;

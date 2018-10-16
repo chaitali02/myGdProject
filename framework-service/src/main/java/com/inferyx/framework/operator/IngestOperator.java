@@ -78,7 +78,8 @@ public class IngestOperator {
 
 	private String generateWhere(Ingest ingest,String incrColName, String incrLastValue) {
 		IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
-		return " WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + (ingestionType.equals(IngestionType.FILETOFILE) ? "" : " AND $CONDITIONS");
+		return " WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") 
+				+ (!ingestionType.equals(IngestionType.TABLETOTABLE) ? "" : " AND $CONDITIONS");
 	}
 
 	private String generateFrom(Ingest ingest, String tableName) {
