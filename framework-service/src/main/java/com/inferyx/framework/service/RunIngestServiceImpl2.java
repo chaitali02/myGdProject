@@ -1062,15 +1062,17 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//this is import block from ORACLE table to HIVE
 						logger.info("this is import block from ORACLE table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-						sqoopInput.setTable(sourceDp.getName().toUpperCase());
+						if(mappedAttrs != null && areAllAttrs) {
+							sqoopInput.setTable(sourceDp.getName().toUpperCase());
+						}						
 //						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
 						sqoopInput.setDeleteMode(true);
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setHiveTableName(targetDp.getName());
-						}
+						sqoopInput.setFieldsTerminatedBy(',');
+						sqoopInput.setLinesTerminatedBy('\n');
+						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
@@ -1084,6 +1086,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setDeleteMode(true);
+						sqoopInput.setFieldsTerminatedBy(',');
+						sqoopInput.setLinesTerminatedBy('\n');
 						if(mappedAttrs != null && areAllAttrs) {
 							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
 							sqoopInput.setTable(tableName);
@@ -1098,15 +1102,16 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("this is import block from other table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
 						if(mappedAttrs != null && areAllAttrs) {
-							
+							sqoopInput.setTable(sourceDp.getName());
 						} 
-						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 						sqoopInput.setDeleteMode(true);
+						sqoopInput.setFieldsTerminatedBy(',');
+						sqoopInput.setLinesTerminatedBy('\n');
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
 //						sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);
