@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.inferyx.framework.executor.helper;
 
 import java.io.IOException;
@@ -29,10 +29,10 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.HiveExecutor;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
-/**
+*//**
  * @author joy
  *
- */
+ *//*
 @Service
 public class KafkaStreamToTableHelper<T, K> {
 	
@@ -43,9 +43,9 @@ public class KafkaStreamToTableHelper<T, K> {
 	@Autowired
 	HiveExecutor hiveExecutor;
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	public KafkaStreamToTableHelper() {
 		// TODO Auto-generated constructor stub
 	}
@@ -125,7 +125,7 @@ public class KafkaStreamToTableHelper<T, K> {
 				}
 			});
 			
-		} /*else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
+		} else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
 			if(fileFormat == null) {
 				df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 			} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
@@ -138,8 +138,9 @@ public class KafkaStreamToTableHelper<T, K> {
 //				rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 			}
 		}
-*/
+
 
 	}
 	
 }
+*/
