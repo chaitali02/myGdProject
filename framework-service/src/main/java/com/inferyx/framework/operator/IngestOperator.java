@@ -12,7 +12,9 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,9 +24,12 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -46,13 +51,20 @@ public class IngestOperator {
 		return generateSelect(ingest, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(ingest, tableName))
-				.concat(generateWhere(incrColName, incrLastValue))
+				.concat(generateWhere(ingest, incrColName, incrLastValue))
 				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams))
 				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams));
 	}
 
 	private String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		List<AttributeMap> attrMapList = new ArrayList<>();
+//		for(AttributeMap attributeMap : ingest.getAttributeMap()) {
+//			AttributeMap sourceAttrMap = new AttributeMap();
+//			sourceAttrMap.setAttrMapId(attributeMap.getAttrMapId());
+//			sourceAttrMap.setSourceAttr(attributeMap.getSourceAttr());
+//			attrMapList.add(sourceAttrMap);
+//		}
 		return attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
 	}
 
@@ -64,8 +76,10 @@ public class IngestOperator {
 		return ConstantsUtil.BLANK;
 	}
 
-	private String generateWhere(String incrColName, String incrLastValue) {
-		return " WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " OR $CONDITIONS";
+	private String generateWhere(Ingest ingest,String incrColName, String incrLastValue) {
+		IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
+		return " WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") 
+				+ (!ingestionType.equals(IngestionType.TABLETOTABLE) ? "" : " AND $CONDITIONS");
 	}
 
 	private String generateFrom(Ingest ingest, String tableName) {
@@ -78,6 +92,13 @@ public class IngestOperator {
 
 	private String generateSelect(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		List<AttributeMap> attrMapList = new ArrayList<>();
+//		for(AttributeMap attributeMap : ingest.getAttributeMap()) {
+//			AttributeMap sourceAttrMap = new AttributeMap();
+//			sourceAttrMap.setAttrMapId(attributeMap.getAttrMapId());
+//			sourceAttrMap.setSourceAttr(attributeMap.getSourceAttr());
+//			attrMapList.add(sourceAttrMap);
+//		}
 		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(ingest.getAttributeMap(), ingest.getSourceDetail(), refKeyMap, otherParams, execParams));
 	}
 }

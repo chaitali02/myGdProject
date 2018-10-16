@@ -39,6 +39,7 @@ public class StreamInput<T, K> {
 	private String targetDir;
 	private String fileFormat;
 	private String ingestionType;
+	private ExecParams execParams;
 
 	/**
 	 *
@@ -386,6 +387,20 @@ public class StreamInput<T, K> {
 	 */
 	public void setRunParams(Map<String, Object> runParams) {
 		this.runParams = runParams;
+	}
+
+	/**
+	 * @return the execParams
+	 */
+	public ExecParams getExecParams() {
+		return execParams;
+	}
+
+	/**
+	 * @param execParams the execParams to set
+	 */
+	public void setExecParams(ExecParams execParams) {
+		this.execParams = execParams;
 	}
 	
 
