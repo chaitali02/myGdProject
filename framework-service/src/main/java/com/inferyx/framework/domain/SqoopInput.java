@@ -39,7 +39,28 @@ public class SqoopInput {
 	private String sqlQuery;
 	private String splitByCol;
 	private String[] attributeMap;
+	private boolean deleteMode;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the deleteMode
+	 */
+	public boolean isDeleteMode() {
+		return deleteMode;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param deleteMode the deleteMode to set
+	 */
+	public void setDeleteMode(boolean deleteMode) {
+		this.deleteMode = deleteMode;
+	}
+
 	/**
 	 *
 	 * @Ganesh
