@@ -890,9 +890,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						logger.info("sourceDir : " + sourceDir);
 						logger.info("targetDir : " + targetDir);
-						sqoopInput.setExportDir(targetDir);
+//						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setDeleteMode(true);
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setTable(sourceDp.getName());
 						}
@@ -1064,6 +1065,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setDeleteMode(true);
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setHiveTableName(targetDp.getName());
 						}
@@ -1079,6 +1081,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setTargetDirectory(targetDir);
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
+						sqoopInput.setDeleteMode(true);
 						if(mappedAttrs != null && areAllAttrs) {
 							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
 							sqoopInput.setTable(tableName);
@@ -1101,6 +1104,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setTargetDirectory(targetDir);
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
+						sqoopInput.setDeleteMode(true);
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
 //						sqoopInput.sethCatalogPartitionKeys(hCatalogPartitionKeys);

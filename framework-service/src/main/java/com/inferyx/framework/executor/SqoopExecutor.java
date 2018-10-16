@@ -269,6 +269,10 @@ public class SqoopExecutor {
 			sqoopOptions.setSplitByCol(sqoopInput.getSplitByCol());
 		}
 		
+		if(sqoopInput.isDeleteMode()) {
+			sqoopOptions.setDeleteMode(sqoopInput.isDeleteMode());
+		}
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
