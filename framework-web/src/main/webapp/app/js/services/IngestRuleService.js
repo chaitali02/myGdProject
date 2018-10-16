@@ -126,7 +126,7 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
         var url = $location.absUrl().split("app")[0]
         return $http({
             method: 'POST',
-            url: url + "recon/execute?action=execute&type=recon&uuid=" + uuid + "&version=" + version,
+            url: url + "ingest/execute?action=execute&type=ingest&uuid=" + uuid + "&version=" + version,
             headers: {
                 'Accept': '*/*',
                 'content-Type': "application/json",
