@@ -658,7 +658,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	
 		else if($scope.selectedSourceType == "FILE" && $scope.selectedTargetType == "FILE" && $scope.selectedAutoMode == "From Source"){
-			debugger
+
 			for(var i=0;i<$scope.ingestTableInfo.length;i++){
                 var mapInfo = {};
 				mapInfo.isSourceAtributeSimple = false;
@@ -1664,7 +1664,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 attributemap.targetAttr = targetAttr;
                 attributemaparray[i] = attributemap;
             }
-        }
+		}
+		if($scope.myform1.$dirty ==true || $scope.myform2.$dirty ==true || $scope.myform3.$dirty ==true ){
+			ingestJson.ingestChg='Y'
+		}
 		ingestJson.attributeMap = attributemaparray;
 
 		console.log(JSON.stringify(ingestJson))
