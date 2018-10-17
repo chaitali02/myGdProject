@@ -180,7 +180,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        }
            
        $scope.leave = function(row){
-         $('#tabletoshow').css('display','none')
+        $('#tabletoshow').css('display','none')
        }
        $scope.selectPage = function(pageNo) {
          $scope.pagination.currentPage = pageNo;
@@ -372,11 +372,17 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                <div class="tooltipcustom" id="tabletoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.95
                  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">      
                  <div style="margin-top: 5px;margin-right: 15px">
-                   <div class="row" style="padding-left:6%">
+                   <div class="row" style="padding-left:2%">
                      <table ng-if="gridOptions.columnDefs">
                        <tr ng-repeat="m in gridOptions.columnDefs  |  limitTo :20">
-                         <th ng-if="m.visible==true">{{m.displayName}}</th>
-                         <td style="padding-left:6%" ng-if="m.visible==true">{{mouseHowerRowValue[m.name]}}</td>                       
+                         <th ng-if="m.visible==true"><div style=" width:110px;
+                         white-space: nowrap;
+                         overflow: hidden;
+                         text-overflow: ellipsis;">{{m.displayName}}</div></th>
+                         <td style="padding-left:3%" ng-if="m.visible==true"><div  style="min-width:250px;max-width:600px;
+                         white-space: nowrap;
+                         overflow: hidden;
+                         text-overflow: ellipsis;">{{mouseHowerRowValue[m.name]}}</div></td>                       
                        </tr>
                        <tr ng-show="gridOptions.columnDefs.length >20" rowspan="2" >
                          <td colspan="2" style="text-align:right">......</td>                       
@@ -441,7 +447,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      };
  });
 
-DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compile,$location,$http,dagMetaDataService,$rootScope) {
+DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,$compile,$location,$http,dagMetaDataService,$rootScope) {
    function setGrid(paper, gridSize, color) {
      // Set grid size on the JointJS paper object (joint.dia.Paper instance)
      paper.options.gridSize = gridSize;
@@ -942,19 +948,22 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
-                   debugger
+                   
                  if(isExec || isGroupExec){
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
                      if(status && (status=='Completed') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
+                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && (status=='NotStarted' || status=='Resume')){
                        iconMenuItems.push({title:'On Hold', type : 'onhold'});
+                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && status=='InProgress'){
                        iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                        
                      else if(status && status=='OnHold'){
@@ -977,21 +986,23 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                      ingest : {name:'ingest', label: 'Ingest'},
                      ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
                    }
-                 
+                   
                    var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
                    if(id != startParams.id){
                      var url=$location.absUrl().split("app")[0];
                      $http.get(url+'common/getLatestByUuid?action=view&uuid='+modelData.dependsOn.ref.uuid+'&type='+modelData.dependsOn.ref.type).then(function (res) {
                        state = {state : dagMetaDataService.elementDefs[modelData.dependsOn.ref.type].state, params : {id :modelData.dependsOn.ref.uuid,name:modelData.dependsOn.ref.name,version :res.data.version,type:modelData.dependsOn.ref.type,mode:true, returnBack: true}};
-                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                       execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
+                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
                      });
                    }
                      
                    else {
+                    execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
                      var url=$location.absUrl().split("app")[0];
                      $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-                       state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
-                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                       state = {state : dagMetaDataService.elementDefs[res.data.type+"exec"].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
+                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
                      });
                    }
                  }
@@ -999,13 +1010,29 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  else {
                    var url=$location.absUrl().split("app")[0];
                    $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-                     state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type, mode:true, returnBack: true}};
-                     iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
+                     state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type+"exec", mode:true, returnBack: true}};
+                     execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+                     iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
                    });
                  }
                });//End contextmenu
              }//End drawChildGraph
-
+             window.showLogs  =function(execUrl ){
+              var state = execUrl;
+              $rootScope.previousState = {name : $state.current.name, params : $state.params};
+              $rootScope.previousState.params.tab = '1';
+              var ispresent=false;
+              if(ispresent !=true){
+                var stateTab={};
+                stateTab.route=state.state;
+                stateTab.param=state.params;
+                stateTab.active=false;
+                $rootScope.$broadcast('onAddTab',stateTab);
+              }
+              $state.go(state.state,state.params);
+              
+            }
+        
            function iconContextMenu() {
              var height,
              width,
@@ -1030,8 +1057,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  'font-family': 'Open Sans'
                }
              };
-
-             function menu(x, y, url,resultParams) {
+   
+             function menu(x, y, url,execUrl,resultParams) {
                d3.select('.context-menu').remove();
                scaleItems();
                d3.select('#showgrouppaper svg')
@@ -1052,6 +1079,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  if(d.type == 'results'){
                    return 'showResult('+resultParams+')'
                  }
+                 else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
+                }
                  else if(d.type == 'onhold'){
                    return 'setSubTaskStatus('+resultParams+',"OnHold")'
                  }
@@ -1074,6 +1104,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                    if(d.type == 'results'){
                      return 'showResult('+resultParams+')'
                    }
+                   else if(d.type =='logs'){
+                    return 'showLogs('+execUrl+')'
+                  }
                    else if(d.type == 'onhold'){
                      return 'setSubTaskStatus('+resultParams+',"OnHold")'
                    }
