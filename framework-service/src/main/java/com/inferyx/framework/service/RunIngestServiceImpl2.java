@@ -931,9 +931,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 							targetFilePathUrl = targetDS.getPath();
 							if(targetFileName.endsWith("."+FileType.PARQUET)) {
-								targetFileName = targetFileName.replaceAll("."+FileType.PARQUET, "");
+								targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
 							} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
-								targetFileName = targetFileName.replaceAll("."+FileType.PARQUET.toString().toLowerCase(), "");
+								targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
 							}
 							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 						} else {
@@ -997,9 +997,12 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 						logger.info("temporary location: "+tempDirLocation);
 						
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
-								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+//						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
+//								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
+//										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+						
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+														targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
