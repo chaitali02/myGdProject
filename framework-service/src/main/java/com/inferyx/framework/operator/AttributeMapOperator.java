@@ -155,7 +155,7 @@ public class AttributeMapOperator {
 						//.concat(attrMap.getSourceAttr().get(0).getAttributeId().toString());
 			} 
 			
-			if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.attribute)) {
+			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
 				//special handling for ingest 
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {

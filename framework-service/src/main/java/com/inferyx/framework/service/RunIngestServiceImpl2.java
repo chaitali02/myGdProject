@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -604,13 +605,13 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				if(ingestionType.equals(IngestionType.FILETOFILE)) {
 					String tableName = null;
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && sourceDp != null) {
 					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && targetDp != null) {
 						String tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
-						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				}
 			}
 			
@@ -637,9 +638,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = targetDS.getPath();
 						if(targetFileName.endsWith("."+FileType.PARQUET)) {
-							targetFileName = targetFileName.replaceAll("."+FileType.PARQUET, "");
+							targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
 						} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
-							targetFileName = targetFileName.replaceAll("."+FileType.PARQUET.toString().toLowerCase(), "");
+							targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
 						}
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
