@@ -1640,7 +1640,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 					console.log(JSON.stringify(response))
 					$scope.isSubmitProgess = false;
 			        $scope.isSubmitDisable = true;
-					$scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+					$scope.saveMessage = "Rule Saved and Submitted Successfully"
 					notify.type='success',
 					notify.title= 'Success',
 					notify.content=$scope.saveMessage

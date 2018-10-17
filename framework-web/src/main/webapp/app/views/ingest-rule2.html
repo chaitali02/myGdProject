@@ -439,8 +439,11 @@
                                             </div>
                                             <div class="portlet-body form">
                                                 <div class="x_title" style="padding:10px;">
-                                                    <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="!isSourceFormateDisable ||{{mode}}"></button>
-                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="!isSourceFormateDisable || {{mode}}"></button>
+                                                    <!-- <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="!isSourceFormateDisable ||{{mode}}"></button>
+                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="!isSourceFormateDisable || {{mode}}"></button> -->
+                                                    <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="{{mode}}"></button>
+                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="{{mode}}"></button>
+                                                    
                                                 </div>
                                                 <div class="form-body" style="padding-top:50px;">
                                                     <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
