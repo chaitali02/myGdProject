@@ -950,7 +950,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       name : 'distribution',
       caption : 'Distribution',
       execType:'',
-      metaType:'algorithm',
+      metaType:'distribution',
       color : '#00E676',
       parentIconCaption:'',
       allowInMenu : false,

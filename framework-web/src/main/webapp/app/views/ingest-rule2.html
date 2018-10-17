@@ -439,8 +439,11 @@
                                             </div>
                                             <div class="portlet-body form">
                                                 <div class="x_title" style="padding:10px;">
-                                                    <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="!isSourceFormateDisable ||{{mode}}"></button>
-                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="!isSourceFormateDisable || {{mode}}"></button>
+                                                    <!-- <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="!isSourceFormateDisable ||{{mode}}"></button>
+                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="!isSourceFormateDisable || {{mode}}"></button> -->
+                                                    <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="{{mode}}"></button>
+                                                    <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="{{mode}}"></button>
+                                                    
                                                 </div>
                                                 <div class="form-body" style="padding-top:50px;">
                                                     <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
@@ -792,6 +795,17 @@
                                 <!-- Start Tab4 -->
                                 <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
                                     <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="submit()" novalidate="novalidate">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Run Immediately ?</label>
+                                            <div class="col-md-9">
+                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="isExecute" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
+                                                        <span ng-disabled="{{mode}}"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">

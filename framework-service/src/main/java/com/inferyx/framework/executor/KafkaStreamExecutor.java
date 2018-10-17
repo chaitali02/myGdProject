@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
@@ -30,10 +30,10 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
-/**
+*//**
  * @author joy
  *
- */
+ *//*
 public class KafkaStreamExecutor<T, K> {
 	
 	@Autowired
@@ -45,18 +45,18 @@ public class KafkaStreamExecutor<T, K> {
 	
 	static Logger logger = Logger.getLogger(KafkaStreamExecutor.class);
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	public KafkaStreamExecutor() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	/**
+	*//**
 	 * 
 	 * @param ds
 	 * @param streamInput
-	 */
+	 *//*
 	public void stream(Datasource ds, StreamInput<T, K> streamInput, Map map) {
 		
 		Properties streamsConfiguration = streamInput.getProps();
@@ -87,3 +87,4 @@ public class KafkaStreamExecutor<T, K> {
 	}
 
 }
+*/

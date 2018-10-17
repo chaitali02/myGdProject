@@ -1106,7 +1106,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		
+		//filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
 		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
@@ -1560,7 +1561,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
         }
         
         var attributemaparray = [];
-        if($scope.ingestTableArray){
+        if($scope.ingestTableArray && $scope.ingestTableInfo){
             for (var i = 0; i < $scope.ingestTableInfo.length; i++) {
                 var attributemap = {};
                 attributemap.attrMapId = i;
@@ -1631,13 +1632,33 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		console.log(JSON.stringify(ingestJson))
 		IngestRuleService.submit(ingestJson, 'ingestview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isSubmitProgess = false;
-			$scope.isSubmitDisable = true;
-			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Rule Saved Successfully'
-			$scope.$emit('notify', notify);
-			$scope.oksave();
+			
+			if ($scope.isExecute == "YES") {
+				IngestRuleService.getOneById(response.data, "ingest").then(function(response) {onSuccessGetOneById(response.data)});
+				var onSuccessGetOneById = function(result) {
+				IngestRuleService.execute(result.data.uuid,result.data.version).then(function(response) { onSuccess(response.data)});
+				  var onSuccess = function(response) {
+					console.log(JSON.stringify(response))
+					$scope.isSubmitProgess = false;
+			        $scope.isSubmitDisable = true;
+					$scope.saveMessage = "Rule Saved and Submitted Successfully"
+					notify.type='success',
+					notify.title= 'Success',
+					notify.content=$scope.saveMessage
+					$scope.$emit('notify', notify);
+					$scope.oksave();
+				  }
+				}
+			  } //End If
+			else {
+				$scope.isSubmitProgess = false;
+				$scope.isSubmitDisable = true;
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = 'Rule Saved Successfully'
+				$scope.$emit('notify', notify);
+				$scope.oksave();
+		    }
 		}
 		var onError = function (response) {
 			$scope.isSubmitProgess = false;
