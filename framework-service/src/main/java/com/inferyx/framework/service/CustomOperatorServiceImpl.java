@@ -174,10 +174,13 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
 					operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
 					MetaType.datastore.toString());
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), getFilePath(datapod, operatorExecVersion));
+			datastore.setLocation(filePathUrl);
 			data = exec.fetchResults(datastore, datapod, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,6 +197,10 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		}
 
 		return data;
+	}
+	
+	protected String getFilePath (Datapod locationDatapod, String execVersion) {
+		return "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
 	}
 
 	/**
