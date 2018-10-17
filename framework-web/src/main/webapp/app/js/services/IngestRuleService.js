@@ -478,9 +478,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
     }
     this.execute = function (uuid, version) {
         var deferred = $q.defer();
-        IngestRuleFactory.execute(uuid, version).then(function (response) { onSuccess(response.data) });
+        IngestRuleFactory.execute(uuid, version).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
         var onSuccess = function (response) {
             deferred.resolve({
+                data: response
+            })
+        }
+        var onError = function (response) {
+            deferred.reject({
                 data: response
             })
         }
@@ -568,6 +573,17 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsFormula = false;
                         filterInfo.lhsvalue = response.filter.filterInfo[i].operand[0].value;
                     }
+                    if (response.filter.filterInfo[i].operand[0].ref.type == "attribute") {
+                        var obj = {}
+                        obj.text = "datapod"
+                        obj.caption = "attribute"
+                        filterInfo.lhstype = obj;
+                        filterInfo.islhsSimple = true;
+                        filterInfo.islhsDatapod = false;
+                        filterInfo.islhsFormula = false;
+                        filterInfo.lhsvalue = response.filter.filterInfo[i].operand[0].value;
+                    }
+                    
                     else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" || response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
                         var lhsdatapodAttribute = {}
                         var obj = {}
@@ -603,6 +619,16 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         var obj = {}
                         obj.text = "string"
                         obj.caption = "string"
+                        filterInfo.rhstype = obj;
+                        filterInfo.isrhsSimple = true;
+                        filterInfo.isrhsDatapod = false;
+                        filterInfo.isrhsFormula = false;
+                        filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value;
+                    }
+                    if (response.filter.filterInfo[i].operand[1].ref.type == "attribute") {
+                        var obj = {}
+                        obj.text = "datapod"
+                        obj.caption = "attribute"
                         filterInfo.rhstype = obj;
                         filterInfo.isrhsSimple = true;
                         filterInfo.isrhsDatapod = false;
@@ -657,6 +683,22 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsformula.name = response.filter.filterInfo[i].operand[1].ref.name;
                         filterInfo.rhsformula = rhsformula;
                     }
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "function") {
+						var rhsfunction = {}
+						var obj = {}
+						obj.text = "function"
+						obj.caption = "function"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsFormula =   false;
+						filterInfo.isrhsSimple =    false;
+						filterInfo.isrhsDatapod =   false;
+						filterInfo.isrhsDataset =   false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction =  true;
+						rhsfunction.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsfunction.name =response.filter.filterInfo[i].operand[1].ref.name;
+						filterInfo.rhsfunction = rhsfunction;
+					}
                     else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
 						var rhsdataset = {}
 						var obj = {}
@@ -708,6 +750,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
                         sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+                        sourceattribute.attrName = response.attributeMap[i].sourceAttr.attrName;
                         attributemapjson.sourceattribute=sourceattribute;
                         var obj = {}
                         obj.text = "datapod"
@@ -732,10 +775,23 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         attributemapjson.isSourceAtributeFunction = false;
 
                     }
+                    else if (response.attributeMap[i].sourceAttr.ref.type == "attribute") {
+                        var obj = {}
+                        obj.text = "datapod"
+                        obj.caption = "attribute"
+                        attributemapjson.sourceAttributeType = obj;
+                        attributemapjson.isSourceAtributeSimple = true;
+                        attributemapjson.sourcesimple = response.attributeMap[i].sourceAttr.value
+                        attributemapjson.isSourceAtributeDatapod = false;
+                        attributemapjson.isSourceAtributeFormula = false;
+                        attributemapjson.isSourceAtributeExpression = false;
+                        attributemapjson.isSourceAtributeFunction = false;
+
+                    }
                     if (response.attributeMap[i].sourceAttr.ref.type == "expression") {
                         var sourceexpression = {};
                         sourceexpression.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-                        sourceexpression.name = "";
+                        sourceexpression.name = response.attributeMap[i].sourceAttr.ref.name;
                         var obj = {}
                         obj.text = "expression"
                         obj.caption = "expression"
@@ -750,7 +806,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     if (response.attributeMap[i].sourceAttr.ref.type == "formula") {
                         var sourceformula = {};
                         sourceformula.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-                        sourceformula.name = "";
+                        sourceformula.name = response.attributeMap[i].sourceAttr.ref.name;
                         var obj = {}
                         obj.text = "formula"
                         obj.caption = "formula"
@@ -765,7 +821,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     if (response.attributeMap[i].sourceAttr.ref.type == "function") {
                         var sourcefunction = {};
                         sourcefunction.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-                        sourcefunction.name = "";
+                        sourcefunction.name = response.attributeMap[i].sourceAttr.ref.name;
                         var obj = {}
                         obj.text = "function"
                         obj.caption = "function"
@@ -779,7 +835,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     }
                     attributemapjson.sourceattribute = sourceattribute;
                     
-                    if(response.attributeMap[i].targetAttr.ref.type !="simple"){
+                    if(response.attributeMap[i].targetAttr.ref.type !="simple" && response.attributeMap[i].targetAttr.ref.type !="attribute"){
                         var targetattribute = {}
                         targetattribute.uuid = response.attributeMap[i].targetAttr.ref.uuid;
                         targetattribute.name = response.attributeMap[i].targetAttr.ref.name;

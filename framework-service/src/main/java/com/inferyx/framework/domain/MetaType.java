@@ -23,7 +23,7 @@ public enum MetaType {
 	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, 
 	appConfig, /*operatortype,*/ operatorExec, operator ,comment, commentView, tag, lov, GenerateData, Transpose, 
 	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec, reportview, batch, batchExec,
-	schedule, batchview, ingest, ingestExec, ingestview, ingestgroup, ingestgroupExec;
+	schedule, batchview, ingest, ingestExec, ingestview, ingestgroup, ingestgroupExec,attribute;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,

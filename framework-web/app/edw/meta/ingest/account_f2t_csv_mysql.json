@@ -82,7 +82,7 @@
             "attrMapId" : "0",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "account_id"
             },
@@ -98,7 +98,7 @@
             "attrMapId" : "1",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "account_type_id"
             },
@@ -114,7 +114,7 @@
             "attrMapId" : "2",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "account_status_id"
             },
@@ -130,7 +130,7 @@
             "attrMapId" : "3",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "product_type_id"
             },
@@ -146,7 +146,7 @@
             "attrMapId" : "4",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "customer_id"
             },
@@ -162,7 +162,7 @@
             "attrMapId" : "5",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "pin_number"
             },
@@ -178,7 +178,7 @@
             "attrMapId" : "6",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "nationality"
             },
@@ -194,7 +194,7 @@
             "attrMapId" : "7",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "primary_iden_doc"
             },
@@ -210,7 +210,7 @@
             "attrMapId" : "8",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "primary_iden_doc_id"
             },
@@ -226,7 +226,7 @@
             "attrMapId" : "9",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "secondary_iden_doc"
             },
@@ -242,7 +242,7 @@
             "attrMapId" : "10",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "secondary_iden_doc_id"
             },
@@ -258,7 +258,7 @@
             "attrMapId" : "11",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "account_open_date"
             },
@@ -274,7 +274,7 @@
             "attrMapId" : "12",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "account_number"
             },
@@ -290,7 +290,7 @@
             "attrMapId" : "13",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "opening_balance"
             },
@@ -306,7 +306,7 @@
             "attrMapId" : "14",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "current_balance"
             },
@@ -322,7 +322,7 @@
             "attrMapId" : "15",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "overdue_balance"
             },
@@ -338,7 +338,7 @@
             "attrMapId" : "16",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "overdue_date"
             },
@@ -354,7 +354,7 @@
             "attrMapId" : "17",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "currency_code"
             },
@@ -370,7 +370,7 @@
             "attrMapId" : "18",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "interest_type"
             },
@@ -386,7 +386,7 @@
             "attrMapId" : "19",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "interest_rate"
             },
@@ -402,7 +402,7 @@
             "attrMapId" : "20",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "load_date"
             },
@@ -418,7 +418,7 @@
             "attrMapId" : "21",
             "sourceAttr" : {
                 "ref" : {
-                    "type" : "simple"
+                    "type" : "attribute"
                 },
                 "value" : "load_id"
             },
