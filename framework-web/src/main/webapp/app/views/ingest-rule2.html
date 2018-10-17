@@ -491,6 +491,11 @@
                                                                                 class="form-control" required disable-validation-message=""
                                                                                 ng-pattern="/[a-zA-Z0-9\-_%]/">
                                                                         </span>
+                                                                        <span ng-if="tabledata.lhstype.caption=='attribute'">
+                                                                                <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
+                                                                                    class="form-control" required disable-validation-message=""
+                                                                                    ng-pattern="/[a-zA-Z0-9\-_%]/">
+                                                                            </span>
                                                                         <span ng-if="tabledata.lhstype.caption=='integer'">
                                                                             <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
                                                                                 class="form-control" required disable-validation-message=""
@@ -532,7 +537,7 @@
                                                                 <td style="width:200px;">
                                                                     <div ng-if="tabledata.isrhsSimple">
                                                                         <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                                                            <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                                                            <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && (tabledata.rhstype.caption=='string' || tabledata.rhstype.caption=='attribute')">
                                                                                 <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                     required disable-validation-message="">
                                                                             </span>
@@ -543,7 +548,7 @@
                                                                                     tooltip-placement="left">
                                                                             </span>
 
-                                                                            <span ng-if="['=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                                                            <span ng-if="['=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && (tabledata.rhstype.caption=='string'|| tabledata.rhstype.caption=='attribute')">
                                                                                 <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                     required disable-validation-message="">
                                                                             </span>

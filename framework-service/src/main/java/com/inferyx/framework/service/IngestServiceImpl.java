@@ -556,12 +556,12 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	public String generateSqlByDatasource(Datasource  datasource, String tableName, String incrColName, String incrLastValue, int limit) {
 		if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {				
-				return "SELECT * FROM " + tableName + " WHERE "
-						+ (limit == 0 ? "" : "rownum< " + limit) 
-						+ (incrLastValue == null ? "" : " AND "+incrColName+" > "+incrLastValue);
+				return "SELECT * FROM " + tableName 
+						+ (incrLastValue == null ? "" : " WHERE "+incrColName+" > "+incrLastValue)
+						+ (limit == 0 ? "" : "rownum < " + limit) ;
 		} else {
-			return "SELECT * FROM " + tableName  
-					+ (incrLastValue == null ? "" : incrColName+" > "+incrLastValue) 
+			return "SELECT * FROM " + tableName
+					+ (incrLastValue == null ? "" : " WHERE " + incrColName+" > "+incrLastValue) 
 					+ (limit == 0 ? "" : " LIMIT " + limit);
 		}
 	}
@@ -817,7 +817,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @throws IllegalAccessException 
 	 */
 	public String resolveAttribute(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
+			if(attrRefHolder.getRef().getType().equals(MetaType.attribute)) {
 				return attrRefHolder.getValue();
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
 				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
@@ -853,7 +853,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @throws IllegalAccessException 
 	 */
 	public String getAttrAliseName(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-			if(attrRefHolder.getRef().getType().equals(MetaType.simple)) {
+			if(attrRefHolder.getRef().getType().equals(MetaType.attribute)) {
 				return attrRefHolder.getValue();
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
 				MetaIdentifier sourceDpMI = attrRefHolder.getRef();

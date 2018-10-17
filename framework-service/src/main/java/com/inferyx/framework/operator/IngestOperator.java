@@ -58,13 +58,6 @@ public class IngestOperator {
 
 	private String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//		List<AttributeMap> attrMapList = new ArrayList<>();
-//		for(AttributeMap attributeMap : ingest.getAttributeMap()) {
-//			AttributeMap sourceAttrMap = new AttributeMap();
-//			sourceAttrMap.setAttrMapId(attributeMap.getAttrMapId());
-//			sourceAttrMap.setSourceAttr(attributeMap.getSourceAttr());
-//			attrMapList.add(sourceAttrMap);
-//		}
 		return attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
 	}
 
@@ -92,13 +85,6 @@ public class IngestOperator {
 
 	private String generateSelect(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//		List<AttributeMap> attrMapList = new ArrayList<>();
-//		for(AttributeMap attributeMap : ingest.getAttributeMap()) {
-//			AttributeMap sourceAttrMap = new AttributeMap();
-//			sourceAttrMap.setAttrMapId(attributeMap.getAttrMapId());
-//			sourceAttrMap.setSourceAttr(attributeMap.getSourceAttr());
-//			attrMapList.add(sourceAttrMap);
-//		}
 		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(ingest.getAttributeMap(), ingest.getSourceDetail(), refKeyMap, otherParams, execParams));
 	}
 }

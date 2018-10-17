@@ -595,9 +595,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-				for(AttributeMap attributeMap : ingest.getAttributeMap()) {
-					attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
-				}
+//				for(AttributeMap attributeMap : ingest.getAttributeMap()) {
+//					attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
+//				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
@@ -645,14 +645,12 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					} else {
 						if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
-						}
-						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+						} else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
 						}
 						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
-						}
-						else {
+						} else {
 							logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
 						}
 						targetFilePathUrl = targetDS.getPath().concat(targetFileName);
@@ -1255,14 +1253,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	 * @return
 	 */
 	private boolean areAllAttrs(Collection<String> values) {
-		boolean isSimple = false;
+		boolean isAttribute = false;
 		boolean isFormula = false;
 		boolean isFunction = false;
 		boolean isDatapod = false;
 		
 		for(String attrType : values) {
-			if(attrType.equalsIgnoreCase(MetaType.simple.toString())) {
-				isSimple = true;
+			if(attrType.equalsIgnoreCase(MetaType.attribute.toString())) {
+				isAttribute = true;
 			} else if(attrType.equalsIgnoreCase(MetaType.formula.toString())) {
 				isFormula = true;
 			} else if(attrType.equalsIgnoreCase(MetaType.function.toString())) {
@@ -1271,7 +1269,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				isDatapod = true;
 			}
 		}
-		if(isSimple || isFormula || isFunction) {
+		if(isAttribute || isFormula || isFunction) {
 			return false;
 		} else {
 			return isDatapod;
@@ -1301,7 +1299,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				attrRefHolder = attributeMap.getTargetAttr();
 			}
 			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder);
-			mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
+			if(resolvedAttr != null) {
+				mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
+			}
 		}
 		return mappedAttributes;
 	}
