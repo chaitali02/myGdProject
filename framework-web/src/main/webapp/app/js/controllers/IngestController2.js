@@ -1106,7 +1106,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		
+		//filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
 		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
