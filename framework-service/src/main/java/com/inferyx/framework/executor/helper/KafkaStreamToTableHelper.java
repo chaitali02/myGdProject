@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
@@ -94,35 +96,49 @@ public class KafkaStreamToTableHelper<T, K> {
 		String valueColName = valueInfo.getParamValue().getValue();
 		String topicColName = topicInfo.getParamValue().getValue();
 		
+
+		
 		logger.info("Hive writing starts for this partition >>>>>>>>>>>>>>>>>>>> ");
 		if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOTABLE.toString())) {
+			String sql1 = " INSERT INTO " + targetDP.getName() + "(";
+			final StringBuilder sql2 = new StringBuilder("");
+			String sql = "";
+			for(int i=0; i<attributeList.length; i++){
+				sql1 += attributeList[i] + ", ";
+			}
+			sql1 = sql1.substring(0, sql1.length()-2) + ") VALUES ";
+
 			lines.foreach(new ForeachAction<T, K>() {
 				
 				@Override
 				public void apply(T key, K value) {
-					String sql1 = " INSERT INTO " + targetDP.getName() + "(";
-					String sql2 = " VALUES (";
-					String sql = "";
+					
 					for(int i=0; i<attributeList.length; i++){
-						sql1 += attributeList[i] + ", ";
 						
+						sql2.append(" (");// = " (";
 						if (attributeList[i].equals(keyColName)) {
-							sql2 += key + ", "; 
+							sql2.append(key + ", "); 
 						} else if (attributeList[i].equals(valueColName)) {
-							sql2 += value + ", ";
+							sql2.append(value + ", ");
 						} else if (attributeList[i].equals(topicColName)) {
-							sql2 += streamInput.getTopicName() + ", ";
+							sql2.append(streamInput.getTopicName() + ", ");
 						}
-						
+						sql2.append("), ");
 					} 
-					sql = sql1.concat(sql2);
-					try {
-						hiveExecutor.executeSql(sql);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 			});
+			
+			sql = sql1.concat(sql2.toString());
+			sql = sql.replaceAll(",)", ")");
+			sql = sql.substring(0, sql.length() - 2);
+			try {
+				hiveExecutor.executeSql(sql);
+				sql = "";
+				sql2.delete(0, sql2.length() - 1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 			
 		} /*else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
 			if(fileFormat == null) {
