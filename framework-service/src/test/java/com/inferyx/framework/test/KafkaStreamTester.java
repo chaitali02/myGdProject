@@ -1,4 +1,4 @@
-/*package com.inferyx.framework.test;
+package com.inferyx.framework.test;
 
 import java.util.Properties;
 
@@ -55,4 +55,3 @@ public class KafkaStreamTester {
 	
 
 }
-*/

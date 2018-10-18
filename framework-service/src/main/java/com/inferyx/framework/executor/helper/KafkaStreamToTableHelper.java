@@ -1,6 +1,6 @@
 /**
  * 
- *//*
+ */
 package com.inferyx.framework.executor.helper;
 
 import java.io.IOException;
@@ -21,7 +21,6 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.enums.IngestionType;
@@ -29,10 +28,10 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.HiveExecutor;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
-*//**
+/**
  * @author joy
  *
- *//*
+ */
 @Service
 public class KafkaStreamToTableHelper<T, K> {
 	
@@ -43,9 +42,9 @@ public class KafkaStreamToTableHelper<T, K> {
 	@Autowired
 	HiveExecutor hiveExecutor;
 
-	*//**
+	/**
 	 * 
-	 *//*
+	 */
 	public KafkaStreamToTableHelper() {
 		// TODO Auto-generated constructor stub
 	}
@@ -125,7 +124,7 @@ public class KafkaStreamToTableHelper<T, K> {
 				}
 			});
 			
-		} else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
+		} /*else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
 			if(fileFormat == null) {
 				df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
 			} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
@@ -137,10 +136,9 @@ public class KafkaStreamToTableHelper<T, K> {
 			} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 //				rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, false);
 			}
-		}
+		}*/
 
 
 	}
 	
 }
-*/

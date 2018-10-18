@@ -1,6 +1,6 @@
 /**
  * 
- *//*
+ */
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
@@ -11,29 +11,19 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.connector.ConnectionHolder;
-import com.inferyx.framework.connector.IConnector;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.StreamInput;
-import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.executor.helper.KafkaStreamToTableHelper;
-import com.inferyx.framework.executor.helper.StreamToTableHelper;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.ParamSetServiceImpl;
 
-*//**
+/**
  * @author joy
  *
- *//*
+ */
 public class KafkaStreamExecutor<T, K> {
 	
 	@Autowired
@@ -45,18 +35,18 @@ public class KafkaStreamExecutor<T, K> {
 	
 	static Logger logger = Logger.getLogger(KafkaStreamExecutor.class);
 
-	*//**
+	/**
 	 * 
-	 *//*
+	 */
 	public KafkaStreamExecutor() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	*//**
+	/**
 	 * 
 	 * @param ds
 	 * @param streamInput
-	 *//*
+	 */
 	public void stream(Datasource ds, StreamInput<T, K> streamInput, Map map) {
 		
 		Properties streamsConfiguration = streamInput.getProps();
@@ -87,4 +77,3 @@ public class KafkaStreamExecutor<T, K> {
 	}
 
 }
-*/
