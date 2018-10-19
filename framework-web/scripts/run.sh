@@ -1,7 +1,9 @@
-./install_application.sh localhost refresh ../app/admin/meta/
-./install_application.sh localhost append ../app/edw/meta/
-./install_application.sh localhost append ../app/fraud/meta/
-./install_application.sh localhost append ../app/ecocap/meta/
+./install_application.sh localhost refresh ../app/admin/meta
+./install_application.sh localhost append ../app/edw/meta
+./install_application.sh localhost append ../app/fraud/meta
+./install_application.sh localhost append ../app/ecocap/meta
+./install_application.sh localhost append ../app/aml/meta
+
 ./update_application.sh localhost datasource d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd
 ./update_application.sh localhost meta d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd
 ./update_application.sh localhost datapod d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd
@@ -24,7 +26,6 @@ rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/data/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework/data/
 
-
 mkdir /user/hive/warehouse/framework/train
 mkdir /user/hive/warehouse/framework/predict
 mkdir /user/hive/warehouse/framework/simulate
@@ -44,4 +45,3 @@ mkdir /user/hive/warehouse/framework/app
 cp -r ../app/*/data/csv/header/* /user/hive/warehouse/framework/upload/
 cp -r ../deploy/* /user/hive/warehouse/framework/deploy/
 cp -r ../app/* /user/hive/warehouse/framework/app/
-

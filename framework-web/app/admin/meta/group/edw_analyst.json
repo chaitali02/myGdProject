@@ -1,8 +1,9 @@
 {
-    "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c3",
-    "name" : "dw_admin",
+    "_id" : ObjectId("59ba5f4e3992db72dfc7d7b8"),
+    "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2",
+    "name" : "edw_analyst",
     "version" : "1464977196",
-    "desc" : "Admin group for data warehouse application",
+    "desc" : "Analyst group for data warehouse application",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -36,7 +37,7 @@
     "roleId" : {
         "ref" : {
             "type" : "role",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f87"
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f88"
         }
     },
     "appId" : {

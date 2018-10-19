@@ -69,6 +69,18 @@
                 "type" : "group",
                 "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
             }
+        }, 
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
+            }
+        }, 
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd6z"
+            }
         }        
 	]
 }
