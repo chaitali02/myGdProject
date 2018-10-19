@@ -308,7 +308,7 @@ public class IngestServiceImpl extends RuleTemplate {
 					//get source files matching the criteria
 					List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat());
 					if(fileNameList == null || fileNameList.isEmpty()) {
-						throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+"\' not exist.");
+						throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+ingest.getSourceFormat().toLowerCase()+"\' not exist.");
 					}
 					
 					List<String> fileInfo = new ArrayList<>();
