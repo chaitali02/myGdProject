@@ -21,6 +21,7 @@
 					"ref": {
 						"type": "simple"
 					},
+                                        "attributeType":"string",
 					"value": "'USA'"
 				}
 			]

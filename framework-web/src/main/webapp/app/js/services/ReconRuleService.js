@@ -375,7 +375,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						filterInfo.islhsDatapod = false;
 						filterInfo.islhsFormula = false;
                         filterInfo.lhsvalue =response.sourcefilter.filterInfo[i].operand[0].value;
-                        if(response.sourcefilter.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+                        if(response.sourcefilter.filterInfo[i].operand[0].attributeType =="integer"){
 							obj.caption = "integer";
 						}
 					}
@@ -427,7 +427,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						}else if(['<','>',"<=",'>='].indexOf(response.sourcefilter.filterInfo[i].operator) !=-1){
 							obj.caption = "integer";
 							
-						}else if(response.sourcefilter.filterInfo[i].operator =='=' && response.sourcefilter.filterInfo[i].operand[1].value.indexOf("'") ==-1){
+						}else if(response.sourcefilter.filterInfo[i].operator =='=' && response.sourcefilter.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.sourcefilter.filterInfo[i].operand[1].value
 						}
@@ -580,7 +580,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						filterInfo.islhsDatapod = false;
 						filterInfo.islhsFormula = false;
                         filterInfo.lhsvalue =response.targetfilter.filterInfo[i].operand[0].value;
-                        if(response.targetfilter.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+                        if(response.targetfilter.filterInfo[i].operand[0].value.attributeType =="integer"){
 							obj.caption = "integer";
 						}
 					}
@@ -631,7 +631,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 						}else if(['<','>',"<=",'>='].indexOf(response.targetfilter.filterInfo[i].operator) !=-1){
 							obj.caption = "integer";
 							
-						}else if(response.targetfilter.filterInfo[i].operator =='=' && response.targetfilter.filterInfo[i].operand[1].value.indexOf("'") ==-1){
+						}else if(response.targetfilter.filterInfo[i].operator =='=' && response.targetfilter.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.targetfilter.filterInfo[i].operand[1].value
 						}

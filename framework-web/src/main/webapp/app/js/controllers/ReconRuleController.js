@@ -832,6 +832,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
           if($scope.sourceFilterTable[i].lhstype.text == "string") {
             lhsref.type = "simple";
             lhsoperand.ref = lhsref;
+            lhsoperand.attributeType =$scope.sourceFilterTable[i].lhstype.caption;
             lhsoperand.value = $scope.sourceFilterTable[i].lhsvalue;
           }
           else if ($scope.sourceFilterTable[i].lhstype.text == "datapod") {
@@ -854,6 +855,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
           if ($scope.sourceFilterTable[i].rhstype.text == "string") {
             rhsref.type = "simple";
             rhsoperand.ref = rhsref;
+            rhsoperand.attributeType =$scope.sourceFilterTable[i].rhstype.caption;
             rhsoperand.value = $scope.sourceFilterTable[i].rhsvalue;
           }
           else if ($scope.sourceFilterTable[i].rhstype.text == "datapod") {
@@ -940,6 +942,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
             lhsref.type = "simple";
             lhsoperand.ref = lhsref;
+            lhsoperand.attributeType =$scope.targetFilterTable[i].lhstype.caption;
             lhsoperand.value = $scope.targetFilterTable[i].lhsvalue;
           }
           else if ($scope.targetFilterTable[i].lhstype.text == "datapod") {
@@ -966,6 +969,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
             rhsref.type = "simple";
             rhsoperand.ref = rhsref;
+            rhsoperand.attributeType =$scope.targetFilterTable[i].rhstype.caption;
             rhsoperand.value = $scope.targetFilterTable[i].rhsvalue;
           }
           else if ($scope.targetFilterTable[i].rhstype.text == "datapod") {

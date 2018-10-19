@@ -621,6 +621,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 
 					lhsref.type = "simple";
 					lhsoperand.ref = lhsref;
+					lhsoperand.attributeType =$scope.filterTableArray[i].lhstype.caption;
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue//"'"+$scope.filterTableArray[i].lhsvalue+"'";
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
@@ -644,6 +645,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 				if ($scope.filterTableArray[i].rhstype.text == "string") {
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
+					rhsoperand.attributeType =$scope.filterTableArray[i].rhstype.caption;
 					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
 						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
 					}
