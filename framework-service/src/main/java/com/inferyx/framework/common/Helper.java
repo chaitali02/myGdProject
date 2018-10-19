@@ -1072,7 +1072,11 @@ public class Helper {
 			String dateFormat = smplDateFormat.format(new Date());
 			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
 		}
-
+			
+		if(fileName.contains("{") && fileName.contains("}")) {
+			fileName = fileName.replaceAll("\\{", "[").replaceAll("\\}", "]");
+		}
+		
 		if (fileExtn != null) {
 			fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
 			fileName = fileName + (fileName.toLowerCase().endsWith("." + fileExtn.toLowerCase()) ? ""

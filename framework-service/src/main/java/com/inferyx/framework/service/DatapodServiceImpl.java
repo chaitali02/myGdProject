@@ -1006,20 +1006,19 @@ public class DatapodServiceImpl {
 		String csvFileName = csvFile.getOriginalFilename();
 		try {
 			//patern matching for csv filename
-			Pattern p = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
-			Matcher match = p.matcher(csvFileName);
-			boolean z = match.find();			
-			if (z == true || csvFileName.contains(" ")) 
+			Pattern pattern = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
+			Matcher match = pattern.matcher(csvFileName);
+			boolean isMatched = match.find();			
+			if (isMatched || csvFileName.contains(" ")) 
 				throw new Exception("CSV file name contains white space or special character");
-			
-			String uploadPath = null;
-			uploadPath = hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			String directory = Helper.getPropertyValue("framework.file.upload.path");
+			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
 			
 			// Copy file to server location
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
 		 
-			uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			uploadPath = hdfsInfo.getHdfsURL() + uploadPath;
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
 			
 			//Check datapod and csv attributes name
