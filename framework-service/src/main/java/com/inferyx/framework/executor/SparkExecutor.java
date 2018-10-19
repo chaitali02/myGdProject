@@ -920,14 +920,16 @@ public class SparkExecutor<T> implements IExecutor {
 												.option("dateFormat", "dd-MM-yyyy")
 												.option("inferSchema", "false")
 												.option("header", "true").load(load.getSource().getValue());
-										long count = dfTmp.count();
+		long count = dfTmp.count();
+		
 		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
-		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, "dfLoadTemp");
+		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
+		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
 		
 		ResultSetHolder rsHolder;		
 		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
-				+ " AS version FROM dfLoadTemp";
-		String sqlWoVersion = "SELECT * FROM dfLoadTemp";
+				+ " AS version FROM "+tempTableName;
+		String sqlWoVersion = "SELECT * FROM "+tempTableName;
 
 		String[] columns = dfTmp.columns();
 		List<String> list = Arrays.asList(columns);
@@ -940,15 +942,15 @@ public class SparkExecutor<T> implements IExecutor {
 			} else
 				rsHolder = executeSql(sqlWiVersion, clientContext);
 		}
-
+		
 		Dataset<Row> dfTask = rsHolder.getDataFrame();
 
 		// dfTask = hiveContext.sql("select *, "+ dagExecVer + " as version from
 		// dfLoadTemp").coalesce(4);
-		dfTask.cache();
+//		dfTask.cache();
 		// sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
-
+		
 		logger.info("Going to datapodWriter");
 		
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
