@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -595,22 +596,22 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-				for(AttributeMap attributeMap : ingest.getAttributeMap()) {
-					attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
-				}
+//				for(AttributeMap attributeMap : ingest.getAttributeMap()) {
+//					attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
+//				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
 				if(ingestionType.equals(IngestionType.FILETOFILE)) {
 					String tableName = null;
 					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && sourceDp != null) {
 					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && targetDp != null) {
 						String tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
-						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, null, null, runMode);
+						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				}
 			}
 			
@@ -637,22 +638,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 						targetFilePathUrl = targetDS.getPath();
 						if(targetFileName.endsWith("."+FileType.PARQUET)) {
-							targetFileName = targetFileName.replaceAll("."+FileType.PARQUET, "");
+							targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
 						} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
-							targetFileName = targetFileName.replaceAll("."+FileType.PARQUET.toString().toLowerCase(), "");
+							targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
 						}
 						targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 					} else {
 						if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
-						}
-						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+						} else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
 						}
 						else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
 							targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
-						}
-						else {
+						} else {
 							logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
 						}
 						targetFilePathUrl = targetDS.getPath().concat(targetFileName);
@@ -932,9 +931,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
 							targetFilePathUrl = targetDS.getPath();
 							if(targetFileName.endsWith("."+FileType.PARQUET)) {
-								targetFileName = targetFileName.replaceAll("."+FileType.PARQUET, "");
+								targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
 							} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
-								targetFileName = targetFileName.replaceAll("."+FileType.PARQUET.toString().toLowerCase(), "");
+								targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
 							}
 							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
 						} else {
@@ -998,9 +997,12 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 						logger.info("temporary location: "+tempDirLocation);
 						
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
-								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+//						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
+//								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
+//										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+						
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+														targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
@@ -1255,14 +1257,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	 * @return
 	 */
 	private boolean areAllAttrs(Collection<String> values) {
-		boolean isSimple = false;
+		boolean isAttribute = false;
 		boolean isFormula = false;
 		boolean isFunction = false;
 		boolean isDatapod = false;
 		
 		for(String attrType : values) {
-			if(attrType.equalsIgnoreCase(MetaType.simple.toString())) {
-				isSimple = true;
+			if(attrType.equalsIgnoreCase(MetaType.attribute.toString())) {
+				isAttribute = true;
 			} else if(attrType.equalsIgnoreCase(MetaType.formula.toString())) {
 				isFormula = true;
 			} else if(attrType.equalsIgnoreCase(MetaType.function.toString())) {
@@ -1271,7 +1273,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				isDatapod = true;
 			}
 		}
-		if(isSimple || isFormula || isFunction) {
+		if(isAttribute || isFormula || isFunction) {
 			return false;
 		} else {
 			return isDatapod;
@@ -1301,7 +1303,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				attrRefHolder = attributeMap.getTargetAttr();
 			}
 			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder);
-			mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
+			if(resolvedAttr != null) {
+				mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
+			}
 		}
 		return mappedAttributes;
 	}

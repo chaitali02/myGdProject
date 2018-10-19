@@ -83,7 +83,7 @@ public class JoinKeyOperator {
 		List<String> operandValue = new ArrayList<>(2);
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
-			if (sourceAttr.getRef().getType() == MetaType.simple) {
+			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
 				} else {
@@ -96,7 +96,13 @@ public class JoinKeyOperator {
 					}
 					operandValue.add(value);
 				}
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
+			} else if (sourceAttr.getRef().getType().equals(MetaType.attribute)) {
+				if (StringUtils.isBlank(sourceAttr.getValue())) {
+					operandValue.add("''");
+				} else {
+					operandValue.add(sourceAttr.getValue());
+				}
+			} else if (sourceAttr.getRef().getType().equals(MetaType.paramlist)) {
 				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				if(value != null) {
 					boolean isNumber = Helper.isNumber(value);			
