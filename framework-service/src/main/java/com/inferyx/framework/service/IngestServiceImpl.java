@@ -356,39 +356,11 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 
 	public String generateFileName(String fileName, String fileExtn, String fileFormat) {
-
 		Pattern regex = Helper.getRegexByFileInfo(fileName, fileExtn, fileFormat, false);
 		fileName = regex.pattern();
 		fileName = fileName.substring(1, fileName.length()-1);
 		fileName = fileName.replaceAll(Pattern.quote("\\."), ".");
 		return fileName;
-		/*if(fileName != null && fileName.toLowerCase().contains("mmddyyyy_hhmmss")) {
-			String pattern = null;
-			if(fileName.contains("MMddyyyy_HHmmss")) {
-				pattern = "MMddyyyy_HHmmss";
-			} else if(fileName.contains("mmddyyyy_HHmmss")) {
-				pattern = "mmddyyyy_HHmmss";
-			} else if(fileName.contains("MMddyyyy_hhmmss")) {
-				pattern = "MMddyyyy_hhmmss";
-			} else {
-				pattern = "mmddyyyy_hhmmss";
-			}	
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
-			String formatedDate = dateFormat.format(new Date());
-			return fileName.replaceAll(pattern, formatedDate);
-		} else if(fileName != null && fileName.toLowerCase().contains("mmddyyyy")) {
-			String pattern = null;
-			if(fileName.contains("MMddyyyy")) {
-				pattern = "MMddyyyy";
-			} else {
-				pattern = "mmddyyyy";
-			}			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
-			String formatedDate = dateFormat.format(new Date());
-			return fileName.replaceAll(pattern, formatedDate);
-		} else {
-			return fileName;
-		}*/
 	}
 	
 	@SuppressWarnings("unused")
