@@ -1,0 +1,114 @@
+{
+  "uuid": "9e3e2936-02fb-11e7-93ae-92361f002697",
+  "version": "1488801521",
+  "name": "year(string date)",
+  "desc": "Returns the year part of a date or a timestamp string.",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": null,
+      "name": "admin"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Oct 19 11:09:45 IST 2018",
+  "tags": [
+    "DEV",
+    "1.0.1",
+    "DEMO"
+  ],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": null,
+        "name": "Administration"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": null,
+        "name": "Data Warehouse"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": null,
+        "name": "Data Warehouse"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": null,
+        "name": "Fraud Analytics"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": null,
+        "name": "Risk Analytics"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": null,
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "inputReq": "Y",
+  "funcType": "hive",
+  "functionInfo": [
+    {
+      "name": "year",
+      "type": "file",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "year",
+      "type": "mysql",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "year",
+      "type": "hive",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "year",
+      "type": "impala",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "year",
+      "type": "oracle",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "year",
+      "type": "postgres",
+      "paramInfoHolder": []
+    }
+  ],
+  "category": "date"
+}

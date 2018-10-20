@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -31,6 +32,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -56,8 +58,11 @@ public class JoinKeyOperator {
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
-			, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
+		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
 
 		if (filters == null) {
@@ -65,10 +70,20 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			builder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
-			builder.append(generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams)).append(" ");
+			String filter = generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd);
+			if (StringUtils.isNotBlank(filter)) {
+				if (StringUtils.isNotBlank(filterBuilder)) {
+					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
+				}
+				filterBuilder.append(filter).append(" ");
+			} 
 		}
-		builder.append(")");
+		if (StringUtils.isNotBlank(filterBuilder.toString())) {
+			builder.append(filterBuilder);
+			builder.append(")");
+		} else {
+			return ConstantsUtil.BLANK;
+		}
 
 		logger.info(String.format("Final filter %s", builder.toString()));
 		return builder.toString();
@@ -79,8 +94,11 @@ public class JoinKeyOperator {
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
-			, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<String> operandValue = new ArrayList<>(2);
+		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
 			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
@@ -133,6 +151,9 @@ public class JoinKeyOperator {
 				usedRefKeySet.add(datapodRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.formula) {
 				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
+					aggrCount += 1;
+				}
 				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
@@ -143,6 +164,12 @@ public class JoinKeyOperator {
 					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
 					usedRefKeySet.add(functionRef1);
 				}	
+		}
+		
+		// Handling having clause
+		if ((!isAggrAllowed && aggrCount > 0) 
+				|| (isAggrReqd && aggrCount <= 0)) {
+			return null;
 		}
 
 		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));

@@ -589,16 +589,18 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String[] mappedAttrs = null; 
 			boolean areAllAttrs = false;
 			String query = null;
-			List<String> colAliaseNames = null;
+			List<String> colAliaseNames = null;			
+			String whereClause = "";
 			if(ingest.getAttributeMap() != null && !ingest.getAttributeMap().isEmpty()) {
 				resolvedAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), true);
-				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);			
+				mappedAttrs = resolvedAttrMap.keySet().toArray(new String[resolvedAttrMap.keySet().size()]);
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-//				for(AttributeMap attributeMap : ingest.getAttributeMap()) {
-//					attributeMap.getSourceAttr().setAttrName(attributeMap.getSourceAttr().getValue());
-//				}
+				if(areAllAttrs) {
+					whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, latestIncrLastValue));
+					whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null));
+				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
@@ -898,6 +900,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setAttributeMap(mappedAttrs);
+							if(!whereClause.isEmpty()) {
+								sqoopInput.setWhereClause(whereClause);
+							}
 						} else if(mappedAttrs != null && !areAllAttrs) {
 							sqoopInput.setSqlQuery(query);
 						}
@@ -1131,6 +1136,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 					if(mappedAttrs != null && areAllAttrs) {
 						sqoopInput.setAttributeMap(mappedAttrs);
+						if(!whereClause.isEmpty()) {
+							sqoopInput.setWhereClause(whereClause);
+						}
 					} else if(mappedAttrs != null && !areAllAttrs) {
 						sqoopInput.setSqlQuery(query);
 					}

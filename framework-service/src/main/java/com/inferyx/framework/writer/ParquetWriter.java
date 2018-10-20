@@ -13,21 +13,17 @@ package com.inferyx.framework.writer;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.List;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.types.DataType;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
@@ -39,21 +35,28 @@ public class ParquetWriter implements IWriter {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ExecutorFactory execFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	@Override
 	public void write(ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
 		try { 
-			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
+//			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			Dataset<Row> df = rsHolder.getDataFrame();
 //			df.show(true);
 			if(datapod !=null) {
 				if(df.columns().length != datapod.getAttributes().size())
 					throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
 				
-				List<Attribute> attributes = datapod.getAttributes();
-				for(Attribute attribute : attributes){
-					df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)exec.getDataType(attribute.getType())));
-				} 				
+//				List<Attribute> attributes = datapod.getAttributes();
+//				for(Attribute attribute : attributes){
+//					df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)exec.getDataType(attribute.getType())));
+//				}
+				
+				if(rsHolder.getTableName() != null && !rsHolder.getTableName().isEmpty()) {
+					rsHolder = sparkExecutor.applySchema(rsHolder, datapod, null, rsHolder.getTableName(), true);
+					df = rsHolder.getDataFrame();
+				}
 			} 
 			df.printSchema();
 //			df.show(true);

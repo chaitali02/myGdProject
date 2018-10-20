@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -46,15 +48,19 @@ public class FilterOperator {
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
-			, Set<MetaIdentifier> usedRefKeySet) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null);
+			, Set<MetaIdentifier> usedRefKeySet
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd);
 	}
 	
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
-			, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.size() <= 0) {
 			return "";
@@ -70,7 +76,14 @@ public class FilterOperator {
 				filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
 				usedRefKeySet.add(filterRef);
-				builder.append(" AND (").append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams)).append(")");
+				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd);
+				if (StringUtils.isBlank(filterStr)) {
+					builder.append(ConstantsUtil.BLANK);
+				} /*else if (isAggrReqd) {
+					builder.append(" (").append(filterStr).append(")");
+				}*/ else {
+					builder.append(" AND (").append(filterStr).append(")");
+				}
 				break;
 			case datapod:
 				OrderKey datapodKey = filterIdentifier.getRef().getKey();
@@ -125,7 +138,7 @@ public class FilterOperator {
 				case filter : 
 					OrderKey filterKey = filterIdentifier.getRef().getKey();
 					com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
-					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams)).append(")");
+					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false)).append(")");
 					builder.append(" as ").append(filter.getName()).append(COMMA);
 					break;
 				case datapod:

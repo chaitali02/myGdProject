@@ -358,7 +358,7 @@ public class ReconOperator {
 			objectName = dataset.getName();
 		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
-			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams);
+			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
 			if(filter.contains(objectName))
 				filter = filter.replace(objectName+".", tableName+".");
 			return filter;

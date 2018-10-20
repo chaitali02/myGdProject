@@ -1,0 +1,114 @@
+{
+  "uuid": "9e3e2936-02fb-11e7-93ae-92361f002699",
+  "version": "1488801521",
+  "name": "concat()",
+  "desc": "Returns the string or bytes resulting from concatenating the strings or bytes passed in as parameters in order. For example, concat('foo', 'bar') results in 'foobar'. Note that this function can take any number of input strings.",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": null,
+      "name": "admin"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Oct 19 11:09:45 IST 2018",
+  "tags": [
+    "DEV",
+    "1.0.1",
+    "DEMO"
+  ],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": null,
+        "name": "Administration"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": null,
+        "name": "Data Warehouse"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": null,
+        "name": "Data Warehouse"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": null,
+        "name": "Fraud Analytics"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": null,
+        "name": "Risk Analytics"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": null,
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "inputReq": "Y",
+  "funcType": "hive",
+  "functionInfo": [
+    {
+      "name": "concat",
+      "type": "file",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "concat",
+      "type": "mysql",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "concat",
+      "type": "hive",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "concat",
+      "type": "impala",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "concat",
+      "type": "oracle",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "concat",
+      "type": "postgres",
+      "paramInfoHolder": []
+    }
+  ],
+  "category": "string"
+}

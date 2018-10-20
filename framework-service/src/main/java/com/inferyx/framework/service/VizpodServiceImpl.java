@@ -831,7 +831,7 @@ public class VizpodServiceImpl {
 			}
 			vizExec.setExecParams(execParams);
 			try {
-				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode, false));
+				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));
 				logger.info(vizExec.getSql());
 				vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			} catch (Exception e) {
@@ -1009,7 +1009,7 @@ public class VizpodServiceImpl {
 		}
 		vizExec.setExecParams(execParams);
 		try {
-			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode, true));
+			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, false, runMode, true));
 			logger.info(vizExec.getSql());
 			vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		} catch (Exception e) {

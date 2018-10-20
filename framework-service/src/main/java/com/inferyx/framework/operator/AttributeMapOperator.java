@@ -439,7 +439,8 @@ public class AttributeMapOperator {
 				if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 					isGroupBy = true;
 				} else {
-					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
+					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams)).append(",");
+//					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
 				}
 			}
 		}
