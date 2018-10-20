@@ -334,7 +334,7 @@
                             ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> -->
                             <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
                             class="form-control" required disable-validation-message=""
-                            ng-pattern="/[a-zA-Z0-9\-_%]/">
+                            ng-pattern="/[a-zA-Z0-9\-_%]/" ng-change="onChangeSimple()">
                         </span>
                         <span ng-if="tabledata.lhstype.caption=='integer'">
                           <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
@@ -342,14 +342,13 @@
                             ng-pattern="/^[0-9]{1,20}$/">
                         </span>
                       </span>
-                      <div width="200px" ng-if="tabledata.islhsDatapod">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                            ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
-                            ng-change="onChangeAttribute()" required disable-validation-message="">
-                          </select>
-                        </span>
-                      </div>
+                      <div width="190px" ng-show="tabledata.islhsDatapod">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
+                              ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                            </select>
+                          </span>
+                        </div>
                       <div ng-if="tabledata.islhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in allFormula track by r.uuid"
@@ -381,26 +380,26 @@
                               required disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter values into single quotes and seprated by comma'}}"
                               ng-pattern="/([\']+[a-zA-Z0-9\-_%,]*[']+$)/" tooltip-placement="left"> -->
                               <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                              required disable-validation-message="">
+                              required disable-validation-message="" ng-change="onChangeSimple()">
                           </span>
                           <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                             <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                             <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                               required ng-pattern="/^[0-9\,]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer value seprated by comma '}}"
-                              tooltip-placement="left">
+                              tooltip-placement="left" ng-change="onChangeSimple()">
                           </span>
 
-                          <span ng-if="['=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                          <span ng-if="['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
                             <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                             <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                               required disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
                               ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> -->
                               <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                              required disable-validation-message="">
+                              required disable-validation-message="" ng-change="onChangeSimple()">
                           </span>
                           <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                             <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-disabled="{{mode}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                              required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}">
+                              required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}" ng-change="onChangeSimple()">
                           </span>
                         </span>
                         <span ng-if="tabledata.operator =='BETWEEN'">
@@ -408,7 +407,7 @@
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
                               <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
                                 required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
-                                tooltip-placement="left">
+                                tooltip-placement="left" ng-change="onChangeSimple()">
                             </span>
                           </div>
 
@@ -419,7 +418,7 @@
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
                               <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
                                 ng-pattern="/^[0-9]{1,20}$/" required disable-validation-message="" uib-tooltip="{{myform['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
-                                tooltip-placement="left">
+                                tooltip-placement="left" ng-change="onChangeSimple()">
                             </span>
                           </div>
 

@@ -474,11 +474,12 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.islhsDatapod = false;
 						filterInfo.islhsFormula = false;
 						filterInfo.lhsvalue =response.filter.filterInfo[i].operand[0].value;
-						if(response.filter.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+						if(response.filter.filterInfo[i].operand[0].attributeType =="integer"){
 							obj.caption = "integer";
 						}
 					}
 					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" ||response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
+						debugger
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -528,7 +529,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						}else if(['<','>',"<=",'>='].indexOf(response.filter.filterInfo[i].operator) !=-1){
 							obj.caption = "integer";
 							
-						}else if(response.filter.filterInfo[i].operator =='=' && response.filter.filterInfo[i].operand[1].value.indexOf("'") ==-1){
+						}else if(response.filter.filterInfo[i].operator =='=' && response.filter.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
 						}
@@ -537,6 +538,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						}
 					}
 					else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod") {
+						
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"

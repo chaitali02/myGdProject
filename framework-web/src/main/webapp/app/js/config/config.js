@@ -78,7 +78,7 @@ InferyxApp.constant('CF_DOWNLOAD',{
 
 
 InferyxApp.constant("CF_FILTER",{
-	operator :[{"caption":"EQUAL TO (=)","value":"="},
+	operator :[{"caption":"EQUAL (=)","value":"="},{"caption":" NOT EQUAL (!=)","value":"!="},
 	{"caption":"LESS THAN (<)","value":"<"},
 	{"caption":"GREATER THAN (>) ","value":">"},
 	{"caption":"LESS OR EQUAL (<=) ","value":"<="},

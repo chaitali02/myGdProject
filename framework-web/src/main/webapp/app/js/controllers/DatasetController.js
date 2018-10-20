@@ -54,7 +54,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.graphDataStatus = false
 	$scope.logicalOperator = ["AND","OR"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
-	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', '!=','LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
@@ -1209,9 +1209,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				}
 				filterInfo.operator = $scope.filterTableArray[i].operator;
 				if ($scope.filterTableArray[i].lhstype.text == "string") {
-
 					lhsref.type = "simple";
 					lhsoperand.ref = lhsref;
+					lhsoperand.attributeType =$scope.filterTableArray[i].lhstype.caption;
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
@@ -1239,7 +1239,11 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
+					rhsoperand.attributeType =$scope.filterTableArray[i].rhstype.caption;
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+					  rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+					}
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
 					// if ($scope.selectSourceType == "dataset") {
