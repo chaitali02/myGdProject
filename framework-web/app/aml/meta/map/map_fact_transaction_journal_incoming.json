@@ -1,0 +1,374 @@
+{
+  "uuid": "54daf45c-d0f7-4d03-bcaf-6d51ed10a3ae",
+  "version": "1540027578",
+  "name": "map_fact_transaction_journal_incoming",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 20 14:56:18 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+      "version": null,
+      "name": "ds_fact_transaction_incoming"
+    },
+    "value": null
+  },
+  "attributeMap": [
+    {
+      "attrMapId": "0",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "transaction_id",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "transaction_id",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "direction",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "direction",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "account_id",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "account_id",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "3",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "customer_id",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "customer_id",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "4",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "transaction_type_code",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "transaction_type_code",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "5",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "date_val",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "transaction_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "6",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "country",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "transaction_country",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "7",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "sender_country",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "sender_country",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "8",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "reciever_country",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "reciever_country",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "9",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+          "version": null,
+          "name": "ds_fact_transaction_incoming"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "amount_usd",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "10",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "9e3de26e-02fb-11e7-93ae-92361f002671",
+          "version": null,
+          "name": "current_date"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "load_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "11",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "9e3dff24-02fb-11e7-93ae-92361f002671",
+          "version": null,
+          "name": "unix_timestamp()"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "load_id",
+        "attrType": null
+      }
+    }
+  ]
+}

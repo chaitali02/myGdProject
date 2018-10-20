@@ -1,0 +1,204 @@
+{
+  "uuid": "ff8ce26a-767b-406b-872e-f27b361a891d",
+  "version": "1539946626",
+  "name": "ds_fact_transaction_incoming",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Oct 19 16:27:06 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "437f94ab-5daa-4155-aec8-d74badf25052",
+      "version": null,
+      "name": "relation_fact_transaction_incoming"
+    },
+    "value": null
+  },
+  "filterInfo": [],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "transaction_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
+          "version": null,
+          "name": "fact_transaction"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "transaction_id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "direction",
+      "sourceAttr": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "INCOMING",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "transaction_type_code",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+          "version": null,
+          "name": "dim_transaction_type"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "transaction_type_code",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "transaction_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+          "version": null,
+          "name": "dim_date"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "date_val",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrSourceName": "transaction_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+          "version": null,
+          "name": "dim_address"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "country",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrSourceName": "sender_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "53992b0f-f790-4025-a136-0187d23c8b26",
+          "version": null,
+          "name": "ds_fact_transaction_sender_details"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "country",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrSourceName": "reciever_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "34705241-333c-43cd-8dc5-dda7bc8d9235",
+          "version": null,
+          "name": "ds_fact_transaction_reciever_details"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "country",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrSourceName": "amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
+          "version": null,
+          "name": "fact_transaction"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "amount_usd",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrSourceName": "load_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
+          "version": null,
+          "name": "fact_transaction"
+        },
+        "value": null,
+        "attrId": "16",
+        "attrName": "load_date",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrSourceName": "load_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
+          "version": null,
+          "name": "fact_transaction"
+        },
+        "value": null,
+        "attrId": "17",
+        "attrName": "load_id",
+        "attrType": "Integer"
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}
