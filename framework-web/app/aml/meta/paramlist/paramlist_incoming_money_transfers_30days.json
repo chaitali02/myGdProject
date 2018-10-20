@@ -1,0 +1,88 @@
+{
+  "uuid": "016be52d-87ec-4722-b9ce-cfdc1f4406f2",
+  "version": "1540030060",
+  "name": "paramlist_incoming_money_transfers_30days",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 20 15:37:40 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "trans_count",
+      "paramType": "integer",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "1"
+      },
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "trans_amount_usd",
+      "paramType": "double",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "10"
+      },
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "lookback_days",
+      "paramType": "integer",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "30"
+      },
+      "paramRef": null
+    }
+  ],
+  "paramListType": "rule",
+  "templateFlg": "N",
+  "templateInfo": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+      "version": null,
+      "name": "paramlist_money_transfers"
+    },
+    "value": null
+  }
+}
