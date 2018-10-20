@@ -1,7 +1,7 @@
 {
-  "uuid": "cf8e7a12-eef6-48b7-9842-7cdeeb4ad56f",
-  "version": "1540024213",
-  "name": "ds_customer_summary_30d",
+  "uuid": "71956b2d-1f39-407e-a17b-4de504121516",
+  "version": "1540040125",
+  "name": "ds_customer_summary_30days",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "createdOn": "Sat Oct 20 18:25:25 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",

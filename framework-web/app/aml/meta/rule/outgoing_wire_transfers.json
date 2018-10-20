@@ -1,7 +1,7 @@
 {
-  "uuid": "06d75ad8-24ca-4346-9edd-5d8e6301e5a3",
-  "version": "1540019377",
-  "name": "Incoming Wire Transfers Orig",
+  "uuid": "30420bcf-3e42-4a34-8453-92c1c6366ac0",
+  "version": "1540038261",
+  "name": "Outgoing Wire Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "createdOn": "Sat Oct 20 17:54:21 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,8 +32,14 @@
     {
       "ref": {
         "type": "filter",
-        "uuid": "6555edaf-a37e-4e31-89f3-7935c227c088"
-      }
+        "uuid": "9ea590d6-318a-48f4-ae2a-7c4a689ab12d",
+        "version": null,
+        "name": "Outgoing Wire Transfers"
+      },
+      "value": null,
+      "attrId": null,
+      "attrName": null,
+      "attrType": null
     }
   ],
   "debugMode": false,
@@ -49,6 +55,22 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrSourceName": "rule_name",
+      "sourceAttr": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "Outgoing Wire Transfers",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
       "attrSourceName": "customer_id",
       "sourceAttr": {
         "ref": {
@@ -64,8 +86,8 @@
       }
     },
     {
-      "attrSourceId": "1",
-      "attrSourceName": "trans_count",
+      "attrSourceId": "2",
+      "attrSourceName": "fm_trans_count",
       "sourceAttr": {
         "ref": {
           "type": "formula",
@@ -80,8 +102,8 @@
       }
     },
     {
-      "attrSourceId": "2",
-      "attrSourceName": "trans_sum_usd",
+      "attrSourceId": "3",
+      "attrSourceName": "fm_trans_sum_usd",
       "sourceAttr": {
         "ref": {
           "type": "formula",
@@ -101,9 +123,9 @@
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "2ba1db28-f640-4ad7-aaa1-4d87820dcdfd",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
       "version": null,
-      "name": "paramlist_aml_rules"
+      "name": "paramlist_money_transfers"
     },
     "value": null
   }

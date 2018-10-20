@@ -1,7 +1,7 @@
 {
-  "uuid": "e885f3b1-8e7d-46fc-842c-83873615ebf2",
-  "version": "1540024213",
-  "name": "ds_customer_summary_30d",
+  "uuid": "c656e196-a1f0-4835-a9b7-f0d9e2b12991",
+  "version": "1540038379",
+  "name": "Net Wire Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "createdOn": "Sat Oct 20 17:56:19 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -27,7 +27,23 @@
       "value": null
     }
   ],
-  "dependsOn": {
+  "expressionInfo": null,
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "filter",
+        "uuid": "c0b15ba4-bc34-4743-b913-9646b9820069",
+        "version": null,
+        "name": "Net Wire Transfers"
+      },
+      "value": null,
+      "attrId": null,
+      "attrName": null,
+      "attrType": null
+    }
+  ],
+  "debugMode": false,
+  "source": {
     "ref": {
       "type": "datapod",
       "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
@@ -36,23 +52,25 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "cf8e7a12-eef6-48b7-9842-7cdeeb4ad56f",
-        "version": null,
-        "name": "ds_customer_summary_30d"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrSourceName": "rule_name",
+      "sourceAttr": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "Net Wire Transfers",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
       "attrSourceName": "customer_id",
       "sourceAttr": {
         "ref": {
@@ -65,22 +83,6 @@
         "attrId": "3",
         "attrName": "customer_id",
         "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrSourceName": "trans_month_year",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "dad3d855-4bdb-44c8-bc6b-b5f09db606b8",
-          "version": null,
-          "name": "fm_trans_month_year"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
       }
     },
     {
@@ -101,13 +103,13 @@
     },
     {
       "attrSourceId": "3",
-      "attrSourceName": "trans_sum_usd",
+      "attrSourceName": "trans_net_amount",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
+          "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
           "version": null,
-          "name": "fm_trans_sum_usd"
+          "name": "fm_trans_net_amount"
         },
         "value": null,
         "attrId": null,
@@ -116,6 +118,15 @@
       }
     }
   ],
-  "groupBy": null,
-  "limit": 0
+  "persistFlag": null,
+  "datasource": null,
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+      "version": null,
+      "name": "paramlist_money_transfers"
+    },
+    "value": null
+  }
 }
