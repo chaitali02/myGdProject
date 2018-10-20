@@ -647,7 +647,6 @@ public class SparkExecutor<T> implements IExecutor {
 		if (obj instanceof SparkSession) {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
-//			rsHolder.getDataFrame().show(false);
 			try {
 				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -656,7 +655,6 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new IOException("Can not write data.");
 			}
-			rsHolder.getDataFrame().show(false);
 			datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -2691,7 +2689,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 
 		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
-//		rsHolder.getDataFrame().show(false);
+		
 		Tuple2<double[], long[]> histogramTuples = histogramUtil.fetchHistogramTuples(rsHolder.getDataFrame(), numBuckets);
 		/*DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
 		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);*/

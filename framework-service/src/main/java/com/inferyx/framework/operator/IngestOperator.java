@@ -56,12 +56,12 @@ public class IngestOperator {
 				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams));
 	}
 
-	private String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
+	public String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
 	}
 
-	private String generateFilter(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
+	public String generateFilter(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
@@ -69,21 +69,21 @@ public class IngestOperator {
 		return ConstantsUtil.BLANK;
 	}
 
-	private String generateWhere(Ingest ingest,String incrColName, String incrLastValue) {
+	public String generateWhere(Ingest ingest,String incrColName, String incrLastValue) {
 		IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 		return " WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") 
 				+ (!ingestionType.equals(IngestionType.TABLETOTABLE) ? "" : " AND $CONDITIONS");
 	}
 
-	private String generateFrom(Ingest ingest, String tableName) {
+	public String generateFrom(Ingest ingest, String tableName) {
 		return tableName;
 	}
 
-	private String getFrom() {
+	public String getFrom() {
 		return  ConstantsUtil.FROM;
 	}
 
-	private String generateSelect(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
+	public String generateSelect(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(ingest.getAttributeMap(), ingest.getSourceDetail(), refKeyMap, otherParams, execParams));
 	}
