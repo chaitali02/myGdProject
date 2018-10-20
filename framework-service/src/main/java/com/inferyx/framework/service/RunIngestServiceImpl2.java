@@ -598,8 +598,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
 				if(areAllAttrs) {
-					whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, latestIncrLastValue));
-					whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null));
+					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, latestIncrLastValue));
+					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null));
 				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
