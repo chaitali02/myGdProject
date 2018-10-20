@@ -1790,6 +1790,7 @@ public class MetadataServiceImpl {
 	 * @throws JsonProcessingException
 	 */
 	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException {
+		logger.info("Ref : " + ref);
 		if(execParams != null) {
 			if(execParams.getCurrParamSet() != null) {
 				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
