@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,6 +65,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(generateWhere())
 					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams))
 					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
+					.concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams))
 					.concat(generateLimit(dataset));
 		}
 
@@ -141,13 +143,22 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
-				return filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
+				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : filterStr;
 			}
 			return ConstantsUtil.BLANK;
 		} 
 		
 		public String generateGroupBy (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
+		}
+		
+		public String generateHaving (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
+				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
+				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING.concat(filterStr);
+			}
+			return ConstantsUtil.BLANK;
 		}
 
 		private String generateLimit(DataSet dataset) {

@@ -959,6 +959,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.filterTableArray[index].isrhsFunction = false;
       $scope.getParamByApp();
 			
+    }
+    if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
 		}
   }
   
@@ -1290,6 +1293,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 
             lhsref.type = "simple";
             lhsoperand.ref = lhsref;
+            lhsoperand.attributeType =$scope.filterTableArray[i].lhstype.caption;
             lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
           }
           else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
@@ -1316,6 +1320,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 
             rhsref.type = "simple";
             rhsoperand.ref = rhsref;
+            rhsoperand.attributeType =$scope.filterTableArray[i].rhstype.caption;
             rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
           }
           else if ($scope.filterTableArray[i].rhstype.text == "datapod") {

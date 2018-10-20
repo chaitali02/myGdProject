@@ -284,7 +284,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 
 	$scope.joinChange = function (data, index,type) {
-		var temp=$scope.rhsAllAttribute.splice(index+1,1);
+		//var temp=$scope.rhsAllAttribute.splice(index+1,1);
 		//$scope.lhsAllAttribute = _.without($scope.lhsAllAttribute, _.findWhere($scope.lhsAllAttribute, {uuid:temp.uuid}));
 		if (data !=null && typeof data != "undefined") {
 			MetadataRelationSerivce.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });

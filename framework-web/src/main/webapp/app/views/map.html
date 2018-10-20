@@ -275,7 +275,7 @@
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
+															<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"
 															 ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
 														</span>
 													</div>

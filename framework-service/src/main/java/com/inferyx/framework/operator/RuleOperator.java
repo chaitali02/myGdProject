@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,7 +72,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
 				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams))
-				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams));
+				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams))
+				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams));
 		return sql;
 	}
 	
@@ -147,7 +149,15 @@ public class RuleOperator implements IParsable, IReferenceable {
 									Set<MetaIdentifier> usedRefKeySet, 
 									ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
+		}
+		return ConstantsUtil.BLANK;
+	}
+	
+	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
+			String filterStr = filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
+			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;
 	}

@@ -395,7 +395,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsDatapod = false;
 					filterInfo.islhsFormula = false;
 					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value//.replace(/["']/g, "");
-					if(response.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+					if(response.filterInfo[i].operand[0].attributeType =="integer"){
 						obj.caption = "integer";
 					}
 				}
@@ -449,7 +449,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
 						obj.caption = "integer";
 						
-					}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].value.indexOf("'") ==-1){
+					}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
 						obj.caption = "integer";
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 					}
