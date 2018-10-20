@@ -339,8 +339,11 @@
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in rhsType | orderBy : 'caption' track by x.text+x.caption"
-                                      ng-disabled=" {{mode}}" class="form-control">
+                                    
+                                    <!-- <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"-->
+                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption" 
+  
+                                    ng-disabled=" {{mode}}" class="form-control">
                                     </select>
                                   </span>
                                 </td>
@@ -375,7 +378,7 @@
                                           required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform2['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}" ng-change="onChangeSimple()">
                                       </span>
                                     </span>
-                                    <span ng-if="tabledata.operator =='BETWEEN'">
+                                    <span ng-if="tabledata.operator =='BETWEEN' && tabledata.rhstype.caption=='integer'">
                                       <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
                                         <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                           <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
@@ -396,6 +399,28 @@
                                       </div>
 
                                     </span>
+                                    
+                                    <span ng-if="tabledata.operator =='BETWEEN' && tabledata.rhstype.caption=='string'">
+                                        <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                              required disable-validation-message="" uib-tooltip="{{myform2['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
+                                              tooltip-placement="left" ng-change="onChangeSimple()">
+                                          </span>
+                                        </div>
+  
+                                        <div class="col-md-1 col-sm-1 " style="width:1%;padding: 0px 15px 0px 11px">
+                                          <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
+                                        </div>
+                                        <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                               required disable-validation-message="" uib-tooltip="{{myform2['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
+                                              tooltip-placement="left" ng-change="onChangeSimple()">
+                                          </span>
+                                        </div>
+  
+                                      </span>
                                   </div>
                                   <div ng-if="tabledata.isrhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
