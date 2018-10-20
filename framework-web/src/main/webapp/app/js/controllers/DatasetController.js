@@ -54,7 +54,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.graphDataStatus = false
 	$scope.logicalOperator = ["AND","OR"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
-	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', '!=','LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
