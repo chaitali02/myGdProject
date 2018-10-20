@@ -34,10 +34,10 @@
 		},
 		{
 			"attributeId": 3,
-			"name": "version",
-			"type": "Integer",
-			"desc": "version",
-			"dispName": "version",
+			"name": "country_risk_level",
+			"type": "integer",
+			"desc": "country_risk_level",
+			"dispName": "country_risk_level",
 			"active": "Y"
 		}
 	],
