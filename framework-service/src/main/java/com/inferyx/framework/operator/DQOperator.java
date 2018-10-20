@@ -76,7 +76,7 @@ public class DQOperator implements IParsable {
 	private String UNDERSCORE = "_";
 	private String COMMA = ", ";
 	private String COUNT = " COUNT";
-	private String HAVING = " HAVING_1_1 ";
+	private String HAVING = " HAVING (1=1) ";
 	private String DUP_TABLE = " dupTable ";
 	private String ONE = " 1 ";
 	private String BETWEEN = " BETWEEN ";

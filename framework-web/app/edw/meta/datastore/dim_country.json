@@ -1,0 +1,44 @@
+{
+    "metaId" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
+            "version" : "1502631071"
+        }
+    },
+    "execId" : {
+        "ref" : {
+            "type" : "loadExec",
+            "uuid" : "85a5e7ac-f5e5-4c1a-bbe0-6bd45f7118e7",
+            "version" : "1540034253"
+        }
+    },
+    "location" : "/570bb0dc-067e-4aed-9893-30033e73f584/1502631071/1540034253",
+    "persistMode" : "DISK_ONLY",
+    "numRows" : NumberLong(249),
+    "runMode" : "BATCH",
+    "uuid" : "b8999ac9-df1c-44a5-a009-600206f5b0d5",
+    "version" : "1540034254",
+    "name" : "dim_country",
+    "desc" : "Creating datastore for dim_country",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-20T11:17:34.000Z"),
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}

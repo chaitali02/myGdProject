@@ -280,10 +280,14 @@ public class ParamListServiceImpl {
 	 */
 	public String getParamValue(ExecParams execParams,  
 									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException {		
+									MetaIdentifier ref) throws JsonProcessingException {	
+		logger.info("Inside ParamListServiceImpl.getParamValue(); "); 
 		ParamListHolder paramListHolder = null;
 		if (execParams != null) {
 			paramListHolder = execParams.getParamListHolder();
+			if (!paramListHolder.getRef().getUuid().equals(ref.getUuid())) {
+				paramListHolder = null;
+			}
 		}
 		
 		if (paramListHolder == null) {
