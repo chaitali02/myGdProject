@@ -320,16 +320,19 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 
 	$scope.clear = function () {
 		$scope.formulainfoarray = [];
+		$scope.myform.$dirty=true ;
 	}
 
 	$scope.undo = function () {
 		$scope.formulainfoarray.splice($scope.formulainfoarray.length - 1, 1);
+		$scope.myform.$dirty=true ;
 	}
 
 	$scope.addData = function (data) {
 		if(!$scope.isEdit && !$scope.isAdd ){
 			return false;
 		}
+		$scope.myform.$dirty=true ;
 		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG"]
 		var len = $scope.formulainfoarray.length;
 		if (aggrfun.indexOf(data.value) > -1) {
