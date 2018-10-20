@@ -18,7 +18,7 @@ public class ConstantsUtil {
 	public static final String SELECT = " SELECT ";
 	public static final String FROM = " FROM ";
 	public static final String GROUP_BY = " GROUP BY ";
-	public static final String HAVING_1_1 = " HAVING_1_1 (1=1) ";
+	public static final String HAVING_1_1 = " HAVING (1=1) ";
 	public static final String DOT = ".";
 	public static final String IS_NOT_NULL = " IS NOT NULL ";
 	public static final String NULL_CHECK_PASS = "nullCheck_pass";
