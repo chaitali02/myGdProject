@@ -49,14 +49,14 @@ public class IngestOperator {
 	static Logger logger = Logger.getLogger(IngestOperator.class);
 	
 	public String generateSQL(Ingest ingest, String tableName, String incrColName, String incrLastValue, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		return generateSelect(ingest, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(ingest, tableName))
 				.concat(generateWhere(ingest, incrColName, incrLastValue))
-				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams))
+				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams))
-				.concat(generateHaving(ingest, refKeyMap, otherParams, usedRefKeySet, execParams));
+				.concat(generateHaving(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
 	}
 
 	public String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
@@ -65,16 +65,16 @@ public class IngestOperator {
 	}
 
 	public String generateFilter(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
+			return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 		}
 		return ConstantsUtil.BLANK;
 	}
 	
-	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
-			String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
+			String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;

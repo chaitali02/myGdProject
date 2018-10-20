@@ -177,7 +177,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
 					}
 				} else {
 					builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
@@ -187,7 +187,7 @@ public class RelationOperator {
 						builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
 					}
 				}
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -203,7 +203,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
 					}
 				} else if(joinMI.getType().equals(MetaType.datapod)) {
 					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
@@ -217,14 +217,14 @@ public class RelationOperator {
 							builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 						}
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
 						}
 					} else {
 						builder.append(joinType + " JOIN ").append(" ");
 						builder.append(dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
 
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
 						}
 					}
 				}

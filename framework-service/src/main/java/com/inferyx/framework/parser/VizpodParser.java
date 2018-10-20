@@ -166,7 +166,7 @@ public class VizpodParser {
 				whereBuilder.append(blankSpace);
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
-				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false));
+				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false, runMode));
 				if(allowColNameInFltr) {
 					Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 					Matcher matcher = pattern.matcher(whereBuilder);
@@ -217,7 +217,7 @@ public class VizpodParser {
 				}
 				
 				// Having
-				String havingStr = filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true);
+				String havingStr = filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true, runMode);
 				if (org.apache.commons.lang3.StringUtils.isNotBlank(havingStr)) {
 					finalBuilder.append(ConstantsUtil.HAVING_1_1)
 								.append(havingStr);
@@ -302,7 +302,7 @@ public class VizpodParser {
 				//whereBuilder.append("WHERE");
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
-				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false));
+				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false, runMode));
 				
 				if(allowColNameInFltr) {
 					Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
@@ -366,7 +366,7 @@ public class VizpodParser {
 			}
 			
 			// Having Builder
-			havingBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true));
+			havingBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true, runMode));
 			
 			// Limit Builder
 			if (vizpod.getLimit() != null){
@@ -417,8 +417,8 @@ public class VizpodParser {
 			selectBuilder = new StringBuilder(datasetOperator.generateSelect(dataSet, null, null, null, runMode));
 			fromBuilder.append(" FROM ").append(datasetOperator.generateFrom(dataSet, null, null, usedRefKeySet, runMode));
 			whereBuilder.append(datasetOperator.generateWhere());
-			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null));
-			whereBuilder.append(" ").append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false));
+			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null, null));
+			whereBuilder.append(" ").append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false, runMode));
 			if(allowColNameInFltr) {
 				Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 				Matcher matcher = pattern.matcher(whereBuilder);
@@ -428,7 +428,7 @@ public class VizpodParser {
 				}
 			}			
 			groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet, null, null, null));
-			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, null, null));
+			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, null, null, null));
 			
 			queryBuilder.append(selectBuilder);
 			queryBuilder.append(fromBuilder);

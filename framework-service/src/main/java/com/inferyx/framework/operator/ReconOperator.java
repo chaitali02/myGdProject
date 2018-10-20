@@ -170,7 +170,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
-			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
+			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), runMode)
 //			      + GROUP_BY
 //			      + SOURCE_UUID_ALIAS + COMMA
 //			      + SOURCE_VERSION_ALIAS + COMMA
@@ -195,7 +195,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
-			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
+			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), null)
 //			      + GROUP_BY
 //			      + TARGET_UUID_ALIAS + COMMA
 //			      + TARGET_VERSION_ALIAS + COMMA
@@ -316,7 +316,9 @@ public class ReconOperator {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
+	/********************** UNUSED 
+	 * @param runMode TODO
+	 * @throws Exception **********************/
 	/*public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
 		Datapod datapod = null;
 		if(object instanceof Relation) {
@@ -345,9 +347,8 @@ public class ReconOperator {
 
 	public String generateFilter(String tableName, Object object, List<AttributeRefHolder> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams)
-			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode)
+			throws Exception {
 		String objectName = null;
 		if(object instanceof Datapod) {				
 			Datapod datapod = (Datapod) object;
@@ -358,7 +359,7 @@ public class ReconOperator {
 			objectName = dataset.getName();
 		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
-			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
+			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 			if(filter.contains(objectName))
 				filter = filter.replace(objectName+".", tableName+".");
 			return filter;

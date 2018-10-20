@@ -39,8 +39,12 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.enums.OperandType;
+import com.inferyx.framework.enums.OperatorType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
@@ -53,6 +57,7 @@ public class JoinKeyOperator {
 	@Autowired MetadataServiceImpl metadataServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired protected DatasetOperator datasetOperator;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
 			, java.util.Map<String, MetaIdentifier> refKeyMap
@@ -60,7 +65,8 @@ public class JoinKeyOperator {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, Boolean isAggrReqd
+			, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
@@ -70,7 +76,7 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			String filter = generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd);
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode);
 			if (StringUtils.isNotBlank(filter)) {
 				if (StringUtils.isNotBlank(filterBuilder)) {
 					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
@@ -96,7 +102,8 @@ public class JoinKeyOperator {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, Boolean isAggrReqd
+			, RunMode runMode) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
@@ -171,9 +178,44 @@ public class JoinKeyOperator {
 				|| (isAggrReqd && aggrCount <= 0)) {
 			return null;
 		}
-
-		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
+		if(filterInfo.getOperator().trim().equalsIgnoreCase("IN") 
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT IN")
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("EXISTS") 
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT EXISTS")) {
+			if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.dataset)) {
+				MetaIdentifier dataSetMI = filterInfo.getOperand().get(1).getRef();
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString());
+				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+				return generateRHSQuery(operandValue, filterInfo, filterSource, subQuery, dataSet.getName());
+			} else {
+				return generateRHSOperand(operandValue, filterInfo, filterSource);
+			}			
+		} else {
+			return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
+		}		
 	}
 
+	public String generateRHSQuery(List<String> operandValue, FilterInfo filterInfo, MetaIdentifierHolder filterSource, String subQuery, String alias) {
+		StringBuilder rhsQuery = new StringBuilder();
+		rhsQuery.append("SELECT ");
+		rhsQuery.append(operandValue.get(1)).append(" ");
+		rhsQuery.append(" FROM ");
+		rhsQuery.append("( ").append(subQuery).append(" )");
+		rhsQuery.append(" ").append(alias);
+		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), "("+rhsQuery.toString()+")");
+	}
+	
+	public String generateRHSOperand(List<String> operandValue, FilterInfo filterInfo, MetaIdentifierHolder filterSource) {		
+		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), "("+operandValue.get(1)+")");
+	}
+	
+	public String generateSubqueryByDataset(DataSet dataSet
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, RunMode runMode) throws Exception {
+		return datasetOperator.generateSql(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+	}
 }
 

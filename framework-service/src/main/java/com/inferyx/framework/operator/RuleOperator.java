@@ -71,9 +71,9 @@ public class RuleOperator implements IParsable, IReferenceable {
 				.concat(getFrom())
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
-				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams))
+				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams))
-				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams));
+				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
 		return sql;
 	}
 	
@@ -147,16 +147,17 @@ public class RuleOperator implements IParsable, IReferenceable {
 									java.util.Map<String, MetaIdentifier> refKeyMap, 
 									HashMap<String, String> otherParams, 
 									Set<MetaIdentifier> usedRefKeySet, 
-									ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+									ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
+			String filter = filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			return filter;
 		}
 		return ConstantsUtil.BLANK;
 	}
 	
-	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
-			String filterStr = filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
+			String filterStr = filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;

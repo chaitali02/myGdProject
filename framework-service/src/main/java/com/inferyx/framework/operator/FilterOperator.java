@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
  
 @Component
@@ -50,8 +51,8 @@ public class FilterOperator {
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd);
+			, Boolean isAggrReqd, RunMode runMode) throws Exception {
+		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd, runMode);
 	}
 	
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
@@ -60,7 +61,7 @@ public class FilterOperator {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, Boolean isAggrReqd, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.size() <= 0) {
 			return "";
@@ -76,7 +77,7 @@ public class FilterOperator {
 				filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
 				usedRefKeySet.add(filterRef);
-				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd);
+				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode);
 				if (StringUtils.isBlank(filterStr)) {
 					builder.append(ConstantsUtil.BLANK);
 				} /*else if (isAggrReqd) {
@@ -112,17 +113,10 @@ public class FilterOperator {
 	 * @param filterIdentifierList
 	 * @param usedRefKeySet 
 	 * @return
-	 * @throws ParseException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws JsonProcessingException 
+	 * @throws Exception 
 	 */
 	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet,
-											ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+											ExecParams execParams) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -138,7 +132,7 @@ public class FilterOperator {
 				case filter : 
 					OrderKey filterKey = filterIdentifier.getRef().getKey();
 					com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
-					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false)).append(")");
+					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, null)).append(")");
 					builder.append(" as ").append(filter.getName()).append(COMMA);
 					break;
 				case datapod:

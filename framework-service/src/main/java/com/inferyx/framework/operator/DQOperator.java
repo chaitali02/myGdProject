@@ -417,13 +417,12 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	public String generateFilter(List<AttributeRefHolder> filterInfo, Set<MetaIdentifier> usedRefKeySet)
-			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateFilter(List<AttributeRefHolder> filterInfo, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
+			throws Exception {
 		if (filterInfo == null || filterInfo.isEmpty()) {
 			return "";
 		}
-		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false);
+		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 
 	}
 
@@ -436,7 +435,7 @@ public class DQOperator implements IParsable {
 			return null;
 		}
 		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
-				.concat(WHERE_1_1).concat(generateFilter(dq.getFilterInfo(), usedRefKeySet));
+				.concat(WHERE_1_1).concat(generateFilter(dq.getFilterInfo(), usedRefKeySet, runMode));
 	}
 
 	public String generateCase(DataQual dq, String tableName, String attributeName)

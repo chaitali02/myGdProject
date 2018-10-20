@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
@@ -120,16 +121,9 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	 * @param filterIdentifierList
 	 * @param usedRefKeySet 
 	 * @return
-	 * @throws ParseException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws JsonProcessingException 
+	 * @throws Exception 
 	 */
-	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -151,7 +145,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				builder.append(" (")
-						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false))
+						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode))
 						.append(")");
 				builder.append(" as ").append(filter.getName()).append(COMMA);
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
