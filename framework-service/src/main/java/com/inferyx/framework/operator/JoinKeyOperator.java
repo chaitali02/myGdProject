@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -61,6 +62,7 @@ public class JoinKeyOperator {
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
+		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
 
 		if (filters == null) {
@@ -68,10 +70,20 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			builder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
-			builder.append(generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd)).append(" ");
+			String filter = generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd);
+			if (StringUtils.isNotBlank(filter)) {
+				if (StringUtils.isNotBlank(filterBuilder)) {
+					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
+				}
+				filterBuilder.append(filter).append(" ");
+			} 
 		}
-		builder.append(")");
+		if (StringUtils.isNotBlank(filterBuilder.toString())) {
+			builder.append(filterBuilder);
+			builder.append(")");
+		} else {
+			return ConstantsUtil.BLANK;
+		}
 
 		logger.info(String.format("Final filter %s", builder.toString()));
 		return builder.toString();

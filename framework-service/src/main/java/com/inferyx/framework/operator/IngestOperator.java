@@ -75,7 +75,7 @@ public class IngestOperator {
 	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
-			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING.concat(filterStr);
+			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;
 	}

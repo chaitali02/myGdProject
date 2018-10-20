@@ -79,7 +79,9 @@ public class FilterOperator {
 				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd);
 				if (StringUtils.isBlank(filterStr)) {
 					builder.append(ConstantsUtil.BLANK);
-				} else {
+				} /*else if (isAggrReqd) {
+					builder.append(" (").append(filterStr).append(")");
+				}*/ else {
 					builder.append(" AND (").append(filterStr).append(")");
 				}
 				break;

@@ -219,7 +219,7 @@ public class VizpodParser {
 				// Having
 				String havingStr = filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true);
 				if (org.apache.commons.lang3.StringUtils.isNotBlank(havingStr)) {
-					finalBuilder.append(ConstantsUtil.HAVING)
+					finalBuilder.append(ConstantsUtil.HAVING_1_1)
 								.append(havingStr);
 				}
 			}
