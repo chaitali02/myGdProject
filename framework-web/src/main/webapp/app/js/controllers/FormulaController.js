@@ -113,6 +113,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		{ "type": "simple", "value": ">", "class": "formula_button btn btn-icon-only " },
 		{ "type": "simple", "value": "<=", "class": "formula_button btn btn-icon-only " },
 		{ "type": "simple", "value": ">=", "class": "formula_button btn btn-icon-only " },
+		{ "type": "simple", "value": ",", "class": "formula_button btn btn-icon-only " },
 		{ "type": "simple", "value": "AND", "class": "formula_function btn " },
 		{ "type": "simple", "value": "OR", "class": "formula_function btn " },
 		{ "type": "simple", "value": "SUM", "class": "formula_function btn " },

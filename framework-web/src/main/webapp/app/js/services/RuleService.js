@@ -311,11 +311,31 @@ RuleModule.factory('RuleFactory', function ($http, $location) {
       return response;
     })
   }
+  factory.disableRhsType=function(arrayStr){
+    var rTypes=[
+      { "text": "string", "caption": "string","disabled":false },
+      { "text": "string", "caption": "integer" ,"disabled":false },
+      { "text": "datapod", "caption": "attribute","disabled":false },
+      { "text": "formula", "caption": "formula","disabled":false },
+      { "text": "dataset", "caption": "dataset" ,"disabled":false },
+      { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+      { "text": "function", "caption": "function" ,"disabled":false }]
+    for(var i=0;i<rTypes.length;i++){
+      rTypes[i].disabled=false;
+      if(arrayStr.length >0){
+        var index=arrayStr.indexOf(rTypes[i].caption);
+        if(index !=-1){
+          rTypes[i].disabled=true;
+        }
+      }
+    }
+    return rTypes;
+  }
   return factory;
 })
 
 
-RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
+RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILTER) {
   var factory = {};
 
   factory.executeRuleWithParams = function (uuid, version, data) {
@@ -581,11 +601,13 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
     }
     return deferred.promise;
   }
-
+  
   factory.getOneByUuidAndVersion = function (uuid, version, type) {
     var deferred = $q.defer();
     RuleFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
+     
+     
       var ruleJSOn = {};
       ruleJSOn.ruledata = response;
       var filterInfoArray = [];
@@ -593,7 +615,20 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 				for (i = 0; i <response.filter.filterInfo.length; i++) {
 					var filterInfo = {};
 					filterInfo.logicalOperator =response.filter.filterInfo[i].logicalOperator;
-					filterInfo.operator =response.filter.filterInfo[i].operator;
+          filterInfo.operator =response.filter.filterInfo[i].operator;
+          var rhsTypes=null;
+          filterInfo.rhsTypes=null;
+          if(filterInfo.operator =='BETWEEN'){
+            filterInfo.rhsTypes =RuleFactory.disableRhsType(['attribute','formula','dataset','function','paramlist'])
+          }else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
+            filterInfo.rhsTypes=RuleFactory.disableRhsType([]);
+          }else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
+            filterInfo.rhsTypes=RuleFactory.disableRhsType(['string','dataset']);
+          }
+          else{
+            filterInfo.rhsTypes=RuleFactory.disableRhsType(['dataset']);
+          }
+          
 					if (response.filter.filterInfo[i].operand[0].ref.type == "simple") {
 						var obj = {}
 						obj.text = "string"
@@ -762,6 +797,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         
             filterInfo.rhsparamlist = rhsparamlist;
           }
+         
 					filterInfoArray[i] = filterInfo
 				}
 		  }

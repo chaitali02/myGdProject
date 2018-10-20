@@ -76,6 +76,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"double","caption":"double"},
 	 	{"name":"date","caption":"date"}, 
 		{"name":"integer","caption":"integer"},
+		{"name":"decimal","caption":"decimal"},
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
 		{"name":"distribution","caption":"distribution"},

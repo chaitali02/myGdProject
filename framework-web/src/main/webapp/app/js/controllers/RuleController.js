@@ -259,9 +259,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       }
 
     }
-    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ruleview').then(function (response) {
-      onSuccess(response.data)
-    });
+    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ruleview').then(function (response) { onSuccess(response.data)});
     var onSuccess = function (response) {
       $scope.ruleData = response.ruledata
       $scope.rulecompare = response.ruledata;
@@ -277,11 +275,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray = response.sourceAttributes
       $scope.datapodAttributeTags = response.sourceAttributes
       $scope.rulsourcetype = response.ruledata.source.ref.type;
-      RuleService.getAllLatestActive(response.ruledata.source.ref.type).then(function (response) {
-        onSuccessRelation(response.data)
-      });
+      RuleService.getAllLatestActive(response.ruledata.source.ref.type).then(function (response) { onSuccessRelation(response.data)});
       var onSuccessRelation = function (response) {
-
         $scope.ruleRelation = response
         if($scope.ruleData &&  $scope.rulsourcetype == "rule"){
             temp = response.options.filter(function(el) {
@@ -794,31 +789,40 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;
 		$('#searchAttr').modal('hide')
 	}
+  
+  $scope.disableRhsType=function(rshTypes,arrayStr){
+		for(var i=0;i<rshTypes.length;i++){
+			rshTypes[i].disabled=false;
+			if(arrayStr.length >0){
+				var index=arrayStr.indexOf(rshTypes[i].caption);
+				if(index !=-1){
+					rshTypes[i].disabled=true;
+				}
+		  }
+    }
+    return rshTypes;
+	}
 
   $scope.onChangeOperator=function(index){
 		if($scope.rulecompare != null) {
 			$scope.rulecompare.filterChg = "y"
     }
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
-		  //$scope.disableRhsType(['string','attribute','formula','dataset'])
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
+		  $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['attribute','formula','dataset','function','paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			//if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			//  $scope.disableRhsType([]);
-			//}else{
-			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
-	 	  //}
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,[]);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
-      // $scope.disableRhsType(['string','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['string','dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 		else{
-			//$scope.disableRhsType(['attribute','formula','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 	}
@@ -845,8 +849,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
     filertable.operator = $scope.operator[0].value
-		filertable.lhstype = $scope.lhsType[0]
-		filertable.rhstype = $scope.rhsType[0]
+    filertable.lhstype = $scope.lhsType[0];
+    console.log(CF_FILTER.rhsType)
+    filertable.rhsTypes=CF_FILTER.rhsType;
+    filertable.rhsTypes=$scope.disableRhsType(filertable.rhsTypes,['dataset']);
+    console.log(filertable.rhsTypes);
+		filertable.rhstype = filertable.rhsTypes[0];
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
@@ -1131,7 +1139,6 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.onChangeAttributeParamlist = function (data, index) {
-    debugger
     $scope.attributeTableArray[index].name = data.paramName
   }
 
@@ -1150,7 +1157,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     attrivuteinfo.name = "attribute" + len;
     attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
     attrivuteinfo.isSourceAtributeSimple = true;
-    attrivuteinfo.sourcesimple = "''"
+    attrivuteinfo.sourcesimple;
     attrivuteinfo.isSourceAtributeDatapod = false;
    // console.log(JSON.stringify(attrivuteinfo))
     $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
@@ -1322,6 +1329,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
             rhsoperand.ref = rhsref;
             rhsoperand.attributeType =$scope.filterTableArray[i].rhstype.caption;
             rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+            if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+              rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+            }
+            
           }
           else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
             if ($scope.rulsourcetype == "relation") {
