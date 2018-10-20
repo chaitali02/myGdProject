@@ -1,0 +1,121 @@
+{
+  "uuid": "e885f3b1-8e7d-46fc-842c-83873615ebf2",
+  "version": "1540024213",
+  "name": "ds_customer_summary_30d",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 20 14:00:13 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "filter",
+        "uuid": "cf8e7a12-eef6-48b7-9842-7cdeeb4ad56f",
+        "version": null,
+        "name": "ds_customer_summary_30d"
+      },
+      "value": null,
+      "attrId": null,
+      "attrName": null,
+      "attrType": null
+    }
+  ],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "customer_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "customer_id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "trans_month_year",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "dad3d855-4bdb-44c8-bc6b-b5f09db606b8",
+          "version": null,
+          "name": "fm_trans_month_year"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
+          "version": null,
+          "name": "fm_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "trans_sum_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
+          "version": null,
+          "name": "fm_trans_sum_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}
