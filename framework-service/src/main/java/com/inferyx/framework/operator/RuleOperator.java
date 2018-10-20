@@ -149,8 +149,7 @@ public class RuleOperator implements IParsable, IReferenceable {
 									Set<MetaIdentifier> usedRefKeySet, 
 									ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
-			String filter = filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
-			return filter;
+			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 		}
 		return ConstantsUtil.BLANK;
 	}
