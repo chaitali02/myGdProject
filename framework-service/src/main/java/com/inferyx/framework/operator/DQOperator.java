@@ -423,7 +423,7 @@ public class DQOperator implements IParsable {
 		if (filterInfo == null || filterInfo.isEmpty()) {
 			return "";
 		}
-		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet);
+		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false);
 
 	}
 

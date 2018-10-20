@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -95,7 +96,8 @@ public class ReportOperator implements IOperator {
 		.concat(generateFrom(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 		.concat(generateWhere())
 		.concat(generateFilter(report, refKeyMap, otherParams, usedRefKeySet, execParams))
-		.concat(generateGroupBy(report, refKeyMap, otherParams, execParams));
+		.concat(generateGroupBy(report, refKeyMap, otherParams, execParams))
+		.concat(generateHaving(report, refKeyMap, otherParams, usedRefKeySet, execParams));
 	}
 
 	private String generateSelect(Report report, Map<String, MetaIdentifier> refKeyMap,
@@ -161,7 +163,7 @@ public class ReportOperator implements IOperator {
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
-			String filter = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+			String filter = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -170,5 +172,13 @@ public class ReportOperator implements IOperator {
 	private String generateGroupBy(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(report.getAttributeInfo()), refKeyMap, otherParams, execParams);
+	}
+	
+	private String generateHaving (Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if (report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
+			String filterStr = filterOperator.generateSql(report.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true);
+			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING.concat(filterStr);
+		}
+		return ConstantsUtil.BLANK;
 	}
 }

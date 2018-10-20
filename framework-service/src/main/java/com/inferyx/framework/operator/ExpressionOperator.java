@@ -151,7 +151,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				builder.append(" (")
-						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams))
+						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false))
 						.append(")");
 				builder.append(" as ").append(filter.getName()).append(COMMA);
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
