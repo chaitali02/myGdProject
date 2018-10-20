@@ -72,7 +72,9 @@ public class JoinKeyOperator {
 		for (FilterInfo filterInfo : filters) {
 			String filter = generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd);
 			if (StringUtils.isNotBlank(filter)) {
-				filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
+				if (StringUtils.isNotBlank(filterBuilder)) {
+					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
+				}
 				filterBuilder.append(filter).append(" ");
 			} 
 		}
