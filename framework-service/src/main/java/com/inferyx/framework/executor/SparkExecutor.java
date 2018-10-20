@@ -655,6 +655,7 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new IOException("Can not write data.");
 			}
+			rsHolder.setTableName(tableName);
 			datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
