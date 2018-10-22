@@ -430,9 +430,38 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 			}
 			$scope.allparamlistParams=paramsArray;
 		  }
+		  if($scope.paramlistArray.length >0){
+			if($scope.allparamlistParams[0].uuid !=$scope.paramlistArray[0]){
+				$scope.getOneByUuidParamList($scope.paramlistArray[0]);
+			}
+			if($scope.paramlistArray.length >1 && $scope.allparamlistParams[1].uuid !=$scope.paramlistArray[1]){
+				$scope.getOneByUuidParamList($scope.paramlistArray[1]);
+			}
+		  }
 		}
 	}
-
+	$scope.getOneByUuidParamList = function (uuid) {
+		CommonService.getLatestByUuid(uuid, "paramlist").
+		then(function (response) { onSuccessParamList(response.data)});
+		var onSuccessParamList = function (response) {
+			var paramsArray = [];
+			for (var i = 0; i < response.params.length; i++) {
+			var paramsjson = {};
+			paramsjson.uuid = response.uuid;
+			paramsjson.name = response.name + "." + response.params[i].paramName;
+			paramsjson.attributeId = response.params[i].paramId;
+			paramsjson.attrType = response.params[i].paramType;
+			paramsjson.paramName = response.params[i].paramName;
+			paramsjson.caption = response.name + "." +paramsjson.paramName;
+			paramsArray[i] = paramsjson;
+			}
+			$scope.otherParamList = paramsArray
+			if($scope.allparamlistParams &&  $scope.allparamlistParams.length >0)
+			$scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.otherParamList);
+		}
+		 
+	}
+	  
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
@@ -455,7 +484,8 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 			defaultversion.version = response.filter.version;
 			defaultversion.uuid = response.filter.uuid;
 			$scope.filter.defaultVersion = defaultversion;
-			$scope.filterdata = response.filter
+			$scope.filterdata = response.filter;
+			$scope.paramlistArray=response.paramlistArray;
 			defaultoption.uuid = response.filter.dependsOn.ref.uuid;
 			defaultoption.name = response.filter.dependsOn.ref.name;
 			$scope.selectRelation = response.filter.dependsOn.ref.type

@@ -673,14 +673,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.getParamByApp();
   }
 
-  
-  $scope.changeCheckboxExecution = function () {
-    $scope.allparamset=null;
-    $scope.allParamList=null;
-    $scope.isParamLsitTable=false;
-    $scope.selectParamList=null;
-    $scope.paramTypes=null;
-    $scope.selectParamType=null;
+  $scope.showParamlistPopup=function(){
     setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
       $('#responsive').modal({
@@ -692,10 +685,41 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.allparamset = null;
     }
   }
+  $scope.closeParalistPopup=function(){
+    $scope.dataLoading = false;
+    $scope.checkboxModelexecution="NO";
+    $scope.isSubmitDisabled=false;
+    $('#responsive').modal('hide');
+
+  }
+  $scope.changeCheckboxExecution = function () {
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.paramTypes=null;
+    $scope.selectParamType=null;
+    // setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
+    // if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+    //   $('#responsive').modal({
+    //     backdrop: 'static',
+    //     keyboard: false
+    //   });
+    // } else {
+    //   $scope.isShowExecutionparam = false;
+    //   $scope.allparamset = null;
+    // }
+  }
   
   $scope.executeWithExecParams = function () {
     $('#responsive').modal('hide');
+    RuleService.getOneById($scope.ruleId, "rule").then(function (response) {
+    onSuccessGetOneById(response.data)});
+    var onSuccessGetOneById = function (result) {
+      $scope.modelExecute(result.data);
+    } 
   }
+
   $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
@@ -976,7 +1000,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist=true;
       $scope.filterTableArray[index].isrhsFunction = false;
-      $scope.getParamByApp();
+      if($scope.allparamlistParams && $scope.allparamlistParams.length ==0){
+        $scope.getParamByApp();
+      }
 			
     }
     if ($scope.rulecompare != null) {
@@ -1456,13 +1482,15 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      if (options.execution == "YES") {
-        RuleService.getOneById(response.data, "rule").then(function (response) {
-          onSuccessGetOneById(response.data)
-        });
-        var onSuccessGetOneById = function (result) {
-          $scope.modelExecute(result.data);
-        }
+      if(options.execution == "YES") {
+        $scope.ruleId=response.data;
+        $scope.showParamlistPopup();
+        // RuleService.getOneById(response.data, "rule").then(function (response) {
+        //   onSuccessGetOneById(response.data)
+        // });
+        // var onSuccessGetOneById = function (result) {
+        //   $scope.modelExecute(result.data);
+        // }
       } //End if
       else {
         $scope.dataLoading = false;
