@@ -381,6 +381,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 			var filterjson = {};
 			filterjson.filter = response;
 			var filterInfoArray = [];
+			filterjson.paramlistArray=[];
 			for (i = 0; i < response.filterInfo.length; i++) {
 				var filterInfo = {};
 				filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
@@ -448,7 +449,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 						filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
 					}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
 						obj.caption = "integer";
-						
+						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 					}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
 						obj.caption = "integer";
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
@@ -555,6 +556,9 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.isrhsDataset = false;
 					filterInfo.isrhsParamlist = true;
 					filterInfo.isrhsFunction = false;
+					if(filterjson.paramlistArray.indexOf(response.filterInfo[i].operand[1].ref.uuid) ==-1){
+						filterjson.paramlistArray.push(response.filterInfo[i].operand[1].ref.uuid)
+					}
 					rhsparamlist.uuid = response.filterInfo[i].operand[1].ref.uuid;
 					rhsparamlist.datapodname = response.filterInfo[i].operand[1].ref.name;
 					rhsparamlist.name = response.filterInfo[i].operand[1].attributeName;

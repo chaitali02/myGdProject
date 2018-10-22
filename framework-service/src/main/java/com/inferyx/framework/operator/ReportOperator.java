@@ -175,10 +175,15 @@ public class ReportOperator implements IOperator {
 	}
 	
 	private String generateHaving (Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		if (report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
+		
+		/*if (report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
 			String filterStr = filterOperator.generateSql(report.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
-		}
+		}*/
+		if (execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
+			String filterStr = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
+	    }
 		return ConstantsUtil.BLANK;
 	}
 }

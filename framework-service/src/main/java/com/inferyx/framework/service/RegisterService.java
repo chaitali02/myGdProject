@@ -50,6 +50,7 @@ import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.ApplicationView;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -236,6 +237,8 @@ public class RegisterService {
 	private IngestServiceImpl ingestServiceImpl;
 	@Autowired
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	@Autowired
+	private ApplicationViewServiceImpl applicationViewServiceImpl;
 	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -1020,6 +1023,10 @@ public class RegisterService {
 			case "ingestview" :
 				IngestView ingestView = mapper.convertValue(operator, IngestView.class);
 				baseEntity = ingestViewServiceImpl.save(ingestView);
+				break;
+			case "applicationview" :
+				ApplicationView applicationView = mapper.convertValue(operator, ApplicationView.class);
+				baseEntity = applicationViewServiceImpl.save(applicationView);
 				break;
 			}
 		}
@@ -1839,6 +1846,9 @@ public class RegisterService {
 				break;
 			case "ingestview":
 				result = ow.writeValueAsString(ingestViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "applicationview":
+				result = ow.writeValueAsString(applicationViewServiceImpl.findOneByUuidAndVersion(uuid, version));
 				break;
 			}
 		}
