@@ -133,7 +133,7 @@
 	],
 	"uuid": "7a8cb69d-8c88-49f0-885d-5a16fcdadecd",
 	"version": "1489065912",
-	"name": "relation_dim_account",
+	"name": "rel_dim_account",
 	"desc": "relation for dim_account table using raw source tables",
 	"createdBy": {
 		"ref": {

@@ -257,7 +257,7 @@
 	],
 	"uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
 	"version": "1502631202",
-	"name": "relation_datawarehouse",
+	"name": "rel_datawarehouse",
 	"desc": "Relation for Datawarehouse Datapods",
 	"createdBy": {
 		"ref": {

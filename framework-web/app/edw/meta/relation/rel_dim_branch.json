@@ -40,7 +40,7 @@
 	],
 	"uuid": "61e48b8f-bd30-472e-a00c-c4a0683d1315",
 	"version": "1488711209",
-	"name": "relation_dim_branch",
+	"name": "rel_dim_branch",
 	"desc": "relation for dim_branch table using raw source tables",
 	"createdBy": {
 		"ref": {

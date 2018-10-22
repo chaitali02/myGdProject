@@ -1,7 +1,7 @@
 {
 	"uuid": "a57e93e8-6e27-4a95-9fd7-6b56a8b40e06",
 	"version": "1490555278",
-	"name": "relation_fact_transaction",
+	"name": "rel_fact_transaction",
 	"desc": "relation for fact_transaction table using raw source tables",
 	"createdBy": {
 		"ref": {

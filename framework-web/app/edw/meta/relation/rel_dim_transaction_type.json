@@ -8,7 +8,7 @@
 	"relationInfo": [],
 	"uuid": "adbc1dd1-6369-4ef5-9a01-5250db30e06b",
 	"version": "1488708047",
-	"name": "relation_dim_transaction_type",
+	"name": "rel_dim_transaction_type",
 	"desc": "relation for dim_transaction_type table using raw source table",
 	"createdBy": {
 		"ref": {

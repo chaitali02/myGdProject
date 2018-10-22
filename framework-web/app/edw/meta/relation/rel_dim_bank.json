@@ -2,14 +2,14 @@
 	"dependsOn": {
 		"ref": {
 			"type": "datapod",
-			"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+			"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 		}
 	},
 	"relationInfo": [],
-	"uuid": "55ed3e38-7de7-4c90-b6df-257b4167c647",
-	"version": "1488707862",
-	"name": "relation_dim_address",
-	"desc": "relation for dim address table using raw source table",
+	"uuid": "ee2781b3-a252-4207-92d7-5989f0bcc0ad",
+	"version": "1488707649",
+	"name": "rel_dim_bank",
+	"desc": "relation for dim_bank table using raw source table",
 	"createdBy": {
 		"ref": {
 			"type": "user",
