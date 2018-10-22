@@ -85,7 +85,8 @@ public class CommonController<T> {
 				|| type.equalsIgnoreCase(MetaType.reconview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.reportview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.batchview.toString())
-				|| type.equalsIgnoreCase(MetaType.ingestview.toString()))
+				|| type.equalsIgnoreCase(MetaType.ingestview.toString())
+				|| type.equalsIgnoreCase(MetaType.applicationview.toString()))
 			if(StringUtils.isBlank(version))
 				return (T) registerService.getLatestByUuid(uuid, type);
 			else
@@ -178,7 +179,8 @@ public class CommonController<T> {
 				|| type.equalsIgnoreCase(MetaType.reconview.toString())
 				|| type.equalsIgnoreCase(MetaType.reportview.toString())
 				|| type.equalsIgnoreCase(MetaType.batchview.toString())
-				|| type.equalsIgnoreCase(MetaType.ingestview.toString())) {
+				|| type.equalsIgnoreCase(MetaType.ingestview.toString())
+				|| type.equalsIgnoreCase(MetaType.applicationview.toString())) {
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
 			 
