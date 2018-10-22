@@ -597,9 +597,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-		/*		if(areAllAttrs) {
-					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, latestIncrLastValue));
-					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null));
+				if(areAllAttrs) {
+					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
+					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
 				}
 				
 				if(whereClause.contains("WHERE")) {
@@ -607,7 +607,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				} else if(whereClause.contains("where")) {
 					whereClause = whereClause.replaceAll("where", "").trim();
 				}
-				*/
+				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
 				if(ingestionType.equals(IngestionType.FILETOFILE)) {
