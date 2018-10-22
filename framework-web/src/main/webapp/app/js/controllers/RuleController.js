@@ -1115,6 +1115,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           var paramsjson = {};
           paramsjson.uuid = response[i].ref.uuid;
           paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+          paramsjson.dname = response[i].ref.name + "." + response[i].paramName;
           paramsjson.attributeId = response[i].paramId;
           paramsjson.attrType = response[i].paramType;
           paramsjson.paramName = response[i].paramName;

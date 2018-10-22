@@ -164,8 +164,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		if(!$scope.isEdit && !$scope.isAdd ){
 			return false;
 		}
-		debugger
-		 console.log($scope.formulainfoarray[index]);
+		//console.log($scope.formulainfoarray[index]);
 	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
 			$scope.attributeinfo={};
 			var type={};
@@ -239,7 +238,31 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			}
 		}
 	}
-
+	
+	$scope.getParamByApp=function(){
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+		then(function (response) { onSuccessGetParamByApp(response.data)});
+		var onSuccessGetParamByApp=function(response){
+		  $scope.lodeParamlist=[];
+		  if(response.length >0){
+			var paramsArray = [];
+			for(var i=0;i<response.length;i++){
+			  var paramjson={}
+			  var paramsjson = {};
+			  paramsjson.uuid = response[i].ref.uuid;
+			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+			  paramsjson.dname = response[i].ref.name + "." + response[i].paramName;
+			  paramsjson.attributeId = response[i].paramId;
+			  paramsjson.attrType = response[i].paramType;
+			  paramsjson.paramName = response[i].paramName;
+			  paramsjson.caption = "app."+paramsjson.paramName;
+			  paramsArray[i] = paramsjson
+			}
+			$scope.lodeParamlist=paramsArray;
+		  }
+		}
+	  }
+	$scope.getParamByApp();
 	$scope.selectDependson = function () {
 		$scope.formulainfoarray=[];
 		MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
@@ -400,6 +423,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			}
 		}
 		else if($scope.attributeType.text == "paramlist"){
+			debugger
 			data.type = $scope.attributeType.text
 			data.value = $scope.sourceparamlist.dname
 			data.uuid = $scope.sourceparamlist.uuid;
@@ -477,11 +501,24 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = false;
 			$scope.isSourceAtributeParamlist = true;
-			debugger;
 			MetadataFormulaSerivce.getParamByParamList($scope.allformuladepands.defaultoption.uuid,"paramlist").then(function (response) { onSuccessParamlist(response.data) });
 			var onSuccessParamlist = function (response) {
-				debugger
-				$scope.lodeParamlist = response
+				if($scope.lodeParamlist && $scope.lodeParamlist.length ==0){
+					$scope.lodeParamlist = response;
+				}else if($scope.lodeParamlist.length >0  && $scope.lodeParamlist[0].uuid != response[0].uuid){
+					for(var i=0;i<response.length;i++){
+						var paramjson={}
+						var paramsjson = {};
+						paramsjson.uuid = response[i].uuid;
+						paramsjson.name = response[i].name 
+						paramsjson.dname = response[i].datapodname+"."+response[i].dname;
+						paramsjson.attributeId = response[i].attributeId;
+						paramsjson.attrType = response[i].paramType;
+						paramsjson.paramName = response[i].paramName;
+						paramsjson.caption = "formula."+paramsjson.paramName;
+						$scope.lodeParamlist.push(paramsjson);
+					}
+				}
 			}
 		}
 	}
