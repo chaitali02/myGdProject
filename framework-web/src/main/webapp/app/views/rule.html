@@ -471,7 +471,6 @@
                                         <div class="col-md-1" style="padding:7px 0px 0px 5px;">
                                             <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsparamlist')"></span>
                                         </div> -->
-                                      
                                         <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
                                         ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId" ng-disabled="{{mode}}"
                                          required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
@@ -623,9 +622,9 @@
                       <div class="col-md-9">
                         <div class="mt-checkbox-list" style="margin-top:-7px">
                           <label class="mt-checkbox mt-checkbox-outline">
-                            <input  ng-disabled="{{mode}} || isSubmitDisabled" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
+                            <input  ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
                               ng-change="changeCheckboxExecution()">
-                            <span  ng-disabled="{{mode}} || isSubmitDisabled"></span>
+                            <span  ng-disabled="{{mode}}"></span>
                           </label>
                         </div>
                       </div>
@@ -841,7 +840,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+            <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="closeParalistPopup()">Close</button>
             <input type="submit" class="btn green" value="Submit" />
           </div>
         </form>
