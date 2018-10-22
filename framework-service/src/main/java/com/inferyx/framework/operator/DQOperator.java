@@ -295,7 +295,7 @@ public class DQOperator implements IParsable {
 			if (!isKey) {
 				dupJoinStr = dupJoinStr.concat(dq.getAttribute().getAttrName()).concat(COMMA);
 			}
-			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(COUNT)
+			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(" AND ").concat(COUNT)
 					.concat(BRACKET_OPEN).concat(dq.getAttribute().getAttrName()).concat(BRACKET_CLOSE)
 					.concat(GREATER_THAN).concat(ONE).concat(BRACKET_CLOSE).concat(DUP_TABLE).concat(ON)
 					.concat(BRACKET_OPEN);
@@ -311,7 +311,7 @@ public class DQOperator implements IParsable {
 					.concat(BRACKET_CLOSE).concat(AS).concat(" dup ").concat(FROM).concat(tableName)
 					// .concat(AS)
 					.concat(" ").concat(datapod.getName()).concat(WHERE_1_1).concat(GROUP_BY);
-			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(COUNT)
+			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(" AND ").concat(COUNT)
 					.concat(BRACKET_OPEN).concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)))
 					.concat(BRACKET_CLOSE).concat(GREATER_THAN).concat(ONE).concat(BRACKET_CLOSE).concat(DUP_TABLE)
 					.concat(ON).concat(BRACKET_OPEN);
