@@ -622,9 +622,9 @@
                       <div class="col-md-9">
                         <div class="mt-checkbox-list" style="margin-top:-7px">
                           <label class="mt-checkbox mt-checkbox-outline">
-                            <input  ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
+                            <input  ng-disabled="{{mode}} || isSubmitDisabled" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
                               ng-change="changeCheckboxExecution()">
-                            <span  ng-disabled="{{mode}}"></span>
+                            <span  ng-disabled="{{mode}} || isSubmitDisabled"></span>
                           </label>
                         </div>
                       </div>
