@@ -547,7 +547,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
 					formulainfo.attrId = response.formulaInfo[i].attributeId;
-					formulainfo.value = response.formulaInfo[i].attributeName;
+					formulainfo.value = response.formulaInfo[i].ref.name+"."+response.formulaInfo[i].attributeName;
 
 				}
 				else {
