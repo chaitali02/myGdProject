@@ -1,7 +1,7 @@
 {
-  "uuid": "b354a33f-ee51-4f24-b5f0-4c63bd555330",
+  "uuid": "b354a33f-ee52-4f24-b5f0-4c63bd555330",
   "version": "1540038853",
-  "name": "Outgoing Cross Border Wire Transfers",
+  "name": "Outgoing Cross Border Cash Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -91,7 +91,7 @@
             "name": null
           },
           "attributeId": null,
-          "value": "WR",
+          "value": "CA",
           "attributeName": null,
           "attributeType": "string"
         }

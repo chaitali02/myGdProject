@@ -1,7 +1,7 @@
 {
-  "uuid": "b354a33f-ee51-4f24-b5f0-4c63bd555330",
+  "uuid": "b354a33f-ee51-4f24-b5f0-8c63bd555320",
   "version": "1540038853",
-  "name": "Outgoing Cross Border Wire Transfers",
+  "name": "Net Cross Border Cash Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -48,36 +48,6 @@
             "version": null,
             "name": "fact_transaction_journal"
           },
-          "attributeId": 1,
-          "value": null,
-          "attributeName": "direction",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "simple",
-            "uuid": null,
-            "version": null,
-            "name": null
-          },
-          "attributeId": null,
-          "value": "OUTGOING",
-          "attributeName": null,
-          "attributeType": "string"
-        }
-      ]
-    },
-    {
-      "logicalOperator": "AND",
-      "operator": "=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
           "attributeId": 4,
           "value": null,
           "attributeName": "transaction_type_code",
@@ -91,7 +61,7 @@
             "name": null
           },
           "attributeId": null,
-          "value": "WR",
+          "value": "CA",
           "attributeName": null,
           "attributeType": "string"
         }
@@ -164,9 +134,9 @@
         {
           "ref": {
             "type": "formula",
-            "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
+            "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
             "version": null,
-            "name": "fm_trans_sum_usd"
+            "name": "fm_trans_net_amount"
           },
           "attributeId": null,
           "value": null,

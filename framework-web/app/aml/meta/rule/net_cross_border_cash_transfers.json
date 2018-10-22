@@ -1,7 +1,7 @@
 {
-  "uuid": "35b88f7b-8f56-4cf1-9912-7d35c7cf397a",
-  "version": "1540039073",
-  "name": "High Velocity Wire Transfers",
+  "uuid": "bc156d87-b99b-4d55-a578-c2234b3a0222",
+  "version": "1540038853",
+  "name": "Net Cross Border Cash Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -32,9 +32,9 @@
     {
       "ref": {
         "type": "filter",
-        "uuid": "8b99e3f1-a4b4-43d1-981b-4b08c878b12c",
+        "uuid": "b354a33f-ee51-4f24-b5f0-8c63bd555320",
         "version": null,
-        "name": "High Velocity Wire Transfers"
+        "name": "Net Cross Border Cash Transfers"
       },
       "value": null,
       "attrId": null,
@@ -63,7 +63,7 @@
           "version": null,
           "name": null
         },
-        "value": "High Velocity Wire Transfers",
+        "value": "Net Cross Border Cash Transfers",
         "attrId": null,
         "attrName": null,
         "attrType": null
@@ -87,13 +87,29 @@
     },
     {
       "attrSourceId": "2",
-      "attrSourceName": "trans_velocity",
+      "attrSourceName": "trans_count",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "56334478-2fdb-4363-bbdd-a8661151577b",
+          "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
           "version": null,
-          "name": "fm_trans_velocity"
+          "name": "fm_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "trans_net_amount",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
+          "version": null,
+          "name": "fm_trans_net_amount"
         },
         "value": null,
         "attrId": null,
@@ -107,9 +123,9 @@
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
+      "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
       "version": null,
-      "name": "paramlist_high_trans_velocity"
+      "name": "paramlist_cross_border_transfers"
     },
     "value": null
   }

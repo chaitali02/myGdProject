@@ -1,7 +1,7 @@
 {
-  "uuid": "8b99e3f1-a4b4-43d1-981b-4b08c878b12c",
+  "uuid": "8b99e3f1-abvp-43d1-981b-4b08c878b12c",
   "version": "1540039073",
-  "name": "High Velocity Wire Transfers",
+  "name": "High Velocity Cash Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -36,7 +36,7 @@
     },
     "value": null
   },
-   "filterInfo" : [ 
+  "filterInfo" : [ 
         {
             "logicalOperator" : "",
             "operator" : ">=",
@@ -111,7 +111,7 @@
                     "ref" : {
                         "type" : "simple"
                     },
-                    "value" : "WR",
+                    "value" : "CA",
                     "attributeType" : "string"
                 }
             ]

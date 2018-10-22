@@ -1,7 +1,7 @@
 {
-  "uuid": "35b88f7b-8f56-4cf1-9912-7d35c7cf397a",
+  "uuid": "35b88f7b-8f56-4cf1-9912-7d35c7cf397b",
   "version": "1540039073",
-  "name": "High Velocity Wire Transfers",
+  "name": "High Velocity Cash Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -32,9 +32,9 @@
     {
       "ref": {
         "type": "filter",
-        "uuid": "8b99e3f1-a4b4-43d1-981b-4b08c878b12c",
+        "uuid": "8b99e3f1-abvp-43d1-981b-4b08c878b12c",
         "version": null,
-        "name": "High Velocity Wire Transfers"
+        "name": "High Velocity Cash Transfers"
       },
       "value": null,
       "attrId": null,
@@ -63,7 +63,7 @@
           "version": null,
           "name": null
         },
-        "value": "High Velocity Wire Transfers",
+        "value": "High Velocity Cash Transfers",
         "attrId": null,
         "attrName": null,
         "attrType": null

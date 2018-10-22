@@ -1,7 +1,7 @@
 {
-  "uuid": "b354a33f-ee51-4f24-b5f0-4c63bd555330",
-  "version": "1540038853",
-  "name": "Outgoing Cross Border Wire Transfers",
+  "uuid": "79fd0685-366b-4e07-5678-53b99125baaa",
+  "version": "1540039357",
+  "name": "Net High Risk Geo Wire Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -48,36 +48,6 @@
             "version": null,
             "name": "fact_transaction_journal"
           },
-          "attributeId": 1,
-          "value": null,
-          "attributeName": "direction",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "simple",
-            "uuid": null,
-            "version": null,
-            "name": null
-          },
-          "attributeId": null,
-          "value": "OUTGOING",
-          "attributeName": null,
-          "attributeType": "string"
-        }
-      ]
-    },
-    {
-      "logicalOperator": "AND",
-      "operator": "=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
           "attributeId": 4,
           "value": null,
           "attributeName": "transaction_type_code",
@@ -99,20 +69,8 @@
     },
     {
       "logicalOperator": "AND",
-      "operator": "!=",
+      "operator": "IN",
       "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 7,
-          "value": null,
-          "attributeName": "sender_country",
-          "attributeType": null
-        },
         {
           "ref": {
             "type": "datapod",
@@ -123,6 +81,18 @@
           "attributeId": 8,
           "value": null,
           "attributeName": "reciever_country",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "dataset",
+            "uuid": "901b398f-41d9-4b31-9803-c9611bf63eb2",
+            "version": null,
+            "name": "ds_high_risk_geographies"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "country_code",
           "attributeType": null
         }
       ]
@@ -146,9 +116,9 @@
         {
           "ref": {
             "type": "paramlist",
-            "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
+            "uuid": "ce0492ec-6240-4b5c-87cf-139a58c111b2",
             "version": null,
-            "name": "paramlist_cross_border_transfers"
+            "name": "paramlist_high_risk_geo_transfers"
           },
           "attributeId": 0,
           "value": null,
@@ -157,16 +127,16 @@
         }
       ]
     },
-    {
+     {
       "logicalOperator": "AND",
       "operator": ">=",
       "operand": [
         {
           "ref": {
             "type": "formula",
-            "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
+            "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
             "version": null,
-            "name": "fm_trans_sum_usd"
+            "name": "fm_trans_net_amount"
           },
           "attributeId": null,
           "value": null,
@@ -176,9 +146,9 @@
         {
           "ref": {
             "type": "paramlist",
-            "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
+            "uuid": "ce0492ec-6240-4b5c-87cf-139a58c111b2",
             "version": null,
-            "name": "paramlist_cross_border_transfers"
+            "name": "paramlist_high_risk_geo_transfers"
           },
           "attributeId": 1,
           "value": null,
