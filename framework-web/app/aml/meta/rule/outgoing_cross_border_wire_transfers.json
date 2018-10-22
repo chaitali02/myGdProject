@@ -1,7 +1,7 @@
 {
-  "uuid": "c656e196-a1f0-4835-a9b7-f0d9e2b12999",
-  "version": "1540038379",
-  "name": "Net Cash Transfers",
+  "uuid": "bc156d87-b99b-4d55-a578-c2234b3a0731",
+  "version": "1540038853",
+  "name": "Outgoing Cross Border Wire Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -32,9 +32,9 @@
     {
       "ref": {
         "type": "filter",
-        "uuid": "c0b15ba4-bc34-4743-b913-9646b9820070",
+        "uuid": "b354a33f-ee51-4f24-b5f0-4c63bd555330",
         "version": null,
-        "name": "Net Cash Transfers"
+        "name": "Outgoing Cross Border Wire Transfers"
       },
       "value": null,
       "attrId": null,
@@ -63,7 +63,7 @@
           "version": null,
           "name": null
         },
-        "value": "Net Cash Transfers",
+        "value": "Outgoing Cross Border Wire Transfers",
         "attrId": null,
         "attrName": null,
         "attrType": null
@@ -103,13 +103,13 @@
     },
     {
       "attrSourceId": "3",
-      "attrSourceName": "trans_net_amount",
+      "attrSourceName": "trans_sum_usd",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
+          "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
           "version": null,
-          "name": "fm_trans_net_amount"
+          "name": "fm_trans_sum_usd"
         },
         "value": null,
         "attrId": null,
@@ -123,9 +123,9 @@
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+      "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
       "version": null,
-      "name": "paramlist_money_transfers"
+      "name": "paramlist_cross_border_transfers"
     },
     "value": null
   }
