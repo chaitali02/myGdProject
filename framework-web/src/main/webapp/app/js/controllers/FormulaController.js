@@ -236,6 +236,12 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			$scope.allformuladepands={};
 			$scope.allformuladepands.options = response;
 			$scope.allformuladepands.defaultoption=response[0];
+			if(typeof $stateParams.id != "undefined"){
+				var defaultoption = {};
+				defaultoption.uuid = $scope.formuladata.dependsOn.ref.uuid;
+				defaultoption.name = $scope.formuladata.dependsOn.ref.name;
+				$scope.allformuladepands.defaultoption = defaultoption;
+			}
 			MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
 			var onSuccessGetAllAttributeBySource = function (resposne) {
 				$scope.allAttribute = resposne;
@@ -319,6 +325,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			
 			if($scope.selectedDependsOnType =="paramlist"){
 				$scope.getAllLatestParamListByTemplate();
+				
 			}else{
 				MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type).then(function (response) { onSuccessGetAllLatest(response.data) });
 				var onSuccessGetAllLatest = function (response) {
