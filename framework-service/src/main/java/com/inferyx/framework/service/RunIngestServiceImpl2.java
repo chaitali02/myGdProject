@@ -626,7 +626,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
 					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && targetDp != null) {
-						String tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
+						String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
 						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				}
 			}
@@ -687,7 +687,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						if(sourceHeader.equalsIgnoreCase("false")) {
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 						}
-						rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+						rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, null, tableName, false);
 					} 
 					
 					//applying target schema to df
@@ -771,7 +771,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							if(sourceHeader.equalsIgnoreCase("false")) {
 								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 							}
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, null, tableName, false);
 						} 
 						
 						//applying target schema to df
@@ -835,7 +835,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 								if(sourceHeader.equalsIgnoreCase("false")) {
 									rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 								}
-								rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+								rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, null, tableName, false);
 							} 
 							
 							//applying target schema to df
@@ -989,7 +989,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						
 						//map schema to source mappedAttrs	
 						if(colAliaseNames != null) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, null, tableName, false);
 						}
 						
 						//applying target schema to df

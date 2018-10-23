@@ -3167,11 +3167,15 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder mapSchema(ResultSetHolder rsHolder, String query, List<String> columnList, String tableName, boolean registerTempTable) throws IOException {
+	public ResultSetHolder mapSchema(ResultSetHolder rsHolder, String query, List<String> columnList, Datasource targetDatasource, String tableName, boolean registerTempTable) throws IOException {
 		logger.info("inside method mapSchema");
 		Dataset<Row> df = null;
 		if(query != null) {
-			rsHolder = executeSql(query, null);
+			if(targetDatasource != null) {
+				rsHolder = executeSqlByDatasource(query, targetDatasource, null);
+			} else {
+				rsHolder = executeSql(query, null);
+			}
 		} else {
 			df = rsHolder.getDataFrame();
 			df.printSchema();
