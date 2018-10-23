@@ -201,10 +201,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		if($scope.isUseTemlate){
 			$scope.getAllLatestParamListByTemplate();
 			$scope.isTemplageInfoRequired=true;
+			$scope.isTableDisable=true;
 		}else{
 			$scope.isTemplageInfoRequired=false;
 			$scope.allParamList=null;
 			$scope.paramtable=null;
+			$scope.isTableDisable=false;
 			
 		}
 	}
