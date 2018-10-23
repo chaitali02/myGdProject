@@ -597,16 +597,24 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-//				if(areAllAttrs) {
-//					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
-//					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
-//				}
-//				
-//				if(whereClause.contains("WHERE")) {
-//					whereClause = whereClause.replaceAll("WHERE", "").trim();
-//				} else if(whereClause.contains("where")) {
-//					whereClause = whereClause.replaceAll("where", "").trim();
-//				}
+				if(areAllAttrs) {
+					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
+					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
+				}
+				
+				//removing where
+				if(whereClause.contains("WHERE")) {
+					whereClause = whereClause.replaceAll("WHERE", "").trim();
+				} else if(whereClause.contains("where")) {
+					whereClause = whereClause.replaceAll("where", "").trim();
+				}
+				
+				//removing $CONDITIONS
+				if(whereClause.contains("AND $CONDITIONS")) {
+					whereClause = whereClause.replace("AND $CONDITIONS", "").trim();
+				} else if(whereClause.contains("and $conditions")) {
+					whereClause = whereClause.replace("and $conditions", "").trim();
+				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				

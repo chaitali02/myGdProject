@@ -12,6 +12,7 @@ package com.inferyx.framework.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -283,27 +284,39 @@ public class ParamListServiceImpl {
 									MetaIdentifier ref) throws JsonProcessingException {	
 		logger.info("Inside ParamListServiceImpl.getParamValue(); "); 
 		ParamListHolder paramListHolder = null;
+		String paramName = null;
+		String refParamValue = null;
+		ParamList paramListRef = (ParamList)daoRegister.getRefObject(ref);
 		if (execParams != null) {
 			paramListHolder = execParams.getParamListHolder();
-			if (!paramListHolder.getRef().getUuid().equals(ref.getUuid())) {
+			/*if (!paramListHolder.getRef().getUuid().equals(ref.getUuid())) {
 				paramListHolder = null;
-			}
+			}*/
 		}
 		
-		if (paramListHolder == null) {
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
-			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-				if (param.getParamId().equalsIgnoreCase(attributeId+"")) {
-					return param.getParamValue().getValue();
+		// Get param from ref
+		for (com.inferyx.framework.domain.Param param : paramListRef.getParams()) {
+			if (param.getParamId().equalsIgnoreCase(attributeId+"")) {
+				if (paramListHolder == null) {
+					return param.getParamValue().getValue();	// Nothing in execParams. Send from ref
+				} else {	// ExecParams has data. Wait and watch
+					paramName = param.getParamName();
+					refParamValue = param.getParamValue().getValue();
 				}
 			}
-		}
-		
+		}	
+		logger.info("Param name : " + paramName);
+		logger.info("Param value : " + refParamValue);
 		ParamList paramList = (ParamList) daoRegister.getRefObject(paramListHolder.getRef());
 		for(Param param : paramList.getParams()) {
-			if(param.getParamId().equalsIgnoreCase(attributeId+"")) {
-				return param.getParamValue().getValue();
-			}
+			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId+"")) 
+					|| param.getParamName().equals(paramName)) {
+				logger.info("Param name from execParams : " + param.getParamName());
+					return param.getParamValue().getValue();
+			} 
+		}
+		if (StringUtils.isNotBlank(paramName)) {
+			return refParamValue;
 		}
 		return "''";
 	}// End method	
