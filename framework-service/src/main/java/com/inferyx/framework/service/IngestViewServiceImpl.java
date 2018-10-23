@@ -115,6 +115,7 @@ public class IngestViewServiceImpl {
 		} else if(ingestView.getIngestChg().equalsIgnoreCase("Y") & ingestView.getFilterChg().equalsIgnoreCase("N") ) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
+			filterInfo = getFilterInfoByFilter(ingestView.getFilter());
 		} else if(ingestView.getFilterChg().equalsIgnoreCase("Y")) {
 			//setting ingest baseEntity
 			ingest = setIngestBaseEntity(ingestView);
@@ -147,6 +148,19 @@ public class IngestViewServiceImpl {
 		return save(ingest);
 	}
 	
+	public List<AttributeRefHolder> getFilterInfoByFilter(Filter filter) {
+		List<AttributeRefHolder> filterList = null;
+		if(filter != null) {
+			filterList = new ArrayList<>();
+			AttributeRefHolder filterHolder = new AttributeRefHolder();
+			MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
+			filterHolder.setRef(filterMeta);
+			filterList.add(filterHolder);
+		}
+		
+		return filterList;
+	}
+	
 	public List<AttributeRefHolder> processFilter(IngestView ingestView, String ingestUuid) throws JsonProcessingException, JSONException, ParseException {
 		Filter filter = new Filter();
 		filter.setName(ingestView.getName());
@@ -155,7 +169,7 @@ public class IngestViewServiceImpl {
 		filter.setDesc(ingestView.getDesc());
 		filter.setFilterInfo(ingestView.getFilter().getFilterInfo());
 		commonServiceImpl.save(MetaType.filter.toString(), filter);
-		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
+		List<AttributeRefHolder> filterList = new ArrayList<>();
 		AttributeRefHolder filterHolder = new AttributeRefHolder();
 		MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
 		filterHolder.setRef(filterMeta);

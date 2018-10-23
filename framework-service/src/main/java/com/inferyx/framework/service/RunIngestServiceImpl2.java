@@ -1350,7 +1350,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	/********************** UNUSED **********************/
 	@SuppressWarnings("unused")
 	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
-		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+">"+incrLastValue : "1=1") + " AND $CONDITIONS";
+		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+" > "+incrLastValue : "1=1") + " AND $CONDITIONS";
 		logger.info("query: "+query);
 		return query;
 	}
@@ -1371,7 +1371,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		queryBuilder.append(" FROM ");
 		queryBuilder.append(tableName);
 		queryBuilder.append(" WHERE ");
-		queryBuilder.append(incrLastValue != null ? incrColName+">"+incrLastValue : "1=1");
+		queryBuilder.append(incrLastValue != null ? incrColName+" > "+incrLastValue : "1=1");
 		queryBuilder.append(" AND $CONDITIONS");
 		
 		logger.info("sqoop select query: "+queryBuilder.toString());
