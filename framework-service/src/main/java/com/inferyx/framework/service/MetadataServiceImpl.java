@@ -1805,20 +1805,32 @@ public class MetadataServiceImpl {
 				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
 			} else if (execParams.getParamListInfo() != null){
 				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				Application application = commonServiceImpl.getApp(); 
+				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
 				String paramName = null;
 				com.inferyx.framework.domain.Param param = null;
 				for (int i = 0; i < paramList.getParams().size(); i++) {
 					param = paramList.getParams().get(i);
-					if (param.getParamId().equals(attributeId+"")) {
+					if (param.getParamId().equals(attributeId.toString())) {
 						paramName = param.getParamName();
 						break;
 					}
 				}
+				
+				for(Param param2 : appParamList.getParams()) {
+					if((StringUtils.isBlank(paramName) && param2.getParamId().equalsIgnoreCase(attributeId.toString())) 
+							|| param2.getParamName().equals(paramName)) {
+						logger.info("Param name from app paramlist : " + param2.getParamName());
+						return param2.getParamValue().getValue();
+					}
+				}
+				
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					if (paramListHolder.getParamName().equals(paramName)) {
 						return paramListHolder.getParamValue().getValue();
 					}
 				}
+				
 				if (param != null && param.getParamValue() != null) {
 					return param.getParamValue().getValue();
 				}
@@ -1831,11 +1843,35 @@ public class MetadataServiceImpl {
 				}
 			}
 		} else {
+			String paramName = null;
+			String refParamValue = null;
+			Application application = commonServiceImpl.getApp(); 
+			ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
 			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-				if (param.getParamId().equals(attributeId+"")) {
+				if (param.getParamId().equals(attributeId.toString())) {
+					if(appParamList == null) {
+						return param.getParamValue().getValue();	// Nothing in execParams. Send from ref
+					} else {	// ExecParams has data. Wait and watch
+						paramName = param.getParamName();
+						refParamValue = param.getParamValue().getValue();
+					}
+				}
+			}
+			
+			logger.info("Param name : " + paramName);
+			logger.info("Param value : " + refParamValue);
+			
+			for(Param param : appParamList.getParams()) {
+				if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
+						|| param.getParamName().equals(paramName)) {
+					logger.info("Param name from app paramlist : " + param.getParamName());
 					return param.getParamValue().getValue();
 				}
+			}
+			
+			if (StringUtils.isNotBlank(paramName)) {
+				return refParamValue;
 			}
 	}
 		return "''";
