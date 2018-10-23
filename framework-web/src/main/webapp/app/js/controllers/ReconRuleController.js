@@ -13,6 +13,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.operator = CF_FILTER.operator;
   $scope.lshType  = CF_FILTER.lhsType;
   $scope.rhsType  = CF_FILTER.rhsType;
+  $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
+
   $scope.continueCount=1;
   var notify = {
     type: 'success',

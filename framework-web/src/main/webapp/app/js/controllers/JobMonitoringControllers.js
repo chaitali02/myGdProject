@@ -41,7 +41,11 @@
         metajson.type = response[i].type;
         metajson.count = response[i].count;
         metajson.lastUpdatedBy = response[i].lastUpdatedBy;
-        metajson.lastUpdatedOn = new Date(response[i].lastUpdatedOn.split("IST")[0]);
+        metajson.lastUpdatedBy = response[i].lastUpdatedBy;
+        var date =response[i].lastUpdatedOn.split(" ");
+        date.splice(date.length-2,1);
+        metajson.lastUpdatedOn = new Date(date.toString().replace(/,/g," "));
+       // metajson.lastUpdatedOn = new Date(response[i].lastUpdatedOn.split("IST")[0]);
         var randomno = Math.floor((Math.random() * 4) + 0);
         metajson.class = colorclassarray[randomno];
         switch (response[i].type) {
