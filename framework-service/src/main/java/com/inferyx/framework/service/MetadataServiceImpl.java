@@ -1788,8 +1788,15 @@ public class MetadataServiceImpl {
 	 * @param ref
 	 * @return value
 	 * @throws JsonProcessingException
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException {
+	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("Ref : " + ref);
 		if(execParams != null) {
 			if(execParams.getCurrParamSet() != null) {
