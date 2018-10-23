@@ -528,7 +528,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 							filterInfo.rhsvalue2=response.filter.filterInfo[i].operand[1].value.split("and")[1];	
 						}else if(['<','>',"<=",'>='].indexOf(response.filter.filterInfo[i].operator) !=-1){
 							obj.caption = "integer";
-							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
 
 						}else if(response.filter.filterInfo[i].operator =='=' && response.filter.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";

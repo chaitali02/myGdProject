@@ -32,7 +32,7 @@ AdminModule.factory('MetadataApplicationFactory', function ($http, $location) {
 	factory.applicationSubmit = function (data,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=application&upd_tag="+upd_tag,
+			url: url + "common/submit?action=edit&type=applicationview&upd_tag="+upd_tag,
 
 			headers: {
 				'Accept': '*/*',
@@ -131,9 +131,40 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
 		MetadataApplicationFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
+		var onSuccess = function (response){
+			var applicationJson={};
+			applicationJson.application=response;
+			var paramArray=[];
+			if(response.paramList !=null){
+				for(var i=0;i<response.paramList.params.length;i++){
+					var paramInfo={}
+					paramInfo.paramId=response.paramList.params[i].paramId; 
+					paramInfo.paramName=response.paramList.params[i].paramName;
+					paramInfo.paramType=response.paramList.params[i].paramType.toLowerCase();
+					if(response.paramList.params[i].paramValue !=null && response.paramList.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list"].indexOf(response.paramList.params[i].paramType) != -1){
+						paramInfo.paramValue=response.paramList.params[i].paramValue.value;
+						paramInfo.paramValueType="simple"
+					}
+					else if(response.paramList.params[i].paramValue !=null && response.paramList.params[i].paramValue.ref.type == "simple" && ["date"].indexOf(response.paramList.params[i].paramType) !=-1){
+					var temp=response.paramList.params[i].paramValue.value.replace(/["']/g, "")
+					paramInfo.paramValue=new Date(temp);
+					paramInfo.paramValueType="date"
+					}
+					else if(response.paramList.params[i].paramValue !=null){
+					var paramValue={};
+					paramValue.uuid=response.paramList.params[i].paramValue.ref.uuid;
+					paramValue.type=response.paramList.params[i].paramValue.ref.type;
+					paramInfo.paramValue=paramValue;
+					paramInfo.paramValueType=response.paramList.params[i].paramValue.ref.type;
+					}else{
+					
+					}
+					paramArray[i]=paramInfo;
+				}
+		    }
+			applicationJson.paramInfo=paramArray;
 			deferred.resolve({
-				data: response
+				data: applicationJson
 			})
 		}
 		return deferred.promise;

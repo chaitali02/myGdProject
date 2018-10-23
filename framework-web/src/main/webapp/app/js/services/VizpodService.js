@@ -170,6 +170,7 @@
       }
 
       this.getAllAttributeBySource = function(uuid, type) {
+        
         var deferred = $q.defer();
         if (type == "relation") {
           // VizpodFactory.findDatapodByRelation(uuid, type).then(function(response) {
@@ -458,7 +459,7 @@
               attrinfo.type=response.detailAttr[i].ref.type;
               attrinfo.dname=response.detailAttr[i].ref.name+"."+response.detailAttr[i].attributeName;
               attrinfo.attributeId=response.detailAttr[i].attrId;
-              attrinfo.id=response.detailAttr[i].ref.uuid+"_"+response.detailAttr[i].attributeId
+              attrinfo.id=response.detailAttr[i].ref.uuid+"_"+response.detailAttr[i].attrId
 
               detailAttrInfoArray[i]=attrinfo;
             }

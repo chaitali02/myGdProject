@@ -1,6 +1,6 @@
 {
-    "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
-    "version" : "1534081141",
+    "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6b",
+    "version" : "1464977196",
     "name" : "paramlist_app",
     "desc" : null,
     "createdBy" : {
@@ -53,7 +53,7 @@
             "paramRef" : null
         }
     ],
-    "paramListType" : "dag",
+    "paramListType" : "application",
     "templateFlg" : "Y",
     "templateInfo" : null
 }
