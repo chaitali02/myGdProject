@@ -571,7 +571,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			if(sourceDpMI.getUuid() != null) {
+			/*if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
 				
@@ -583,7 +583,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-			}	
+			}*/	
 
 			Map<String, String> resolvedAttrMap = null; 
 			String[] mappedAttrs = null; 
@@ -611,9 +611,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				//removing $CONDITIONS
 				if(whereClause.contains("AND $CONDITIONS")) {
-					whereClause = whereClause.replaceAll("AND $CONDITIONS", "").trim();
+					whereClause = whereClause.replace("AND $CONDITIONS", "").trim();
 				} else if(whereClause.contains("and $conditions")) {
-					whereClause = whereClause.replaceAll("and $conditions", "").trim();
+					whereClause = whereClause.replace("and $conditions", "").trim();
 				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
