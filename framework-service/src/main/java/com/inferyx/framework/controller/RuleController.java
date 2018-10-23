@@ -21,6 +21,7 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -61,6 +63,8 @@ public class RuleController {
 	@Autowired CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
+	
+	static final Logger logger = Logger.getLogger(RuleController.class);
 	
 	@RequestMapping(value = "/getRuleSql", method = RequestMethod.POST)
 	public String getRuleSql(@RequestBody Rule rule,
@@ -92,10 +96,12 @@ public class RuleController {
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				logger.info(" ExecParams has paramInfo ");
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
 					execParams.setCurrParamSet(paramSetHolder);
 				}
 			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				logger.info(" ExecParams has paramListInfo ");
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					execParams.setParamListHolder(paramListHolder);
 				}
