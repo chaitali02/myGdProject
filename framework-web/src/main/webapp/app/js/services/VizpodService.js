@@ -458,8 +458,8 @@
               attrinfo.uuid=response.detailAttr[i].ref.uuid;
               attrinfo.type=response.detailAttr[i].ref.type;
               attrinfo.dname=response.detailAttr[i].ref.name+"."+response.detailAttr[i].attributeName;
-              attrinfo.attributeId=response.detailAttr[i].attrId;
-              attrinfo.id=response.detailAttr[i].ref.uuid+"_"+response.detailAttr[i].attrId
+              attrinfo.attributeId=response.detailAttr[i].attributeId;
+              attrinfo.id=response.detailAttr[i].ref.uuid+"_"+response.detailAttr[i].attributeId
 
               detailAttrInfoArray[i]=attrinfo;
             }
