@@ -1914,6 +1914,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
            var state;
            var  execStates;
+           debugger
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
@@ -1925,7 +1926,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  }
                  if(isGroupExec){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                   iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='NotStarted' || status=='Resume')){
