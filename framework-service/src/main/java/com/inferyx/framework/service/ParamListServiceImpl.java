@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IParamListDao;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Param;
@@ -278,15 +281,25 @@ public class ParamListServiceImpl {
 	 * @param ref
 	 * @return value
 	 * @throws JsonProcessingException
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
 	public String getParamValue(ExecParams execParams,  
 									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException {	
+									MetaIdentifier ref) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {	
 		logger.info("Inside ParamListServiceImpl.getParamValue(); "); 
 		ParamListHolder paramListHolder = null;
 		String paramName = null;
 		String refParamValue = null;
 		ParamList paramListRef = (ParamList)daoRegister.getRefObject(ref);
+		Application application = commonServiceImpl.getApp(); 
+		ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+		
 		if (execParams != null) {
 			paramListHolder = execParams.getParamListHolder();
 			/*if (!paramListHolder.getRef().getUuid().equals(ref.getUuid())) {
@@ -296,8 +309,8 @@ public class ParamListServiceImpl {
 		
 		// Get param from ref
 		for (com.inferyx.framework.domain.Param param : paramListRef.getParams()) {
-			if (param.getParamId().equalsIgnoreCase(attributeId+"")) {
-				if (paramListHolder == null) {
+			if (param.getParamId().equalsIgnoreCase(attributeId.toString())) {
+				if (paramListHolder == null && appParamList == null) {
 					return param.getParamValue().getValue();	// Nothing in execParams. Send from ref
 				} else {	// ExecParams has data. Wait and watch
 					paramName = param.getParamName();
@@ -305,14 +318,24 @@ public class ParamListServiceImpl {
 				}
 			}
 		}	
+		
 		logger.info("Param name : " + paramName);
 		logger.info("Param value : " + refParamValue);
+		
+		for(Param param : appParamList.getParams()) {
+			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
+					|| param.getParamName().equals(paramName)) {
+				logger.info("Param name from app paramlist : " + param.getParamName());
+				return param.getParamValue().getValue();
+			}
+		}
+		
 		ParamList paramList = (ParamList) daoRegister.getRefObject(paramListHolder.getRef());
 		for(Param param : paramList.getParams()) {
-			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId+"")) 
+			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {
 				logger.info("Param name from execParams : " + param.getParamName());
-					return param.getParamValue().getValue();
+				return param.getParamValue().getValue();
 			} 
 		}
 		if (StringUtils.isNotBlank(paramName)) {
