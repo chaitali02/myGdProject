@@ -572,6 +572,9 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsDatapod = false;
                         filterInfo.islhsFormula = false;
                         filterInfo.lhsvalue = response.filter.filterInfo[i].operand[0].value;
+                        if(response.filter.filterInfo[i].operand[0].attributeType =="integer"){
+							obj.caption = "integer";
+						}
                     }
                     if (response.filter.filterInfo[i].operand[0].ref.type == "attribute") {
                         var obj = {}
@@ -623,7 +626,22 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsSimple = true;
                         filterInfo.isrhsDatapod = false;
                         filterInfo.isrhsFormula = false;
-                        filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value;
+                        filterInfo.rhsvalue =response.filter.filterInfo[i].operand[1].value;
+						if(response.filter.filterInfo[i].operator =="BETWEEN"){
+							obj.caption = "integer";
+							filterInfo.rhsvalue1=response.filter.filterInfo[i].operand[1].value.split("and")[0];
+							filterInfo.rhsvalue2=response.filter.filterInfo[i].operand[1].value.split("and")[1];	
+						}else if(['<','>',"<=",'>='].indexOf(response.filter.filterInfo[i].operator) !=-1){
+							obj.caption = "integer";
+							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
+
+						}else if(response.filter.filterInfo[i].operator =='=' && response.filter.filterInfo[i].operand[1].attributeType =="integer"){
+							obj.caption = "integer";
+							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
+						}
+						else{
+						filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value//.replace(/["']/g, "");
+						}
                     }
                     if (response.filter.filterInfo[i].operand[1].ref.type == "attribute") {
                         var obj = {}
