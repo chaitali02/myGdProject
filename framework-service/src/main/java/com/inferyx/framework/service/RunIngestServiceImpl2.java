@@ -626,7 +626,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
 					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				} else if(!areAllAttrs && targetDp != null) {
-						String tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
+						String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
 						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 				}
 			}
