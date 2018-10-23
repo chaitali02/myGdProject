@@ -1872,7 +1872,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
 
         .state('adminListapplication', {
-            url: "/Admin/application?id&mode&returnBack",
+            url: "/Admin/application?id&version&mode&returnBack",
             templateUrl: "views/application.html",
             data: { pageTitle: 'Admin' },
             controller: "",

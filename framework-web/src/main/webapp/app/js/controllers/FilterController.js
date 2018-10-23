@@ -226,7 +226,6 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 	}
 
 	$scope.dependsOndd = function () {
-
 		MetadataFilterSerivce.getAllLatest($scope.selectRelation).then(function (response) { onSuccessRelation(response.data) });
 		var onSuccessRelation = function (response) {
 			$scope.filterRelation = response
@@ -384,7 +383,6 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = true;
 			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
-			// MetadataFilterSerivce.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allFunction = response;
 			}
@@ -550,6 +548,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 			defaultoption.name = response.filter.dependsOn.ref.name;
 			$scope.selectRelation = response.filter.dependsOn.ref.type
 			$scope.filterTableArray = response.filterInfo;
+			$scope.paramlistArray=response.paramlistArray;
 			$scope.getParamByApp();
 			MetadataFilterSerivce.getAllLatest(response.filter.dependsOn.ref.type).then(function (response) { onSuccessRelation(response.data) });
 			var onSuccessRelation = function (response) {
