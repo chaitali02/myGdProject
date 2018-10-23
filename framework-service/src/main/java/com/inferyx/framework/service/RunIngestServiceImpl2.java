@@ -597,16 +597,16 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-//				if(areAllAttrs) {
-//					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
-//					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
-//				}
-//				
-//				if(whereClause.contains("WHERE")) {
-//					whereClause = whereClause.replaceAll("WHERE", "").trim();
-//				} else if(whereClause.contains("where")) {
-//					whereClause = whereClause.replaceAll("where", "").trim();
-//				}
+				if(areAllAttrs) {
+					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
+					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
+				}
+				
+				if(whereClause.contains("WHERE")) {
+					whereClause = whereClause.replaceAll("WHERE", "").trim();
+				} else if(whereClause.contains("where")) {
+					whereClause = whereClause.replaceAll("where", "").trim();
+				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
