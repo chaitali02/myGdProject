@@ -571,7 +571,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			/*if(sourceDpMI.getUuid() != null) {
+			if(sourceDpMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
 				
@@ -583,7 +583,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-			}*/	
+			}	
 
 			Map<String, String> resolvedAttrMap = null; 
 			String[] mappedAttrs = null; 
