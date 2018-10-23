@@ -602,10 +602,18 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
 				}
 				
+				//removing where
 				if(whereClause.contains("WHERE")) {
 					whereClause = whereClause.replaceAll("WHERE", "").trim();
 				} else if(whereClause.contains("where")) {
 					whereClause = whereClause.replaceAll("where", "").trim();
+				}
+				
+				//removing $CONDITIONS
+				if(whereClause.contains("AND $CONDITIONS")) {
+					whereClause = whereClause.replaceAll("AND $CONDITIONS", "").trim();
+				} else if(whereClause.contains("and $conditions")) {
+					whereClause = whereClause.replaceAll("and $conditions", "").trim();
 				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
