@@ -146,6 +146,26 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.disableRhsType=function(arrayStr){
+		var rTypes=[
+		  { "text": "string", "caption": "string","disabled":false },
+		  { "text": "string", "caption": "integer" ,"disabled":false },
+		  { "text": "datapod", "caption": "attribute","disabled":false },
+		  { "text": "formula", "caption": "formula","disabled":false },
+		  { "text": "dataset", "caption": "dataset" ,"disabled":false },
+		  { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+		  { "text": "function", "caption": "function" ,"disabled":false }]
+		for(var i=0;i<rTypes.length;i++){
+		  rTypes[i].disabled=false;
+		  if(arrayStr.length >0){
+			var index=arrayStr.indexOf(rTypes[i].caption);
+			if(index !=-1){
+			  rTypes[i].disabled=true;
+			}
+		  }
+		}
+		return rTypes;
+	}
 	return factory;
 });
 

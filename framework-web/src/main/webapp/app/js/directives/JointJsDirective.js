@@ -1914,7 +1914,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
            var state;
            var  execStates;
-           debugger
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
