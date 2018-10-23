@@ -485,6 +485,19 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					var filterInfo = {};
 					filterInfo.logicalOperator =response.filter.filterInfo[i].logicalOperator;
 					filterInfo.operator =response.filter.filterInfo[i].operator;
+					var rhsTypes=null;
+					filterInfo.rhsTypes=null;
+					if(filterInfo.operator =='BETWEEN'){
+					  filterInfo.rhsTypes =MetadataDatasetFactory.disableRhsType(['attribute','formula','dataset','function','paramlist'])
+					}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
+					  filterInfo.rhsTypes=MetadataDatasetFactory.disableRhsType([]);
+					}else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
+					  filterInfo.rhsTypes=MetadataDatasetFactory.disableRhsType(['string','dataset']);
+					}
+					else{
+					  filterInfo.rhsTypes=MetadataDatasetFactory.disableRhsType(['dataset']);
+					}
+					
 					if (response.filter.filterInfo[i].operand[0].ref.type == "simple") {
 						var obj = {}
 						obj.text = "string"
@@ -499,7 +512,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						}
 					}
 					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" ||response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
-						debugger
+						
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"

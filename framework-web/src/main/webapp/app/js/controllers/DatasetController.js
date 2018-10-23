@@ -666,31 +666,40 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$('#searchAttr').modal('hide')
 	}
 
-	$scope.onChangeOperator = function (index) {
-		if ($scope.datasetCompare != null) {
-			$scope.datasetCompare.filterChg = "y"
+	$scope.disableRhsType=function(rshTypes,arrayStr){
+		for(var i=0;i<rshTypes.length;i++){
+			rshTypes[i].disabled=false;
+			if(arrayStr.length >0){
+				var index=arrayStr.indexOf(rshTypes[i].caption);
+				if(index !=-1){
+					rshTypes[i].disabled=true;
+				}
+		  }
+    }
+    return rshTypes;
+	}
+
+  $scope.onChangeOperator=function(index){
+		if($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+    }
+		if($scope.filterTableArray[index].operator =='BETWEEN'){
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
+		  $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['attribute','formula','dataset','function','paramlist'])
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,[]);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
+      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['string','dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
-		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
-			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
-			//	$scope.disableRhsType(['string','attribute','formula','dataset'])
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
-			// if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			// 	$scope.disableRhsType([]);
-			// }else{
-			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
-			// }
-			$scope.filterTableArray[index].rhstype = $scope.rhsType[4];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
-			// $scope.disableRhsType(['string','dataset']);
-			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		}
-		else {
-			//$scope.disableRhsType(['attribute','formula','dataset']);
-			$scope.filterTableArray[index].rhstype = $scope.rhsType[0];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		else{
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 	}
 
@@ -721,7 +730,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
-		filertable.rhstype = $scope.rhsType[0]
+		filertable.rhstype = $scope.rhsType[0];
+		filertable.rhsTypes=CF_FILTER.rhsType;
+		filertable.rhsTypes=$scope.disableRhsType(filertable.rhsTypes,['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
