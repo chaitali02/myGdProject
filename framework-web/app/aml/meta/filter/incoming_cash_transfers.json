@@ -21,7 +21,8 @@
                     "ref" : {
                         "type" : "simple"
                     },
-                    "value" : "INCOMING"
+                    "value" : "INCOMING",
+                    "attributeType" : "string"
                 }
             ]
         }, 
@@ -40,7 +41,8 @@
                     "ref" : {
                         "type" : "simple"
                     },
-                    "value" : "CA"
+                    "value" : "CA",
+                    "attributeType" : "string"
                 }
             ]
         }, 
@@ -57,7 +59,7 @@
                 {
                     "ref" : {
                         "type" : "paramlist",
-                        "uuid" : "2ba1db28-f640-4ad7-aaa1-4d87820dcdfd"
+                        "uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5"
                     },
                     "attributeId" : 0
                 }
@@ -76,7 +78,7 @@
                 {
                     "ref" : {
                         "type" : "paramlist",
-                        "uuid" : "2ba1db28-f640-4ad7-aaa1-4d87820dcdfd"
+                        "uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5"
                     },
                     "attributeId" : 1
                 }
@@ -95,10 +97,9 @@
                 }, 
                 {
                     "ref" : {
-                        "type" : "paramlist",
-                        "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
-                    },
-                    "attributeId" : 1
+                        "type" : "formula",
+                        "uuid" : "24670241-fcfc-41bc-9eb8-51505fc6fd7e"
+                    }
                 }
             ]
         }, 
@@ -134,7 +135,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-10-19T14:30:57.000Z"),
+    "createdOn" : ISODate("2018-10-24T09:14:11.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
