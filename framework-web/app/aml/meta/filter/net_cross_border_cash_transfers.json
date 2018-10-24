@@ -173,18 +173,12 @@
           "attributeName": "transaction_date",
           "attributeType": null
         },
-        {
-          "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-            "version": null,
-            "name": "paramlist_aml"
-          },
-          "attributeId": 3,
-          "value": null,
-          "attributeName": "last_90days_start_date",
-          "attributeType": null
-        }
+         {
+                    "ref" : {
+                        "type" : "formula",
+                        "uuid" : "953851e7-2dad-4421-82d8-3b5d05b50845"
+                    }
+                }
       ]
     },
     {
