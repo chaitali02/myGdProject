@@ -345,6 +345,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       if (response)
         $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
+      $scope.allparamlistParams=[];
     }
   } //End Else
 
