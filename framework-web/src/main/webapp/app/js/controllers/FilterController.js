@@ -226,6 +226,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 	}
 
 	$scope.dependsOndd = function () {
+		
 		MetadataFilterSerivce.getAllLatest($scope.selectRelation).then(function (response) { onSuccessRelation(response.data) });
 		var onSuccessRelation = function (response) {
 			$scope.filterRelation = response
@@ -244,6 +245,9 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 		var onSuccessAttributeBySource = function (response) {
 			$scope.filterDatapod = response
 			$scope.lhsdatapodattributefilter = response;
+			$scope.filterTableArray = [];
+			$scope.addRow();
+			
 		}
 	}
 
