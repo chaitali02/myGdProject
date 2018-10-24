@@ -1048,7 +1048,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      $scope.getSourceByFormula();
+        if($scope.ruleLodeFormula && $scope.ruleLodeFormula.length ==0)
+        $scope.getSourceByFormula();
 
     } else if (type == "expression") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = false;
