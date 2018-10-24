@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,15 +36,20 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
- 
+
+/**
+ * @author Ganesh
+ *
+ */
 @Component
-public class FilterOperator {
-	
+public class FilterOperator2 {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired protected JoinKeyOperator joinKeyOperator;
 	private final String COMMA = ", ";
 	
+	private static Logger logger = Logger.getLogger(FilterOperator2.class);	
+
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
@@ -166,80 +172,6 @@ public class FilterOperator {
 					break;
 			}// End switch
 		}// End for
-		
-		
-
-		/*for (MetaIdentifierHolder filterIdentifier : filterIdentifierList) {
-			if(filterIdentifier.getRef().getType().equals(MetaType.filter))
-			{
-				OrderKey filterKey = filterIdentifier.getRef().getKey();
-				com.inferyx.framework.metadata.Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
-					builder.append(" (").append(jfor (MetaIdentifierHolder filterIdentifier : filterIdentifierList) {
-			if(filterIdentifier.getRef().getType().equals(MetaType.filter))
-			{
-				OrderKey filterKey = filterIdentifier.getRef().getKey();
-				com.inferyx.framework.metadata.Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
-					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(), null, null)).append(")");
-					builder.append(" as ").append(filter.getName());
-					
-			}
-			else if(filterIdentifier.getRef().getType().equals(MetaType.datapod))
-					{
-				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				}else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
-				builder.append(" (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttributeId(), filterIdentifier.getValue())).append(")");
-				builder.append(" as ").append(datapod.getName()).append("_filter").append(COMMA);
-				
-					}
-			else
-				builder.append("");
-			
-		}oinKeyOperator.generateSql(filter.getFilterInfo(), null, null)).append(")");
-					builder.append(" as ").append(filter.getName());
-					
-			}
-			else if(filterIdentifier.getRef().getType().equals(MetaType.datapod))
-					{
-				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				}else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
-				builder.append(" (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttributeId(), filterIdentifier.getValue())).append(")");
-				builder.append(" as ").append(datapod.getName()).append("_filter").append(COMMA);
-				
-					}
-			else
-				builder.append("");
-			
-		}*/
-		
-		
 		return builder.toString();
 	}
 	

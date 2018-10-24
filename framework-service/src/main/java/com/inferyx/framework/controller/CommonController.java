@@ -80,7 +80,6 @@ public class CommonController<T> {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.dqview.toString()) 
-				|| type.equalsIgnoreCase(MetaType.ruleview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
 				|| type.equalsIgnoreCase(MetaType.reconview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.reportview.toString()) 
@@ -103,7 +102,9 @@ public class CommonController<T> {
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString()))
+		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) 
+				|| type.equalsIgnoreCase(MetaType.dqview.toString()) 
+				|| type.equalsIgnoreCase(MetaType.dashboardview.toString()))
 			return  registerService.getLatestByUuid(uuid, type);
 		else {
 			T object = (T) commonServiceImpl.getLatestByUuid(uuid, type);
@@ -125,7 +126,8 @@ public class CommonController<T> {
 	public @ResponseBody String getOneById(@RequestParam("id") String id, 
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()))
+		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) 
+				|| type.equalsIgnoreCase(MetaType.dqview.toString()))
 			return registerService.getOneById(id, type);
 		else {
 			T object = (T) commonServiceImpl.getOneById(id, type);
@@ -173,8 +175,8 @@ public class CommonController<T> {
 			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
 			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
 			throws Exception {
-		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString())
-				|| type.equalsIgnoreCase(MetaType.ruleview.toString())
+		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) 
+				|| type.equalsIgnoreCase(MetaType.dqview.toString())
 				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
 				|| type.equalsIgnoreCase(MetaType.reconview.toString())
 				|| type.equalsIgnoreCase(MetaType.reportview.toString())
