@@ -615,18 +615,22 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     }
   }
   $scope.onChangeSourceType = function() {
+    $scope.sourceFilterTable=[];
     $scope.getAllLatest("source",$scope.selectSourceType,true,{});
   } //End onChangeSourceType
 
   $scope.onChangeTargetType = function() {
+    $scope.targetFilterTable=[];
     $scope.getAllLatest("target",$scope.selectTargetType,true,{});
   } //End onChangeTargetType
 
   $scope.onChangeSource=function(){
+    $scope.sourceFilterTable=[];
     $scope.getAllAttributeBySource('source',$scope.allSource.defaultoption.uuid,$scope.selectSourceType,true);
     $scope.getFunctionByCategory('source',true);
   }
   $scope.onChangeTarget=function(){
+    $scope.targetFilterTable=[];
     $scope.getAllAttributeBySource('target',$scope.allTarget.defaultoption.uuid,$scope.selectTargetType,true);
     $scope.getFunctionByCategory('target',true);
   }

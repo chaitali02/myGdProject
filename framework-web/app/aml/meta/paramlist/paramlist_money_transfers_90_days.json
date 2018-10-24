@@ -1,0 +1,69 @@
+{
+    "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "trans_count",
+            "paramType" : "integer",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "1"
+            }
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "trans_amount_usd",
+            "paramType" : "double",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "1"
+            }
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "lookback_days",
+            "paramType" : "integer",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "90"
+            }
+        }
+    ],
+    "paramListType" : "rule",
+    "templateFlg" : "N",
+    "templateInfo" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5"
+        }
+    },
+    "uuid" : "3db40edc-f18b-41b7-9b5b-25e2c8b5a690",
+    "version" : "1540363367",
+    "name" : "paramlist_money_transfers_90_days",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-24T06:42:47.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}

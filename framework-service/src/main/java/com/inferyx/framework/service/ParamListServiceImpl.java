@@ -266,10 +266,10 @@ public class ParamListServiceImpl {
 	public String sql(Integer paramId, ParamList paramList) {
 		List<Param> list = paramList.getParams();
 		for(Param param : list) {
-			if(param.getParamId().equalsIgnoreCase(paramId.toString()))
+			if(param.getParamId().equalsIgnoreCase(paramId.toString())) {
 				//return String.format("%s.%s", paramList.getName(), param.getParamName());
 				return param.getParamName();
-			break;
+			}
 		}
 		return null;
 	}
