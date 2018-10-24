@@ -1,0 +1,64 @@
+{
+    "ruleInfo" : [ 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-2e37-480e-ac6a-ae509be06aeg"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-2e37-480e-ac6a-ae509be06aee"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-2e37-480e-ac6a-ae509be06aed"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-6666-480e-ac6a-ae509be06aed"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-2e37-480e-ac6a-ae509be06aem"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "0ba72065-5555-480e-ac6a-ae509be06aed"
+            }
+        }
+    ],
+    "uuid" : "3964fddd-558b-4d92-b6e5-cce17060ecea",
+    "version" : "1540289617",
+    "name" : "High Risk Geo Transfers",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-23T10:13:37.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}

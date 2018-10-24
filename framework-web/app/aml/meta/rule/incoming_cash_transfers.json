@@ -98,12 +98,12 @@
   ],
   "persistFlag": null,
   "datasource": null,
-  "paramList": {
+   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "2ba1db28-f640-4ad7-aaa1-4d87820dcdfd",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
       "version": null,
-      "name": "paramlist_aml_rules"
+      "name": "paramlist_money_transfers"
     },
     "value": null
   }

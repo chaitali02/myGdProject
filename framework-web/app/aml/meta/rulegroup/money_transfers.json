@@ -1,0 +1,64 @@
+{
+    "ruleInfo" : [ 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "06d75ad8-24ca-4346-9edd-5d8e6301e5a3"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "06d75ad8-24ca-4346-9edd-5d8e6301e234"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "c656e196-a1f0-4835-a9b7-f0d9e2b12999"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "c656e196-a1f0-4835-a9b7-f0d9e2b12991"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "30420bcf-3e42-4a34-8453-92c1c6366ac0"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "30420bcf-3e42-4a34-8453-92c1c6366ac1"
+            }
+        }
+    ],
+    "uuid" : "53912051-ad50-43f8-bc0b-8146b4cfdb31",
+    "version" : "1540289592",
+    "name" : "Money Transfers",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-23T10:13:12.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}
