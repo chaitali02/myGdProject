@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -31,22 +30,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Import;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.AdminServiceImpl;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ExportServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
-import com.inferyx.framework.service.SecurityServiceImpl;
 
 @RestController
 @RequestMapping(value="/admin")
@@ -62,8 +55,6 @@ public class AdminController {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	IDatasourceDao iDatasourceDao;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
 
 	@RequestMapping(value="/getTaskThreadMap", method=RequestMethod.GET)
     public ConcurrentHashMap getTaskThreadMap() throws Exception {
@@ -131,7 +122,7 @@ public class AdminController {
 			) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		Export export = mapper.convertValue(metaObject, Export.class);
-		BaseEntity baseEntity=export;
+		BaseEntity baseEntity = export;
 		if (upd_tag.equalsIgnoreCase("Y")) {
 			commonServiceImpl.updateLovForTag(baseEntity);
 		}
