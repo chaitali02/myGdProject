@@ -41,6 +41,18 @@ import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
+ * 1 ["a", "b", "c"]
+ * 2 ["d", "e", "f"]
+ * 
+ * select id, feature_ex from test_arr lateral view explode (feature) ex_t_1 as faeture_ex;
+ * 
+ * 1	a
+ * 1	b
+ * 1	c
+ * 2	d
+ * 2	e
+ * 2	f
+ * 
  * @author joy
  *
  */
