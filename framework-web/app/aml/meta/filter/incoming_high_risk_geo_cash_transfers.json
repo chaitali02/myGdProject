@@ -204,17 +204,11 @@
           "attributeType": null
         },
         {
-          "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-            "version": null,
-            "name": "paramlist_aml"
-          },
-          "attributeId": 3,
-          "value": null,
-          "attributeName": "last_90days_start_date",
-          "attributeType": null
-        }
+                    "ref" : {
+                        "type" : "formula",
+                        "uuid" : "a41039ea-453d-40f3-93ff-40b030c5ca89"
+                    }
+                }
       ]
     },
     {

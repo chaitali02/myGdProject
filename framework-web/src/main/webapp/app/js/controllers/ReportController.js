@@ -2,14 +2,20 @@
 DatavisualizationModule = angular.module('DatavisualizationModule')
 DatavisualizationModule.controller('ReportListController', function ($filter, $rootScope, $scope, $sessionStorage, $state, CommonService, dagMetaDataService, FileSaver, Blob, privilegeSvc, CF_META_TYPES) {
 
-
-
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 
 	});
-
+    $scope.updateStats = function () {
+		CommonService.getMetaStats("report").then(function (response) {
+		  if (response.data && response.data.length && response.data.length > 0) {
+			$rootScope.metaStats["report"] = response.data[0];
+		  }
+		});
+	  }
+	 
+	$scope.updateStats();
 	var notify = {
 		type: 'info',
 		title: 'Info',
@@ -24,7 +30,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
 
 	});
-
+    
 	$scope.pagination = {
 		currentPage: 1,
 		pageSize: 10,
@@ -226,19 +232,19 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		if ($scope.obj.active == 'Y') {
 			CommonService.delete($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessDelete(response.data) });
 			var OnSuccessDelete = function (response) {
-				$scope.alldashboard[$scope.obj.index].active = response.active;
+			//	$scope.alldashboard[$scope.obj.index].active = response.active;
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].active = response.active;
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Deleted Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Deleted Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
 		else {
-			CommonService.restore($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessDelete(response.data) });
-			var OnSuccessDelete = function (response) {
-				$scope.alldashboard[$scope.obj.index].active = 'Y'
+			CommonService.restore($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessRestore(response.data) });
+			var OnSuccessRestore = function (response) {
+				//$scope.alldashboard[$scope.obj.index].active = 'Y'
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].active = "Y"
 				notify.type = 'success',
@@ -255,19 +261,17 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		if ($scope.obj.published == 'N') {
 			CommonService.publish($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessPublush(response.data) });
 			var OnSuccessPublush = function (response) {
-				$scope.alldashboard[$scope.obj.index].published = response.published;
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].published = response.published;
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Publish Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Publish Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
 		else {
 			CommonService.unpublish($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessUnpublush(response.data) });
 			var OnSuccessUnpublush = function (response) {
-				$scope.alldashboard[$scope.obj.index].published = 'N'
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].published = "N"
 				notify.type = 'success',
@@ -280,7 +284,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 
 });//End ReportListController
 
-DatavisualizationModule.controller('ReportDetailController', function ($q,dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES,CF_DOWNLOAD) {
+DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -335,12 +339,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
 	//	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
-	$scope.download={};
-	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-	$scope.download.formates=CF_DOWNLOAD.formate;
-	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
-	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
-	$scope.download.limit_to=CF_DOWNLOAD.limit_to; 
+	$scope.download = {};
+	$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+	$scope.download.formates = CF_DOWNLOAD.formate;
+	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
+	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
+	$scope.download.limit_to = CF_DOWNLOAD.limit_to;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
 	$scope.datsetsampledata = null;
@@ -488,15 +492,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 		});
 	}
 
-	$scope.onChipsRemove=function(index,filterIndex){
-		
-		$scope.filterTag.splice(index,1);
+	$scope.onChipsRemove = function (index, filterIndex) {
+
+		$scope.filterTag.splice(index, 1);
 		$scope.selectedAttributeValue[filterIndex] = null;
-			var noSelect = { "id": null, "value": "-select-" }
-			setTimeout(function () {
-				$scope.selectedAttributeValue[filterIndex] = noSelect;
-				$scope.applyFilter();
-			}, 100);
+		var noSelect = { "id": null, "value": "-select-" }
+		setTimeout(function () {
+			$scope.selectedAttributeValue[filterIndex] = noSelect;
+			$scope.applyFilter();
+		}, 100);
 
 	}
 
@@ -1654,15 +1658,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q,dagMet
 
 	}
 	$scope.downloadFile = function (data) {
-		
-		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData==true) {
+
+		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData == true) {
 			$scope.download.data = data;
 			$('#downloadSample').modal({
 				backdrop: 'static',
 				keyboard: false
 			});
 		}
-		
+
 	};
 
 });

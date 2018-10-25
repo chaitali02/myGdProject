@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +17,8 @@ import java.util.Set;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -32,7 +28,9 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.enums.RunMode;
@@ -105,6 +103,28 @@ public class FilterOperator {
 				break;
 			}// End switch
 		}
+		return builder.toString();
+	}
+	
+	public String generateSql(List<FilterInfo> filterInfo
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, MetaIdentifierHolder filterSource
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd, RunMode runMode) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		if (filterInfo == null || filterInfo.size() <= 0) {
+			return "";
+		}
+		
+		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode);
+		if (StringUtils.isBlank(filterStr)) {
+			builder.append(ConstantsUtil.BLANK);
+		} else {
+			builder.append(" AND (").append(filterStr).append(")");
+		}		
 		return builder.toString();
 	}
 	

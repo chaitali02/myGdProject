@@ -218,7 +218,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			superCol: 'statusParant',
 			enableColumnMenu: false,
 			cellClass: 'text-center',
-			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
 
@@ -280,7 +280,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			maxWidth:110,
 			cellClass: 'text-center',
 			visible: true,
-			displayName: 'version',
+			displayName: 'Version',
 			headerCellClass: 'text-center',
 			sort: {
 				direction: uiGridConstants.DESC,

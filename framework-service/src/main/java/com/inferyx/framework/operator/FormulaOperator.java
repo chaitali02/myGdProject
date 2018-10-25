@@ -72,9 +72,17 @@ public class FormulaOperator {
 				}
 				builder.append(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
-				String value = null;
-				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
-				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
+//				String value = null;
+//				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
+//				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
+//				builder.append(value);
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
 				builder.append(value);
 			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {

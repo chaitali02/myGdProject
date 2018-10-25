@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Rule extends BaseRule {
 	
 	private List<MetaIdentifierHolder> expressionInfo;
-	private List<AttributeRefHolder> filterInfo;	
+	private List<FilterInfo> filterInfo;	
 	private boolean debugMode;
 	private MetaIdentifierHolder source;	// May be a relation, datapod or dataset
 	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
@@ -27,10 +27,23 @@ public class Rule extends BaseRule {
 	private MetaIdentifierHolder datasource;
 	private MetaIdentifierHolder paramList;
 	
-	public List<AttributeRefHolder> getFilterInfo() {
+	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the filterInfo
+	 */
+	public List<FilterInfo> getFilterInfo() {
 		return filterInfo;
 	}
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param filterInfo the filterInfo to set
+	 */
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
 	public List<MetaIdentifierHolder> getExpressionInfo() {

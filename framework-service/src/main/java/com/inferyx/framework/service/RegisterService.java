@@ -128,7 +128,6 @@ import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
 import com.inferyx.framework.view.metadata.ReconView;
-import com.inferyx.framework.view.metadata.RuleView;
 
 @Service
 public class RegisterService {
@@ -175,10 +174,6 @@ public class RegisterService {
 	private DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
 	@Autowired
 	private DQViewServiceImpl dqViewServiceImpl;
-	@Autowired
-	private RuleServiceImpl ruleServiceImpl;
-	@Autowired
-	private RuleViewServiceImpl ruleViewServiceImpl;
 	@Autowired
 	private RuleExecServiceImpl ruleExecServiceImpl;
 	@Autowired
@@ -940,10 +935,10 @@ public class RegisterService {
 				DQView dqViewOptr = mapper.convertValue(operator, DQView.class);
 				baseEntity = dataQualServiceImpl.save(dqViewOptr);
 				break;
-			case "ruleview":
+			/*case "ruleview":
 				RuleView ruleViewOptr = mapper.convertValue(operator, RuleView.class);
 				baseEntity =  ruleServiceImpl.save(ruleViewOptr);
-				break;
+				break;*/
 			/*case "rule":
 				Rule ruleOptr = mapper.convertValue(operator, Rule.class);
 				Id = ruleServiceImpl.save(ruleOptr).getId();
@@ -1768,9 +1763,9 @@ public class RegisterService {
 				DQView dqView = dqViewServiceImpl.findOneByUuidAndVersion(uuid, version);
 				result = ow.writeValueAsString(dqViewServiceImpl.resolveName(dqView));
 				break;
-			case "ruleview":
-				result = ow.writeValueAsString(ruleViewServiceImpl.findOneByUuidAndVersion(uuid, version));
-				break;
+//			case "ruleview":
+//				result = ow.writeValueAsString(ruleViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+//				break;
 			case "reconview":
 				result = ow.writeValueAsString(reconViewServiceImpl.findOneByUuidAndVersion(uuid, version));
 				break;
@@ -1994,10 +1989,10 @@ public class RegisterService {
 				DQView dqView = dqViewServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(dqViewServiceImpl.resolveName(dqView));
 				break;
-			case "ruleview":
+			/*case "ruleview":
 				RuleView ruleview = ruleViewServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(ruleview);
-				break;
+				break;*/
 			/*case "rule":
 				Rule rule = ruleServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(ruleServiceImpl.resolveName(rule));

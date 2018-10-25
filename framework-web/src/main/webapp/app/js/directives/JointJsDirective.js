@@ -222,7 +222,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              });
              var url = window.URL.createObjectURL(blob);
              linkElement.setAttribute('href', url);
-             linkElement.setAttribute("download", uuid+".txt");
+             linkElement.setAttribute("download", uuid+".json");
              var clickEvent = new MouseEvent(
                  "click", {
                      "view" : window,

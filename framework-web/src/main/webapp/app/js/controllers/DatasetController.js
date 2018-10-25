@@ -314,7 +314,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.datasetRelation.options = temp
 			}
 			$scope.attributeTableArray = null;
+			$scope.filterTableArray=null;
 			$scope.addAttribute();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -332,7 +334,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.sourcedatapodattribute = response;
 			$scope.lhsdatapodattributefilter = response;
 			$scope.attributeTableArray = null;
+			$scope.filterTableArray=null;
 			$scope.addAttribute();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
