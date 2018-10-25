@@ -36,20 +36,38 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "92668c29-034f-40b2-9987-9073fdf6e821",
-        "version": null,
-        "name": "ds_industry_factor_mean"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
+  "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : "=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ec1958cf-98ec-4269-b821-9fbb81a85835",
+                        "version" : null,
+                        "name" : "industry_factor_mean"
+                    },
+                    "attributeId" : 2,
+                    "value" : null,
+                    "attributeName" : "reporting_date",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "paramlist",
+                        "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+                        "version" : null,
+                        "name" : "paramlist_ecocap_app"
+                    },
+                    "attributeId" : 0,
+                    "value" : null,
+                    "attributeName" : "reporting_date",
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
   "attributeInfo": [
     {
       "attrSourceId": "0",

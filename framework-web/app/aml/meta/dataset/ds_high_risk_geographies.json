@@ -36,20 +36,38 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "b6e1fe82-8821-4ad5-9414-baa071383771",
-        "version": null,
-        "name": "ds_high_risk_geographies"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
+   "filterInfo" : [ 
+        {
+            "logicalOperator" : "",
+            "operator" : ">",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
+                        "version" : null,
+                        "name" : "dim_country"
+                    },
+                    "attributeId" : 3,
+                    "value" : null,
+                    "attributeName" : "country_risk_level",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "simple",
+                        "uuid" : null,
+                        "version" : null,
+                        "name" : null
+                    },
+                    "attributeId" : null,
+                    "value" : "5",
+                    "attributeName" : null,
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
   "attributeInfo": [
     {
       "attrSourceId": "0",

@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "dataset")
 public class DataSet extends BaseEntity {
 	private MetaIdentifierHolder dependsOn;
-	private List<AttributeRefHolder> filterInfo;
+	private List<FilterInfo> filterInfo;	
 	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
 	private MetaIdentifierHolder groupBy;
 	private int limit;
@@ -42,11 +42,11 @@ public class DataSet extends BaseEntity {
 		this.limit = limit;
 	}
 
-	public List<AttributeRefHolder> getFilterInfo() {
+	public List<FilterInfo> getFilterInfo() {
 		return filterInfo;
 	}
-
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+	
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
 

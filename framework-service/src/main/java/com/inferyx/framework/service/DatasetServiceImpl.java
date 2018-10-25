@@ -192,7 +192,7 @@ public class DatasetServiceImpl {
 		}
 		dataset.setTags(datasetView.getTags());
 		dataset.setDesc(datasetView.getDesc());
-		dataset.setFilterInfo(filterList);
+	//	dataset.setFilterInfo(filterList);
 		dataset.setName(datasetView.getName());
 		dataset.setDependsOn(relationHolder);
 		dataset.setAttributeInfo(datasetView.getAttributeInfo());

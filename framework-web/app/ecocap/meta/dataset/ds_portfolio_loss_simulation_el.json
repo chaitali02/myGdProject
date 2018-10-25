@@ -36,20 +36,38 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "27e14f58-4b47-4187-a674-f957b7aee5ea",
-        "version": null,
-        "name": "ds_portfolio_loss_simulation_el"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
+   "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : ">",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+                        "version" : null,
+                        "name" : "portfolio_loss_simulation"
+                    },
+                    "attributeId" : 1,
+                    "value" : null,
+                    "attributeName" : "portfolio_loss",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+                        "version" : null,
+                        "name" : "portfolio_loss_simulaton_aggr"
+                    },
+                    "attributeId" : 1,
+                    "value" : null,
+                    "attributeName" : "value_at_risk",
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
   "attributeInfo": [
     {
       "attrSourceId": "0",
