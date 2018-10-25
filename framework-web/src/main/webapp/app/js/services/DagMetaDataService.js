@@ -1927,7 +1927,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
   obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
   var defaultElement = {
-    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
+    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
     size: { width: 50, height: 50 },
     inPorts : ['in'],
     outPorts: ['out'],
