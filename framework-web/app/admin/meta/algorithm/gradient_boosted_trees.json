@@ -1,0 +1,76 @@
+{
+    "type" : "CLASSIFICATION",
+    "libraryType" : "R",
+    "trainClass" : "org.apache.spark.ml.classification.GBTClassifier",
+    "modelClass" : "org.apache.spark.ml.classification.GBTClassificationModel",
+    "summaryMethods" : [ 
+        "getMaxIter", 
+        "getLossType", 
+        "getCacheNodeIds", 
+        "getCheckpointInterval", 
+        "getImpurity", 
+        "getMaxBins", 
+        "getMaxDepth", 
+        "getMaxMemoryInMB", 
+        "getMinInstancesPerNode", 
+        "getSeed", 
+        "getNumTrees"
+    ],
+    "labelRequired" : "Y",
+    "savePmml" : "Y",
+    "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "880a284d-6d61-4ed8-8f37-b9c284b3e0e5"
+        }
+    },
+    "uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035",
+    "version" : "1540549028",
+    "name" : "Gradient_Boosted_Trees",
+    "desc" : "Gradient_Boosted_Trees classification",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-26T10:17:08.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo": [
+			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+	]
+}

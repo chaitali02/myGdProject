@@ -1,0 +1,103 @@
+{
+    "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "minInfoGain",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0.0, 0.5, 1.0"
+            }
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "maxDepth",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "5, 8, 10, 11"
+            }
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "minInstancesPerNode",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "1, 2, 3"
+            }
+        }, 
+        {
+            "paramId" : "3",
+            "paramName" : "maxBins",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "32, 35, 38"
+            }
+        }, 
+        {
+            "paramId" : "4",
+            "paramName" : "seed",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "159147643, 1000, 100000"
+            }
+        }
+    ],
+    "paramListType" : "model",
+    "templateFlg" : "Y",
+    "uuid" : "880a284d-6d61-4ed8-8f37-b9c284b3e0e5",
+    "version" : "1540542913",
+    "name" : "paramlist_Gradient_Boosted_Trees_WH",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-26T08:35:13.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+   "appInfo": [
+			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+	]
+}
