@@ -27,7 +27,7 @@ public class Ingest extends BaseRule {
 	private MetaIdentifierHolder sourceDetail;
 	private MetaIdentifierHolder targetDatasource;
 	private MetaIdentifierHolder targetDetail;
-	private List<AttributeRefHolder> filterInfo;
+	private List<FilterInfo> filterInfo;
 	private String runParams;
 	private String sourceFormat; //CSV, TSV, PSV, PARQUET
 	private String targetFormat; //CSV, TSV, PSV, PARQUET
@@ -269,18 +269,14 @@ public class Ingest extends BaseRule {
 	 *
 	 * @return the filterInfo
 	 */
-	public List<AttributeRefHolder> getFilterInfo() {
+	public List<FilterInfo> getFilterInfo() {
 		return filterInfo;
 	}
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param filterInfo the filterInfo to set
-	 */
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+	
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
+
 	/**
 	 *
 	 * @Ganesh

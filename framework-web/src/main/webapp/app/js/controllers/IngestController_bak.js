@@ -807,7 +807,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.ingest.versions[i] = ingetversion;
 			}
 		}
-		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest').then(function (response) { onSuccess(response.data) });
+		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestview').then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;
@@ -1070,39 +1070,23 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$('#searchAttr').modal('hide')
 	}
 
-		$scope.disableRhsType = function (rshTypes, arrayStr) {
-		for (var i = 0; i < rshTypes.length; i++) {
-			rshTypes[i].disabled = false;
-			if (arrayStr.length > 0) {
-				var index = arrayStr.indexOf(rshTypes[i].caption);
-				if (index != -1) {
-					rshTypes[i].disabled = true;
-				}
-			}
-		}
-		return rshTypes;
-	}
-
 	$scope.onChangeOperator = function (index) {
-		if ($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
+		if ($scope.ingestCompare != null) {
+			$scope.ingestCompare.filterChg = "y"
 		}
 		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
-			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
-			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['string', 'dataset']);
-			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
-			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
+			$scope.filterTableArray[index].rhstype = $scope.rhsType[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 	}
@@ -1136,8 +1120,6 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
 		filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
-		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
@@ -1408,7 +1390,15 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		else{
 			ingestJson.saveMode=null;
 		}
-		
+		if ($scope.ingestCompare == null) {
+			ingestJson.ingestChg = "Y";
+			ingestJson.filterChg = "Y";
+		} else {
+			if ($scope.ingestData.ingestChg == "Y") {
+				ingestJson.ingestChg = "Y";
+			}
+			ingestJson.ingestChg = "N";
+		}
 		var upd_tag = "N";
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -1484,11 +1474,31 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 		//filterInfo
 		var filterInfoArray = [];
-	
-	
+		var filter = {};
+		if ($scope.ingestCompare != null && $scope.ingestCompare.filter != null) {
+			filter.uuid = $scope.ingestCompare.filter.uuid;
+			filter.name = $scope.ingestCompare.filter.name;
+			filter.version = $scope.ingestCompare.filter.version;
+			filter.createdBy = $scope.ingestCompare.filter.createdBy;
+			filter.createdOn = $scope.ingestCompare.filter.createdOn;
+			filter.active = $scope.ingestCompare.filter.active;
+			filter.tags = $scope.ingestCompare.filter.tags;
+			filter.desc = $scope.ingestCompare.filter.desc;
+			filter.dependsOn = $scope.ingestCompare.filter.dependsOn;
+		}
 		if ($scope.filterTableArray.length > 0) {
 			for (var i = 0; i < $scope.filterTableArray.length; i++) {
-			
+				if ($scope.ingestCompare != null && $scope.ingestCompare.filter != null && $scope.ingestCompare.filter.filterInfo.length == $scope.filterTableArray.length) {
+					if ($scope.ingestCompare.filterChg == "y") {
+						ingestJson.filterChg = "y";
+					}
+					else {
+						ingestJson.filterChg = "n";
+					}
+				}
+				else {
+					ingestJson.filterChg = "y";
+				}
 				var filterInfo = {};
 				var operand = []
 				var lhsoperand = {};;
@@ -1505,7 +1515,6 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				if ($scope.filterTableArray[i].lhstype.text == "string" &&  $scope.filterTableArray[i].lhsvalue) {
 					lhsref.type = "simple";
 					lhsoperand.ref = lhsref;
-					lhsoperand.attributeType = $scope.filterTableArray[i].lhstype.caption;
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
 				}
 				if ($scope.filterTableArray[i].lhstype.text == "datapod" &&  $scope.filterTableArray[i].lhsvalue) {
@@ -1531,16 +1540,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
-					rhsoperand.attributeType = $scope.filterTableArray[i].rhstype.caption;
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
-				}
-				if ($scope.filterTableArray[i].rhstype.text == "string" &&  $scope.filterTableArray[i].rhsvalue1 &&  $scope.filterTableArray[i].rhsvalue2) {
-
-					rhsref.type = "simple";
-					rhsoperand.ref = rhsref;
-					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
-						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
-					}
 				}
 				if ($scope.filterTableArray[i].rhstype.text == "datapod" &&  $scope.filterTableArray[i].rhsvalue) {
 
@@ -1584,14 +1584,16 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				filterInfoArray[i] = filterInfo;
 
 			}//End FilterInfo
-			
-			ingestJson.filterInfo = filterInfoArray;
+			filter.filterInfo = filterInfoArray;
+			ingestJson.filter = filter;
 		}
 		else {
-			ingestJson.filterInfo = null;
-			
+			ingestJson.filter = null;
+			ingestJson.filterChg = "y";
 		}
-	
+		if ($scope.ingestData.filterChg == "Y") {
+			ingestJson.filterChg = "y";
+        }
         
         var attributemaparray = [];
         if($scope.ingestTableArray && $scope.ingestTableInfo){
@@ -1663,11 +1665,13 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                 attributemaparray[i] = attributemap;
             }
 		}
-		
+		if($scope.myform1.$dirty ==true || $scope.myform2.$dirty ==true || $scope.myform3.$dirty ==true ){
+			ingestJson.ingestChg='Y'
+		}
 		ingestJson.attributeMap = attributemaparray;
 
 		console.log(JSON.stringify(ingestJson))
-		IngestRuleService.submit(ingestJson, 'ingest', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		IngestRuleService.submit(ingestJson, 'ingestview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			
 			if ($scope.isExecute == "YES") {
