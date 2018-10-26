@@ -580,6 +580,26 @@
 			<artifactId>kafka_2.11</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.bytedeco.javacpp-presets</groupId>
+		    <artifactId>tesseract</artifactId>
+		    <version>3.04-1.1</version>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>org.bytedeco.javacpp-presets</groupId>
+		    <artifactId>leptonica</artifactId>
+		    <version>1.72-1.1</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.12</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.bytedeco</groupId>
+		    <artifactId>javacpp</artifactId>
+		    <version>1.1</version>
+		</dependency>
 
 
 	</dependencies>

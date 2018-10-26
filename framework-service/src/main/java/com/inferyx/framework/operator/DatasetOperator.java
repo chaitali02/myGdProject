@@ -33,6 +33,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -55,6 +56,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		@Autowired
 		DataStoreServiceImpl datastoreServiceImpl;
 		
+		@Autowired
+		FilterOperator2 filterOperator2;
 		static final Logger logger = Logger.getLogger(DatasetOperator.class);
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
@@ -143,7 +146,11 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
-				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
+				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
+
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+
+				//String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : filterStr;
 			}
 			return ConstantsUtil.BLANK;
@@ -155,7 +162,11 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		public String generateHaving (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
-				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
+				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
+
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+
+//				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 			}
 			return ConstantsUtil.BLANK;

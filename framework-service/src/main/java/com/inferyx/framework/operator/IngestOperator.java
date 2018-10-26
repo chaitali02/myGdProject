@@ -12,9 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,11 +24,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.AttributeMap;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
 
@@ -45,6 +43,8 @@ public class IngestOperator {
 	private AttributeMapOperator attributeMapOperator;
 	@Autowired
 	private FilterOperator filterOperator;
+	@Autowired
+	FilterOperator2 filterOperator2;
 	
 	static Logger logger = Logger.getLogger(IngestOperator.class);
 	
@@ -57,24 +57,35 @@ public class IngestOperator {
 				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams))
 				.concat(generateHaving(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+		
 	}
 
 	public String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
+		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
+		logger.info(query);
+		return query;
 	}
 
 	public String generateFilter(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
+
+		    return filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+
+			//return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 		}
 		return ConstantsUtil.BLANK;
 	}
 	
 	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
-			String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
+
+			String filterStr = filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+
+			//String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;

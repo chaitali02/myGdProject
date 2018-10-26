@@ -5,12 +5,26 @@
             "uuid" : "91290798-b6a9-4883-bc58-664b66a08794"
         }
     },
-    "filterInfo" : [ 
+     "filterInfo" : [ 
         {
-            "ref" : {
-                "type" : "filter",
-                "uuid" : "bdea0dd6-5b5a-45a5-81bf-77619b3529c9"
-            }
+            "logicalOperator" : "",
+            "operator" : "=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
+                    },
+                    "attributeId" : 0
+                }, 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
+                    },
+                    "attributeId" : 0
+                }
+            ]
         }
     ],
     "limit" : 0,

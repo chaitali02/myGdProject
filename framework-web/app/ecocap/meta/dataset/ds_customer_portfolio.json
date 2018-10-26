@@ -36,20 +36,38 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "0119c5d4-5271-4c57-b442-e55cf547c714",
-        "version": null,
-        "name": "ds_customer_portfolio"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
+  "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : "=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                        "version" : null,
+                        "name" : "customer_portfolio"
+                    },
+                    "attributeId" : 9,
+                    "value" : null,
+                    "attributeName" : "reporting_date",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "paramlist",
+                        "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+                        "version" : null,
+                        "name" : "paramlist_ecocap_app"
+                    },
+                    "attributeId" : 0,
+                    "value" : null,
+                    "attributeName" : "reporting_date",
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
   "attributeInfo": [
     {
       "attrSourceId": "0",

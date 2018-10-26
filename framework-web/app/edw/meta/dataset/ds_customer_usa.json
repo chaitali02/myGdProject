@@ -41,19 +41,28 @@
 		},
 		"value": null
 	},
-	"filterInfo": [
-		{
-			"ref": {
-				"type": "filter",
-				"uuid": "c456f883-9699-4abc-9a4a-82896e074c5b",
-				"version": null,
-				"name": null
-			},
-			"value": null,
-			"attrId": null,
-			"attrName": null
-		}
-	],
+	 "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : "=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    },
+                    "attributeId" : 8
+                }, 
+                {
+                    "ref" : {
+                        "type" : "simple"
+                    },
+                    "attributeType" : "string",
+                    "value" : "USA"
+                }
+            ]
+        }
+    ],
 	"attributeInfo": [
 		{
 			"attrSourceId": "0",

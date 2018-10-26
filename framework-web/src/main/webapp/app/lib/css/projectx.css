@@ -1165,3 +1165,11 @@ transition: right 1m
   color:white;
 }
 
+.text-wrap{
+  overflow: hidden;
+  white-space:nowrap;
+  max-width:170px;
+  margin-bottom:-4px;
+  text-overflow:ellipsis;
+}
+
