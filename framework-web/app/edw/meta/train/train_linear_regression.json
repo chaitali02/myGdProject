@@ -74,6 +74,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "ef4d437d-8eba-415f-aa46-bf8563bbde05",
     "version" : "1535973389",
     "name" : "train_linear_regression",

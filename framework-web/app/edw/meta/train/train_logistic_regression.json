@@ -91,6 +91,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "7bf207ca-aafe-4da8-bdc2-ff99d4b6110c",
     "version" : "1535821738",
     "name" : "train_logistic_regression",

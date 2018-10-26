@@ -100,6 +100,7 @@
     ],
     "trainPercent" : 70.0,
     "valPercent" : 30.0,
+    "featureImportance" : "N",
     "labelInfo" : {
         "attrId" : "4",
         "ref" : {

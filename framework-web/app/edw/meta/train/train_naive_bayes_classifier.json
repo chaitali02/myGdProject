@@ -91,6 +91,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "46bcd068-eca9-4b80-a25d-913e8fd463ec",
     "version" : "1536045262",
     "name" : "train_naive_bayes_classifier",

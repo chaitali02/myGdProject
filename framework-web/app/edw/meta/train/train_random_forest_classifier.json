@@ -108,6 +108,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "Y",
     "uuid" : "c969e192-b285-4a15-9fcc-3c31de061489",
     "version" : "1535821272",
     "name" : "train_random_forest_classifier",
