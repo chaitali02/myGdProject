@@ -48,6 +48,7 @@ import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
+import org.apache.spark.ml.classification.RandomForestClassificationModel;
 import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.clustering.LocalLDAModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
@@ -357,7 +358,7 @@ public class SparkExecutor<T> implements IExecutor {
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			dfSorted = sparkSession.sql(sql);
-
+			dfSorted.printSchema();
 			Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
 			String[] columns = dfSorted.columns();
 			for (Row row : rows) {
@@ -925,7 +926,7 @@ public class SparkExecutor<T> implements IExecutor {
 		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
 		
-		ResultSetHolder rsHolder;		
+		ResultSetHolder rsHolder = null;		
 		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
 				+ " AS version FROM "+tempTableName;
 		String sqlWoVersion = "SELECT * FROM "+tempTableName;
@@ -949,17 +950,22 @@ public class SparkExecutor<T> implements IExecutor {
 //		dfTask.cache();
 		// sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
-		
 		logger.info("Going to datapodWriter");
 		
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
 		// MetaIdentifier(MetaType.datapod, datapodKey.getUUID(),
 		// datapodKey.getVersion()));
-		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod, daoRegister);
+		
 		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 		ResultSetHolder rsHolder2 = new ResultSetHolder();
-		rsHolder2.setDataFrame(dfTask);
-		rsHolder2.setType(ResultType.dataframe);
+		if(datapod != null) {
+			rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);
+		} else {
+			rsHolder2.setDataFrame(dfTask);
+			rsHolder2.setType(ResultType.dataframe);
+		}
+		
+		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod, daoRegister);
 		datapodWriter.write(rsHolder2, filePathUrl, datapod, SaveMode.Overwrite.toString());
 		return count;
 	}
@@ -1720,15 +1726,16 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
+		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 //		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(true);
+		
 		@SuppressWarnings("unchecked")
-		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
-				.invoke(trainedModel, df);
+		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
+		
 //		predictionDf.show(true);
 //		Evaluator evaluator = getEvaluatorByTrainClass("LogisticRegressor");
 //		RegressionEvaluator regressionEvaluator = (RegressionEvaluator) evaluator;
@@ -1772,6 +1779,15 @@ public class SparkExecutor<T> implements IExecutor {
 			return rsHolder;
 	}
 	
+	@Override
+	public List<Double> featureImportance(Object trainedModel, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Vector vector = (Vector) trainedModel.getClass().getMethod("featureImportances").invoke(trainedModel);
+		List<Double> featureWeightList = new ArrayList<>();
+		for(double featureWeight : vector.toArray()) {
+			featureWeightList.add(featureWeight);
+		}
+		return featureWeightList;
+	}
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod, String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
 		logger.info("inside method persistDataframe");
@@ -1842,42 +1858,17 @@ public class SparkExecutor<T> implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
-
-			method = algoClass.getClass().getMethod("setFeaturesCol", String.class);
-			method.invoke(algoClass, "features");
-			
-
-		/*	ParamMap paramMap2 = new ParamMap();
-			for(ParamPair<?> paramPair : paramMap.toList()) {
-				Param<?> param = paramPair.param();
-				for(Param<?> param2 : (Param<?>[]) algoClass.getClass().getMethod("params").invoke(algoClass)) {
-					if(param.name().equalsIgnoreCase(param2.name())) {
-						Method method2 = algoClass.getClass().getMethod(param.name());
-						Object obj2 = method2.invoke(algoClass);
-						Class<?>[] param3 = new Class[1];
-						param3[0] = int.class;
-						Method method1 = obj2.getClass().getMethod("w", param3);						
-						paramMap2.put((ParamPair<?>)method1.invoke((IntParam)obj2, Integer.parseInt(""+250)));
-						System.out.println("metadata: "+param.name()+"    spark: "+param2.name());
-						System.out.println("metadata: "+param.parent()+"    spark: "+param2.parent());
-						System.out.println("metadata: "+param.doc()+"    spark: "+param2.doc());
-						System.out.println(algoClass.getClass().getMethod("uid").invoke(algoClass));
-					}
-				}
-			}
-			System.out.println(paramMap2.toList().get(0).param().parent());*/
-
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
 				PipelineModel trngModel = null;
-				if (null != paramMap)
+				if (null != paramMap) {
 					trngModel = pipeline.fit(trainingDf, paramMap);
-				else
+				} else {
 					trngModel = pipeline.fit(trainingDf);
-				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
+				}
+				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-//				trainedDataSet.show(false);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2232,7 +2223,6 @@ public class SparkExecutor<T> implements IExecutor {
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
 			try {
-//				trainingDf.show(false);
 				cvModel = cv.fit(trainingDf);
 			} catch (Exception e) {
 				e.printStackTrace();
