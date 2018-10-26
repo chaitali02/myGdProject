@@ -191,8 +191,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				// TODO: handle exception
 			}
 
+
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion));
 			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "No data found.");
+					(message != null) ? message : "No data found.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
 
@@ -285,8 +288,10 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			}
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
 					Status.Stage.Failed);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Operator execution failed.");
+					(message != null) ? message : "Operator execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Operator execution failed.");
 		}
 		return isSuccess;
@@ -342,8 +347,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
+			
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Can not create executable Operator.");
+					(message != null) ? message : "Can not create executable Operator.",dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable Operator.");
 		}
 		return operatorExec;
@@ -420,7 +428,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
