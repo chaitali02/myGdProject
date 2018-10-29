@@ -175,13 +175,13 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			//filterServiceImpl.save(filter);
 			commonServiceImpl.save(MetaType.filter.toString(), filter);
 		}		
-		if(filter != null)
-		{
-		MetaIdentifier filterInfo = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
-		filterMeta.setRef(filterInfo);
-		filterList.add(filterMeta);
-		dq.setFilterInfo(filterList);
-		}
+//		if(filter != null)
+//		{
+//		MetaIdentifier filterInfo = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
+//		filterMeta.setRef(filterInfo);
+//		filterList.add(filterMeta);
+//		dq.setFilterInfo(filterList);
+//		}
 		dq.setBaseEntity();
 		dq.setPublished(dqView.getPublished());
 		DataQual dataqual=iDataQualDao.save(dq);

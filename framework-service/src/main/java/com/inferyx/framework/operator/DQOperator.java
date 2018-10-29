@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -113,6 +114,9 @@ public class DQOperator implements IParsable {
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+
+	@Autowired
+	FilterOperator2 filterOperator2;
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
@@ -417,12 +421,16 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	public String generateFilter(List<AttributeRefHolder> filterInfo, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
+	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
 			throws Exception {
-		if (filterInfo == null || filterInfo.isEmpty()) {
+		if (dq.getFilterInfo() == null || dq.getFilterInfo().isEmpty()) {
 			return "";
 		}
-		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
+		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, dq.getUuid(), dq.getVersion()));
+
+		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null,filterSource, null, usedRefKeySet, null, false, false, runMode);
+
+		return filterStr; //filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 
 	}
 
@@ -435,7 +443,7 @@ public class DQOperator implements IParsable {
 			return null;
 		}
 		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
-				.concat(WHERE_1_1).concat(generateFilter(dq.getFilterInfo(), usedRefKeySet, runMode));
+				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 	}
 
 	public String generateCase(DataQual dq, String tableName, String attributeName)
