@@ -113,12 +113,17 @@ public class JoinKeyOperator {
 					operandValue.add("''");
 				} else {
 					String value = sourceAttr.getValue();
-					if(value != null) {
+					if(value != null && sourceAttr.getAttributeType() !=null) {
+						String attrType=sourceAttr.getAttributeType();
+					    value = attrType.equalsIgnoreCase("integer")? value :"'"+value+"'";
+					}
+					else if(value != null && sourceAttr.getAttributeType() !=null) {
 						boolean isNumber = Helper.isNumber(value);			
 						if(!isNumber) {
 							value = "'"+value+"'";
 						}
 					}
+				
 					operandValue.add(value);
 				}
 			} else if (sourceAttr.getRef().getType().equals(MetaType.attribute)) {
