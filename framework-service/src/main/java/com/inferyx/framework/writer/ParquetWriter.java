@@ -78,7 +78,7 @@ public class ParquetWriter implements IWriter {
 					// TODO: handle exception
 				}
 				try {
-					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.", null);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
 						| ParseException e1) {

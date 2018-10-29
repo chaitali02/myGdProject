@@ -95,30 +95,28 @@ public class ReconViewServiceImpl {
 		reconView.setSourceFunc(resolvedRule.getSourceFunc());
 	    reconView.setTargetFunc(resolvedRule.getTargetFunc());
 		
-		if(resolvedRule.getSourceFilter() != null) {
+		/*if(resolvedRule.getSourceFilter() != null) {
 		List<AttributeRefHolder> filterInfo = resolvedRule.getSourceFilter();
 		Filter resolvedFilter = null;
 		for (int i = 0; i < filterInfo.size(); i++) {
-			//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(),rule.getVersion());
 			Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(),recon.getVersion(), MetaType.filter.toString());
 			resolvedFilter = filterServiceImpl.resolveName(filter);
 			
 		}
 		reconView.setSourcefilter(resolvedFilter);
-		}
+		}*/
 		
 		
-		if(resolvedRule.getTargetFilter() != null) {
+		/*if(resolvedRule.getTargetFilter() != null) {
 			List<AttributeRefHolder> filterInfo = resolvedRule.getTargetFilter();
 			Filter resolvedFilter = null;
 			for (int i = 0; i < filterInfo.size(); i++) {
-				//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(),rule.getVersion());
 				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(),recon.getVersion(), MetaType.filter.toString());
 				resolvedFilter = filterServiceImpl.resolveName(filter);
 				
 			}
 			reconView.setTargetfilter(resolvedFilter);
-			}
+			}*/
 		    
 		return reconView;
 	}
@@ -153,7 +151,7 @@ public class ReconViewServiceImpl {
 		reconView.setSourceDistinct(resolvedRule.getSourceDistinct());	   
 		reconView.setTargetDistinct(resolvedRule.getTargetDistinct());
 		
-		if(resolvedRule.getSourceFilter() != null) {
+		/*if(resolvedRule.getSourceFilter() != null) {
 		List<AttributeRefHolder> sourceFilter = resolvedRule.getSourceFilter();
 		Filter resolvedFilter = null;
 		for (int i = 0; i < sourceFilter.size(); i++) {
@@ -163,10 +161,10 @@ public class ReconViewServiceImpl {
 			
 		}
 		reconView.setSourcefilter(resolvedFilter);
-		}
+		}*/
 		
 		
-		if(resolvedRule.getTargetFilter() != null) {
+		/*if(resolvedRule.getTargetFilter() != null) {
 			List<AttributeRefHolder> targetFilter = resolvedRule.getTargetFilter();
 			Filter resolvedFilter = null;
 			for (int i = 0; i < targetFilter.size(); i++) {
@@ -176,7 +174,7 @@ public class ReconViewServiceImpl {
 				
 			}
 			reconView.setTargetfilter(resolvedFilter);
-			}
+			}*/
 		    
 		return reconView;
 	}	
@@ -261,7 +259,7 @@ public class ReconViewServiceImpl {
 			AttributeRefHolder filterInfo = new AttributeRefHolder();
 			filterInfo.setRef(filterMeta);
 			sourcefilterList.add(filterInfo);
-			recon.setSourceFilter(sourcefilterList);	
+			//recon.setSourceFilter(sourcefilterList);	
 		}
 		
 		if (reconView.getTargetfilter() != null) {
@@ -285,7 +283,7 @@ public class ReconViewServiceImpl {
 			AttributeRefHolder filterInfo = new AttributeRefHolder();
 			filterInfo.setRef(filterMeta);
 			targetfilterList.add(filterInfo);
-			recon.setTargetFilter(targetfilterList);
+			//recon.setTargetFilter(targetfilterList);
 		}
 	
 		recon.setPublished(reconView.getPublished());

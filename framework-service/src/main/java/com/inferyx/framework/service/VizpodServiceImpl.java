@@ -912,7 +912,9 @@ public class VizpodServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
 		} finally {
 			VizpodResultHolder resultHolder = new VizpodResultHolder(data, vizExec);
@@ -1273,7 +1275,7 @@ public class VizpodServiceImpl {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		

@@ -1857,7 +1857,9 @@ public class DagExecServiceImpl {
 					int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					}else{
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
@@ -1920,7 +1922,9 @@ public class DagExecServiceImpl {
 						int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 						if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
 							logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
-							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+							MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+							dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 							throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 						}else{
 							Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
@@ -2003,7 +2007,9 @@ public class DagExecServiceImpl {
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
@@ -2037,7 +2043,9 @@ public class DagExecServiceImpl {
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());

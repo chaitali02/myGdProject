@@ -1621,8 +1621,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				// TODO: handle exception
 			}
 			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Graphpod execution failed.");
+					(message != null) ? message : "Graphpod execution failed." ,dependsOn);
 			throw new RuntimeException(e);
 		}
 	}

@@ -377,7 +377,9 @@ public class RuleServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 				}
 			}
@@ -388,7 +390,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 		}
 	}
@@ -424,7 +428,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create Business Rule.");
 		}
 		return ruleExec;
@@ -474,7 +480,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Business Rule execution failed.");
 		}
 		return ruleExec;
@@ -680,7 +688,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -794,7 +804,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		

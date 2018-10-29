@@ -412,7 +412,9 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Map execution failed.");			
 		} 		
 	}

@@ -384,7 +384,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.", dependsOn);
 			throw new NumberFormatException((message != null) ? message : "Can not create ProfileExec.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -394,7 +396,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create ProfileExec.");
 		}		
 	}
@@ -469,7 +473,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExecUUID, profileExecVersion));
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -511,7 +517,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Profile.");
 				}
 			}
@@ -522,7 +530,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Profile.");
 		}
 
@@ -564,7 +574,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Profile.");
 		}	
 		return profileExec;
@@ -589,7 +601,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Profile execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Profile execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Profile execution failed.");
 		}
 	}
@@ -601,7 +615,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		

@@ -3305,7 +3305,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
@@ -3464,12 +3464,12 @@ public class CommonServiceImpl <T> {
 			return metaList;
 		}
 		
-		public HttpServletResponse sendResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		public HttpServletResponse sendResponse(String code, String status, String msg, MetaIdentifierHolder dependsOn) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {
 				HttpServletResponse response = requestAttributes.getResponse();
 				if(response != null) {
-						Message message = new Message(code, status, msg);
+						Message message = new Message(code, status, msg, dependsOn);
 						Message savedMessage = messageServiceImpl.save(message);
 						
 						ObjectMapper mapper = new ObjectMapper();
@@ -3685,7 +3685,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
@@ -3915,7 +3915,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;

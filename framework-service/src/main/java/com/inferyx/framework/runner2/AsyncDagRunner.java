@@ -19,6 +19,8 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.StageExec;
@@ -129,7 +131,10 @@ public class AsyncDagRunner {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+			
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Pipeline execution failed.");
 		}finally {			
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());

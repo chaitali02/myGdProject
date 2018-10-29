@@ -118,7 +118,9 @@ public class ReportServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable report.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportUuid, reportVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable report.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable report.");
 		}		
 		
@@ -151,7 +153,9 @@ public class ReportServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable report.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable report.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable report.");
 		}
 		return reportExec;
@@ -223,7 +227,9 @@ public class ReportServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -239,7 +245,9 @@ public class ReportServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
 		}
 		
@@ -287,7 +295,9 @@ public class ReportServiceImpl {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows, dependsOn);
 			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 		}
 		
@@ -311,8 +321,10 @@ public class ReportServiceImpl {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					"Requested rows exceeded the limit of " + maxRows);
+					"Requested rows exceeded the limit of " + maxRows, dependsOn);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 		

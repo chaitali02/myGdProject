@@ -29,6 +29,9 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -92,7 +95,7 @@ public class ParquetReader implements IReader
 					// TODO: handle exception
 				}
 				try {
-					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.", null);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
 						| ParseException e1) {
@@ -131,7 +134,7 @@ public class ParquetReader implements IReader
 					// TODO: handle exception
 				}
 				try {
-					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.", null);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
 						| ParseException e1) {

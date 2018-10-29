@@ -175,13 +175,13 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			//filterServiceImpl.save(filter);
 			commonServiceImpl.save(MetaType.filter.toString(), filter);
 		}		
-		if(filter != null)
-		{
-		MetaIdentifier filterInfo = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
-		filterMeta.setRef(filterInfo);
-		filterList.add(filterMeta);
-		dq.setFilterInfo(filterList);
-		}
+//		if(filter != null)
+//		{
+//		MetaIdentifier filterInfo = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
+//		filterMeta.setRef(filterInfo);
+//		filterList.add(filterMeta);
+//		dq.setFilterInfo(filterList);
+//		}
 		dq.setBaseEntity();
 		dq.setPublished(dqView.getPublished());
 		DataQual dataqual=iDataQualDao.save(dq);
@@ -293,7 +293,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create DQExec.");
 		}
 	}
@@ -310,7 +312,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create DQExec.");
 		}
 	}
@@ -336,7 +340,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Data Quality execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataqualExec.getUuid(), dataqualExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Data Quality execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Data Quality execution failed.");
 		}
 	}
@@ -374,7 +380,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExecUUID, dataQualExecVersion));
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -412,7 +420,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.dqExec,dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Data Quality.");
 				}
 			}
@@ -423,7 +433,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Data Quality.");
 		}
 		
@@ -461,7 +473,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.", dependsOn);
 			throw new Exception((message != null) ? message : "Failed data quality parsing.");
 		}
 		return dataQualExec;
@@ -475,7 +489,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					"Requested rows exceeded the limit of " + maxRows);
+					"Requested rows exceeded the limit of " + maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 

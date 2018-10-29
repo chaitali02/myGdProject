@@ -1193,7 +1193,9 @@ public class DagServiceImpl {
 						statusList.add(failedStatus);
 						dagExec.setStatusList(statusList);
 						commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
-						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
 						throw new Exception((message != null) ? message : "Pipeline execution failed.");
 					} finally {
 						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
