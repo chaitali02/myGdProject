@@ -64,6 +64,7 @@
             <artifactId>spring-test</artifactId>
             <version>4.2.4.RELEASE</version>
             <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -521,11 +522,26 @@
 		</dependency>
 		
 		<!-- Tensorflow -->
-		<dependency>
+	<!-- 	<dependency>
 			<groupId>org.tensorflow</groupId>
 			<artifactId>tensorflow</artifactId>
 			<version>1.8.0</version>
 			<optional>true</optional>
+		</dependency>
+		 -->
+			<!-- Tensorflow -->
+		<dependency>
+			<groupId>org.tensorflow</groupId>
+			<artifactId>tensorflow</artifactId>
+			<version>1.11.0</version>
+			<optional>true</optional>
+			
+		</dependency>
+		<dependency>
+		    <groupId>org.tensorflow</groupId>
+		    <artifactId>libtensorflow_jni_gpu</artifactId>
+		    <version>1.11.0</version>
+		    <optional>true</optional>		    
 		</dependency>
 		
 		<!-- scala-library -->

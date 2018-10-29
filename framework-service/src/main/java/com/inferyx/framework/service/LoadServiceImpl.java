@@ -555,7 +555,9 @@ public class LoadServiceImpl {
 				// TODO: handle exception
 			}
 			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Load execution failed.");
 		}
 	}

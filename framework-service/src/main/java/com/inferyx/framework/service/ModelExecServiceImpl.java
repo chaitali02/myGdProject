@@ -644,7 +644,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
 	}
@@ -678,7 +680,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
 	}
@@ -712,7 +716,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
 	}
@@ -755,7 +761,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
@@ -868,7 +874,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.trainExec, uuid, version));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Train.");
 				}
 			}
@@ -879,7 +887,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.trainExec, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Train.");
 		}
 	}
@@ -902,7 +912,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, uuid, version));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.", dependsOn);
 					throw new Exception((message != null) ? message : "Predict restart operation failed.");
 				}
 			}
@@ -913,7 +925,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Predict restart operation failed.");
 		}
 	}
@@ -936,7 +950,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, uuid, version));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.", dependsOn);
 					throw new Exception((message != null) ? message : "Simulate restart operation failed.");
 				}
 			}
@@ -947,7 +963,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Simulate restart operation failed.");
 		}
 	}

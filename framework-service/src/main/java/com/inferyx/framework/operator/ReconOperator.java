@@ -32,6 +32,8 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
@@ -215,7 +217,10 @@ public class ReconOperator {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
+			
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.", dependsOn);
 			throw new NullPointerException(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -226,7 +231,10 @@ public class ReconOperator {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
+
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not generate query.");
 		}
 		

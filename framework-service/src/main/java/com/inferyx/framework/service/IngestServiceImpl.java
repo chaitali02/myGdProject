@@ -161,7 +161,9 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable ingest.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable ingest.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable ingest.");
 		}			
 		return ingestExec;
@@ -343,11 +345,15 @@ public class IngestServiceImpl extends RuleTemplate {
 
 			if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
 				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
-				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No change in incremental param hence skipping execution.");
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
+				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No change in incremental param hence skipping execution.", dependsOn);
 				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {
 				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
-				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
+				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.", dependsOn);
 				throw new RuntimeException((message != null) ? message : "Ingest execution failed.");				
 			}
 		}
@@ -505,7 +511,9 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, execUuid, execVersion));
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -681,7 +689,9 @@ public class IngestServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
+					commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not restart Ingest.");
 				}
 			}
@@ -692,7 +702,9 @@ public class IngestServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
+			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Ingest.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not restart Ingest.");
 		}
 	}
@@ -723,7 +735,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
 			} else {
 				message = e.toString();
-				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), message);
+				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), message, null);
 				throw new RuntimeException(message);
 			}
 		}

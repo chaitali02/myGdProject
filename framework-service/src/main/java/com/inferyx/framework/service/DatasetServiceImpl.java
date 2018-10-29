@@ -92,7 +92,9 @@ public class DatasetServiceImpl {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dataset, datasetUUID, datasetVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows, dependsOn);
 			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 		}
 		

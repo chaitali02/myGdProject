@@ -53,12 +53,12 @@ public class DQViewServiceImpl {
 			dq = iDataQualDao.findOne(id);
 		}*/
 		DataQual dq = (DataQual) commonServiceImpl.getOneById(id, MetaType.dq.toString());
-		List<AttributeRefHolder> filterList = dq.getFilterInfo();
-		for(int i=0; i<filterList.size(); i++)		{
-			//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
-			Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
-			dqView.setFilter(filter);
-		}
+//		List<AttributeRefHolder> filterList = dq.getFilterInfo();
+//		for(int i=0; i<filterList.size(); i++)		{
+//			//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
+//			Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
+//			dqView.setFilter(filter);
+//		}
 		dqView.setAppInfo(dq.getAppInfo());
 		dqView.setName(dq.getName());
 		dqView.setDesc(dq.getDesc());
@@ -94,14 +94,14 @@ public class DQViewServiceImpl {
 			dq = iDataQualDao.findOneByUuidAndVersion(uuid, version);
 		}*/
 		DataQual dq = (DataQual) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dq.toString());
-		List<AttributeRefHolder> filterList = dq.getFilterInfo();
-		if(filterList != null)		{
-			for(int i=0; i<filterList.size(); i++)		{
-				//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
-				Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
-				dqView.setFilter(filter);
-			}
-		}
+//		List<AttributeRefHolder> filterList = dq.getFilterInfo();
+//		if(filterList != null)		{
+//			for(int i=0; i<filterList.size(); i++)		{
+//				//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
+//				Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
+//				dqView.setFilter(filter);
+//			}
+//		}
 		dqView.setAppInfo(dq.getAppInfo());
 		dqView.setName(dq.getName());
 		dqView.setDesc(dq.getDesc());
@@ -138,14 +138,14 @@ public class DQViewServiceImpl {
 			dq = iDataQualDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
 		}*/
 		DataQual dq = (DataQual) commonServiceImpl.getLatestByUuid(uuid, MetaType.dq.toString());
-		List<AttributeRefHolder> filterList = dq.getFilterInfo();
-		if(filterList != null)		{
-		for(int i=0; i<filterList.size(); i++)		{
-				//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
-				Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
-				dqView.setFilter(filter);
-			}
-		}
+//		List<AttributeRefHolder> filterList = dq.getFilterInfo();
+//		if(filterList != null)		{
+//		for(int i=0; i<filterList.size(); i++)		{
+//				//Filter filter = filterServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion());
+//				Filter filter = (Filter) commonServiceImpl.getAsOf(filterList.get(i).getRef().getUuid(),dq.getVersion(), MetaType.filter.toString());
+//				dqView.setFilter(filter);
+//			}
+//		}
 		dqView.setAppInfo(dq.getAppInfo());
 		dqView.setName(dq.getName());
 		dqView.setDesc(dq.getDesc());

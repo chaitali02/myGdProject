@@ -79,6 +79,7 @@ import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -2186,5 +2187,35 @@ public class MetadataServiceImpl {
 			}
 		}
 		return dsForFile;
+	}
+
+	public List<Message> getMessageByUuidAndVersion(String uuid, String version) {
+
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("desc");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("tags");
+		query.fields().include("active");
+		query.fields().include("published");
+		query.fields().include("appInfo");		
+		query.fields().include("activityInfo");
+		query.fields().include("code");
+		query.fields().include("status");
+		query.fields().include("message");
+		query.fields().include("dependsOn");
+		
+		if (uuid != null && !uuid.isEmpty()) 
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
+		
+		if (version != null && !version.isEmpty()) 
+			query.addCriteria(Criteria.where("dependsOn.ref.version").is(version));
+		
+		List<Message> messages = new ArrayList<>();
+		messages = (List<Message>) mongoTemplate.find(query, Message.class);		
+		return messages;
 	}
 }
