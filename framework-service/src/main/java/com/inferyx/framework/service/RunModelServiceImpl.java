@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -772,11 +773,33 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
+//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
+//							try {
+//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
+//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
+//								if(!featureWeightList.isEmpty()) {
+//									summary.put("featureImportances", featureWeightList);
+//								}
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}							
+//						}
 						String fileName = tableName+".result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
+//							try {
+//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
+//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
+//								if(!featureWeightList.isEmpty()) {
+//									summary.put("featureImportances", featureWeightList);
+//								}
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}							
+//						}
 						String fileName = tableName+".result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {

@@ -280,26 +280,6 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
 			then(function (response, status, headers) {
 				return response;
 			})
-    }
-    factory.disableRhsType = function (arrayStr) {
-		var rTypes = [
-			{ "text": "string", "caption": "string", "disabled": false },
-			{ "text": "string", "caption": "integer", "disabled": false },
-			{ "text": "datapod", "caption": "attribute", "disabled": false },
-			{ "text": "formula", "caption": "formula", "disabled": false },
-			{ "text": "dataset", "caption": "dataset", "disabled": false },
-			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
-			{ "text": "function", "caption": "function", "disabled": false }]
-		for (var i = 0; i < rTypes.length; i++) {
-			rTypes[i].disabled = false;
-			if (arrayStr.length > 0) {
-				var index = arrayStr.indexOf(rTypes[i].caption);
-				if (index != -1) {
-					rTypes[i].disabled = true;
-				}
-			}
-		}
-		return rTypes;
 	}
     return factory;
 })
@@ -578,24 +558,12 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 ingestJSOn.ingestData.targetExtn=ingestJSOn.ingestData.targetExtn.toLowerCase();
             }
             var filterInfoArray = [];
-            if (response.filterInfo != null) {
-                for (i = 0; i < response.filterInfo.length; i++) {
+            if (response.filter != null) {
+                for (i = 0; i < z.length; i++) {
                     var filterInfo = {};
-                    filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
-                    filterInfo.operator = response.filterInfo[i].operator;
-                    var rhsTypes = null;
-					filterInfo.rhsTypes = null;
-					if (filterInfo.operator == 'BETWEEN') {
-						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType([]);
-					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['string', 'dataset']);
-					}
-					else {
-						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['dataset']);
-					}
-                    if (response.filterInfo[i].operand[0].ref.type == "simple") {
+                    filterInfo.logicalOperator = response.filter.filterInfo[i].logicalOperator;
+                    filterInfo.operator = response.filter.filterInfo[i].operator;
+                    if (response.filter.filterInfo[i].operand[0].ref.type == "simple") {
                         var obj = {}
                         obj.text = "string"
                         obj.caption = "string"
@@ -603,12 +571,12 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsSimple = true;
                         filterInfo.islhsDatapod = false;
                         filterInfo.islhsFormula = false;
-                        filterInfo.lhsvalue = response.filterInfo[i].operand[0].value;
-                        if(response.filterInfo[i].operand[0].attributeType =="integer"){
+                        filterInfo.lhsvalue = response.filter.filterInfo[i].operand[0].value;
+                        if(response.filter.filterInfo[i].operand[0].attributeType =="integer"){
 							obj.caption = "integer";
 						}
                     }
-                    if (response.filterInfo[i].operand[0].ref.type == "attribute") {
+                    if (response.filter.filterInfo[i].operand[0].ref.type == "attribute") {
                         var obj = {}
                         obj.text = "datapod"
                         obj.caption = "attribute"
@@ -616,10 +584,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsSimple = true;
                         filterInfo.islhsDatapod = false;
                         filterInfo.islhsFormula = false;
-                        filterInfo.lhsvalue = response.filterInfo[i].operand[0].value;
+                        filterInfo.lhsvalue = response.filter.filterInfo[i].operand[0].value;
                     }
                     
-                    else if (response.filterInfo[i].operand[0].ref.type == "datapod" || response.filterInfo[i].operand[0].ref.type == "dataset") {
+                    else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" || response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
                         var lhsdatapodAttribute = {}
                         var obj = {}
                         obj.text = "datapod"
@@ -628,15 +596,15 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsSimple = false;
                         filterInfo.islhsFormula = false
                         filterInfo.islhsDatapod = true;
-                        lhsdatapodAttribute.uuid = response.filterInfo[i].operand[0].ref.uuid;
-                        lhsdatapodAttribute.type = response.filterInfo[i].operand[0].ref.type;
-                        lhsdatapodAttribute.datapodname = response.filterInfo[i].operand[0].ref.name;
-                        lhsdatapodAttribute.name = response.filterInfo[i].operand[0].attributeName;
-                        lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.name + "." + response.filterInfo[i].operand[0].attributeName;
-                        lhsdatapodAttribute.attributeId = response.filterInfo[i].operand[0].attributeId;
+                        lhsdatapodAttribute.uuid = response.filter.filterInfo[i].operand[0].ref.uuid;
+                        lhsdatapodAttribute.type = response.filter.filterInfo[i].operand[0].ref.type;
+                        lhsdatapodAttribute.datapodname = response.filter.filterInfo[i].operand[0].ref.name;
+                        lhsdatapodAttribute.name = response.filter.filterInfo[i].operand[0].attributeName;
+                        lhsdatapodAttribute.dname = response.filter.filterInfo[i].operand[0].ref.name + "." + response.filter.filterInfo[i].operand[0].attributeName;
+                        lhsdatapodAttribute.attributeId = response.filter.filterInfo[i].operand[0].attributeId;
                         filterInfo.lhsdatapodAttribute = lhsdatapodAttribute;
                     }
-                    else if (response.filterInfo[i].operand[0].ref.type == "formula") {
+                    else if (response.filter.filterInfo[i].operand[0].ref.type == "formula") {
                         var lhsformula = {}
                         var obj = {}
                         obj.text = "formula"
@@ -645,12 +613,12 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsFormula = true;
                         filterInfo.islhsSimple = false;
                         filterInfo.islhsDatapod = false;
-                        lhsformula.uuid = response.filterInfo[i].operand[0].ref.uuid;
-                        lhsformula.type = response.filterInfo[i].operand[0].ref.type;
-                        lhsformula.name = response.filterInfo[i].operand[0].ref.name;
+                        lhsformula.uuid = response.filter.filterInfo[i].operand[0].ref.uuid;
+                        lhsformula.type = response.filter.filterInfo[i].operand[0].ref.type;
+                        lhsformula.name = response.filter.filterInfo[i].operand[0].ref.name;
                         filterInfo.lhsformula = lhsformula;
                     }
-                    if (response.filterInfo[i].operand[1].ref.type == "simple") {
+                    if (response.filter.filterInfo[i].operand[1].ref.type == "simple") {
                         var obj = {}
                         obj.text = "string"
                         obj.caption = "string"
@@ -658,24 +626,24 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsSimple = true;
                         filterInfo.isrhsDatapod = false;
                         filterInfo.isrhsFormula = false;
-                        filterInfo.rhsvalue =response.filterInfo[i].operand[1].value;
-						if(response.filterInfo[i].operator =="BETWEEN"){
+                        filterInfo.rhsvalue =response.filter.filterInfo[i].operand[1].value;
+						if(response.filter.filterInfo[i].operator =="BETWEEN"){
 							obj.caption = "integer";
-							filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
-							filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
-						}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
+							filterInfo.rhsvalue1=response.filter.filterInfo[i].operand[1].value.split("and")[0];
+							filterInfo.rhsvalue2=response.filter.filterInfo[i].operand[1].value.split("and")[1];	
+						}else if(['<','>',"<=",'>='].indexOf(response.filter.filterInfo[i].operator) !=-1){
 							obj.caption = "integer";
-							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
 
-						}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
+						}else if(response.filter.filterInfo[i].operator =='=' && response.filter.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
-							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+							filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value
 						}
 						else{
-						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
+						filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 						}
                     }
-                    if (response.filterInfo[i].operand[1].ref.type == "attribute") {
+                    if (response.filter.filterInfo[i].operand[1].ref.type == "attribute") {
                         var obj = {}
                         obj.text = "datapod"
                         obj.caption = "attribute"
@@ -683,9 +651,9 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsSimple = true;
                         filterInfo.isrhsDatapod = false;
                         filterInfo.isrhsFormula = false;
-                        filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+                        filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "datapod") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod") {
                         var rhsdatapodAttribute = {}
                         var obj = {}
                         obj.text = "datapod"
@@ -694,15 +662,15 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsSimple = false;
                         filterInfo.isrhsFormula = false
                         filterInfo.isrhsDatapod = true;
-                        rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
-                        rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
-                        rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
-                        rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
-                        rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
-                        rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
+                        rhsdatapodAttribute.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsdatapodAttribute.type = response.filter.filterInfo[i].operand[1].ref.type;
+                        rhsdatapodAttribute.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+                        rhsdatapodAttribute.name = response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsdatapodAttribute.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsdatapodAttribute.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
                         filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.filter.dependsOn.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset" && response.filter.dependsOn.ref.uuid == response.filter.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -712,14 +680,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsFormula = false
 						filterInfo.isrhsDatapod = true;
 						filterInfo.isrhsDataset = false;
-						rhsdatapodAttribute.uuid =response.filterInfo[i].operand[1].ref.uuid;
-						rhsdatapodAttribute.datapodname =response.filterInfo[i].operand[1].ref.name;
-						rhsdatapodAttribute.name =response.filterInfo[i].operand[1].attributeName;
-						rhsdatapodAttribute.dname =response.filterInfo[i].operand[1].ref.name + "." +response.filterInfo[i].operand[1].attributeName;
-						rhsdatapodAttribute.attributeId =response.filterInfo[i].operand[1].attributeId;
+						rhsdatapodAttribute.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsdatapodAttribute.datapodname =response.filter.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.name =response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname =response.filter.filterInfo[i].operand[1].ref.name + "." +response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.attributeId =response.filter.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
 					}
-                    else if (response.filterInfo[i].operand[1].ref.type == "formula") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "formula") {
                         var rhsformula = {}
                         var obj = {}
                         obj.text = "formula"
@@ -728,12 +696,12 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsFormula = true;
                         filterInfo.isrhsSimple = false;
                         filterInfo.isrhsDatapod = false;
-                        rhsformula.uuid = response.filterInfo[i].operand[1].ref.uuid;
-                        rhsformula.type = response.filterInfo[i].operand[1].ref.type;
-                        rhsformula.name = response.filterInfo[i].operand[1].ref.name;
+                        rhsformula.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsformula.type = response.filter.filterInfo[i].operand[1].ref.type;
+                        rhsformula.name = response.filter.filterInfo[i].operand[1].ref.name;
                         filterInfo.rhsformula = rhsformula;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "function") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "function") {
 						var rhsfunction = {}
 						var obj = {}
 						obj.text = "function"
@@ -745,11 +713,11 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsDataset =   false;
 						filterInfo.isrhsParamlist = false;
 					    filterInfo.isrhsFunction =  true;
-						rhsfunction.uuid =response.filterInfo[i].operand[1].ref.uuid;
-						rhsfunction.name =response.filterInfo[i].operand[1].ref.name;
+						rhsfunction.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsfunction.name =response.filter.filterInfo[i].operand[1].ref.name;
 						filterInfo.rhsfunction = rhsfunction;
 					}
-                    else if (response.filterInfo[i].operand[1].ref.type == "dataset") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
 						var rhsdataset = {}
 						var obj = {}
 						obj.text = "dataset"
@@ -759,14 +727,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsSimple = false;
 						filterInfo.isrhsDatapod = false;
 						filterInfo.isrhsDataset = true;
-						rhsdataset.uuid = response.filterInfo[i].operand[1].ref.uuid;
-						rhsdataset.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsdataset.name = response.filterInfo[i].operand[1].attributeName;
-						rhsdataset.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
-						rhsdataset.attributeId = response.filterInfo[i].operand[1].attributeId;
+						rhsdataset.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsdataset.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+						rhsdataset.name = response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdataset.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+						rhsdataset.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdataset = rhsdataset;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "paramlist") {
+                    else if (response.filter.filterInfo[i].operand[1].ref.type == "paramlist") {
                         var rhsparamlist = {}
                         var obj = {}
                         obj.text = "paramlist"
@@ -778,11 +746,11 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsDataset = false;
                         filterInfo.isrhsParamlist = true;
                         filterInfo.isrhsFunction = false;
-                        rhsparamlist.uuid = response.filterInfo[i].operand[1].ref.uuid;
-                        rhsparamlist.datapodname = response.filterInfo[i].operand[1].ref.name;
-                        rhsparamlist.name = response.filterInfo[i].operand[1].attributeName;
-                        rhsparamlist.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
-                        rhsparamlist.attributeId = response.filterInfo[i].operand[1].attributeId;
+                        rhsparamlist.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+                        rhsparamlist.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+                        rhsparamlist.name = response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
                     
                         filterInfo.rhsparamlist = rhsparamlist;
                       }

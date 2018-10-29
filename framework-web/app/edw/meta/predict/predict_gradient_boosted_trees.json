@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+            "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
         }
     },
     "source" : {
@@ -11,14 +11,21 @@
             "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
         }
     },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "f7dbde66-157a-4f51-b3f3-e8bc2142eb00"
+        }
+    },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
             "feature" : {
                 "featureId" : "0",
+                "featureName" : "customer_id",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
                 }
             },
             "attribute" : {
@@ -33,9 +40,10 @@
             "featureMapId" : "1",
             "feature" : {
                 "featureId" : "1",
+                "featureName" : "address_id",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
                 }
             },
             "attribute" : {
@@ -50,9 +58,10 @@
             "featureMapId" : "2",
             "feature" : {
                 "featureId" : "2",
+                "featureName" : "branch_id",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
                 }
             },
             "attribute" : {
@@ -67,9 +76,10 @@
             "featureMapId" : "3",
             "feature" : {
                 "featureId" : "3",
+                "featureName" : "commute_distance_miles",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
                 }
             },
             "attribute" : {
@@ -83,10 +93,11 @@
         {
             "featureMapId" : "4",
             "feature" : {
-                "featureId" : "5",
+                "featureId" : "4",
+                "featureName" : "censor",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567"
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
                 }
             },
             "attribute" : {
@@ -98,9 +109,6 @@
             }
         }
     ],
-    "trainPercent" : 70.0,
-    "valPercent" : 30.0,
-    "featureImportance" : "N",
     "labelInfo" : {
         "attrId" : "4",
         "ref" : {
@@ -108,10 +116,15 @@
             "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
         }
     },
-    "useHyperParams" : "N",
-    "uuid" : "09a3ff8d-4905-4d7e-b3e3-3e9151fab69b",
-    "version" : "1535970908",
-    "name" : "train_aft_survival_regression",
+    "trainInfo" : {
+        "ref" : {
+            "type" : "train",
+            "uuid" : "d5f23ff1-29b5-46a5-b13b-35814a2d20e4"
+        }
+    },
+    "uuid" : "c0823cc0-b3dd-4aff-b60b-d77836fb0efd",
+    "version" : "1540551023",
+    "name" : "predict_gradient_boosted_trees",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -120,7 +133,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-09-03T10:35:08.000Z"),
+    "createdOn" : ISODate("2018-10-26T10:50:23.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
@@ -129,7 +142,8 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
             }
         }
     ]

@@ -108,6 +108,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "f5581561-ac59-463d-845a-b1b5f8fafbd9",
     "version" : "1535822030",
     "name" : "train_linear_svm_classifier",

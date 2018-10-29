@@ -646,4 +646,16 @@ public interface IExecutor {
 	 * @throws SQLException
 	 */
 	String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param trainedModel
+	 * @param clientContext
+	 * @return 
+	 * @throws SQLException
+	 */
+	List<Double> featureImportance(Object trainedModel, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 }

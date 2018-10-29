@@ -1816,7 +1816,7 @@ public class ModelServiceImpl {
 				//TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(), model.getVersion());
 				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
 				if (trainExec == null)
-					throw new Exception("Executed model not found.");
+					throw new Exception("No trained model found.");
 
 				String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), label, appUuid);

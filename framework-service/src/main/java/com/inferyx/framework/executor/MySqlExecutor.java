@@ -795,4 +795,12 @@ public class MySqlExecutor implements IExecutor {
 		rs.next();
 		return rs.getObject(1).toString();
 	}
+
+	@Override
+	public List<Double> featureImportance(Object trainedModel, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

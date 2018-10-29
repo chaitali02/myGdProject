@@ -91,6 +91,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "d762b4ea-5adc-4d05-ab93-d78d00a48609",
     "version" : "1535821565",
     "name" : "train_k-means",

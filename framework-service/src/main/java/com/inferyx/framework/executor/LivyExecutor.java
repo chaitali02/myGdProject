@@ -606,4 +606,12 @@ public class LivyExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Double> featureImportance(Object trainedModel, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

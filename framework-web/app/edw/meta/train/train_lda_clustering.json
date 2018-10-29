@@ -91,6 +91,7 @@
         }
     },
     "useHyperParams" : "N",
+    "featureImportance" : "N",
     "uuid" : "ca4d4bf0-3294-4f13-a7d7-f9da26f5b8e5",
     "version" : "1536045368",
     "name" : "train_lda_clustering",

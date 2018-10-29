@@ -513,6 +513,7 @@
   ],
   "trainPercent": 70,
   "valPercent": 30,
+  "featureImportance" : "N",
   "labelInfo": {
     "ref": {
       "type": "datapod",

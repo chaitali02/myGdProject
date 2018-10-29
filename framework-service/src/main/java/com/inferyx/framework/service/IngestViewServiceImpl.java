@@ -86,15 +86,15 @@ public class IngestViewServiceImpl {
 		ingestView.setSourceExtn(ingest.getSourceExtn());
 		ingestView.setTargetExtn(ingest.getTargetExtn());
 		ingestView.setTargetHeader(ingest.getTargetHeader());
-		List<AttributeRefHolder> filterInfo = ingest.getFilterInfo();
-		Filter resolvedFilter = null;
-		if(filterInfo != null)		{
-			for (int i = 0; i < filterInfo.size(); i++) {
-				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), ingest.getVersion(), MetaType.filter.toString());
-				resolvedFilter = filterServiceImpl.resolveName(filter);
-			}
-		}
-		ingestView.setFilter(resolvedFilter);		
+//		List<AttributeRefHolder> filterInfo = ingest.getFilterInfo();
+//		Filter resolvedFilter = null;
+//		if(filterInfo != null)		{
+//			for (int i = 0; i < filterInfo.size(); i++) {
+//				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), ingest.getVersion(), MetaType.filter.toString());
+//				resolvedFilter = filterServiceImpl.resolveName(filter);
+//			}
+//		}
+//		ingestView.setFilter(resolvedFilter);		
 		ingestView.setAttributeMap(ingest.getAttributeMap());
 		return ingestView;
 	}
@@ -142,9 +142,9 @@ public class IngestViewServiceImpl {
 		ingest.setTargetExtn(ingestView.getTargetExtn());
 		ingest.setAttributeMap(ingestView.getAttributeMap());
 		ingest.setTargetHeader(ingestView.getTargetHeader());
-		if(ingestView.getFilter() != null) {
-			ingest.setFilterInfo(filterInfo);
-		}
+//		if(ingestView.getFilter() != null) {
+//			ingest.setFilterInfo(filterInfo);
+//		}
 		return save(ingest);
 	}
 	

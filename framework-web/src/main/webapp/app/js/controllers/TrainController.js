@@ -403,6 +403,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.valPercent = $scope.trainData.valPercent;
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
+    TrainJson.featureImportance=$scope.trainData.featureImportance;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
