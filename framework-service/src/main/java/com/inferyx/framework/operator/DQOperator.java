@@ -629,7 +629,10 @@ public class DQOperator implements IParsable {
 				}catch (Exception e2) {
 					// TODO: handle exception
 				}
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.");
+				
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.", dependsOn);
 				throw new Exception((message != null) ? message : "Failed data quality parsing.");
 			}
 		return dataQualExec;

@@ -46,6 +46,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -1048,5 +1049,12 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) {
 		return metadataServiceImpl.getDatapodByDatasource(datasourceUuid);
+	}
+	
+	@RequestMapping(value = "/getMessageByUuidAndVersion", method = RequestMethod.GET)
+	public @ResponseBody List<Message> getMessageByUuidAndVersion(
+			@RequestParam(value = "uuid") String uuid,
+			@RequestParam(value = "version", required = false) String version) {
+		return metadataServiceImpl.getMessageByUuidAndVersion(uuid, version);
 	}
 }

@@ -419,14 +419,14 @@ public class VizpodParser {
 			whereBuilder.append(datasetOperator.generateWhere());
 			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null, null));
 			whereBuilder.append(" ").append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false, runMode));
-			if(allowColNameInFltr) {
+			//if(allowColNameInFltr) {
 				Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 				Matcher matcher = pattern.matcher(whereBuilder);
 				while(matcher.find()) {
 					if(!NumberUtils.isCreatable(matcher.group()))
 						whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
 				}
-			}			
+			//}			
 			groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet, null, null, null));
 			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, null, null, null));
 			
