@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -61,6 +62,8 @@ public class ReconOperator {
 	FilterOperator filterOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
+	@Autowired
+	FilterOperator2 filterOperator2;
 
 	static final Logger LOGGER = Logger.getLogger(ReconOperator.class);
 
@@ -172,7 +175,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
-			      + generateFilter("source", sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), runMode)
+			      + generateFilter("source", recon,sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), runMode)
 //			      + GROUP_BY
 //			      + SOURCE_UUID_ALIAS + COMMA
 //			      + SOURCE_VERSION_ALIAS + COMMA
@@ -197,7 +200,7 @@ public class ReconOperator {
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
-			      + generateFilter("target", targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), null)
+			      + generateFilter("target",recon, targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), null)
 //			      + GROUP_BY
 //			      + TARGET_UUID_ALIAS + COMMA
 //			      + TARGET_VERSION_ALIAS + COMMA
@@ -353,7 +356,7 @@ public class ReconOperator {
 		return datapod;
 	}*/
 
-	public String generateFilter(String tableName, Object object, List<AttributeRefHolder> filterAttrRefHolder,
+	public String generateFilter(String tableName,Recon recon, Object object, List<FilterInfo> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode)
 			throws Exception {
@@ -367,7 +370,11 @@ public class ReconOperator {
 			objectName = dataset.getName();
 		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
-			String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.recon, recon.getUuid(), recon.getVersion()));
+
+			String filter = filterOperator2.generateSql(filterAttrRefHolder, refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+
+			//String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 			if(filter.contains(objectName))
 				filter = filter.replace(objectName+".", tableName+".");
 			return filter;

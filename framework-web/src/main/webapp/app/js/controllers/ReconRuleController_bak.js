@@ -138,20 +138,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     });
   }
 
-
-  $scope.disableRhsType = function (rshTypes, arrayStr) {
-		for (var i = 0; i < rshTypes.length; i++) {
-			rshTypes[i].disabled = false;
-			if (arrayStr.length > 0) {
-				var index = arrayStr.indexOf(rshTypes[i].caption);
-				if (index != -1) {
-					rshTypes[i].disabled = true;
-				}
-			}
-		}
-		return rshTypes;
-	}
-
   $scope.addSourceFilterRow = function() {
     if($scope.sourceFilterTable == null) {
       $scope.sourceFilterTable = [];
@@ -167,9 +153,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     filertable.logicalOperator=$scope.sourceFilterTable.length >0?$scope.logicalOperator[0]:"";
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
-    filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
-		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
+		filertable.rhstype = $scope.rhsType[0]
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.sourceFilterTable.splice($scope.sourceFilterTable.length, 0, filertable);
@@ -189,9 +173,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.lhsFilter = $scope.targetFilterAttribute[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
-    filertable.rhstype = $scope.rhsType[0];
-    filertable.rhsTypes = CF_FILTER.rhsType;
-		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
+		filertable.rhstype = $scope.rhsType[0]
 		filertable.rhsvalue;
 		filertable.lhsvalue ;
     $scope.targetFilterTable.splice($scope.targetFilterTable.length, 0, filertable);
@@ -441,43 +423,56 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }
   
   $scope.onChangeRhsParamList=function(filterType){
-   
+    if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
   }
   $scope.onChangeSimple = function (filterType) {
-	
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
 	}
 	
   $scope.onChangeAttribute=function(filterType){
-	
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
 	}
 
 	$scope.onChangeFromula=function(filterType){
-	
-  }
- 
-
-
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
+	}
   $scope.onChangeTargetOperator=function(index){
 		if($scope.originalCompare != null) {
 		  $scope.originalCompare.targetfilterChg = "y"
 		}
 		if($scope.targetFilterTable[index].operator =='BETWEEN'){
-      $scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
     else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, []);
 		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.targetFilterTable[index].operator) !=-1){
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['string', 'dataset']);
   		$scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
 		}
 		else{
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['dataset']);
 			$scope.targetFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
 		}
@@ -487,30 +482,25 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		  $scope.originalCompare.sourcefilterChg = "y"
 		}
 		if($scope.sourceFilterTable[index].operator =='BETWEEN'){
-      $scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
     else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, []);
 		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.sourceFilterTable[index].operator) !=-1){
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['string', 'dataset']);
   		$scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}
 		else{
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['dataset']);
 			$scope.sourceFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}
   }
-
-
   $scope.SearchAttribute=function(index,filterType,type,propertyType){
     filterType =='source' ?$scope.selectAttr=$scope.sourceFilterTable[index][propertyType]:$scope.selectAttr=$scope.targetFilterTable[index][propertyType]
+	
     $scope.searchAttr={};
 		$scope.searchAttr.type=type;
 		$scope.searchAttr.propertyType=propertyType;
@@ -657,7 +647,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         $scope.rule.versions[i] = ruleversion;
       }
     }
-    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recon').then(function(response) { onSuccess(response.data)});
+    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'reconview').then(function(response) { onSuccess(response.data)});
     var onSuccess = function(response) {
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
@@ -700,7 +690,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.getAllLatest("target",$scope.selectTargetType,true,{});
   }
   $scope.selectVersion=function(){
-    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon').then(function(response) { onSuccess(response.data)});
+    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'reconview').then(function(response) { onSuccess(response.data)});
     var onSuccess = function(response) {
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
@@ -744,6 +734,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.isSubmitProgess=true;
     $scope.isSubmitDisable=true;
     var jsonObj={}
+    jsonObj.targetfilterChg=null;
     jsonObj.uuid=$scope.reconruledata.uuid;
     jsonObj.name = $scope.reconruledata.name;
     jsonObj.desc = $scope.reconruledata.desc;
@@ -792,13 +783,45 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     jsonObj.targetFunc=targetFunc;
 
     var sourcefilter = {}
-    
-  
+    if ($scope.originalCompare != null && $scope.originalCompare.sourcefilter != null) {
+      sourcefilter.uuid = $scope.originalCompare.sourcefilter.uuid;
+      sourcefilter.name = $scope.originalCompare.sourcefilter.name;
+      sourcefilter.createdBy = $scope.originalCompare.sourcefilter.createdBy;
+      sourcefilter.createdOn = $scope.originalCompare.sourcefilter.createdOn;
+      sourcefilter.active = $scope.originalCompare.sourcefilter.active;
+      sourcefilter.tags = $scope.originalCompare.sourcefilter.tags;
+      sourcefilter.desc = $scope.originalCompare.sourcefilter.desc;
+      sourcefilter.dependsOn = $scope.originalCompare.sourcefilter.dependsOn;
+    }
+
+    var targetfilter = {}
+    if ($scope.originalCompare != null && $scope.originalCompare.targetfilter != null) {
+      targetfilter.uuid = $scope.originalCompare.targetfilter.uuid;
+      targetfilter.name = $scope.originalCompare.targetfilter.name;
+      targetfilter.createdBy = $scope.originalCompare.targetfilter.createdBy;
+      targetfilter.createdOn = $scope.originalCompare.targetfilter.createdOn;
+      targetfilter.active = $scope.originalCompare.targetfilter.active;
+      targetfilter.tags = $scope.originalCompare.targetfilter.tags;
+      targetfilter.desc = $scope.originalCompare.targetfilter.desc;
+      targetfilter.dependsOn = $scope.originalCompare.targetfilter.dependsOn;
+    }
     var sourceFilterInfo = [];
     if($scope.sourceFilterTable !=null){
       if($scope.sourceFilterTable.length >0){
         for (var i = 0; i < $scope.sourceFilterTable.length; i++) {
-       
+          if ($scope.originalCompare != null && $scope.originalCompare.sourcefilter != null 
+              && $scope.originalCompare.sourcefilter.filterInfo.length == $scope.sourceFilterTable.length) {
+            
+            if($scope.originalCompare.sourcefilterChg == "y") {
+              jsonObj.sourcefilterChg = "y";
+            }
+            else {
+              jsonObj.sourcefilterChg = "n";
+            }
+          }
+          else {
+            jsonObj.sourcefilterChg = "y";
+          }
           var filterInfo  = {};
           var operand = []
           var lhsoperand = {}
@@ -840,9 +863,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
             rhsoperand.ref = rhsref;
             rhsoperand.attributeType =$scope.sourceFilterTable[i].rhstype.caption;
             rhsoperand.value = $scope.sourceFilterTable[i].rhsvalue;
-            if ($scope.sourceFilterTable[i].operator == 'BETWEEN') {
-              rhsoperand.value = $scope.sourceFilterTable[i].rhsvalue1 + " and " + $scope.sourceFilterTable[i].rhsvalue2;
-            }
           }
           else if ($scope.sourceFilterTable[i].rhstype.text == "datapod") {
             if ($scope.selectSourceType == "dataset") {
@@ -882,20 +902,35 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			  	filterInfo .operand = operand;
           sourceFilterInfo[i] = filterInfo;
         }
-        jsonObj.sourceFilter = sourceFilterInfo;
+        sourcefilter.filterInfo = sourceFilterInfo;
+        jsonObj.sourcefilter = sourcefilter;
 
       }else{
-        jsonObj.sourceFilter = null;
+        jsonObj.sourcefilter = null;
+        jsonObj.sourcefilterChg = "y";
       }
     }else{
-      jsonObj.sourceFilter = null;
+      jsonObj.sourcefilter = null;
+      jsonObj.sourcefilterChg = "y";
       
     }
     var targetFilterInfo=[];
     if($scope.targetFilterTable !=null){
       if($scope.targetFilterTable.length>0){
         for(var i=0;i<$scope.targetFilterTable.length;i++) {
-        
+          if($scope.originalCompare !=null && $scope.originalCompare.targetfilter != null 
+            && $scope.originalCompare.targetfilter.filterInfo.length == $scope.targetFilterTable.length) {
+              debugger
+              if($scope.originalCompare.targetfilterChg == "y") {
+                jsonObj.targetfilterChg = "y";
+              }
+              else {
+                jsonObj.targetfilterChg = "n";
+              }
+          }else{
+            jsonObj.targetfilterChg = "y";
+          }
+
           var  filterInfo  = {};
           var operand = []
           var lhsoperand = {}
@@ -942,9 +977,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
             rhsoperand.ref = rhsref;
             rhsoperand.attributeType =$scope.targetFilterTable[i].rhstype.caption;
             rhsoperand.value = $scope.targetFilterTable[i].rhsvalue;
-					  if ($scope.targetFilterTable[i].operator == 'BETWEEN') {
-						  rhsoperand.value = $scope.targetFilterTable[i].rhsvalue1 + " and " + $scope.targetFilterTable[i].rhsvalue2;
-					  }
           }
           else if ($scope.targetFilterTable[i].rhstype.text == "datapod") {
             if ($scope.selectTargetType == "dataset") {
@@ -985,16 +1017,19 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			  	filterInfo .operand = operand;
           targetFilterInfo[i] = filterInfo;
         }
-        jsonObj.targetFilter = targetFilterInfo;
+        targetfilter.filterInfo = targetFilterInfo;
+        jsonObj.targetfilter = targetfilter;
       }else{
-        jsonObj.targetFilter = null;
+        jsonObj.targetfilter = null;
+        jsonObj.targetfilterChg = "y";
       }
     }else{
-      jsonObj.targetFilter = null;
+      jsonObj.targetfilter = null;
+      jsonObj.targetfilterChg = "y";
       
     }
     console.log("Rule JSON" + JSON.stringify(jsonObj))
-    ReconRuleService.submit(jsonObj, 'recon',upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
+    ReconRuleService.submit(jsonObj, 'reconview',upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
       if ($scope.isExecute == "YES") {
         ReconRuleService.getOneById(response.data, "recon").then(function(response) {onSuccessGetOneById(response.data) });
