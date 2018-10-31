@@ -59,12 +59,13 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>4.2.4.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
+		 <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.2.4.RELEASE</version>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
@@ -87,6 +88,12 @@
 					<artifactId>pmml-model</artifactId>
 				</exclusion>
 			</exclusions>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+			<version>${spark.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -116,12 +123,6 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-yarn_2.11</artifactId>
-			<version>${spark.version}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
 			<version>${spark.version}</version>
 			<optional>true</optional>
 		</dependency>
@@ -503,7 +504,7 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
 		<dependency>
 			<groupId>postgresql</groupId>
@@ -511,7 +512,7 @@
 			<version>9.1-901-1.jdbc4</version>
 			<optional>true</optional>
 		</dependency>
-
+		
 		<!-- httpcore -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -519,46 +520,85 @@
 			<version>4.4.9</version>
 			<optional>true</optional>
 		</dependency>
-
+		
 		<!-- Tensorflow -->
-		<dependency>
+	<!-- 	<dependency>
 			<groupId>org.tensorflow</groupId>
 			<artifactId>tensorflow</artifactId>
 			<version>1.8.0</version>
 			<optional>true</optional>
 		</dependency>
-
+		 -->
+			<!-- Tensorflow -->
+		<dependency>
+			<groupId>org.tensorflow</groupId>
+			<artifactId>tensorflow</artifactId>
+			<version>1.11.0</version>
+			<optional>true</optional>
+			
+		</dependency>
+		<dependency>
+		    <groupId>org.tensorflow</groupId>
+		    <artifactId>libtensorflow_jni_gpu</artifactId>
+		    <version>1.11.0</version>
+		    <optional>true</optional>		    
+		</dependency>
+		
 		<!-- scala-library -->
 		<dependency>
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>2.11.8</version>
-			<optional>true</optional>
+		    <groupId>org.scala-lang</groupId>
+		    <artifactId>scala-library</artifactId>
+		    <version>2.11.8</version>
+		    <optional>true</optional>
 		</dependency>
-
-
+		
+		
 		<!-- H2O -->
-		<!-- <dependency> <groupId>ai.h2o</groupId> <artifactId>h2o-core</artifactId> 
-			<version>3.20.0.1</version> <type>pom</type> <scope>runtime</scope> </dependency> 
-			<dependency> <groupId>ai.h2o</groupId> <artifactId>h2o-genmodel</artifactId> 
-			<version>3.20.0.1</version> <type>pom</type> <exclusions> <exclusion> <groupId>org.slf4j</groupId> 
-			<artifactId>slf4j-log4j12</artifactId> </exclusion> </exclusions> <scope>runtime</scope> 
-			</dependency> -->
-		<!-- <dependency> <groupId>ai.h2o</groupId> <artifactId>h2o-algos</artifactId> 
-			<version>3.20.0.1</version> <type>pom</type> <scope>runtime</scope> </dependency> -->
-		<!-- <dependency> <groupId>ai.h2o</groupId> <artifactId>sparkling-water-ml_2.11</artifactId> 
-			<version>2.3.7</version> </dependency> -->
+		<!-- <dependency>
+		    <groupId>ai.h2o</groupId>
+		    <artifactId>h2o-core</artifactId>
+		    <version>3.20.0.1</version>
+		    <type>pom</type>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>ai.h2o</groupId>
+		    <artifactId>h2o-genmodel</artifactId>
+		    <version>3.20.0.1</version>
+		    <type>pom</type>
+		    <exclusions>
+            <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </exclusion>
+        </exclusions>
+		    <scope>runtime</scope>
+		</dependency> -->
+		<!-- <dependency>
+		    <groupId>ai.h2o</groupId>
+		    <artifactId>h2o-algos</artifactId>
+		    <version>3.20.0.1</version>
+		    <type>pom</type>
+		    <scope>runtime</scope>
+		</dependency> -->
+		<!-- <dependency>
+		    <groupId>ai.h2o</groupId>
+		    <artifactId>sparkling-water-ml_2.11</artifactId>
+		    <version>2.3.7</version>
+		</dependency> -->
 		<dependency>
 			<groupId>org.apache.sqoop</groupId>
 			<artifactId>sqoop</artifactId>
 			<version>${sqoop.version}</version>
 			<optional>true</optional>
-			<!-- <exclusions> <exclusion> <groupId>org.apache.hadoop</groupId> <artifactId>hadoop-common</artifactId> 
-				</exclusion> </exclusions> -->
 			<!-- <type>pom</type> -->
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.sqoop</groupId> <artifactId>sqoop-client</artifactId> 
-			<version>1.99.5-cdh5.13.0</version> </dependency> -->
+		<dependency>
+			<groupId>org.apache.sqoop</groupId>
+			<artifactId>sqoop-client</artifactId>
+			<version>1.99.5-cdh5.13.0</version>
+			<optional>true</optional>
+		</dependency>		
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
@@ -567,25 +607,49 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-clients</artifactId>
-			<version>2.0.0</version>
-			<optional>true</optional>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		    <version>2.0.0</version>
+		    <optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-streams</artifactId>
 			<version>2.0.0</version>
-			<optional>true</optional>
+		    <optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.11</artifactId>
-			<version>2.0.0</version>
-			<optional>true</optional>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka_2.11</artifactId>
+		    <version>2.0.0</version>
+		    <optional>true</optional>
 		</dependency>
-
-
+		
+		<dependency>
+		    <groupId>org.bytedeco.javacpp-presets</groupId>
+		    <artifactId>tesseract</artifactId>
+		    <version>3.04-1.1</version>
+		    <optional>true</optional>
+		    
+		</dependency>
+		<!-- <dependency>
+		    <groupId>org.bytedeco.javacpp-presets</groupId>
+		    <artifactId>leptonica</artifactId>
+		    <version>1.72-1.1</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.12</version>
+		    <optional>true</optional>
+		</dependency>
+		<dependency>
+		    <groupId>org.bytedeco</groupId>
+		    <artifactId>javacpp</artifactId>
+		    <version>1.1</version>
+		    <optional>true</optional>
+		</dependency>
+		
 	</dependencies>
 
 	<properties>
