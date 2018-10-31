@@ -105,7 +105,7 @@
                 "version": null,
                 "name": "dim_account"
               },
-              "attributeId": 22,
+              "attributeId": 20,
               "value": null,
               "attributeName": "customer_id",
               "attributeType": "string"
