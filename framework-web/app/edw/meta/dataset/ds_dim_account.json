@@ -364,6 +364,22 @@
     },
     {
       "attrSourceId": "20",
+      "attrSourceName": "customer_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+          "version": null,
+          "name": "account"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "customer_id",
+        "attrType": "integer"
+      }
+    },
+    {
+      "attrSourceId": "21",
       "attrSourceName": "load_date",
       "sourceAttr": {
         "ref": {
@@ -379,7 +395,7 @@
       }
     },
     {
-      "attrSourceId": "21",
+      "attrSourceId": "22",
       "attrSourceName": "load_id",
       "sourceAttr": {
         "ref": {
@@ -392,22 +408,6 @@
         "attrId": null,
         "attrName": null,
         "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "22",
-      "attrSourceName": "customer_id",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "customer_id",
-        "attrType": "integer"
       }
     }
   ],
