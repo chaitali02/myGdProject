@@ -34,6 +34,8 @@ select 'dim_bank' as tabname, count(*) as cnt from dim_bank
 union all
 select 'dim_branch' as tabname, count(*) as cnt from dim_branch
 union all
+select 'dim_country' as tabname, count(*) as cnt from dim_country
+union all
 select 'dim_customer' as tabname, count(*) as cnt from dim_customer
 union all
 select 'dim_transaction_type' as tabname, count(*) as cnt from dim_transaction_type
