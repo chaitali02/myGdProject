@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS `dim_account`(
   `overdue_date` string, 
   `currency_code` string, 
   `interest_type` string, 
-  `interest_rate` float)
+  `interest_rate` float,
+  `customer_id` string)
    PARTITIONED BY ( 
   `load_date` string,
   `load_id` bigint)
