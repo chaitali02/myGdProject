@@ -16,6 +16,8 @@ select 'branch' as tabname, count(*) as cnt from branch
 union all
 select 'branch_type' as tabname, count(*) as cnt from branch_type
 union all
+select 'dim_country' as tabname, count(*) as cnt from dim_country
+union all
 select 'customer' as tabname, count(*) as cnt from customer
 union all
 select 'dim_date' as tabname, count(*) as cnt from dim_date
