@@ -29,6 +29,8 @@ Copy BANK FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/bank.cs
 
 Copy BRANCH FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/branch.csv' With csv delimiter ',';
 
+Copy DIM_COUNTRY FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/dim_country.csv' With csv delimiter ',';
+
 Copy BRANCH_TYPE FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/branch_type.csv' With csv delimiter ',';
 
 Copy CUSTOMER FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/customer.csv' With csv delimiter ',';

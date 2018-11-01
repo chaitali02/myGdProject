@@ -59,7 +59,7 @@ public class FormulaOperator {
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
-			builder.append(" ");
+			builder.append("");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
@@ -180,7 +180,7 @@ public class FormulaOperator {
 
 		boolean isInAggr = false;
 		int countBrOpen = 0;
-		StringBuilder builder = new StringBuilder(" ");
+		StringBuilder builder = new StringBuilder("");
 		if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 			return builder.toString();
 		}
