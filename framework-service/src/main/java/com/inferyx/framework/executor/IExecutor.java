@@ -348,9 +348,10 @@ public interface IExecutor {
 	 * @param valPercent
 	 * @param tableName
 	 * @param clientContext
+	 * @param trainOtherParam TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
 	
 	/**
 	 * 
@@ -544,11 +545,12 @@ public interface IExecutor {
 	 * @param tableName
 	 * @param hyperParamList 
 	 * @param clientContext
+	 * @param trainOtherParam TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
 			throws IOException;
 	
 	/**
@@ -658,4 +660,7 @@ public interface IExecutor {
 	List<Double> featureImportance(Object trainedModel, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	Map<String, Object> calculateConfusionMatrix(Map<String, Object> summary, String tableName, String clientContext)
+			throws IOException;
 }

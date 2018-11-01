@@ -195,6 +195,7 @@ public class SqoopExecutor {
 		}
 		if (StringUtils.isNotBlank(sqoopInput.getTargetDirectory())) {
 			sqoopOptions.setWarehouseDir(sqoopInput.getTargetDirectory());
+			sqoopOptions.setTargetDir(sqoopInput.getTargetDirectory());
 		}
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionKey())) {
 			sqoopOptions.setHivePartitionKey(sqoopInput.getPartitionKey());
