@@ -25,6 +25,7 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AggregateFunc;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
@@ -34,7 +35,9 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ParamListServiceImpl;
@@ -50,6 +53,8 @@ public class FormulaOperator {
 	@Autowired protected RuleServiceImpl ruleServiceImpl;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
@@ -58,19 +63,26 @@ public class FormulaOperator {
 		
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
+		Datasource source = commonServiceImpl.getDatasourceByApp();
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
 			builder.append("");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
 				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
-				if(value != null) {
-					boolean isNumber = Helper.isNumber(value);			
-					if(!isNumber) {
-						value = "'"+value+"'";
+				if (value != null) {
+					boolean isNumber = Helper.isNumber(value);
+					if (!isNumber) {
+						value = "'" + value + "'";
 					}
 				}
-				builder.append(value);
+				if (source.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub")
+						&& builder.lastIndexOf(",") != -1) {
+					builder.append("INTERVAL " + value + " DAY");
+				} else {
+					builder.append(value);
+
+				}
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
 //				String value = null;
 //				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
