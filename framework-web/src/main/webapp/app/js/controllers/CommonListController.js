@@ -168,8 +168,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.okKill = function () {
+    
     var api = false;
-    switch ($scope.newType) {
+    switch ($scope.newType.toLowerCase()) {
       case 'dqexec':
         api = 'dataqual';
         break;
@@ -868,7 +869,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.getDetailForUpload = function (data,index) {
     console.log(data.index)
-  debugger
     $scope.setActivity(data.uuid, data.version, $scope.select, "uplode");
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid

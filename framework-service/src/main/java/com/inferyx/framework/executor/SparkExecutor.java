@@ -3214,11 +3214,11 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Map<String, Object>  calculateConfusionMatrix(Map<String, Object>summary,String tableName,String clientContext) throws IOException{
-		
+	public Map<String, Object>  calculateConfusionMatrix(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
+		trainedDataSet.show();
 		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet);
 		
 		Matrix confusion = metrics.confusionMatrix();		
@@ -3255,10 +3255,18 @@ public class SparkExecutor<T> implements IExecutor {
 	    System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
 	    
 	    //For Roc
-	    BinaryClassificationMetrics metrics1 = new BinaryClassificationMetrics(trainedDataSet);
-		System.out.println("Roc: \n" +metrics1.roc().toJavaRDD().collect());
+	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
+		System.out.println("Roc: \n" +binaryClassificationMetrics.roc().collectPartitions());
+		
+		List<Object> rocList = new ArrayList<>();
+		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
+			rocList.add("("+tuple2._1()+","+tuple2._2()+")");
+		}
+		if(!rocList.isEmpty()) {
+			summary.put("roc", rocList);
+		}
 		// AUPRC
-		System.out.println("Area under precision-recall curve = " + metrics1.areaUnderPR());
+		System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;
 	}
 }
