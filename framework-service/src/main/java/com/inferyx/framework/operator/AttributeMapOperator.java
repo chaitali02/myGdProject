@@ -159,7 +159,7 @@ public class AttributeMapOperator {
 				//special handling for ingest 
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
-				return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();			
+				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
 				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
 //				boolean isNumber = Helper.isNumber(value);			
