@@ -1273,6 +1273,49 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		
 		return ingestExec;
 	}
+	
+	/**
+	 * 
+	 * @param sqoopInput
+	 * @param mappedAttrs
+	 * @param areAllAttrs
+	 * @param whereClause
+	 * @param query
+	 */
+	private void setTableOrQuery(SqoopInput sqoopInput, 
+									String[] mappedAttrs, 
+									boolean areAllAttrs, 
+									String whereClause, 
+									String query) {
+		if(mappedAttrs != null && areAllAttrs) {
+			sqoopInput.setAttributeMap(mappedAttrs);
+			if(!whereClause.isEmpty()) {
+				sqoopInput.setWhereClause(whereClause);
+			}
+		} else if(mappedAttrs != null && !areAllAttrs) {
+			sqoopInput.setSqlQuery(query);
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param sqoopInput
+	 * @param incrLastValue
+	 * @param incrColName
+	 */
+	private void setIncremental (SqoopInput sqoopInput, 
+									String incrLastValue, 
+									String incrColName) {
+		if(incrLastValue != null) {
+			sqoopInput.setIncrementalTestColumn(incrColName);
+			if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				sqoopInput.setIncrementalLastValue(incrLastValue);
+			}
+		} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			sqoopInput.setIncrementalTestColumn(incrColName);
+		}
+	}
 
 	/**
 	 * @param values
