@@ -124,7 +124,7 @@ public class MatrixMultOperator implements IOperator {
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
 
 		String lhsSql = generateSql(lhsTableName, lhsKeyAttrList, lhsAttrList);
-		String rhsSql = generateSql("46d40a37_3dde_451e_9ec7_5ba711a64554_1533436084_1534596412"/*rhsTableName*/, rhsKeyAttrList, rhsAttrList);
+		String rhsSql = generateSql(rhsTableName, rhsKeyAttrList, rhsAttrList);
 		
 //		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsKeyAttrList, lhsAttrList)).getDataFrame();
 //		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsKeyAttrList, rhsAttrList)).getDataFrame();
