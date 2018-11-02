@@ -788,7 +788,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //							}							
 //						}
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrix(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
@@ -806,7 +806,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //						}
 						
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrix(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
 						filePathUrl = null;

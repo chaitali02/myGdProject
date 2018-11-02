@@ -661,6 +661,6 @@ public interface IExecutor {
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 
-	Map<String, Object> calculateConfusionMatrix(Map<String, Object> summary, String tableName, String clientContext)
+	Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext)
 			throws IOException;
 }

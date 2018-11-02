@@ -3214,7 +3214,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Map<String, Object>  calculateConfusionMatrix(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
+	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
@@ -3256,7 +3256,7 @@ public class SparkExecutor<T> implements IExecutor {
 	    
 	    //For Roc
 	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
-		System.out.println("Roc: \n" +binaryClassificationMetrics.roc().collectPartitions());
+		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
 		
 		List<Object> rocList = new ArrayList<>();
 		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
@@ -3266,7 +3266,7 @@ public class SparkExecutor<T> implements IExecutor {
 			summary.put("roc", rocList);
 		}
 		// AUPRC
-		System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
+	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;
 	}
 }
