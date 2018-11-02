@@ -1286,14 +1286,17 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 									String[] mappedAttrs, 
 									boolean areAllAttrs, 
 									String whereClause, 
-									String query) {
+									String query, 
+									String tableName) {
 		if(mappedAttrs != null && areAllAttrs) {
 			sqoopInput.setAttributeMap(mappedAttrs);
 			if(!whereClause.isEmpty()) {
 				sqoopInput.setWhereClause(whereClause);
-			}
+			} 
 		} else if(mappedAttrs != null && !areAllAttrs) {
 			sqoopInput.setSqlQuery(query);
+		} else {
+			sqoopInput.setTable(tableName);
 		}
 		
 	}
