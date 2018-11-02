@@ -222,8 +222,10 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
         $scope.$emit('notify', notify);
     
         var url = $location.absUrl().split("app")[0];
-        $http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
-          console.log(response);
+//        $http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
+            $http.put(url+'model/setStatus?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
+
+        	console.log(response);
         });
       }
     $scope.restartExec = function (row, status) {

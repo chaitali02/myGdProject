@@ -833,6 +833,19 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		super.kill(uuid, version, MetaType.trainExec);
 	}
 	
+	public void setStatus (String type, String uuid, String version,String status){
+		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
+			super.onHold(uuid, version, Helper.getMetaType(type));
+		}
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
+			super.resume(uuid,version, Helper.getMetaType(type));
+		}
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
+			super.kill(uuid, version,Helper.getMetaType(type));
+		}
+		
+	}
+	
 	public void restartTrain(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.trainExec.toString());

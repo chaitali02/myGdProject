@@ -333,6 +333,9 @@ public class Helper {
 		case ingest : return "IngestServiceImpl";
 		case ingestExec : return "IngestExecServiceImpl";
 		case ingestgroup : return "IngestGroupServiceImpl";
+		case trainExec : return "ModelExecServiceImpl";
+		case predictExec : return "ModelExecServiceImpl";
+		case simulateExec : return "ModelExecServiceImpl";
 		default: return null;
 		}
 	}
