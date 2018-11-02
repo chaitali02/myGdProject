@@ -70,6 +70,7 @@ import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics;
 import org.apache.spark.mllib.evaluation.MulticlassMetrics;
 import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
@@ -3219,6 +3220,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
 		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet);
+		
 		Matrix confusion = metrics.confusionMatrix();		
 		int size = metrics.confusionMatrix().numCols();
 	    double[] matrixArray = metrics.confusionMatrix().toArray();
@@ -3251,6 +3253,12 @@ public class SparkExecutor<T> implements IExecutor {
 	    System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
 	    System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
 	    System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
+	    
+	    //For Roc
+	    BinaryClassificationMetrics metrics1 = new BinaryClassificationMetrics(trainedDataSet);
+		System.out.println("Roc: \n" +metrics1.roc().toJavaRDD().collect());
+		// AUPRC
+		System.out.println("Area under precision-recall curve = " + metrics1.areaUnderPR());
 		return summary ;
 	}
 }
