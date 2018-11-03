@@ -531,7 +531,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public Map<String, Object> calculateConfusionMatrix(Map<String, Object> summary, String tableName,
+	public Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;

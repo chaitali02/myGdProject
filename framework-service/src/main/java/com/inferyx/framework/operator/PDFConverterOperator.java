@@ -87,7 +87,7 @@ public class PDFConverterOperator implements IOperator {
 		BufferedImage image = null;
 		BytePointer outText;
 		ParamListHolder sourcePath = paramSetServiceImpl.getParamByName(execParams, "sourcePath");	// Should end with "/"
-		ParamListHolder fileNames = paramSetServiceImpl.getParamByName(execParams, "fileNames");	// Comma separated list of PDF file names suffixed with extension
+		ParamListHolder fileNames = paramSetServiceImpl.getParamByName(execParams, "fileNames");	// Tilde separated list of PDF file names suffixed with extension
 		ParamListHolder scaleFactor = paramSetServiceImpl.getParamByName(execParams, "scaleFactor");	// Zoom factor. Higher zoom factor - Better readability; Lower zoom factor - Better performance (speed of interpreting) 
 		String []fileNameList = fileNames.getParamValue().getValue().split("~");
 		
