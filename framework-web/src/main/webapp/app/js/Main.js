@@ -16,6 +16,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "ReconModule",
     "DataQualityModule",
     "ProfileModule",
+    "BatchModule",
     "AdminModule",
     "JobMonitoringModule",
     "SystemMonitoringModule",
@@ -23,6 +24,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "DatascienceModule",
     "GraphAnalysisModule",
     "VizpodModule",
+    "DataIngestionModule",
     'dataGrid',
     'pagination',
     "ngCookies",
@@ -61,7 +63,10 @@ var InferyxApp = angular.module("InferyxApp", [
     'ngclipboard',
     "Utils",
     "ui.multiselect",
-    "jsonFormatter"
+    "jsonFormatter",
+    "moment-picker",
+    "multipleDatePicker"
+   
 ]);
 
 
@@ -70,7 +75,7 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 	/* $ocLazyLoadProvider.config({
 	        // global configs go here
 	    });*/
-
+       
     if (typeof localStorage.userdetail != "undefined") {
         console.log(JSON.parse(localStorage.userdetail).sessionId)
         $httpProvider.defaults.headers.common['sessionId'] = JSON.parse(localStorage.userdetail).sessionId
@@ -99,8 +104,8 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
             'responseError': function (rejection) {
                 if (rejection.status == 500) {
                     notify.type = 'error',
-                        notify.title = 'Some Error Occured',
-                        notify.content = "Please try to reload or contact administrator"//"Dashboard Deleted Successfully"
+                    notify.title = 'Some Error Occured',
+                    notify.content = "Please check log or contact administrator"//"Dashboard Deleted Successfully"
                     $rootScope.$emit('notify', notify);
                 }
                 else if (rejection.status != 200 && rejection.status != 500 && rejection.status != 419) {
@@ -108,6 +113,13 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                     notify.title = 'Info';
                     try {
                         notify.content = rejection.data.message;
+                        if(rejection.data instanceof ArrayBuffer){
+                            var decodedString = String.fromCharCode.apply(null, new Uint8Array(rejection.data));
+                            var obj = JSON.parse(decodedString);
+                            var message = obj['message'];
+                            notify.content = message;
+                        }
+                        
                     } catch (e) {
                         notify.content = "Error Code" + rejection.status
                     } finally {
@@ -144,10 +156,14 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 }]);
 
 
-InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService) {
+InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService','defaultErrorMessageResolver', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService,defaultErrorMessageResolver                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ) {
     Idle.watch();
     validator.setValidElementStyling(false);
     validator.setInvalidElementStyling(true);
+    defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+        errorMessages['maxLimitDownload'] = 'Max rows exceeded the limit (100000)';
+        errorMessages['parttenFileName'] = 'invalid charater';
+      });
     if (localStorage.userdetail) {
           $rootScope.productDetail = (JSON.parse(localStorage.userdetail).productDetail);
         $rootScope.role = localStorage.role;
@@ -422,8 +438,19 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "class": "fa fa-random",
         "submenu": [
             { "name": "createwf", "type": "createwf", "uuid": "null", "caption": "Create New" },
-            { "name": "listwf", "type": "dag", "uuid": "null", "caption": "List" },
-            { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results" }
+            { "name": "listwf", "type": "dag", "uuid": "null", "caption": "List" ,"typeCount": "dag", },
+            { "name": "paramlistdag", "type": "paramlist", "typeCount": "paramlistdag", "uuid": "null", "caption": "Parameter List" },
+            { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results","typeCount": "dagexec", }
+        ]
+    };
+    $scope.Batch = {
+        "caption": " Batch Scheduler",
+        "name": "batch",
+        "class": "fa fa-tasks",
+        "submenu": [
+            { "name": "batchdetail", "type": "createwf", "uuid": "null", "caption": "Create New" },
+            { "name": "batchlist", "type": "batch", "uuid": "null", "caption": "List" ,"typeCount": "batch", },
+            { "name": "batchexeclist", "type": "batchExec", "uuid": "null", "caption": "Results","typeCount": "batchexec", }
         ]
     };
     $scope.GraphAnalysis = {
@@ -431,9 +458,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "name": "graphanalysis ",
         "class": "fa fa-bar-chart",
         "submenu": [
-            { "name": "createga", "type": "createga", "uuid": "null", "caption": "Create New" },
-            { "name": "listgraphpod", "type": "graphpod", "uuid": "null", "caption": "List" },
-            { "name": "graphpodresultlist", "type": "graphexec", "uuid": "null", "caption": "Results" }
+            { "name": "creaetgraphpod", "type": "graphpod", "typeCount": "","uuid": "null", "caption": "Create New" },
+            { "name": "listgraphpod", "type": "graphpod", "typeCount": "graphpod","uuid": "null", "caption": "List" },
+            { "name": "graphpodresultlist", "type": "graphexec","typeCount": "graphexec", "uuid": "null", "caption": "Results" }
         ]
     };
     $scope.Datascience = {
@@ -461,8 +488,21 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "submenu": [
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
+            { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
         ]
     }
+    $scope.Ingestdata = {
+        "caption": "Data Ingestion",
+        "name": "ingest",
+        "class": "fa fa-random",
+        "submenu": [
+            // { "name": "ingestrulelist", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
+            { "name": "ingestrulelist2", "type": "ingest","typeCount": "ingest","uuid": "null", "caption": "Rule" },
+            { "name": "ingestrulegrouplist", "type": "ingestgroup", "typeCount": "ingestgroup","uuid": "null", "caption": "Rule Group" },
+            { "name": "ingestrulerestultlist", "type": "ingestexec",  "typeCount": "ingestexec","uuid": "null", "caption": "Rule Results" }
+        ]
+    }
+
     $scope.Admindata = {
         "caption": "Admin",
         "name": "admin",
@@ -530,6 +570,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
                 }
             }
             if (localStorage.isAppRoleExists) {
+                $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });
                 var onSuccessGetMetaStats = function (response) {
                     angular.forEach(response, function (val, key) {
@@ -546,6 +587,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 
 InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
     $rootScope.reOpen=localStorage.reOpen;
+    
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
         $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
         $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
@@ -634,6 +676,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             var onSecurityAppRoleSuccess = function (response) {
                 localStorage.isAppRoleExists = true
                 console.log(JSON.stringify(response.data));
+                $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });
                 var onSuccessGetMetaStats = function (response) {
                     angular.forEach(response, function (val, key) {
@@ -653,7 +696,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         }
         $rootScope.reOpen=false;
         localStorage.reOpen=false;
-        $state.go('datadiscovery');
+        $state.go('datadiscovery',{}, {reload: true});
     };
 
     $scope.cancelLogut = function () {
@@ -665,7 +708,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             $rootScope.reOpen=false;
             localStorage.reOpen=false;
             if ($sessionStorage.fromStateName){
-                $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+              //  $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
             }else{
                 $state.go('datadiscovery');
             }
@@ -791,9 +834,9 @@ InferyxApp.controller('AppController', ['$scope', '$rootScope', 'commentService'
 
 
 /* Setup Layout Part - Header */
-InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService','$sessionStorage', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService,$sessionStorage) {
+InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService','$sessionStorage','CF_APP_SETTING', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService,$sessionStorage,CF_APP_SETTING) {
     $rootScope.dummyArg = 1;
-    
+    $scope.appSetting=CF_APP_SETTING;
     $rootScope.caseConverter = function (str) {
         var temp = str.charAt(0).toUpperCase() + str.slice(1);
         return temp.replace(/([A-Z][a-z])/g, " $1");
@@ -847,12 +890,12 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
     $scope.OepnWelcomeWindow=function(){
         $rootScope.reOpen=true;
         localStorage.reOpen=true;
-        if ($sessionStorage.fromStateName){
-            $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
-        }
-        else{
-            $state.go('/home');
-        }
+        // if ($sessionStorage.fromStateName){
+        //     $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+        // }
+        // else{
+        //     $state.go('/home');
+        // }
            $('#myModal').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -1083,6 +1126,43 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             '   js/controllers/VizpodController.js',
                             'js/services/VizpodService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        .state('reportlist', {
+            url: "/reportList",
+            templateUrl: "views/report-list.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            // 'js/services/ReportServices.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('reportdetail', {
+            url: "/Report?id&mode&returnBack&version",
+            templateUrl: "views/report.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            'js/services/ReportService.js'
                         ]
                     });
                 }]
@@ -1428,9 +1508,34 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'paramlist', parantType: 'rule' }
 
         })
+        .state('paramlistdag', {
+            url: "/Data Pipeline/ParamList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Pipeline' },
+            params: { type: 'paramlist', parantType: 'dag' }
 
+        })
+        .state('createparamlistdag', {
+            url: "/BusinessRules/CreateParamListDag?id&mode&returnBack&version",
+            templateUrl: "views/paramlist.html",
+            data: { pageTitle: 'Data Pipeline' },
+            params: { type: 'paramlist', parantType: 'dag' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ParamlistController.js',
+                            'js/services/ParamlistService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('createparamlistrule', {
-            url: "/BusinessRules/CreateParamList?id&mode&returnBack&version",
+            url: "/BusinessRules/CreateParamListRule?id&mode&returnBack&version",
             templateUrl: "views/paramlist.html",
             data: { pageTitle: 'Business Rules' },
             params: { type: 'paramlist', parantType: 'rule' },
@@ -1548,6 +1653,23 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                             'js/controllers/ReconRuleController.js',
                             'js/services/ReconRuleService.js'
 
+                        ]
+                    }]);
+                }]
+            }
+        })
+
+        .state('reconcompare', {
+            url: "/ReconCompare",
+            templateUrl: "views/recon-compare.html",
+            data: { pageTitle: 'Data Reconciliation' },
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'Reconcompare',
+                        files: [
+                            'js/controllers/ReconCompareController.js',
+                            'js/services/ReconRuleService.js'
                         ]
                     }]);
                 }]
@@ -1750,7 +1872,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
 
         .state('adminListapplication', {
-            url: "/Admin/application?id&mode&returnBack",
+            url: "/Admin/application?id&version&mode&returnBack",
             templateUrl: "views/application.html",
             data: { pageTitle: 'Admin' },
             controller: "",
@@ -2169,7 +2291,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
 
         .state('resultgraphwf', {
-            url: "/DataPipeline/Result?id&version&type&mode&dagid",
+            url: "/DataPipeline/Result?id&version&type&mode&dagid&returnBack",
             templateUrl: "views/data-pipeline-result.html",
             data: { pageTitle: 'Data Pipeline' },
             controller: "",
@@ -2187,13 +2309,66 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })
 
+        .state('batchlist', {
+            url: "/Batch/List",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: ' Batch Scheduler' },
+            params: { type: "batch" }
+        })
+
+        .state('batchexeclist', {
+            url: "/Batch/ResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: ' Batch Scheduler' },
+            params: { type: 'batchexec', isExec: true }
+        })
+
+      
+        .state('batchdetail', {
+            url: "/BatchDetail?id&mode&returnBack&version",
+            templateUrl: "views/batch.html",
+            data: { pageTitle: ' Batch Scheduler' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'Batch',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchController.js',
+                            'js/services/BatchService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        
+        .state('batchexecresult', {
+            url: "/BatchResult?id&mode&returnBack&version&name",
+            templateUrl: "views/batch-result.html",
+            data: { pageTitle: ' Batch Scheduler' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'Batch',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchController.js',
+                            'js/services/BatchService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('algorithm', {
             url: "/Datascience/AlgorithmList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Data Science' },
             params: { type: 'algorithm' }
         })
-
+        
         .state('createalgorithm', {
             url: "/CreateAlgorithm?id&mode&returnBack&version",
             templateUrl: "views/algorithm.html",
@@ -2404,6 +2579,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('modelrestultpage', {
             url: "/ModelResults?id&version&type&name",
             templateUrl: "views/model-result.html",
+            data: { pageTitle: 'Data Science' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ModelResultController.js',
+                            'js/services/ModelService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('trainrestultpage', {
+            url: "/trainResults?id&version&type&name",
+            templateUrl: "views/train-result.html",
             data: { pageTitle: 'Data Science' },
             controller: "",
             resolve: {
@@ -2721,6 +2914,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('jobexecutorlistreportexec', {
+            url: "/JobMonitoringList/report?id&mode&returnBack",
+            templateUrl: "views/report-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
 
         .state('jobexecutorlistprofilegroupexec', {
             url: "/JobMonitoringList/profilegroup?id&mode&returnBack",
@@ -2876,7 +3087,62 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-        
+        .state('jobexecutorlistbatchexec', {
+            url: "/JobMonitoringList/batch?id&mode&returnBack",
+            templateUrl: "views/batch-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/BatchExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('jobexecutorlistingestexec', {
+            url: "/JobMonitoringList/ingest?id&mode&returnBack",
+            templateUrl: "views/ingest-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
+        .state('jobexecutorlistingestgroupexec', {
+            url: "/JobMonitoringList/ingestGroup?id&mode&returnBack",
+            templateUrl: "views/ingest-group-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestGroupExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
         .state('commonlistpage', {
             url: "/list?type",
             templateUrl: "views/common-list.html",
@@ -3035,7 +3301,106 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-
+        .state('ingestrulelist', {
+            url: "/DataIngestion/IngestList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingest'}
+        })
+        .state('ingestrulelist2', {
+            url: "/DataIngestion/IngestList2",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingest2'}
+        })
+        .state('ingestrulegrouplist', {
+            url: "/DataIngestion/IngestGroupList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingestgroup'}
+        })
+        .state('ingestrulerestultlist', {
+            url: "/DataIngestion/IngestResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Ingestion' },
+            params: { type: 'ingestexec', isExec: true}
+        })
+        
+        .state('ingestruledetail', {
+            url: "/DataIngestion/IngestRuleDetail?id&mode&returnBack&version",
+            templateUrl: "views/ingest-rule.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController.js',
+                            'js/services/IngestRuleService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('ingestruledetail2', {
+            url: "/DataIngestion/IngestRuleDetail2?id&mode&returnBack&version",
+            templateUrl: "views/ingest-rule2.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController2.js',
+                            'js/services/IngestRuleService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('ingestrulegroupdetail', {
+            url: "/DataIngestion/IngestRuleGroupDetail?id&mode&returnBack&version",
+            templateUrl: "views/ingest-rule-group.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                             'js/controllers/IngestController.js',
+                            'js/services/IngestRuleGroupService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('ingestexecresult', {
+            url: "/DataIngestion/IngestResult?id&version&type&name",
+            templateUrl: "views/ingest-result.html",
+            data: { pageTitle: 'Data Ingestion' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/IngestController.js',
+                            'js/services/IngestRuleService.js',
+                            'js/services/ProfileService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        
+        
 }]);
 
 

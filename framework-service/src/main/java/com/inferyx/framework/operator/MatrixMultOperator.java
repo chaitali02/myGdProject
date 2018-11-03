@@ -3,29 +3,16 @@
  */
 package com.inferyx.framework.operator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
-import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
-import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
-import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
@@ -41,6 +28,7 @@ import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -67,16 +55,8 @@ public class MatrixMultOperator implements IOperator {
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	private RandomDistributionFactory randomDistributionFactory;
-	@Autowired
-	private MatrixToRddConverter matrixToRddConverter;
-	@Autowired
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 	
-	protected final String ADD = "ADD";
-	protected final String SUB = "SUB";
-	protected final String MUL = "MUL";
-
 	static final Logger logger = Logger.getLogger(MatrixMultOperator.class);
 
 	/**
@@ -115,8 +95,8 @@ public class MatrixMultOperator implements IOperator {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		Map<String, String> otherParams = execParams.getOtherParams();
-//		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
-//		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
+		ParamListHolder lhsKeyAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsKeyAttr");
+		ParamListHolder rhsKeyAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsKeyAttr");
 		ParamListHolder lhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsAttrs");
 		ParamListHolder rhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsAttrs");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
@@ -124,69 +104,84 @@ public class MatrixMultOperator implements IOperator {
 		MetaIdentifier lhsAttrDpIdentifier = lhsAttrInfo.getAttributeInfo().get(0).getRef();
 		MetaIdentifier rhsAttrDpIdentifier = rhsAttrInfo.getAttributeInfo().get(0).getRef();
 		
-		String lhsTableName = otherParams
-				.get("datapodUuid_" + lhsAttrDpIdentifier.getUuid() + "_tableName");
-		String rhsTableName = otherParams
-				.get("datapodUuid_" + rhsAttrDpIdentifier.getUuid() + "_tableName");
+		String lhsTableName = otherParams.get("datapodUuid_" + lhsAttrDpIdentifier.getUuid() + "_tableName");
+		String rhsTableName = otherParams.get("datapodUuid_" + rhsAttrDpIdentifier.getUuid() + "_tableName");
 		String operation = operationType.getParamValue().getValue();
 /*		String lhsTableName = otherParams
 				.get("datapodUuid_" + lhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");
 		String rhsTableName = otherParams
 				.get("datapodUuid_" + rhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");*/
-		String saveTableName = otherParams
-				.get("datapodUuid_" + locationInfo.getParamValue().getRef().getUuid() + "_tableName");
+		String saveTableName = otherParams.get("datapodUuid_" + locationInfo.getParamValue().getRef().getUuid() + "_tableName");
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationInfo.getParamValue().getRef().getUuid(), 
 																			locationInfo.getParamValue().getRef().getVersion(), 
 																			locationInfo.getParamValue().getRef().getType().toString());
+		Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																							locationDatapod.getDatasource().getRef().getVersion(), 
+																							locationDatapod.getDatasource().getRef().getType().toString());
+		List<AttributeRefHolder> lhsKeyAttrList = lhsKeyAttrInfo.getAttributeInfo();
+		List<AttributeRefHolder> rhsKeyAttrList = rhsKeyAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
 
-		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
-		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsAttrList)).getDataFrame();
-		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
-			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
-		});
-		JavaRDD<MatrixEntry> rhsMatrixEntry = rhsDf.toJavaRDD().map(data -> {
-			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
-		});
-		CoordinateMatrix lhsCoMat = new CoordinateMatrix(lhsMatrixEntry.rdd());
-		CoordinateMatrix rhsCoMat = new CoordinateMatrix(rhsMatrixEntry.rdd());
-		BlockMatrix resultMatrix = null;
+		String lhsSql = generateSql(lhsTableName, lhsKeyAttrList, lhsAttrList);
+		String rhsSql = generateSql(rhsTableName, rhsKeyAttrList, rhsAttrList);
 		
-		switch (operation) {
-		case ADD:
-			resultMatrix = lhsCoMat.toBlockMatrix().add(rhsCoMat.toBlockMatrix());
-			break;
-		case SUB:
-			resultMatrix = lhsCoMat.toBlockMatrix().subtract(rhsCoMat.toBlockMatrix());
-			break;
-		case MUL:
-			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
-			break;
-		default:
-			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
-			break;
-		}
-		JavaRDD<Row> rowRdd = printResult(resultMatrix, baseExec, otherParams, runMode, exec);
-		// Convert Rdd to Dataframe and register Dataframe
-		// Obtain list of attr names from locationDatapod
-		String[] columns = new String[locationDatapod.getAttributes().size()];
-		int count = 0;
-		for (Attribute attr : locationDatapod.getAttributes()) {
-			columns[count] = attr.getName();
-			count++;
-		}
-		List<String> tableColumns = Arrays.asList(columns);
-		StructType schema = createSchema(tableColumns);
+//		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsKeyAttrList, lhsAttrList)).getDataFrame();
+//		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsKeyAttrList, rhsAttrList)).getDataFrame();
+//		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
+//			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
+//		});
+//		JavaRDD<MatrixEntry> rhsMatrixEntry = rhsDf.toJavaRDD().map(data -> {
+//			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
+//		});
+//		CoordinateMatrix lhsCoMat = new CoordinateMatrix(lhsMatrixEntry.rdd());
+//		CoordinateMatrix rhsCoMat = new CoordinateMatrix(rhsMatrixEntry.rdd());
+//		BlockMatrix resultMatrix = null;
+//		
+//		switch (operation) {
+//		case ADD:
+//			resultMatrix = lhsCoMat.toBlockMatrix().add(rhsCoMat.toBlockMatrix());
+//			break;
+//		case SUB:
+//			resultMatrix = lhsCoMat.toBlockMatrix().subtract(rhsCoMat.toBlockMatrix());
+//			break;
+//		case MUL:
+//			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+//			break;
+//		default:
+//			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+//			break;
+//		}
+//		JavaRDD<Row> rowRdd = printResult(resultMatrix, baseExec, otherParams, runMode, exec);
+//		// Convert Rdd to Dataframe and register Dataframe
+//		// Obtain list of attr names from locationDatapod
+//		String[] columns = new String[locationDatapod.getAttributes().size()];
+//		int count = 0;
+//		for (Attribute attr : locationDatapod.getAttributes()) {
+//			columns[count] = attr.getName();
+//			count++;
+//		}
+////		List<Object> tableColumns = Arrays.asList(columns);
+//		StructType schema = createSchema(locationDatapod.getAttributes());
+//		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_df");
+		
+		ResultSetHolder rsHolder = exec.mattrix(locationDatapod, operation, lhsTableName, rhsTableName, lhsSql, rhsSql, saveTableName, baseExec, otherParams, runMode);
 		
 		// Save result
 		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
 		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_df");
 		String sql = "SELECT * FROM " + saveTableName+"_df";
-		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		ResultSetHolder rsHolder2 = null;
+		if(targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
+				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
+			rsHolder2 = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), true, commonServiceImpl.getApp().getUuid());
+		} else {
+			rsHolder2 = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod, null);
+		}
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
@@ -197,15 +192,15 @@ public class MatrixMultOperator implements IOperator {
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, baseExec.getUuid(), execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, rsHolder2.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
 		
 		return null;
 	}
-	
-	/**
+		
+/*	*//**
 	 * 
 	 * @param resultMatrix
 	 * @param baseExec
@@ -213,28 +208,28 @@ public class MatrixMultOperator implements IOperator {
 	 * @param runMode
 	 * @param exec
 	 * @return
-	 */
+	 *//*
 	private JavaRDD<Row> printResult(BlockMatrix resultMatrix, BaseExec baseExec, Map<String, String> otherParams, RunMode runMode, IExecutor exec) {
 		resultMatrix.toCoordinateMatrix().toIndexedRowMatrix().rows().toJavaRDD().collect().forEach(t -> logger.info(t.vector()));
 		JavaRDD<Row> rowRdd = matrixToRddConverter.convertToRows(resultMatrix);
 		return rowRdd;
 	}
 	
-	/**
+	*//**
 	 * 
 	 * @param tableColumns
 	 * @return
-	 */
-	public StructType createSchema(List<String> tableColumns){
+	 *//*
+	public StructType createSchema(List<Attribute> attributes){
 
         List<StructField> fields  = new ArrayList<StructField>();
-        for(String column : tableColumns){         
+        for(Attribute attr  : attributes){         
 
-                fields.add(DataTypes.createStructField(column, DataTypes.StringType, true));            
+                fields.add(DataTypes.createStructField(attr.getName(),(DataType)sparkExecutor.getDataType(attr.getType()), true));            
 
         }
         return DataTypes.createStructType(fields);
-    }
+    }*/
 
 	/**
 	 * 
@@ -242,19 +237,31 @@ public class MatrixMultOperator implements IOperator {
 	 * @param attrList
 	 * @return
 	 */
-	private String generateSql(String tableName, List<AttributeRefHolder> attrList) {
+	private String generateSql(String tableName, List<AttributeRefHolder> keyAttrList, List<AttributeRefHolder> attrList) {
+		String keyAttrs = "";
+		for (int count = 0; count < keyAttrList.size(); count++) {
+			keyAttrs = keyAttrs.concat(keyAttrList.get(count).getAttrName());
+			if (count < (keyAttrList.size() - 1)) {
+				keyAttrs = keyAttrs.concat(ConstantsUtil.COMMA);
+			}
+		}
 		StringBuilder sb = new StringBuilder(
-				" select floor((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3) as colnum, exp.val from ")
-						.append(tableName).append(" matatab lateral view explode(ARRAY(");
-		AttributeRefHolder attrRefHolder = null;
+				" SELECT floor((row_number() OVER (PARTITION BY 1 ORDER BY ");
+				sb.append(keyAttrs).append(ConstantsUtil.COMMA).append("seq))/3-0.000000001) AS rn, seq, val, ")
+				  		.append(keyAttrs).append(" FROM ")
+						.append(tableName).append(" CROSS JOIN ( SELECT ")/*.append(keyAttrs)*/
+						.append(" ARRAY(");
 		for (int count = 0; count < attrList.size(); count++) {
 			sb.append("cast(matatab").append(ConstantsUtil.DOT).append(attrList.get(count).getAttrName())
-					.append(" as double)");
+					.append(" AS double)");
 			if (count < (attrList.size() - 1)) {
 				sb.append(ConstantsUtil.COMMA);
 			}
 		}
-		sb.append(")) exp as val order by rn, colnum");
+		sb.append(") AS arr_r from ")
+		.append(tableName)
+		.append(" matatab ORDER BY 1) exp LATERAL VIEW POSEXPLODE(exp.arr_r) rec AS seq, val ORDER BY ")
+		.append(keyAttrs).append(", seq");
 		return sb.toString();
 	}
 

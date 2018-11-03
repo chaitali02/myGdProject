@@ -108,7 +108,7 @@ public class BaseEntity {
 	}
 
 	public void setCreatedOn(String createdOn) {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		
 		//Date tmp = new Date(createdOn);
 		try {
@@ -186,7 +186,7 @@ public class BaseEntity {
 				}
 			}
 		}
-		if (this.getCreatedOn().isEmpty()) {
+		if (this.getCreatedOn() == null || this.getCreatedOn().isEmpty()) {
 			this.setCreatedOn(Helper.getCurrentDate().toString());
 		}
 	}

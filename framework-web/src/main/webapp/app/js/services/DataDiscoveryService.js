@@ -53,7 +53,10 @@
 	        }
 	        
 	        if(response[i].lastUpdatedOn != null) {
-	        	datapodJSon.lastUpdatedOn = new Date(response[i].lastUpdatedOn.split("IST")[0]);	        	
+						var date =response[i].lastUpdatedOn.split(" ");
+						date.splice(date.length-2,1);
+				//		console.log(date.toString().replace(/,/g," "))
+	        	datapodJSon.lastUpdatedOn = new Date(date.toString().replace(/,/g," "));//new Date(response[i].lastUpdatedOn.split("IST")[0]);	        	
 	        }
 	        else {
 	        	datapodJSon.lastUpdatedOn = "NA";

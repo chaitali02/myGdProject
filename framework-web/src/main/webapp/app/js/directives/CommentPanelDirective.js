@@ -271,8 +271,9 @@ InferyxApp.directive('showMore', [function() {
             text: '=',
             limit:'='
         },
-
         template: '<div><p ng-show="largeText"> {{ text | subString :0 :end }}.... <a href="javascript:;" ng-click="showMore()" ng-show="isShowMore">Show More</a><a href="javascript:;" ng-click="showLess()" ng-hide="isShowMore">Show Less </a></p><p ng-hide="largeText">{{ text }}</p></div> ',
+
+        // template: '<div><p ng-show="largeText" style="margin:0px"> {{ text | subString :0 :end }}.... <a href="javascript:;" ng-click="showMore()" ng-show="isShowMore">Show More</a><a href="javascript:;" ng-click="showLess()" ng-hide="isShowMore">Show Less </a></p><p ng-hide="largeText" style="margin:0px">{{ text }}</p></div> ',
         link: function(scope, iElement, iAttrs) {
             scope.end = scope.limit;
             scope.isShowMore = true;

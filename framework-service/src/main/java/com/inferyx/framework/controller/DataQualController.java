@@ -10,9 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +34,6 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -202,23 +198,20 @@ public class DataQualController {
    	}	
     
     
-	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "dataQualExecUUID") String dataQualExecUUID, 
-	    		@RequestParam(value= "dataQualExecVersion") String dataQualExecVersion,
-	    		@RequestParam(value = "format", defaultValue="excel")String format,
-				@RequestParam(value ="rows",defaultValue="1000") int rows,
-				@RequestParam(value = "download", defaultValue="Y") String download,@RequestParam(value="offset", defaultValue="0") int offset, 
-				@RequestParam(value="limit", defaultValue="200") int limit,
-				@RequestParam(value="sortBy", required=false) String sortBy,@RequestParam(value="order", required=false) String order,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value="requestId", required = false) String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
-	    		{
-			RunMode runMode = Helper.getExecutionMode(mode);
-			dataQualServiceImpl.download(dataQualExecUUID, dataQualExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
-	    	return null;
-	   }
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "dataQualExecUUID") String dataQualExecUUID,
+			@RequestParam(value = "dataQualExecVersion") String dataQualExecVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		dataQualServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, null, 0, rows, response, rows, null,
+				null, null, runMode);
+		return null;
+	}
 	
 	@RequestMapping(value="/getSummary",method=RequestMethod.GET)
 	public List<Map<String, Object>>   getDataQualSummary(@RequestParam(value= "dataQualExecUUID") String dataQualExecUUID, 

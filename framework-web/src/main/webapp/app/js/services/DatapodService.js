@@ -66,14 +66,21 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findDatapodSample = function (uuid, version) {
+	factory.findDatapodSample = function (uuid, version,rows) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion="+version+"&rows="+rows,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-
+	factory.findResultByDatastore = function (uuid, version,limit) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit="+limit,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+    
 	factory.findDownloadSample = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -81,14 +88,98 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-
+	factory.findDatastoreByDatapod = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getDatastoreByDatapod?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.findCompareMetadata = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.findSynchronizeMetadata = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/synchronizeMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+    
 	return factory;
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
-	this.getDatapodSample = function (data) {
+	this.synchronizeMetadata = function (uuid,version,type) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findSynchronizeMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.compareMetadata = function (uuid,version,type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findCompareMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.getResultByDatastore = function (uuid,version,limit) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findResultByDatastore(uuid,version,limit).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.getDatastoreByDatapod = function (data,type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatastoreByDatapod(data.uuid,data.version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.getDatapodSample = function (data,rows) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatapodSample(data.uuid,data.version,rows).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			//console.log(response)
 			deferred.resolve({
@@ -164,7 +255,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
-
+				attribute.length = response.attributes[i].length;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -240,6 +331,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.type = response.attributes[i].type.toLowerCase();
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
+				attribute.length = response.attributes[i].length;
 				//console.log(response.attributes[i].key);
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";

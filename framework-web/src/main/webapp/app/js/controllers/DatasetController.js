@@ -2,46 +2,46 @@
  **/
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
-MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc,CommonService,CF_FILTER) {
-	$rootScope.isCommentVeiwPrivlage=true;
+MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER) {
+	$rootScope.isCommentVeiwPrivlage = true;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
-		$scope.isDragable="false";
+		$scope.isDragable = "false";
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-		});  
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isDragable="true";
-		$scope.isPanelActiveOpen=true;
+		$scope.isDragable = "true";
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
 	else {
 		$scope.isAdd = true;
-		$scope.isDragable="true";
+		$scope.isDragable = "true";
 	}
-	$scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	$scope.iSSubmitEnable = false;
@@ -52,10 +52,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showgraph = false
 	$scope.showGraphDiv = false
 	$scope.graphDataStatus = false
-	$scope.logicalOperator = [" ", "OR", "AND"];
-	$scope.SourceTypes = ["datapod", "relation",'dataset']
-	$scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-    $scope.operator =CF_FILTER.operator;
+	$scope.logicalOperator = ["AND", "OR"];
+	$scope.SourceTypes = ["datapod", "relation", 'dataset']
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', '!=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.operator = CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
 	$scope.datsetsampledata = null;
@@ -71,24 +71,25 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	});
 	$scope.lhsType = [
 		{ "text": "string", "caption": "string" },
-		{ "text": "string", "caption": "integer"},
-		{ "text": "datapod", "caption": "attribute"},
-		{ "text": "formula", "caption": "formula"}];
+		{ "text": "string", "caption": "integer" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "formula", "caption": "formula" }];
 	$scope.rhsType = [
-		{ "text": "string", "caption": "string","disabled":false },
-		{ "text": "string", "caption": "integer" ,"disabled":false },
-		{ "text": "datapod", "caption": "attribute","disabled":false },
-		{ "text": "formula", "caption": "formula","disabled":false },
-		{ "text": "dataset", "caption": "dataset" ,"disabled":false }];
+		{ "text": "string", "caption": "string", "disabled": false },
+		{ "text": "string", "caption": "integer", "disabled": false },
+		{ "text": "datapod", "caption": "attribute", "disabled": false },
+		{ "text": "formula", "caption": "formula", "disabled": false },
+		{ "text": "dataset", "caption": "dataset", "disabled": false },
+		{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+		{ "text": "function", "caption": "function", "disabled": false }];
 
-	/*Start showPage*/
 	$scope.showPage = function () {
 		$scope.isShowSimpleData = false
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-	
-	
+
+
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListdataset', {
@@ -119,12 +120,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		paginationPageSizes: [10, 25, 50, 75, 100],
 		maxSize: 5,
 	}
-	
-	$scope.getLovByType = function() {
+
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
 			console.log(response)
-			$scope.lobTag=response[0].value
+			$scope.lobTag = response[0].value
 		}
 	}
 	$scope.loadTag = function (query) {
@@ -132,7 +133,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
 	// $scope.onOverCallBackRow=function(event,ui,index){
 	// 	 console.log($scope.indexDragg)
 	// 	console.log(index)
@@ -210,7 +211,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "expression", "caption": "expression" },
 		{ "text": "formula", "caption": "formula" },
-		{ "text": "function", "caption": "function" }
+		{ "text": "function", "caption": "function" },
+		{ "text": "paramlist", "caption": "paramlist" }
 	];
 
 	$scope.defalutType = ["Simple", 'Formula', 'Expression'];
@@ -235,7 +237,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		// console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
 		if (fromState.name != "matadata") {
 			$sessionStorage.fromParams = fromParams
@@ -253,6 +254,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showSampleTable = function (data) {
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
+		$scope.isDataError = false;
 		$scope.tableclass = "centercontent";
 		$scope.showForm = false;
 		$scope.showGraphDiv = false;
@@ -304,14 +306,16 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		MetadataDatasetSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			$scope.datasetRelation = response;
-			if($scope.dataset &&  $scope.selectSourceType == "dataset"){
-				temp = response.options.filter(function(el) {
+			if ($scope.dataset && $scope.selectSourceType == "dataset") {
+				temp = response.options.filter(function (el) {
 					return el.uuid !== $scope.dataset.uuid;
 				});
 				$scope.datasetRelation.options = temp
 			}
-			$scope.attributeTableArray=null;
+			$scope.attributeTableArray = null;
+			$scope.filterTableArray = null;
 			$scope.addAttribute();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -328,11 +332,36 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var onSuccessGetDatapodByRelation = function (response) {
 			$scope.sourcedatapodattribute = response;
 			$scope.lhsdatapodattributefilter = response;
-			$scope.attributeTableArray=null;
+			$scope.attributeTableArray = null;
+			$scope.filterTableArray = null;
 			$scope.addAttribute();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
+			}
+		}
+	}
+	$scope.getParamByApp = function () {
+
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+			then(function (response) { onSuccessGetParamByApp(response.data) });
+		var onSuccessGetParamByApp = function (response) {
+			$scope.allparamlistParams = [];
+			if (response.length > 0) {
+				var paramsArray = [];
+				for (var i = 0; i < response.length; i++) {
+					var paramjson = {}
+					var paramsjson = {};
+					paramsjson.uuid = response[i].ref.uuid;
+					paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+					paramsjson.attributeId = response[i].paramId;
+					paramsjson.attrType = response[i].paramType;
+					paramsjson.paramName = response[i].paramName;
+					paramsjson.caption = "app." + paramsjson.paramName
+					paramsArray[i] = paramsjson
+				}
+				$scope.allparamlistParams = paramsArray;
 			}
 		}
 	}
@@ -354,11 +383,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.dataset = $sessionStorage.datasetjosn;
 			$scope.tags = $sessionStorage.datasetjosn.tags
 			$scope.selectSourceType = $sessionStorage.datasetjosn.dependsOn.ref.type
+			$scope.getParamByApp();
 			MetadataDatasetSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				$scope.datasetRelation = response;		
-				if($scope.dataset &&  $scope.selectSourceType == "dataset"){
-					temp = response.options.filter(function(el) {
+				$scope.datasetRelation = response;
+				if ($scope.dataset && $scope.selectSourceType == "dataset") {
+					temp = response.options.filter(function (el) {
 						return el.uuid !== $scope.dataset.uuid;
 					});
 					$scope.datasetRelation.options = temp
@@ -371,6 +401,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				defaultversion.uuid = $sessionStorage.datasetjosn.uuid;
 				$scope.datasetversion.defaultVersion = defaultversion;
 				$scope.datasetRelation.defaultoption = defaultoption;
+
 				MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 				var onSuccessGetDatapodByRelation = function (response) {
 					$scope.sourcedatapodattribute = response;
@@ -385,9 +416,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
-				$scope.ruleLodeFunction = response
+				$scope.ruleLodeFunction = response;
+				$scope.allFunction = response;
 			}
 			$scope.filterTableArray = $sessionStorage.datasetjosn.filterTableArray;
 			$scope.attributeTableArray = $sessionStorage.datasetjosn.attributeTableArray
@@ -408,7 +440,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 		else {
-			MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($stateParams.id, $stateParams.version, 'datasetview').then(function (response) { onSuccessResult(response.data) });
+			MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($stateParams.id, $stateParams.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
 			var onSuccessResult = function (response) {
 				$scope.dataset = response.dataset;
 				$scope.selectSourceType = response.dataset.dependsOn.ref.type
@@ -418,12 +450,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				defaultversion.uuid = response.dataset.uuid;
 				$scope.datasetversion.defaultVersion = defaultversion;
 				$scope.tags = response.tags
+				$scope.getParamByApp();
 				MetadataDatasetSerivce.getAllLatest(response.dataset.dependsOn.ref.type).then(function (response) { onSuccess(response.data) });
 				var onSuccess = function (response) {
-					//console.log(JSON.stringify(response))
 					$scope.datasetRelation = response;
-					if($scope.dataset &&  $scope.selectSourceType == "dataset"){
-						temp = response.options.filter(function(el) {
+					if ($scope.dataset && $scope.selectSourceType == "dataset") {
+						temp = response.options.filter(function (el) {
 							return el.uuid !== $scope.dataset.uuid;
 						});
 						$scope.datasetRelation.options = temp
@@ -448,9 +480,11 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					$scope.sourcedatapodattribute = response;
 					$scope.lhsdatapodattributefilter = response;
 				}
-				MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+				CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 				var onSuccessFuntion = function (response) {
-					$scope.ruleLodeFunction = response
+					$scope.ruleLodeFunction = response;
+					//$scope.allFunction={};
+					$scope.allFunction = response;
 				}
 				$scope.attributeTableArray = response.sourceAttributes
 				$scope.filterTableArray = response.filterInfo;
@@ -460,10 +494,11 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}//End If
 	else {
 		$scope.showactive = "false"
-		if (typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListdataset") {
+		if ($sessionStorage.fromStateName && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListdataset") {
 			$scope.dataset = $sessionStorage.datasetjosn;
 			$scope.tags = $sessionStorage.datasetjosn.tags
 			$scope.selectSourceType = $sessionStorage.datasetjosn.dependsOn.ref.type
+			$scope.getParamByApp();
 			MetadataDatasetSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				$scope.datasetRelation = response;
@@ -487,9 +522,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.allFormula = response;
 				$scope.allFormula.splice(0, 1);
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
+
 				$scope.ruleLodeFunction = response
+				//$scope.allFunction={};
+				$scope.allFunction = response;
 			}
 			$scope.filterTableArray = $sessionStorage.datasetjosn.filterTableArray;
 			$scope.attributeTableArray = $sessionStorage.datasetjosn.attributeTableArray
@@ -518,7 +556,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.selectSourceType = null;
 		$scope.myform.$dirty = false;
 		$scope.datasetHasChanged = true;
-		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'datasetview').then(function (response) { onSuccessResult(response.data) });
+		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
 			$scope.dataset = response.dataset;
 			$scope.selectSourceType = response.dataset.dependsOn.ref.type
@@ -528,9 +566,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			defaultversion.uuid = response.dataset.uuid;
 			$scope.datasetversion.defaultVersion = defaultversion;
 			$scope.tags = response.tags
+			$scope.getParamByApp();
 			MetadataDatasetSerivce.getAllLatest(response.dataset.dependsOn.ref.type).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				// console.log(JSON.stringify(response))
 				$scope.datasetRelation = response;
 				var defaultoption = {};
 				defaultoption.type = $scope.dataset.dependsOn.ref.type
@@ -553,10 +591,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
-			var onSuccessFuntion = function (response) {
-
+			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) }); var onSuccessFuntion = function (response) {
 				$scope.ruleLodeFunction = response
+				//$scope.allFunction={};
+				$scope.allFunction = response;
 			}
 			$scope.attributeTableArray = response.sourceAttributes
 			$scope.filterTableArray = response.filterInfo;
@@ -564,86 +602,104 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 		}//End onSuccessResult
 	}/* End selectVersion*/
-	 
-	$scope.SearchAttribute=function(index){
-		$scope.selectDatasetAttr=$scope.filterTableArray[index].rhsdataset
-		MetadataDatasetSerivce.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
-		$scope.searchAttrIndex=index;
-		var onSuccessRelation = function (response) {
-			$scope.allDataset = response;
+
+	$scope.SearchAttribute = function (index, type, propertyType) {
+		$scope.selectAttr = $scope.filterTableArray[index][propertyType]
+		$scope.searchAttr = {};
+		$scope.searchAttr.type = type;
+		$scope.searchAttr.propertyType = propertyType;
+		$scope.searchAttr.index = index;
+		MetadataDatasetSerivce.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+		$scope.searchAttrIndex = index;
+		var onSuccessGetAllLatest = function (response) {
+			$scope.allSearchType = response;
 			var temp;
-			if($scope.selectSourceType == "dataset"){
-				temp = $scope.allDataset.options.filter(function(el) {
-					return el.uuid !== $scope.datasetRelation.defaultoption .uuid;
+			if ($scope.selectSourceType == "dataset") {
+				temp = $scope.allSearchType.options.filter(function (el) {
+					return el.uuid !== $scope.datasetRelation.defaultoption.uuid;
 				});
-				$scope.allDataset.options=temp;
-				$scope.allDataset.defaultoption=temp[0]
+				$scope.allSearchType.options = temp;
+				$scope.allSearchType.defaultoption = temp[0]
 			}
-			if($scope.dataset){
-				temp = $scope.allDataset.options.filter(function(el) {
+			if ($scope.dataset) {
+				temp = $scope.allSearchType.options.filter(function (el) {
 					return el.uuid !== $scope.dataset.uuid;
 				});
-				$scope.allDataset.options=temp;
-				$scope.allDataset.defaultoption=temp[0]
+				$scope.allSearchType.options = temp;
+				$scope.allSearchType.defaultoption = temp[0]
+			}
+			if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.selectAttr.uuid;
+				defaultoption.name = "";
+				$scope.allSearchType.defaultoption = defaultoption;
 			}
 			$('#searchAttr').modal({
 				backdrop: 'static',
 				keyboard: false
-			  });
-			  MetadataDatasetSerivce.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+			});
+			MetadataDatasetSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, type).then(function (response) { onSuccessAttributeBySource(response.data) });
 			var onSuccessAttributeBySource = function (response) {
-				$scope.allDatasetAttr = response;
-				if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
-					var defaultoption={};
-					defaultoption.uuid=$scope.selectDatasetAttr.uuid;
-					defaultoption.name="";
-					$scope.allDataset.defaultoption=defaultoption;
-				}else{
-					$scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+					var defaultoption = {};
+					defaultoption.uuid = $scope.selectAttr.uuid;
+					defaultoption.name = "";
+					$scope.allSearchType.defaultoption = defaultoption;
+				} else {
+					$scope.selectAttr = $scope.allAttr[0]
 				}
 
 			}
 		}
-		
 	}
-    $scope.onChangeDataset=function(){
-		MetadataDatasetSerivce.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+
+	$scope.onChangeSearchAttr = function () {
+		MetadataDatasetSerivce.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, $scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
-			$scope.allDatasetAttr = response;
+			$scope.allAttr = response;
 		}
 	}
 
-	$scope.SubmitSearchAttr=function(){
-		console.log($scope.selectDatasetAttr);
-		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
+	$scope.SubmitSearchAttr = function () {
+		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType] = $scope.selectAttr;
 		$('#searchAttr').modal('hide')
 	}
 
-	$scope.onChangeOperator=function(index){
-		if ($scope.datasetCompare != null) {
-			$scope.datasetCompare.filterChg = "y"
+	$scope.disableRhsType = function (rshTypes, arrayStr) {
+		for (var i = 0; i < rshTypes.length; i++) {
+			rshTypes[i].disabled = false;
+			if (arrayStr.length > 0) {
+				var index = arrayStr.indexOf(rshTypes[i].caption);
+				if (index != -1) {
+					rshTypes[i].disabled = true;
+				}
+			}
 		}
-		if($scope.filterTableArray[index].operator =='BETWEEN'){
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
-		//	$scope.disableRhsType(['string','attribute','formula','dataset'])
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			// if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			// 	$scope.disableRhsType([]);
-			// }else{
-			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
-	 	    // }
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
-           // $scope.disableRhsType(['string','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		return rshTypes;
+	}
+
+	$scope.onChangeOperator = function (index) {
+		if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
 		}
-		else{
-			//$scope.disableRhsType(['attribute','formula','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
-			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['string', 'dataset']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 	}
 
@@ -671,10 +727,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
-		filertable.logicalOperator= $scope.filterTableArray.length ==0 ? $scope.logicalOperator[0] :$scope.logicalOperator[1]
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
-		filertable.rhstype = $scope.rhsType[0]
+		filertable.rhstype = $scope.rhsType[0];
+		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
@@ -734,6 +792,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsFormula = false;
 			$scope.filterTableArray[index].rhsvalue;
 			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
 		}
 		else if (type == "datapod") {
 
@@ -741,6 +802,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsDatapod = true;
 			$scope.filterTableArray[index].isrhsFormula = false;
 			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
 		}
 		else if (type == "formula") {
 
@@ -748,10 +812,28 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.allFormula = response;
 				$scope.allFormula.splice(0, 1);
+			}
+		}
+		else if (type == "function") {
+
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = true;
+
+			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
+			var onSuccressGetFunction = function (response) {
+				$scope.allFunction = response;
 			}
 		}
 		else if (type == "dataset") {
@@ -759,11 +841,20 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = true;
-			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
-				$scope.allDataset = response;
-			}
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
 		}
+		else if (type == "paramlist") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = true;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			$scope.getParamByApp();
+		}
+
 	}
 
 
@@ -774,27 +865,20 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.onChangeSimple = function () {
-		if ($scope.datasetCompare != null) {
-			$scope.datasetCompare.filterChg = "y"
-		}
-	}
-	
-	// $scope.onChangeOperator=function(){
-	// 	if ($scope.datasetCompare != null) {
-	// 		$scope.datasetCompare.filterChg = "y"
-	// 	}
-	// }
-  $scope.onChangeAttribute=function(){
-		if ($scope.datasetCompare != null) {
-			$scope.datasetCompare.filterChg = "y"
-		}
+		
 	}
 
-	$scope.onChangeFromula=function(){
-		if ($scope.datasetCompare != null) {
-			$scope.datasetCompare.filterChg = "y"
-		}
+	$scope.onChangeAttribute = function () {
+		
 	}
+
+	$scope.onChangeFromula = function () {
+	}
+
+	$scope.onChangeRhsParamList = function () {
+		
+	}
+
 	$scope.addAttribute = function () {
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
@@ -820,7 +904,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		});
 		$scope.attributeTableArray = newDataList;
 	}
-    
+
 	$scope.onChangeSourceAttribute = function (type, index) {
 		if (type == "string") {
 			$scope.attributeTableArray[index].isSourceAtributeSimple = true;
@@ -828,6 +912,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 
 		}
 		else if (type == "datapod") {
@@ -837,6 +922,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 		}
 		else if (type == "formula") {
 
@@ -845,9 +931,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = true;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
-				//alert(JSON.stringify(response))
 				$scope.datasetLodeFormula = response
 
 			}
@@ -859,6 +945,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = true;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 			MetadataDatasetSerivce.getExpressionByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 				$scope.datasetLodeExpression = response
@@ -872,32 +959,113 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = true;
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessExpression(response.data) });
-			var onSuccessExpression = function (response) {
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
+			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
+			var onSuccressGetFunction = function (response) {
 				$scope.ruleLodeFunction = response
 			}
-
+		}
+		else if (type == "paramlist") {
+			$scope.attributeTableArray[index].isSourceAtributeSimple = false;
+			$scope.attributeTableArray[index].isSourceAtributeDatapod = false;
+			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
+			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
+			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = true;
+			$scope.getParamByApp();
 		}
 
+
 	}
-	
-	$scope.onChangeSourceName=function(index){
-		$scope.attributeTableArray[index].isSourceName=true;
+
+	$scope.isDublication = function (arr, field, index, name) {
+
+		var res = -1;
+		for (var i = 0; i < arr.length - 1; i++) {
+			if (arr[i][field] == arr[index][field] && i != index) {
+				$scope.myform[name].$invalid = true;
+				res = i;
+				break
+			} else {
+				$scope.myform[name].$invalid = false;
+			}
+		}
+		return res;
+	}
+
+	$scope.onChangeSourceName = function (index) {
+
+		$scope.attributeTableArray[index].isSourceName = true;
+		if ($scope.attributeTableArray[index].name) {
+			var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
+			if (res != -1) {
+				$scope.isDuplication = true;
+			} else {
+				$scope.isDuplication = false;
+			}
+		}
+
 	}
 
 	$scope.onChangeAttributeDatapod = function (data, index) {
 		if (data != null && !$scope.attributeTableArray[index].isSourceName) {
 			$scope.attributeTableArray[index].name = data.name
+			//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
+		setTimeout(function () {
+			if ($scope.attributeTableArray[index].name) {
+				var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
+				if (res != -1) {
+					$scope.isDuplication = true;
+				} else {
+					$scope.isDuplication = false;
+				}
+			}
+		}, 1)
+
 	}
 	$scope.onChangeFormula = function (data, index) {
-		if(!$scope.attributeTableArray[index].isSourceName)
-		$scope.attributeTableArray[index].name = data.name
+		if (!$scope.attributeTableArray[index].isSourceName)
+			$scope.attributeTableArray[index].name = data.name;
+		setTimeout(function () {
+			if ($scope.attributeTableArray[index].name) {
+				var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
+				if (res != -1) {
+					$scope.isDuplication = true;
+				} else {
+					$scope.isDuplication = false;
+				}
+			}
+		}, 1)
 	}
 
 	$scope.onChangeExpression = function (data, index) {
-		if(!$scope.attributeTableArray[index].isSourceName)
-		$scope.attributeTableArray[index].name = data.name
+		if (!$scope.attributeTableArray[index].isSourceName)
+			$scope.attributeTableArray[index].name = data.name;
+		setTimeout(function () {
+			if ($scope.attributeTableArray[index].name) {
+				var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
+				if (res != -1) {
+					$scope.isDuplication = true;
+				} else {
+					$scope.isDuplication = false;
+				}
+			}
+		}, 1)
+	}
+	$scope.onChangeParamlist = function (data, index) {
+		if (!$scope.attributeTableArray[index].isSourceName)
+			$scope.attributeTableArray[index].name = data.paramName;
+		setTimeout(function () {
+			if ($scope.attributeTableArray[index].name) {
+				var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
+				if (res != -1) {
+					$scope.isDuplication = true;
+				} else {
+					$scope.isDuplication = false;
+				}
+			}
+		}, 1)
 	}
 
 	$scope.jsonCode = function () {
@@ -926,7 +1094,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 		dataSetJson.tags = tagArray;
-
 		//relationInfo
 		var dependsOn = {};
 		var ref = {};
@@ -938,8 +1105,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		dataSetJson.attributeTableArray = $scope.attributeTableArray
 		$sessionStorage.datasetjosn = dataSetJson
 	}
+
+
 	$scope.submitDataset = function () {
-		var upd_tag="N"
+		var upd_tag = "N"
 		delete $sessionStorage.datasetjosn;
 		delete $sessionStorage.index
 		delete $sessionStorage.dependon
@@ -948,6 +1117,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.iSSubmitEnable = false;
 		$scope.datasetHasChanged = true;
 		$scope.myform.$dirty = false;
+
 		var dataSetJson = {}
 		dataSetJson.uuid = $scope.dataset.uuid
 		dataSetJson.name = $scope.dataset.name;
@@ -955,17 +1125,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		dataSetJson.active = $scope.dataset.active;
 		dataSetJson.published = $scope.dataset.published;
 		dataSetJson.limit = $scope.dataset.limit;
-		dataSetJson.srcChg = "y";
-
-		if ($scope.datasetCompare == null) {
-			dataSetJson.srcChg = "y";
-			dataSetJson.sourceChg = "y";
-			dataSetJson.filterChg = "y";
-		}
-		else {
-			dataSetJson.mapInfo = uuid = $scope.datasetCompare.mapInfo
-		}
-
 
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -973,8 +1132,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 		dataSetJson.tags = tagArray;
@@ -986,55 +1145,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		ref.uuid = $scope.datasetRelation.defaultoption.uuid
 		dependsOn.ref = ref;
 		dataSetJson.dependsOn = dependsOn;
-		if ($scope.datasetCompare != null && $scope.datasetCompare.dependsOn.ref.uuid != $scope.datasetRelation.defaultoption.uuid) {
-			dataSetJson.sourceChg = "y";
-
-		}
-		else {
-
-			dataSetJson.sourceChg = "n";
-
-		}
-
+		
 
 		//filterInfo
 		var filterInfoArray = [];
-		var filter = {}
-		if ($scope.datasetCompare != null && $scope.datasetCompare.filter != null) {
-			filter.uuid = $scope.datasetCompare.filter.uuid;
-			filter.name = $scope.datasetCompare.filter.name;
-			filter.version = $scope.datasetCompare.filter.version;
-			filter.createdBy = $scope.datasetCompare.filter.createdBy;
-			filter.createdOn = $scope.datasetCompare.filter.createdOn;
-			filter.active = $scope.datasetCompare.filter.active;
-			filter.tags = $scope.datasetCompare.filter.tags;
-			filter.desc = $scope.datasetCompare.filter.desc;
-			filter.dependsOn = $scope.datasetCompare.filter.dependsOn;
-		}
 		if ($scope.filterTableArray.length > 0) {
-
 			for (var i = 0; i < $scope.filterTableArray.length; i++) {
-
-				if ($scope.datasetCompare != null && $scope.datasetCompare.filter != null && $scope.datasetCompare.filter.filterInfo.length == $scope.filterTableArray.length) {
-					//  if($scope.datasetCompare.filter.filterInfo[i].operand[0].attributeId != $scope.filterTableArray[i].lhsFilter.attributeId
-					// 		 || $scope.filterTableArray[i].logicalOperator !=$scope.datasetCompare.filter.filterInfo[i].logicalOperator
-					// 		 || $scope.filterTableArray[i].filtervalue !=$scope.datasetCompare.filter.filterInfo[i].operand[1].value
-					// 		 || $scope.filterTableArray[i].operator !=$scope.datasetCompare.filter.filterInfo[i].operator){
-
-					// 	 dataSetJson.filterChg="y";
-
-					//  }
-					if ($scope.datasetCompare.filterChg == "y") {
-						dataSetJson.filterChg = "y";
-					}
-					else {
-						dataSetJson.filterChg = "n";
-					}
-				}
-				else {
-
-					dataSetJson.filterChg = "y";
-				}
 				var filterInfo = {};
 				var operand = []
 				var lhsoperand = {}
@@ -1052,18 +1168,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 					lhsref.type = "simple";
 					lhsoperand.ref = lhsref;
+					lhsoperand.attributeType = $scope.filterTableArray[i].lhstype.caption;
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-					if ($scope.selectSourceType == "dataset") {
-						lhsref.type = "dataset";
 
-					}
-					else {
-						lhsref.type = "datapod";
-					}
+					lhsref.type = $scope.filterTableArray[i].lhsdatapodAttribute.type;
 					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
-
 					lhsoperand.ref = lhsref;
 					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
 				}
@@ -1078,16 +1190,15 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
+					rhsoperand.attributeType = $scope.filterTableArray[i].rhstype.caption;
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+					}
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-					if ($scope.selectSourceType == "dataset") {
-						rhsref.type = "dataset";
-
-					}
-					else {
-						rhsref.type = "datapod";
-					}
+		
+					rhsref.type = $scope.filterTableArray[i].rhsdatapodAttribute.type;
 					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
 
 					rhsoperand.ref = rhsref;
@@ -1099,62 +1210,41 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
 					rhsoperand.ref = rhsref;
 				}
+				else if ($scope.filterTableArray[i].rhstype.text == "function") {
+					rhsref.type = "function";
+					rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
+					rhsoperand.ref = rhsref;
+				}
 				else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
 					rhsref.type = "dataset";
 					rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
 					rhsoperand.ref = rhsref;
 					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
 				}
+				else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
+
+					rhsref.type = "paramlist";
+					rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
+				}
 				operand[1] = rhsoperand;
 				filterInfo.operand = operand;
-				// var filterInfo={};
-				// var operand=[];
-				// var operandfirst={};
-				// var reffirst={};
-				// var operandsecond={};
-				// var refsecond={};
-				// reffirst.type="datapod"
-
-				// reffirst.uuid=$scope.filterTableArray[i].lhsFilter.uuid
-				// operandfirst.ref=reffirst;
-				// operandfirst.attributeId=$scope.filterTableArray[i].lhsFilter.attributeId
-				//   operand[0]=operandfirst;
-				// refsecond.type="simple";
-				// operandsecond.ref=refsecond;
-				// if(typeof $scope.filterTableArray[i].filtervalue == "undefined"){
-				// 	operandsecond.value="";
-				// }
-				// else{
-
-				// 	operandsecond.value=$scope.filterTableArray[i].filtervalue
-				// }
-
-				// operand[1]=operandsecond;
-				// if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
-				// 	filterInfo.logicalOperator=""
-				// }
-				// else{
-				// 	filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
-				// }
-				// filterInfo.operator=$scope.filterTableArray[i].operator
-				// filterInfo.operand=operand;
-
 				filterInfoArray[i] = filterInfo;
 
 			}//End FilterInfo
-			filter.filterInfo = filterInfoArray;
-			dataSetJson.filter = filter;
+		
+			dataSetJson.filterInfo = filterInfoArray;
 		}
 		else {
-			dataSetJson.filter = null;
-			dataSetJson.filterChg = "y";
+			dataSetJson.filterInfo = null;
 		}
+
 		var sourceAttributesArray = [];
 		for (var l = 0; l < $scope.attributeTableArray.length; l++) {
 			attributeinfo = {}
 			attributeinfo.attrSourceId = l;
 			attributeinfo.attrSourceName = $scope.attributeTableArray[l].name
-			//attributeinfo.attributeDesc=$scope.attributeTableArray[l].name
 			var ref = {};
 			var sourceAttr = {};
 			if ($scope.attributeTableArray[l].sourceAttributeType.text == "string") {
@@ -1166,14 +1256,20 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
 
-				ref.type = $scope.selectSourceType;
+				ref.type = $scope.attributeTableArray[l].sourcedatapod.type;
 				ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
 				sourceAttr.ref = ref;
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;
 				sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
 				attributeinfo.sourceAttr = sourceAttr;
+			}
+			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "paramlist") {
 
-
+				ref.type = "paramlist";
+				ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
+				sourceAttr.ref = ref;
+				sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attributeId;
+				attributeinfo.sourceAttr = sourceAttr;
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "expression") {
 
@@ -1199,15 +1295,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				attributeinfo.sourceAttr = sourceAttr;
 
 			}
-
 			sourceAttributesArray[l] = attributeinfo
-
 		}
 		dataSetJson.attributeInfo = sourceAttributesArray
 		console.log(JSON.stringify(dataSetJson))
 
 
-		MetadataDatasetSerivce.submit(dataSetJson, 'datasetview',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatasetSerivce.submit(dataSetJson, 'dataset', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

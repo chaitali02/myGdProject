@@ -13,13 +13,8 @@
   "tags": [],
   "active": "Y",
   "published": "N",
-<<<<<<< HEAD:framework-web/app/admin/meta/paramlist/paramlist_Decision_Tree_Classifier_WH.json
- "appInfo": [
+  	"appInfo": [
 			{
-=======
-  "appInfo": [
-		{
->>>>>>> master:framework-web/app/admin/meta/paramlist/paramlist_Decision_Tree_Classifier_with_Hyper_Params.json
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -42,6 +37,12 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
             }
         }
 	],

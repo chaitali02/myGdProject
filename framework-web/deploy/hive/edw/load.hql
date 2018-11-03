@@ -1,0 +1,30 @@
+truncate table dim_account;
+truncate table dim_address;
+truncate table dim_bank;
+truncate table dim_branch; 
+truncate table dim_country;
+truncate table dim_customer;
+truncate table dim_state;
+truncate table dim_transaction_type;
+truncate table dp_rule_results;
+truncate table dq_rule_results;
+truncate table fact_account_summary_monthly;
+truncate table fact_customer_summary_monthly;
+truncate table fact_transaction;
+truncate table rc_rule_results;
+
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' OVERWRITE INTO TABLE account_hive;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account.csv' OVERWRITE INTO TABLE account PARTITION (load_date='2017-07-01', load_id='00');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account_status_type.csv' OVERWRITE INTO TABLE account_status_type PARTITION (load_date='2017-07-01', load_id='00');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/account_type.csv' OVERWRITE INTO TABLE account_type PARTITION (load_date='2017-07-01', load_id='00');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/address.csv' OVERWRITE INTO TABLE address PARTITION (load_date='2017-07-01', load_id='00');  
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/bank.csv' OVERWRITE INTO TABLE bank PARTITION (load_date='2017-07-01', load_id='00'); 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/branch.csv' OVERWRITE INTO TABLE branch PARTITION (load_date='2017-07-01', load_id='00'); 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/dim_country.csv' OVERWRITE INTO TABLE dim_country PARTITION (load_date='2017-07-01', load_id='00');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/branch_type.csv' OVERWRITE INTO TABLE branch_type PARTITION (load_date='2017-07-01', load_id='00'); 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/customer.csv' OVERWRITE INTO TABLE customer PARTITION (load_date='2017-07-01', load_id='00'); 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/dim_date.csv' OVERWRITE INTO TABLE dim_date PARTITION (load_date='2017-12-04');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/product_type.csv' OVERWRITE INTO TABLE product_type PARTITION (load_date='2017-07-01', load_id='00'); 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/transaction.csv' OVERWRITE INTO TABLE transaction PARTITION (load_date='2017-07-01', load_id='00');
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/app/edw/data/csv/noheader/transaction_type.csv' OVERWRITE INTO TABLE transaction_type PARTITION (load_date='2017-07-01', load_id='00');
+

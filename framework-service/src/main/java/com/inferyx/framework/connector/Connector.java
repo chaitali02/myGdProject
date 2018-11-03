@@ -102,4 +102,16 @@ public class Connector implements IConnector {
 		} 
 		return connHolder;
 	}
+
+	@Override
+	public ConnectionHolder getConnection(Object input,Object input2) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

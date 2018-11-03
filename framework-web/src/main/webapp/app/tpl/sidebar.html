@@ -35,13 +35,7 @@
                 <span class="title">{{Datadiscovery.caption}}</span>
             </a>
         </li>
-         <li class="nav-item" ng-click="deInitTabs()">
-            <a ui-sref="{{MetaDatanavigator.name}}">
-                <i class="{{MetaDatanavigator.class}}"></i>
-                <span class="title">{{MetaDatanavigator.caption}}</span>
-
-            </a>
-        </li>
+        
         <!--Datavisualization Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -50,7 +44,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="datavisualizationsubmenu in Datavisualization.submenu | orderBy:'caption'" ng-click="deInitTabs()">
+                <li class="nav-item" data-ng-repeat="datavisualizationsubmenu in Datavisualization.submenu " ng-click="deInitTabs()">
                     <a ui-sref="{{datavisualizationsubmenu.name}}" class="nav-link">
                         <span class="title">{{datavisualizationsubmenu.caption}}</span>
                        <span class="badge badge-success">{{metaStats[datavisualizationsubmenu.type].count}}</span>
@@ -58,6 +52,25 @@
                 </li>
             </ul>
         </li>
+         <!--Data Ingestion Menu-->
+        <li class="nav-item">
+                <a href="#" class="nav-link nav-toggle">
+                      <i class="{{Ingestdata.class}}"></i>
+                      <span class="title">{{Ingestdata.caption}}</span>
+                      <span class="arrow"></span>
+                      
+                  </a>
+                  <ul class="sub-menu">
+                      <li class="nav-item"data-ng-repeat="ingestdatasubmenu in Ingestdata.submenu | orderBy" ng-click="deInitTabs()">
+                          <a ui-sref="{{ingestdatasubmenu.name}}" class="nav-link">
+                              <span class="title">{{ingestdatasubmenu.caption}}</span>
+                               <span class="badge badge-success">{{metaStats[ingestdatasubmenu.typeCount].count}}</span>
+                          </a>
+                      </li>
+                     
+                  </ul>
+      
+              </li>
         <!--Profile Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -135,6 +148,12 @@
                         <span class="badge badge-success">{{metaStats[ruledatasubmenu.type].count}}</span>
                     </a>
                 </li>
+                <li class="nav-item" ng-click="deInitTabs()">
+                    <a  ui-sref="reconcompare({type:reconexec})" class="nav-link">
+                        <span class="title">Compare Results</span>
+                         <span class="badge badge-success"></span>
+                    </a>
+                </li>
             </ul>
         </li>
         
@@ -186,7 +205,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="graphanAlysisSubMenu in GraphAnalysis.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
+                <li ng-disabled="graphanAlysisSubMenu.caption == 'Create New' && (!privileges['graphpod'] || privileges['graphpod'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="graphanAlysisSubMenu in GraphAnalysis.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
                     <a ui-sref="{{graphanAlysisSubMenu.name}}({type:graphanAlysisSubMenu.type})" class="nav-link">
                         <span class="title">{{graphanAlysisSubMenu.caption}}</span>
                         <span class="badge badge-success">{{metaStats[graphanAlysisSubMenu.typeCount].count}}</span>
@@ -206,11 +225,28 @@
                 <li ng-disabled="dagdatasubmenu.caption == 'Create New' && (!privileges['dag'] || privileges['dag'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="dagdatasubmenu in Dagworkflow.submenu | orderBy:'caption'  | filter:searchtext" ng-click="deInitTabs()">
                     <a ui-sref="{{dagdatasubmenu.name}}({type:dagdatasubmenu.type})" class="nav-link">
                         <span class="title">{{dagdatasubmenu.caption}}</span>
-                         <span class="badge badge-success">{{metaStats[dagdatasubmenu.type].count}}</span>
+                         <span class="badge badge-success">{{metaStats[dagdatasubmenu.typeCount].count}}</span>
                     </a>
                 </li>
             </ul>
         </li>
+       
+          <!--Batch Menu-->
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-toggle">
+                  <i class="{{Batch.class}}"></i>
+                  <span class="title">{{Batch.caption}}</span>
+                  <span class="arrow"></span>
+              </a>
+              <ul class="sub-menu"><!-- ({action:'add'})" -->
+                  <li ng-disabled="batchsubmenu.caption == 'Create New' && (!privileges['batch'] || privileges['batch'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="batchsubmenu in Batch.submenu | orderBy:'caption'  | filter:searchtext" ng-click="deInitTabs()">
+                      <a ui-sref="{{batchsubmenu.name}}({type:batchsubmenu.type})" class="nav-link">
+                          <span class="title">{{batchsubmenu.caption}}</span>
+                           <span class="badge badge-success">{{metaStats[batchsubmenu.typeCount].count}}</span>
+                      </a>
+                  </li>
+              </ul>
+          </li>
       
         <!--Admind Menu-->
         <li class="nav-item" ng-show="role=='admin'">
@@ -250,18 +286,26 @@
             </ul>
         </li>
 
-<li class="nav-item" ng-click="deInitTabs()">
+        <li class="nav-item" ng-click="deInitTabs()">
             <a ui-sref="{{JobExecutor.name}}">
                 <i class="{{JobExecutor.class}}"></i>
                 <span class="title">{{JobExecutor.caption}}</span>
 
             </a>
         </li>
+
         <li class="nav-item">
           <a ui-sref="{{SystemMonitering.name}}">
               <i class="{{SystemMonitering.class}}"></i>
               <span class="title">{{SystemMonitering.caption}}</span>
           </a>
-                </li>
+        </li>
+        <li class="nav-item" ng-click="deInitTabs()">
+            <a ui-sref="{{MetaDatanavigator.name}}">
+                <i class="{{MetaDatanavigator.class}}"></i>
+                <span class="title">{{MetaDatanavigator.caption}}</span>
+
+            </a>
+        </li>
     </ul><!-- END SIDEBAR MENU -->
 </div>

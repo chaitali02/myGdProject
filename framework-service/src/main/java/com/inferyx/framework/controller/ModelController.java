@@ -185,7 +185,7 @@ public class ModelController {
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return new ObjectMapper().writeValueAsString(
-				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion, null));
+				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion));
 	}
 
 	/********************** UNUSED **********************/
@@ -199,12 +199,12 @@ public class ModelController {
 	}*/
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public void download(@RequestParam(value = "modelExecUUID") String ruleExecUUID,
-			@RequestParam(value = "modelExecVersion") String ruleExecVersion,
+	public void download(@RequestParam(value = "modelExecUUID") String trainExecUuid,
+			@RequestParam(value = "modelExecVersion") String trainExecVersion,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = modelServiceImpl.download(ruleExecUUID, ruleExecVersion, response, runMode);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, response, runMode);
 	}
 	
 	@RequestMapping(value = "/predict/execute", method = RequestMethod.POST)
@@ -305,43 +305,32 @@ public class ModelController {
 	}
 	
 	@RequestMapping(value = "/predict/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "predictExecUUID") String predictExecUUID,
+	public HttpServletResponse predictDownload(@RequestParam(value = "predictExecUUID") String predictExecUUID,
 			@RequestParam(value = "predictExecVersion") String predictExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", defaultValue = "predictExec") String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, download, offset, limit, response, rows,
-				sortBy,type, order, requestId, runMode);
+		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, null, 0, rows, response, rows, null,
+				type, null, null, runMode);
 		return null;
 	}
+
 	@RequestMapping(value = "/simulate/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "simulateExecUUID") String simulateExecUUID,
+	public HttpServletResponse simulateDownload(@RequestParam(value = "simulateExecUUID") String simulateExecUUID,
 			@RequestParam(value = "simulateExecVersion") String simulateExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", defaultValue = "simulateExec") String type,
 			@RequestParam(value = "action", required = false) String action,
-			/*@RequestParam(value = "requestId", required = false) String requestId,*/
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, download, offset, limit, response, rows,
-				sortBy,type, order, "1", runMode);
+		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, null, 0, rows, response, rows,
+				null, type, null, "1", runMode);
 		return null;
 	}
 	
@@ -371,12 +360,27 @@ public class ModelController {
 		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
 	}	
 	
-	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
-	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+//	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
+//	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+//	}
+	
+	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
+	public boolean setStatus(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("status") String status,
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) {
+		try {
+			modelExecServiceImpl.setStatus(type,uuid,version,status);			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	@RequestMapping(value = "/train/restart",  method = RequestMethod.GET)
@@ -390,21 +394,21 @@ public class ModelController {
 		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
 	}
 	
-	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
-	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
-	}
-	
-	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
-	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
-	}
+//	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
+//	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
+//	}
+//	
+//	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
+//	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
+//	}
 	
 	@RequestMapping(value = "/predict/restart",  method = RequestMethod.GET)
 	public void restartPredict(@RequestParam(value = "uuid") String trainExecUuid,

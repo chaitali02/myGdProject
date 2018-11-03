@@ -1,0 +1,52 @@
+{
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026",
+    "version" : "1464977196",
+    "name" : "oracle",
+    "desc" : "Oracle Data Source",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "active" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        },
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }
+    ],
+    "type" : "ORACLE",
+    "access" : "JDBC",
+    "driver" : "oracle.jdbc.driver.OracleDriver",
+    "host" : "localhost",
+    "dbname" : "xe",
+    "sid" : "framework",
+    "port" : "1521",
+    "username" : "inferyx",
+    "password" : "root",
+    "path": "/user/hive/warehouse/framwork",
+    "sessionParameters" : "framework.oracle.schema=framework",
+    "createdOn" : ISODate("2017-12-08T08:03:03.324Z")
+}

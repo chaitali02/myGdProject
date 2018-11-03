@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -122,6 +123,8 @@ public class PostGresRegister {
 				if (registryList.get(i).getName().equals(tableName)) {
 					registryList.get(i).setRegisteredOn(savedDp.getCreatedOn());
 					registryList.get(i).setStatus("Registered");
+					registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
+
 				}
 
 				MetaIdentifierHolder holder = new MetaIdentifierHolder();

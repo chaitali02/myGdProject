@@ -161,6 +161,16 @@ MetadataModule.factory('MetadataFormulaFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.findAttributesByRelation = function (uuid,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	return factory;
 });
 
@@ -238,22 +248,43 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 		var deferred = $q.defer();
 
 		if (type == "relation") {
-			MetadataFormulaFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
+			// MetadataFormulaFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
+			// var onSuccess = function (response) {
+			// 	var attributes = [];
+			// 	for (var j = 0; j < response.length; j++) {
+			// 		for (var i = 0; i < response[j].attributes.length; i++) {
+			// 			var attributedetail = {};
+			// 			attributedetail.uuid = response[j].uuid;
+			// 			attributedetail.datapodname = response[j].name;
+			// 			attributedetail.name = response[j].attributes[i].name;
+			// 			attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
+			// 			attributedetail.attributeId = response[j].attributes[i].attributeId;
+			// 			attributes.push(attributedetail)
+			// 		}
+			// 	}
+
+			// 	//console.log(JSON.stringify(attributes))
+			// 	deferred.resolve({
+			// 		data: attributes
+			// 	})
+			// }
+			MetadataFormulaFactory.findAttributesByRelation(uuid, type, "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
+
+
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
-					for (var i = 0; i < response[j].attributes.length; i++) {
-						var attributedetail = {};
-						attributedetail.uuid = response[j].uuid;
-						attributedetail.datapodname = response[j].name;
-						attributedetail.name = response[j].attributes[i].name;
-						attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-						attributedetail.attributeId = response[j].attributes[i].attributeId;
-						attributes.push(attributedetail)
-					}
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributes.push(attributedetail)
 				}
 
-				//console.log(JSON.stringify(attributes))
 				deferred.resolve({
 					data: attributes
 				})
@@ -266,6 +297,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
@@ -286,6 +318,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -306,6 +339,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -513,7 +547,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
 					formulainfo.attrId = response.formulaInfo[i].attributeId;
-					formulainfo.value = response.formulaInfo[i].attributeName;
+					formulainfo.value = response.formulaInfo[i].ref.name+"."+response.formulaInfo[i].attributeName;
 
 				}
 				else {

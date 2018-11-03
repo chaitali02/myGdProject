@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -95,6 +96,7 @@ public class AttributeMapOperator {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String comma = "";
+		
 		// add select attribute
 		for (AttributeMap attr : attrMapList) {
 			builder.append(comma);
@@ -140,18 +142,30 @@ public class AttributeMapOperator {
 		String alias = null;
 		try {
 			if (attrMap.getTargetAttr() != null && attrMap.getTargetAttr().getRef() != null) { // Set attribute alias as corrs. target attribute
-				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(attrMap.getTargetAttr().getRef(), refKeyMap));
-				alias = datapod.getAttribute(Integer.parseInt(attrMap.getTargetAttr().getAttrId())).getName();
+				if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.attribute)) {
+					//special handling for ingest 
+					alias = attrMap.getTargetAttr().getValue();
+				} else {
+					datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(attrMap.getTargetAttr().getRef(), refKeyMap));
+					alias = datapod.getAttribute(Integer.parseInt(attrMap.getTargetAttr().getAttrId())).getName();
+				}
 			} else { // If target attribute is not present, set attribute alias as source attribute alias appended by attributeid (as two source attrs. may have the same name
 				alias = attrMap.getSourceAttr().getAttrName();
 				//alias = sourceAttrAlias(daoRegister, mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams);
 						//.concat(attrMap.getSourceAttr().get(0).getAttributeId().toString());
 			} 
-			if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
-				return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();
+			
+			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
+				//special handling for ingest 
+				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
+			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
+				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
-				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+//				boolean isNumber = Helper.isNumber(value);			
+//				if(!isNumber) {
+//					value = "'"+value+"'";
+//				}
 				return builder.append("\"").append(value).append("\"").append(" as ").append(alias).append(" ").toString();
 			} 
 			builder.append(sourceAttrSql(daoRegister, mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams, execParams));
@@ -209,6 +223,10 @@ public class AttributeMapOperator {
 					&& (object instanceof Datapod)) {
 				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				return builder.append(datapod.sql(Integer.parseInt(sourceAttr.getAttrId()))).append(" ").toString();
+			} else if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.dataset)  
+					&& (object instanceof DataSet)) {
+				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				return builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttrId())).append(" ").toString();
 			}
 			if (mapSource.getRef().getType() == MetaType.dataset && (object instanceof DataSet)) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
@@ -421,7 +439,8 @@ public class AttributeMapOperator {
 				if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 					isGroupBy = true;
 				} else {
-					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
+					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams)).append(",");
+//					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
 				}
 			}
 		}

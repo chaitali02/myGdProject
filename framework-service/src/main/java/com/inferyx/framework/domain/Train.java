@@ -23,6 +23,27 @@ public class Train extends BaseEntity {
 	private double valPercent;
 	private AttributeRefHolder labelInfo;
 	private String useHyperParams;
+	private String featureImportance;
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the featureImportance
+	 */
+	public String getFeatureImportance() {
+		return featureImportance;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param featureImportance the featureImportance to set
+	 */
+	public void setFeatureImportance(String featureImportance) {
+		this.featureImportance = featureImportance;
+	}
 
 	/**
 	 * @Ganesh

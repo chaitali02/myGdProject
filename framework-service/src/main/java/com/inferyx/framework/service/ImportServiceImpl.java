@@ -102,8 +102,9 @@ public class ImportServiceImpl {
 	
 	public Export uploadFile(MultipartFile multiPartFile, String filename) throws IllegalStateException, IOException {
 		ObjectMapper objmapper=new  ObjectMapper();
-		
-		String filePath = Helper.getPropertyValue("framework.schema.Path")+"/import/"+filename;
+		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");
+		String filePath = dirPath.concat(filename);
 		File dest = new File(filePath);
 		multiPartFile.transferTo(dest);
 		ZipFile zipFile = new ZipFile(filePath);
@@ -126,8 +127,9 @@ public class ImportServiceImpl {
 	
 	@SuppressWarnings("unused")
 	public String saveMetaInfoDependencies(Import imprt, String fileName) throws IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-						
-			String filePath = Helper.getPropertyValue("framework.schema.Path")+"/import/"+fileName+".zip";
+		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");			
+			String filePath = dirPath.concat(fileName).concat(".zip");
 			ZipFile zipFile = new ZipFile(filePath);
 			
 			if(zipFile != null) {
@@ -197,7 +199,7 @@ public class ImportServiceImpl {
 				logger.info("Zip file not present.");
 				if(zipFile != null)
 					zipFile.close();
-				sendResponse("404", MessageStatus.FAIL.toString(), "sorry we could not find the file you requested.");
+				sendResponse("404", MessageStatus.FAIL.toString(), "Requested file not fount.");
 				return null;
 			}
 			return filePath;
@@ -495,7 +497,9 @@ public class ImportServiceImpl {
 	}
 	@SuppressWarnings("unused")
 	public String validateMetaInfoDependencies(Import imprt, String fileName) throws IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-			String filePath = Helper.getPropertyValue("framework.schema.Path")+"/import/"+fileName+".zip";
+		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");	
+		String filePath = dirPath.concat(fileName).concat(".zip");
 			ZipFile zipFile = new ZipFile(filePath);
 			if(zipFile != null) {
 				ObjectMapper objMapper=new  ObjectMapper();

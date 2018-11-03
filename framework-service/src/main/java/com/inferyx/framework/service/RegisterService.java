@@ -21,10 +21,12 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -48,10 +50,13 @@ import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.ApplicationView;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BatchExec;
+import com.inferyx.framework.domain.BatchView;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -71,6 +76,9 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Group;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroupExec;
+import com.inferyx.framework.domain.IngestView;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MapExec;
@@ -91,6 +99,8 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.ReportView;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -104,6 +114,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -117,7 +128,6 @@ import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
 import com.inferyx.framework.view.metadata.ReconView;
-import com.inferyx.framework.view.metadata.RuleView;
 
 @Service
 public class RegisterService {
@@ -164,10 +174,6 @@ public class RegisterService {
 	private DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
 	@Autowired
 	private DQViewServiceImpl dqViewServiceImpl;
-	@Autowired
-	private RuleServiceImpl ruleServiceImpl;
-	@Autowired
-	private RuleViewServiceImpl ruleViewServiceImpl;
 	@Autowired
 	private RuleExecServiceImpl ruleExecServiceImpl;
 	@Autowired
@@ -216,7 +222,19 @@ public class RegisterService {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
 	private ReconExecServiceImpl reconExecServiceImpl;
-
+	@Autowired
+	private ReportViewServiceImpl reportViewServiceImpl;
+	@Autowired
+	private BatchViewServiceImpl batchViewServiceImpl;
+	@Autowired
+	private IngestViewServiceImpl ingestViewServiceImpl;
+	@Autowired
+	private IngestServiceImpl ingestServiceImpl;
+	@Autowired
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	@Autowired
+	private ApplicationViewServiceImpl applicationViewServiceImpl;
+	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
 
@@ -917,10 +935,10 @@ public class RegisterService {
 				DQView dqViewOptr = mapper.convertValue(operator, DQView.class);
 				baseEntity = dataQualServiceImpl.save(dqViewOptr);
 				break;
-			case "ruleview":
+			/*case "ruleview":
 				RuleView ruleViewOptr = mapper.convertValue(operator, RuleView.class);
 				baseEntity =  ruleServiceImpl.save(ruleViewOptr);
-				break;
+				break;*/
 			/*case "rule":
 				Rule ruleOptr = mapper.convertValue(operator, Rule.class);
 				Id = ruleServiceImpl.save(ruleOptr).getId();
@@ -988,7 +1006,22 @@ public class RegisterService {
 			case "reconview":
 				ReconView reconViewOptr = mapper.convertValue(operator, ReconView.class);
 				baseEntity = reconViewServiceImpl.save(reconViewOptr);
-				
+				break;
+			case "reportview" :
+				ReportView reportView = mapper.convertValue(operator, ReportView.class);
+				baseEntity = reportViewServiceImpl.save(reportView);
+				break;
+			case "batchview" :
+				BatchView batchView = mapper.convertValue(operator, BatchView.class);
+				baseEntity = batchViewServiceImpl.save(batchView);
+				break;
+			case "ingestview" :
+				IngestView ingestView = mapper.convertValue(operator, IngestView.class);
+				baseEntity = ingestViewServiceImpl.save(ingestView);
+				break;
+			case "applicationview" :
+				ApplicationView applicationView = mapper.convertValue(operator, ApplicationView.class);
+				baseEntity = applicationViewServiceImpl.save(applicationView);
 				break;
 			}
 		}
@@ -1589,6 +1622,10 @@ public class RegisterService {
 				ParamSet paramSet = paramSetServiceImpl.findOneById(id);
 				result = ow.writeValueAsString(paramSetServiceImpl.resolveName(paramSet));
 				break;*/
+			case "reportview":
+				ReportView reportView = reportViewServiceImpl.findOneById(id);
+				result = ow.writeValueAsString(commonServiceImpl.resolveName(reportView, MetaType.reportview));
+				break;
 			}
 		}
 
@@ -1726,9 +1763,9 @@ public class RegisterService {
 				DQView dqView = dqViewServiceImpl.findOneByUuidAndVersion(uuid, version);
 				result = ow.writeValueAsString(dqViewServiceImpl.resolveName(dqView));
 				break;
-			case "ruleview":
-				result = ow.writeValueAsString(ruleViewServiceImpl.findOneByUuidAndVersion(uuid, version));
-				break;
+//			case "ruleview":
+//				result = ow.writeValueAsString(ruleViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+//				break;
 			case "reconview":
 				result = ow.writeValueAsString(reconViewServiceImpl.findOneByUuidAndVersion(uuid, version));
 				break;
@@ -1796,6 +1833,18 @@ public class RegisterService {
 				ParamSet paramset = paramSetServiceImpl.findOneByUuidAndVersion(uuid, version);
 				result = ow.writeValueAsString(paramSetServiceImpl.resolveName(paramset));
 				break;*/
+			case "reportview":
+				result = ow.writeValueAsString(reportViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "batchview":
+				result = ow.writeValueAsString(batchViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "ingestview":
+				result = ow.writeValueAsString(ingestViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "applicationview":
+				result = ow.writeValueAsString(applicationViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
 			}
 		}
 		return result;
@@ -1940,10 +1989,10 @@ public class RegisterService {
 				DQView dqView = dqViewServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(dqViewServiceImpl.resolveName(dqView));
 				break;
-			case "ruleview":
+			/*case "ruleview":
 				RuleView ruleview = ruleViewServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(ruleview);
-				break;
+				break;*/
 			/*case "rule":
 				Rule rule = ruleServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(ruleServiceImpl.resolveName(rule));
@@ -2013,6 +2062,9 @@ public class RegisterService {
 				MapExec mapExec = mapExecServiceImpl.findLatestByUuid(uuid);
 				result = ow.writeValueAsString(mapExecServiceImpl.resolveName(mapExec));
 				break;*/
+			case "reportview":
+				result = ow.writeValueAsString(reportViewServiceImpl.findLatestByUuid(uuid));
+				break;
 			}
 
 		}
@@ -2328,65 +2380,237 @@ public class RegisterService {
 		}
 		return statusValue;
 	}
+    
+	public List<AttributeRefHolder> getAttributesByRelation(String relationUuid, String type)throws JSONException, JsonProcessingException {
+		List<AttributeRefHolder> attrRefDetails = new ArrayList<>();
+		Set<String> refCheck = new HashSet<>();
+		
+		Relation relation = (Relation) commonServiceImpl.getLatestByUuid(relationUuid, MetaType.relation.toString());
 
-	public List<AttributeRefHolder> getAttributesByRelation(String relationUuid, String type) throws JSONException, JsonProcessingException {
-		List<AttributeRefHolder> attrRefDetails = null;
-		List<String> datapodUuid = new ArrayList<String>();
-
-		if (type.equalsIgnoreCase("relation")) {
-			//Relation relationDetails = relationServiceImpl.findLatestByUuid(relationUuid);
-			Relation relationDetails = (Relation) commonServiceImpl.getLatestByUuid(relationUuid, MetaType.relation.toString());
-			String sourceUUId = relationDetails.getDependsOn().getRef().getUuid();
-			datapodUuid.add(sourceUUId);
-			if (relationDetails.getRelationInfo().size() > 0) {
-				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
-					String joinInfoUUId = relationDetails.getRelationInfo().get(i).getJoin().getRef().getUuid();
-					datapodUuid.add(joinInfoUUId);
-				}
-			}
-			logger.info("datapoduuid : " + datapodUuid);
-
-			attrRefDetails = new ArrayList<AttributeRefHolder>();
-			if (relationDetails.getRelationInfo().size() > 0) {
-				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
-					for (int j = 0; j < relationDetails.getRelationInfo().get(i).getJoinKey().size(); j++) {
-						for (int k = 0; k < relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
-								.size(); k++) {
-
-							AttributeRefHolder attributeRef = new AttributeRefHolder();
-							MetaIdentifier ref = new MetaIdentifier();
-							String datapodUUID = relationDetails.getRelationInfo().get(i).getJoinKey().get(j)
-									.getOperand().get(k).getRef().getUuid();
-							//Datapod datapodDet = datapodServiceImpl.findLatestByUuid(datapodUUID);
-							Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
-							Integer AttrId = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
-									.get(k).getAttributeId();
-							if (datapodUuid.contains(datapodUUID)) {
-								ref.setType(MetaType.datapod);
-								ref.setUuid(datapodDet.getUuid());
-								ref.setVersion(datapodDet.getVersion());
-								ref.setName(datapodDet.getName());
-								Attribute attr = datapodDet.getAttribute(AttrId);
-								if (attr != null) {
-									attributeRef.setAttrId(Integer.toString((AttrId)));
-									attributeRef.setAttrType(datapodDet.getAttribute(AttrId).getType());
-									if (datapodDet.getAttribute(AttrId).getDispName() != null) {
-										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getDispName());
-									} else
-										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getName());
-									attributeRef.setRef(ref);
-									attrRefDetails.add(attributeRef);
-								}
-
-							}
-						}
-					}
+		MetaIdentifier dependsOnRefMI = relation.getDependsOn().getRef();
+		attrRefDetails.addAll(getAttributeRefHolderByRef(dependsOnRefMI));
+		refCheck.add(dependsOnRefMI.getUuid());
+		
+		if (relation.getRelationInfo().size() > 0) {
+			for (int i = 0; i < relation.getRelationInfo().size(); i++) {
+				MetaIdentifier refMI = relation.getRelationInfo().get(i).getJoin().getRef();
+				if(!refCheck.contains(refMI.getUuid())) {
+					attrRefDetails.addAll(getAttributeRefHolderByRef(refMI));
+					refCheck.add(refMI.getUuid());
+				} else {
+					logger.info("attribute ref already present >>>>> "+"uuid: "+refMI.getUuid()+" :: type: "+refMI.getType());
 				}
 			}
 		}
+		
 		logger.info("finalMap is " + attrRefDetails);
 		return attrRefDetails;
 	}
+	public List<AttributeRefHolder> getAttributeRefHolderByRef(MetaIdentifier refMI) throws JsonProcessingException {
+		List<AttributeRefHolder> attrRefDetails = new ArrayList<>();
+		if (refMI.getType().equals(MetaType.datapod)) {
+			Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(refMI.getUuid(), refMI.getType().toString());
+			MetaIdentifier ref = new MetaIdentifier();
+			ref.setName(datapodDet.getName());
+			ref.setUuid(datapodDet.getUuid());
+			ref.setVersion(datapodDet.getVersion());
+			ref.setType(MetaType.datapod);
+			List<Attribute> listAttributes = datapodDet.getAttributes();
+			for (Attribute attr : listAttributes) {
+				AttributeRefHolder attributeRefTemp = new AttributeRefHolder();
+				attributeRefTemp.setAttrId(Integer.toString((attr.getAttributeId())));
+				attributeRefTemp.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
+				if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
+					attributeRefTemp.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+				} else
+					attributeRefTemp.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
+				attributeRefTemp.setRef(ref);
+				attrRefDetails.add(attributeRefTemp);
+			}
+		} else if (refMI.getType().equals(MetaType.dataset)) {
+			DataSet datasetDet = (DataSet) commonServiceImpl.getLatestByUuid(refMI.getUuid(), refMI.getType().toString());
+			MetaIdentifier ref = new MetaIdentifier();
+			ref.setName(datasetDet.getName());
+			ref.setUuid(datasetDet.getUuid());
+			ref.setVersion(datasetDet.getVersion());
+			ref.setType(MetaType.dataset);
+			List<AttributeSource> listAttributes = datasetDet.getAttributeInfo();
+			for (AttributeSource attr : listAttributes) {
+				AttributeRefHolder attributeRef = new AttributeRefHolder();
+				attributeRef.setAttrId((attr.getAttrSourceId()));
+				attributeRef.setAttrType(attr.getSourceAttr().getAttrType());
+				attributeRef.setAttrName(attr.getAttrSourceName());
+				attributeRef.setRef(ref);
+				attrRefDetails.add(attributeRef);
+			}
+		}
+		return attrRefDetails;
+	}
+	
+//	public List<AttributeRefHolder> getAttributesByRelation(String relationUuid, String type)throws JSONException, JsonProcessingException {
+//		List<AttributeRefHolder> attrRefDetails = null;
+//		List<String> objectUuidList = new ArrayList<String>();
+//		Relation relationDetails = (Relation) commonServiceImpl.getLatestByUuid(relationUuid,
+//				MetaType.relation.toString());
+//		if (relationDetails.getRelationInfo().size() > 0) {
+//			for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
+//				String joinInfoUUId = relationDetails.getRelationInfo().get(i).getJoin().getRef().getUuid();
+//				objectUuidList.add(joinInfoUUId);
+//			}
+//		}
+//		attrRefDetails = new ArrayList<AttributeRefHolder>();
+//		logger.info("datapoduuid : " + objectUuidList);
+//		if (type.equalsIgnoreCase("relation")) {
+//			
+//			if (relationDetails.getRelationInfo().size() > 0) {
+//				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
+//					for (int j = 0; j < relationDetails.getRelationInfo().get(i).getJoinKey().size(); j++) {
+//						for (int k = 0; k < relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//								.size(); k++) {
+//							String refUUID = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//									.get(k).getRef().getUuid();
+//							String refType = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//									.get(k).getRef().getType().toString();
+//							if (refType.equalsIgnoreCase(MetaType.datapod.toString())) {
+//								Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(refUUID, refType);
+//								MetaIdentifier ref = new MetaIdentifier();
+//								ref.setName(datapodDet.getName());
+//								ref.setUuid(datapodDet.getUuid());
+//								ref.setVersion(datapodDet.getVersion());
+//								ref.setType(MetaType.datapod);
+//								List<Attribute> listAttributes = datapodDet.getAttributes();
+//								for (Attribute attr : listAttributes) {
+//									AttributeRefHolder attributeRefTemp = new AttributeRefHolder();
+//									attributeRefTemp.setAttrId(Integer.toString((attr.getAttributeId())));
+//									attributeRefTemp
+//											.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
+//									if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
+//										attributeRefTemp.setAttrName(
+//												datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+//									} else
+//										attributeRefTemp
+//												.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
+//									attributeRefTemp.setRef(ref);
+//									attrRefDetails.add(attributeRefTemp);
+//								}
+//							} else if (refType.equalsIgnoreCase(MetaType.dataset.toString())) {
+//								DataSet datasetDet = (DataSet) commonServiceImpl.getLatestByUuid(refUUID, refType);
+//								MetaIdentifier ref = new MetaIdentifier();
+//								ref.setName(datasetDet.getName());
+//								ref.setUuid(datasetDet.getUuid());
+//								ref.setVersion(datasetDet.getVersion());
+//								ref.setType(MetaType.dataset);
+//								List<AttributeSource> listAttributes = datasetDet.getAttributeInfo();
+//								for (AttributeSource attr : listAttributes) {
+//									AttributeRefHolder attributeRef = new AttributeRefHolder();
+//									attributeRef.setAttrId((attr.getAttrSourceId()));
+//									attributeRef.setAttrType(attr.getSourceAttr().getAttrType());
+//									attributeRef.setAttrName(attr.getAttrSourceName());
+//									attributeRef.setRef(ref);
+//									attrRefDetails.add(attributeRef);
+//								}
+//
+//							}
+//
+//						}
+//					}
+//				}
+//			}else {
+//				
+//				if (relationDetails.getDependsOn().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString())) {
+//					Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(relationDetails.getDependsOn().getRef().getUuid(), relationDetails.getDependsOn().getRef().getType().toString());
+//					MetaIdentifier ref = new MetaIdentifier();
+//					ref.setName(datapodDet.getName());
+//					ref.setUuid(datapodDet.getUuid());
+//					ref.setVersion(datapodDet.getVersion());
+//					ref.setType(MetaType.datapod);
+//					List<Attribute> listAttributes = datapodDet.getAttributes();
+//					for (Attribute attr : listAttributes) {
+//						AttributeRefHolder attributeRefTemp = new AttributeRefHolder();
+//						attributeRefTemp.setAttrId(Integer.toString((attr.getAttributeId())));
+//						attributeRefTemp
+//								.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
+//						if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
+//							attributeRefTemp.setAttrName(
+//									datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+//						} else
+//							attributeRefTemp
+//									.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
+//						attributeRefTemp.setRef(ref);
+//						attrRefDetails.add(attributeRefTemp);
+//					}
+//				}
+//			}
+//		}else {
+//			System.out.println("trest");
+//			if (relationDetails.getRelationInfo().size() > 0) {
+//				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
+//					for (int j = 0; j < relationDetails.getRelationInfo().get(i).getJoinKey().size(); j++) {
+//						for (int k = 0; k < relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//								.size(); k++) {
+//
+//							AttributeRefHolder attributeRef = new AttributeRefHolder();
+//							MetaIdentifier ref = new MetaIdentifier();
+//							String refUUID = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//									.get(k).getRef().getUuid();
+//							String refType = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
+//									.get(k).getRef().getType().toString();
+//							if (refType.equalsIgnoreCase(MetaType.datapod.toString())) {
+//								Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(refUUID, refType);
+//								Integer AttrId = relationDetails.getRelationInfo().get(i).getJoinKey().get(j)
+//										.getOperand().get(k).getAttributeId();
+//								// if (objectUuidList.contains(refUUID)) {
+//								ref.setType(MetaType.datapod);
+//								ref.setUuid(datapodDet.getUuid());
+//								ref.setVersion(datapodDet.getVersion());
+//								ref.setName(datapodDet.getName());
+//								Attribute attr = datapodDet.getAttribute(AttrId);
+//								if (attr != null) {
+//									attributeRef.setAttrId(Integer.toString((AttrId)));
+//									attributeRef.setAttrType(datapodDet.getAttribute(AttrId).getType());
+//									if (datapodDet.getAttribute(AttrId).getDispName() != null) {
+//										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getDispName());
+//									} else
+//										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getName());
+//									attributeRef.setRef(ref);
+//									attrRefDetails.add(attributeRef);
+//								}
+//
+//								// }
+//							} else if (refType.equalsIgnoreCase(MetaType.dataset.toString())) {
+//								DataSet datasetDet = (DataSet) commonServiceImpl.getLatestByUuid(refUUID, refType);
+//								Integer AttrId = relationDetails.getRelationInfo().get(i).getJoinKey().get(j)
+//										.getOperand().get(k).getAttributeId();
+//								// if (objectUuidList.contains(refUUID)) {
+//								ref.setType(MetaType.dataset);
+//								ref.setUuid(datasetDet.getUuid());
+//								ref.setVersion(datasetDet.getVersion());
+//								ref.setName(datasetDet.getName());
+//
+//								AttributeSource attrSource = datasetDet.getAttributeInfo().get(AttrId);
+//								MetaIdentifier attr = attrSource.getSourceAttr().getRef();
+//
+//								if (attr != null) {
+//									attributeRef.setAttrId(Integer.toString((AttrId)));
+//									attributeRef.setAttrType(
+//											datasetDet.getAttributeInfo().get(AttrId).getSourceAttr().getAttrType());
+//									attributeRef.setAttrName(attrSource.getAttrSourceName());
+//
+//									attributeRef.setRef(ref);
+//									attrRefDetails.add(attributeRef);
+//								}
+//
+//								// }
+//
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		logger.info("finalMap is " + attrRefDetails);
+//		return attrRefDetails;
+//	}
 
 	/********************** UNUSED **********************/
 	// Find Formula by given relation uuid
@@ -3404,12 +3628,19 @@ public class RegisterService {
 		List<Registry> registryList = new ArrayList<Registry>();
 		List<Datapod> datapodList = null;
 		int i = 1;
+		String compareStatus = null;
 		for (Entry<String, String> tableWithPath : tablesWithPath.entrySet()) {
 			datapodList = datapodServiceImpl.searchDatapodByName(tableWithPath.getKey(), datasourceUuid);
 			if (datapodList.size() > 0){
 				for (Datapod datapod : datapodList) {
 					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
 						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+							try {
+								 compareStatus=datapodServiceImpl.getMetaStatsByDatapodName(datapod.getUuid(), datapod.getVersion(), RunMode.BATCH);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							Registry registry = new Registry();
 							registry.setId(Integer.toString(i));
 							registry.setName(tableWithPath.getKey());
@@ -3418,6 +3649,7 @@ public class RegisterService {
 							registry.setDesc(datapod.getDesc());
 							registry.setRegisteredOn(datapod.getCreatedOn());
 							registry.setStatus("Registered");
+							registry.setCompareStatus(compareStatus);
 							registryList.add(registry);
 							break;
 						} else {
@@ -3429,6 +3661,7 @@ public class RegisterService {
 							registry.setDesc(null);
 							registry.setRegisteredOn(null);
 							registry.setStatus("UnRegistered");
+							registry.setCompareStatus(Compare.NEW.toString());
 							registryList.add(registry);
 						}
 					}
@@ -3773,6 +4006,12 @@ public class RegisterService {
 			case "operatorexec" : 
 				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
 				break;
+			case "ingestexec":
+				result = ow.writeValueAsString(ingestServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
+			case "ingestgroupexec":
+				result = ow.writeValueAsString(ingestGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
 			}
 		}
 		return result;
@@ -3921,6 +4160,32 @@ public class RegisterService {
 		if (graphExec != null) {
 			countHolder.add(addToCount(MetaType.graphExec.toString(), graphExecCount,
 					graphExec.getCreatedBy().getRef().getName(), graphExec.getCreatedOn()));
+		}
+		int reprotExecCount = commonServiceImpl.findAllLatest(MetaType.reportExec).size();
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getLatest(MetaType.reportExec.toString());
+		
+		if (reportExec != null) {
+			countHolder.add(addToCount(MetaType.reportExec.toString(), reprotExecCount,
+					reportExec.getCreatedBy().getRef().getName(), reportExec.getCreatedOn()));
+		}
+		
+		int batchExecCount = commonServiceImpl.findAllLatest(MetaType.batchExec).size();
+		BatchExec batchExec = (BatchExec) commonServiceImpl.getLatest(MetaType.batchExec.toString());
+		if (batchExec != null) {
+			countHolder.add(addToCount(MetaType.batchExec.toString(), batchExecCount,
+					batchExec.getCreatedBy().getRef().getName(), batchExec.getCreatedOn()));
+		}
+		int ingestExecCount = commonServiceImpl.findAllLatest(MetaType.ingestExec).size();
+		IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatest(MetaType.ingestExec.toString());
+		if (ingestExec != null) {
+			countHolder.add(addToCount(MetaType.ingestExec.toString(), ingestExecCount,
+					ingestExec.getCreatedBy().getRef().getName(), ingestExec.getCreatedOn()));
+		}
+		int ingestGroupExecCount = commonServiceImpl.findAllLatest(MetaType.ingestgroupExec).size();
+		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getLatest(MetaType.ingestgroupExec.toString());
+		if (ingestGroupExec != null) {
+			countHolder.add(addToCount(MetaType.ingestgroupExec.toString(), ingestGroupExecCount,
+					ingestGroupExec.getCreatedBy().getRef().getName(), ingestGroupExec.getCreatedOn()));
 		}
 
 		return countHolder;

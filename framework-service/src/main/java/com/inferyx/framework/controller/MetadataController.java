@@ -42,9 +42,11 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -960,5 +962,99 @@ public class MetadataController {
 			@RequestParam(value = "version", required = false) String plVersion,
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListChilds(plUuid, plVersion);
+	}
+	
+	
+	@RequestMapping(value = "/getFunctionByCriteria", method = RequestMethod.GET)
+	public @ResponseBody List<Function> getFunctionByCriteria(
+			@RequestParam(value ="category" , required = false) String category,
+			@RequestParam(value ="inputReq" , required = false ) String inputReq,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return metadataServiceImpl.getFunctionByCriteria(category,inputReq);
+	}
+	@RequestMapping(value = "/getParamByApp", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamByAppId(
+			@RequestParam(value = "uuid", required = false) String uuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamByApp(uuid);
+	}
+	
+	@RequestMapping(value = "/getDatastoreByDatapod", method = RequestMethod.GET)
+	public @ResponseBody List<DataStore> getDatastoreByDatapod(
+			@RequestParam(value ="uuid") String uuid,
+			@RequestParam(value ="version" , required = false ) String version,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return metadataServiceImpl.getDatastoreByDatapod(uuid,version);
+	}
+
+	@RequestMapping(value = "/getParamListByDag", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getParamListByDag(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="dag") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
+	}
+	
+	@RequestMapping(value = "/getParamListByDag", method = RequestMethod.GET, params = {"uuid", "version"})
+	public @ResponseBody List<ParamListHolder> getParamListByDag(
+			@RequestParam(value = "uuid", required = false) String daguid,
+			@RequestParam(value = "version", required = false) String dagVersion,
+			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByDag(daguid, dagVersion, null);
+	}
+	
+	@RequestMapping(value = "/getExecListByBatchExec", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntityStatus> getBatchMetaInfoByBatchExec(
+			@RequestParam(value = "uuid") String uuid,
+			@RequestParam(value = "version") String version, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) 
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return metadataServiceImpl.getBatchMetaInfoByBatchExec(uuid, version);
+	}
+	
+	@RequestMapping(value = "/getDatasourceForFile", method = RequestMethod.GET)
+	public @ResponseBody List<Datasource> getDatasourceForFile(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getDatasourceForFile();
+	}
+	
+	@RequestMapping(value = "/getDatasourceForTable", method = RequestMethod.GET)
+	public @ResponseBody List<Datasource> getDatasourceForTable( 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getDatasourceForTable();
+	}
+	@RequestMapping(value = "/getDatasourceForStream", method = RequestMethod.GET)
+	public @ResponseBody List<Datasource> getDatasourceForStream( 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getDatasourceForStream();
+	}
+	
+	@RequestMapping(value = "/getDatapodByDatasource", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getDatapodByDatasource(
+			@RequestParam(value = "uuid") String datasourceUuid,
+			@RequestParam(value = "version", required = false) String datasourceVersion, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) {
+		return metadataServiceImpl.getDatapodByDatasource(datasourceUuid);
+	}
+	
+	@RequestMapping(value = "/getMessageByUuidAndVersion", method = RequestMethod.GET)
+	public @ResponseBody List<Message> getMessageByUuidAndVersion(
+			@RequestParam(value = "uuid") String uuid,
+			@RequestParam(value = "version", required = false) String version) {
+		return metadataServiceImpl.getMessageByUuidAndVersion(uuid, version);
 	}
 }

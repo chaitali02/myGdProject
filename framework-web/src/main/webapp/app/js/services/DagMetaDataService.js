@@ -2,7 +2,29 @@ InferyxApp=angular.module('InferyxApp');
 InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConstants){
   var obj = {};
    $rootScope.loginUser = JSON.parse(localStorage.userdetail).name;
-
+   obj.compareMetaDataStatusDefs={
+    'NOCHANGE':{
+      name : 'NoChange',
+      caption:'No Change',
+      color :'#36c6d3',//'#9CBB62',
+    },
+    'MODIFIED':{
+      name : 'Modified',
+      caption:'Modified',
+      color :'#F1C40F',//'#5083C3',
+    },
+    'DELETED':{
+      name : 'Deleted',
+      caption:'Deleted',
+      color :'#ed6b75',//'#C34E4E',
+    },
+    'NEW':{
+      name : 'New',
+      caption:'New',
+      color :'#006df0',//'#4FACC5',
+    },
+   
+  }
   obj.statusDefs={
     'NotStarted':{
       name : 'NotStarted',
@@ -43,7 +65,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'Terminating':{
       name : 'Terminating',
       caption:'Terminating',
-      color :'#d80027',
+      color :'#FFCCCC',//'#d80027',
       iconPath : 'assets/layouts/layout/img/new_status/Terminating.svg',
     },
     'OnHold':{
@@ -218,12 +240,12 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-       '       <li><a ng-disabled="grid.appScope.newType.indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-       
-     //  '       <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-        // '       <li><a ng-disabled="[\'Not Started\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'OnHold\')"><i class="fa fa-eye" aria-hidden="true"></i> On Hold </a></li>',
-        // '       <li><a ng-disabled="[\'On Hold\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Resume\')"><i class="fa fa-eye" aria-hidden="true"></i> Resume </a></li>',
-        '       <li><a ng-disabled="[\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
+        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        '       <li><a  ng-show="grid.appScope.newType.indexOf(\'ingestExec\') != -1?true:false" ng-disabled="true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        //'      <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+   //   '        <li><a ng-disabled="[\'Not Started\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'OnHold\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
+   //   '        <li><a ng-disabled="[\'OnHold\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Resume\')"><i class="fa fa-repeat" aria-hidden="true"></i> Resume </a></li>',
+        '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Execute\') == -1 || [\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
         '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
         '    </ul>',
         '  </div>',
@@ -928,7 +950,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       name : 'distribution',
       caption : 'Distribution',
       execType:'',
-      metaType:'algorithm',
+      metaType:'distribution',
       color : '#00E676',
       parentIconCaption:'',
       allowInMenu : false,
@@ -1202,8 +1224,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
    'operator':{
     name : 'operator',
     caption :'Operator',
-    execType:'Operatorexec',
-    metaType:'Operator',
+    execType:'operatorexec',
+    metaType:'operator',
     iconPath : 'assets/layouts/layout/img/operator.svg',
     color : '#DCEDC8',
     parentIconCaption:'Operator',
@@ -1212,7 +1234,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     listState : 'operator',
     detailState :'createoperator',
     state: 'createoperator',
-    childMenu:['generatedata','transpose','clonedata'],
+    childMenu:['generatedata','transpose','clonedata','matrix','histogram'],
     allowInChildMenu : false,
   },
   'operatorexec':{
@@ -1594,7 +1616,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       parentIconCaption:'',
       childIconCaption:'Training',
       execType:'trainExec',
-      metaType:'simulate',
+      metaType:'train',
       iconPath : 'assets/layouts/layout/img/train.svg',
       allowInMenu : false,
       state: 'createtrain',
@@ -1613,7 +1635,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'jobmonitoringlist',
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlisttarinexec',
-      resultState:'modelrestultpage',
+      resultState:'trainrestultpage',
       childMenu:[],
       allowInChildMenu : false,
     },
@@ -1702,6 +1724,36 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : true,
     },
+    'matrix':{
+      name : 'operator',
+      caption :'Matrix ',
+      execType:'', 
+      metaType:'operator',
+      color : '#c6ff00',
+      parentIconCaption:'',
+      childIconCaption:'Matrix',
+      iconPath : 'assets/layouts/layout/img/operator.svg',
+      detailState: 'createoperator',
+      allowInMenu :false,
+      listState : 'operator',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+    'histogram':{
+      name : 'operator',
+      caption :'Histogram ',
+      execType:'', 
+      metaType:'operator',
+      color : '#c6ff00',
+      parentIconCaption:'',
+      childIconCaption:'Histogram',
+      iconPath : 'assets/layouts/layout/img/operator.svg',
+      detailState: 'createoperator',
+      allowInMenu :false,
+      listState : 'operator',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
     'graphpod':{
       name : 'graphpod',
       caption :'Graph',
@@ -1730,12 +1782,152 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'report':{
+      name : 'report',
+      caption:'Report',
+      execType:'reportExec',
+      metaType:'report',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'reportlist',
+      joblistState : '',
+      detailState :'reportdetail',
+      childMenu:[],
+      allowInChildMenu : false,
+
+    },
+    'reportexec':{
+      name : 'report',
+      caption:'Report Exec',
+      execType:'reportExec',
+      metaType:'reportExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistreportexec',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'batch':{
+      name : 'batch',
+      caption:'Batch',
+      execType:'batchExec',
+      metaType:'batch',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'batchlist',
+      joblistState : '',
+      detailState :'batchdetail',
+      childMenu:[],
+      allowInChildMenu : false,
+
+    },
+    'batchexec':{
+      name : 'batch',
+      caption:'Batch Exec',
+      execType:'batchExec',
+      metaType:'batchExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistbatchexec',
+      resultState:'batchexecresult',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'ingest':{
+      name : 'ingest',
+      caption:'Rule',
+      execType:'ingestExec',
+      metaType:'ingest',
+      color : '#fff8dc',
+      iconPath : 'assets/layouts/layout/img/ingest.svg',
+      parentIconCaption:'Data Ingestion',
+      childIconCaption:'Rule',
+      allowInMenu : true,
+      listState : 'ingestrulelist',
+      joblistState : '',
+      state:'ingestruledetail',
+      detailState :'ingestruledetail',
+      childMenu:["ingest",'ingestgroup'],
+      allowInChildMenu : true,
+    },
+    'ingest2':{
+      name : 'ingest',
+      caption:'Rule',
+      execType:'ingestExec',
+      metaType:'ingest',
+      color : '#fff8dc',
+      iconPath : 'assets/layouts/layout/img/ingest.svg',
+      parentIconCaption:'Data Ingestion',
+      childIconCaption:'Rule',
+      allowInMenu : false,
+      listState : 'ingestrulelist2',
+      joblistState : '',
+      state:'ingestruledetail2',
+      detailState :'ingestruledetail2',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'ingestexec':{
+      name : 'ingest',
+      caption:'Ingest Exec',
+      execType:'ingestExec',
+      metaType:'ingestExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistingestexec',
+      resultState:'ingestexecresult',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'ingestgroup':{
+      name : 'ingestgroup',
+      caption:'Rule Group',
+      execType:'ingestgroupExec',
+      metaType:'ingestgroup',
+      iconPath : 'assets/layouts/layout/img/ingestgroup.svg',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      childIconCaption:'Rule Group',
+      allowInMenu : false,
+      listState : 'ingestrulegrouplist',
+      joblistState : '',
+      state :'ingestrulegroupdetail',
+      detailState :'ingestrulegroupdetail',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+    'ingestgroupexec':{
+      name : 'ingestgroup',
+      caption:'Ingest Group Exec',
+      execType:'ingestgroupExec',
+      metaType:'ingestgroupExec',
+      color : '#fff8dc',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistingestgroupexec',
+      resultState:'ingestexecresult',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
   };
 
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
   var defaultElement = {
-    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
+    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
     size: { width: 50, height: 50 },
     inPorts : ['in'],
     outPorts: ['out'],
@@ -1869,6 +2061,24 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '.body': {
           elementType : 'recongroup',
           "xlink:href": obj.elementDefs['recongroup'].iconPath
+        }
+      }
+    }),
+    'ingest' : angular.merge({},defaultElement,{
+      elementType:'ingest',
+      attrs: {
+        '.body': {
+          elementType : 'ingest',
+          "xlink:href": obj.elementDefs['ingest'].iconPath
+        }
+      }
+    }),
+    'ingestgroup' : angular.merge({},defaultElement,{
+      elementType:'ingestgroup',
+      attrs: {
+        '.body': {
+          elementType : 'ingestgroup',
+          "xlink:href": obj.elementDefs['ingestgroup'].iconPath
         }
       }
     }),

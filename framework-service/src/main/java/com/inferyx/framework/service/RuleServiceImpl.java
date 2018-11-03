@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +23,7 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.livy.shaded.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -37,17 +32,15 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleDao;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -56,15 +49,12 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
-import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
-import com.inferyx.framework.view.metadata.RuleView;
 
 @Service
 public class RuleServiceImpl extends RuleTemplate {
@@ -106,8 +96,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	/*
 	 * @Autowired private IRuleGroupExecDao iRuleGroupExecDao;
 	 */
-	@Autowired
-	private ExecutorFactory execFactory;
 	/*
 	 * @Autowired private ParamSetServiceImpl paramSetServiceImpl;
 	 */
@@ -274,67 +262,69 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * result.add(ruleLatest); } return result; }
 	 */
 
-	public Rule save(RuleView ruleView) throws Exception {
-		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
-		/* List<AttributeMap> attrMapList = new ArrayList<AttributeMap>(); */
-		AttributeRefHolder filterInfo = new AttributeRefHolder();
-		if (ruleView == null)
-			return null;
-		Rule rule = new Rule();
-		if (StringUtils.isNotBlank(ruleView.getUuid()))
-			rule.setUuid(ruleView.getUuid());
-		// save(rule);
-		// rule.exportBaseProperty();
-		if (ruleView.getTags() != null)
-			rule.setTags(ruleView.getTags());
-		if (StringUtils.isNotBlank(ruleView.getName()))
-			rule.setName(ruleView.getName());
-		if (StringUtils.isNotBlank(ruleView.getDesc()))
-			rule.setDesc(ruleView.getDesc());
-		Filter filter = null;
-		MetaIdentifierHolder source = ruleView.getSource();
-		source.getRef().setVersion(null);
-		rule.setSource(source);
-		if (ruleView.getFilter() != null) {
-			filter = ruleView.getFilter();
-			filter.setDependsOn(source);
-			filter.setName(ruleView.getName());
-			filter.setDesc(ruleView.getDesc());
-			filter.setTags(ruleView.getTags());
-			if (ruleView.getFilterChg().equalsIgnoreCase("y") && filter != null) {
-				try {
-					// filterdet = filterServiceImpl.save(filter);
-		         commonServiceImpl.save(MetaType.filter.toString(), filter);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		if (filter != null) {
-			MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
-			filterInfo.setRef(filterMeta);
-			filterList.add(filterInfo);
-			rule.setFilterInfo(filterList);
-		}
-		List<AttributeSource> sourceAttr = ruleView.getAttributeInfo();
-		rule.setAttributeInfo(sourceAttr);
-		rule.setParamList(ruleView.getParamList());
-		rule.setPublished(ruleView.getPublished());
-		rule = save(rule);
-		return rule;
-	}
+	/********************** UNUSED **********************/
+//	public Rule save(RuleView ruleView) throws Exception {
+//		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
+//		/* List<AttributeMap> attrMapList = new ArrayList<AttributeMap>(); */
+//		AttributeRefHolder filterInfo = new AttributeRefHolder();
+//		if (ruleView == null)
+//			return null;
+//		Rule rule = new Rule();
+//		if (StringUtils.isNotBlank(ruleView.getUuid()))
+//			rule.setUuid(ruleView.getUuid());
+//		// save(rule);
+//		// rule.exportBaseProperty();
+//		if (ruleView.getTags() != null)
+//			rule.setTags(ruleView.getTags());
+//		if (StringUtils.isNotBlank(ruleView.getName()))
+//			rule.setName(ruleView.getName());
+//		if (StringUtils.isNotBlank(ruleView.getDesc()))
+//			rule.setDesc(ruleView.getDesc());
+//		Filter filter = null;
+//		MetaIdentifierHolder source = ruleView.getSource();
+//		source.getRef().setVersion(null);
+//		rule.setSource(source);
+//		if (ruleView.getFilter() != null) {
+//			filter = ruleView.getFilter();
+//			filter.setDependsOn(source);
+//			filter.setName(ruleView.getName());
+//			filter.setDesc(ruleView.getDesc());
+//			filter.setTags(ruleView.getTags());
+//			if (ruleView.getFilterChg().equalsIgnoreCase("y") && filter != null) {
+//				try {
+//					// filterdet = filterServiceImpl.save(filter);
+//		         commonServiceImpl.save(MetaType.filter.toString(), filter);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		if (filter != null) {
+//			MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
+//			filterInfo.setRef(filterMeta);
+//			filterList.add(filterInfo);
+//			rule.setFilterInfo(filterList);
+//		}
+//		List<AttributeSource> sourceAttr = ruleView.getAttributeInfo();
+//		rule.setAttributeInfo(sourceAttr);
+//		rule.setParamList(ruleView.getParamList());
+//		rule.setPublished(ruleView.getPublished());
+//		rule = save(rule);
+//		return rule;
+//	}
 
-	public Rule save(Rule rule) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		rule.setAppInfo(metaIdentifierHolderList);
-		rule.setBaseEntity();
-		Rule ruleDet = iRuleDao.save(rule);
-		registerGraph.updateGraph((Object) ruleDet, MetaType.rule);
-		return ruleDet;
-	}
+	/********************** UNUSED **********************/
+//	public Rule save(Rule rule) throws Exception {
+//		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
+//		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
+//		metaIdentifierHolderList.add(meta);
+//		rule.setAppInfo(metaIdentifierHolderList);
+//		rule.setBaseEntity();
+//		Rule ruleDet = iRuleDao.save(rule);
+//		registerGraph.updateGraph((Object) ruleDet, MetaType.rule);
+//		return ruleDet;
+//	}
 
 	/*
 	 * public List<MetaIdentifier> execute(String ruleUUID, String ruleVersion,
@@ -387,7 +377,9 @@ public class RuleServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 				}
 			}
@@ -398,7 +390,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 		}
 	}
@@ -434,7 +428,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create Business Rule.");
 		}
 		return ruleExec;
@@ -484,7 +480,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Business Rule execution failed.");
 		}
 		return ruleExec;
@@ -536,9 +534,11 @@ public class RuleServiceImpl extends RuleTemplate {
 		try {
 			limit = offset + limit;
 			offset = offset + 1;
+			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
+					MetaType.ruleExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
+					ruleExec.getResult().getRef().getVersion());
 
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(ruleExecUUID, ruleExecVersion);
-			
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
 			/*boolean requestIdExistFlag = false;
@@ -688,7 +688,9 @@ public class RuleServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
@@ -799,6 +801,13 @@ public class RuleServiceImpl extends RuleTemplate {
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
 		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
 		List<Map<String, Object>> results =getRuleResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(ruleExecUUID, ruleExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec,ruleExecUUID,ruleExecVersion)));
 		
@@ -876,21 +885,16 @@ public class RuleServiceImpl extends RuleTemplate {
 		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUuid, ruleVersion);
 		ruleExecMeta.setRef(ruleExecInfo);
 		try {
-			System.out.println(new ObjectMapper().writeValueAsString(execParams));
-		} catch (org.apache.livy.shaded.jackson.core.JsonProcessingException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
 			if (execParams != null) {
 				if(execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 					for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-						MetaIdentifier ref = paramSetHolder.getRef();
-						ref.setType(MetaType.paramset);
-						paramSetHolder.setRef(ref);
-						execParams.setParamSetHolder(paramSetHolder);
-						if(ruleExec == null)
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						if(ruleExec == null) {
+							MetaIdentifier ref = paramSetHolder.getRef();
+							ref.setType(MetaType.paramset);
+							paramSetHolder.setRef(ref);
+							execParams.setCurrParamSet(paramSetHolder);
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);		
+						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
@@ -899,17 +903,25 @@ public class RuleServiceImpl extends RuleTemplate {
 					}
 				} else if(execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
 					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
-						execParams.setParamListHolder(paramListHolder);
-						if(ruleExec == null)
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						if(ruleExec == null) {
+							execParams.setParamListHolder(paramListHolder);
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);
+						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
 						ruleExecMetaList.add(ruleExecInfo);
 						ruleExec = null;
 					}
-				}
-				
+				} else {
+					if(ruleExec == null)
+						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+					ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+					ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+					ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
+					ruleExecMetaList.add(ruleExecInfo);
+					ruleExec = null;
+				}				
 			} else {
 				if(ruleExec == null)
 					ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			

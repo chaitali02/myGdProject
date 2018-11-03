@@ -70,6 +70,8 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.IBatchDao;
+import com.inferyx.framework.dao.IBatchExecDao;
 import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
@@ -95,7 +97,11 @@ import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.dao.IGraphpodDao;
 import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
+import com.inferyx.framework.dao.IIngestDao;
 import com.inferyx.framework.dao.IImportDao;
+import com.inferyx.framework.dao.IIngestExecDao;
+import com.inferyx.framework.dao.IIngestGroupDao;
+import com.inferyx.framework.dao.IIngestGroupExecDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
@@ -124,11 +130,14 @@ import com.inferyx.framework.dao.IReconExecDao;
 import com.inferyx.framework.dao.IReconGroupDao;
 import com.inferyx.framework.dao.IReconGroupExecDao;
 import com.inferyx.framework.dao.IRelationDao;
+import com.inferyx.framework.dao.IReportDao;
+import com.inferyx.framework.dao.IReportExecDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
+import com.inferyx.framework.dao.IScheduleDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
@@ -439,6 +448,126 @@ public class CommonServiceImpl <T> {
 	DatasetOperator datasetOperator;
 	@Autowired
 	RuleOperator ruleOperator;
+	@Autowired
+	IReportDao iReportDao;
+	@Autowired
+	IReportExecDao iReportExecDao;
+	@Autowired
+	IBatchDao iBatchDao;
+	@Autowired
+	IBatchExecDao iBatchExecDao;
+	@Autowired
+	IScheduleDao iScheduleDao;
+	@Autowired 
+	IIngestDao iIngestDao;
+	@Autowired
+	IIngestExecDao iIngestExecDao;
+	@Autowired
+	IIngestGroupDao iIngestGroupDao;
+	@Autowired
+	IIngestGroupExecDao iIngestGroupExecDao;
+	
+	@Autowired
+	IngestExecServiceImpl ingestExecServiceImpl;
+	
+	@Autowired
+	IngestGroupServiceImpl ingestGroupServiceImpl;
+	
+	public IIngestGroupDao getiIngestGroupDao() {
+		return iIngestGroupDao;
+	}
+
+	public void setiIngestGroupDao(IIngestGroupDao iIngestGroupDao) {
+		this.iIngestGroupDao = iIngestGroupDao;
+	}
+
+	public IIngestGroupExecDao getiIngestGroupExecDao() {
+		return iIngestGroupExecDao;
+	}
+
+	public void setiIngestGroupExecDao(IIngestGroupExecDao iIngestGroupExecDao) {
+		this.iIngestGroupExecDao = iIngestGroupExecDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the iIngestDao
+	 */
+	public IIngestDao getiIngestDao() {
+		return iIngestDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param iIgestDao the iIngestDao to set
+	 */
+	public void setiIngestDao(IIngestDao iIngestDao) {
+		this.iIngestDao = iIngestDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the iIngestExecDao
+	 */
+	public IIngestExecDao getiIngestExecDao() {
+		return iIngestExecDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param iIngestExecDao the iIngestExecDao to set
+	 */
+	public void setiIngestExecDao(IIngestExecDao iIngestExecDao) {
+		this.iIngestExecDao = iIngestExecDao;
+	}
+
+	public IScheduleDao getiScheduleDao() {
+		return iScheduleDao;
+	}
+
+	public void setiScheduleDao(IScheduleDao iScheduleDao) {
+		this.iScheduleDao = iScheduleDao;
+	}
+
+	public IBatchDao getiBatchDao() {
+		return iBatchDao;
+	}
+
+	public void setiBatchDao(IBatchDao iBatchDao) {
+		this.iBatchDao = iBatchDao;
+	}
+
+	public IBatchExecDao getiBatchExecDao() {
+		return iBatchExecDao;
+	}
+
+	public void setiBatchExecDao(IBatchExecDao iBatchExecDao) {
+		this.iBatchExecDao = iBatchExecDao;
+	}
+
+	public IReportExecDao getiReportExecDao() {
+		return iReportExecDao;
+	}
+
+	public void setiReportExecDao(IReportExecDao iReportExecDao) {
+		this.iReportExecDao = iReportExecDao;
+	}
+
+	public IReportDao getiReportDao() {
+		return iReportDao;
+	}
+
+	public void setiReportDao(IReportDao iReportDao) {
+		this.iReportDao = iReportDao;
+	}
 	
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
@@ -1282,6 +1411,16 @@ public class CommonServiceImpl <T> {
 	public void setProfileGroupExecServiceImpl(ProfileGroupExecServiceImpl profileGroupExecServiceImpl) {
 		this.profileGroupExecServiceImpl = profileGroupExecServiceImpl;
 	}
+	
+	public IngestExecServiceImpl getIngestExecServiceImpl() {
+		return ingestExecServiceImpl;
+	}
+
+	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
+		this.ingestExecServiceImpl = ingestExecServiceImpl;
+	}
+
+	
 
 	static final Logger logger = Logger.getLogger(CommonServiceImpl.class);
 	private static final String GET = "get";
@@ -1549,8 +1688,10 @@ public class CommonServiceImpl <T> {
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
 						name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
-						object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
-						name = null;
+						if(name != null) {
+							object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
+							name = null;							
+						}
 						continue;
 					}
 					if (method.getName().contains("UUID")) {
@@ -1627,13 +1768,16 @@ public class CommonServiceImpl <T> {
 					}
 					 
 					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){
+							
 						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
-						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
-						for(Param param : paramList.getParams()) {							
-							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
-								paramListHolder.setParamName(param.getParamName());
-						}
-						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
+						if(paramListHolder != null) {
+							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+							for(Param param : paramList.getParams()) {							
+								if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+									paramListHolder.setParamName(param.getParamName());
+							}
+							object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);								
+						}						
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1667,9 +1811,9 @@ public class CommonServiceImpl <T> {
 					resolveName(invokedObj, type);
 				}
 			} catch (NullPointerException | NoSuchMethodException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			return object;
 		}
@@ -1764,9 +1908,8 @@ public class CommonServiceImpl <T> {
 		}*/
 
 	public String resolveName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		if(type == MetaType.simple)
+		if(type == MetaType.simple || type == MetaType.attribute)
 			return null;
-		
 		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
 		BaseEntity baseEntity = null;
 		if (version != null)
@@ -1774,8 +1917,11 @@ public class CommonServiceImpl <T> {
 		else{
 			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,uuid,new Sort(Sort.Direction.DESC, "version"));
 		}
+		if(baseEntity != null)
 			return baseEntity.getName();
-		}
+		else 
+			return null;
+	}
 	
 	public String resolveAttributeName(String attributeId, Object object) throws JsonProcessingException {
 		Method [] methodList = object.getClass().getMethods();
@@ -2023,7 +2169,9 @@ public class CommonServiceImpl <T> {
 			BaseEntity objDet = null;
 
 			Object metaObj = mapper.convertValue(object,Helper.getDomainClass(metaType));
-			Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
+//			if (Helper.getDomainClass(metaType).getMethod("getAppInfo", List.class).invoke(metaObj) == null) {
+				Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
+//			}
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
 				
 			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
@@ -2122,7 +2270,7 @@ public class CommonServiceImpl <T> {
 	}
 
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	public T getOneByUuidAndVersion(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
 		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
@@ -2136,7 +2284,6 @@ public class CommonServiceImpl <T> {
 		try{
 			T object = null;
 			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			
 			if (appUuid != null){
 				if(StringUtils.isBlank(version))
 					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao,appUuid, uuid,new Sort(Sort.Direction.DESC, "version"));
@@ -2148,6 +2295,7 @@ public class CommonServiceImpl <T> {
 				else
 					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
 			}
+			//return (T) object;
 			return (T) resolveName(object, Helper.getMetaType(type));
 		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
 			
@@ -2306,7 +2454,7 @@ public class CommonServiceImpl <T> {
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
 			for(MetaType mType : metaTypes){
-				//logger.info("MetaType: "+mType+"\n");
+//				logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {
@@ -2336,6 +2484,8 @@ public class CommonServiceImpl <T> {
 						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
 						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
 						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+						count= metadataServiceImpl.getParamList(MetaType.dag.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
 			
 					}	
 				}				
@@ -2973,7 +3123,34 @@ public class CommonServiceImpl <T> {
 		}else
 			return false;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	public Datasource getDatasourceByDatapod(Datapod datapod) throws JsonProcessingException {
+		Datasource datasource = null;
+		if (datapod == null || datapod.getDatasource() == null) {
+			logger.error("no datasource configured with this datapod. So aborting ... ");
+			return null;
+		}
+		datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		return datasource;
+	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
 	public Datasource getDatasourceByApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = null;
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
@@ -2987,6 +3164,27 @@ public class CommonServiceImpl <T> {
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
 		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(), holder.getRef().getVersion(), "application");
 		return application;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	public String[] getAllDSSessionParams() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource_2 = getDatasourceByApp();
+		String sessionParameters = datasource_2.getSessionParameters();
+		if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+			return sessionParameters.split(",");
+		}
+		return null;
 	}
 	
 	public String getSessionParametresPropertyValue(String property, String defaultValue) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -3107,7 +3305,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
@@ -3175,31 +3373,26 @@ public class CommonServiceImpl <T> {
 		}*/
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public List<T> findAllLatestWithoutAppUuid(MetaType type) {
+		public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 			List objectList = new ArrayList();
 			List<T> finalObjectList = new ArrayList<>();
 			java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>(); 
 			BaseEntity baseEntity = null;
-			try {
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
-				objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
-				
-				for (int i = 0; i < objectList.size(); i++) {
-					baseEntity = BaseEntity.class.cast(objectList.get(i));
-					if (objectMap.containsKey(baseEntity.getUuid())) {
-						if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
-							objectMap.put(baseEntity.getUuid(), baseEntity);
-						}
-					} else {
+			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+			objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
+			
+			for (int i = 0; i < objectList.size(); i++) {
+				baseEntity = BaseEntity.class.cast(objectList.get(i));
+				if (objectMap.containsKey(baseEntity.getUuid())) {
+					if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
 						objectMap.put(baseEntity.getUuid(), baseEntity);
 					}
+				} else {
+					objectMap.put(baseEntity.getUuid(), baseEntity);
 				}
-				for (String uuid : objectMap.keySet()) {
-					finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
-				}
-				return finalObjectList;
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
+			}
+			for (String uuid : objectMap.keySet()) {
+				finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
 			}
 			return finalObjectList;
 		}
@@ -3273,12 +3466,12 @@ public class CommonServiceImpl <T> {
 			return metaList;
 		}
 		
-		public HttpServletResponse sendResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		public HttpServletResponse sendResponse(String code, String status, String msg, MetaIdentifierHolder dependsOn) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {
 				HttpServletResponse response = requestAttributes.getResponse();
 				if(response != null) {
-						Message message = new Message(code, status, msg);
+						Message message = new Message(code, status, msg, dependsOn);
 						Message savedMessage = messageServiceImpl.save(message);
 						
 						ObjectMapper mapper = new ObjectMapper();
@@ -3494,7 +3687,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
@@ -3537,27 +3730,30 @@ public class CommonServiceImpl <T> {
 			T execObject = (T)createExec(metaType, ref);
 			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
 					String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
-			List<TaskOperator> taskOperatorList = taskExec.getOperators();
-			TaskOperator taskOperator = new TaskOperator();
-			taskOperator.setDependsOn(taskOperatorList.get(i).getDependsOn());
-			taskOperator.setOperatorId(taskOperatorList.get(i).getOperatorId());
-			taskOperator.setOperatorParams(taskOperatorList.get(i).getOperatorParams());
-			taskOperator.setOperatorType(taskOperatorList.get(i).getOperatorType());
-			MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-			operatorInfo.setRef(metaExecIdentifier);
-			taskOperator.setOperatorInfo(operatorInfo);
 			
-			List<TaskOperator> taskOperatorList2 = new ArrayList<>();
+			List<MetaIdentifierHolder> operatorInfo = taskExec.getOperators().get(0).getOperatorInfo();
+			MetaIdentifierHolder operatorInfoHolder = new MetaIdentifierHolder(metaExecIdentifier);
+			operatorInfoHolder.setValue(taskExec.getOperators().get(0).getOperatorInfo().get(i).getValue());
+			
+			List<MetaIdentifierHolder> tempOperatorInfo = new ArrayList<>();
 			int j = 0;
-			for(TaskOperator taskOperator2 : taskOperatorList) {
+			for(MetaIdentifierHolder operatorInfoHolder2 : operatorInfo) {
 				if(j == i) {
-					taskOperatorList2.add(taskOperator);
+					tempOperatorInfo.add(operatorInfoHolder);
 				} else {
-					taskOperatorList2.add(taskOperator2);
+					tempOperatorInfo.add(operatorInfoHolder2);
 				}
 				j++;
-			}		
-			taskExec.setOperators(taskOperatorList2);
+			}	
+			TaskOperator taskOperator = new TaskOperator();
+			taskOperator.setDependsOn(taskExec.getOperators().get(0).getDependsOn());
+			taskOperator.setOperatorId(taskExec.getOperators().get(0).getOperatorId());
+			taskOperator.setOperatorInfo(tempOperatorInfo);
+			taskOperator.setOperatorParams(taskExec.getOperators().get(0).getOperatorParams());
+			taskOperator.setOperatorType(taskExec.getOperators().get(0).getOperatorType());
+			List<TaskOperator> taskOperators = new ArrayList<>();
+			taskOperators.add(taskOperator);
+			taskExec.setOperators(taskOperators);
 			return execObject;
 		}
 		
@@ -3721,7 +3917,7 @@ public class CommonServiceImpl <T> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
@@ -3740,7 +3936,7 @@ public class CommonServiceImpl <T> {
 			arrayTwo.addAll(lov.getValue());
 			if (!arrayOne.equals(lov.getValue())) {
 				boolean boolAddAll = arrayOne.addAll(arrayTwo);
-				System.out.println(boolAddAll);
+//				System.out.println(boolAddAll);
 				hs.addAll(arrayOne);
 				arrayOne.clear();
 				arrayOne.addAll(hs);
@@ -3844,7 +4040,7 @@ public class CommonServiceImpl <T> {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
-		query.fields().include("actuve");
+		query.fields().include("active");
 		query.fields().include("name");
 		query.fields().include("appInfo");
 		query.fields().include("createdBy");
@@ -3879,4 +4075,37 @@ public class CommonServiceImpl <T> {
 		return latestParamList;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	// Get paramList from appInfo and populate param
+	public List<ParamListHolder> getAppParamList() throws JsonProcessingException {
+		// Get app info from session
+		MetaIdentifierHolder appInfo = securityServiceImpl.getAppInfo();
+		if (appInfo == null) {
+			return null;
+		}
+		List<ParamListHolder> paramHolderList = null;
+		Application application = (Application) getOneByUuidAndVersion(appInfo.getRef().getUuid(), appInfo.getRef().getVersion(), appInfo.getRef().getType().toString());
+		if (application.getParamList() == null || application.getParamList().getRef() == null) {
+			return null;
+		}
+		ParamList paramList = (ParamList) getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString());
+		ParamListHolder paramListHolder = null;
+		if (paramList != null && paramList.getParams() != null && !paramList.getParams().isEmpty()) {
+			paramHolderList = new ArrayList<>();
+			for (Param param : paramList.getParams()) {
+				paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setParamValue(param.getParamValue());
+				paramListHolder.setRef(param.getParamRef());
+				paramHolderList.add(paramListHolder);
+			}
+		}
+		return paramHolderList;
+	}
 }

@@ -26,8 +26,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.session.SessionInformation;
-//import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -38,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.IUserDao;
-import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.AppRole;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
@@ -217,7 +214,7 @@ public class SecurityServiceImpl  implements Serializable{
 			}
 			//e.printStackTrace();
 		}
-		return appInfo;		
+		return appInfo;
 	}
 
 	public MetaIdentifierHolder getRoleInfo() {
@@ -239,9 +236,7 @@ public class SecurityServiceImpl  implements Serializable{
 				//logger.info("Setting roleInfo using class  FrameworkThreadLocal !");
 				roleInfo =  sessionContext.getRoleInfo();
 			} else {
-				logger.info("Null Session context. Unable to get roleInfo.");	
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.role,"d04716df-e96a-419f-9118-c81342b47f88","1464977196");
-				roleInfo.setRef(appMeta);
+				throw new RuntimeException("No role information available.");
 			}
 		}		
 		return roleInfo;		
@@ -266,9 +261,7 @@ public class SecurityServiceImpl  implements Serializable{
 				//logger.info("Setting userInfo using class  FrameworkThreadLocal !");
 				userInfo = sessionContext.getUserInfo();	
 			} else {
-				logger.info("Null Session context. Unable to get userInfo");
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.user,"d04716df-e96a-419f-9118-c81342b47f86","1464977196");
-				userInfo.setRef(appMeta);
+				throw new RuntimeException("No user information available.");
 			}
 		}
 		return userInfo;		
@@ -295,6 +288,7 @@ public class SecurityServiceImpl  implements Serializable{
 			} else {
 				logger.info("Null Session context.");	
 				sessionInfo=null;
+				throw new RuntimeException("No session information available.");
 			}
 		}
 		return sessionInfo;		
@@ -448,6 +442,7 @@ public class SecurityServiceImpl  implements Serializable{
 			} else {
 				logger.info("Null Session context.");	
 				privInfo=null;
+				throw new RuntimeException("No priviledge information available.");
 			}
 		}
 		//logger.info(map.entrySet());
@@ -481,13 +476,15 @@ public class SecurityServiceImpl  implements Serializable{
 					}
 					holderList.add(group.getAppId());
 				}
-				List<AppRole> resolvedAppRoleList = resolveAppVsRole(rawList, holderList);
-				//logger.info("AppRole ->--->> "+ow.writeValueAsString(resolvedAppRoleList));
-				return ow.writeValueAsString(resolvedAppRoleList);
-			}else
-				logger.info("No group informaion available, groupInfo is empty/null."); return "No group informaion available, groupInfo is empty/null.";
-		}else
-			logger.info("User object null."); return "User object null.";
+				return ow.writeValueAsString(resolveAppVsRole(rawList, holderList));
+			} else {
+				logger.info("No group informaion available, groupInfo is empty/null.");
+				throw new RuntimeException("No app role information available.");
+			}
+		}else {
+			logger.info("User object null."); 
+			throw new RuntimeException("No app role information available.");
+		}
 	}
 	
 	public void setPrivInfo() throws JsonProcessingException {

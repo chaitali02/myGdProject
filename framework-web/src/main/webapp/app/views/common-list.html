@@ -149,7 +149,39 @@
             </div>
            
           </div> -->
-
+          
+          <div class="modal fade in" id="killmodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+            <div class="modal-dialog">
+              <div class="modal-content rulemodel">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                  <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body"> {{selectDetail.setStatus}}
+                  <span style="text-transform: capitalize">{{caption}}</span> ?</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn green" ng-click="okKill()">Ok</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div>
+          <div class="modal fade in" id="restartmodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+            <div class="modal-dialog">
+              <div class="modal-content rulemodel">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                  <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body"> Restart
+                  <span style="text-transform: capitalize">{{caption}}</span> ?</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn green" ng-click="okRestart()">Ok</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div>
 
           <div class="modal fade in" id="clonemodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
             <div class="modal-dialog">
@@ -205,7 +237,7 @@
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
                               </label>
                               <div class="col-md-6">
-                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r.text  as r.caption disable when ['dag'].indexOf(select) !=-1  && r.text =='paramset' ?true:false for r in paramTypes">
                                     <option value="">-Select-</option>
                                 </select>
                                 <input type="hidden" name="ParamType" ng-model="selectParamType" required>
@@ -226,7 +258,7 @@
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
                               </label>
                               <div class="col-md-6">
-                                <div >  
+                                <div>  
                                   <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()"  data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
                                       <option value="" >-Select-</option>
                                   </select>
@@ -543,6 +575,14 @@
                           <div ng-show="!isFileNameValid">Special character or space not allowed in file name.</div>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-md-2" style="margin-top:5px;">
+                          <label style="margin-left:4px;">Desc</label>
+                        </div>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" ng-model="fileUpladDesc">
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -557,7 +597,7 @@
           <div class="portlet-body">
             <div class="row">
               <div class="col-md-6 col-sm-6">
-                <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="handleGroup!=-1 || select=='dagexec'|| isJobExec==true">
+                <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="handleGroup!=-1 || select=='dagexec' || select=='batchexec'|| select=='ingestexec'|| isJobExec==true">
                   <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline" type="checkbox"
                     ng-model="autorefresh" ng-change="autoRefreshOnChange()" />
                   <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>

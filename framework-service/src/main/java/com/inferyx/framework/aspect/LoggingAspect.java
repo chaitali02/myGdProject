@@ -60,7 +60,7 @@ public class LoggingAspect {
 	 */
 	  @Around("aroundPointcut()")
 	  public Object logTimeMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		  
 	    StopWatch stopWatch = new StopWatch();
 	    stopWatch.start();

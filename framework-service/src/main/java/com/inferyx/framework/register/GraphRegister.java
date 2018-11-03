@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 //import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.codehaus.jettison.json.JSONException;
@@ -95,6 +94,7 @@ import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
+import com.inferyx.framework.dao.IScheduleDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
@@ -225,8 +225,6 @@ public class GraphRegister<T> {
 	GraphServiceImpl graphServiceImpl;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	JavaSparkContext javaSparkContext;
 	/*@Autowired
     private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
@@ -392,9 +390,18 @@ public class GraphRegister<T> {
 	IGraphpodDao iGraphpodDao;
 	@Autowired
 	IGraphpodExecDao iGraphpodExecDao;
+	@Autowired
+	IScheduleDao iScheduleDao;
 	
 	
-	
+	public IScheduleDao getiScheduleDao() {
+		return iScheduleDao;
+	}
+
+	public void setiScheduleDao(IScheduleDao iScheduleDao) {
+		this.iScheduleDao = iScheduleDao;
+	}
+
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
 	}
@@ -631,20 +638,6 @@ public class GraphRegister<T> {
 	 */
 	public void setiUploadDao(IUploadDao iUploadDao) {
 		this.iUploadDao = iUploadDao;
-	}
-
-	/**
-	 * @return the javaSparkContext
-	 */
-	public JavaSparkContext getJavaSparkContext() {
-		return javaSparkContext;
-	}
-
-	/**
-	 * @param javaSparkContext the javaSparkContext to set
-	 */
-	public void setJavaSparkContext(JavaSparkContext javaSparkContext) {
-		this.javaSparkContext = javaSparkContext;
 	}
 
 	/**

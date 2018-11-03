@@ -4,14 +4,20 @@
 
 DataPipelineModule= angular.module('DataPipelineModule');
 
-DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http, $filter) {
+DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http,$filter,CF_DOWNLOAD) {
  return {
    scope : {
      name: "=",
      hcolumns:"=",
      data: "="
    },
-   link: function ($scope, element, attrs) {   
+   link: function ($scope, element, attrs) {
+    $scope.download={};
+    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+    $scope.download.formates=CF_DOWNLOAD.formate;
+    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+    $scope.download.limit_to=CF_DOWNLOAD.limit_to;   
      var initialised = false;
      $scope.filteredRows = [];
      $scope.pagination={
@@ -134,7 +140,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
            if(data.length && data.length > 0){
              angular.forEach(data[0],function (val,key) {
                var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
-               var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'version','sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
+               var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
                if(hiveKey.indexOf(key) ==-1){
                 var width;
                 if(count >3){
@@ -174,7 +180,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        }
            
        $scope.leave = function(row){
-         $('#tabletoshow').css('display','none')
+        $('#tabletoshow').css('display','none')
        }
        $scope.selectPage = function(pageNo) {
          $scope.pagination.currentPage = pageNo;
@@ -210,12 +216,13 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        $scope.downloadTrainData=function(uuid){
          var linkElement = document.createElement('a');
          try {
-             var blob = new Blob([$scope.trainData], {
+          var jsonobj = angular.toJson($scope.trainData, true);
+             var blob = new Blob([jsonobj], {
                  type: "text/xml"
              });
              var url = window.URL.createObjectURL(blob);
              linkElement.setAttribute('href', url);
-             linkElement.setAttribute("download", uuid+".txt");
+             linkElement.setAttribute("download", uuid+".json");
              var clickEvent = new MouseEvent(
                  "click", {
                      "view" : window,
@@ -228,36 +235,49 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              console.log(ex);
          }
        }
-       $scope.downloaddata=function(url,uuid){
-         $http({
-           method: 'GET',
-           url:url,
-           responseType: 'arraybuffer'
-         }).success(function(data, status, headers) {
-           headers = headers();  
-           var filename = headers['filename'];
-           var contentType = headers['content-type']; 
-           var linkElement = document.createElement('a');
-           try {
-             var blob = new Blob([data], {
-             type: contentType
-           });
-           var url = window.URL.createObjectURL(blob);
-             linkElement.setAttribute('href', url);
-             linkElement.setAttribute("download",filename);
-             var clickEvent = new MouseEvent("click", {
-               "view": window,
-               "bubbles": true,
-               "cancelable": false
-             });
-             linkElement.dispatchEvent(clickEvent);
-           } catch (ex) {
-             console.log(ex);
-           }
-         }).error(function(data) {
-           console.log(data);
-       }); 
+       $scope.submitDownload=function(){
+    	  $('#downloadSampleCommon').modal("hide"); 
+        $http({
+          method: 'GET',
+          url: $scope.download.url+"&rows="+$scope.download.rows,
+          responseType: 'arraybuffer'
+        }).success(function(data, status, headers) {
+          headers = headers(); 
+        
+          $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+          var filename = headers['filename'];
+          var contentType = headers['content-type']; 
+          var linkElement = document.createElement('a');
+          try {
+            var blob = new Blob([data], {
+            type: contentType
+          });
+          var url = window.URL.createObjectURL(blob);
+            linkElement.setAttribute('href', url);
+            linkElement.setAttribute("download",filename);
+            var clickEvent = new MouseEvent("click", {
+              "view": window,
+              "bubbles": true,
+              "cancelable": false
+            });
+            linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+            console.log(ex);
+          }
+        }).error(function(data) {
+          console.log(data);
+          $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+      }); 
        }
+       $scope.downloaddata=function(url,uuid){
+        $scope.download.url=url
+        $('#downloadSampleCommon').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        
+       }
+
        window.downloadPiplineFile = function() {               
          var uuid = $scope.downloadDetail.uuid;
          var version=$scope.downloadDetail.version;
@@ -280,7 +300,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              $scope.downloaddata(url,uuid);
            }
            else if($scope.downloadDetail.type =="map"){
-             url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode;
+             url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode
              $scope.downloaddata(url,uuid)
            }
            else if($scope.downloadDetail.type =="recon"){
@@ -295,6 +315,10 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
              $scope.downloaddata(url,uuid)
            }
+           else if($scope.downloadDetail.type =="operator"){
+            url=baseurl+"/operator/download?action=view&uuid="+uuid+"&version="+version+"&mode="+mode;
+            $scope.downloaddata(url,uuid)
+          }
            else if($scope.downloadDetail.type =="train"){
              url=baseurl+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version;
              $http({
@@ -302,7 +326,8 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                url:url,
                
              }).success(function(data, status, headers) {
-               if(data.customeFlag =="N"){
+              
+               if(data.customFlag =="N" ){
                  $scope.downloadTrainData(uuid);
                  return false;
                }
@@ -319,8 +344,13 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      },
      template: `
        <div class="row" ng-show="type =='train'">
+       <!--<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelresult != null">
+          <train-result execjson='modelresult' ></train-result>
+        </div>-->
          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
+        
           <!--<pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>-->
+
            <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
          </div>        
        </div>
@@ -347,11 +377,17 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                <div class="tooltipcustom" id="tabletoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.95
                  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">      
                  <div style="margin-top: 5px;margin-right: 15px">
-                   <div class="row" style="padding-left:6%">
+                   <div class="row" style="padding-left:2%">
                      <table ng-if="gridOptions.columnDefs">
                        <tr ng-repeat="m in gridOptions.columnDefs  |  limitTo :20">
-                         <th ng-if="m.visible==true">{{m.displayName}}</th>
-                         <td style="padding-left:6%" ng-if="m.visible==true">{{mouseHowerRowValue[m.name]}}</td>                       
+                         <th ng-if="m.visible==true"><div style=" width:110px;
+                         white-space: nowrap;
+                         overflow: hidden;
+                         text-overflow: ellipsis;">{{m.displayName}}</div></th>
+                         <td style="padding-left:3%" ng-if="m.visible==true"><div  style="min-width:250px;max-width:600px;
+                         white-space: nowrap;
+                         overflow: hidden;
+                         text-overflow: ellipsis;">{{mouseHowerRowValue[m.name]}}</div></td>                       
                        </tr>
                        <tr ng-show="gridOptions.columnDefs.length >20" rowspan="2" >
                          <td colspan="2" style="text-align:right">......</td>                       
@@ -370,12 +406,53 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                </div>
              </div>
            </div>
-         </div> 
+          </div> 
+          <div id="downloadSampleCommon" class="modal fade bs-modal-lg in" style="display: none;">
+            <div class="modal-dialog" style="width:40%">
+              <div class="modal-content" style="resize: both;overflow: auto;">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                  <h4 class="modal-title">Download</h4>
+                </div>
+                <form class="form-horizontal" name="myform3"  ng-submit="submitDownload()" novalidate="novalidate">
+                  <div class="modal-body" style="padding-top:0px">
+                    <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                      <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                        data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="col-md-3 control-label">Rows</label>
+                              <div class="col-md-8">
+                              <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload" >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-3 control-label">Format</label>
+                              <div class="col-md-8">
+                                <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--End Model Body-->
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    <button type="submit" class="btn green">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
        `
      };
  });
 
-DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compile,$location,$http,dagMetaDataService,$rootScope) {
+DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,$compile,$location,$http,dagMetaDataService,$rootScope) {
    function setGrid(paper, gridSize, color) {
      // Set grid size on the JointJS paper object (joint.dia.Paper instance)
      paper.options.gridSize = gridSize;
@@ -428,7 +505,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
        </div>
 
        <div class="joint-graph-zoom-slider col-md-1 col-md-offset-11">
-       <div class="pull-right" style="height:120px;width:25px;margin-right:25px">
+       <div class="pull-right" style="height:120px;width:25px;margin-right:15px;margin-top:10px">
          <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
          <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
          <a ng-click="changeSliderBack()"> <i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
@@ -503,10 +580,14 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
            $scope.zoomSize=$scope.zoomSize+1;
          }
          
-         $scope.changeSliderBack=function() {
-           $scope.zoomSize=$scope.zoomSize-1;
-         }
-       
+        $scope.changeSliderBack=function() {
+          if($scope.zoomSize >=5)
+          $scope.zoomSize=$scope.zoomSize-1;
+        }
+        
+        $scope.resize=function(){
+          $scope.zoomSize =10;
+        }
          $scope.zoomSize = 7;
          setGrid(paper, 10, '#AAAAAA');
          var initialised = false;
@@ -782,7 +863,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                '.status': {
                  'element-id' : startParams.id,
                },
-               text: { text: startParams.name || startParams.id}
+               text: { text: startParams.name.length >20 ?startParams.name.substring(0, 15) + "....":startParams.name || startParams.id,},
+               title: { text: startParams.name || startParams.id}
              }
            })
          ));//End Cell
@@ -814,7 +896,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                    '.status image' : {
                      "xlink:href":"assets/layouts/layout/img/new_status/"+task.statusList[task.statusList.length -1].stage+".svg"
                    },
-                   text: { text: task.name}
+                   text: { text: task.name.length >30 ?task.name.substring(0, 27) + "....":task.name},
+                   title: { text: task.name }
                  }
                })
              ));
@@ -877,14 +960,17 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
-                     if(status && (status=='Completed') && isGroupExec!=true){
+                     if(status && (status=='Completed') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
+                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && (status=='NotStarted' || status=='Resume')){
                        iconMenuItems.push({title:'On Hold', type : 'onhold'});
+                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && status=='InProgress'){
                        iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                        
                      else if(status && status=='OnHold'){
@@ -904,22 +990,26 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+                     ingest : {name:'ingest', label: 'Ingest'},
+                     ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
                    }
-                 
+                   
                    var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
                    if(id != startParams.id){
                      var url=$location.absUrl().split("app")[0];
                      $http.get(url+'common/getLatestByUuid?action=view&uuid='+modelData.dependsOn.ref.uuid+'&type='+modelData.dependsOn.ref.type).then(function (res) {
                        state = {state : dagMetaDataService.elementDefs[modelData.dependsOn.ref.type].state, params : {id :modelData.dependsOn.ref.uuid,name:modelData.dependsOn.ref.name,version :res.data.version,type:modelData.dependsOn.ref.type,mode:true, returnBack: true}};
-                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                       execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
+                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
                      });
                    }
                      
                    else {
+                    execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
                      var url=$location.absUrl().split("app")[0];
                      $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-                       state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
-                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                       state = {state : dagMetaDataService.elementDefs[res.data.type+"exec"].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
+                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
                      });
                    }
                  }
@@ -927,13 +1017,29 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  else {
                    var url=$location.absUrl().split("app")[0];
                    $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-                     state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type, mode:true, returnBack: true}};
-                     iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
+                     state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type+"exec", mode:true, returnBack: true}};
+                     execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+                     iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
                    });
                  }
                });//End contextmenu
              }//End drawChildGraph
-
+             window.showLogs  =function(execUrl ){
+              var state = execUrl;
+              $rootScope.previousState = {name : $state.current.name, params : $state.params};
+              $rootScope.previousState.params.tab = '1';
+              var ispresent=false;
+              if(ispresent !=true){
+                var stateTab={};
+                stateTab.route=state.state;
+                stateTab.param=state.params;
+                stateTab.active=false;
+                $rootScope.$broadcast('onAddTab',stateTab);
+              }
+              $state.go(state.state,state.params);
+              
+            }
+        
            function iconContextMenu() {
              var height,
              width,
@@ -958,8 +1064,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  'font-family': 'Open Sans'
                }
              };
-
-             function menu(x, y, url,resultParams) {
+   
+             function menu(x, y, url,execUrl,resultParams) {
                d3.select('.context-menu').remove();
                scaleItems();
                d3.select('#showgrouppaper svg')
@@ -980,6 +1086,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  if(d.type == 'results'){
                    return 'showResult('+resultParams+')'
                  }
+                 else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
+                }
                  else if(d.type == 'onhold'){
                    return 'setSubTaskStatus('+resultParams+',"OnHold")'
                  }
@@ -1002,6 +1111,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                    if(d.type == 'results'){
                      return 'showResult('+resultParams+')'
                    }
+                   else if(d.type =='logs'){
+                    return 'showLogs('+execUrl+')'
+                  }
                    else if(d.type == 'onhold'){
                      return 'setSubTaskStatus('+resultParams+',"OnHold")'
                    }
@@ -1102,6 +1214,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
                  case 'recongroup':
                    api = 'recon';
                    break;
+                  case 'ingest':
+                   api = 'ingest';
+                   break;
+                  case 'ingestgroup':
+                   api = 'ingest';
+                   break;
                }
                if(!api){
                  return
@@ -1123,6 +1241,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      addMode:'=',
      graph : '=',
      isTemplate:'=',
+     height:'=',
     },
     link: function ($scope, element, attrs) {
      var taskDetail=null;
@@ -1136,11 +1255,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
      
      $scope.changeSliderBack=function() {
-       $scope.zoomSize=$scope.zoomSize-1;
-     }
+      if($scope.zoomSize >=5)
+      $scope.zoomSize=$scope.zoomSize-1;
+    }
+    
+    $scope.resize=function(){
+      $scope.zoomSize =7;
+    }
      
      window.navigateTo = function(url){
        var state = JSON.parse(url);
+       console.log(state)
        $rootScope.previousState = {name : $state.current.name, params : $state.params};
        $rootScope.previousState.params.tab = '1';
        var ispresent=false;
@@ -1159,12 +1284,77 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
      $scope.operatorResult=function(param){
       $('#viewResultModel').modal("hide");
-      showResult(param)
+      showResult($scope.selectedResult)
      }
-     
      $scope.onChangeOperator=function(index){
-      $scope.isExecParamsetTable=false;
-      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+       $scope.selectedResult=$scope.execParamParamset[index].param;
+       $scope.isSelectedResDis=false;
+     }
+    //  $scope.onChangeOperator=function(index){
+    //   $scope.isExecParamsetTable=false;
+    //   CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+    //     var paramInfoArray=[];
+    //     $scope.isExecParamsetTable=true;
+    //     var result=response.data
+    //     if(response !=null) {
+    //       for (var i=0; i < result.paramInfo.length; i++) {
+    //         var paramInfo = {};
+    //         paramInfo.paramSetId=result.paramInfo[i].paramSetId;
+    //         if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
+    //           paramInfo.selected=true;
+    //         }
+    //         var paramSetValarray = [];
+    //         for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
+    //           var paramSetValjson = {};
+    //           paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
+    //           paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
+    //           paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
+    //           paramSetValjson.ref = result.paramInfo[i].paramSetVal[j].ref;
+    //           paramSetValarray[j] = paramSetValjson;
+    //           paramInfo.paramSetVal = paramSetValarray;
+    //           paramInfo.value = result.paramInfo[i].paramSetVal[j].value;
+    //         }
+    //         paramInfoArray[i] = paramInfo;
+    //       }
+    //       $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
+    //       $scope.execParamParamset = paramInfoArray;
+         
+    //     }
+    //   });
+    //  }
+
+
+     $scope.getOperatorDetail=function(params){
+      $scope.taskOnOperator=[];
+      for(var i=0;i<params.operator[0].operatorInfo.length;i++){
+        var taskOperators={};
+        var paramObj={};
+        paramObj.elementType=params.elementType;
+        paramObj.id=params.operator[0].operatorInfo[i].ref.uuid;
+        paramObj.name=params.name;
+        paramObj.parentStage=params.parentStage;
+        paramObj.ref=params.ref;
+        paramObj.taskId=params.taskId;
+        paramObj.type=params.type;
+        paramObj.typeLabel=params.typeLabel;
+        paramObj.version=params.operator[0].operatorInfo[i].ref.version;;
+        taskOperators.param=paramObj;
+     //   taskOperators.param.operator=null;
+        taskOperators.uuid=params.operator[0].operatorInfo[i].ref.uuid;
+        taskOperators.version=params.operator[0].operatorInfo[i].ref.version;
+        taskOperators.name=params.operator[0].operatorInfo[i].ref.name;
+        taskOperators.selected=false
+        taskOperators.paramSetId=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].paramSetId;
+        taskOperators.paramSetUuid=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.uuid;
+        taskOperators.paramSetName=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.name;
+        $scope.taskOnOperator[i]=taskOperators;
+      }
+      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[0].paramSetUuid,"","paramset").then(function(response){ 
+        $('#viewResultModel').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        $scope.isSelectedResDis=true;
         var paramInfoArray=[];
         $scope.isExecParamsetTable=true;
         var result=response.data
@@ -1172,12 +1362,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           for (var i=0; i < result.paramInfo.length; i++) {
             var paramInfo = {};
             paramInfo.paramSetId=result.paramInfo[i].paramSetId;
-            if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
-              paramInfo.selected=true;
-            }
+            paramInfo.param=$scope.taskOnOperator[i].param;
+            paramInfo.paramSetUuid=$scope.taskOnOperator[i].paramSetUuid;
+            paramInfo.paramSetName=$scope.taskOnOperator[i].paramSetName;
+            paramInfo.selected =false;
             var paramSetValarray = [];
             for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
               var paramSetValjson = {};
+            
               paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
               paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
               paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
@@ -1190,12 +1382,28 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }
           $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
           $scope.execParamParamset = paramInfoArray;
-         
         }
       });
+
      }
 
-     window.showResult = function(params){
+    window.showLogs  =function(execUrl ){
+      var state = execUrl;
+      $rootScope.previousState = {name : $state.current.name, params : $state.params};
+      $rootScope.previousState.params.tab = '1';
+      var ispresent=false;
+      if(ispresent !=true){
+        var stateTab={};
+        stateTab.route=state.state;
+        stateTab.param=state.params;
+        stateTab.active=false;
+        $rootScope.$broadcast('onAddTab',stateTab);
+      }
+      $state.go(state.state,state.params);
+      
+    }
+
+    window.showResult = function(params){
        $scope.lastParams = params;
        $scope.isExecParamsetTable=false;
        App.scrollTop();
@@ -1208,34 +1416,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        else{
         console.log(params);
         $scope.taskOnOperator=[];
-        if(params.operator && params.operator.length >1){
-          for(var i=0;i<params.operator.length;i++){
-            var taskOperators={};
-            var paramObj={};
-            paramObj.elementType=params.elementType;
-            paramObj.id=params.operator[i].operatorInfo.ref.uuid;
-            paramObj.name=params.name;
-            paramObj.parentStage=params.parentStage;
-            paramObj.ref=params.ref;
-            paramObj.taskId=params.taskId;
-            paramObj.type=params.type;
-            paramObj.typeLabel=params.typeLabel;
-            paramObj.version=params.operator[i].operatorInfo.ref.version;;
-            taskOperators.param=paramObj;
-         //   taskOperators.param.operator=null;
-            taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
-            taskOperators.version=params.operator[i].operatorInfo.ref.version;
-            taskOperators.name=params.operator[i].operatorInfo.ref.name;
-            taskOperators.selected=false
-            taskOperators.paramSetId=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].paramSetId;
-            taskOperators.paramSetUuid=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid;
-            taskOperators.paramSetName=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.name;
-            $scope.taskOnOperator[i]=taskOperators;
-          }
-          $('#viewResultModel').modal({
-            backdrop: 'static',
-            keyboard: false
-          });
+        if(params.operator && params.operator[0].operatorInfo.length >1){
+          $scope.getOperatorDetail(params);
         }else{
           $scope.lastResultsParams = params;
           $scope.showResults = true;
@@ -1494,6 +1676,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var dagid = "dag_0";
          $(".status[element-id=" + dagid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusDag+".svg");
          $(".status[element-id=" + dagid + "] .statusTitle").text(statusDag);
+         $(".status[element-id=" + dagid + "]").attr("statusList",JSON.stringify(data.status));
          angular.forEach(data.status,function (status) {
            $(".status[element-id=" + dagid + "]").attr(status.stage,status.createdOn);
          });
@@ -1502,6 +1685,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var stageid = stage.stageId.length > 3 ? stage.stageId : 'stage_'+stage.stageId;
            $(".status[element-id=" + stageid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusStage+".svg");
            $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
+           $(".status[element-id=" + stageid + "]").attr("statusList",JSON.stringify(stage.status));
            angular.forEach(stage.status,function (status) {
              $(".status[element-id=" + stageid + "]").attr(status.stage,status.createdOn);
            });
@@ -1510,8 +1694,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var taskid = task.taskId.length > 3 ? task.taskId : stageid +'_' +'task_'+task.taskId;
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
+             $(".status[element-id=" + taskid + "]").attr("statusList",JSON.stringify(task.status));
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
+              
              });
            });
          });
@@ -1716,7 +1902,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if( taskDetail &&  taskDetail.taskId == taskId){
              return false;
            } 
-           var ref = cell.attributes['model-data'].operators[0].operatorInfo.ref;
+           var ref = cell.attributes['model-data'].operators[0].operatorInfo[0].ref;
            var type = ref.type;
            var operator=cell.attributes['model-data'].operators;
            if(type.slice(-4) == 'Exec'){
@@ -1734,6 +1920,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            pt.x = d3.event.clientX; pt.y = d3.event.clientY;
            var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
            var state;
+           var  execStates;
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
@@ -1741,9 +1928,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
                  if(isExec && (status=='Completed')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
+                   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                  if(isGroupExec){
-                   iconMenuItems.push({title:'Show Results', type : 'results'})
+                   iconMenuItems.push({title:'Show Results', type : 'results'});
+                //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='NotStarted' || status=='Resume')){
@@ -1752,8 +1941,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                else if(status && status=='OnHold'){
                  iconMenuItems.push({title:'Resume', type : 'resume'});
                }
+               
+               if(status && status=='Failed'){
+                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                
+               }
                if(status && status=='InProgress'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
              }
              iconMenu.resetItems(iconMenuItems);
@@ -1773,20 +1968,24 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                recon : {name:'recon', label: 'Recon'},
                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+               ingest : {name:'ingest', label: 'Ingest'},
+               ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
              }
           
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
+             execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
-               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });
            }//End If if(isExec || isGroupExec)
            else {
              var url=$location.absUrl().split("app")[0];
-             $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-             state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
-             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
+              $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
+              execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+              state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
              });
            }//End Else
          });
@@ -1842,9 +2041,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        }
        var thisModel = newCell || $scope.graph.getCell(id);
        var elementType = thisModel.attributes.elementType;
-       if( elementType == "stage" || elementType == "dag"){
+       if(elementType == "dag"){
          return false;
        }
+    
 
        var name = thisModel.attributes['model-data'].name || '';
        var text = '';
@@ -1861,12 +2061,20 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          id:id,modelData :thisModel.attributes['model-data'],elementTypeText: text,
          headers : {color:color,title:text}
        };
-          
-       if(thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid){
-         $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo.ref.name;
+       if(elementType == "stage" ){
+        $('#StageModel').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        return false;
+      }
+       
+       if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
+         $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
        }
+       
        if(elementType =="operator" &&  !newCell){
-        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
+        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
         CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
           if(!response || !response.data){
             $scope.operatorinfoMapInfo = [];
@@ -1945,10 +2153,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           backdrop: 'static',
           keyboard: false
         });
-        var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
-        var typeParamListArray=["simulate","operator"];
-        var typeParamSetArray=["train","rule"];
-        if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
+        var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
+        var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
+        var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
+        if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;
           $scope.allparamset=null;
@@ -1960,32 +2168,57 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
           if($scope.popupModel.selectedType){
             var temp = $scope.popupModel.selectedType.split('|');
-            $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-            $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+            $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+            $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
+            if(type.toLowerCase().indexOf("exec") !=-1){
+              var url=$location.absUrl().split("app")[0];
+              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid+'&execVersion='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.version+'&type='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type).then(function (res) {
+                var objDetail={}
+                objDetail.uuid=res.data.uuid;
+                objDetail.version="";
+                objDetail.type=res.data.type;
+                $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel)   
+              });
+            }else{
+              var objDetail={}
+              objDetail.uuid=temp[0];
+              objDetail.version="";
+              objDetail.type=type;
+              $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel);
+            }
+          }
           
+        }
+        else if( typeParamListArray.indexOf(type.toLowerCase()) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
+          $scope.isExecParamList=true;
+          var temp = $scope.popupModel.selectedType.split('|');
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
+          if(type.toLowerCase().indexOf("exec") !=-1){
+            var url=$location.absUrl().split("app")[0];
+            $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid+'&execVersion='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.version+'&type='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type).then(function (res) {
+              var objDetail={}
+              objDetail.uuid=res.data.uuid;
+              objDetail.version="";
+              objDetail.type=res.data.type;
+              $scope.getExecParamList(objDetail,$scope.popupModel)   
+            });
+          }else{
             var objDetail={}
             objDetail.uuid=temp[0];
             objDetail.version="";
             objDetail.type=type;
-            $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel);
+            $scope.getExecParamList(objDetail,$scope.popupModel);
           }
-          
-        }
-        else if( typeParamListArray.indexOf(type) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
-          $scope.isExecParamList=true;
-          var temp = $scope.popupModel.selectedType.split('|');
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
-          var objDetail={}
-          objDetail.uuid=temp[0];
-          objDetail.version="";
-          objDetail.type=type;
-          $scope.getExecParamList(objDetail,$scope.popupModel);
         }
       };
        
        
-
+      $scope.OnSubmitStage=function(popupModel){
+        var cell = $scope.graph.getCell(popupModel.id);
+        cell.attr('text', { text: popupModel.modelData.name});
+        $('#StageModel').modal("hide");
+      }
       $scope.savePop = function (popupModel) {
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
@@ -2003,8 +2236,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         return;
         }
         var temp = popupModel.selectedType.split('|');
-        popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-        popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
         cell.attr('text', { text: popupModel.modelData.name});
        /* var objDetail={}
         objDetail.uuid=temp[0];
@@ -2202,7 +2435,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var elementModel = cell.attributes['model-data'];
       
          try {
-           var elementType = elementModel.operators[0].operatorInfo.ref.type;
+           var elementType = elementModel.operators[0].operatorInfo[0].ref.type;
            if(elementType.slice(-4) == 'Exec'){
              elementType = elementType.slice(0,-4);
            }
@@ -2277,6 +2510,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $("#"+divid).show();
          var status = jointElement.find('.status');
          var startTime = status.attr("inprogress");
+         var statusList=status.attr("statusList");
+         if(statusList && statusList.length >0)
+         startTime=getStatsListObject(JSON.parse(statusList),"InProgress");
          var endTime = status.attr("completed");
          $scope.popoverData = {};
          $scope.popoverData.startTime = startTime || '-';
@@ -2292,7 +2528,18 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $scope.$apply();//this is required
        });
      });
-          
+         
+     function getStatsListObject(statusLsit,value){
+      var result=null
+      for(var i=0;i<statusLsit.length;i++){
+        var stage=statusLsit[i]["stage"];
+        if(stage == value){
+          result=statusLsit[i].createdOn;
+          break;
+        }  
+      }
+      return result;
+     }
      window.addelement = function(e,elemt){
        var operator=elemt.type
        //create sub elements on this event
@@ -2310,12 +2557,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          "model-data": {
            name : 'New '+operator,
            operators : [ {
-             operatorInfo : {
+             operatorInfo : [{
                ref : {
                  name : '',
                  type : operator,
                }
-             },
+             }],
              operatorParams:null
            }]
          },
@@ -2349,12 +2596,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             "model-data": {
               name : 'New '+operator,
               operators : [ {
-                operatorInfo : {
+                operatorInfo :[ {
                   ref : {
                     name : '',
                     type : operator,
                   }
-                },
+                }],
                 operatorParams:{}
               }]
             },
@@ -2527,7 +2774,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             }
           };
 
-          function menu(x, y, url,resultParams) {
+          function menu(x, y, url,execUrl,resultParams) {
             d3.select('.context-menu').remove();
             scaleItems();
             // Draw the menu
@@ -2548,6 +2795,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('onclick', function(d){
                 if(d.type == 'results'){
                   return 'showResult('+resultParams+')'
+                }
+                else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
                 }
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
@@ -2572,6 +2822,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('onclick', function(d){
                 if(d.type == 'results'){
                   return 'showResult('+resultParams+')'
+                }
+                else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
                 }
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
@@ -2649,15 +2902,20 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        // $scope.popupModel.modelData.operators[0].operatorParams=null;
        $scope.paramListHolder=null;
         var temp = $scope.popupModel.selectedType.split('|');
-        $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-        $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+        $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
+        if($scope.popupModel.modelData.name.indexOf("New") !=-1){
+          $scope.popupModel.modelData.name=temp[1];
+        }
+
         var objDetail={}
         objDetail.uuid=temp[0];
         objDetail.version="";
-        var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train","rule"];
         var typeParamListArray=["simulate","operator"];
+        debugger
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
@@ -2715,8 +2973,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         $scope.selectParamList=null;
         $scope.popupModel.modelData.operators[0].operatorInfo;
         var objDetail={};
-        objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
-        objDetail.type=$scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
+        objDetail.type=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.version= "";
         if($scope.selectParamType =="paramlist"){
           $scope.paramlistdata=null;
@@ -2883,7 +3141,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
-       
+      
         $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -2904,8 +3162,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){ 
                 var paramList={};
-                paramList.uuid=paramListInfo[i].ref.uuid;
-                paramList.type=paramListInfo[i].ref.type;
+                if(paramList.type=paramListInfo[i].ref !=null){
+                  paramList.uuid=paramListInfo[i].ref.uuid;
+                  paramList.type=paramListInfo[i].ref.type;
+                }
                 paramList.paramId=paramListInfo[i].paramId;
                 paramList.paramType=paramListInfo[i].paramType.toLowerCase();
                 paramList.paramName=paramListInfo[i].paramName;
@@ -2946,6 +3206,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                else if(paramListInfo[i].paramType == "attribute"){
                 var selectedParamValue={}
                 var attributeInfo={}
+              
                 paramList.selectedParamValueType=paramListInfo[i].attributeInfo[0].ref.type;
                 selectedParamValue.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
                 selectedParamValue.type=paramListInfo[i].attributeInfo[0].ref.type;
@@ -2953,6 +3214,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 attributeInfo.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
                 attributeInfo.type=paramListInfo[i].attributeInfo[0].ref.type;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[0].attrId;
+                attributeInfo.attrType=paramListInfo[i].attributeInfo[0].attrType;
                 paramList.attributeInfo=attributeInfo
                 paramListHolder[i]=paramList
                }
@@ -2969,6 +3231,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                
                // attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
                 attributeInfo.datapodname=paramListInfo[i].attributeInfo[j].ref.name;
+                attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
                 attributeInfo.name=paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.dname=paramListInfo[i].attributeInfo[j].ref.name+"."+paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
@@ -3033,6 +3296,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       
       $scope.onChangeForAttributeInfo=function(data,type,index){
+        $scope.paramListHolder[index].attributeInfoTag=null;
         $scope.getAllAttributeBySource(data,type,index);
 
       }
@@ -3041,6 +3305,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         if(data !=null){ 
           CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
           var onSuccessGetAllAttributeBySource = function (response) {
+            //console.log(response)
             $scope.paramListHolder[index].allAttributeinto=response
           
           }
@@ -3082,8 +3347,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           for(var i=0;i<$scope.paramListHolder.length;i++){
             var paramList={};
             paramList.paramId=$scope.paramListHolder[i].paramId;
-          //  paramList.paramName=$scope.paramListHolder[i].paramName;
-          //  paramList.paramType=$scope.paramListHolder[i].paramType;
+            paramList.paramName=$scope.paramListHolder[i].paramName;
+            paramList.paramType=$scope.paramListHolder[i].paramType;
             paramList.ref=$scope.paramListHolder[i].ref;
             if($scope.paramListHolder[i].paramType =='attribute'){
               var attributeInfoArray=[];
@@ -3091,7 +3356,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               var attributeInfoRef={}
               attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
               attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
-            //  attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+              attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
               attributeInfo.ref=attributeInfoRef;
               attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
               attributeInfoArray[0]=attributeInfo
@@ -3105,10 +3370,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 var attributeInfoRef={}
                 attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
                 attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
-               // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+                attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
                 attributeInfo.ref=attributeInfoRef;
                 attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
-             ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+                attributeInfo.attrType=$scope.paramListHolder[i].attributeInfoTag[j].attrType;
+                attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
                 attributeInfoArray[j]=attributeInfo
               }
               paramList.attributeInfo=attributeInfoArray;
@@ -3150,6 +3416,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
         console.log(JSON.stringify(execParams))
         $scope.popupModel.modelData.operators[0].operatorParams=execParams;
+        console.log(JSON.stringify( $scope.popupModel.modelData.operators[0].operatorParams))
       }
     },//End of link Fn
     templateUrl: 'views/jointgraph.html',

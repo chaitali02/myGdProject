@@ -295,7 +295,7 @@ public class DagServiceImpl2 {
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					execParams.setParamSetHolder(paramSetHolder);
+					execParams.setCurrParamSet(paramSetHolder);
 					// Create object
 					dagExec = createDAGExec(dag, execParams);
 					dagExec.setExecParams(execParams); // Set execParams in DAGExec
@@ -517,17 +517,20 @@ public class DagServiceImpl2 {
 
 			// Traverse task & Populate RefKeys
 			if (indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null) {
-				BaseExec baseExec = execFactory2.getExec(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType(), indvTask.getOperators().get(0).getOperatorInfo().getRef());
-				taskExec.getOperators().get(0).setOperatorInfo(baseExec.getMetaIdentifierHolder(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()));
-				try {
-					commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()).toString(), baseExec);
-				} catch (JSONException | ParseException e) {
-					e.printStackTrace();
+				List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+				for(int i=0; i<indvTask.getOperators().get(0).getOperatorInfo().size(); i++) {
+					BaseExec baseExec = execFactory2.getExec(indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType(), indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef());
+					MetaIdentifierHolder operatorInfo = baseExec.getMetaIdentifierHolder(indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType());
+					operatorInfoList.add(operatorInfo);
+					try {
+						commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType()).toString(), baseExec);
+					} catch (JSONException | ParseException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-			
+				taskExec.getOperators().get(0).setOperatorInfo(operatorInfoList);
+			}			
 			execParams.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));
-
 			taskExecs.add(taskExec);
 		}
 		// For GC - START
@@ -588,91 +591,96 @@ public class DagServiceImpl2 {
 							// consider inactive stage)
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
-
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
-				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
 				List<TaskOperator> operatorList = new ArrayList<>();
 				TaskOperator operator = new TaskOperator();
-				MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-				operator.setOperatorInfo(operatorInfo);
-				operatorList.add(operator);
-				indvExecTask.setOperators(operatorList);
-				StringBuilder builder = null;
-				if (indvTask.getOperators().get(0).getOperatorParams() != null
-						&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
-						&& execParams.getParamSetHolder() == null) {
-					List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
-							.getOperatorParams().get(MetaType.paramset.toString());
-					List<ParamSetHolder> paramSetHolders = new ArrayList<>();
-					ObjectMapper mapper = new ObjectMapper();
-					for(Object obj : paramSetHolderList) {
-						paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
+				for(int i=0; i<indvTask.getOperators().get(0).getOperatorInfo().size(); i++) {
+					MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef();
+					MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
+					List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+					operatorInfoList.add(operatorInfo);
+					operator.setOperatorInfo(operatorInfoList);
+					indvExecTask.setOperators(operatorList);
+					StringBuilder builder = null;
+					if (indvTask.getOperators().get(0).getOperatorParams() != null
+							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
+							&& execParams.getCurrParamSet() == null) {
+						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
+								.getOperatorParams().get(MetaType.paramset.toString());
+						List<ParamSetHolder> paramSetHolders = new ArrayList<>();
+						ObjectMapper mapper = new ObjectMapper();
+						for(Object obj : paramSetHolderList) {
+							paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
+						}
+						if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
+							execParams.setParamInfo(paramSetHolders);
+							execParams.setCurrParamSet(paramSetHolders.get(0));
+						}
 					}
-					if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
-						execParams.setParamInfo(paramSetHolders);
-						execParams.setParamSetHolder(paramSetHolders.get(0));
+					if (indvTask.getOperators().get(0).getOperatorParams() != null
+							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
+							&& execParams.getParamListHolder() == null) {
+						List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
+						List<ParamListHolder> paramListHolders = new ArrayList<>();
+						ObjectMapper mapper = new ObjectMapper();
+						for(Object obj : paramListHolderList) {
+							paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
+						}
+						if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
+							execParams.setParamListInfo(paramListHolders);
+							execParams.setParamListHolder(paramListHolders.get(0));
+						}
 					}
-				}
-				if (indvTask.getOperators().get(0).getOperatorParams() != null
-						&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
-						&& execParams.getParamListHolder() == null) {
-					List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
-					List<ParamListHolder> paramListHolders = new ArrayList<>();
-					ObjectMapper mapper = new ObjectMapper();
-					for(Object obj : paramListHolderList) {
-						paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
-					}
-					if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
-						execParams.setParamListInfo(paramListHolders);
-						execParams.setParamListHolder(paramListHolders.get(0));
-					}
-				}
-				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
-				// Have few parts in common area
-				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-						.convertRefKeyListToMap(execParams.getRefKeyList());
-				BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getUuid(), 
-																						indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getVersion(), 
-																						indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getType().toString());
+					operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+					// Have few parts in common area
+					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
+							.convertRefKeyListToMap(execParams.getRefKeyList());
+					BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(indvExecTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getUuid(), 
+																							indvExecTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getVersion(), 
+																							indvExecTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType().toString());
 
-				try {
-					// If conditions with parse goes here - START
-					IOperator operator2 = systemOperatorFactory2.getOperator(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
-					baseExec = operator2.parse(baseExec, execParams, runMode);
-					commonServiceImpl.save(indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getType().toString(), baseExec);
-					
-					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
-					// If conditions with parse goes here - END	
-					logger.info(" otherParams : " + otherParams);
-					logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
-					baseExec.setRefKeyList(execParams.getRefKeyList());
-					if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-						throw new Exception();
-					}
-				} catch (Exception e) {
-					Status failedStatus = new Status(Status.Stage.Failed, new Date());
-					List<Status> statusList = indvExecTask.getStatusList();
-					if (statusList == null) {
-						statusList = new ArrayList<Status>();
-					}
-					statusList.remove(failedStatus);
-					statusList.add(failedStatus);
-					e.printStackTrace();
-					String message = null;
 					try {
-						message = e.getMessage();
-					}catch (Exception e2) {
-						// TODO: handle exception
+						// If conditions with parse goes here - START
+						IOperator operator2 = systemOperatorFactory2.getOperator(indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType());
+						baseExec = operator2.parse(baseExec, execParams, runMode);
+						commonServiceImpl.save(indvExecTask.getOperators().get(0).getOperatorInfo().get(i).getRef().getType().toString(), baseExec);
+						
+						execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
+						// If conditions with parse goes here - END	
+						logger.info(" otherParams : " + otherParams);
+						logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
+						baseExec.setRefKeyList(execParams.getRefKeyList());
+						if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
+							throw new Exception();
+						}
+					} catch (Exception e) {
+						Status failedStatus = new Status(Status.Stage.Failed, new Date());
+						List<Status> statusList = indvExecTask.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						e.printStackTrace();
+						String message = null;
+						try {
+							message = e.getMessage();
+						}catch (Exception e2) {
+							// TODO: handle exception
+						}
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dag, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
+						throw new Exception((message != null) ? message : "Pipeline execution failed.");
+					} finally {
+						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
-					throw new Exception((message != null) ? message : "Pipeline execution failed.");
-				} finally {
-					commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
-				}
-				
+				}		
+
+				operatorList.add(operator);
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
 				Status status = new Status(Status.Stage.NotStarted, new Date());

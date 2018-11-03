@@ -2,7 +2,40 @@
  *
  */
 InferyxApp=angular.module('InferyxApp');
-InferyxApp.factory('graphService',function(dagMetaDataService){
+InferyxApp.factory('setDataFactory',function(dagMetaDataService){
+  var factory={};
+  isObjectEmpty = function(execParam){
+    for(var prop in execParam) {
+      if(execParam.hasOwnProperty(prop))
+          return false;
+  }
+  return true;
+  }
+  factory.setEXEC_PARAMS=function(operators){
+    if(operators[0].operatorParams !=null && !isObjectEmpty(operators[0].operatorParams.EXEC_PARAMS)){
+      if(operators[0].operatorParams.EXEC_PARAMS.paramListInfo !=null){
+        var data=operators[0].operatorParams.EXEC_PARAMS.paramListInfo;
+        for(var i=0;i<operators[0].operatorParams.EXEC_PARAMS.paramListInfo.length;i++){
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].paramName;
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].paramType;
+          delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].ref.name;
+          if(operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo !=null && operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo.length >0){
+            
+            for(var j=0;j<operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo.length;j++){
+              delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo[j].ref.name;
+              delete operators[0].operatorParams.EXEC_PARAMS.paramListInfo[i].attributeInfo[j].attrName;
+            }
+          }
+
+        }
+      }
+    }
+    console.log(operators);
+    return operators;
+  }
+  return factory;
+});
+InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
 
     var factory={}
     factory.convertDagToGraph=function(dag,isTemplate,addMode){
@@ -19,7 +52,8 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               '.status': {
                 'element-id' : 'dag_0',
               },
-              text: { text: dag.name,y:'60px','font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray;','text-anchor': 'start'} }
+              //dag.name
+              text: { text:'Start',y:'60px','font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray;','text-anchor': 'start'} }
           }
         })
       ));
@@ -38,31 +72,31 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               name : 'new stage',
               version:"N/a",
               operators : [ {
-                operatorInfo : {
+                operatorInfo :[ {
                   ref : {
                     name : 'new stage',
                     type : 'stage',
                     uuid:"stage_0",version:"N/a"
                   }
-                }
+                }]
                 
               }],
               isTemplate:true
             },
-            position: { x: 350 , y: stageYPos },
+            position: { x: 150 , y: stageYPos },
             attrs: {
               "model-data": {
                 uuid: "stage_0",
                 name : 'new stage',
                 version:"N/a",
                 operators : [ {
-                  operatorInfo : {
+                  operatorInfo : [{
                     ref : {
                       name : 'new stage',
                       type : 'stage',
                       uuid:"stage_0",version:"N/a"
                     }
-                  }
+                  }]
                 }],
                 isTemplate:true
               },
@@ -142,7 +176,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
           taskXPos = taskXPos + 80;
           angular.forEach(stage.tasks,function (task,taskKey) {
             var o = task.operators[0];
-            var type = o.operatorInfo.ref.type;
+            var type = o.operatorInfo[0].ref.type;
             taskXPos = taskXPos + 80
             taskYPos = taskYPos + 80;
             task.taskId = task.taskId.length > 3 ? task.taskId : stage.stageId+'_'+"task_"+task.taskId
@@ -185,7 +219,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
       });
       return {cells:cells,links:links};
     }
-    factory.convertGraphToDag=function(cells){
+    factory.convertGraphToDag=function(cells,isEXEC_PARAMS){
       //var getJointGrapObject = JSON.parse($scope.graph.content);
       var dag = {};
       var stages = {};
@@ -246,7 +280,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
             "active":val.attributes.attrs[".body"].active ==true?"Y":"N",
             "xPos" : val.attributes.position.x,
             "yPos" : val.attributes.position.y,
-            "operators" : val.attributes['model-data'].operators || {}
+            "operators" : isEXEC_PARAMS == true ?setDataFactory.setEXEC_PARAMS(val.attributes['model-data'].operators):val.attributes['model-data'].operators || {}
             // "properties":val.properties ? val.properties : {}
           };
           }
@@ -326,5 +360,10 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
        console.log("*******DAG JSON*******",JSON.stringify(inArrayFormat[0].stages));
        return inArrayFormat;
     }
+
+   
    return factory;
 });
+
+
+

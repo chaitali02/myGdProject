@@ -1,0 +1,7 @@
+invalidate metadata;
+
+select tabname,cnt from
+(
+select 'FACT_TRANSACTION_JOURNAL' as tabname, count(*) as cnt from FACT_TRANSACTION_JOURNAL
+) t1
+order by tabname; 

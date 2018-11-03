@@ -29,6 +29,9 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -56,7 +59,8 @@ public class ParquetReader implements IReader
 	static final Logger logger = Logger.getLogger(ParquetReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException {
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) 
+			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		String tableName="";
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {
@@ -91,7 +95,7 @@ public class ParquetReader implements IReader
 					// TODO: handle exception
 				}
 				try {
-					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.", null);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
 						| ParseException e1) {
@@ -105,4 +109,42 @@ public class ParquetReader implements IReader
 		return rsHolder;
 	}	
 
+	public ResultSetHolder read(String filePath, Object conObject) throws IOException {
+		String tableName = "";
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {			
+			Dataset<Row> df = null;
+			SparkSession sparkSession = (SparkSession) conObject;
+			DataFrameReader reader = sparkSession.read();
+			df = reader.load(filePath);
+			tableName = Helper.genTableName(filePath);
+			rsHolder.setDataFrame(df);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setTableName(tableName);
+			return rsHolder;
+		}catch (Exception e) {
+			e.printStackTrace();
+			String errorMessage = e.getMessage();
+			if(errorMessage.contains("Path does not exist:")) {
+				String message = null;
+				try {
+					message = e.getMessage();
+				}catch (Exception e2) {
+					// TODO: handle exception
+				}
+				try {
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.", null);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
+						| ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					throw new RuntimeException((message != null) ? message : "File path not exist.");
+				}
+				throw new RuntimeException((message != null) ? message : "File path not exist.");
+			}
+			throw new RuntimeException("Can not read file.");
+		}	
+	}
 }

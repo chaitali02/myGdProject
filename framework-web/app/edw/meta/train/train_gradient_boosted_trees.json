@@ -1,0 +1,136 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+                }
+            },
+            "attribute" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "3",
+            "feature" : {
+                "featureId" : "3",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+                }
+            },
+            "attribute" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "feature" : {
+                "featureId" : "4",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }
+    ],
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "labelInfo" : {
+        "attrId" : "4",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "useHyperParams" : "N",
+    "uuid" : "d5f23ff1-29b5-46a5-b13b-35814a2d20e4",
+    "version" : "1540546050",
+    "name" : "train_gradient_boosted_trees",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-26T09:27:30.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            }
+        }
+    ]
+}

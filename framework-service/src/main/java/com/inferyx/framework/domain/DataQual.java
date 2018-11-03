@@ -30,7 +30,7 @@ public class DataQual extends BaseRule{
 	private Map<String, Long> lengthCheck;
 	private AttributeRefHolder refIntegrityCheck;	
 	//private String stdDevCheck;
-	private List<AttributeRefHolder> filterInfo;
+	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
 	
 	
@@ -52,10 +52,12 @@ public class DataQual extends BaseRule{
 	public void setDependsOn(MetaIdentifierHolder dependsOn) {
 		this.dependsOn = dependsOn;
 	}
-	public List<AttributeRefHolder> getFilterInfo() {
+	
+	public List<FilterInfo> getFilterInfo() {
 		return filterInfo;
 	}
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+	
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
 	public AttributeRefHolder getRefIntegrityCheck() {

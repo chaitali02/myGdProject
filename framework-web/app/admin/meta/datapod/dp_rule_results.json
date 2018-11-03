@@ -113,7 +113,7 @@
             "type" : "Double",
             "desc" : "Minimum value in data",
             "key" : null,
-            "partition" : "Y",
+            "partition" : "N",
             "dispName" : "minVal",
             "active" : "Y",
             "expr" : null
@@ -219,24 +219,6 @@
         }, 
         {
             "attributeId" : 16,
-            "name" : "load_date",
-            "type" : "string",
-            "desc" : "load_date",
-            "dispName" : "load_date",
-            "partition" : "Y",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 17,
-            "name" : "load_id",
-            "type" : "Integer",
-            "desc" : "load_id",
-            "dispName" : "load_id",
-            "partition" : "Y",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 18,
             "name" : "version",
             "type" : "Integer",
             "desc" : "version",

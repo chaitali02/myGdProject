@@ -21,6 +21,7 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -61,6 +63,8 @@ public class RuleController {
 	@Autowired CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
+	
+	static final Logger logger = Logger.getLogger(RuleController.class);
 	
 	@RequestMapping(value = "/getRuleSql", method = RequestMethod.POST)
 	public String getRuleSql(@RequestBody Rule rule,
@@ -92,10 +96,12 @@ public class RuleController {
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		if (execParams != null) {
 			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				logger.info(" ExecParams has paramInfo ");
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					execParams.setParamSetHolder(paramSetHolder);
+					execParams.setCurrParamSet(paramSetHolder);
 				}
 			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				logger.info(" ExecParams has paramListInfo ");
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					execParams.setParamListHolder(paramListHolder);
 				}
@@ -271,24 +277,21 @@ public class RuleController {
 	}	
 	
 	
-	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "ruleExecUUID") String ruleExecUUID, 
-	    		@RequestParam(value= "ruleExecVersion") String ruleExecVersion,
-	    		@RequestParam(value = "format", defaultValue="excel")String format,
-				@RequestParam(value ="rows",defaultValue="1000") int rows,
-				@RequestParam(value = "download", defaultValue="Y") String download,@RequestParam(value="offset", defaultValue="0") int offset, 
-				@RequestParam(value="limit", defaultValue="200") int limit,
-				@RequestParam(value="sortBy", required=false) String sortBy,@RequestParam(value="order", required=false) String order,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value="requestId",required = false) String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
-	    		{
-			RunMode runMode = Helper.getExecutionMode(mode);
-			ruleServiceImpl.download(ruleExecUUID, ruleExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
-	    	return null;
-	   }
-	
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "ruleExecUUID") String ruleExecUUID,
+			@RequestParam(value = "ruleExecVersion") String ruleExecVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		ruleServiceImpl.download(ruleExecUUID, ruleExecVersion, format, null, 0, rows, response, rows, null, null, null,
+				runMode);
+		return null;
+	}
+
 	@RequestMapping(value = "/getRuleExeByDatapod", method = RequestMethod.GET)
     public List<RuleExec> getdqExecByDatapod(@RequestParam("datapodUUID") String datapodUUID,
 			@RequestParam(value = "type", required = false) String type,

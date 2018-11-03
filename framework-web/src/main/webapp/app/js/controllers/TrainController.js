@@ -165,7 +165,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.getAllLetestModel = function (defaultValue) {
-    TrainService.getAllModelByType('N', "model").then(function (response) { onGetAllLatest(response.data) });
+//    TrainService.getAllModelByType('N', "model").then(function (response) { onGetAllLatest(response.data) });
+    TrainService.getAllLatest("model").then(function (response) { onGetAllLatest(response.data) });
     var onGetAllLatest = function (response) {
       $scope.allModel = response;
       if (defaultValue == true) { }
@@ -403,6 +404,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.valPercent = $scope.trainData.valPercent;
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
+    TrainJson.featureImportance=$scope.trainData.featureImportance;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -441,7 +443,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     // target.ref=targetref;
     // TrainJson.target=target;
     var featureMap = [];
-    if ($scope.featureMapTableArray.length > 0) {
+    if ( $scope.featureMapTableArray && $scope.featureMapTableArray.length > 0) {
       for (var i = 0; i < $scope.featureMapTableArray.length; i++) {
         var featureMapObj = {};
         featureMapObj.featureMapId = i;
@@ -547,7 +549,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.getParamSetByAlgorithm=function(){
-    TrainService.getParamListByModel($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version,$scope.trainData.useHyperParams).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
+    TrainService.getParamSetByAlgorithm($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version,$scope.trainData.useHyperParams).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
       var onSuccessGetParamSetByAlgorithm = function (response) {
         $scope.allparamset = response
         $scope.isShowExecutionparam = true;

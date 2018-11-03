@@ -19,8 +19,10 @@ import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 
 public class RunDataQualServiceImpl extends RunBaseRuleService {
@@ -51,22 +53,28 @@ public class RunDataQualServiceImpl extends RunBaseRuleService {
 	 * @param baseRuleExec
 	 * @param datapodKey
 	 * @return
+	 * @throws JsonProcessingException 
 	 */
 	@Override
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
-		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) || execContext.equals(ExecContext.livy_spark)) {
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+		if(datapodKey.getType().equals(MetaType.rule)) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+
+		}
+	    else if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) && execContext.equals(ExecContext.FILE) 
+				/*|| execContext.equals(ExecContext.livy_spark)*/) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+		}
+		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), MetaType.datapod.toString());
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
+		if (/*execContext == null || execContext.equals(ExecContext.spark) ||*/ datasource.getType().equals(ExecContext.FILE.toString()) || runMode.equals(RunMode.ONLINE) /*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", datapodKey.getUuid().replace("-", "_"),
 					datapodKey.getVersion(), baseRuleExec.getVersion());
 		}
-		Datapod dp = null;
-		try {
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		logger.info("datasource.getType() : " + datasource.getType());
 		if (dp != null) {
 			return datasource.getDbname() + "." + dp.getName();
-		}
+		} 
 		return null;
 	}
 	

@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS CUSTOMER; 
+
+CREATE TABLE CUSTOMER 
+  ( 
+     CUSTOMER_ID            STRING, 
+     ADDRESS_ID             STRING, 
+     BRANCH_ID              STRING, 
+     TITLE                  STRING, 
+     FIRST_NAME             STRING, 
+     MIDDLE_NAME            STRING, 
+     LAST_NAME              STRING, 
+     SSN                    STRING, 
+     PHONE                  STRING, 
+     DATE_FIRST_PURCHASE    STRING, 
+     COMMUTE_DISTANCE_MILES INT 
+  ) PARTITIONED BY (LOAD_DATE STRING, LOAD_ID STRING) ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ',';

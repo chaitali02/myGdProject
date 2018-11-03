@@ -1,227 +1,12 @@
 /**
 **/
+
 MetadataModule = angular.module('MetadataModule');
-// MetadataModule.controller('MetadataController', function ($location, $filter, dagMetaDataService, uiGridConstants, $state, $sessionStorage, $rootScope, $cookieStore, $stateParams, $scope, MetadataDatatableService, MetadataSerivce, CommonService, FileSaver, Blob) {
-
-// 	console.log("metadatacontrollerjs" + $rootScope.baseUrl)
-// 	$scope.select = $stateParams.type
-
-// 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-// 		console.log(fromParams)
-// 		$sessionStorage.fromStateName = fromState.name
-// 		$sessionStorage.fromParams = fromParams
-// 	});
-
-// 	$scope.action = function (data, mode) {
-// 		console.log(data);
-// 		var uuid = data.uuid;
-// 		var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
-// 		if (stateName)
-// 			$state.go(stateName, {
-// 				id: uuid,
-// 				mode: mode == 'view' ? true : false
-// 			});
-// 	}
-// 	$scope.selectData = function (data) {
-// 		$scope.gridOptions.data = data.data;
-// 		$scope.originalData = data.data;
-// 	}
-// 	$scope.gridOptions = {
-// 		paginationPageSizes: null,
-// 		columnDefs: [{
-// 			displayName: 'datapodId',
-// 			name: 'id',
-// 			visible: false,
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center'
-// 		},
-// 		{
-// 			displayName: 'UUID',
-// 			name: 'uuid',
-// 			minWidth: 250,
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center'
-// 		},
-// 		{
-// 			displayName: 'Version',
-// 			name: 'version',
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center',
-// 			sort: {
-// 				direction: uiGridConstants.DESC,
-// 				// priority: 0,
-// 			},
-// 		},
-// 		{
-// 			displayName: 'Name',
-// 			name: 'name',
-// 			minWidth: 250,
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center'
-// 		},
-// 		{
-// 			displayName: 'Created By',
-// 			name: 'createdBy.ref.name',
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center'
-// 		},
-// 		{
-// 			displayName: 'Created On',
-// 			name: 'createdOn',
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center'
-// 		},
-// 		{
-// 			displayName: 'Action',
-// 			name: 'action',
-// 			cellClass: 'text-center',
-// 			headerCellClass: 'text-center',
-// 			maxWidth: 100,
-// 			cellTemplate: [
-// 				'<div class="ui-grid-cell-contents">',
-// 				'  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
-// 				'    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
-// 				'    <i class="fa fa-angle-down"></i></button>',
-// 				'    <ul uib-dropdown-menu>',
-// 				'    <li><a ng-click="grid.appScope.action(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-// 				'    <li><a ng-click="grid.appScope.action(row.entity,\'edit\')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
-// 				'    <li><a href="javascript:;"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
-// 				'    <li><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
-// 				'    <li><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
-// 				'    </ul>',
-// 				'  </div>',
-// 				'</div>'
-// 			].join('')
-// 		}
-// 		]
-// 	};
-// 	$scope.refreshData = function () {
-// 		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-// 	};
-
-// 	//MetadataDatatableService.setUuid($stateParams.type,$cookieStore.get('userdetail').sessionId).then(function(response){onSuccess(response.data)});
-// 	CommonService.getBaseEntityByCriteria($stateParams.type, '', '', '', '', '', '').then(function (response) { onSuccess(response.data) });
-// 	var onSuccess = function (response) {
-// 		$scope.gridOptions.data = response;
-// 		$scope.originalData = response;
-// 	}
-
-// 	$scope.getDetail = function (data) {
-// 		$scope.selectuuid = data.split(",")[1]
-// 		$('#matadatafilemodal').modal({
-// 			backdrop: 'static',
-// 			keyboard: false
-// 		});
-// 	}
-
-// 	$scope.okMetadataFile = function () {
-// 		$('#matadatafilemodal').modal('hide');
-// 		MetadataSerivce.getByUuid($scope.selectuuid, $stateParams.type).then(function (response) { onSuccessGetUuid(response.data) });
-// 		var onSuccessGetUuid = function (response) {
-// 			var jsonobj = angular.toJson(response, true);
-// 			var data = new Blob([jsonobj], { type: 'application/json;charset=utf-8' });
-// 			FileSaver.saveAs(data, response.name + '.json');
-// 		}
-// 	}
-
-// 	$scope.createCopy = function (data) {
-// 		var uuid = data.split(",")[1]
-// 		var version = data.split(",")[2]
-// 		$scope.clone = {};
-// 		$scope.clone.uuid = uuid;
-// 		$scope.clone.version = version;
-// 		$('#clonemodal').modal({
-// 			backdrop: 'static',
-// 			keyboard: false
-// 		});
-// 	}
-// 	$scope.okClone = function () {
-// 		$('#clonemodal').modal('hide');
-// 		MetadataSerivce.saveAs($scope.clone.uuid, $scope.clone.version, $scope.select).then(function (response) { onSuccessSaveAs(response.data) });
-// 		var onSuccessSaveAs = function (response) {
-// 			MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
-// 			var onSuccess = function (response) {
-// 				$scope.data = response;
-// 				$scope.message = $scope.select + " Cloned Successfully"
-// 				$('#showMsgModel').modal({
-// 					backdrop: 'static',
-// 					keyboard: false
-// 				});
-// 			}
-// 		}
-// 	}
-
-// 	$scope.excutionDag = function (data) {
-// 		var uuid = data.split(",")[1]
-// 		var version = data.split(",")[2]
-// 		if ($stateParams.type == "dag") {
-// 			MetadataSerivce.getByUuid(uuid, "dag").then(function (response) { onSuccessGetUuid(response.data) });
-// 			var onSuccessGetUuid = function (response) {
-// 				MetadataSerivce.excutionDag(response).then(function (response) { onSuccessExecutionDag(response.data) });
-// 				var onSuccessExecutionDag = function (response) {
-// 					console.log("DagExec: " + JSON.stringify(response))
-// 					$scope.executionmsg = "Pipeline Submited Successfully"
-// 					$('#executionsubmit').modal({
-// 						backdrop: 'static',
-// 						keyboard: false
-// 					});
-// 				}
-// 			}
-// 		}//End If
-// 		else if ($stateParams.type == "map") {
-// 			MetadataSerivce.executeMap(uuid, version).then(function (response) { onSuccessExecutionMap(response.data) });
-// 			var onSuccessExecutionMap = function (response) {
-// 				$scope.executionmsg = "Map Submited Successfully"
-// 				console.log("MapExec: " + JSON.stringify(response))
-// 				$('#executionsubmit').modal({
-// 					backdrop: 'static',
-// 					keyboard: false
-// 				});
-// 			}// emd onSuccessExecutionMap
-// 		} //End ElseIf
-// 	}//End excutionDag
-
-// 	$scope.getDetailForUpload = function (data) {
-// 		var uuid = data.split(",")[1]
-// 		var version = data.split(",")[2]
-// 		$(":file").jfilestyle('clear')
-// 		$("#csv_file").val("");
-// 		$('#fileupload').modal({
-// 			backdrop: 'static',
-// 			keyboard: false
-// 		});
-// 	}
-
-// 	$scope.uploadFile = function () {
-// 		var file = $scope.myFile;
-// 		var iEl = angular.element(document.querySelector('#csv_file'));
-// 		var filename = iEl[0].files[0].name
-// 		var fd = new FormData();
-// 		fd.append('file', file)
-// 		MetadataSerivce.getFile(filename, fd).then(function (response) { onSuccess(response.data) });
-// 		var onSuccess = function (response) {
-// 			MetadataSerivce.getRegisterFile(response).then(function (response) { onSuccessGetRegisterFile(response.data) });
-// 			var onSuccessGetRegisterFile = function (response) {
-// 				$('#fileupload').modal('hide');
-// 				MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
-// 				var onSuccess = function (response) {
-// 					$scope.data = response;
-// 				}
-
-// 				$scope.executionmsg = "CSV Uploaded Successfully"
-// 				$('#executionsubmit').modal({
-// 					backdrop: 'static',
-// 					keyboard: false
-// 				});
-// 			}
-// 		}
-// 	}
-// });
-
-
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location,$timeout, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService,CommonService) {
-	
+MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout,$http,$filter,$rootScope,$state,$sessionStorage, 
+	 $scope, $stateParams,$cookieStore, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,commentService,
+	 CommonService,CF_DOWNLOAD,CF_SAMPLE) {
+
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -255,6 +40,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
+	$scope.download={};
+	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+	$scope.download.formates=CF_DOWNLOAD.formate;
+	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
+	$scope.sample={};
+	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrow;
+	$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
+	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
 	$scope.mode = ""
 	$scope.dataLoading = false;
@@ -265,7 +61,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar'];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -279,6 +75,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['datapod'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.isResizeCompareMetadata=true;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datapod'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -299,21 +96,37 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		maxSize: 5,
 	}
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
-
+    $scope.gridOptions = {
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
 
 	/*Start showPage*/
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
 		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
 	}/*End showPage*/
 
 	$scope.showGraph = function (uuid, version) {
 		$scope.showFrom = false;
+		$scope.isShowDatastore=false;
 		$scope.isShowSimpleData = false;
 		$scope.showGraphDiv = true;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
 
 	}/*End ShowGraph*/
+
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListdatapod', {
@@ -352,21 +165,193 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		enableSelectAll: true
 	};
 
-	$scope.canEdit = function () {
-		if ($stateParams.mode == "true") {
-			return false;
+    $scope.gridOptionsCompareMetaData={
+		enableGridMenu: true,
+		rowHeight: 40,
+		enableRowSelection: true,
+		enableSelectAll: true,
+		headerTemplate: 'views/header-template.html',
+		superColDefs: [{
+			name: 'sourceParant',
+			displayName: 'Source'
+		}, {
+			name: 'targetParant',
+			displayName:'Target'
+		},
+		 {
+			name: 'statusParant',
+			displayName:'Status'
+		}
+		],
+		columnDefs: [{
+			name: 'sourceAttribute',
+			displayName: 'Atrribute',
+			superCol: 'sourceParant'
+		}, {
+			name: 'sourceType',
+			displayName: 'Type',
+			superCol: 'sourceParant'
+		}, {
+			name: 'sourceLength',
+			displayName: 'Length',
+			superCol: 'sourceParant'
+  
+		},
+		{
+			name: 'targetAttribute',
+			displayName: 'Atrribute',
+			superCol: 'targetParant'
+		}, {
+			name: 'targetType',
+			displayName: 'Type',
+			superCol: 'targetParant'
+		},
+		{
+			name: 'targetLength',
+			displayName: 'Length',
+			superCol: 'targetParant'
+  
+		},
+		{
+			name: 'status',
+			displayName: '',
+			superCol: 'statusParant',
+			enableColumnMenu: false,
+			cellClass: 'text-center',
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
+		}],
+	};  
+
+	$scope.filteredRowsCompareMetaData = [];
+	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
+		$scope.gridApiCompareMetaData = gridApi;
+		$scope.filteredRowsCompareMetaData = $scope.gridApiCompareMetaData.core.getVisibleRows($scope.gridApiCompareMetaData.grid);
+	};
+	$window.addEventListener('resize', function(e) {
+		$scope.isResizeCompareMetadata=false
+		$timeout(function() {
+		   $scope.isResizeCompareMetadata=true;
+		  },10);
+	  });
+	  
+	$scope.getGridStyleCompareMetaData = function () {
+		
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
+			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 50 : 400) + 70) + 'px';
 		}
 		else {
-			return true;
+		
+			style['height'] = "150px";
 		}
+		return style;
+	}
+	$scope.gridOptionsDataStrore={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	};
+    $scope.gridOptionsDataStrore.columnDefs = [
+		{
+			name: 'uuid',
+			width: '30%',
+			enableCellEdit: false,
+			visible: false,
+			displayName: 'Uuid',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'name',
+			minWidth: 220,
+			displayName: 'Name',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'version',
+			maxWidth:110,
+			cellClass: 'text-center',
+			visible: true,
+			displayName: 'Version',
+			headerCellClass: 'text-center',
+			sort: {
+				direction: uiGridConstants.DESC,
+			   // priority: 0,
+			  },
+		},
+		{
+			displayName: 'Created By',
+			name: 'createdBy.ref.name',
+			cellClass: 'text-center',
+			maxWidth:100,
+			headerCellClass: 'text-center'
+		  },
+		  {
+			displayName: 'Created On',
+			name: 'createdOn',
+			minWidth: 220,
+			cellClass: 'text-center',
+			headerCellClass: 'text-center',
+	
+		  },
+		
+		{
+			name: 'numRows',
+			width: '10%',
+			enableCellEdit: false,
+			displayName: 'Rows',
+			cellClass: 'text-center',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'action',
+			displayName: 'Action',
+			width: '10%',
+			cellTemplate: '<input type="radio" name="action" style="margin:11px;width:16px;height:16px;" ng-click="grid.appScope.onSelectDataStore(row.entity,$index)"  ng-disabled="row.entity.isSelectedDatastore"></input>',
+			cellEditableCondition:false,
+			cellClass: 'text-center',
+			headerCellClass: 'text-center'
+		}
+		
+	];
+
+    $scope.filteredRowsDatastore = [];
+	$scope.gridOptionsDataStrore.onRegisterApi = function (gridApi) {
+		$scope.gridApiDatastore = gridApi;
+		$scope.filteredRowsDatastore = $scope.gridApiDatastore.core.getVisibleRows($scope.gridApiDatastore.grid);
 	};
 
+	$scope.getGridStyleDatastore = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+		}
+		if ($scope.filteredRowsDatastore && $scope.filteredRowsDatastore.length > 0) {
+			style['height'] = (($scope.filteredRowsDatastore.length < 10 ? $scope.filteredRowsDatastore.length * 50 : 400) + 50) + 'px';
+		}
+		else {
+			style['height'] = "100px";
+		}
+		return style;
+	}
+	$scope.gridOptions.columnDefs = [];
 	$scope.gridOptionsDatapod.columnDefs = [
 		{
 			name: 'attributeId',
+			displayName: 'Id',
 			enableCellEdit: false,
-			visible: false,
-			headerCellClass: 'text-center'
+			visible: true,
+			width: '5%',
+			headerCellClass: 'text-center',
+			cellClass: 'text-center'
 		},
 		{
 			name: 'key',
@@ -398,7 +383,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		{
 			name: 'dispName',
 			displayName: 'Display Name',
-			width: '19%',
+			width: '18%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		},
@@ -406,14 +391,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		{
 			name: 'name',
 			displayName: 'Name',
-			width: '19%',
+			width: '14%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		},
 		//, displayName: 'Name', cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.name"  title="{{row.entity.name}}" ng-disabled="row.entity.isAttributeEnable ||{{grid.appScope.mode}}"class="form-control">'},
 		{
 			name: 'type',
-			width: '18%',
+			width: '13%',
 			enableCellEdit: false,
 			displayName: 'Type',
 			cellTemplate: ' <select select2 style="margin:10px;" ng-model="row.entity.type" ng-options="x for x in grid.appScope.type"  ng-disabled="{{grid.appScope.mode}}" class="form-control"></select>',
@@ -421,9 +406,16 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 			headerCellClass: 'text-center'
 		},
 		{
+			name: 'length',
+			displayName: 'Length',
+			width: '10%',
+			cellTemplate: ' <input type="number" min="1" style="margin: 7px 0px 0px 3px;height: 72%;width: 90%;" ng-model="row.entity.length" ng-disabled="{{grid.appScope.mode}}"></input>',
+			headerCellClass: 'text-center'
+		},
+		{
 			name: 'desc',
 			displayName: 'Desc',
-			width: '19%',
+			width: '17%',
 			cellEditableCondition: $scope.canEdit,
 			headerCellClass: 'text-center'
 		}
@@ -433,14 +425,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 
 	$scope.gridOptions.columnDefs = [];
 	$scope.filteredRows = [];
+	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
 	};
+
 	$scope.gridOptionsDatapod.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
 	};
+
 	$scope.getGridStyle = function () {
 		var style = {
 			'margin-top': '10px',
@@ -454,8 +449,16 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		}
 		return style;
 	}
+
+	$scope.canEdit = function () {
+		if ($stateParams.mode == "true") {
+			return false;
+		}
+		else {
+			return true;
+		}
+	};
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		//console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 	});
@@ -471,19 +474,22 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	}
 
 
-    $scope.getLovByType = function() {
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
 			console.log(response)
-			$scope.lobTag=response[0].value
+			$scope.lobTag = response[0].value
 		}
 	}
+	
 	$scope.loadTag = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+
+	$scope.getLovByType();
+	
 	$scope.datapodFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.datapodHasChanged = true;
@@ -496,9 +502,98 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	$scope.onChangeName = function (data) {
 		$scope.datapodName = data;
 	}
+	
 
+	$scope.refreshDataDatastore=function(){
+		$scope.gridOptionsDataStrore.data= $filter('filter')($scope.originalDataDatastore, $scope.searchtextDatastore, undefined);
+	}
+	
+	
+	$scope.isDisabledDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+			
+		}
+	}
+	$scope.isEnableDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=false;
+			if(data !=null && (data.uuid == $scope.gridOptionsDataStrore.data[i].uuid)){
+				$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+				 
+			}
+		}
+	}
 
+	$scope.onSelectDataStore=function(data,index){
+		$scope.isDisabledDSRB();
+		$scope.sample.data=null;
+		$scope.datastoreDetail=data
+		$scope.sample.data=data;
+		//$scope.sample.type="datastore";
+		$scope.getResultByDatastore(data);
+	}
 
+	$scope.showDatastrores=function(data){
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false;
+		$scope.showGraphDiv = false;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=true;
+		$scope.gridOptionsDataStrore.data=[];
+		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetDatastoreByDatapode = function (response) {
+			$scope.isShowDatastore=true;
+			$scope.originalDataDatastore=response;
+			$scope.gridOptionsDataStrore.data=response;
+			console.log(response)
+		}
+	
+	}
+	
+	$scope.getResultByDatastore = function (data) {
+		//$('#SampleModel').modal("hide");
+		$scope.isDataError = false;
+		$scope.isDataInpogress = true
+		$scope.tableclass = "centercontent";
+		$scope.showFrom = false;
+		$scope.showGraphDiv = false;
+		$scope.spinner = true;
+		$scope.isDatastoreResult=true;
+		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetResultByDatastore = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
+			$scope.isEnableDSRB(data);
+			$scope.gridOptions.columnDefs = [];
+			$scope.isDataInpogress = false;
+			$scope.tableclass = "";
+			$scope.spinner = false
+			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
+				var attribute = {};
+				attribute.name = $scope.datapoddata.attributes[j].name;
+				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
+				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				$scope.gridOptions.columnDefs.push(attribute)
+			}
+			$scope.counter = 0;
+			$scope.originalData = response;
+			if ($scope.originalData.length > 0) {
+				$scope.getResults($scope.originalData);
+			}
+			$scope.spinner = false;
+
+		}
+
+		var onError = function (response) {
+			$scope.isDataError = true;
+			$scope.msgclass = "errorMsg"
+			$scope.datamessage = "Some Error Occurred";
+			$scope.isDataInpogress = true;
+			$scope.spinner = false;
+			$scope.isEnableDSRB(data);
+		}
+	}
 	$scope.showSampleTable = function (data) {
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
@@ -507,41 +602,26 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		$scope.showFrom = false;
 		$scope.showGraphDiv = false;
 		$scope.spinner = true;
-		MetadataDatapodSerivce.getDatapodSample(data).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
+		$scope.isShowDatastore=false;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=false;
+	//	$('#SampleModel').modal("hide");
+		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
-			console.log(response)
-			//$scope.datapodsampledata=response;
-
+			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;	
 			$scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
-
-			for (var j = 0; j < data.attributes.length; j++) {
+			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
-				attribute.name = data.attributes[j].name;
-				attribute.displayName = data.attributes[j].dispName;
+				attribute.name =data.attributes[j].name;
+				attribute.displayName =data.attributes[j].dispName;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
-
-			// angular.forEach(response[0], function (value, key) {
-			// 	debugger
-			// 	if (key != "rownum" && key != "version") {
-			// 		if($scope.gridOptions.columnDefs[$scope.counter].name.toLowerCase() == key){
-			// 			$scope.gridOptions.columnDefs[$scope.counter].name = key;
-			// 		}else{
-			// 			$scope.gridOptions.columnDefs[$scope.counter].name = key;
-			// 			$scope.gridOptions.columnDefs[$scope.counter].displayName = key;
-			// 		}
-
-			// 		console.log(key, value)
-			// 		$scope.counter++
-			// 	}
-			// });
-			//$scope.gridOptions.data = response;
-			console.log($scope.gridOptions.columnDefs)
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
 				$scope.getResults($scope.originalData);
@@ -549,6 +629,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 			$scope.spinner = false;
 
 		}
+
 		var onError = function (response) {
 			$scope.isDataError = true;
 			$scope.msgclass = "errorMsg"
@@ -558,16 +639,21 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		}
 	}
 
+	
+
 	$scope.selectPage = function (pageNo) {
 		$scope.pagination.currentPage = pageNo;
 	};
+
 	$scope.onPerPageChange = function () {
 		$scope.pagination.currentPage = 1;
 		$scope.getResults($scope.originalData)
 	}
+
 	$scope.pageChanged = function () {
 		$scope.getResults($scope.originalData)
 	};
+
 	$scope.getResults = function (params) {
 		$scope.pagination.totalItems = params.length;
 		if ($scope.pagination.totalItems > 0) {
@@ -586,12 +672,80 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		$scope.gridOptions.data = params.slice(offset, limit);
 		console.log($scope.gridOptions.data)
 	}
+
 	$scope.refreshData = function () {
 		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
 		$scope.getResults(data);
 	};
+	$scope.refreshCompareMetaData = function (searchtext) {
+		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
+		
+	};
 
+    $scope.showCompareMetaData=function(data){
+		if($scope.isShowCompareMetaData){
+			return false
+		}
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.compareMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessCompareMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessCompareMetadata = function (response) {
+			$scope.gridOptions.columnDefs.data = [];
+			$scope.gridOptionsCompareMetaData.data=response;
+			var count=0;
+			for(var i=0;i<response.length;i++){
+				if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+			}
+			if(response.length == count){
+				$scope.isMetaSysn=true;
+			}else{
+				$scope.isMetaSysn=false;
+			}
 
+			$scope.originalCompareMetaData=response;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+			$scope.gridOptionsCompareMetaData.tableclass = "";
+		}
+
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
+	
+	$scope.synchronousMetadata=function(data){
+		if($scope.isMetaSysn || $scope.selectSourceType=='file'){
+			return false
+		}
+
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessSynchronizeMetadata = function (response) {
+			$scope.datapoddata=response;
+			$scope.showCompareMetaData($scope.datapoddata)
+		}
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		//var resultvalue=value.split(/[\_]?/);
@@ -605,7 +759,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	$scope.selectType = function () {
 		MetadataDatapodSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
-			console.log(JSON.stringify(response))
 			$scope.alldatasource = response
 		}
 	}
@@ -635,15 +788,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 					$scope.tags = tags;
 				}
 			}
-			//console.log(JSON.stringify($scope.datapoddata))
-			$scope.gridOptionsDatapod.data = response.attributes;
-			/*if($sessionStorage.showgraph == true && $sessionStorage.fromStateName !="metadata"){
-			$scope.showFromGraph($scope.datapoddata.uuid,$scope.datapoddata.version);
-			delete $sessionStorage.showgraph
-		}
-		else{
-		delete $sessionStorage.showgraph
-	}*/
+			$scope.gridOptionsDatapod.data = response.attributes;	
 			$scope.attributetable = response.attributes
 			defaultversion.version = response.datapodata.version;
 			defaultversion.uuid = response.datapodata.uuid;
@@ -663,6 +808,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 			}
 		}
 	} /*End If*/
+
 
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
@@ -712,7 +858,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	/*Start SubmitDatapod*/
 	$scope.submitDatapod = function () {
 		var datapodJson = {};
-		var upd_tag="N"
+		var upd_tag = "N"
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.datapodHasChanged = true;
@@ -728,8 +874,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 
@@ -745,32 +891,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		datapodJson.datasource = datasource;
 		var attributesarray = [];
 		var count = 0;
-		// for(var datapodattr=0;datapodattr<$scope.attributetable.length;datapodattr++){
-		// 	var attributes={};
-		// 	attributes.attributeId=datapodattr
-		// 	attributes.name=$scope.attributetable[datapodattr].name;
-		// 	attributes.type=$scope.attributetable[datapodattr].type;
-		// 	attributes.desc=$scope.attributetable[datapodattr].desc;
-		// 	attributes.dispName=$scope.attributetable[datapodattr].dispName;
-		// 	attributes.active=$scope.attributetable[datapodattr].active;
-		// 	if($scope.attributetable[datapodattr].key == "Y"){
-		// 		attributes.key=count;
-		// 		count=count+1;
-		// 	}
-		// 	else{
-		// 		attributes.key=""
-		// 	}
-		// 	if($scope.attributetable[datapodattr].partition == "Y"){
-		// 		attributes.partition=$scope.attributetable[datapodattr].partition;
-		// 	}
-		// 	else{
-		// 		attributes.partition="N"
-		// 	}
-		// 	attributesarray[datapodattr]=attributes
-		// }
-
 		for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
-
 			var attributes = {};
 			attributes.attributeId = datapodattr
 			attributes.name = $scope.gridOptionsDatapod.data[datapodattr].name;
@@ -778,6 +899,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 			attributes.desc = $scope.gridOptionsDatapod.data[datapodattr].desc;
 			attributes.dispName = $scope.gridOptionsDatapod.data[datapodattr].dispName;
 			attributes.active = $scope.gridOptionsDatapod.data[datapodattr].active;
+			attributes.length = $scope.gridOptionsDatapod.data[datapodattr].length;
 			if ($scope.gridOptionsDatapod.data[datapodattr].key == "Y") {
 				attributes.key = count;
 				count = count + 1;
@@ -795,7 +917,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		}
 		datapodJson.attributes = attributesarray;
 		console.log(JSON.stringify(datapodJson))
-		MetadataDatapodSerivce.submit(datapodJson, 'datapod',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodSerivce.submit(datapodJson, 'datapod', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
@@ -815,13 +937,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 
 
 	$scope.addRow = function () {
-		// if($scope.attributetable == null){
-		// 	$scope.attributetable =[];
-		// }
 		var attributejson = {}
 		attributejson.attributeId = $scope.gridOptionsDatapod.data.length//$scope.attributetable.length;
-		// $scope.attributetable.splice($scope.attributetable.length, 0,attributejson);
-
 		$scope.gridOptionsDatapod.data.push(attributejson);
 	}
 
@@ -831,43 +948,55 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		});
 	}
 	$scope.removeRow = function () {
-		/*var len=$scope.attributetable.length
-		$scope.attributetable.splice(len-1, 1);*/
-		// var newDataList=[];
-		// $scope.selectallattribute=false;
-		// angular.forEach( $scope.attributetable, function(selected){
-		// 	if(!selected.selected){
-		// 		newDataList.push(selected);
-		// 	}
-		// });
-		// $scope.attributetable = newDataList;
+		$scope.iSSubmitEnable = true;
 		angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
 			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
 		});
 	}
+	$scope.downloadFileByDatastore = function (data) {
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datastore";
+		$('#downloadSample').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
+
 	$scope.downloadFile = function (data) {
-		var uuid = data.uuid;
-		var version = data.version;
+		if($scope.isDownloadDatapod)
+		  return false;
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datapod";
+		$('#downloadSample').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
+
+    $scope.submitDownload =function(){
+		$scope.isDownloadDatapod=true;
+		$('#downloadSample').modal("hide");
 		var url = $location.absUrl().split("app")[0]
 		$http({
 			method: 'GET',
-			url: url + "datapod/download?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&formate="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
+			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			$scope.isDownloadDatapod=false;
 			headers = headers();
-
-			var filename = headers['x-filename'];
+			var filename = headers['filename'];
 			var contentType = headers['content-type'];
-
 			var linkElement = document.createElement('a');
 			try {
 				var blob = new Blob([data], {
 					type: contentType
 				});
 				var url = window.URL.createObjectURL(blob);
-
 				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", uuid + ".xls");
+				linkElement.setAttribute("download",filename);
 
 				var clickEvent = new MouseEvent("click", {
 					"view": window,
@@ -879,10 +1008,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 				console.log(ex);
 			}
 		}).error(function (data) {
+			$scope.isDownloadDatapod=false;
 			console.log(data);
+			$('#downloadSample').modal("hide");
 		});
-	};
-
+	}
 })/* End MetadataDatapodController*/
 
 

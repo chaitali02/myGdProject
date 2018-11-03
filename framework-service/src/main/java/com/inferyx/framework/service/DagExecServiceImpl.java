@@ -569,9 +569,11 @@ public class DagExecServiceImpl {
 									com.inferyx.framework.domain.Status.Stage.Terminating, date);
 							taskStatusList.add(status);
 							logger.info("Starting to kill operator");
-							commonServiceImpl.kill(taskExec.getOperators().get(0).getOperatorInfo().getRef().getType()
-													, taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid()
-													, taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion()); 
+							for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+								commonServiceImpl.kill(operatorInfo.getRef().getType()
+														, operatorInfo.getRef().getUuid()
+														, operatorInfo.getRef().getVersion());
+							}
 							logger.info("After operator is killed");
 							status = new Status(
 									com.inferyx.framework.domain.Status.Stage.Killed, new Date());
@@ -803,15 +805,23 @@ public class DagExecServiceImpl {
 						if (indvTaskExec.getTaskId().equals(taskId)) {
 							// Check the latest task status and decide
 							// Get operator statusList
-							operatorStatusList = commonServiceImpl.getAllStatusForExec(indvTaskExec.getOperators().get(0).getOperatorInfo().getRef());
+							operatorStatusList = new ArrayList<>();
+							for(MetaIdentifierHolder operatorInfo : indvTaskExec.getOperators().get(0).getOperatorInfo()) {
+								List<Status> tempOperatorStatusList = commonServiceImpl.getAllStatusForExec(operatorInfo.getRef());
+								Status operatorStatus = Helper.getLatestStatus(tempOperatorStatusList);
+								if(operatorStatus.getStage().equals(Status.Stage.Killed)) {
+									operatorStatusList.addAll(tempOperatorStatusList);
+									break;
+								} else {
+									operatorStatusList.addAll(tempOperatorStatusList);
+								}
+							}
 							Status operatorStatus = Helper.getLatestStatus(operatorStatusList);
 							com.inferyx.framework.domain.Status status = null;
 							if (operatorStatus.getStage().equals(Status.Stage.Killed)) {
-								status = new Status(
-										com.inferyx.framework.domain.Status.Stage.Killed, new Date());
+								status = new Status(com.inferyx.framework.domain.Status.Stage.Killed, new Date());
 							} else {
-								status = new Status(
-										com.inferyx.framework.domain.Status.Stage.Completed, new Date());
+								status = new Status(com.inferyx.framework.domain.Status.Stage.Completed, new Date());
 							}
 							/*com.inferyx.framework.domain.Status status = new Status(
 									com.inferyx.framework.domain.Status.Stage.Completed, new Date());*/
@@ -1847,7 +1857,9 @@ public class DagExecServiceImpl {
 					int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					}else{
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
@@ -1910,7 +1922,9 @@ public class DagExecServiceImpl {
 						int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 						if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
 							logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
-							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+							MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+							dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 							throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 						}else{
 							Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
@@ -1993,7 +2007,9 @@ public class DagExecServiceImpl {
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
@@ -2027,7 +2043,9 @@ public class DagExecServiceImpl {
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
 						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
 						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());

@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDatasetDao;
@@ -81,16 +80,16 @@ public class DatasetViewServiceImpl {
 		datasetView.setCreatedOn(resolvedDataset.getCreatedOn());
 		datasetView.setPublished(resolvedDataset.getPublished());
 		MetaIdentifierHolder dependsOn = resolvedDataset.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
-		Filter resolvedFilter = null;
-		if(filterInfo != null)		{
-			for (int i = 0; i < filterInfo.size(); i++) {
-				//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
-				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
-				resolvedFilter = filterServiceImpl.resolveName(filter);
-			}
-		}
-		datasetView.setFilter(resolvedFilter);
+//		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
+//		Filter resolvedFilter = null;
+//		if(filterInfo != null)		{
+//			for (int i = 0; i < filterInfo.size(); i++) {
+//				//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
+//				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
+//				resolvedFilter = filterServiceImpl.resolveName(filter);
+//			}
+//		}
+//		datasetView.setFilter(resolvedFilter);
 	//	Relation relation = relationServiceImpl.getAsOf(dependsOn.getRef().getUuid(), dataset.getVersion());
 	//	Relation resolvedRelation = relationServiceImpl.resolveName(relation);
 		datasetView.setDependsOn(dependsOn);
@@ -150,18 +149,18 @@ public class DatasetViewServiceImpl {
 		datasetView.setCreatedOn(resolvedDataset.getCreatedOn());
 		datasetView.setPublished(resolvedDataset.getPublished());
 		MetaIdentifierHolder dependsOn = resolvedDataset.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
-		Filter resolvedFilter = null;
-		if(filterInfo != null)
-		{
-		for (int i = 0; i < filterInfo.size(); i++) {
-			//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
-			Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
-			resolvedFilter = filterServiceImpl.resolveName(filter);
-		}
-		}
-		
-		datasetView.setFilter(resolvedFilter);
+//		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
+//		Filter resolvedFilter = null;
+//		if(filterInfo != null)
+//		{
+//		for (int i = 0; i < filterInfo.size(); i++) {
+//			//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
+//			Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
+//			resolvedFilter = filterServiceImpl.resolveName(filter);
+//		}
+//		}
+//		
+//		datasetView.setFilter(resolvedFilter);
 		//Relation relation = relationServiceImpl.getAsOf(dependsOn.getRef().getUuid(), dataset.getVersion());
 		//Relation resolvedRelation = relationServiceImpl.resolveName(relation);
 		datasetView.setDependsOn(dependsOn);
@@ -240,16 +239,16 @@ public class DatasetViewServiceImpl {
 		datasetView.setPublished(resolvedDataset.getPublished());
 		datasetView.setLimit(resolvedDataset.getLimit());
 		MetaIdentifierHolder dependsOn = resolvedDataset.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
-		Filter resolvedFilter = null;
-		if(filterInfo != null)		{
-			for (int i = 0; i < filterInfo.size(); i++) {
-				//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
-				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
-				resolvedFilter = filterServiceImpl.resolveName(filter);
-			}
-		}
-		datasetView.setFilter(resolvedFilter);
+//		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
+//		Filter resolvedFilter = null;
+//		if(filterInfo != null)		{
+//			for (int i = 0; i < filterInfo.size(); i++) {
+//				//Filter filter = filterServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion());
+//				Filter filter = (Filter) commonServiceImpl.getAsOf(filterInfo.get(i).getRef().getUuid(), dataset.getVersion(), MetaType.filter.toString());
+//				resolvedFilter = filterServiceImpl.resolveName(filter);
+//			}
+//		}
+//		datasetView.setFilter(resolvedFilter);
 		//Relation relation = relationServiceImpl.getAsOf(dependsOn.getRef().getUuid(), dataset.getVersion());
 		///Relation resolvedRelation = relationServiceImpl.resolveName(relation);
 		datasetView.setDependsOn(dependsOn);
@@ -264,7 +263,9 @@ public class DatasetViewServiceImpl {
 				AttributeRefHolder sourceAttr = new AttributeRefHolder();
 				SourceAttr = datasetSourceAttribute.get(i).getSourceAttr().getRef();
 				sourceAttr.setRef(SourceAttr);
-				if (datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) || datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)) {
+				if (datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) 
+						|| datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)
+						|| datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
 					int attrId = Integer.parseInt(datasetSourceAttribute.get(i).getSourceAttr().getAttrId());
 					ref.setAttrSourceId(datasetSourceAttribute.get(i).getAttrSourceId());
 					ref.setAttrSourceName(datasetSourceAttribute.get(i).getAttrSourceName());

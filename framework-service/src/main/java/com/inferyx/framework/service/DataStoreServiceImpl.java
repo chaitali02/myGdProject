@@ -56,6 +56,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -63,6 +64,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -70,7 +72,6 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -97,14 +98,6 @@ public class DataStoreServiceImpl {
 	DatasourceServiceImpl datasourceServiceImpl;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private DatasetOperator datasetOperator;
-	@Autowired
-	private DagExecServiceImpl dagexecServiceImpl;
-	@Autowired
-	private UserServiceImpl userServiceImpl;
 	@Autowired
 	private HDFSInfo hdfsInfo;
 	@Autowired
@@ -439,9 +432,9 @@ public class DataStoreServiceImpl {
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
 				Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
 		String dsType = ds.getType();
-		if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				&& */!dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			String tableName = ds.getDbname() + "." + dp.getName();
 			return tableName;
 		} 
@@ -535,49 +528,49 @@ public class DataStoreServiceImpl {
 	
 	// generating table Name from dataSource
 	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String appUuid = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		String tableName = null;
 		DataStore dataStore = null;
-		if (appUuid != null) {
-			dataStore = iDataStoreDao.findOneByUuidAndVersion(appUuid, dataStoreUUID, dataStoreVersion);
-		} else {
-			dataStore = iDataStoreDao.findOneByUuidAndVersion(dataStoreUUID, dataStoreVersion);
-		}
+		dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
 		String filePath = dataStore.getLocation();
 		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 		String metaid = dataStore.getMetaId().getRef().getUuid();
 		String metaV = dataStore.getMetaId().getRef().getVersion();
 		MetaType metaType = dataStore.getMetaId().getRef().getType();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		String dsType = datasource.getType();
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		String dsType = appDatasource.getType();
 		if (metaType == MetaType.datapod) {
-			//Datapod dp = datapodServiceImpl.findOneByUuidAndVersion(metaid, metaV);
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
 			if (dp == null) {
-				//dp = datapodServiceImpl.findLatestByUuid(metaid);
 				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
 			}
-//			String datasource = dp.getDatasource().getRef().getUuid();
-//			//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-//			Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
-//			dsType = ds.getType();
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			Datasource dpDatasource = commonServiceImpl.getDatasourceByDatapod(dp);
+			dsType = dpDatasource.getType();
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				filePath = String.format("%s%s", hdfsLocation, filePath);
-				tableName = Helper.genTableName(filePath);
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				if((appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
+						&& !(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					filePath = String.format("%s%s", hdfsLocation, filePath);
+					tableName = Helper.genTableName(filePath);
+				} else if(!(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+					tableName = dpDatasource.getDbname() + "." + dp.getName();
+				} else {
+					filePath = String.format("%s%s", hdfsLocation, filePath);
+					tableName = Helper.genTableName(filePath);
+				}
 			} else {
-				if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-						|| dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
+				if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+						||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
 					if (!filePath.contains(hdfsLocation)) {
 						filePath = String.format("%s%s", hdfsLocation, filePath);
 					}
 					tableName = Helper.genTableName(filePath);				
 				} else {
-					tableName = datasource.getDbname() + "." + dp.getName();
+					tableName = dpDatasource.getDbname() + "." + dp.getName();
 					if(tableName.startsWith("."))
 						tableName = tableName.substring(1);
 				}
@@ -591,49 +584,71 @@ public class DataStoreServiceImpl {
 			if(ruleName.toLowerCase().contains("rule_"))
 				ruleName = ruleName.replace("rule_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + ruleName;
+					tableName = appDatasource.getDbname() + "." + ruleName;
 		} else if (metaType == MetaType.recon) {
 			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.recon.toString());
 			String reconName = recon.getName();
 			if(reconName.toLowerCase().contains("recon_"))
 				reconName = reconName.replace("recon_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
-			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + reconName;
+					tableName = appDatasource.getDbname() + "." + reconName;
 		} else if (metaType == MetaType.operator) {
 			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
 			String operatorName = recon.getName();
 			if(operatorName.toLowerCase().contains("operator_"))
 				operatorName = operatorName.replace("operator_", "");
 			
-			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);
-			} else if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = Helper.genTableName(filePath);
 			}else
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+					tableName = Helper.genTableName(filePath);
+				else
+					tableName = appDatasource.getDbname() + "." + operatorName;
+		} else if (metaType == MetaType.report) {
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.report.toString());
+			String reportName = report.getName();
+			if(reportName.toLowerCase().contains("report"))
+				reportName = reportName.replace("report_", "");
+			
+			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				tableName = Helper.genTableName(filePath);
+			} else
 			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource.getDbname() + "." + operatorName;
-		}
+					tableName = appDatasource.getDbname() + "." + reportName;
+		} else if (metaType == MetaType.ingest) {
+			String[] list = filePath.split("/");	
+//			Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid( dataStore.getMetaId().getRef().getUuid(), dataStore.getMetaId().getRef().getType().toString());
+			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
+			} else {
+				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
+			}
+		}	
 		return tableName;
 	}
 
@@ -642,8 +657,18 @@ public class DataStoreServiceImpl {
 		DataStore ds = findDataStoreByMeta(datapodUUID, datapodVersion);
 		if (ds == null) {
 			logger.error("Datastore is not available for this datapod");			
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, datapodUUID, datapodVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod", dependsOn);
 			throw new RuntimeException("Datastore is not available for this datapod");
+		}
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, datapodUUID, datapodVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows, dependsOn);
+			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 		}
 		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(),ds.getVersion(),null,0,rows,null,rows,null,null,null, runMode);
 		return results;
@@ -716,7 +741,8 @@ public class DataStoreServiceImpl {
 						tn = requestMap.get(requestId);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else 
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -732,8 +758,9 @@ public class DataStoreServiceImpl {
 					} else {
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
+//							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
+//									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else {
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -756,7 +783,8 @@ public class DataStoreServiceImpl {
 						requestMap.put(requestId, tn);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+//							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 						} else {
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -775,8 +803,9 @@ public class DataStoreServiceImpl {
 			} else {
 				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
-							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
+//							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+					data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
 				} else {
 					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -928,7 +957,7 @@ public class DataStoreServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
 			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -939,7 +968,7 @@ public class DataStoreServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
 			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 	}
@@ -996,6 +1025,7 @@ public class DataStoreServiceImpl {
 		return dataStoreList;
 	}*/
 
+	@SuppressWarnings("static-access")
 	public List<DataStore> getDataStoreByDim(String uuid, List<AttributeRefHolder> dimensionList) {
 		String META_TYPE = "metaId.ref.type";
 		String META_UUID = "metaId.ref.uuid";
@@ -1004,7 +1034,6 @@ public class DataStoreServiceImpl {
 		String REF_UUID = "ref.uuid";
 		String VALUE = "value";
 		String ATTRIBUTE_ID = "attributeId";
-		String CREATED_ON = "createdOn";
 		String DATAPOD = "datapod";
 		String VERSION = "version";
 
@@ -1029,11 +1058,12 @@ public class DataStoreServiceImpl {
 		return mongoOperations.find(dimMatchQuery, DataStore.class);
 	}
 
-	public List<Map<String, Object>> getAttributeValues(String datapodUUID, int attributeID) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<Map<String, Object>> getAttributeValues(String datapodUUID, int attributeID, RunMode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		setRunMode(runMode);
 		List<Map<String, Object>> data = new ArrayList<>();
 		//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
 		Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
-		String id = datapodDO.getAttributes().get(0).getName();
+//		String id = datapodDO.getAttributes().get(0).getName();
 		String attributeName = datapodDO.getAttributes().get(attributeID).getName();
 		DataStore datastore = findLatestByMeta(datapodDO.getUuid(), datapodDO.getVersion());
 		String tableName = getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
@@ -1041,7 +1071,7 @@ public class DataStoreServiceImpl {
 		// attributeName + " AS value from " + tableName);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, null);
+		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, commonServiceImpl.getApp().getUuid());
 //				.executeSql("select distinct " + id + " AS id," + attributeName + " AS value from " + tableName);
 		/*DataFrame df = rsHolder.getDataFrame();
 		Row[] rows = df.head(100);
@@ -1065,15 +1095,8 @@ public class DataStoreServiceImpl {
 			return iDataStoreDao.findAllVersion(uuid);
 	}
 
-	public DataStore findDatastoreByExec(String uuid, String version) {
-		String appUuid = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
-		if (appUuid != null) {
-			return iDataStoreDao.findDataStoreByExecUuidVersion(appUuid, uuid, version);
-		} else {
-			return iDataStoreDao.findDataStoreByExecUuidVersion(uuid, version);
-		}
+	public DataStore getDatastore(String uuid, String version) throws JsonProcessingException {
+		return (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 	}
 
 	public DataStore getAsOf(String uuid, String asOf) {
@@ -1107,18 +1130,21 @@ public class DataStoreServiceImpl {
 	
 	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef) throws Exception{
-		create( filePath, fileName, metaId, execId, appInfo, createdBy, saveMode, resultRef, -1L, null);
+		create( filePath, fileName, metaId, execId, appInfo, createdBy, saveMode, resultRef, -1L, null, null);
 	}
 	
-	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
-			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode) throws Exception{
+	public void create(String filePath, String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
+			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, String desc) throws Exception{
 		BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(execId.getUuid(), execId.getVersion(), execId.getType().toString());
 		DataStore dataStore = new DataStore();
 		dataStore.setBaseEntity();
 		MetaIdentifierHolder metaDetails = new MetaIdentifierHolder();
 		MetaIdentifierHolder execDetails = new MetaIdentifierHolder();
 		MetaIdentifier resultDetails = new MetaIdentifier();
-		dataStore.setDesc("Creating datastore for " + fileName);
+		if(desc == null || desc.isEmpty())
+			dataStore.setDesc("Creating datastore for "+fileName);
+		else
+			dataStore.setDesc(desc);
 		dataStore.setName(fileName);
 		metaDetails.setRef(metaId);
 		dataStore.setMetaId(metaDetails);
@@ -1382,8 +1408,9 @@ public class DataStoreServiceImpl {
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+//							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+					data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 				} else {
 					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 						if (runMode.equals(RunMode.ONLINE))
@@ -1417,15 +1444,15 @@ public class DataStoreServiceImpl {
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-								data = exec.executeAndFetch(
-										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
-												+ tableName +") AS tab) AS tab1",
-												appUuid);
+//								data = exec.executeAndFetch(
+//										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
+//												+ tableName +") AS tab) AS tab1",
+//												appUuid);
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 							} else {
 								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 									if (runMode.equals(RunMode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-												appUuid);
+										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
 									else
 										data = exec.executeAndFetch(
 												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
@@ -1483,5 +1510,30 @@ public class DataStoreServiceImpl {
 		}
 		
 		return data;
+	}
+	
+	public HttpServletResponse download(String uuid, String version, String format, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
+			RunMode runMode) throws Exception {
+		setRunMode(runMode);
+		DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
+		if (ds == null) {
+			logger.error("Datastore is not available for this datapod");
+			throw new Exception();
+		}
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows ,null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
+		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(), ds.getVersion(), null,
+				0, limit, response, rowLimit, null, null, null, runMode);
+		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+	
+		return response;
+
 	}
 }

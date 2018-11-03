@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +66,8 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
@@ -79,6 +83,7 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -404,9 +409,10 @@ public class DatapodServiceImpl {
 		// Check if datapod exists
 		String fileName = Helper.getFileName(csvFileName);
 		Datapod dp = null;
-		dp = findOneByName(fileName);
+		Datapod dp1 = findOneByName(fileName);
 		// Create datapod and relation if it does not exist
 		if (dp == null) {
+		
 			/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
 					.option("header", "true").load(csvFileName);		
 			df.printSchema();
@@ -445,6 +451,9 @@ public class DatapodServiceImpl {
 			// Create datapod
 //			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
 			dp = new Datapod();
+			if(dp1 !=null) {
+				dp.setUuid(dp1.getUuid());
+			}
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 //			for(Datasource datasource : datasourceList) {
 				MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
@@ -514,7 +523,7 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH);
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH, null);
 		
 		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
@@ -993,24 +1002,23 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
-	public void upload(MultipartFile csvFile, String datapodUuid) {		
+	public void upload(MultipartFile csvFile, String datapodUuid, String desc) {		
 		String csvFileName = csvFile.getOriginalFilename();
 		try {
 			//patern matching for csv filename
-			Pattern p = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
-			Matcher match = p.matcher(csvFileName);
-			boolean z = match.find();			
-			if (z == true || csvFileName.contains(" ")) 
+			Pattern pattern = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
+			Matcher match = pattern.matcher(csvFileName);
+			boolean isMatched = match.find();			
+			if (isMatched || csvFileName.contains(" ")) 
 				throw new Exception("CSV file name contains white space or special character");
-			
-			String uploadPath = null;
-			uploadPath = hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			String directory = Helper.getPropertyValue("framework.file.upload.path");
+			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
 			
 			// Copy file to server location
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
 		 
-			uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			uploadPath = hdfsInfo.getHdfsURL() + uploadPath;
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
 			
 			//Check datapod and csv attributes name
@@ -1024,11 +1032,15 @@ public class DatapodServiceImpl {
 			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
 			List<Attribute> dpAttrs = datapod.getAttributes();
+		
 			int count = 0;
 			for(int i=0; i<dpAttrs.size();i++) {
-				if(dpAttrs.get(i).getName().contentEquals("version")){					
+				if(dpAttrs.get(i).getName().contentEquals("version")){	
+					if(!attributes.get(attributes.size()-1).getName().contentEquals("version")) 
+					{
 					dpAttrs.remove(dpAttrs.get(i));
 					count++;
+					}
 				}	
 				if(count>1) {
 					throw new Exception("2 Version column in datapod");
@@ -1094,7 +1106,7 @@ public class DatapodServiceImpl {
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
 			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH, desc);
 		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
@@ -1113,11 +1125,20 @@ public class DatapodServiceImpl {
 		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
 		if (ds == null) {
 			logger.error("Datastore is not available for this datapod");
-			throw new Exception();
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod", null);
+			throw new RuntimeException("Datastore is not available for this datapod");
 		}
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(), null,
-				0, limit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+				0, rowLimit, response, rowLimit, null, null, null, runMode);
+		response = commonServiceImpl.download(uuid, version, format, offset, rowLimit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
 		
 		/*
 		String downloadPath = Helper.getPropertyValue("framework.file.download.path");
@@ -1186,12 +1207,13 @@ public class DatapodServiceImpl {
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String tableName = null;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		String dsType = datasource.getType();
 		if(runMode.equals(RunMode.BATCH)) {
-			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				tableName = datasource.getDbname() + "." + datapod.getName();
 				return tableName;
 			} else {
@@ -1201,5 +1223,148 @@ public class DatapodServiceImpl {
 			tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
 		}		
 		return tableName;
+	}
+
+	public List<CompareMetaData> compareMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		String sourceTableName = null;
+		try {
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+	}
+
+	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		String sourceTableName = null;
+		try {
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		List<Attribute> attributes = new ArrayList<>();
+		int i = 0;
+		for(CompareMetaData compareMetaData : comparisonResult) {
+			String propertyName = compareMetaData.getSourceAttribute();
+			if(propertyName != null && !propertyName.isEmpty()) {
+				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
+//				String attrType = compareMetaData.getSourceType().toLowerCase();
+//				if(attrType.contains("type")) {
+//					attrType = attrType.replaceAll("type", "");
+//				} 
+//				
+				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
+				if(containsProperty) {
+					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
+					attribute.setAttributeId(i);
+					attribute.setLength(length);
+					attribute.setType(compareMetaData.getSourceType());
+					attributes.add(attribute);
+				} else {
+					Attribute attribute = new Attribute();
+					attribute.setName(propertyName);
+					attribute.setDesc(propertyName);
+					attribute.setDispName(propertyName);
+					attribute.setLength(length);
+					attribute.setType(compareMetaData.getSourceType());
+					attribute.setPartition("N");
+					attribute.setAttributeId(i);
+					attribute.setActive("Y");
+					
+					attributes.add(attribute);
+				}
+				i++;
+			}
+		}
+		
+		if(!attributes.isEmpty()) {
+			targetDatapod.setAttributes(attributes);
+			targetDatapod.setId(null);
+			targetDatapod.setVersion(null);
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(MetaType.datapod.toString(), targetDatapod);
+			return (Datapod) commonServiceImpl.getOneByUuidAndVersion(baseEntity.getUuid(), baseEntity.getVersion(), MetaType.datapod.toString());
+		} else {
+			return targetDatapod;
+		}
+	}
+	
+	public Attribute getAttributeByName(String attributeName, List<Attribute> attributes) {
+		for(Attribute attribute : attributes) {
+			if(attributeName.equalsIgnoreCase(attribute.getName())) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+	
+	public boolean isPropertyInAttributeList(String propertyName, List<Attribute> attributes) {
+		boolean containsProperty = false;
+		for(Attribute attribute : attributes) {
+			if(propertyName.equalsIgnoreCase(attribute.getName())) {
+				containsProperty = true;
+				break;
+			}
+		}
+		return containsProperty;
+	}
+	
+	public String getMetaStatsByDatapodName(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString());
+		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(),
+				dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		String sourceTableName = null;
+		try {
+			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion),
+					runMode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		List<CompareMetaData> result = exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String status = null;
+		Integer modifyCount = 1, deletCount = 1, newCount = 1, noChangeCount = 1;
+		for (CompareMetaData meta : result) 
+		{
+			if (meta.getStatus().equalsIgnoreCase(Compare.MODIFIED.toString())) {
+				map.put(meta.getStatus(), modifyCount);
+				modifyCount++;
+			}
+			if (meta.getStatus().equalsIgnoreCase(Compare.DELETED.toString())) {
+				map.put(meta.getStatus(), deletCount);
+				deletCount++;
+			}
+			if (meta.getStatus().equalsIgnoreCase(Compare.NEW.toString())) {
+				map.put(meta.getStatus(), newCount);
+				newCount++;
+			}
+			if (meta.getStatus().equalsIgnoreCase(Compare.NOCHANGE.toString())) {
+				map.put(meta.getStatus(), noChangeCount);
+				noChangeCount++;
+			}
+		}
+
+		if (map.keySet().contains(Compare.NEW.toString()) || map.keySet().contains(Compare.DELETED.toString())
+				|| map.keySet().contains(Compare.MODIFIED.toString())) {
+			status = Compare.MODIFIED.toString();
+		} else {
+			status = Compare.NOCHANGE.toString();
+		}
+
+		return status;
 	}
 }

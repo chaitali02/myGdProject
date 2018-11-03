@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+
 public class Registry {
 	private String id;
 	private String name;
@@ -18,7 +19,15 @@ public class Registry {
 	private String registeredBy;
 	private String status;
 	private String path;
+	private String compareStatus;
+
 	
+	public String getCompareStatus() {
+		return this.compareStatus;
+	}
+	public void setCompareStatus(String compareStatus) {
+		this.compareStatus = compareStatus;
+	}
 	/**
 	 * @Ganesh
 	 *

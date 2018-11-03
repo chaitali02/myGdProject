@@ -67,7 +67,7 @@ public class MapTaskParser extends TaskParser {
 
 		java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
 		Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 		String operatorType = indvTask.getOperators().get(0).getOperatorType();
 		HashMap<String, Object> operatorParams = indvTask.getOperators().get(0).getOperatorParams();
 		ref = populateRefVersion(ref, refKeyMap);
@@ -130,6 +130,7 @@ public class MapTaskParser extends TaskParser {
 		otherParams.put($DAGEXEC_VERSION, dagExec.getVersion());
 		
 		if (operatorType == null || operatorType.equals(MetaType.map.toString()) || operatorType.equals(MetaType.matrixmult.toString())) {
+			
 			builder.append(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 		} else {
 			otherParams.put("operatorType", operatorType);
@@ -156,13 +157,13 @@ public class MapTaskParser extends TaskParser {
 		return map.getSource().getRef().getType();
 	}
 	
-	public String getFilterSql(List<AttributeRefHolder> filterInfo
+	/*public String getFilterSql(List<AttributeRefHolder> filterInfo
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		builder.append(filterOperator.generateSql(filterInfo, refKeyMap, otherParams, usedRefKeySet));
 		return builder.toString();
-	}
+	}*/
 	
 	protected String getTableFromDatapod(Datapod datapod, Task indvTask, List<String> datapodList, 
 											DagExec dagExec, HashMap<String, String> otherParams) throws Exception {

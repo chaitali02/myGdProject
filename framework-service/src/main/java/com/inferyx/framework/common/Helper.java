@@ -14,17 +14,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +40,8 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Batch;
+import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
@@ -61,6 +68,10 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
+import com.inferyx.framework.domain.Ingest;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroup;
+import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -92,12 +103,15 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroup;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroup;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.RunStatusHolder;
+import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
@@ -109,6 +123,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
@@ -119,6 +134,8 @@ public class Helper {
 	static Logger logger=Logger.getLogger(Helper.class);
 	@Autowired
 	Engine engine;
+	@Autowired
+	private HDFSInfo hdfsInfo;
 
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
@@ -276,6 +293,15 @@ public class Helper {
 				case lov : return "iLovDao";
 				case graphpod : return "iGraphpodDao";
 				case graphExec : return "iGraphpodExecDao";
+				case report : return "iReportDao";
+				case reportExec : return "iReportExecDao";
+				case batch : return "iBatchDao";
+				case batchExec : return "iBatchExecDao";
+				case schedule : return "iScheduleDao";	
+				case ingest : return "iIngestDao";
+				case ingestExec : return "iIngestExecDao";
+				case ingestgroup : return "iIngestGroupDao";
+				case ingestgroupExec : return "iIngestGroupExecDao";
 				default:
 					return null;
 			}
@@ -304,8 +330,13 @@ public class Helper {
 		case recongroup : return "ReconGroupServiceImpl";	
 		case recongroupExec : return "ReconGroupExecServiceImpl";		
 		case load : return "LoadExecServiceImpl";	
-		default:
-			return null;
+		case ingest : return "IngestServiceImpl";
+		case ingestExec : return "IngestExecServiceImpl";
+		case ingestgroup : return "IngestGroupServiceImpl";
+		case trainExec : return "ModelExecServiceImpl";
+		case predictExec : return "ModelExecServiceImpl";
+		case simulateExec : return "ModelExecServiceImpl";
+		default: return null;
 		}
 	}
 	
@@ -387,8 +418,15 @@ public class Helper {
 		case lov : return Lov.class;
 		case graphpod : return Graphpod.class;
 		case graphExec : return GraphExec.class;
-
-
+		case report : return Report.class;
+		case reportExec : return ReportExec.class;
+		case batch : return Batch.class;
+		case batchExec : return BatchExec.class;
+		case schedule : return Schedule.class;
+		case ingest : return Ingest.class;
+		case ingestExec : return IngestExec.class;
+		case ingestgroup : return IngestGroup.class;
+		case ingestgroupExec : return IngestGroupExec.class;
 		default:
 			return null;
 		}
@@ -475,6 +513,15 @@ public class Helper {
 //				case "gendatavallist" : return MetaType.GenDataValList;
 				case "graphpod" : return MetaType.graphpod;
 				case "graphexec" : return MetaType.graphExec;
+				case "report" : return MetaType.report;
+				case "reportexec" : return MetaType.reportExec;
+				case "batch" : return MetaType.batch;
+				case "batchexec" : return MetaType.batchExec;
+				case "schedule" : return MetaType.schedule;
+				case "ingest" : return MetaType.ingest;
+				case "ingestexec" : return  MetaType.ingestExec; 
+				case "ingestgroup" : return MetaType.ingestgroup;
+				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
 				default : return null;
 			}
 		}
@@ -489,6 +536,7 @@ public class Helper {
 				case "gendataattr" : return OperatorType.genDataAttr;
 				case "gendatavallist" : return OperatorType.genDataValList;
 				case "matrix" : return OperatorType.matrix;
+				case "histogram" : return OperatorType.HISTOGRAM;
 				default : return null;
 			}
 		}
@@ -590,6 +638,7 @@ public class Helper {
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
 				case "postgres" : return ExecContext.POSTGRES;
+				case "sqoop" : return ExecContext.SQOOP;
 				default : return null;
 			}
 		else
@@ -666,6 +715,8 @@ public class Helper {
 			 					break;
 				case XLS : regex = "xls";
 					break;
+			default:
+				break;
 			}
 		
 		for (Entry<Object, Object> entry : Helper.getPropertiesList()) {
@@ -682,9 +733,9 @@ public class Helper {
 				case CSV : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case LOG : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case ZIP : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
-				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;	
-				
-				
+				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
+			default:
+				break;					
 			}
 		return null;
 	}
@@ -712,6 +763,8 @@ public class Helper {
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
+			default:
+				break;
 			}
 		return null;
 	}
@@ -744,7 +797,7 @@ public class Helper {
 				}
 			}
 			else if(fileType.toString().equalsIgnoreCase("CSV")) {
-				return getPropertyValue("framework.file.upload.path");
+				return getPropertyValue("framework.file.upload.pafileTypeth");
 			}
 			else if(fileType.toString().equalsIgnoreCase("XLS")) {
 				return getPropertyValue("framework.file.upload.path");
@@ -835,6 +888,10 @@ public class Helper {
 		case simulate : return MetaType.simulateExec;
 		case predict : return MetaType.predictExec;
 		case operator : return MetaType.operatorExec;
+		case report : return MetaType.reportExec;
+		case batch : return MetaType.batchExec;
+		case ingest : return MetaType.ingestExec;
+		case ingestgroup : return MetaType.ingestgroupExec;
 		default : return null;
 		}
 	}
@@ -862,6 +919,10 @@ public class Helper {
 		case simulateExec : return MetaType.simulate;
 		case predictExec : return MetaType.predict;
 		case operatorExec : return MetaType.operator;
+		case reportExec : return MetaType.report;
+		case batchExec : return MetaType.batch;
+		case ingestExec : return MetaType.ingest;
+		case ingestgroupExec : return MetaType.ingestgroup;
 		default : return null;
 		}
 	}
@@ -924,6 +985,8 @@ public class Helper {
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
 		case graphExec : return new GraphExec();
+		case ingestExec : return new IngestExec();
+		case ingestgroupExec : return new IngestGroupExec();
 		default : return null;
 		}
 	}
@@ -944,5 +1007,98 @@ public class Helper {
 		}		
 	}
 	
+
 	
+	public static boolean isNumber(String str) {
+		return NumberUtils.isCreatable(str);
+	}
+	
+	public static boolean isDate(String str) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		try {
+			dateFormat.parse(str);
+			return true;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+//				e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static IngestionType getIngestionType(String ingestionType) {
+		if(ingestionType != null) {
+			switch(ingestionType.toLowerCase()) {
+			case "file-file" : return IngestionType.FILETOFILE;
+			case "file-table" : return IngestionType.FILETOTABLE;
+			case "table-file" : return IngestionType.TABLETOFILE;
+			case "table-table" : return IngestionType.TABLETOTABLE;
+			case "stream-table" : return IngestionType.STREAMTOTABLE;
+			case "stream-file" : return IngestionType.STREAMTOFILE;
+			}
+		}
+		return null;
+	}
+	
+	public static String getDelimetrByFormat(String format) {
+		if(format != null) {
+			switch(format.toLowerCase()) {
+			case "csv" : return ",";
+			case "tsv" : return "\t";
+			case "psv" : return "|";
+			case "parquet" : return "parquet";
+			}
+		}
+		return null;
+	}
+	
+	public static SaveMode getSparkSaveMode(com.inferyx.framework.enums.SaveMode saveMode) {
+		switch(saveMode) {
+		case APPEND : return SaveMode.Append;
+		case OVERWRITE : return SaveMode.Overwrite;
+		default : return null;
+		}
+	}
+	
+	public String getPathByDataSource(Datasource datasource) {
+		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
+	}
+	
+	public static Pattern getRegexByFileInfo(String fileName, String fileExtn, String fileFormat, boolean isCaseSensitive) {
+		// Make regex compatible
+		fileName = fileName.replace(".","\\.").replace("*",".*");
+		
+		// Replace tokens
+		int occurences = StringUtils.countMatches(fileName,"[");
+		for (int i=0 ; i < occurences ; i++) {
+			String result = fileName.substring(fileName.indexOf("[") + 1, fileName.indexOf("]"));
+			SimpleDateFormat smplDateFormat = new SimpleDateFormat(result);
+			String dateFormat = smplDateFormat.format(new Date());
+			fileName = fileName.replaceAll("\\["+result+"\\]",dateFormat);
+		}
+			
+		if(fileName.contains("{") && fileName.contains("}")) {
+			fileName = fileName.replaceAll("\\{", "[").replaceAll("\\}", "]");
+		}
+		
+		if (fileExtn != null) {
+			fileExtn = fileExtn.startsWith(".") ? fileExtn.substring(1) : fileExtn;
+			fileName = fileName + (fileName.toLowerCase().endsWith("." + fileExtn.toLowerCase()) ? ""
+					: "\\." + fileExtn.toLowerCase());
+		} else {
+			fileFormat = fileFormat.startsWith(".") ? fileFormat.substring(1) : fileFormat;
+			fileName = fileName + (fileName.toLowerCase().endsWith("." + fileFormat.toLowerCase()) ? ""
+					: "\\." + fileFormat.toLowerCase());
+
+		}
+
+		
+		//Apply Regex
+		Pattern regex = null;
+		if(isCaseSensitive) {
+			regex = Pattern.compile("^"+fileName+"$");
+		} else {
+			regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
+		}
+		return regex;
+	}
 }

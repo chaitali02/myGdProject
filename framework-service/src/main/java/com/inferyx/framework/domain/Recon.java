@@ -21,8 +21,44 @@ public class Recon extends BaseRule {
 	private MetaIdentifierHolder sourceFunc;
 	private AttributeRefHolder targetAttr;
 	private MetaIdentifierHolder targetFunc;
-	private List<AttributeRefHolder> sourceFilter;
-	private List<AttributeRefHolder> targetFilter;
+	private List<FilterInfo> sourceFilter;
+	private List<FilterInfo> targetFilter;
+	private String sourceDistinct = "N";
+	private String targetDistinct = "N";
+	private List<AttributeRefHolder> sourceGroup;
+	private List<AttributeRefHolder> targetGroup;
+
+	public List<AttributeRefHolder> getSourceGroup() {
+		return this.sourceGroup;
+	}
+
+	public void setSourceGroup(List<AttributeRefHolder> sourceGroup) {
+		this.sourceGroup = sourceGroup;
+	}
+
+	public List<AttributeRefHolder> getTargetGroup() {
+		return this.targetGroup;
+	}
+
+	public void setTargetGroup(List<AttributeRefHolder> targetGroup) {
+		this.targetGroup = targetGroup;
+	}
+
+	public String getSourceDistinct() {
+		return sourceDistinct;
+	}
+
+	public void setSourceDistinct(String sourceDistinct) {
+		this.sourceDistinct = sourceDistinct;
+	}
+
+	public String getTargetDistinct() {
+		return targetDistinct;
+	}
+
+	public void setTargetDistinct(String targetDistinct) {
+		this.targetDistinct = targetDistinct;
+	}
 
 	public AttributeRefHolder getSourceAttr() {
 		return sourceAttr;
@@ -56,19 +92,19 @@ public class Recon extends BaseRule {
 		this.targetFunc = targetFunc;
 	}
 
-	public List<AttributeRefHolder> getSourceFilter() {
+	public List<FilterInfo> getSourceFilter() {
 		return sourceFilter;
 	}
 
-	public void setSourceFilter(List<AttributeRefHolder> sourceFilter) {
+	public void setSourceFilter(List<FilterInfo> sourceFilter) {
 		this.sourceFilter = sourceFilter;
 	}
 
-	public List<AttributeRefHolder> getTargetFilter() {
+	public List<FilterInfo> getTargetFilter() {
 		return targetFilter;
 	}
 
-	public void setTargetFilter(List<AttributeRefHolder> targetFilter) {
+	public void setTargetFilter(List<FilterInfo> targetFilter) {
 		this.targetFilter = targetFilter;
 	}
 

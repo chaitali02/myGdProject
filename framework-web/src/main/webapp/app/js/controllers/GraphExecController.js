@@ -55,6 +55,13 @@
       $scope.showExec = true
       $scope.showGraphDiv = false;
     }
+    $scope.showSqlFormater=function(){
+      $('#sqlFormaterModel').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      $scope.formateSql=sqlFormatter.format($scope.execData.exec);
+    }
 
 
   });

@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -18,14 +19,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -37,6 +39,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -47,6 +50,7 @@ import com.inferyx.framework.register.DatapodRegister;
  * @author joy
  *
  */
+@Service
 public class RunBaseRuleService implements Callable<TaskHolder> {
 	
 	protected BaseRuleExec baseRuleExec;
@@ -67,9 +71,29 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Engine engine;
 	protected Helper helper;
 	protected ExecParams execParams;
+	protected ExecutorServiceImpl executorServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
+	
+	/**
+	 * @return the executorServiceImpl
+	 */
+	public ExecutorServiceImpl getExecutorServiceImpl() {
+		return executorServiceImpl;
+	}
+
+
+
+	/**
+	 * @param executorServiceImpl the executorServiceImpl to set
+	 */
+	public void setExecutorServiceImpl(ExecutorServiceImpl executorServiceImpl) {
+		this.executorServiceImpl = executorServiceImpl;
+	}
+
+
+
 	/**
 	 * @return the connFactory
 	 */
@@ -410,20 +434,29 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @param baseRuleExec
 	 * @param datapodKey
 	 * @return
+	 * @throws JsonProcessingException 
 	 */
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
-		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) 
-				|| execContext.equals(ExecContext.livy_spark)) {
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+		if(datapodKey.getType().equals(MetaType.rule)) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+
+		}
+	    else if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) && execContext.equals(ExecContext.FILE) 
+				/*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 		}
+
 		Datapod dp = null;
 		try {
 			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
+			if (datasource.getType().equals(ExecContext.FILE.toString())) {
+				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
+			} else {
+				return datasource.getDbname() + "." + dp.getName();
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-		}
-		if (dp != null) {
-			return datasource.getDbname() + "." + dp.getName();
 		}
 		return null;
 	}
@@ -440,7 +473,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
 		dataStoreServiceImpl.setRunMode(runMode);
-		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()));
+		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath,datapodKey, baseRuleExec.getRef(ruleExecType),
 				null,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}
@@ -448,7 +481,30 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected String getSaveMode() {
 		return SaveMode.Append.toString();
 	}
+
+	/**
+	 * 
+	 * @param execParams
+	 * @param baseRuleExec
+	 */
+	protected void checkInternalVarMap(ExecParams execParams, BaseRuleExec baseRuleExec) {
+		if (execParams == null) {
+			return;
+		}
+		if ( execParams.getInternalVarMap() == null ) {
+			execParams.setInternalVarMap(new HashMap<>());
+		}
+		
+		if (!execParams.getInternalVarMap().containsKey("\\$".concat(SysVarType.exec_version.toString()))) {
+			execParams.getInternalVarMap().put("\\$".concat(SysVarType.exec_version.toString()), baseRuleExec.getVersion());
+		}
+	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public TaskHolder execute() throws Exception {
 		// Set status to In Progress
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -485,32 +541,43 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			ExecContext execContext = null;
 			String appUuid = null;
 			
-			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
+			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			exec = execFactory.getExecutor(execContext.toString());
 			
-			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext);
+			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext, runMode);
+			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
+			logger.info("execContext : " + execContext);
 			Datapod datapod = null;
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
+			/***** Replace internalVarMap - START *****/
+			checkInternalVarMap(execParams, baseRuleExec);
+			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
+			/***** Replace internalVarMap - END *****/
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				if(execContext.equals(ExecContext.FILE)
-						|| execContext.equals(ExecContext.livy_spark)
-						|| execContext.equals(ExecContext.spark))
-					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", appUuid);
-				else {
+				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+						datapod.getDatasource().getRef().getVersion(), 
+						datapod.getDatasource().getRef().getType().toString());
+				if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", true, appUuid);
+				} else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-				rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
-				countRows = rsHolder.getCountRows();
+//				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
+//				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
+//				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
+//						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
+//							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+//					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
+//					exec.executeSql(sql, appUuid);
+//				} else {
+					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), Helper.genTableName(filePath), appUuid);
+					countRows = rsHolder.getCountRows();
+//				}
 			}
 				
 			logger.info("temp table registered: "+tableName);
@@ -548,7 +615,9 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Execution failed.", dependsOn);
 			throw new java.lang.Exception((message != null) ? message : "Execution failed.");
 		} 
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion())); 

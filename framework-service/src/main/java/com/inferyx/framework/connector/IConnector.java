@@ -12,7 +12,11 @@ package com.inferyx.framework.connector;
 
 import java.io.IOException;
 
+import com.inferyx.framework.domain.Datasource;
+
 public interface IConnector {
 
 	ConnectionHolder getConnection() throws IOException;
+	ConnectionHolder getConnection(Object input, Object input2) throws IOException;
+	ConnectionHolder getConnectionByDatasource(Datasource datasource) throws IOException;
 }

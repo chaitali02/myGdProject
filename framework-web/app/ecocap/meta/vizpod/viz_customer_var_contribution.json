@@ -1,0 +1,74 @@
+{
+  "uuid": "d6863f63-bb9d-42ac-997e-4094abdc8fcf",
+  "version": "1534012521",
+  "name": "viz_customer_var_contribution",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Aug 11 14:35:21 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+      "version": null,
+      "name": "customer_var_contribution_topn_perc"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": null,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "top_n"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "var_contribution_perc"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "5b9aa28757fb10181968d8b1",
+  "uuid": "98aba397-92b5-46ad-9ea2-ec066ed01467",
+  "version": "1536860807",
+  "name": "viz_total_customers_by_state_map",
+  "desc": "Total Customers By State - Map",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Sep 13 13:46:47 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "relation",
+      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+      "version": null,
+      "name": "relation_datawarehouse"
+    },
+    "value": null
+  },
+  "type": "usa-map",
+  "limit": null,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+        "version": null,
+        "name": "dim_state"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "state_code"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
+        "version": null,
+        "name": "formula_total_customers"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ]
+}

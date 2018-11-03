@@ -10,16 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -58,28 +55,22 @@ public class DatapodController {
 	    	return datastoreServiceImpl.getDatapodResults(dataStoreUUID, dataStoreVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
 	   	
 	   }
-	
-	
-	
-	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public HttpServletResponse  download(@RequestParam(value= "datapodUUID") String datapodUUID, 
-	    		@RequestParam(value= "datapodVersion") String datapodVersion,
-	    		@RequestParam(value = "format", defaultValue="excel")String format,
-				@RequestParam(value ="rows",defaultValue="1000") int rows,
-				@RequestParam(value="offset", defaultValue="0") int offset, 
-				@RequestParam(value="limit", defaultValue="200") int limit,
-				@RequestParam(value="sortBy", required=false) String sortBy,
-				@RequestParam(value="order", required=false) String order,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value="requestId",required = false) String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
-	    		{
-		    RunMode runMode = Helper.getExecutionMode(mode);
-    	    response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
-    	    return null;
-		
-	   }
+
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "uuid") String datapodUUID,
+			@RequestParam(value = "version") String datapodVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, 0, rows, response, rows, null, null,
+				null, runMode);
+		return null;
+
+	}
 	 
 	 @RequestMapping(value="/getDatapodSample", method=RequestMethod.GET)
 	    public List<Map<String, Object>>  getDatapodSample(@RequestParam(value= "datapodUUID") String datapodUUID, 
@@ -106,9 +97,10 @@ public class DatapodController {
 	    public List<Map<String, Object>>  getAttributeValues(@RequestParam(value= "datapodUUID") String datapodUUID,
 	    		@RequestParam(value= "attributeId") int attributeID,
 				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException
-	    		{
-	    	return datastoreServiceImpl.getAttributeValues(datapodUUID,attributeID);	   	
+				@RequestParam(value = "action", required = false) String action,	    
+				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
+		 	RunMode runMode = Helper.getExecutionMode(mode);		 
+	    	return datastoreServiceImpl.getAttributeValues(datapodUUID,attributeID,runMode);   	
 	   }
 	 
 	 @RequestMapping(value="/getAttributeName", method=RequestMethod.GET)
@@ -136,15 +128,36 @@ public class DatapodController {
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public boolean upload(@RequestParam("csvFileName") MultipartFile csvFile,
 			@RequestParam(value = "datapodUuid") String datapodUuid,
+			@RequestParam(value = "desc") String desc,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		datapodServiceImpl.setDataStoreServiceImpl(datastoreServiceImpl);
 		try{
-			datapodServiceImpl.upload(csvFile,datapodUuid);
+			datapodServiceImpl.upload(csvFile,datapodUuid,desc);
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping(value = "/compareMetadata", method = RequestMethod.GET)
+	public List<CompareMetaData> compareMetadata(@RequestParam(value = "uuid") String datapodUuid,
+					@RequestParam(value = "version")String datapodVersion,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.compareMetadata(datapodUuid, datapodVersion, runMode);
+	}
+	
+	@RequestMapping(value = "/synchronizeMetadata", method = RequestMethod.GET)
+	public Datapod synchronizeMetadata(@RequestParam(value = "uuid") String datapodUuid,
+					@RequestParam(value = "version")String datapodVersion,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.synchronizeMetadata(datapodUuid, datapodVersion, runMode);
 	}
 }

@@ -1320,6 +1320,9 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
         } else if ($scope.parantType == 'model') {
           url = 'getParamListByModel'
         }
+        else if ($scope.parantType == 'dag') {
+          url = 'getParamListByDag'
+        }
         else if ($scope.noExec) {
           url = 'getBaseEntityByCriteria'
         }
@@ -1500,3 +1503,18 @@ InferyxApp.directive('preventEnterSubmit', function () {
     });
   };
 });
+
+
+InferyxApp.filter('unique', function() {
+
+  return function (arr, field) {
+    var o = {}, i, l = arr.length, r = [];
+    for(i=0; i<l;i+=1) {
+      o[arr[i][field]] = arr[i];
+    }
+    for(i in o) {
+      r.push(o[i]);
+    }
+    return r;
+  };
+})

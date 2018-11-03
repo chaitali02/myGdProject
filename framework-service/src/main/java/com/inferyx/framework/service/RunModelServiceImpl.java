@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -31,6 +33,7 @@ import org.apache.spark.sql.SaveMode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -653,6 +656,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	public void execute() throws Exception {
 		try {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+			Map<String,String> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
@@ -663,6 +667,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}
 			boolean isSuccess = false;
 			Object result = null;
+			
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				Algorithm algorithm = null;
@@ -676,11 +681,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
 				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String filePath = "/model/train"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 
-				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
-
+				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
+				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
 				Datasource datasource = commonServiceImpl.getDatasourceByApp();
 				IExecutor exec = execFactory.getExecutor(datasource.getType());
 
@@ -688,7 +693,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-				String sql = modelServiceImpl.generateSQLBySource(source);
+				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
@@ -701,10 +706,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
 				
 				Object trndModel = null;
-			
+			    
 				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
 					//Without hypertuning
-					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass);
+					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
 				} else {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -715,7 +720,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 								for(ParamListHolder paramListHolder : paramListHolderList) {
 									MetaIdentifier hyperParamMI = paramListHolder.getRef();
 									ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -724,7 +729,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							for(ParamListHolder paramListHolder : paramListHolderList) {
 								MetaIdentifier hyperParamMI = paramListHolder.getRef();
 								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
 							}
 						}
 					} else {
@@ -736,7 +741,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						for(ParamListHolder paramListHolder : paramListHolderList) {
 							MetaIdentifier hyperParamMI = paramListHolder.getRef();
 							ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
 						}
 					}
 				}
@@ -765,17 +770,43 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						e.printStackTrace();
 					}
 				}
-				if (isModelSved) {					
+				if (isModelSved) {	
+					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
+//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
+//							try {
+//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
+//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
+//								if(!featureWeightList.isEmpty()) {
+//									summary.put("featureImportances", featureWeightList);
+//								}
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}							
+//						}
 						String fileName = tableName+".result";
+						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
+//							try {
+//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
+//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
+//								if(!featureWeightList.isEmpty()) {
+//									summary.put("featureImportances", featureWeightList);
+//								}
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}							
+//						}
+						
 						String fileName = tableName+".result";
+						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
 						filePathUrl = null;
@@ -799,7 +830,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
 					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
 				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
-						trainExec.getVersion(), null);
+						trainExec.getVersion());
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 
@@ -824,7 +855,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
 		}		
 	}

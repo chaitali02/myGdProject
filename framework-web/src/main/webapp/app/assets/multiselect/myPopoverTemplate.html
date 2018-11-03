@@ -1,0 +1,10 @@
+
+<div class="form-group" style="margin-bottom:0px;overflow-y: auto;
+height: 100%;">
+    <ul class="list-group" style="margin-bottom:0px;">
+        <li class="list-group-item" style="margin-bottom:0px;color:white;background-color:rgba(20,20,20,0.9);opacity: 0.8;" ng-repeat="headerobj in header | limitTo : 5">
+                {{headerobj.name}}
+        </li>
+    </ul>
+    <span ng-if="header.length >5" style="float:right;margin-top: 5px;margin-right: 10px;">....</span>
+</div>

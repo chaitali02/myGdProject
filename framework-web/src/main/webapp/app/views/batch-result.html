@@ -1,0 +1,87 @@
+<div class="row" ng-controller="ResultBatchController">
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="col-md-12">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a ui-sref="home">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>{{$state.current.data.pageTitle}}</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>Batch Results</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li><span>{{batchexecDetail.name}}</span></li>
+            </ul>
+            <div class="page-toolbar">
+                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+
+                    <i class="icon-calendar"></i>&nbsp;
+                    <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Batch Result
+                </div>
+                <div class="tools">
+                    <a title="Refresh" ng-click="refresh()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">   
+                    <div class="col-md-6 col-sm-6" >
+                        <div id="datastoredatatable_filter" class="">
+                            <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange()"/>
+                            <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
+                            <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autoRefreshCounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                            <label>Search:</label>
+                            <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                                aria-controls="datastoredatatable">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ng-style="getGridStyle()">
+                        <div class="nodatawatermark" ng-show="!gridOptions.data.length">No data available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade in" id="confModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+        <div class="modal-dialog">
+            <div class="modal-content rulemodel">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body">{{msg}}
+                    <span style="text-transform: capitalize">{{type}}</span> ?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn green" ng-click="submitOk(msg)">Ok</button>
+                </div>
+            </div>
+            <!--/.modal-content -->
+        </div>
+        <!--/.modal-dialog -->
+    </div>
+</div>

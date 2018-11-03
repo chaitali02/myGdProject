@@ -24,11 +24,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
@@ -37,7 +39,9 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
@@ -54,10 +58,13 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	protected FormulaOperator formulaOperator;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired 
+	protected CommonServiceImpl<?> commonServiceImpl;
 	
 	private final String COMMA = ", ";
 
-	public String generateSql(List<AttributeRefHolder> filterIdentifierList,
+	/********************** UNUSED **********************/
+/*	public String generateSql(List<AttributeRefHolder> filterIdentifierList,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet,
 			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
@@ -106,7 +113,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			}// End switch
 		}
 		return builder.toString();
-	}
+	}*/
 
 	/**
 	 * Generate select query with expression with filter
@@ -114,16 +121,9 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	 * @param filterIdentifierList
 	 * @param usedRefKeySet 
 	 * @return
-	 * @throws ParseException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws JsonProcessingException 
+	 * @throws Exception 
 	 */
-	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -133,14 +133,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			switch (filterIdentifier.getRef().getType()) {
 			case expression:
 				OrderKey expressionKey = filterIdentifier.getRef().getKey();
-				com.inferyx.framework.domain.Expression expression = null;
-				if (null == expressionKey.getVersion()) {
-					expression = daoRegister.getExpressionDao().findLatestByUuid(expressionKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					expression = daoRegister.getExpressionDao().findOneByUuidAndVersion(expressionKey.getUUID(),
-							expressionKey.getVersion());
-				}
+				com.inferyx.framework.domain.Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(expressionKey.getUUID(), expressionKey.getVersion(), MetaType.expression.toString());
 				builder.append(" (")
 						.append(generateSql(expression.getExpressionInfo(), expression.getDependsOn(), null, null, execParams))
 						.append(")");
@@ -150,16 +143,9 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				break;
 			case filter:
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
-				com.inferyx.framework.domain.Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
+				com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				builder.append(" (")
-						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams))
+						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode))
 						.append(")");
 				builder.append(" as ").append(filter.getName()).append(COMMA);
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
@@ -167,14 +153,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				break;
 			case datapod:
 				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
 				builder.append(" (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(),
 						filterIdentifier.getValue())).append(")");
 				builder.append(" as ").append(datapod.getName()).append("_filter").append(COMMA);
@@ -194,8 +173,17 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 		if (!NumberUtils.isDigits(attributeId)) {
 			return "";
 		}
-		if (value != null && value.contains(",")) {
-			return String.format("%s IN (%s)", datapod.sql(Integer.parseInt(attributeId)), value);
+		if(value != null) {
+			boolean isNumber = Helper.isNumber(value);			
+			if(!isNumber) {
+				if (value.contains(",")) {
+					value = value.substring(0, value.length()-1);
+					value = "'"+value+"'"+",";
+					return String.format("%s IN (%s)", datapod.sql(Integer.parseInt(attributeId)), value);
+				} else {				
+					value = "'"+value+"'";
+				}
+			}
 		}
 		return String.format("%s = %s", datapod.sql(Integer.parseInt(attributeId)), value);
 	}
@@ -227,10 +215,23 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 		for (SourceAttr sourceAttr : expressionInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
-				operandValue.add(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getParamSetHolder() != null || execParams.getParamListHolder() != null)) {
+				String value = sourceAttr.getValue();
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
+				operandValue.add(value);
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
 				String value = null;
 				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
 				operandValue.add(value);
 			} else if (filterSource.getRef().getType() == MetaType.dataset
 					&& sourceAttr.getRef().getType() == MetaType.dataset) {
@@ -265,10 +266,23 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (metInfo.getRef().getType() == MetaType.simple) {
-			operandValue = metInfo.getValue();
+			String value = metInfo.getValue();
+			if(value != null) {
+				boolean isNumber = Helper.isNumber(value);			
+				if(!isNumber) {
+					value = "'"+value+"'";
+				}
+			}
+			operandValue = value;
 		} else if (metInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
 			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(metInfo.getAttrId()), metInfo.getRef());
+			if(value != null) {
+				boolean isNumber = Helper.isNumber(value);			
+				if(!isNumber) {
+					value = "'"+value+"'";
+				}
+			}
 			operandValue = value;
 		} else if (metInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister
@@ -282,10 +296,23 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (notMetInfo.getRef().getType() == MetaType.simple) {
-			operandValue = notMetInfo.getValue();
+			String value = notMetInfo.getValue();
+			if(value != null) {
+				boolean isNumber = Helper.isNumber(value);			
+				if(!isNumber) {
+					value = "'"+value+"'";
+				}
+			}
+			operandValue = value;
 		} else if (notMetInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
 			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(notMetInfo.getAttrId()), notMetInfo.getRef());
+			if(value != null) {
+				boolean isNumber = Helper.isNumber(value);			
+				if(!isNumber) {
+					value = "'"+value+"'";
+				}
+			}
 			operandValue = value;
 		} else if (notMetInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister

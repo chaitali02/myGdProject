@@ -1,0 +1,283 @@
+{
+  "uuid": "e885f3b1-8e7d-46fc-842c-83873615ebf2",
+  "version": "1540042277",
+  "name": "ds_customer_summary_30days",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+ "filterInfo" : [ 
+        {
+            "logicalOperator" : "",
+            "operator" : ">=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+                        "version" : null,
+                        "name" : "fact_transaction_journal"
+                    },
+                    "attributeId" : 5,
+                    "value" : null,
+                    "attributeName" : "transaction_date",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "paramlist",
+                        "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+                        "version" : null,
+                        "name" : "paramlist_aml"
+                    },
+                    "attributeId" : 3,
+                    "value" : null,
+                    "attributeName" : "last_90days_start_date",
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "customer_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "customer_id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "in_wire_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "171b6d64-26ae-4070-bae7-adda75569617",
+          "version": null,
+          "name": "fm_in_wire_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "in_wire_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "a1a06227-380d-4b03-a582-0fa03cc411be",
+          "version": null,
+          "name": "fm_in_wire_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "out_wire_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "6ac0117f-5e1f-4ae1-9758-957d598a7ea0",
+          "version": null,
+          "name": "fm_out_wire_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrSourceName": "out_wire_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b3e43993-35a3-4f24-8bb8-2877efd42eaa",
+          "version": null,
+          "name": "fm_out_wire_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrSourceName": "net_wire_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f5076aa7-1b14-4901-afb7-b33a6d9ece01",
+          "version": null,
+          "name": "fm_net_wire_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrSourceName": "net_wire_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "954927a0-5fb3-4580-9d00-9bb1240fde4a",
+          "version": null,
+          "name": "fm_net_wire_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrSourceName": "in_cash_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "8f939862-8e3c-4b39-b056-725ce2aa5bff",
+          "version": null,
+          "name": "fm_in_cash_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrSourceName": "in_cash_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "7ff4ebe8-a776-4616-a5e6-473195a56dc3",
+          "version": null,
+          "name": "fm_in_cash_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrSourceName": "out_cash_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "fd0994cb-f4e1-4ed3-be4e-edf49030c9f9",
+          "version": null,
+          "name": "fm_out_cash_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrSourceName": "out_cash_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "82c2ca92-26ee-4718-a9d5-60b744b71c90",
+          "version": null,
+          "name": "fm_out_cash_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrSourceName": "net_cash_transfers_trans_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "517cf20d-c772-4e6d-a57d-88cf2b1644d4",
+          "version": null,
+          "name": "fm_net_cash_transfers_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrSourceName": "net_cash_transfers_trans_amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "32708be5-2ff9-41cb-afca-a067e6d66336",
+          "version": null,
+          "name": "fm_net_cash_transfers_trans_amount_usd"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}

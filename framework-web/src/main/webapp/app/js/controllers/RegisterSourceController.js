@@ -1,9 +1,10 @@
 /****/
 AdminModule = angular.module('AdminModule');
-AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants) {
+AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService) {
   $scope.isSearchDisable = true;
   $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
+  $scope.path = dagMetaDataService.compareMetaDataStatusDefs
   $scope.searchButtonText = "Register";
   $scope.gridOptions = {
     paginationPageSizes: null,
@@ -30,18 +31,19 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         displayName: 'Name',
         name: 'name',
         minWidth: 250,
-        cellClass: 'text-center',
-        headerCellClass: 'text-center'
+        cellClass: 'text-right',
+        headerCellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.ASC,
+          // priority: 0,
+        },
       },
       {
         displayName: 'Desc',
         name: 'desc',
         cellClass: 'text-center',
         headerCellClass: 'text-center',
-        sort: {
-          direction: uiGridConstants.DESC,
-          // priority: 0,
-        },
+       
       },
       {
         displayName: 'Registered On',
@@ -61,6 +63,13 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status}}</span></div>'
+      },
+      {
+        displayName: 'Compare Status',
+        name: 'compareStatus',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.compareStatus].color}} !important" ng-style="">{{grid.appScope.path[row.entity.compareStatus].caption}}</div></div>'
       },
 
     ]
@@ -141,6 +150,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     }
   }
   $scope.searchSource=function(){
+    $scope.gridOptions.data=[];
     $scope.isSearchDisable=true;
     $scope.searchButtonText = "Register";
     $scope.isDataSourceInpogress = true;
@@ -240,41 +250,44 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       count = count + 1;
     }
     console.log(JSON.stringify(registerSourceArray))
-    // RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
-    // var onSuccessGetcreateAndLoad = function (response) {
-    //  // console.log(JSON.stringify(response))
-    //   $scope.searchButtonText = "Register";
-    //   $scope.dataLoading = false;
-    //   $scope.selectedAllRow = false;
-    //   for (var i = 0; i < response.length; i++) {
-    //     if(!$scope.searchtext){
-    //       var id = response[i].id - 1
-    //       $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
-    //       $scope.gridOptions.data[id].desc = response[i].desc;
-    //       $scope.gridOptions.data[id].status = response[i].status;
-    //       $scope.gridOptions.data[id].selected= false;
-    //       $scope.gridOptions.data[id].isDisabled=true;
-    //       $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
-    //     }
-    //     else{
-    //       var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
-    //       if(index!=-1){
-    //         $scope.gridOptions.data[index].registeredOn = response[i].registeredOn;
-    //         $scope.gridOptions.data[index].desc = response[i].desc;
-    //         $scope.gridOptions.data[index].status = response[i].status;
-    //         $scope.gridOptions.data[index].selected= false;
-    //         $scope.gridOptions.data[index].isDisabled=true;
-    //         $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
-    //     }
-    //     }
-    //     //$scope.gridOptions.data.splice(i,1);
-    //    // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
-    //   }
-    //   notify.type = 'success',
-    //   notify.title = 'Success',
-    //   notify.content = 'Datapod Registered Successfully'
-    //   $scope.$emit('notify', notify);
-    // }
+    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
+    var onSuccessGetcreateAndLoad = function (response) {
+     // console.log(JSON.stringify(response))
+      $scope.searchButtonText = "Register";
+      $scope.dataLoading = false;
+      $scope.selectedAllRow = false;
+      for (var i = 0; i < response.length; i++) {
+        if(!$scope.searchtext){
+          var id = response[i].id - 1
+          $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
+          $scope.gridOptions.data[id].desc = response[i].desc;
+          $scope.gridOptions.data[id].status = response[i].status;
+          $scope.gridOptions.data[id].selected= false;
+          $scope.gridOptions.data[id].isDisabled=true;
+          $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+          $scope.gridOptions.data[id].compareStatus=response[i].compareStatus
+        }
+        else{
+          var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+          if(index!=-1){
+            $scope.gridOptions.data[index].registeredOn = response[i].registeredOn;
+            $scope.gridOptions.data[index].desc = response[i].desc;
+            $scope.gridOptions.data[index].status = response[i].status;
+            $scope.gridOptions.data[index].selected= false;
+            $scope.gridOptions.data[index].isDisabled=true;
+            $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
+            $scope.gridOptions.data[index].compareStatus=response[i].compareStatus
+        }
+        }
+        //$scope.gridOptions.data.splice(i,1);
+       // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+      }
+      notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = 'Datapod Registered Successfully'
+      $scope.$emit('notify', notify);
+    }
+
   }
   
 

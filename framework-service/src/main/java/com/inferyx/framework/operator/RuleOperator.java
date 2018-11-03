@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
@@ -62,6 +64,10 @@ public class RuleOperator implements IParsable, IReferenceable {
 	FilterOperator filterOperator;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
+	@Autowired
+	FilterOperator2 filterOperator2;
+	
+	
 	static final Logger logger = Logger.getLogger(RuleOperator.class);
 	
 	public String generateSql(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
@@ -70,8 +76,9 @@ public class RuleOperator implements IParsable, IReferenceable {
 				.concat(getFrom())
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
-				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams))
-				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams));
+				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
+				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams))
+				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
 		return sql;
 	}
 	
@@ -145,9 +152,20 @@ public class RuleOperator implements IParsable, IReferenceable {
 									java.util.Map<String, MetaIdentifier> refKeyMap, 
 									HashMap<String, String> otherParams, 
 									Set<MetaIdentifier> usedRefKeySet, 
-									ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+									ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
-			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
+			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			return filter;
+		}
+		return ConstantsUtil.BLANK;
+	}
+	
+	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
+			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			return StringUtils.isBlank(filterStr) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;
 	}

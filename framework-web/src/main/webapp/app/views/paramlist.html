@@ -202,7 +202,7 @@
                         </span>
                       </th>
                       <th style="width:6%;text-align:center">ID</th>
-                      <th class="text-center">Name</th>
+                      <th class="text-center" style="width:36%;">Name</th>
                       <th class="text-center" style="width:20%;">Type</th>
                       <th class="text-center">Default Value</th>
                     </tr>
@@ -232,10 +232,19 @@
                         </span>
                       </td>
                       <td>
-                        <div ng-if="tabledata.paramValueType =='distribution'" ng-init="getAllLatest('distribution',$index)">
+                        <div ng-if="tabledata.paramValueType =='distribution'" ng-init="onNgInit('distribution',$index)">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <select select2 class="form-control" name="tabledata{{$index}}" ng-disabled="{{mode}}"
                               data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
+                              required disable-validation-message="">
+                            </select>
+                            <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid" required disable-validation-message=""/>
+                          </span>
+                        </div>
+                        <div ng-if="tabledata.paramValueType =='function'" ng-init="onNgInit('function',$index)">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <select select2 class="form-control" name="tabledata{{$index}}" ng-disabled="{{mode}}"
+                              data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allFunction track by r.uuid"
                               required disable-validation-message="">
                             </select>
                             <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid" required disable-validation-message=""/>
@@ -247,7 +256,20 @@
                             class="form-control">
                           </span>
                         </div>
-                        <div  class="text-center" ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
+                        
+                        <div  ng-if="tabledata.paramValueType =='date'">
+                          <div class="col-md-12" style="margin-top:0px;margin-bottom: -20px;">
+                        
+                            <p class="input-group">
+                              <input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="tabledata.paramValue" is-open="popup2.opened" ng-disabled="!isEdit" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <div  class="text-center" ng-if="['simple','distribution','date','function'].indexOf(tabledata.paramValueType) == -1">
                             NA
                           </div>
                       </td>

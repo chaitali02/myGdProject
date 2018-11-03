@@ -21,6 +21,8 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.StageExec;
@@ -177,12 +179,16 @@ public class RunDagServiceImpl implements Callable<String> {
 		try {
 			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			logger.info(" sessionContext " + sessionContext.getUserInfo());
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
+			logger.info(" After set sessionContext ");
 			//Check if parsing has happ or not. If not then parse.
 			dagServiceImpl.setRunMode(runMode);
 			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
 				// Parse to create SQL
+				logger.info(" Before parse ");
 				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
+				logger.info(" After parse ");
 				//dagExecServiceImpl.save(dagExec);
 				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			}
@@ -192,6 +198,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			}
 
 			// Execute the object
+			logger.info(" Before  createDagExecBatch");
 			dagExec = btchServ.createDagExecBatch(dag, dagExec, runMode);
 			
 			
@@ -237,7 +244,9 @@ public class RunDagServiceImpl implements Callable<String> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Pipeline execution failed.");
 		}finally {			
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());

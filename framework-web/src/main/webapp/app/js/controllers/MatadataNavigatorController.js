@@ -38,19 +38,21 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
-      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec'];
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec','paramlistdag'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
         metajson.type = response[i].type;
         metajson.count = response[i].count;
         metajson.lastUpdatedBy = response[i].lastUpdatedBy;
-        metajson.lastUpdatedOn = new Date(response[i].lastUpdatedOn.split("IST")[0]);
+        var date =response[i].lastUpdatedOn.split(" ");
+        date.splice(date.length-2,1);
+        metajson.lastUpdatedOn = new Date(date.toString().replace(/,/g," "));
+        //metajson.lastUpdatedOn = new Date(response[i].lastUpdatedOn.split("IST")[0]);
         var randomno = Math.floor((Math.random() * 4) + 0);
         //metajson.class=colorarray[randomno];
         metajson.class = colorclassarray[randomno];
         var patt = new RegExp("exec");
-       // alert(patt)
         var res = patt.exec(response[i].type);
         if (response[i].type.indexOf("exec") == -1 && noMetaType.indexOf(response[i].type) == -1) {
           switch (response[i].type) {
@@ -317,6 +319,16 @@
               metajson.caption="Graphpod"
               metajson.icon='fa fa-bar-chart';
               metajson.state="listgraphpod"
+              break
+            case "report":
+              metajson.caption="Report"
+              metajson.icon='fa fa-bar-chart';
+              metajson.state="reportlist"
+              break
+            case "batch":
+              metajson.caption="Batch"
+              metajson.icon='fa fa-tasks';
+              metajson.state="batchlist"
               break
             default:
               console.log(response[i].type)

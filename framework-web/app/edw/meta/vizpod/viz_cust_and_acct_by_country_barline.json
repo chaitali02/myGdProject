@@ -1,0 +1,87 @@
+{
+  "id": "5b9aa23d57fb10181968d83d",
+  "uuid": "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
+  "version": "1536860733",
+  "name": "viz_cust_and_acct_by_country_barline",
+  "desc": "Customers and Accounts By Country",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Sep 13 13:45:33 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "relation",
+      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+      "version": null,
+      "name": "relation_datawarehouse"
+    },
+    "value": null
+  },
+  "type": "bar-line-chart",
+  "limit": null,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
+        "version": null,
+        "name": "dim_customer"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "country"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
+        "version": null,
+        "name": "formula_total_accounts"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
+        "version": null,
+        "name": "formula_total_customers"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ]
+}

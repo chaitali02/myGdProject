@@ -49,7 +49,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	@Autowired
 	ConnectionFactory connFactory;
 	
-	protected SQLContext sqlContext;
 	protected MapExec mapExec;
 	protected MetadataUtil daoRegister;
 	protected IMapExecDao iMapExecDao;
@@ -188,15 +187,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 	public void setiMapExecDao(IMapExecDao iMapExecDao) {
 		this.iMapExecDao = iMapExecDao;
-	}
-	
-	public SQLContext getSqlContext() {
-		return sqlContext;
-	}
-
-
-	public void setSqlContext(SQLContext sqlContext) {
-		this.sqlContext = sqlContext;
 	}
 
 	public MetadataUtil getDaoRegister() {
@@ -341,15 +331,16 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String mapTableName  = null;
 			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+			Datasource tgtDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 			/*String executionEngine = engine.getExecEngine();
 			if(executionEngine.equalsIgnoreCase("livy-spark"))
 				executionEngine = "livy_spark";*/
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 			logger.info("Before map execution ");
 			String sql = mapExec.getExec();
-			if (!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			if (/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					&&*/ !tgtDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
 				logger.info("Datapod: "+datapodKey.getUUID());
 				if(sql.startsWith("."))
@@ -360,29 +351,33 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 				String partitionClause = "";
 				if(partitionColls != null && !partitionColls.isEmpty())
 					partitionClause = " PARTITION ( " + partitionColls +" ) ";
-				if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
+				if(tgtDatasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
 					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
-				else if(datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
+				else if(tgtDatasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
 						sql = "INSERT INTO " + mapTableName + " " + sql;
 			}
 
 			logger.info("Running SQL : " + sql);
 			ResultSetHolder rsHolder = null;
-			if(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), appUuid);
+			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDatapod.getDatasource().getRef().getUuid(), 
+																								targetDatapod.getDatasource().getRef().getVersion(), 
+																								targetDatapod.getDatasource().getRef().getType().toString());
+			if(/*datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					||*/ targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
+				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), true, appUuid);
 			else
 				rsHolder = exec.executeSql(sql);
 			
 			if(rsHolder.getType().equals(ResultType.resultset) 
-					&& datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
+					&& appDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 				rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " WHERE rownum<= " + 100 );
 			else if(rsHolder.getType().equals(ResultType.resultset) &&
-					(!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
+					(/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+							||*/ !appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
 					rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " LIMIT " + 100 );
 			
 			logger.info("After map execution before reading result ");
@@ -391,14 +386,14 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
 			logger.info("Before map persist ");
 			dataStoreServiceImpl.setRunMode(runMode);
-			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
+//			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
 			map.getTarget().getRef().setVersion(targetDatapod.getVersion());
 			countRows = rsHolder.getCountRows();
 			dataStoreServiceImpl.create(filePath, mapTableName
 					, new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion())
 					, new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion())
 					, map.getAppInfo(), map.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows
-					, Helper.getPersistModeFromRunMode(runMode.toString()));
+					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Completed);			
@@ -417,7 +412,9 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Map execution failed.");			
 		} 		
 	}

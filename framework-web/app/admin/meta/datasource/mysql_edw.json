@@ -1,0 +1,42 @@
+{
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73034",
+  "version": "1538842468",
+  "name": "mysql_edw",
+  "desc": "MySql_ecocap Data Source",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 06 10:20:21 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "MYSQL",
+  "access": "JDBC",
+  "driver": "com.mysql.jdbc.Driver",
+  "host": "localhost",
+  "dbname": "edw",
+  "port": "3306",
+  "username": "inferyx",
+  "password": "inferyx",
+  "path": "",
+  "subType": null,
+  "sessionParameters": "",
+  "sid": null
+}

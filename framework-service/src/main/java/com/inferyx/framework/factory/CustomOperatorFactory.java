@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.enums.OperatorType;
+import com.inferyx.framework.operator.HistogramOperator;
 import com.inferyx.framework.operator.CloneDataOperator;
 import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataForValList;
@@ -34,6 +35,8 @@ public class CustomOperatorFactory implements IOperatorFactory {
 	CloneDataOperator cloneDataOperator;
 	@Autowired
 	MatrixMultOperator matrixMultOperator;
+	@Autowired
+	HistogramOperator histogramOperator;
 
 	/**
 	 * 
@@ -55,6 +58,7 @@ public class CustomOperatorFactory implements IOperatorFactory {
 			case genDataValList : return generateDataForValList;
 			case cloneData : return cloneDataOperator;
 			case matrix : return matrixMultOperator;
+			case HISTOGRAM : return histogramOperator;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

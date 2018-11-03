@@ -9,7 +9,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             var menus = ["Show Details"];
             var root, zoom;
             var MOVE_STEP = 100;
-            scope.zoomSize = 10;
+            scope.zoomSize =10;
             var margin = {
                 top: 20,
                 right: 120,
@@ -364,8 +364,13 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 // moveDrawRight();
             }
             scope.changeSliderBack = function () {
+                if(scope.zoomSize >=5)
                 scope.zoomSize = scope.zoomSize - 1;
             }
+
+            scope.resize=function(){
+                scope.zoomSize =10;
+              }
 
             // function moveDrawLeft(){
             // 	var xPosition = d3.transform(container.attr("transform")).translate[0];
@@ -548,10 +553,14 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
         template: `
       <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
-        <div class="col-md-1" style="height:100px">
-          <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+        <div class="col-md-1" style="height:100px; width:100px;">
+          <a ng-click="changeSliderForward()"  tooltip-placement="top" uib-tooltip="Zoom in"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
           <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
-            <a ng-click="changeSliderBack()"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+            <a ng-click="changeSliderBack()"  tooltip-placement="top" uib-tooltip="Zoom out"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+            <span class="fa-stack" style="margin-left:16px; margin-top:15px; z-index: 980;" ng-click="resize()" tooltip-placement="top" uib-tooltip="Reset">
+                <i class="fa fa-circle fa-stack-2x" style="color: #999;font-size: 21px;"></i>
+                <i class="fa fa-undo fa-stack-1x fa-inverse" style="margin:-4px 0px 0px 0px;font-size: 10px;"></i>
+    </span>
         </div>
       </div>
       
@@ -562,8 +571,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
-                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
+                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>

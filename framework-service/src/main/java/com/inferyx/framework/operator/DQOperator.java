@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -76,7 +77,7 @@ public class DQOperator implements IParsable {
 	private String UNDERSCORE = "_";
 	private String COMMA = ", ";
 	private String COUNT = " COUNT";
-	private String HAVING = " HAVING ";
+	private String HAVING = " HAVING (1=1) ";
 	private String DUP_TABLE = " dupTable ";
 	private String ONE = " 1 ";
 	private String BETWEEN = " BETWEEN ";
@@ -113,6 +114,9 @@ public class DQOperator implements IParsable {
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+
+	@Autowired
+	FilterOperator2 filterOperator2;
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
@@ -295,7 +299,7 @@ public class DQOperator implements IParsable {
 			if (!isKey) {
 				dupJoinStr = dupJoinStr.concat(dq.getAttribute().getAttrName()).concat(COMMA);
 			}
-			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(COUNT)
+			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(" AND ").concat(COUNT)
 					.concat(BRACKET_OPEN).concat(dq.getAttribute().getAttrName()).concat(BRACKET_CLOSE)
 					.concat(GREATER_THAN).concat(ONE).concat(BRACKET_CLOSE).concat(DUP_TABLE).concat(ON)
 					.concat(BRACKET_OPEN);
@@ -311,7 +315,7 @@ public class DQOperator implements IParsable {
 					.concat(BRACKET_CLOSE).concat(AS).concat(" dup ").concat(FROM).concat(tableName)
 					// .concat(AS)
 					.concat(" ").concat(datapod.getName()).concat(WHERE_1_1).concat(GROUP_BY);
-			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(COUNT)
+			dupJoinStr = dupJoinStr.concat(commaSepAttrsGroup(getRowKeyList(datapod))).concat(HAVING).concat(" AND ").concat(COUNT)
 					.concat(BRACKET_OPEN).concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)))
 					.concat(BRACKET_CLOSE).concat(GREATER_THAN).concat(ONE).concat(BRACKET_CLOSE).concat(DUP_TABLE)
 					.concat(ON).concat(BRACKET_OPEN);
@@ -417,13 +421,16 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	public String generateFilter(List<AttributeRefHolder> filterInfo, Set<MetaIdentifier> usedRefKeySet)
-			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if (filterInfo == null || filterInfo.isEmpty()) {
+	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
+			throws Exception {
+		if (dq.getFilterInfo() == null || dq.getFilterInfo().isEmpty()) {
 			return "";
 		}
-		return filterOperator.generateSql(filterInfo, null, null, usedRefKeySet);
+		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, dq.getUuid(), dq.getVersion()));
+
+		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null,filterSource, null, usedRefKeySet, null, false, false, runMode);
+
+		return filterStr; //filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 
 	}
 
@@ -436,7 +443,7 @@ public class DQOperator implements IParsable {
 			return null;
 		}
 		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
-				.concat(WHERE_1_1).concat(generateFilter(dq.getFilterInfo(), usedRefKeySet));
+				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 	}
 
 	public String generateCase(DataQual dq, String tableName, String attributeName)
@@ -622,7 +629,10 @@ public class DQOperator implements IParsable {
 				}catch (Exception e2) {
 					// TODO: handle exception
 				}
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.");
+				
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.", dependsOn);
 				throw new Exception((message != null) ? message : "Failed data quality parsing.");
 			}
 		return dataQualExec;

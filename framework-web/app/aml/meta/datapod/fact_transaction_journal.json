@@ -1,0 +1,186 @@
+{
+  "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+  "version": "1539946337",
+  "name": "fact_transaction_journal",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "transaction_id",
+      "type": "string",
+      "desc": "transaction_id",
+      "expression": null,
+      "key": "0",
+      "partition": "N",
+      "dispName": "transaction_id",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 1,
+      "name": "direction",
+      "type": "string",
+      "desc": "direction",
+      "expression": null,
+      "key": "1",
+      "partition": "N",
+      "dispName": "direction",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 2,
+      "name": "account_id",
+      "type": "string",
+      "desc": "account_id",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "account_id",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 3,
+      "name": "customer_id",
+      "type": "string",
+      "desc": "customer_id",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "customer_id",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 4,
+      "name": "transaction_type_code",
+      "type": "string",
+      "desc": "transaction_type_code",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "transaction_type_code",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 5,
+      "name": "transaction_date",
+      "type": "string",
+      "desc": "transaction_date",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "transaction_date",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 6,
+      "name": "transaction_country",
+      "type": "string",
+      "desc": "transaction_country",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "transaction_country",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 7,
+      "name": "sender_country",
+      "type": "string",
+      "desc": "sender_country",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "sender_country",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 8,
+      "name": "reciever_country",
+      "type": "string",
+      "desc": "reciever_country",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "reciever_country",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 9,
+      "name": "amount_usd",
+      "type": "decimal",
+      "desc": "amount_usd",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "amount_usd",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 10,
+      "name": "load_date",
+      "type": "string",
+      "desc": "load_date",
+      "expression": null,
+      "key": "",
+      "partition": "Y",
+      "dispName": "load_date",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 11,
+      "name": "load_id",
+      "type": "integer",
+      "desc": "load_id",
+      "expression": null,
+      "key": "",
+      "partition": "Y",
+      "dispName": "load_id",
+      "active": "Y",
+      "length": null
+    }
+  ]
+}

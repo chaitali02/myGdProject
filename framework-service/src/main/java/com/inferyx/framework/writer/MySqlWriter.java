@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -22,6 +23,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
+@Service
 public class MySqlWriter implements IWriter {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -33,7 +35,10 @@ public class MySqlWriter implements IWriter {
 	@Override
 	public void write(ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode) throws IOException{	
 		try{
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																							datapod.getDatasource().getRef().getVersion(), 
+																							datapod.getDatasource().getRef().getType().toString());
 			String tableName = datasource.getDbname().concat(".").concat(datapod.getName());
 			logger.info("Table Name: " + tableName);
 

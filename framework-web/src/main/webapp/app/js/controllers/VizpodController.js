@@ -49,8 +49,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.showgraphdiv = false
 	$scope.graphDataStatus = false
 	$scope.vizpod = {};
-	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph']
-	$scope.VizpodSourceTypes = ['datapod', 'relation'];
+	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart','heat-map']
+	$scope.VizpodSourceTypes = ['datapod','dataset','relation'];
 	$scope.vizpod.versions = [];
 	$scope.isshowmodel = false;
 	$scope.keylist;
@@ -152,7 +152,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod") {
+		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
 			deferred.resolve();
 		}
 		else {
@@ -163,7 +163,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropKey = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
 		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
@@ -189,7 +189,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod") {
+		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" ||  type == "dataset") {
 			deferred.resolve();
 		}
 		else {
@@ -200,7 +200,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropGroup = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
 		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
@@ -229,7 +229,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			}
 		}
 		else {
-			if ($scope.indexOfByMultiplaValue($scope.valuelist, data) == -1 && isEnable == false && type == "datapod") {
+			if ($scope.indexOfByMultiplaValue($scope.valuelist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
 				deferred.resolve();
 			}
 			else {
@@ -243,9 +243,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.onDropValue = function (event, ui, index) {
 		var data = ui.draggable.scope().item
-		var index = ui.draggable.scope().item.id;
+		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
-		$scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
+	    $scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
 	}//End onDropValue
 
@@ -276,7 +276,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onSuccessGetFormulaByType = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var formulajson = {};
-				formulajson.id = $scope.allSourceAttribute.length
+				formulajson.index = $scope.allSourceAttribute.length;
+				formulajson.id = response[i].uuid+"_"+i;
 				formulajson.class = "tagit-choice_formula-dd"
 				formulajson.uuid = response[i].uuid
 				formulajson.dname = response[i].name
@@ -292,7 +293,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onSuccessGetExpressionByType = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var expressionjson = {};
-				expressionjson.id = $scope.allSourceAttribute.length
+				expressionjson.index = $scope.allSourceAttribute.length;
+				expressionjson.id = response[i].uuid+"_"+i
 				expressionjson.class = "tagit-choice_expression-dd"
 				expressionjson.uuid = response[i].uuid
 				expressionjson.dname = response[i].name
@@ -307,6 +309,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.keylist = [];
 		$scope.valuelist = [];
 		$scope.grouplist = [];
+		$scope.filterAttributeTags=[];
 		VizpodSerivce.getAllLatest($scope.sourcetype).then(function (response) { onSuccessGetAllLatestBySource(response.data) });
 		var onSuccessGetAllLatestBySource = function (response) {
 			if (response != null) {
@@ -320,6 +323,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.keylist = [];
 		$scope.valuelist = [];
 		$scope.grouplist = [];
+		$scope.filterAttributeTags=[];
 		VizpodSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
 		var onSuccessGetAllAttributeBySourcet = function (response) {
 			$scope.allSourceAttribute = response
@@ -491,7 +495,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			for (var i = 0; i < $scope.filterAttributeTags.length; i++) {
 				var attributeInfo = {}
 				var ref = {};
-				ref.type = "datapod";
+				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				attributeInfo.ref = ref;
 				attributeInfo.attributeId = $scope.filterAttributeTags[i].attributeId
@@ -530,7 +534,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			ref.uuid = $scope.valuelist[i].uuid
 			ref.type = $scope.valuelist[i].type;
 			valuejson.ref = ref;
-			if ($scope.valuelist[i].type == "datapod") {
+			if ($scope.valuelist[i].type == "datapod" || $scope.valuelist[i].type == "dataset" ) {
 				valuejson.attributeId = $scope.valuelist[i].attributeId;
 			}
 
@@ -577,13 +581,13 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		if (hidemode == 'yes') {
 
 			if ($scope.stageName == "dvvizpod") {
-				setTimeout(function () { $state.go('vizpodlist'); }, 2000);
+				setTimeout(function () { $state.go('vizpodlist'); }, 100);
 			}
 			else if ($scope.stageName != "dvvizpod" && typeof $scope.stageParams.id != "undefined") {
-				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); }, 2000);
+				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); },100);
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName); }, 2000);
+				setTimeout(function () { $state.go("vizpodlist"); }, 100);
 			}
 		}
 	}//End

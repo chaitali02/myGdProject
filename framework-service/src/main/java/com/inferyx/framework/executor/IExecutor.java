@@ -12,6 +12,7 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
@@ -28,6 +30,8 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -43,6 +47,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.RunMode;
 
 public interface IExecutor {
 
@@ -87,12 +92,13 @@ public interface IExecutor {
 	 * 
 	 * @param sql
 	 * @param tableName
+	 * @param formPath TODO
 	 * @param clientContext
 	 * @return
 	 * @throws IOException
 	 */
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException;
+			String saveMode, boolean formPath, String clientContext) throws IOException;
 
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName);
 
@@ -342,9 +348,10 @@ public interface IExecutor {
 	 * @param valPercent
 	 * @param tableName
 	 * @param clientContext
+	 * @param trainOtherParam TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
 	
 	/**
 	 * 
@@ -538,11 +545,12 @@ public interface IExecutor {
 	 * @param tableName
 	 * @param hyperParamList 
 	 * @param clientContext
+	 * @param trainOtherParam TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
 			throws IOException;
 	
 	/**
@@ -557,4 +565,102 @@ public interface IExecutor {
 	Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException;
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param locationDatapod
+	 * @param locationTableName
+	 * @param sql
+	 * @param key
+	 * @param numBuckets
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param locationDatapod
+	 * @param operation
+	 * @param lhsTableName
+	 * @param rhsTableName
+	 * @param lhsSql
+	 * @param rhsSql
+	 * @param saveTableName
+	 * @param baseExec
+	 * @param otherParams
+	 * @param runMode
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName,
+			String lhsSql, String rhsSql, String saveTableName, BaseExec baseExec, Map<String, String> otherParams,
+			RunMode runMode) throws AnalysisException, IOException;
+	/**
+	 * 
+	 * @Ganesh
+	 * 
+	 * @param targetDatapod
+	 * @param datasource
+	 * @param sourceTableName
+	 * @return List<CompareMetaData>
+	 */
+	List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
+			throws IOException;
+	
+	/**
+	 * @Ganesh
+	 * 
+	 * Save sql as per context (shall be used for livy integration)
+	 * 
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext) throws IOException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param clientContext
+	 * @return 
+	 * @throws SQLException
+	 */
+	String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param trainedModel
+	 * @param clientContext
+	 * @return 
+	 * @throws SQLException
+	 */
+	List<Double> featureImportance(Object trainedModel, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext)
+			throws IOException;
 }

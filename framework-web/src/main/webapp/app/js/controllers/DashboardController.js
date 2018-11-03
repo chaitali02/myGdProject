@@ -12,9 +12,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
-	// $scope.sectionRows = [{
-	// 	columns : [{}]
-	// }];
 	$scope.sectionRows = [];
 	if ($stateParams.action == 'add' || !$stateParams.id) {
 		$scope.sectionRows = [{
@@ -35,16 +32,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 
 	}
-	// $scope.sectionRows = {
-	// 	1:{
-	// 		rowNo : 1,
-	// 		columns : {
-	// 			1:{
-	// 				colNo:1
-	// 			}
-	// 		}
-	// 	}
-	// }
+	
 	var notify = {
 		type: 'success',
 		title: 'Success',
@@ -63,7 +51,12 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	
+	$scope.onChangeVizpod=function(vizpodInfo,parentIndex,index){
+		$scope.sectionRows[parentIndex].columns[index].name=vizpodInfo.name;
+	}
+	
 	$scope.addSectionRow = function (i) {
 		$scope.sectionRows.splice(i + 1, 0, {
 			columns: []
@@ -172,6 +165,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 
 	}
 
+	
+
 	$scope.getColWidth = function (row) {
 		var count = 0;
 		angular.forEach(row.columns, function (val, key) {
@@ -207,14 +202,14 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.dashboard = {};
 	$scope.dashboard.versions = [];
 	$scope.isshowmodel = false;
-	$scope.dependsOnTypes = ["datapod", "relation"]
+	$scope.dependsOnTypes = ["datapod","dataset","relation"]
 	$scope.sectiontable = null
 	$scope.logicalOperator = [" ", "OR", "AND"];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
 	$scope.filterTableArray = null;
 	$scope.dashboardCompare = null;
 	$scope.filterAttributeTags = null;
-	$scope.stageName = "metadata"
+	$scope.stageName = "dashboard"
 	$scope.stageParams = { "type": "dashboard" }
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
@@ -278,66 +273,18 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}//End showDashboardGraph
 
 
-	/*
-		$scope.searchObjet = function(JSONObject,key,value){
-			for(var i=0;i<JSONObject.length;i++){
-				if(JSONObject[i][key] == value){
-					  return true;
-				}
-			}
-			return false;
-		}//End searchObjet
-	
-		$scope.searcLinkObjet = function(JSONObject,valuedst,valuesrc){
-			for(var i=0;i<JSONObject.length;i++){
-			   if(JSONObject[i].dst == valuedst && JSONObject[i].src == valuesrc ){
-				 return true;
-				}
-			}
-			  return false;
-		  }//End searcLinkObjet*/
 
-	// Start getNodeData
-	/*$scope.getNodeData=function(data){
-	 	$scope.graphDataStatus=true;
-	 	$scope.showgraph=false;
-	 	MetadataDahsboardSerivce.getGraphData(data.uuid,data.version,"1").then(function (response) {onSuccess(response.data)});
-	   	var onSuccess=function(response){
-	 		$scope.graphDataStatus=false;
-	 		$scope.showgraph=true;
-	 		console.log(JSON.stringify(response))
-	 		var nodelen=$scope.graphdata.nodes.length;
-	 		var linklen=$scope.graphdata.links.length;
-	 		for(var j=0;j<$scope.graphdata.nodes.length;j++){
-	 		    delete $scope.graphdata.nodes[j].weight
-	 		    delete $scope.graphdata.nodes[j].index
-	 		    delete $scope.graphdata.nodes[j].x
-	 		    delete $scope.graphdata.nodes[j].y
-	 		    delete $scope.graphdata.nodes[j].px
-	 		    delete $scope.graphdata.nodes[j].py
-	 		}
-	 	    var countnode=0;
-	 		var countlink=0;
-	 		for(var i=0;i<response.nodes.length;i++){
-	 		    if($scope.searchObjet($scope.graphdata.nodes,"id",response.nodes[i].id) !=true){
-	 			    $scope.graphdata.nodes[nodelen+countnode]=response.nodes[i];
-	 				countnode=countnode+1;
-	 			}
-	         }
-	 		for(var j=0;j<response.links.length;j++){
-	 		    if($scope.searchObjet($scope.graphdata.links,response.links[j].dst,response.links[j].src) !=true){
-	 				$scope.graphdata.links[linklen+countlink]=response.links[j];
-	 				countlink=countlink+1;
-	 			}
-	         }
-	 		console.log(JSON.stringify($scope.graphdata))
-	 		$scope.data=$scope.graphdata
-	 		// $scope.$apply(function(){});
-	 	}
-	}//End getNodeData
-	  */
 	$scope.getVizpodByType = function () {
-		MetadataDahsboardSerivce.getVizpodByType($scope.alldependsOn.defaultoption.uuid, $scope.selectDependsOnType).then(function (response) { onSuccessGetVizpodByType(response.data) });
+		// MetadataDahsboardSerivce.getVizpodByType($scope.alldependsOn.defaultoption.uuid, $scope.selectDependsOnType).then(function (response) { onSuccessGetVizpodByType(response.data) });
+		// var onSuccessGetVizpodByType = function (response) {
+		// 	$scope.allVizpodByDependsOn = response;
+		// 	$scope.icons = {};
+		// 	angular.forEach(response, function (val) {
+		// 		$scope.icons[val.uuid] = val.type;
+		// 	})
+		// 	console.log($scope.icons);
+		// }
+		CommonService.getAllLatest("vizpod").then(function(response){onSuccessGetVizpodByType(response.data)});
 		var onSuccessGetVizpodByType = function (response) {
 			$scope.allVizpodByDependsOn = response;
 			$scope.icons = {};
@@ -613,7 +560,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			for (var i = 0; i < $scope.filterAttributeTags.length; i++) {
 				var filterInfo = {}
 				var ref = {};
-				ref.type = "datapod";
+				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				// ref.version=$scope.profileTags[i].version;
 				filterInfo.ref = ref;
@@ -622,94 +569,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			}
 		}
 		dashboardjson.filterInfo = filterInfoArray;
-		//filterInfo
-    	/*var filterInfoArray=[];
-    	var filter={}
-    	if($scope.dashboardCompare != null && $scope.dashboardCompare.filter !=null ){
-	    	filter.uuid=$scope.dashboardCompare.filter.uuid;
-	    	filter.name=$scope.dashboardCompare.filter.name;
-	    	filter.version=$scope.dashboardCompare.filter.version;
-	    	filter.createdBy=$scope.dashboardCompare.filter.createdBy;
-	    	filter.createdOn=$scope.dashboardCompare.filter.createdOn;
-	    	filter.active=$scope.dashboardCompare.filter.active;
-	    	filter.tags=$scope.dashboardCompare.filter.tags;
-	    	filter.desc=$scope.dashboardCompare.filter.desc;
-	    	filter.dependsOn=$scope.dashboardCompare.filter.dependsOn;
-    	}//End If
-*/
-        /*if($scope.filterTableArray !=null){
-	    	if($scope.filterTableArray.length >0 ){
-
-	    	for(var i=0;i<$scope.filterTableArray.length;i++){
-
-	    		if($scope.dashboardCompare != null &&  $scope.dashboardCompare.filter !=null && $scope.dashboardCompare.filter.filterInfo.length == $scope.filterTableArray.length){
-
-	    			if($scope.dashboardCompare.filter.filterInfo[i].operand[0].attributeId != $scope.filterTableArray[i].lhsFilter.attributeId
-	    				|| $scope.filterTableArray[i].logicalOperator !=$scope.dashboardCompare.filter.filterInfo[i].logicalOperator
-	    				|| $scope.filterTableArray[i].filtervalue !=$scope.dashboardCompare.filter.filterInfo[i].operand[1].value
-	    				|| $scope.filterTableArray[i].operator !=$scope.dashboardCompare.filter.filterInfo[i].operator){
-
-	    		        dashboardjson.filterChg="y";
-	    		         dashboardjson.srcChg="y";
-
-	    			}//End Inner IF
-	    			else{
-	    				dashboardjson.filterChg="n";
-		var privileges = privilegeSvc.privileges['comment'] || [];
-	    			}//End Inner Else
-
-	 	    	}//End If
-	 	    	else{
-
-	 	        	dashboardjson.filterChg="y";
-	 	        	 dashboardjson.srcChg="y";
-	 	    	}//End Else
-
-	    		var filterInfo={};
-	    		var operand=[];
-	    		var operandfirst={};
-	    		var reffirst={};
-	    		var operandsecond={};
-	    		var refsecond={};
-	    		reffirst.type="datapod"
-	    		reffirst.uuid=$scope.filterTableArray[i].lhsFilter.uuid
-	    		operandfirst.ref=reffirst;
-	    		operandfirst.attributeId=$scope.filterTableArray[i].lhsFilter.attributeId
-	    	    operand[0]=operandfirst;
-	    		refsecond.type="simple";
-	    		operandsecond.ref=refsecond;
-
-	    		if(typeof $scope.filterTableArray[i].filtervalue == "undefined"){
-	    			operandsecond.value="";
-	    		}
-
-	    		else{
-	    			operandsecond.value=$scope.filterTableArray[i].filtervalue
-	    		}
-
-	    		operand[1]=operandsecond;
-
-	    		if (typeof $scope.filterTableArray[i].logicalOperator == "undefined"){
-	    			filterInfo.logicalOperator=""
-	    		}
-	    		else{
-	    			filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
-	    		}
-	    		filterInfo.operator=$scope.filterTableArray[i].operator
-	    		filterInfo.operand=operand;
-	    		filterInfoArray[i]=filterInfo;
-
-	    	}//End FilterInfo
-	    	filter.filterInfo=filterInfoArray;
-	 	    dashboardjson.filter=filter;
-	    	}//End Inner If
-	    	else{
-	    		 dashboardjson.filter=null;
-	    		 dashboardjson.filterChg="y";
-	    		  dashboardjson.srcChg="y";
-	    	}//End Else
-
-        }//End IF*/
 		console.log(JSON.stringify(dashboardjson));
 		MetadataDahsboardSerivce.submit(dashboardjson, 'dashboard',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
@@ -720,7 +579,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			notify.title = 'Success',
 			notify.content = 'Dashboard Saved Successfully'
 			$scope.$emit('notify', notify);
-			$scope.okdashboardsave();
+			setTimeout(function () {
+			$scope.okdashboardsave()},2000);
 		}
 		var onError = function (response) {
 			notify.type = 'error',
@@ -741,16 +601,17 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		delete $sessionStorage.fromStateName;
 		$('#dashboardsave').css("display", "none");
 		var hidemode = "yes";
+	
 		if (hidemode == 'yes') {
 			if ($scope.stageName == "metadata") {
-				setTimeout(function () { $state.go('metadata', { 'type': 'dashboard' }); }, 2000);
+				 $state.go('metadata', { 'type': 'dashboard' });
 			}
 			else if ($scope.stageName != "metadata" && typeof $scope.stageParams.id != "undefined") {
 
-				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); }, 2000);
+			 	$state.go($scope.stageName, {'id': $scope.stageParams.id }); 
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName); }, 2000);
+				 $state.go("dashboard");
 			}
 		}
 	}

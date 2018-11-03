@@ -254,6 +254,9 @@
                   <span class="formula_function btn blue formula_span" ng-disabled="{{mode}}">
                     <a ng-click="undo()" style="color: #fff;"> Undo </a>
                   </span>
+                  <!-- <span class="formula_function btn red formula_span" ng-disabled="{{mode}}">
+                    <a ng-click="undo()" style="color: #fff;"> Delete </a>
+                  </span> -->
                 </div>
               </div>
 
@@ -265,7 +268,7 @@
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-12" style="margin-left:-19px;width:29%;">
                   <div ng-show="isSourceAtributeDatapod">
-                    <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute track by attr.uuid+attr.attributeId"
+                    <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute | orderBy:'datapodname' track by attr.uuid+attr.attributeId"
                       ng-disabled="{{mode}}">
                     </select>
                   </div>

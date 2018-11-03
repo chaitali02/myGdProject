@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
@@ -103,6 +102,7 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -138,8 +138,6 @@ public class ModelServiceImpl {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	SparkContext sparkContext;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
@@ -182,7 +180,11 @@ public class ModelServiceImpl {
 	@Autowired
 	private Helper helper;
 	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
+	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private PythonExecutor pythonExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -795,20 +797,25 @@ public class ModelServiceImpl {
 		return fileName;
 	}
 
-	public boolean executeScript(String type, String scriptName, String modelExecUuid, String modelExecVersion, String object) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Model model = (Model) commonServiceImpl.getDomainFromDomainExec(MetaType.modelExec.toString(), modelExecUuid, modelExecVersion);
-		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + modelExecUuid + "_" + modelExecVersion + "_"+ model.getVersion()+".log";
+	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
+//		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
 		String scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/"+scriptName;
-		
-		IExecutor exec = execFactory.getExecutor(type);
-		if(exec instanceof PythonExecutor) {
-			PythonExecutor pythonExecutor = (PythonExecutor) exec;
-			pythonExecutor.setLogPath(logPath);
-		} else if(exec instanceof RExecutor) {
-			RExecutor rExecutor = (RExecutor) exec;
-			rExecutor.setLogPath(logPath);
-		}		
-		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
+//		
+//		IExecutor exec = execFactory.getExecutor(type);
+//		if(exec instanceof PythonExecutor) {
+//			PythonExecutor pythonExecutor = (PythonExecutor) exec;
+//			pythonExecutor.setLogPath(logPath);
+//		} else if(exec instanceof RExecutor) {
+//			RExecutor rExecutor = (RExecutor) exec;
+//			rExecutor.setLogPath(logPath);
+//		}		
+//		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
+		try {
+			return pythonExecutor.executTFScript(scriptPath, commonServiceImpl.getApp().getUuid());
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException {
@@ -856,8 +863,11 @@ public class ModelServiceImpl {
 	}
 	
 	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
-		
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.trainExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(trainExec.getResult().getRef().getUuid(),
+				trainExec.getResult().getRef().getVersion());
+
 		String location = datastore.getLocation();
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/bestModel/stages"))
@@ -1000,8 +1010,8 @@ public class ModelServiceImpl {
 				targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 			
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Object result = null;
@@ -1105,7 +1115,7 @@ public class ModelServiceImpl {
 						
 						String sql = "SELECT * FROM " + tableName_3;					
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1122,7 +1132,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1137,7 +1147,8 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, "false", appUuid);
+//					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;						
 					count = rsHolder.getCountRows();
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
@@ -1177,7 +1188,7 @@ public class ModelServiceImpl {
 
 						String sql = "SELECT * FROM " + tableName_3;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1194,7 +1205,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -1209,18 +1220,18 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;	
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = sparkExecutor.writeResult(sql, null, filePathUrl, null, SaveMode.Append.toString(), tableName_3, null, appUuid);
+//					ResultSetHolder rsHolder = exec.cczexecuteRegisterAndPersist(sql, tableName_3, filePathUrl, targetDp, SaveMode.Append.toString(), false, appUuid);	
 					result = rsHolder;
 					count = rsHolder.getCountRows();
 				}
 			}
 
-				createDatastore(filePathUrl, modelName,
-						new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
-						new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
-						simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-						Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
-		
+			createDatastore(filePathUrl, modelName,
+					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
+					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
+					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
 
 			simulateExec.setLocation(filePathUrl);
 			simulateExec.setResult(resultRef);
@@ -1242,7 +1253,9 @@ public class ModelServiceImpl {
 			}
 
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}
 
@@ -1288,7 +1301,9 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Predict.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Predict.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable Predict.");
 		}
 		return predictExec;
@@ -1332,7 +1347,9 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Simulate.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Simulate.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable Simulate.");
 		}
 		return simulateExec;
@@ -1428,7 +1445,9 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Train.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable TraintrainExec.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable Train.");
 		}		
 		return trainExec;
@@ -1437,7 +1456,7 @@ public class ModelServiceImpl {
 	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap, RunMode runMode, Object algoClass) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
 		
 		if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-			commonServiceImpl.sendResponse("400", MessageStatus.FAIL.toString(), "Training can not be performed on formula.");
+			commonServiceImpl.sendResponse("400", MessageStatus.FAIL.toString(), "Training can not be performed on formula.", null);
 			throw new RuntimeException("Training can not be performed on formula."); 
 		}
 		
@@ -1697,7 +1716,7 @@ public class ModelServiceImpl {
 		return factorCovariances;
 	}*/
 	
-	public String generateSQLBySource(Object source) throws Exception {  
+	public String generateSQLBySource(Object source, ExecParams execParams) throws Exception {  
 		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -1711,7 +1730,7 @@ public class ModelServiceImpl {
 			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
-			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, RunMode.BATCH);
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.BATCH);
 			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
@@ -1766,10 +1785,10 @@ public class ModelServiceImpl {
 					MetaType.algorithm.toString());
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String filePath = "/model/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Object result = null;
@@ -1780,23 +1799,23 @@ public class ModelServiceImpl {
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			String sql = generateSQLBySource(source);
+			String sql = generateSQLBySource(source, execParams);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
 			long count = 0;
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, target, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder;					
 					count = rsHolder.getCountRows();
-					createDatastore(filePath, predict.getName(), 
+					createDatastore(filePathUrl, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				} else {
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder;					
 					count = rsHolder.getCountRows();
 				}
@@ -1804,7 +1823,7 @@ public class ModelServiceImpl {
 				//TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(), model.getVersion());
 				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
 				if (trainExec == null)
-					throw new Exception("Executed model not found.");
+					throw new Exception("No trained model found.");
 
 				String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), label, appUuid);
@@ -1813,16 +1832,16 @@ public class ModelServiceImpl {
 				String query = "SELECT * FROM " + rsHolder.getTableName();
 				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePathUrl, target, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder2;
 					count = rsHolder2.getCountRows();
-					createDatastore(filePath, predict.getName(), 
+					createDatastore(filePathUrl, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				} else {
-					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
 					result = rsHolder2;					
 					count = rsHolder2.getCountRows();
 				}
@@ -1853,7 +1872,9 @@ public class ModelServiceImpl {
 				// TODO: handle exception
 			}
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
@@ -1862,7 +1883,7 @@ public class ModelServiceImpl {
 	public void createDatastore(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, RunMode runMode) throws Exception{
 		dataStoreServiceImpl.setRunMode(runMode);
-		dataStoreServiceImpl.create(filePath, fileName, metaId, execId, appInfo, createdBy, SaveMode.Append.toString(), resultRef, count, persistMode);
+		dataStoreServiceImpl.create(filePath, fileName, metaId, execId, appInfo, createdBy, SaveMode.Append.toString(), resultRef, count, persistMode, null);
 	}
 	
 	public List<Train> getTrainByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -1892,12 +1913,13 @@ public class ModelServiceImpl {
 	
 	public String genTableNameByMetaIdentifier(MetaIdentifier tabNameMI, Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String tableName = null;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		String dsType = datasource.getType();
 		if(runMode.equals(RunMode.BATCH)) {
-			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				tableName = datasource.getDbname() + "." + datapod.getName();
 				return tableName;
 			} else {
@@ -1952,7 +1974,7 @@ public class ModelServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				MetaIdentifier tabNameMI = new MetaIdentifier(MetaType.model, model.getUuid(), model.getVersion());
 				tableName = genTableNameByMetaIdentifier(tabNameMI, null, predictExec.getVersion(), runMode);
-				String sql = generateSQLBySource(source);
+				String sql = generateSQLBySource(source, execParams);
 				exec.executeAndRegister(sql, tableName, appUuid);
 			} else {
 				tableName = getTableNameByMetaObject(source);
@@ -1962,16 +1984,16 @@ public class ModelServiceImpl {
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				String predictQuery = predictMLOperator.generateSql(predict, tableName);	
 				String sql = null;
-				if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+				if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 						&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-						&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+						&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 					tableName = getTableNameByMetaObject(target);
-					sql = helper.buildInsertQuery(appUuid, tableName, target, predictQuery);
+					sql = helper.buildInsertQuery(datasource.getType(), tableName, target, predictQuery);
 				} else {
 					sql = predictQuery;
 				}				
 //				sql = "INSERT INTO framework.account(interest_rate, account_id) VALUES((SELECT interest_rate AS interestRate FROM framework.account account1), (SELECT sqrt ( account.interest_rate ) * 0.9 AS account_id FROM framework.account account2))";
-				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, target, SaveMode.Append.toString(), appUuid);
+				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, target, SaveMode.Append.toString(), true, appUuid);
 				result = rsHolder;					
 				count = rsHolder.getCountRows();
 				
@@ -2000,7 +2022,7 @@ public class ModelServiceImpl {
 						|| dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 						|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 					String query = "SELECT * FROM " + rsHolder.getTableName();					
-					rsHolder = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+					rsHolder = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), true, appUuid);
 				}
 				
 				result = rsHolder;
@@ -2040,7 +2062,9 @@ public class ModelServiceImpl {
 				// TODO: handle exception
 			}
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
@@ -2209,7 +2233,7 @@ public class ModelServiceImpl {
 						
 						String sql = "SELECT * FROM " + tableName_3;					
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2226,7 +2250,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;						
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2241,7 +2265,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), true, appUuid);	
 					result = rsHolder;						
 					count = rsHolder.getCountRows();
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
@@ -2288,9 +2312,9 @@ public class ModelServiceImpl {
 								targetTable = String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), simulateExec.getVersion());
 							} else {
 								targetTable = datasource.getDbname() + "." + datapod.getName();
-								sql = helper.buildInsertQuery(appUuid, targetTable, datapod, sql);
+								sql = helper.buildInsertQuery(datasource.getType(), targetTable, datapod, sql);
 							}
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2308,7 +2332,7 @@ public class ModelServiceImpl {
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
 						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), true, appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2323,7 +2347,7 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;	
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), true, appUuid);	
 					result = rsHolder;
 					count = rsHolder.getCountRows();
 				}
@@ -2356,7 +2380,9 @@ public class ModelServiceImpl {
 			}
 
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}		
 
@@ -2368,33 +2394,40 @@ public class ModelServiceImpl {
 			List<ParamMap> paramMapList = new ArrayList<>();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-			Algorithm algorithm= null;
-			if (model.getDependsOn().getRef().getVersion() != null)
-				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-			else 
-				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-				
-			String algoClassName = algorithm.getTrainClass();
-			Object algoClass = Class.forName(algoClassName).newInstance();
 			
-			if (train.getUseHyperParams().equalsIgnoreCase("N") 
-					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					if(trainExec == null)
-						trainExec = create(train, model, execParams, paramMap, trainExec);
-					Thread.sleep(1000); // Should be parameterized in a class
-					train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
-					trainExec = null;
-				}
-			} else {
+			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
-				train(train, model, trainExec, execParams, null, runMode,algoClass);
-			}
+				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion());
+			} else {
+				Algorithm algorithm= null;
+				if (model.getDependsOn().getRef().getVersion() != null)
+					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+				else 
+					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+					
+				String algoClassName = algorithm.getTrainClass();
+				Object algoClass = Class.forName(algoClassName).newInstance();
+				
+				if (train.getUseHyperParams().equalsIgnoreCase("N") 
+						&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
+						&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
+				}
+				if (paramMapList.size() > 0) {
+					for (ParamMap paramMap : paramMapList) {
+						if(trainExec == null)
+							trainExec = create(train, model, execParams, paramMap, trainExec);
+						Thread.sleep(1000); // Should be parameterized in a class
+						train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+						trainExec = null;
+					}
+				} else {
+					if(trainExec == null)
+						trainExec = create(train, model, execParams, null, trainExec);
+					train(train, model, trainExec, execParams, null, runMode,algoClass);
+				}
+			}			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

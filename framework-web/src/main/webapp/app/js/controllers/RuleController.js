@@ -8,8 +8,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.showFrom = true;
   $scope.showGraphDiv=false;
   $scope.ruleSourceTypes = ["datapod", "relation", "dataset", "rule"];
-  $scope.logicalOperator = ["OR", "AND"];
-  $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
+  $scope.logicalOperator = ["AND","OR"];
+  $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
   $scope.paramTypes=["paramlist","paramset"];
   $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.lhsType = [
@@ -22,7 +22,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 		{ "text": "string", "caption": "integer" ,"disabled":false },
 		{ "text": "datapod", "caption": "attribute","disabled":false },
 		{ "text": "formula", "caption": "formula","disabled":false },
-		{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
+    { "text": "dataset", "caption": "dataset" ,"disabled":false },
+    { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+		{ "text": "function", "caption": "function" ,"disabled":false }]
   $scope.matType = ["string", 'formula'];
   $scope.sourceTypes = ["datapod", "expression"]
   $scope.sourceAttributeTypes = [{
@@ -123,7 +125,6 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -255,31 +256,26 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         ruleversion.version = response[i].version;
         $scope.rule.versions[i] = ruleversion;
       }
-
     }
-    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ruleview').then(function (response) {
-      onSuccess(response.data)
-    });
+    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rule').then(function (response) { onSuccess(response.data)});
     var onSuccess = function (response) {
       $scope.ruleData = response.ruledata
-      $scope.rulecompare = response.ruledata;
       $scope.tags = response.ruledata.tags
-
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
       defaultversion.uuid = response.ruledata.uuid;
       $scope.rule.defaultVersion = defaultversion;
+
       if (response.filterInfo.length > 0) {
         $scope.filterTableArray = response.filterInfo
       }
+
       $scope.attributeTableArray = response.sourceAttributes
       $scope.datapodAttributeTags = response.sourceAttributes
       $scope.rulsourcetype = response.ruledata.source.ref.type;
-      RuleService.getAllLatestActive(response.ruledata.source.ref.type).then(function (response) {
-        onSuccessRelation(response.data)
-      });
-      var onSuccessRelation = function (response) {
 
+      RuleService.getAllLatestActive(response.ruledata.source.ref.type).then(function (response) { onSuccessRelation(response.data)});
+      var onSuccessRelation = function (response) {
         $scope.ruleRelation = response
         if($scope.ruleData &&  $scope.rulsourcetype == "rule"){
             temp = response.options.filter(function(el) {
@@ -291,12 +287,14 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         defaultoption.uuid = $scope.ruleData.source.ref.uuid;
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
+        $scope.getSourceByFormula();
       }
+
+      $scope.getParamByApp();
+
       CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
-        onSuccessGetAllLatestParamListByTemplate(response.data)
-      });
+      onSuccessGetAllLatestParamListByTemplate(response.data)});
       var onSuccessGetAllLatestParamListByTemplate = function (response) {
-        
         $scope.allparamlist={};
         $scope.allparamlist.options = response
         if ($scope.ruleData.paramList != null) {
@@ -305,33 +303,29 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           defaultoption.name = $scope.ruleData.paramList.ref.name;
           $scope.allparamlist.defaultoption = defaultoption;
           $scope.getOneByUuidParamList();
+
         } else {
           $scope.allparamlist.defaultoption = null;
         }
       }
 
-      RuleService.getExpressionByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).then(function (response) {
-        onSuccessExpression(response.data)
-      });
+      RuleService.getExpressionByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).
+      then(function (response) { onSuccessExpression(response.data)});
       var onSuccessExpression = function (response) {
         $scope.ruleLodeExpression = response
       }
+
       $scope.expressionTableArray = response.expressionlist
-      RuleService.getFormulaByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).then(function (response) {
-        onSuccessFormula(response.data)
-      });
-      var onSuccessFormula = function (response) {
-        $scope.ruleLodeFormula = response.data
+    
+      CommonService.getFunctionByCriteria("", "N","function").
+      then(function (response){ onSuccressGetFunction(response.data)});	
+      var onSuccressGetFunction = function (response) {
+        $scope.ruleLodeFunction = response;
+        $scope.allFunction=response;
       }
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessFunction(response.data)
-      });
-      var onSuccessFunction = function (response) {
-        $scope.ruleLodeFunction = response
-      }
-      RuleService.getAllAttributeBySource(response.ruledata.source.ref.uuid, response.ruledata.source.ref.type).then(function (response) {
-        onSuccess(response.data)
-      })
+
+      RuleService.getAllAttributeBySource(response.ruledata.source.ref.uuid, response.ruledata.source.ref.type).
+      then(function (response) {onSuccess(response.data)});
       var onSuccess = function (response) {
         $scope.lhsdatapodattributefilter = response;
         $scope.loadSourceAttribue = response;
@@ -351,45 +345,48 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       if (response)
         $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
+      $scope.allparamlistParams=[];
     }
   } //End Else
 
   $scope.selectVersion = function () {
     $scope.attributeTableArray = null;
     $scope.myform.$dirty = false;
-    RuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid, $scope.rule.defaultVersion.version, 'ruleview').then(function (response) {
-      onSuccess(response.data)
-    });
+    RuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid, $scope.rule.defaultVersion.version, 'rule')
+    .then(function (response) { onSuccess(response.data)});
     var onSuccess = function (response) {
       $scope.ruleData = response.ruledata
-      $scope.rulecompare = response.ruledata;
       $scope.tags = response.ruledata.tags
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
       defaultversion.uuid = response.ruledata.uuid;
       $scope.rule.defaultVersion = defaultversion;
+
       if (response.filterInfo.length > 0) {
         $scope.filterTableArray = response.filterInfo
       } else {
         $scope.filterTableArray = null;
       }
-      $scope.attributeTableArray = response.sourceAttributes
-      //consoleconsole.log(JSON.stringify($scope.attributeTableArray))
-      $scope.datapodAttributeTags = response.sourceAttributes
+
+      $scope.attributeTableArray = response.sourceAttributes;
+      $scope.datapodAttributeTags = response.sourceAttributes;
       $scope.rulsourcetype = response.ruledata.source.ref.type;
+      
       RuleService.getAllLatest(response.ruledata.source.ref.type).then(function (response) {
-        onSuccessRelation(response.data)
-      });
+        onSuccessRelation(response.data)});
       var onSuccessRelation = function (response) {
         $scope.ruleRelation = response
         var defaultoption = {};
         defaultoption.uuid = $scope.ruleData.source.ref.uuid;
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
+        $scope.getSourceByFormula();
       }
+
+      $scope.getParamByApp();
+
       CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
-        onSuccessGetAllLatestParamListByTemplate(response.data)
-      });
+        onSuccessGetAllLatestParamListByTemplate(response.data)});
       var onSuccessGetAllLatestParamListByTemplate = function (response) {
         $scope.allparamlist={};
         $scope.allparamlist.options = response
@@ -403,28 +400,23 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           $scope.allparamlist.defaultoption = null;
         }
       }
+
       RuleService.getExpressionByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).then(function (response) {
-        onSuccessExpression(response.data)
-      });
+        onSuccessExpression(response.data)});
       var onSuccessExpression = function (response) {
         $scope.ruleLodeExpression = response
       }
+
       $scope.expressionTableArray = response.expressionlist
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessFunction(response.data)
-      });
-      var onSuccessFunction = function (response) {
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      var onSuccressGetFunction = function (response) {
         $scope.ruleLodeFunction = response
+        $scope.allFunction=response;
       }
-      RuleService.getFormulaByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).then(function (response) {
-        onSuccessFormula(response.data)
-      });
-      var onSuccessFormula = function (response) {
-        $scope.ruleLodeFormula = response.data
-      }
+     
       RuleService.getAllAttributeBySource(response.ruledata.source.ref.uuid, response.ruledata.source.ref.type, $scope.rulsourcetype).then(function (response) {
-        onSuccess(response.data)
-      })
+        onSuccess(response.data)});
       var onSuccess = function (response) {
         $scope.lhsdatapodattributefilter = response;
         $scope.loadSourceAttribue = response;
@@ -461,6 +453,33 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.isSubmitShow = false;
     }
   }
+
+  $scope.getSourceByFormula=function(){
+    if($scope.ruleRelation.defaultoption){
+      RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
+      var onSuccressGetFormula = function (response) {
+        $scope.ruleLodeFormula = response.data;
+        $scope.allSourceFormula=response.data;
+        $scope.getParamListByFormula();  
+      }
+    }
+  }
+  $scope.getParamListByFormula=function(){
+    if($scope.allparamlist.defaultoption){
+      RuleService.getFormulaByType($scope.allparamlist.defaultoption.uuid,$scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
+      var onSuccressGetFormula = function (response) {
+        if($scope.ruleLodeFormula && $scope.ruleLodeFormula.length >0){
+          $scope.ruleLodeFormula=$scope.ruleLodeFormula.concat(response.data)
+        }else{
+          $scope.allParamlistFormula=response.data
+          $scope.ruleLodeFormula=$scope.allParamlistFormula;
+        }
+      }
+    }else{
+      $scope.ruleLodeFormula=$scope.allSourceFormula;
+    }
+  }
+
   $scope.modelExecute = function (modeldetail) {
     if($scope.selectParamType =="paramlist"){
       if($scope.paramlistdata){
@@ -506,12 +525,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         execParams = null
       }
     }
-    //console.log(JSON.stringify(execParams));
     RuleService.executeRuleWithParams(modeldetail.uuid, modeldetail.version, execParams).then(function (response) {
       onSuccessGetExecuteModel(response.data)
     });
     var onSuccessGetExecuteModel = function (response) {
-     // console.log(JSON.stringify(response));
      $scope.dataLoading = false;
       $scope.saveMessage = "Rule Saved and Submited Successfully"
       notify.type = 'success',
@@ -522,7 +539,6 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
   }
   $scope.onSelectparamSet = function () {
-    //console.log(JSON.stringify($scope.paramsetdata));
     var paramSetjson = {};
     var paramInfoArray = [];
     if ($scope.paramsetdata != null) {
@@ -651,16 +667,16 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.selectParamList=null;
     $scope.paramTypes=null;
     $scope.selectParamType=null;
+    $scope.ruleLodeFormula ==null;
+    $scope.ruleLodeFormula = $scope.allSourceFormula
+    $scope.getParamListByFormula();
     setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     $scope.checkboxModelexecution="NO";
+    $scope.ruleLodeParamList=null;
+    $scope.getParamByApp();
   }
-  $scope.changeCheckboxExecution = function () {
-    $scope.allparamset=null;
-    $scope.allParamList=null;
-    $scope.isParamLsitTable=false;
-    $scope.selectParamList=null;
-    $scope.paramTypes=null;
-    $scope.selectParamType=null;
+
+  $scope.showParamlistPopup=function(){
     setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
       $('#responsive').modal({
@@ -672,10 +688,41 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.allparamset = null;
     }
   }
+  $scope.closeParalistPopup=function(){
+    $scope.dataLoading = false;
+    $scope.checkboxModelexecution="NO";
+    $scope.isSubmitDisabled=false;
+    $('#responsive').modal('hide');
+
+  }
+  $scope.changeCheckboxExecution = function () {
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.paramTypes=null;
+    $scope.selectParamType=null;
+    // setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
+    // if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+    //   $('#responsive').modal({
+    //     backdrop: 'static',
+    //     keyboard: false
+    //   });
+    // } else {
+    //   $scope.isShowExecutionparam = false;
+    //   $scope.allparamset = null;
+    // }
+  }
   
   $scope.executeWithExecParams = function () {
     $('#responsive').modal('hide');
+    RuleService.getOneById($scope.ruleId, "rule").then(function (response) {
+    onSuccessGetOneById(response.data)});
+    var onSuccessGetOneById = function (result) {
+      $scope.modelExecute(result.data);
+    } 
   }
+
   $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
@@ -719,77 +766,101 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       return $filter('filter')($scope.loadSourceAttribue, query);
     });
   };
-  $scope.SearchAttribute=function(index){
-		$scope.selectDatasetAttr=$scope.filterTableArray[index].rhsdataset
-		RuleService.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
+
+  $scope.SearchAttribute=function(index,type,propertyType){
+		$scope.selectAttr=$scope.filterTableArray[index][propertyType]
+		$scope.searchAttr={};
+		$scope.searchAttr.type=type;
+		$scope.searchAttr.propertyType=propertyType;
+		$scope.searchAttr.index=index;
+		RuleService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
 		$scope.searchAttrIndex=index;
-		var onSuccessRelation = function (response) {
-			$scope.allDataset = response;
-      var temp;
-			if($scope.rulsourcetype == "dataset"){
-				temp = $scope.allDataset.options.filter(function(el) {
-					return el.uuid !==$scope.ruleRelation.defaultoption.uuid;
+		var onSuccessGetAllLatest = function (response) {
+			$scope.allSearchType = response;
+			var temp;
+			if($scope.selectSourceType == "dataset"){
+				temp = $scope.allSearchType.options.filter(function(el) {
+					return el.uuid !== $scope.datasetRelation.defaultoption .uuid;
 				});
-				$scope.allDataset.options=temp;
-				$scope.allDataset.defaultoption=temp[0]
+				$scope.allSearchType.options=temp;
+				$scope.allSearchType.defaultoption=temp[0]
 			}
-		
+			if($scope.dataset){
+				temp = $scope.allSearchType.options.filter(function(el) {
+					return el.uuid !== $scope.dataset.uuid;
+				});
+				$scope.allSearchType.options=temp;
+				$scope.allSearchType.defaultoption=temp[0]
+			}
+			if(typeof $stateParams.id != "undefined" && $scope.selectAttr){
+				var defaultoption={};
+				defaultoption.uuid=$scope.selectAttr.uuid;
+				defaultoption.name="";
+				$scope.allSearchType.defaultoption=defaultoption;
+			}
 			$('#searchAttr').modal({
 				backdrop: 'static',
 				keyboard: false
 			  });
-			  RuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
-			  var onSuccessAttributeBySource = function (response) {
-				$scope.allDatasetAttr = response;
-				if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+			RuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,type).then(function (response) { onSuccessAttributeBySource(response.data) });
+			var onSuccessAttributeBySource = function (response) {
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
 					var defaultoption={};
-					defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+					defaultoption.uuid=$scope.selectAttr.uuid;
 					defaultoption.name="";
-					$scope.allDataset.defaultoption=defaultoption;
+					$scope.allSearchType.defaultoption=defaultoption;
 				}else{
-					$scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+					$scope.selectAttr=$scope.allAttr[0]
 				}
 
 			}
 		}
-		
 	}
-    $scope.onChangeDataset=function(){
-      RuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
-		  var onSuccessAttributeBySource = function (response) {
-			  $scope.allDatasetAttr = response;
+	
+	$scope.onChangeSearchAttr=function(){
+		RuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,$scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allAttr = response;
 		}
 	}
 
 	$scope.SubmitSearchAttr=function(){
-		console.log($scope.selectDatasetAttr);
-		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
+		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;
 		$('#searchAttr').modal('hide')
 	}
-  $scope.onChangeOperator=function(index){
-		if($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
+  
+  $scope.disableRhsType=function(rshTypes,arrayStr){
+		for(var i=0;i<rshTypes.length;i++){
+			rshTypes[i].disabled=false;
+			if(arrayStr.length >0){
+				var index=arrayStr.indexOf(rshTypes[i].caption);
+				if(index !=-1){
+					rshTypes[i].disabled=true;
+				}
+		  }
     }
+    return rshTypes;
+	}
+
+  $scope.onChangeOperator=function(index){
+	
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
-		  //$scope.disableRhsType(['string','attribute','formula','dataset'])
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
+		  $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['attribute','formula','dataset','function','paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			//if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			//  $scope.disableRhsType([]);
-			//}else{
-			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
-	 	  //}
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,[]);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
-      // $scope.disableRhsType(['string','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['string','dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 		else{
-			//$scope.disableRhsType(['attribute','formula','dataset']);
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
+			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
+			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 	}
@@ -816,12 +887,15 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
     filertable.operator = $scope.operator[0].value
-		filertable.lhstype = $scope.lhsType[0]
-		filertable.rhstype = $scope.rhsType[0]
+    filertable.lhstype = $scope.lhsType[0];
+    filertable.rhsTypes=CF_FILTER.rhsType;
+    filertable.rhsTypes=$scope.disableRhsType(filertable.rhsTypes,['dataset']);
+		filertable.rhstype = filertable.rhsTypes[0];
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
-	}
+  }
+  
   $scope.removeFilterRow = function () {
     var newDataList = [];
     $scope.checkAll = false;
@@ -830,37 +904,38 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         newDataList.push(selected);
       }
     });
-    if (newDataList.length > 0) {
+    if(newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
     $scope.filterTableArray = newDataList;
   }
+
   $scope.selectlhsType = function (type, index) {
 		if (type == "string") {
+
 			$scope.filterTableArray[index].islhsSimple = true;
 			$scope.filterTableArray[index].islhsDatapod = false;
 			$scope.filterTableArray[index].lhsvalue;
-			$scope.filterTableArray[index].islhsFormula = false;
+      $scope.filterTableArray[index].islhsFormula = false;
+      
 		}
 		else if (type == "datapod") {
 
 			$scope.filterTableArray[index].islhsSimple = false;
 			$scope.filterTableArray[index].islhsDatapod = true;
-			$scope.filterTableArray[index].islhsFormula = false;
+      $scope.filterTableArray[index].islhsFormula = false;
+      
 		}
 		else if (type == "formula") {
 
 			$scope.filterTableArray[index].islhsFormula = true;
 			$scope.filterTableArray[index].islhsSimple = false;
-			$scope.filterTableArray[index].islhsDatapod = false;
-			RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
-			var onSuccressGetFormula = function (response) {
-				$scope.ruleLodeFormula = response.data;
-			}
+      $scope.filterTableArray[index].islhsDatapod = false;
+      $scope.getSourceByFormula();
 		}
+  }
+  
 
-
-	}
 	$scope.selectrhsType = function (type, index) {
 
 		if (type == "string") {
@@ -869,6 +944,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsFormula = false;
       $scope.filterTableArray[index].rhsvalue;
       $scope.filterTableArray[index].isrhsDataset = false;
+      $scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
 		}
 		else if (type == "datapod") {
 
@@ -876,6 +953,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsDatapod = true;
       $scope.filterTableArray[index].isrhsFormula = false;
       $scope.filterTableArray[index].isrhsDataset = false;
+      $scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
 		}
 		else if (type == "formula") {
 
@@ -883,45 +962,67 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsSimple = false;
       $scope.filterTableArray[index].isrhsDatapod = false;
       $scope.filterTableArray[index].isrhsDataset = false;
-			RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
-			var onSuccressGetFormula = function (response) {
-				$scope.ruleLodeFormula = response.data;
-			}
+      $scope.filterTableArray[index].isrhsParamlist = false;
+      $scope.filterTableArray[index].isrhsFunction = false;
+      $scope.getSourceByFormula();
     }
-    else if (type == "dataset") {
+    else if (type == "function") {
+
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist=false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+      $scope.filterTableArray[index].isrhsFunction = true;
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});		
+        var onSuccressGetFunction = function (response) {
+				$scope.allFunction = response;
+			}
+		}
+		else if (type == "dataset") {
 			$scope.filterTableArray[index].isrhsFormula = false;
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = true;
-			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
-				$scope.allDataset = response;
-			}
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			
 		}
+		else if (type == "paramlist") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist=true;
+      $scope.filterTableArray[index].isrhsFunction = false;
+      if($scope.allparamlistParams && $scope.allparamlistParams.length ==0){
+        $scope.getParamByApp();
+      }
+			
+    }
   }
   
   $scope.onChangeSimple = function () {
-		if ($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
-		}
+	
 	}
 	
-	// $scope.onChangeOperator=function(){
-	// 	if ($scope.rulecompare != null) {
-	// 		$scope.rulecompare.filterChg = "y"
-	// 	}
-	// }
+
   $scope.onChangeAttribute=function(){
-		if ($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
-		}
+	
 	}
 
 	$scope.onChangeFromula=function(){
-		if ($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
-		}
-	}
+	
+  }
+  $scope.onChangeFunction=function(){
+   
+  }
+  
+  $scope.onChangeRhsParamList=function(){
+   
+  }
 
   $scope.onChangeSourceAttribute = function (type, index) {
     if (type == "string") {
@@ -947,12 +1048,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) {
-        onSuccessExpression(response.data)
-      });
-      var onSuccessExpression = function (response) {
-        $scope.ruleLodeFormula = response.data
-      }
+        if($scope.ruleLodeFormula && $scope.ruleLodeFormula.length ==0)
+        $scope.getSourceByFormula();
+
     } else if (type == "expression") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = false;
       $scope.attributeTableArray[index].isSourceAtributeDatapod = false;
@@ -973,11 +1071,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = true;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessExpression(response.data)
-      });
-      var onSuccessExpression = function (response) {
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+      onSuccressGetFunction(response.data)});	
+      var onSuccressGetFunction = function (response) {
         $scope.ruleLodeFunction = response
+
       }
     } else if (type == "paramlist") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = false;
@@ -991,26 +1089,53 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.getOneByUuidParamList = function () {
-
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
-      RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").then(function (response) {
-        onSuccessParamList(response.data)
-      });
-
+      RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
+      then(function (response) { onSuccessParamList(response.data)});
       var onSuccessParamList = function (response) {
         var paramsArray = [];
         for (var i = 0; i < response.params.length; i++) {
           var paramsjson = {};
           paramsjson.uuid = response.uuid;
           paramsjson.name = response.name + "." + response.params[i].paramName;
-          paramsjson.attrId = response.params[i].paramId;
-          paramsjson.attrType = response.params[i].paramType
-          paramsjson.paramName = response.params[i].paramName
-          paramsArray[i] = paramsjson
+          paramsjson.attributeId = response.params[i].paramId;
+          paramsjson.attrType = response.params[i].paramType;
+          paramsjson.paramName = response.params[i].paramName;
+          paramsjson.caption = "rule."+paramsjson.paramName;
+          paramsArray[i] = paramsjson;
         }
         $scope.ruleLodeParamList = paramsArray
+        if($scope.allparamlistParams &&  $scope.allparamlistParams.length >0)
+        $scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.ruleLodeParamList);
       }
     }
+  }
+   
+  $scope.getParamByApp=function(){
+    $scope.allparamlistParams=[];
+    CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+    then(function (response) { onSuccessGetParamByApp(response.data)});
+    var onSuccessGetParamByApp=function(response){
+      if(response.length >0){
+        var paramsArray = [];
+        for(var i=0;i<response.length;i++){
+          var paramjson={}
+          var paramsjson = {};
+          paramsjson.uuid = response[i].ref.uuid;
+          paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+          paramsjson.dname = response[i].ref.name + "." + response[i].paramName;
+          paramsjson.attributeId = response[i].paramId;
+          paramsjson.attrType = response[i].paramType;
+          paramsjson.paramName = response[i].paramName;
+          paramsjson.caption = "app."+paramsjson.paramName;
+          paramsArray[i] = paramsjson
+        }
+        $scope.allparamlistParams=paramsArray;
+      }
+      // if($scope.ruleLodeParamList &&  $scope.ruleLodeParamList.length >0)
+      // $scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.ruleLodeParamList);
+    }
+    $scope.getOneByUuidParamList();
   }
 
   $scope.onChangeAttributeDatapod = function (data, index) {
@@ -1042,9 +1167,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     attrivuteinfo.name = "attribute" + len;
     attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
     attrivuteinfo.isSourceAtributeSimple = true;
-    attrivuteinfo.sourcesimple = "''"
+    attrivuteinfo.sourcesimple;
     attrivuteinfo.isSourceAtributeDatapod = false;
-   // console.log(JSON.stringify(attrivuteinfo))
     $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
   }
 
@@ -1108,13 +1232,6 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     ruleJson.desc = $scope.ruleData.desc;
     ruleJson.active = $scope.ruleData.active;
     ruleJson.published = $scope.ruleData.published;
-
-
-    if ($scope.rulecompare == null) {
-      ruleJson.filterChg = "y";
-    } else {
-      ruleJson.mapInfo = $scope.rulecompare.mapInfo
-    }
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -1143,114 +1260,119 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       ruleJson.paramList = null;
     }
     var filterInfoArray = [];
-    var filter = {}
-    if ($scope.rulecompare != null && $scope.rulecompare.filter != null) {
-      filter.uuid = $scope.rulecompare.filter.uuid;
-      filter.name = $scope.rulecompare.filter.name;
-      filter.createdBy = $scope.rulecompare.filter.createdBy;
-      filter.createdOn = $scope.rulecompare.filter.createdOn;
-      filter.active = $scope.rulecompare.filter.active;
-      filter.tags = $scope.rulecompare.filter.tags;
-      filter.desc = $scope.rulecompare.filter.desc;
-      filter.dependsOn = $scope.rulecompare.filter.dependsOn;
-    }
     if ($scope.filterTableArray != null) {
       if ($scope.filterTableArray.length > 0) {
         for (var i = 0; i < $scope.filterTableArray.length; i++) {
-          if ($scope.rulecompare != null && $scope.rulecompare.filter != null && $scope.rulecompare.filter.filterInfo.length == $scope.filterTableArray.length) {
-            if ($scope.rulecompare.filterChg == "y") {
-						  ruleJson.filterChg = "y";
-					  }
-            else {
-              ruleJson.filterChg = "n";
-            }
-          } 
-          else {
-            ruleJson.filterChg = "y";
-          }
           var  filterInfo  = {};
-          var operand = []
-          var lhsoperand = {}
-          var lhsref = {}
-          var rhsoperand = {}
+          var operand = [];
+          var lhsoperand = {};
+          var lhsref = {};
+          var rhsoperand = {};
           var rhsref = {};
+
           if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
+
           else{
             filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
           }
-				  filterInfo .operator = $scope.filterTableArray[i].operator;
-          if($scope.filterTableArray[i].lhstype.text == "string") {
 
+          filterInfo .operator = $scope.filterTableArray[i].operator;
+          
+          if($scope.filterTableArray[i].lhstype.text == "string") {
             lhsref.type = "simple";
             lhsoperand.ref = lhsref;
+            lhsoperand.attributeType =$scope.filterTableArray[i].lhstype.caption;
             lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
           }
-          else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-            if ($scope.rulsourcetype == "dataset") {
-              lhsref.type = "dataset";
 
-            }
-            else {
+          else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
+            
+            if ($scope.rulsourcetype == "relation") {
               lhsref.type = "datapod";
             }
-            lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
+            else {
+              lhsref.type = $scope.rulsourcetype;
+            }
 
+            lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
             lhsoperand.ref = lhsref;
             lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
           }
+
           else if ($scope.filterTableArray[i].lhstype.text == "formula") {
 
             lhsref.type = "formula";
             lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
             lhsoperand.ref = lhsref;
+          
           }
 				  operand[0] = lhsoperand;
+          
           if ($scope.filterTableArray[i].rhstype.text == "string") {
 
             rhsref.type = "simple";
             rhsoperand.ref = rhsref;
+            rhsoperand.attributeType =$scope.filterTableArray[i].rhstype.caption;
             rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+            if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+              rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+            }  
           }
-          else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-            if ($scope.rulsourcetype == "dataset") {
-              rhsref.type = "dataset";
 
-            }
-            else {
+          else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
+            if ($scope.rulsourcetype == "relation") {
               rhsref.type = "datapod";
             }
-            rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
+            else {
+              rhsref.type = $scope.rulsourcetype;
+            }
 
+            rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
           }
+
           else if ($scope.filterTableArray[i].rhstype.text == "formula") {
 
             rhsref.type = "formula";
             rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
             rhsoperand.ref = rhsref;
           }
+
+          else if ($scope.filterTableArray[i].rhstype.text == "function") {
+            rhsref.type = "function";
+            rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
+            rhsoperand.ref = rhsref;
+          }
+
           else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
             rhsref.type = "dataset";
             rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
           }
+
+          else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
+            rhsref.type = "paramlist";
+            rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
+          }
+
 				  operand[1] = rhsoperand;
 			  	filterInfo .operand = operand;
           filterInfoArray[i] = filterInfo;
         }
-        filter.filterInfo = filterInfoArray;
-        ruleJson.filter = filter;
-      } else {
-        ruleJson.filter = null;
-        ruleJson.filterChg = "y";
+        ruleJson.filterInfo = filterInfoArray;
+      } 
+      else {
+        ruleJson.filterInfo = null;
       }
-    } else {
-      ruleJson.filter = null;
-      ruleJson.filterChg = "y";
+    } 
+    else {
+      ruleJson.filterInfo = null; 
     }
     ruleJson.tags = tagArray;
 
@@ -1306,7 +1428,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           ref.type = "paramlist";
           ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
           sourceAttr.ref = ref;
-          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attrId;
+          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attributeId;
           sourceAttr.attrType = $scope.attributeTableArray[l].sourceparamlist.attrType
           attributeinfo.sourceAttr = sourceAttr;
         }
@@ -1317,17 +1439,19 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     ruleJson.attributeInfo = sourceAttributesArray
     console.log("Rule JSON" + JSON.stringify(ruleJson))
 
-    RuleService.submit(ruleJson,'ruleview',upd_tag).then(function (response) {
+    RuleService.submit(ruleJson,'rule',upd_tag).then(function (response) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      if (options.execution == "YES") {
-        RuleService.getOneById(response.data, "rule").then(function (response) {
-          onSuccessGetOneById(response.data)
-        });
-        var onSuccessGetOneById = function (result) {
-          $scope.modelExecute(result.data);
-        }
+      if(options.execution == "YES") {
+        $scope.ruleId=response.data;
+        $scope.showParamlistPopup();
+        // RuleService.getOneById(response.data, "rule").then(function (response) {
+        //   onSuccessGetOneById(response.data)
+        // });
+        // var onSuccessGetOneById = function (result) {
+        //   $scope.modelExecute(result.data);
+        // }
       } //End if
       else {
         $scope.dataLoading = false;
@@ -1637,7 +1761,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 });
 
 
-RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc) {
+RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc,CF_DOWNLOAD) {
   $scope.select = $stateParams.type;
   $scope.type = {
     text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
@@ -1661,6 +1785,12 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   $scope.isdisabled = true
   $scope.isD3RuleEexecGraphShow = false;
   $scope.isD3RGEexecGraphShow = false;
+  $scope.download={};
+  $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+  $scope.download.formates=CF_DOWNLOAD.formate;
+  $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+  $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+  $scope.download.limit_to=CF_DOWNLOAD.limit_to; 
   $scope.filteredRows = [];
   var notify = {
     type: 'success',
@@ -2041,19 +2171,22 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     }
     $scope.refreshRuleGroupExecFunction();
   }
-  $scope.downloadFile = function (data) {
-    if($scope.isD3RuleEexecGraphShow){
-      return false;
-    }
-    var uuid = data.uuid;
-    var version = data.version;
-    var url = $location.absUrl().split("app")[0]
+
+
+
+  $scope.submitDownload=function(){
+		var uuid = $scope.download.data.uuid;
+		var version = $scope.download.data.version;
+		var url = $location.absUrl().split("app")[0];
+		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
-      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version,
+      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();
+      $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			
       var filename = headers['filename'];
       var contentType = headers['content-type'];
       var linkElement = document.createElement('a');
@@ -2076,5 +2209,18 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     }).error(function (data) {
       console.log(data);
     });
+	}
+
+
+  $scope.downloadFile = function (data) {
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
+    $scope.download.data=data;
+      $('#downloadSample').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+   
   };
 }); //End RuleViewResultController

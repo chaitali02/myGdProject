@@ -41,6 +41,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -119,7 +120,70 @@ public class RunStageServiceImpl implements Callable<String> {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	ProfileInfo profileInfo;
 	ReconInfo reconInfo;
+	private IngestServiceImpl ingestServiceImpl;
+	private IngestExecServiceImpl ingestExecServiceImpl;
+	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestServiceImpl
+	 */
+	public IngestServiceImpl getIngestServiceImpl() {
+		return ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestServiceImpl the ingestServiceImpl to set
+	 */
+	public void setIngestServiceImpl(IngestServiceImpl ingestServiceImpl) {
+		this.ingestServiceImpl = ingestServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestExecServiceImpl
+	 */
+	public IngestExecServiceImpl getIngestExecServiceImpl() {
+		return ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestExecServiceImpl the ingestExecServiceImpl to set
+	 */
+	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
+		this.ingestExecServiceImpl = ingestExecServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the ingestGroupServiceImpl
+	 */
+	public IngestGroupServiceImpl getIngestGroupServiceImpl() {
+		return ingestGroupServiceImpl;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param ingestGroupServiceImpl the ingestGroupServiceImpl to set
+	 */
+	public void setIngestGroupServiceImpl(IngestGroupServiceImpl ingestGroupServiceImpl) {
+		this.ingestGroupServiceImpl = ingestGroupServiceImpl;
+	}
 
 	/**
 	 * @Ganesh
@@ -702,28 +766,30 @@ public class RunStageServiceImpl implements Callable<String> {
 	
 				datapodKey = fetchDatapodKey(indvTask);
 				// Fetch datapod key
-				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-						.getOperatorInfo();
-				if (datapodKey == null) {
-					if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-							/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-							|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
-					continue;
+				for(MetaIdentifierHolder operationInfoHolder : indvTask.getOperators().get(0).getOperatorInfo()) {
+					if (datapodKey == null) {
+						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
+								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
+								|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
+						continue;
+						}
 					}
 				}
 				logger.info("Calling task id : " + indvTask.getTaskId());
 				// Set task and submit for execution
-				setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, operationInfoHolder, taskList, runMode);
+				setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, indvTask.getOperators().get(0).getOperatorInfo(), taskList, runMode);
 			
 			}	// For all taskExecs
 			
@@ -865,30 +931,32 @@ public class RunStageServiceImpl implements Callable<String> {
 					// Start process for Task submission
 					datapodKey = fetchDatapodKey(indvTask);
 					// Fetch datapod key
-					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-							.getOperatorInfo();
-					if (datapodKey == null) {
-						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
-						continue;
+					for(MetaIdentifierHolder operationInfoHolder : indvTask.getOperators().get(0).getOperatorInfo()) {
+						if (datapodKey == null) {
+							if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+								&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
+									/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+									|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
+									|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
+							continue;
+							}
 						}
 					}
 					
 					logger.info("Calling task id 2 : " + indvTask.getTaskId());
 					dependentTaskRunningLog.add(dagExec.getUuid() + "_" + stageId + "_" + indvTaskExec.getTaskId());
 					// Set task and submit for execution
-					setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, operationInfoHolder, taskList, runMode);
+					setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, indvTask.getOperators().get(0).getOperatorInfo(), taskList, runMode);
 				
 				}	// For all taskExecs
 			}
@@ -1064,66 +1132,74 @@ public class RunStageServiceImpl implements Callable<String> {
 	public OrderKey fetchDatapodKey(Task indvTask) throws JsonProcessingException {
 		OrderKey datapodKey = null;
 		// Fetch datapod key
-		MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-				.getOperatorInfo();
-		if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.load)) {
+		for(MetaIdentifierHolder operationInfoHolder : indvTask.getOperators().get(0).getOperatorInfo()) {
+			if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.load)) {
 
-			//Load load = loadServiceImpl.findOneByUuidAndVersion(operationInfoHolder.getRef().getUuid(), operationInfoHolder.getRef().getVersion());
-			Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operationInfoHolder.getRef().getUuid(), operationInfoHolder.getRef().getVersion(), MetaType.load.toString());
-			//Datapod dp = datapodServiceImpl.findOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion());
-			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion(), MetaType.datapod.toString());
-			return new OrderKey(dp.getUuid(), dp.getVersion());
-		} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.map)) {
-			MetaIdentifier mapRef = operationInfoHolder.getRef();
-			//com.inferyx.framework.domain.Map map = mapServiceImpl.findLatestByUuid(mapRef.getUuid());
-			com.inferyx.framework.domain.Map map = (Map) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.map.toString());
-			datapodKey = map.getTarget().getRef().getKey();
-			if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
-				datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
-			} else {
+				//Load load = loadServiceImpl.findOneByUuidAndVersion(operationInfoHolder.getRef().getUuid(), operationInfoHolder.getRef().getVersion());
+				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operationInfoHolder.getRef().getUuid(), operationInfoHolder.getRef().getVersion(), MetaType.load.toString());
+				//Datapod dp = datapodServiceImpl.findOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion());
+				Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+				return new OrderKey(dp.getUuid(), dp.getVersion());
+			} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.map)) {
+				MetaIdentifier mapRef = operationInfoHolder.getRef();
+				//com.inferyx.framework.domain.Map map = mapServiceImpl.findLatestByUuid(mapRef.getUuid());
+				com.inferyx.framework.domain.Map map = (Map) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.map.toString());
+				datapodKey = map.getTarget().getRef().getKey();
+				if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+					datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
+				} else {
+					Datapod targetDatapod = (Datapod) daoRegister
+							.getRefObject(new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), null));
+					datapodKey.setVersion(targetDatapod.getVersion());
+				}
+				return datapodKey;
+			} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.dq)) {
+				MetaIdentifier mapRef = operationInfoHolder.getRef();
+				//DataQual dataQual = dataqualServiceImpl.findLatestByUuid(mapRef.getUuid());
+				DataQual dataQual = (DataQual) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.dq.toString());
 				Datapod targetDatapod = (Datapod) daoRegister
-						.getRefObject(new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), null));
-				datapodKey.setVersion(targetDatapod.getVersion());
-			}
-			return datapodKey;
-		} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.dq)) {
-			MetaIdentifier mapRef = operationInfoHolder.getRef();
-			//DataQual dataQual = dataqualServiceImpl.findLatestByUuid(mapRef.getUuid());
-			DataQual dataQual = (DataQual) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.dq.toString());
-			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
-			return new OrderKey(targetDatapod.getUuid(),
-					targetDatapod.getVersion());
-		}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.rule)) {
-			MetaIdentifier ruleRef = operationInfoHolder.getRef();
-			//Rule rule = ruleServiceImpl.findLatestByUuid(ruleRef.getUuid());
-			Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ruleRef.getUuid(), MetaType.rule.toString());
-		} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.profile)) {
-			MetaIdentifier mapRef = operationInfoHolder.getRef();
-			//Profile profile = profileServiceImpl.findLatestByUuid(mapRef.getUuid());
-			Profile profile = (Profile) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.profile.toString());
-			/*Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002671", null));*/
-			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
-			return new OrderKey(targetDatapod.getUuid(),
-					targetDatapod.getVersion());
-		}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& operationInfoHolder.getRef().getType().equals(MetaType.recon)) {
-			MetaIdentifier mapRef = operationInfoHolder.getRef();
-			Recon recon = (Recon) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.recon.toString());
-			/*Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002699", null));*/
-			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
-			return new OrderKey(targetDatapod.getUuid(),
-					targetDatapod.getVersion());
-		}  
+						.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
+				return new OrderKey(targetDatapod.getUuid(),
+						targetDatapod.getVersion());
+			}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.rule)) {
+				MetaIdentifier ruleRef = operationInfoHolder.getRef();
+				//Rule rule = ruleServiceImpl.findLatestByUuid(ruleRef.getUuid());
+				Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ruleRef.getUuid(), MetaType.rule.toString());
+			} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.profile)) {
+				MetaIdentifier mapRef = operationInfoHolder.getRef();
+				//Profile profile = profileServiceImpl.findLatestByUuid(mapRef.getUuid());
+				Profile profile = (Profile) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.profile.toString());
+				/*Datapod targetDatapod = (Datapod) daoRegister
+						.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002671", null));*/
+				Datapod targetDatapod = (Datapod) daoRegister
+						.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
+				return new OrderKey(targetDatapod.getUuid(),
+						targetDatapod.getVersion());
+			}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.recon)) {
+				MetaIdentifier reconRef = operationInfoHolder.getRef();
+				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(reconRef.getUuid(), MetaType.recon.toString());
+				/*Datapod targetDatapod = (Datapod) daoRegister
+						.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002699", null));*/
+				Datapod targetDatapod = (Datapod) daoRegister
+						.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
+				return new OrderKey(targetDatapod.getUuid(),
+						targetDatapod.getVersion());
+			} else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+					&& operationInfoHolder.getRef().getType().equals(MetaType.ingest)) {
+				MetaIdentifier ingestRef = operationInfoHolder.getRef();
+				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ingestRef.getUuid(), MetaType.ingest.toString());
+				if(ingest.getTargetDetail().getRef().getUuid() != null) {
+					Datapod targetDp = (Datapod) commonServiceImpl.getLatestByUuid(ingest.getTargetDetail().getRef().getUuid(), MetaType.datapod.toString());
+					return new OrderKey(targetDp.getUuid(), targetDp.getVersion());
+				}
+			} 
+		}		 
 		return null;
 	}
 	
@@ -1132,12 +1208,12 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @param indvTaskExec
 	 * @param datapodKey
 	 * @param indvTask
-	 * @param operationInfoHolder
+	 * @param operationInfoHolderList
 	 * @param taskList
 	 * @throws JsonProcessingException 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
+	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, List<MetaIdentifierHolder> operationInfoHolderList, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
 		TaskServiceImpl indivTaskExe = new TaskServiceImpl();
 		if (!dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
 				&& !dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, indvTaskExec.getTaskId()).equals(Status.Stage.OnHold)) {
@@ -1154,14 +1230,13 @@ public class RunStageServiceImpl implements Callable<String> {
 		logger.info("Map name of uuid_version:" + dagExec.getUuid() + "_" + indvTaskExec.getTaskId());
 		String filePath = null;
 		indivTaskExe.setName("Task_"+ dagExec.getUuid() + "_" + indvTaskExec.getTaskId());
-		if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-				&& (operationInfoHolder.getRef().getType().equals(MetaType.map) 
-					|| operationInfoHolder.getRef().getType().equals(MetaType.load)
-					|| operationInfoHolder.getRef().getType().equals(MetaType.profile)
-					|| operationInfoHolder.getRef().getType().equals(MetaType.dq)
-					|| operationInfoHolder.getRef().getType().equals(MetaType.recon))) {
-			filePath = String.format("/%s/%s/%s", 
-					datapodKey.getUUID(), datapodKey.getVersion(), dagExec.getVersion());
+		if (operationInfoHolderList != null && operationInfoHolderList.get(0).getRef() != null
+				&& (operationInfoHolderList.get(0).getRef().getType().equals(MetaType.map) 
+					|| operationInfoHolderList.get(0).getRef().getType().equals(MetaType.load)
+					|| operationInfoHolderList.get(0).getRef().getType().equals(MetaType.profile)
+					|| operationInfoHolderList.get(0).getRef().getType().equals(MetaType.dq)
+					|| operationInfoHolderList.get(0).getRef().getType().equals(MetaType.recon))) {
+			filePath = String.format("/%s/%s/%s", datapodKey.getUUID(), datapodKey.getVersion(), dagExec.getVersion());
 		}
 		indivTaskExe.setDependsOn(indvTask.getDependsOn());
 		indivTaskExe.setDagExecServiceImpl(dagExecServiceImpl);
@@ -1213,6 +1288,9 @@ public class RunStageServiceImpl implements Callable<String> {
 		FutureTask<String> futureTask = new FutureTask<String>(indivTaskExe);
 		indivTaskExe.setReconServiceImpl(reconServiceImpl);
 		indivTaskExe.setReconGroupServiceImpl(reconGroupServiceImpl);
+		indivTaskExe.setIngestServiceImpl(ingestServiceImpl);
+		indivTaskExe.setIngestExecServiceImpl(ingestExecServiceImpl);
+		indivTaskExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
 		taskExecutor.execute(futureTask);
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);

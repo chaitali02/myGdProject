@@ -109,8 +109,210 @@
     }; //End Return
   });
 
+  DatavisualizationModule.directive('heatMap', function($compile, $rootScope, sortFactory) {
+    return {
+      scope: {
+        data: "=",
+        column: "=",
+        chartid: "=",
+        objdetail:"="
+      },
+      link: function($scope, element, attrs) {
+        $scope.$watch('data', function(newValue, oldValue) {
+          $scope.chartcolor = ["#d98880", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"] //["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
+          var keynameY = $scope.column.keys[1].attributeName;
+          var keynameX = $scope.column.keys[0].attributeName
+          var columnname;
+          $scope.valueColName;
+          if ($scope.column.values[0].ref.type == "formula") {
+            columnname = $scope.column.values[0].ref.name;
+            $scope.valueColName=$scope.column.values[0].ref.name;
+          } else {
+            columnname = $scope.column.values[0].attributeName;
+            $scope.valueColName=$scope.column.values[0].attributeName
+          }
+
+          var reA = /[^a-zA-Z]/g;
+          var reN = /[^0-9]/g;
+          function sortAlphaNum(propName) {
+            return function(a,b){
+              var aA = a[propName].replace(reA, "");
+              var bA = b[propName].replace(reA, "");
+              if(aA === bA) {
+                var aN = parseInt(a[propName].replace(reN, ""), 10);
+                var bN = parseInt(b[propName].replace(reN, ""), 10);
+                return aN === bN ? 0 : aN > bN ? 1 : -1;
+              } else {
+                return aA > bA ? 1 : -1;
+              }
+            }
+          }
+
+          var data1={}
+          data1.labels=[];
+          data1.datasets=[];
+          console.log(keynameX)
+          console.log(columnname)
+          function indexOfDataset(array,value){
+            var index=-1;
+            for(var j=0;j<array.length;j++){
+              if(array[j].label == value){
+                index=j;
+                break
+              }
+            }
+            return index;
+          }
+        //  console.log(JSON.stringify($scope.data));
+          var countX=0;
+          for(var i=0;i< $scope.data.length;i++){
+            if(i== 0){
+              data1.labels[i]=$scope.data[i][keynameX];
+              var dataset={};
+              dataset.data=[];
+              dataset.label= $scope.data[i][keynameY];
+              if($scope.data[i][columnname] !=0){
+                dataset.data[0]=parseFloat($scope.data[i][columnname].toFixed(2));
+              }else{
+                dataset.data[0]=$scope.data[i][columnname];
+              }
+              data1.datasets[0]=dataset;
+              countX=countX+1
+            }else{
+              var index=data1.labels.indexOf($scope.data[i][keynameX]);
+              if(index == -1){
+                data1.labels[countX]=$scope.data[i][keynameX];
+                countX=countX+1;
+              }
+              var indexY=indexOfDataset(data1.datasets,$scope.data[i][keynameY]);
+              if( indexY== -1){
+                var dataset={};
+                dataset.data=[];
+                dataset.label= $scope.data[i][keynameY];
+                if($scope.data[i][columnname] != 0){
+                  dataset.data[0]=parseFloat($scope.data[i][columnname].toFixed(2));
+                }
+                else{
+                  dataset.data[0]=$scope.data[i][columnname];
+                }
+                data1.datasets[data1.datasets.length]=dataset;
+              }else{
+                data1.datasets[indexY].label=$scope.data[i][keynameY];
+                if($scope.data[i][columnname] !=0){
+                  data1.datasets[indexY].data[data1.datasets[indexY].data.length]=parseFloat($scope.data[i][columnname].toFixed(2));
+                }
+                else{
+                  data1.datasets[indexY].data[data1.datasets[indexY].data.length]=$scope.data[i][columnname];
+                }
+              }
+            }
 
 
+          }
+         // console.log(JSON.stringify(data1));
+          data1.datasets.sort(sortAlphaNum('label'))
+          var options={
+          // String - background color for graph
+          backgroundColor: '#fff',
+          
+          // Boolean - whether each box in the dataset is outlined
+          stroke: true,
+          
+          // Number - width of the outline stroke.
+          strokePerc: 0.01,
+          
+          // String - the outline stroke color.
+          strokeColor: "rgb(128,128,128)",
+          
+          // String - the outline stroke highlight color.
+          highlightStrokeColor: "rgb(192,192,192)",
+          
+          // Boolean - whether to draw the heat map boxes with rounded corners
+          rounded: true,
+          
+          // Number - the radius (as a percentage of size) of the rounded corners
+          roundedRadius: 0.1,
+          
+          // Number - padding between heat map boxes (as a percentage of box size)
+          paddingScale: 0.08,
+          
+          // String - "gradient", "palette"
+          colorInterpolation: "gradient",
+          
+          // Array[String] - the colors used for the active color scheme.
+          // Any number of colors is allowed.
+          //  colors: ['rgba(255, 255, 255, .8)','rgba(255, 0, 0, 0.8)','rgba(0, 128, 0, 0.8)','rgba(0, 0, 255, 0.8)'],
+          colors: ['rgba(255, 255, 255, 0.8)','rgba(255, 192, 203, 0.8)','rgba(255, 0, 0, 0.8)'],
+          // Boolean - whether boxes change color on hover.
+          colorHighlight: true, 
+          
+          // Number - a floating point value which specifies how much lighter or
+          // darker a color becomes when hovered, where 1 is no change, 
+          // 0.9 is slightly darker, and 1.1 is slightly lighter.
+          colorHighlightMultiplier: 0.92,
+          
+          // Boolean - Whether to draw labels on the boxes
+          showLabels: true, 
+          
+          // Number - the font size of the label as percentage of box height
+          labelScale: 0.4,
+          
+          // String - label font family
+          labelFontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+          
+          // String - label font style
+          labelFontStyle: "normal",
+          
+          // String - label font color
+          labelFontColor: "rgba(0,0,0,0.5)",
+          responsive: true,
+          
+          };
+          var ctx = document.getElementById('heatmap').getContext('2d');
+          $scope.newChart = new Chart(ctx).HeatMap(data1, options);
+          console.log( $scope.newChart)
+          $(".heatmapid").append($scope.newChart.generateLegend())
+        }); //End Watch
+      } ,//End link
+      template: `
+        <!--
+        <div style="transform: rotate(90deg);transform-origin: left bottom 0;margin-left: -15px;">
+          <div>
+           {{column.keys[1].attributeName}}
+          </div>
+        </div>
+        <div   style="margin-top: -20px;">
+          <canvas id="heatmap" width="300" height="140"></canvas>
+        </div>
+        </div>
+        <div style="text-align:center;">
+          {{column.keys[0].attributeName}}
+        </div>
+        <div style="text-align:center; margin-top:10px;" class="heatmapid">
+        -->
+        <div style="text-align:center;">
+        {{column.keys[0].attributeName}}
+      </div>
+        <div class="row">
+        
+        <div  class="col-md-11">
+          <canvas id="heatmap" width="300" height="140"></canvas>
+        </div>
+        <div class="col-md-1" style="transform: rotate(90deg);transform-origin:left bottom 0;">
+          <div>
+           {{column.keys[1].attributeName}}
+          </div>
+        </div>
+        </div>
+       
+        <div style="text-align:center; margin-top:10px;" class="heatmapid">
+        </div>
+        
+      `
+    }; //End Return
+  });
+
+  
   DatavisualizationModule.directive('worldMap', function($compile,$filter,$rootScope, sortFactory, $window) {
     return {
       scope: {
@@ -189,6 +391,7 @@
                 d.vizpod=$scope.objdetail;
                 d.dataobj={};
                 var value=datamap.options.data[geography.id] || ""
+                d.dataobj.x=geography.id;
                 if(value !="")
                 d.dataobj.value=datamap.options.data[geography.id][columnname[0]]|| "";
                 else
@@ -221,7 +424,8 @@
           $scope.$watch('data', function(newValue, oldValue) {
             mapRender();
           });//End Watch
-        } //End link
+        } ,//End link
+      
       }; //End Return
     });
 

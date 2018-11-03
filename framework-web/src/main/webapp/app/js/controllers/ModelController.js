@@ -618,7 +618,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           paramListInfo.paramId=$scope.featureTableArray[i].paramListInfo.paramId;
           featureObj.paramListInfo=paramListInfo;
         }else{
-          featureObj.paramListInfo=null
+          //featureObj.paramListInfo=null
         }
         featureArray[i]=featureObj;
       }

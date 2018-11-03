@@ -13,13 +13,13 @@ package com.inferyx.framework.domain;
 import java.util.HashMap;
 import java.util.List;
 
-public class ExecParams {
+public class ExecParams implements Cloneable {
 
 	private List<MetaIdentifier> refKeyList;
 	private List<ParamSetHolder> paramInfo;
 	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
-	private ParamSetHolder paramSetHolder;
+	private ParamSetHolder currParamSet;
 	private ParamListHolder paramListHolder;
 	private List<ParamListHolder> paramListInfo;
 	private java.util.Map<String, String> internalVarMap;
@@ -86,12 +86,12 @@ public class ExecParams {
 		this.paramInfo = paramInfo;
 	}
 
-	public ParamSetHolder getParamSetHolder() {
-		return paramSetHolder;
+	public ParamSetHolder getCurrParamSet() {
+		return currParamSet;
 	}
 
-	public void setParamSetHolder(ParamSetHolder paramSetHolder) {
-		this.paramSetHolder = paramSetHolder;
+	public void setCurrParamSet(ParamSetHolder currParamSet) {
+		this.currParamSet = currParamSet;
 	}
 
 	public List<AttributeRefHolder> getFilterInfo() {
@@ -140,6 +140,10 @@ public class ExecParams {
 
 	public void setGraphFilter(GraphFilter graphFilter) {
 		this.graphFilter = graphFilter;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
 	}
 
 }

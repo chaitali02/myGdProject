@@ -109,9 +109,9 @@ public class ExportServiceImpl implements Serializable {
 		return exp;
 	}
 	
-	@SuppressWarnings("resource")
 	public String writeObjectToFile(Export exp) throws ZipException, JsonGenerationException, JsonMappingException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
-		String directoryPath = Helper.getPropertyValue("framework.schema.Path");
+		String directoryPath = Helper.getPropertyValue("framework.mg.export.path");
+		directoryPath = directoryPath.endsWith("/") ? "" : directoryPath.concat("/");
 		ZipOutputStream zos = null; 
 		File file = null;
 		ObjectMapper objectMapper  = new ObjectMapper();
@@ -121,10 +121,10 @@ public class ExportServiceImpl implements Serializable {
 			Export export = (Export) commonServiceImpl.resolveName(exp, MetaType.export);
 			
 			logger.info("Writting, Export uuid: "+export.getUuid());
-			file = new File(directoryPath+"/export/export.json");
+			file = new File(directoryPath.concat("export.json"));
 			objectMapper.writeValue(file, export);
 			
-			File exportZip = new File(directoryPath+"/export/"+export.getUuid()+".zip");
+			File exportZip = new File(directoryPath.concat(export.getUuid()).concat(".zip"));
 			filePath = exportZip.getAbsolutePath();
 			/*logger.info("Zip file absolute path: "+filePath);*/
 			zos = new ZipOutputStream(new FileOutputStream(exportZip));
@@ -146,7 +146,7 @@ public class ExportServiceImpl implements Serializable {
 				logger.info("writing to metaInfo: "+uuid);
 				Object object = commonServiceImpl.getLatestByUuid(uuid, holder.getRef().getType().toString());
 		
-				file = new File(directoryPath+"/export/"+uuid+".json");
+				file = new File(directoryPath.concat(uuid).concat(".json"));
 				FileWriter fileWriter = new FileWriter(file);
 				fileWriter.write(JSON.parse(objectMapper.writeValueAsString(object)).toString());
 				fileWriter.close();
@@ -194,16 +194,17 @@ public class ExportServiceImpl implements Serializable {
 		return filePath;
 	}
 	public File writeObjectToFile(BaseEntity baseEntity) throws JsonProcessingException, IOException {
-		String directoryPath = Helper.getPropertyValue("framework.schema.Path");
+		String directoryPath = Helper.getPropertyValue("framework.mg.export.path");
+		directoryPath = directoryPath.endsWith("/") ? "" : directoryPath.concat("/");
 		ObjectMapper objectMapper  = new ObjectMapper();
 		String uuid = baseEntity.getUuid();
-		File file = new File(directoryPath+"/export/"+uuid+".json");
+		File file = new File(directoryPath.concat(uuid).concat(".json"));
 		FileWriter fileWriter = new FileWriter(file);
 		fileWriter.write(JSON.parse(objectMapper.writeValueAsString(baseEntity)).toString());
 		fileWriter.close();
 		return file;
 	}
-	public ZipOutputStream writeFileToZip(ZipOutputStream zos, File file/*, File exportZip*/) throws IOException, ZipException {
+	public ZipOutputStream writeFileToZip(ZipOutputStream zos, File file) throws IOException, ZipException {
 		int bytesRead = -1;
 		Long fileSize = file.length();		
 		byte[] byteBuffer = new byte[fileSize.intValue()];
@@ -358,7 +359,9 @@ public class ExportServiceImpl implements Serializable {
 	}
 	public HttpServletResponse download(String uuid, HttpServletResponse response) {
 		try {
-	        	String filePath = Helper.getPropertyValue("framework.schema.Path")+"/export/"+uuid+".zip";
+			String dirPath = Helper.getPropertyValue("framework.mg.export.path");
+			dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");
+	        	String filePath = dirPath.concat(uuid).concat(".zip");
 	            File file = new File(filePath);
 	 
 	            if (file.exists()) {
@@ -389,7 +392,7 @@ public class ExportServiceImpl implements Serializable {
 	            	logger.info("Requested " + uuid+".zip" + " file not found!!");
 	            }
 	        } catch (IOException e) {
-	        	logger.info("Error:- " + e.getMessage());
+	        	logger.info("Exception:- " + e.getMessage());
 	        }
 		return response;
 	}

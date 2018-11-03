@@ -54,7 +54,7 @@
 						<a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
               				<i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
            				 </a>
-						<a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="vizpodlist" style="height:14px;">
+						<a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="okVizpodSave()" style="height:14px;">
 					    	<i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
 						</a>
 					</div>
@@ -145,7 +145,7 @@
 										<span class="required" aria-required="true"> * </span>
 									</label>
 									<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-										<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options track by r.uuid" ng-disabled="{{mode}}" required="">
+										<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options | orderBy: 'datapodname' track by r.uuid" ng-disabled="{{mode}}" required="">
                                         </select>
 									</div>
 								</div>
@@ -186,7 +186,7 @@
 								<div class="form-group">
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Detail</label>
 									<div class="col-md-6">
-										<tags-input  class="tag-scroll" ng-model="filterAttributeTags"  ng-disabled="{{mode}}"  display-property="dname"  key-property="id"add-from-autocomplete-only="true" ng-focus="onTagFocuse()" >
+										<tags-input  class="tag-scroll" ng-model="filterAttributeTags"  ng-disabled="{{mode}}"  display-property="dname"  key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" >
 											<auto-complete source="loadProfiles($query)" min-length="1"
 											debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
 											</auto-complete>
@@ -197,7 +197,7 @@
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
 									<div class="col-md-6">
 										<ul class="tagitdd" style="height:100px;" ng-class="({{mode}} ==true)?'disabled-ul':'default'">
-											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
+											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute track by item.id" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
 												<span class="tagit-label">{{item.dname}}</span>
 												<a class="tagit-close-dd">
 			   										<span class="ui-icon ui-icon-close"></span>
@@ -259,7 +259,7 @@
 
 								<div class="form-group" style="padding-top: 10px;">
 									<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-										<a ui-sref="vizpodlist" class="btn btn-primary">Cancel</a>
+										<a ng-click="okVizpodSave()" class="btn btn-primary">Cancel</a>
 										<input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true" name="submit" ng-mouseover="checkValue()">
 										<span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
                            					<div class="bounce1"></div>

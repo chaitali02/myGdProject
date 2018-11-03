@@ -1,5 +1,10 @@
 InferyxApp=angular.module('InferyxApp');
-//CF:CONSTANT_FOR
+//CF:CONSTANT_FLAG
+InferyxApp.constant("CF_APP_SETTING",{
+    "companyName":"INFERYX"
+});
+
+
 InferyxApp.constant('CF_META_TYPES',{
     activity : "activity",algorithm : "algorithm",application : "application",condition : "condition",
     dag : "dag",dagexec : "dagExec",dashboard : "dashboard",dq : "dq",dqexec : "dqExec",
@@ -20,7 +25,8 @@ InferyxApp.constant('CF_META_TYPES',{
     reconexec : "reconExec",recongroup : "recongroup",recongroupexec : "recongroupExec",
     reconview : "reconview",distribution : "distribution",appConfig : "appConfig",
     operatorexec : "operatorExec",operator : "operator",comment : "comment",commentView : "commentView",
-	tag : "tag",lov:"lov",graphpod:"graphpod",graphexec:"graphExec"
+    tag : "tag",lov:"lov",graphpod:"graphpod",graphexec:"graphExec",report:"report",reportexec:"reportExec",
+    reportview:"reportview",batch:"batch",batchexec:"batchExec",ingest:"ingest",ingestexec:"ingestExec"
 });
 
 
@@ -57,11 +63,25 @@ InferyxApp.constant('CF_LOV_TYPES',{
 	tag:"TAG"
 });
 
+InferyxApp.constant('CF_SAMPLE',{
+    framework_sample_maxrows:100000,
+    framework_sample_minrows:100,
+    limit_to:6,
+});
+
+InferyxApp.constant('CF_DOWNLOAD',{
+    framework_download_maxrow:100000,
+    framework_download_minrows:100,
+    limit_to:6,
+    formate:["excel"],
+});
+
+
 InferyxApp.constant("CF_FILTER",{
-	operator :[{"caption":"EQUAL TO (=)","value":"="},
-	{"caption":"LESS THAN","value":"<"},
-	{"caption":"GREATER THAN","value":">"},
-	{"caption":"LESS OR EQUAL","value":"<="},
+	operator :[{"caption":"EQUAL (=)","value":"="},{"caption":" NOT EQUAL (!=)","value":"!="},
+	{"caption":"LESS THAN (<)","value":"<"},
+	{"caption":"GREATER THAN (>) ","value":">"},
+	{"caption":"LESS OR EQUAL (<=) ","value":"<="},
 	{"caption":"GREATER OR EQUAL (>=)  ","value":">="},
 	{"caption":"BETWEEN","value":"BETWEEN"},
 	{"caption":"LIKE","value":"LIKE"},
@@ -70,16 +90,20 @@ InferyxApp.constant("CF_FILTER",{
 	{"caption":"EXISTS","value":"EXISTS"},
 	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
 	{"caption":"IN","value":"IN"},
-	{"caption":" NOT IN","value":"NOT IN"}],
+    {"caption":" NOT IN","value":"NOT IN"}],
+    
 	lhsType : [{"text":"string","caption":"string"},
 	{ "text": "string", "caption":"integer"},
 	{ "text": "datapod","caption":"attribute"},
-	{ "text": "formula","caption":"formula"}],
+    { "text": "formula","caption":"formula"}],
+    
 	rhsType : [{ "text": "string", "caption": "string","disabled":false },
 	{ "text": "string", "caption": "integer" ,"disabled":false },
 	{ "text": "datapod", "caption": "attribute","disabled":false },
 	{ "text": "formula", "caption": "formula","disabled":false },
-	{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
+    { "text": "dataset", "caption": "dataset" ,"disabled":false },
+    { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+    { "text": "function", "caption": "function" ,"disabled":false }]
 });
 
 InferyxApp.constant("CF_GRAPHPOD",{
@@ -101,4 +125,5 @@ InferyxApp.constant("CF_GRAPHPOD",{
     nodeBackGroundColor:["#ef9a9a","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
     edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
   
-})
+});
+

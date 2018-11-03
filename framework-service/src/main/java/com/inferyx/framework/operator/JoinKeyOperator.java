@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
@@ -30,12 +32,19 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.FormulaType;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.enums.OperandType;
+import com.inferyx.framework.enums.OperatorType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
@@ -45,15 +54,21 @@ public class JoinKeyOperator {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected FormulaOperator formulaOperator;
 	@Autowired protected RegisterService registerService;
-	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
+	@Autowired MetadataServiceImpl metadataServiceImpl;
+	@Autowired protected FunctionOperator functionOperator;
+	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired protected DatasetOperator datasetOperator;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
-			, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd
+			, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
+		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
 
 		if (filters == null) {
@@ -61,10 +76,20 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			builder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
-			builder.append(generateSql(filterInfo,filterSource, refKeyMap, otherParams, usedRefKeySet, execParams)).append(" ");
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode);
+			if (StringUtils.isNotBlank(filter)) {
+				if (StringUtils.isNotBlank(filterBuilder)) {
+					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
+				}
+				filterBuilder.append(filter).append(" ");
+			} 
 		}
-		builder.append(")");
+		if (StringUtils.isNotBlank(filterBuilder.toString())) {
+			builder.append(filterBuilder);
+			builder.append(")");
+		} else {
+			return ConstantsUtil.BLANK;
+		}
 
 		logger.info(String.format("Final filter %s", builder.toString()));
 		return builder.toString();
@@ -75,26 +100,55 @@ public class JoinKeyOperator {
 			, java.util.Map<String, MetaIdentifier> refKeyMap
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
-			, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd
+			, RunMode runMode) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
+		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
-			if (sourceAttr.getRef().getType() == MetaType.simple) {
-				if (StringUtils.isBlank(sourceAttr.getValue()))
+			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
+				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
-				else
+				} else {
+					String value = sourceAttr.getValue();
+					if(value != null && sourceAttr.getAttributeType() !=null) {
+						String attrType=sourceAttr.getAttributeType();
+					    value = attrType.equalsIgnoreCase("integer")? value :"'"+value+"'";
+					}
+					else if(value != null && sourceAttr.getAttributeType() !=null) {
+						boolean isNumber = Helper.isNumber(value);			
+						if(!isNumber) {
+							value = "'"+value+"'";
+						}
+					}
+				
+					operandValue.add(value);
+				}
+			} else if (sourceAttr.getRef().getType().equals(MetaType.attribute)) {
+				if (StringUtils.isBlank(sourceAttr.getValue())) {
+					operandValue.add("''");
+				} else {
 					operandValue.add(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
-				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				}
+			} else if (sourceAttr.getRef().getType().equals(MetaType.paramlist)) {
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				if(value != null) {
+					boolean isNumber = Helper.isNumber(value);			
+					if(!isNumber) {
+						value = "'"+value+"'";
+					}
+				}
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.dataset) {
-				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
+				MetaIdentifier filterSourceMI = sourceAttr.getRef();				
+				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSourceMI, refKeyMap));
 				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
 				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
 				operandValue.add(dataset.sql(attrName));
 				MetaIdentifier datasetRef = new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion());
-				usedRefKeySet.add(datasetRef);
+				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
 				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
 				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
@@ -109,14 +163,64 @@ public class JoinKeyOperator {
 				usedRefKeySet.add(datapodRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.formula) {
 				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
+					aggrCount += 1;
+				}
 				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
-			}			
+			}	
+			 else if (sourceAttr.getRef().getType() == MetaType.function) {
+					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams));
+					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
+					usedRefKeySet.add(functionRef1);
+				}	
 		}
-
-		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
+		
+		// Handling having clause
+		if ((!isAggrAllowed && aggrCount > 0) 
+				|| (isAggrReqd && aggrCount <= 0)) {
+			return null;
+		}
+		if(filterInfo.getOperator().trim().equalsIgnoreCase("IN") 
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT IN")
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("EXISTS") 
+				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT EXISTS")) {
+			if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.dataset)) {
+				MetaIdentifier dataSetMI = filterInfo.getOperand().get(1).getRef();
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString());
+				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+				return generateRHSQuery(operandValue, filterInfo, filterSource, subQuery, dataSet.getName());
+			} else {
+				return generateRHSOperand(operandValue, filterInfo, filterSource);
+			}			
+		} else {
+			return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
+		}		
 	}
 
+	public String generateRHSQuery(List<String> operandValue, FilterInfo filterInfo, MetaIdentifierHolder filterSource, String subQuery, String alias) {
+		StringBuilder rhsQuery = new StringBuilder();
+		rhsQuery.append("SELECT ");
+		rhsQuery.append(operandValue.get(1)).append(" ");
+		rhsQuery.append(" FROM ");
+		rhsQuery.append("( ").append(subQuery).append(" )");
+		rhsQuery.append(" ").append(alias);
+		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), "("+rhsQuery.toString()+")");
+	}
+	
+	public String generateRHSOperand(List<String> operandValue, FilterInfo filterInfo, MetaIdentifierHolder filterSource) {		
+		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), "("+operandValue.get(1)+")");
+	}
+	
+	public String generateSubqueryByDataset(DataSet dataSet
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, RunMode runMode) throws Exception {
+		return datasetOperator.generateSql(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+	}
 }
 

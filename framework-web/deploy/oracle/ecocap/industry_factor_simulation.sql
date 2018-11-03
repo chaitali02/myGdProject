@@ -1,0 +1,12 @@
+DROP TABLE INDUSTRY_FACTOR_SIMULATION;
+
+CREATE TABLE INDUSTRY_FACTOR_SIMULATION
+             ( 
+                          ITERATION_ID   INTEGER, 
+                          FACTOR1        DECIMAL(10,2), 
+                          FACTOR2        DECIMAL(10,2), 
+                          FACTOR3        DECIMAL(10,2), 
+                          FACTOR4        DECIMAL(10,2), 
+                          REPORTING_DATE VARCHAR2(50), 
+                          VERSION        INTEGER 
+             );

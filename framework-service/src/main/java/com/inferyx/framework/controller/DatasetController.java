@@ -31,15 +31,25 @@ public class DatasetController {
 
 	@Autowired protected DatasetServiceImpl datasetServiceImpl;
 	
-	 @RequestMapping(value="/getDatasetSample", method=RequestMethod.GET)
-	    public List<Map<String, Object>>  getDatasetSample(@RequestParam(value= "datasetUUID") String datasetUUID, 
-	    		@RequestParam(value= "datasetVersion") String datasetVersion,
-				@RequestParam(value ="rows",defaultValue="100") int rows, 
-				@RequestBody (required = false) ExecParams execParams,
-				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action, 
-				@RequestParam(value = "mode", required = false, defaultValue="BATCH") String mode) throws Exception{
+	@RequestMapping(value="/getDatasetSample", method=RequestMethod.GET)
+	public List<Map<String, Object>>  getDatasetSample(@RequestParam(value= "datasetUUID") String datasetUUID, 
+			@RequestParam(value= "datasetVersion") String datasetVersion,
+			@RequestParam(value ="rows",defaultValue="100") int rows, 
+			@RequestBody (required = false) ExecParams execParams,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value = "mode", required = false, defaultValue="BATCH") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);
-	    	return datasetServiceImpl.getDatasetSample(datasetUUID,datasetVersion,rows, execParams, runMode);	   	
-	   }
+	    	return datasetServiceImpl.getDatasetSample(datasetUUID, datasetVersion, rows, execParams, runMode);	   	
+	}
+	
+	@RequestMapping(value = "/getAttributeValues",  method=RequestMethod.GET)
+	public List<Map<String, Object>>  getAttributeValues(@RequestParam(value= "uuid") String datasetUuid,
+    		@RequestParam(value= "attributeId") int attributeID,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,	    
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
+	 	RunMode runMode = Helper.getExecutionMode(mode);		 
+    	return datasetServiceImpl.getAttributeValues(datasetUuid, attributeID, runMode);   	
+   }
 }

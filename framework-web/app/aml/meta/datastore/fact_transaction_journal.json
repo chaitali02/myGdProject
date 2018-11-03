@@ -1,0 +1,44 @@
+{
+    "metaId" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version" : "1539946337"
+        }
+    },
+    "execId" : {
+        "ref" : {
+            "type" : "loadExec",
+            "uuid" : "00220182-502f-446b-9681-7dd69af30d28",
+            "version" : "1540018386"
+        }
+    },
+    "location" : "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1539946337/1540018386",
+    "persistMode" : "DISK_ONLY",
+    "numRows" : NumberLong(24),
+    "runMode" : "BATCH",
+    "uuid" : "bdcb806e-0e8b-4127-ac91-fdc5b01c5f15",
+    "version" : "1540018388",
+    "name" : "fact_transaction_journal",
+    "desc" : "Creating datastore for fact_transaction_journal",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-20T06:53:08.000Z"),
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}

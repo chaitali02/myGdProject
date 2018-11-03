@@ -1,0 +1,250 @@
+country_code,country_name,country_population,country_risk_level
+AFG,Afghanistan,1000,8
+ALA,��land Islands,2000,0
+ALB,Albania,3000,0
+DZA,Algeria,4000,0
+ASM,American Samoa,5000,0
+AND,Andorra,6000,0
+AGO,Angola,7000,0
+AIA,Anguilla,8000,0
+ATA,Antarctica,9000,0
+ATG,Antigua and Barbuda,10000,0
+ARG,Argentina,11000,0
+ARM,Armenia,12000,0
+ABW,Aruba,13000,0
+AUS,Australia,14000,0
+AUT,Austria,15000,0
+AZE,Azerbaijan,16000,0
+BHS,Bahamas,17000,0
+BHR,Bahrain,18000,0
+BGD,Bangladesh,19000,0
+BRB,Barbados,20000,0
+BLR,Belarus,21000,0
+BEL,Belgium,22000,0
+BLZ,Belize,23000,0
+BEN,Benin,24000,0
+BMU,Bermuda,25000,0
+BTN,Bhutan,26000,0
+BOL,Bolivia (Plurinational State of),27000,0
+BES,"Bonaire, Sint Eustatius and Saba",28000,0
+BIH,Bosnia and Herzegovina,29000,0
+BWA,Botswana,30000,0
+BVT,Bouvet Island,31000,0
+BRA,Brazil,32000,0
+IOT,British Indian Ocean Territory,33000,0
+BRN,Brunei Darussalam,34000,0
+BGR,Bulgaria,35000,0
+BFA,Burkina Faso,36000,0
+BDI,Burundi,37000,0
+KHM,Cambodia,38000,0
+CMR,Cameroon,39000,0
+CAN,Canada,40000,1
+CPV,Cabo Verde,41000,0
+CYM,Cayman Islands,42000,0
+CAF,Central African Republic,43000,0
+TCD,Chad,44000,0
+CHL,Chile,45000,0
+CHN,China,46000,0
+CXR,Christmas Island,47000,0
+CCK,Cocos (Keeling) Islands,48000,0
+COL,Colombia,49000,0
+COM,Comoros,50000,0
+COG,Congo,51000,0
+COD,Congo (Democratic Republic of the),52000,0
+COK,Cook Islands,53000,0
+CRI,Costa Rica,54000,0
+CIV,C̫te d'Ivoire,55000,0
+HRV,Croatia,56000,0
+CUB,Cuba,57000,0
+CUW,Cura̤ao,58000,0
+CYP,Cyprus,59000,0
+CZE,Czech Republic,60000,0
+DNK,Denmark,61000,0
+DJI,Djibouti,62000,0
+DMA,Dominica,63000,0
+DOM,Dominican Republic,64000,0
+ECU,Ecuador,65000,0
+EGY,Egypt,66000,0
+SLV,El Salvador,67000,0
+GNQ,Equatorial Guinea,68000,0
+ERI,Eritrea,69000,0
+EST,Estonia,70000,0
+ETH,Ethiopia,71000,0
+FLK,Falkland Islands (Malvinas),72000,0
+FRO,Faroe Islands,73000,0
+FJI,Fiji,74000,0
+FIN,Finland,75000,0
+FRA,France,76000,0
+GUF,French Guiana,77000,0
+PYF,French Polynesia,78000,0
+ATF,French Southern Territories,79000,0
+GAB,Gabon,80000,0
+GMB,Gambia,81000,0
+GEO,Georgia,82000,0
+DEU,Germany,83000,0
+GHA,Ghana,84000,0
+GIB,Gibraltar,85000,0
+GRC,Greece,86000,0
+GRL,Greenland,87000,0
+GRD,Grenada,88000,0
+GLP,Guadeloupe,89000,0
+GUM,Guam,90000,0
+GTM,Guatemala,91000,0
+GGY,Guernsey,92000,0
+GIN,Guinea,93000,0
+GNB,Guinea-Bissau,94000,0
+GUY,Guyana,95000,0
+HTI,Haiti,96000,0
+HMD,Heard Island and McDonald Islands,97000,0
+VAT,Holy See,98000,0
+HND,Honduras,99000,0
+HKG,Hong Kong,100000,0
+HUN,Hungary,101000,0
+ISL,Iceland,102000,0
+IND,India,103000,3
+IDN,Indonesia,104000,0
+IRN,Iran (Islamic Republic of),105000,0
+IRQ,Iraq,106000,0
+IRL,Ireland,107000,0
+IMN,Isle of Man,108000,0
+ISR,Israel,109000,0
+ITA,Italy,110000,0
+JAM,Jamaica,111000,0
+JPN,Japan,112000,0
+JEY,Jersey,113000,0
+JOR,Jordan,114000,0
+KAZ,Kazakhstan,115000,0
+KEN,Kenya,116000,0
+KIR,Kiribati,117000,0
+PRK,Korea (Democratic People's Republic of),118000,0
+KOR,Korea (Republic of),119000,0
+KWT,Kuwait,120000,0
+KGZ,Kyrgyzstan,121000,0
+LAO,Lao People's Democratic Republic,122000,0
+LVA,Latvia,123000,0
+LBN,Lebanon,124000,0
+LSO,Lesotho,125000,0
+LBR,Liberia,126000,0
+LBY,Libya,127000,0
+LIE,Liechtenstein,128000,0
+LTU,Lithuania,129000,0
+LUX,Luxembourg,130000,0
+MAC,Macao,131000,0
+MKD,Macedonia (the former Yugoslav Republic of),132000,0
+MDG,Madagascar,133000,0
+MWI,Malawi,134000,0
+MYS,Malaysia,135000,0
+MDV,Maldives,136000,0
+MLI,Mali,137000,0
+MLT,Malta,138000,0
+MHL,Marshall Islands,139000,0
+MTQ,Martinique,140000,0
+MRT,Mauritania,141000,0
+MUS,Mauritius,142000,0
+MYT,Mayotte,143000,0
+MEX,Mexico,144000,0
+FSM,Micronesia (Federated States of),145000,0
+MDA,Moldova (Republic of),146000,0
+MCO,Monaco,147000,0
+MNG,Mongolia,148000,0
+MNE,Montenegro,149000,0
+MSR,Montserrat,150000,0
+MAR,Morocco,151000,0
+MOZ,Mozambique,152000,0
+MMR,Myanmar,153000,0
+NAM,Namibia,154000,0
+NRU,Nauru,155000,0
+NPL,Nepal,156000,0
+NLD,Netherlands,157000,0
+NCL,New Caledonia,158000,0
+NZL,New Zealand,159000,0
+NIC,Nicaragua,160000,0
+NER,Niger,161000,0
+NGA,Nigeria,162000,0
+NIU,Niue,163000,0
+NFK,Norfolk Island,164000,0
+MNP,Northern Mariana Islands,165000,0
+NOR,Norway,166000,0
+OMN,Oman,167000,0
+PAK,Pakistan,168000,6
+PLW,Palau,169000,0
+PSE,"Palestine, State of",170000,0
+PAN,Panama,171000,0
+PNG,Papua New Guinea,172000,0
+PRY,Paraguay,173000,0
+PER,Peru,174000,0
+PHL,Philippines,175000,0
+PCN,Pitcairn,176000,0
+POL,Poland,177000,0
+PRT,Portugal,178000,0
+PRI,Puerto Rico,179000,0
+QAT,Qatar,180000,0
+REU,R̩union,181000,0
+ROU,Romania,182000,0
+RUS,Russian Federation,183000,0
+RWA,Rwanda,184000,0
+BLM,Saint Barth̩lemy,185000,0
+SHN,"Saint Helena, Ascension and Tristan da Cunha",186000,0
+KNA,Saint Kitts and Nevis,187000,0
+LCA,Saint Lucia,188000,0
+MAF,Saint Martin (French part),189000,0
+SPM,Saint Pierre and Miquelon,190000,0
+VCT,Saint Vincent and the Grenadines,191000,0
+WSM,Samoa,192000,0
+SMR,San Marino,193000,0
+STP,Sao Tome and Principe,194000,0
+SAU,Saudi Arabia,195000,0
+SEN,Senegal,196000,0
+SRB,Serbia,197000,0
+SYC,Seychelles,198000,0
+SLE,Sierra Leone,199000,0
+SGP,Singapore,200000,0
+SXM,Sint Maarten (Dutch part),201000,0
+SVK,Slovakia,202000,0
+SVN,Slovenia,203000,0
+SLB,Solomon Islands,204000,0
+SOM,Somalia,205000,0
+ZAF,South Africa,206000,0
+SGS,South Georgia and the South Sandwich Islands,207000,0
+SSD,South Sudan,208000,0
+ESP,Spain,209000,0
+LKA,Sri Lanka,210000,0
+SDN,Sudan,211000,0
+SUR,Suriname,212000,0
+SJM,Svalbard and Jan Mayen,213000,0
+SWZ,Swaziland,214000,0
+SWE,Sweden,215000,0
+CHE,Switzerland,216000,0
+SYR,Syrian Arab Republic,217000,0
+TWN,"Taiwan, Province of China",218000,0
+TJK,Tajikistan,219000,0
+TZA,"Tanzania, United Republic of",220000,0
+THA,Thailand,221000,0
+TLS,Timor-Leste,222000,0
+TGO,Togo,223000,0
+TKL,Tokelau,224000,0
+TON,Tonga,225000,0
+TTO,Trinidad and Tobago,226000,0
+TUN,Tunisia,227000,0
+TUR,Turkey,228000,0
+TKM,Turkmenistan,229000,0
+TCA,Turks and Caicos Islands,230000,0
+TUV,Tuvalu,231000,0
+UGA,Uganda,232000,0
+UKR,Ukraine,233000,0
+ARE,United Arab Emirates,234000,0
+GBR,United Kingdom of Great Britain and Northern Ireland,235000,0
+USA,United States of America,236000,1
+UMI,United States Minor Outlying Islands,237000,0
+URY,Uruguay,238000,0
+UZB,Uzbekistan,239000,0
+VUT,Vanuatu,240000,0
+VEN,Venezuela (Bolivarian Republic of),241000,0
+VNM,Viet Nam,242000,0
+VGB,Virgin Islands (British),243000,0
+VIR,Virgin Islands (U.S.),244000,0
+WLF,Wallis and Futuna,245000,0
+ESH,Western Sahara,246000,0
+YEM,Yemen,247000,0
+ZMB,Zambia,248000,0
+ZWE,Zimbabwe,249000,0

@@ -11,7 +11,7 @@
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 				http://www.springframework.org/schema/beans/spring-beans.xsd
 				http://www.springframework.org/schema/aop
@@ -23,22 +23,38 @@
 				http://www.springframework.org/schema/lang
 				http://www.springframework.org/schema/lang/spring-lang.xsd
 				http://www.springframework.org/schema/tx
-				http://www.springframework.org/schema/tx/spring-tx.xsd
 				http://www.springframework.org/schema/util
 				http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/tx/spring-tx.xsd
 				http://www.springframework.org/schema/mvc
 				http://www.springframework.org/schema/mvc/spring-mvc.xsd
 				http://www.springframework.org/schema/data/mongo
 				http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
 				http://www.springframework.org/schema/aop 
-				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+				http://www.springframework.org/schema/task 
+				http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
 	<context:component-scan base-package="com.inferyx" />
-	<!-- <mvc:resources mapping="/app/**" location="/app"/> -->
+	<!-- <mvc:sources mapping="/app/**" location="/app"/> -->
 	<mvc:annotation-driven />
 	
 	<!-- Enable AspectJ style of Spring AOP -->
 	<!-- <aop:aspectj-autoproxy /> -->
+	
+	<task:annotation-driven />
+
+	<task:scheduler id="scheduler" />
+	
+	<bean id="batchTriggerServiceImpl" class="com.inferyx.framework.service.BatchTriggerServiceImpl">
+		<constructor-arg ref="scheduler" />
+		<constructor-arg>
+			<bean class="org.springframework.scheduling.support.MethodInvokingRunnable">
+				<property name="targetObject" ref="batchSchedulerServiceImpl" />
+				<property name="targetMethod" value="runBatches" />
+			</bean>
+		</constructor-arg>
+	</bean>
 	
 	<import resource="spring-security.xml" />
 	<bean id="propertyConfigurer"
@@ -55,7 +71,7 @@
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="5" />
+		<property name="queueCapacity" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
@@ -64,7 +80,7 @@
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
-		<property name="queueCapacity" value="3" />
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
@@ -73,7 +89,7 @@
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
-		<property name="queueCapacity" value="3" />
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
@@ -96,10 +112,25 @@
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
+	<bean id="batchExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="queueCapacity" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="taskThreadMap2" name="taskThreadList2" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="dagDependeeMap2" name="dagDependeeMap2" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="batchThreadMap" name="batchThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="streamingCtxMap" name="streamingCtxMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="zkConnMap" name="zkConnThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="kafkaConsumerMap" name="kafkaConsumerMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="streamMap" name="streamMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -153,9 +184,9 @@
 		mongo-template-ref="mongoTemplate" />
 
 	<!-- Initialize spark context -->
-	<bean id="sparkContext" class="org.apache.spark.SparkContext">
+	<!-- <bean id="sparkContext" class="org.apache.spark.SparkContext">
 		<constructor-arg value="#{sparkInfo.getSparkConfiguration()}" />
-	</bean>
+	</bean> -->
 
 	<bean id="dbConfiguration"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -171,19 +202,19 @@
 	</bean>
 
 	<!-- Initialize Hive Context scope="request" -->
-	<bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
+	<!-- <bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize Spark Session scope="request" -->
-	<bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
+	<!-- <bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize SQL Context scope="request" -->
-	<bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
+	<!-- <bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<bean id="parser" class="com.inferyx.framework.parser.DagParser">
 	</bean>
@@ -229,18 +260,21 @@
 		<!-- <constructor-arg ref="miUtil"/> <constructor-arg ref="dataSourceFactory"/> 
 			<constructor-arg ref="connFactory"/> <constructor-arg ref="hdfsInfo" /> -->
 	</bean>
-
-	<bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
-		<constructor-arg ref="sparkSession" />
+	
+	<bean id="sparkConnector" class="com.inferyx.framework.connector.SparkConnector">
 	</bean>
+
+	<!-- <bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
+		<constructor-arg ref="sparkConnector" />
+	</bean> -->
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
 	
-	<bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
+	<!-- <bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 
 	<bean id="graphFlag" class="com.inferyx.framework.common.GraphInfo">
 		<property name="mode" value="${framework.graph.enabled}"></property>
@@ -303,7 +337,14 @@
 	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
 	<bean id="uploadExecServiceImpl" class="com.inferyx.framework.service.UploadExecServiceImpl"/>
 	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
-	
+	<bean id="reportViewServiceImpl" class="com.inferyx.framework.service.ReportViewServiceImpl"/>
+	<bean id="reportOperator" class="com.inferyx.framework.operator.ReportOperator"/>
+	<bean id="batchViewServiceImpl" class="com.inferyx.framework.service.BatchViewServiceImpl"/>
+	<bean id="scheduleServiceImpl" class="com.inferyx.framework.service.BatchSchedulerServiceImpl" init-method="init" />
+	<bean id="batchServiceImpl" class="com.inferyx.framework.service.BatchServiceImpl" />
+	<bean id="ingestViewServiceImpl" class="com.inferyx.framework.service.IngestViewServiceImpl"/>
+	<bean id="ingestServiceImpl" class="com.inferyx.framework.service.IngestServiceImpl"/>
+	<bean id="applicationViewServiceImpl" class="com.inferyx.framework.service.ApplicationViewServiceImpl"/>
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
 	<bean id="impalaExecutor" class="com.inferyx.framework.executor.ImpalaExecutor"/>
@@ -358,6 +399,7 @@
 	
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
+	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
@@ -373,9 +415,10 @@
 
 	<bean id="registerGraph" class="com.inferyx.framework.register.GraphRegister">
 		<property name="graphFlag" ref="graphFlag" />
-		<property name="javaSparkContext" ref="javaSparkContext" />
+		<!-- <property name="javaSparkContext" ref="javaSparkContext" /> -->
 		<!-- <property name="hiveContext" ref="hiveContext" /> -->
 	</bean>
-	
+	<bean id="sqoopExecutor" class="com.inferyx.framework.executor.SqoopExecutor" />
+	<!-- <bean id="sampleServiceImpl" class="com.inferyx.framework.service.SampleServiceImpl" init-method="init"/> --> 
 	
 	</beans>

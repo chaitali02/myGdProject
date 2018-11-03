@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.datascience.distribution.Math3RandDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
@@ -33,7 +34,9 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -59,6 +62,10 @@ public class GenerateDataOperator implements IOperator {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private RandomDistributionFactory randomDistributionFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	Engine engine;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -127,13 +134,14 @@ public class GenerateDataOperator implements IOperator {
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+			if(holder.getRef()!= null && holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 				distParamHolderList.add(holder);
-			}
+			} 
 		}
+//		distParamHolderList.addAll(residualParamHolderList);
 		distExecParam.setParamListInfo(distParamHolderList);
 		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
-		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam);
+		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam, execParams);
 		return distributionObject;
 	}
 	
@@ -178,7 +186,20 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		List<Attribute> attributes = locationDatapod.getAttributes();
-		ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																					locationDatapod.getDatasource().getRef().getVersion(), 
+																					locationDatapod.getDatasource().getRef().getType().toString());
+		//ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		ResultSetHolder rsHolder = exec.create(rowObjList, attributes, tableName, commonServiceImpl.getApp().getUuid());
+		if(locationDpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+				|| appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| appDatasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
+			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		} else {
+			rsHolder.setTableName(tableName);
+			rsHolder = sparkExecutor.persistDataframe(rsHolder, locationDpDatasource, locationDatapod, null);
+		}
 		rowObjList = null;
 //		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
@@ -191,7 +212,7 @@ public class GenerateDataOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, rsHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
@@ -219,7 +240,13 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 //		List<Attribute> attributes = locationDatapod.getAttributes();
-		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
+		if(exec instanceof SparkExecutor<?> && !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			resultSetHolder.setTableName(tableName);
+			sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod, null);
+		} else {
+			exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());	
+		}
 		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
@@ -230,7 +257,7 @@ public class GenerateDataOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		logger.info("After setResult : " + ((OperatorExec)metaExec).getResult().getRef().getUuid());
@@ -255,14 +282,18 @@ public class GenerateDataOperator implements IOperator {
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
 		List<ParamListHolder> distParamHolderList = new ArrayList<>();
+		List<ParamListHolder> residualParamHolderList = new ArrayList<>();
 		ExecParams distExecParam = new ExecParams();
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+			if(holder.getRef() != null && holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 				distParamHolderList.add(holder);
+			} else {
+				residualParamHolderList.add(holder);
 			}
 		}
+		distParamHolderList.addAll(residualParamHolderList);
 		distExecParam.setParamListInfo(distParamHolderList);
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
@@ -270,8 +301,11 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		// Get exec
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource locationDpDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(locationDatapod.getDatasource().getRef().getUuid(), 
+																					locationDatapod.getDatasource().getRef().getVersion(), 
+																					locationDatapod.getDatasource().getRef().getType().toString());
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 																																		
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
@@ -283,9 +317,14 @@ public class GenerateDataOperator implements IOperator {
 			// Save result
 			save(exec, rowObjList, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		} else {
-			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
-			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
-			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo(), execParams);
+			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo(), execParams);
+			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			if(!appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())/*
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())*/) {
+				sparkExecutor.persistDataframe(resultSetHolder, appDatasource, locationDatapod, null);
+			} 
 			// Save result
 			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		}

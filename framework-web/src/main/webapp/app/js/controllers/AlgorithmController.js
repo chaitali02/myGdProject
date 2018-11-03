@@ -274,6 +274,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				upd_tag="Y"	
 			}
 		}
+		algorithmJson.tags=tagArray;
 		var summaryMethodsArray = [];
 		if ($scope.summaryMethods != null) {
 			for (var counttag = 0; counttag < $scope.summaryMethods.length; counttag++) {

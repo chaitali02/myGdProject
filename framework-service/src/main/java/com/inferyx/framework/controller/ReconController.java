@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -61,7 +62,8 @@ public class ReconController {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
-	public ReconExec execute(@RequestParam("uuid") String reconUuid, @RequestParam("version") String reconVersion,
+	public ReconExec execute(@RequestParam("uuid") String reconUuid, 
+			@RequestParam("version") String reconVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
@@ -112,20 +114,14 @@ public class ReconController {
 	public HttpServletResponse download(@RequestParam(value = "reconExecUUID") String reconExecUUID,
 			@RequestParam(value = "reconExecVersion") String reconExecVersion,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
-			@RequestParam(value = "rows", defaultValue = "1000") int rows,
-			@RequestParam(value = "download", defaultValue = "Y") String download,
-			@RequestParam(value = "offset", defaultValue = "0") int offset,
-			@RequestParam(value = "limit", defaultValue = "200") int limit,
-			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, download, offset, limit, response, rows,
-				sortBy, order, requestId, runMode);
+		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, null, 0, rows, response, rows,
+				null, null, null, runMode);
 		return null;
 	}
 
@@ -137,6 +133,15 @@ public class ReconController {
 		return reconServiceImpl.getReconExecByRGExec(reconGroupExecUuid, reconGroupExecVersion);
 	}
 	 
+	@RequestMapping(value = "/getReconExecByRecon", method = RequestMethod.GET, params = {"uuid", "startDate", "endDate"}	)
+    public List<ReconExec> getReconExecByRecon(@RequestParam("uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {        
+        return reconServiceImpl.findReconExecByRecon(uuid, startDate, endDate, type, action);
+    }
+	
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResults(@RequestParam("uuid") String reconExecUuid, 
 			@RequestParam("version") String reconExecVersion,
@@ -164,5 +169,16 @@ public class ReconController {
 		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null);
 		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, runMode);
 		return reconGroupServiceImpl.execute(reconGroupUUID, reconGroupVersion, execParams, reconGroupExec, runMode);
+	}
+
+	@RequestMapping(value = "/getReconExecByDatapod", method = RequestMethod.GET, params = { "uuid", "startDate",
+			"endDate" })
+	public List<ReconExec> getReconExecByDatapod(@RequestParam("uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate)
+			throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		return reconServiceImpl.findReconExecByDatapod(uuid, startDate, endDate, type);
 	}
 }

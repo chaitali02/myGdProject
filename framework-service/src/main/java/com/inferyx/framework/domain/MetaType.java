@@ -22,7 +22,8 @@ public enum MetaType {
 	meta, dashboardview, Import, export, message, log, downloadExec, uploadExec, predict, predictExec, simulate,
 	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, 
 	appConfig, /*operatortype,*/ operatorExec, operator ,comment, commentView, tag, lov, GenerateData, Transpose, 
-	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec;
+	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec, reportview, batch, batchExec,
+	schedule, batchview, ingest, ingestExec, ingestview, ingestgroup, ingestgroupExec, attribute, applicationview;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,
@@ -39,7 +40,9 @@ public enum MetaType {
 				MetaType.train, MetaType.trainExec, MetaType.recon, MetaType.reconExec, MetaType.recongroup, 
 				MetaType.recongroupExec, MetaType.distribution, MetaType.appConfig, /*MetaType.operatortype,*/
 				MetaType.operatorExec, MetaType.operator ,MetaType.comment, MetaType.tag, MetaType.lov 
-				/*MetaType.GenerateData, MetaType.Transpose, MetaType.CloneData, MetaType.GenDataAttr, MetaType.GenDataValList*/ ,MetaType.graphpod);
+				/*MetaType.GenerateData, MetaType.Transpose, MetaType.CloneData, MetaType.GenDataAttr, MetaType.GenDataValList*/ ,
+				MetaType.graphpod, MetaType.report, MetaType.reportExec, MetaType.batch, MetaType.batchExec,
+				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec);
 	}
 
 	public static List<MetaType> getMetaExecList() {
@@ -47,7 +50,8 @@ public enum MetaType {
 				MetaType.mapExec, MetaType.modelExec, MetaType.profileExec, MetaType.profilegroupExec,
 				MetaType.ruleExec, MetaType.rulegroupExec, MetaType.vizExec, MetaType.downloadExec, MetaType.uploadExec,
 				MetaType.predictExec, MetaType.simulateExec, MetaType.trainExec, MetaType.reconExec, MetaType.recongroupExec,
-				MetaType.operatorExec, MetaType.graphExec);
+				MetaType.operatorExec, MetaType.graphExec, MetaType.reportExec, MetaType.batchExec, MetaType.ingestExec,
+				MetaType.ingestgroupExec);
 	}
 
 	public static List<MetaType> getMetaAdminList() {

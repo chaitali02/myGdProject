@@ -12,12 +12,16 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +32,11 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -38,6 +44,8 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -54,14 +62,19 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
+@Service
 public class OracleExecutor implements IExecutor {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ConnectionFactory  connectionFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	static final Logger logger = Logger.getLogger(OracleExecutor.class);
 	@Override
@@ -93,19 +106,6 @@ public class OracleExecutor implements IExecutor {
 					throw new RuntimeException(e);
 				}		
 			}
-//			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//			if(requestAttributes != null) {
-//				HttpServletRequest request = requestAttributes.getRequest();
-//				if(request != null) {
-//					HttpSession session = request.getSession();
-//					if(session != null) {
-//						session.setAttribute("rsHolder", rsHolder);
-//					}else
-//						logger.info("HttpSession is \""+null+"\"");
-//				}else
-//					logger.info("HttpServletResponse is \""+null+"\"");
-//			}else
-//				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,7 @@ public class OracleExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
-			String saveMode, String clientContext) throws IOException {
+			String saveMode, boolean formPath, String clientContext) throws IOException {
 		return executeSql(sql);
 	}
 
@@ -313,7 +313,7 @@ public class OracleExecutor implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -459,7 +459,7 @@ public class OracleExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -467,6 +467,197 @@ public class OracleExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
+			int numBuckets, String clientContext) throws IOException {
+		logger.info(" Inside method histogram.");
+		return sparkExecutor.histogram(locationDatapod, locationTableName, sql, key, numBuckets, clientContext);
+	}
+
+	@Override
+	public ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName,
+			String lhsSql, String rhsSql, String saveTableName, BaseExec baseExec, Map<String, String> otherParams,
+			RunMode runMode) throws AnalysisException, IOException {
+
+		return sparkExecutor.mattrix(locationDatapod, operation, lhsTableName, rhsTableName, lhsSql, rhsSql, saveTableName, baseExec, otherParams, runMode);
+	}
+
+	@Override
+	public List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
+			throws IOException {	
+		Map<String, CompareMetaData> comparisonResultMap = new LinkedHashMap<>();
+		try {			
+			if(sourceTableName != null) {				
+				if(sourceTableName.contains(datasource.getDbname())) {
+					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
+				}
+				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
+				ConnectionHolder connectionHolder = connector.getConnection();
+				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+				
+				DatabaseMetaData dbMetaData = con.getMetaData();
+				ResultSet rs = dbMetaData.getColumns(null, null, sourceTableName, null);
+				
+				List<String> sourceAttrList = new ArrayList<>();
+				List<String> targetAttrList = new ArrayList<>();
+				List<Map<String, String>> sourceColDetails = new ArrayList<>();
+				while(rs.next()) {					
+					sourceAttrList.add(rs.getString("COLUMN_NAME"));
+					
+					Map<String, String> sourceAttrDetails = new HashMap<>();
+					sourceAttrDetails.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
+					sourceAttrDetails.put("TYPE_NAME", rs.getString("TYPE_NAME"));
+					sourceAttrDetails.put("COLUMN_SIZE", rs.getString("COLUMN_SIZE"));
+					sourceColDetails.add(sourceAttrDetails);
+				}
+				
+				
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					targetAttrList.add(attribute.getName());
+				}
+				
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					for(Map<String, String> sourceAttrDetails : sourceColDetails) {	
+						comparisonResultMap = compareAttr(comparisonResultMap, attribute, sourceAttrDetails, sourceAttrList, targetAttrList);					
+					}
+				}
+			} else {
+				for(Attribute attribute : targetDatapod.getAttributes()) {
+					CompareMetaData comparison = new CompareMetaData();
+					comparison.setSourceAttribute("");
+					comparison.setSourceLength("");
+					comparison.setSourceType("");
+					
+					comparison.setTargetAttribute(attribute.getName());
+					comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
+					comparison.setTargetType(attribute.getType());
+					
+					comparison.setStatus("");	
+					comparisonResultMap.put(attribute.getName(), comparison);
+				}
+			}
+			return Arrays.asList(comparisonResultMap.values().toArray(new CompareMetaData[comparisonResultMap.values().size()]));			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Map<String, String> sourceAttrDetails, List<String> sourceAttrList, List<String> targetAttrList) {
+		CompareMetaData comparison = new CompareMetaData();
+		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
+		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
+			String status = null;			
+			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().contains(attribute.getType().toLowerCase())) {
+				status = Compare.NOCHANGE.toString();
+			} else {
+				status = Compare.MODIFIED.toString();
+			}
+			if(attribute.getLength() != null && !attribute.getLength().toString().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_SIZE"))){
+				status = Compare.MODIFIED.toString();
+			}			
+			
+			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
+			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
+			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
+			comparison.setStatus(status);
+			comparisonResultMap.put(attribute.getName(), comparison);
+		} else if(!sourceAttrList.contains(attribute.getName())) {
+			comparison.setSourceAttribute("");
+			comparison.setSourceLength("");
+			comparison.setSourceType("");
+			
+			comparison.setTargetAttribute(attribute.getName());
+			comparison.setTargetLength(attrLength);
+			comparison.setTargetType(attribute.getType());
+			
+			comparison.setStatus(Compare.NEW.toString());
+			comparisonResultMap.put(attribute.getName(), comparison);
+		} else if(!targetAttrList.contains(sourceAttrDetails.get("COLUMN_NAME"))) {
+			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
+			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
+			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			
+			comparison.setTargetAttribute("");
+			comparison.setTargetLength("");
+			comparison.setTargetType("");
+			
+			comparison.setStatus(Compare.DELETED.toString());
+			comparisonResultMap.put(sourceAttrDetails.get("COLUMN_NAME"), comparison);
+		}
+		return comparisonResultMap;
+	}
+
+	@Override
+	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException {
+		logger.info(" Inside oracle executor for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
+			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);
+			Object obj = conHolder.getStmtObject();
+			long countRows = -1L;
+			if(obj instanceof Statement) {
+				Statement stmt = (Statement) conHolder.getStmtObject();
+				ResultSet rs=null;
+				try {
+					if(sql.toUpperCase().contains("INSERT")) {
+						countRows = stmt.executeUpdate(sql);
+						//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
+						rsHolder.setCountRows(countRows);
+					} else 
+						rs = stmt.executeQuery(sql);
+					rsHolder.setResultSet(rs);
+					rsHolder.setType(ResultType.resultset);
+				} catch (SQLException e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}  catch (Exception e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}		
+			}
+		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+		}
+		return rsHolder;
+	}
+
+	@Override
+	public String getIncrementalLastValue(ResultSetHolder rsHolder, String clientContext) throws SQLException {
+		ResultSet rs = rsHolder.getResultSet();
+		rs.next();
+		return rs.getObject(1).toString();
+	}
+
+	@Override
+	public List<Double> featureImportance(Object trainedModel, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName,
+			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

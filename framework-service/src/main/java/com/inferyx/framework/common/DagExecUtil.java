@@ -294,11 +294,29 @@ public class DagExecUtil {
 		ExecParams taskExecParams = new ExecParams();
 		
 		taskExecParams.setRefKeyList(new ArrayList<>());
-		taskExecParams.setParamSetHolder(execParams.getParamSetHolder());
+		taskExecParams.setCurrParamSet(execParams.getCurrParamSet());
 		taskExecParams.setParamListHolder(execParams.getParamListHolder());
 		taskExecParams.setExecutionContext(new ExecutionContext());
 		taskExecParams.setOtherParams(execParams.getOtherParams());
 		return taskExecParams;
+	}
+	
+	/**
+	 * 
+	 * @param execParams
+	 * @param sql
+	 * @return
+	 */
+	public static String replaceInternalVarMap(ExecParams execParams, String sql) {
+		if (execParams != null 
+				&& execParams.getInternalVarMap() != null 
+				&& !execParams.getInternalVarMap().isEmpty() 
+				&& StringUtils.isNotBlank(sql)) {
+			for (String key : execParams.getInternalVarMap().keySet()) {
+				sql = sql.replaceAll(key, execParams.getInternalVarMap().get(key));
+			}
+		}
+		return sql;
 	}
 	
 	/*public static fetchRefKeyList (TaskExec taskExec) {

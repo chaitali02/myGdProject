@@ -36,13 +36,14 @@ public class ProfileHiveOperator extends ProfileOperator {
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"+ datapod.getName() + "' AS datapodName, " + attrId
-					+ " AS AttributeId, '" + attrName + "' AS attributeName, " + "(SELECT COUNT(" + attrName + ") FROM " + profileTableName + " tab ) AS numRows, min(" + attrName + ") as minVal, max(" + attrName + ") AS maxVal, avg(cast("
+					+ " AS AttributeId, '" + attrName + "' AS attributeName, " + "COUNT(" + attrName + ") AS numRows, min(" + attrName + ") as minVal, max(" + attrName + ") AS maxVal, avg(cast("
 					+ attrName + " AS int)) AS avgVal, percentile(cast(" + attrName
 					+ " as BIGINT), 0.5) AS medianVal, stddev(" + attrName + ") AS stdDev, count(distinct " + attrName
 					+ ") AS numDistinct, count(distinct " + attrName + ")/count(" + attrName
 					+ ")*100 AS perDistinct, count(if(" + attrName + " is null,1,0)) AS numNull,count(if(" + attrName
 					+ "" + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, count(if(" + attrName
-					+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, "+" current_date() AS load_date, "+" unix_timestamp() AS load_id, '" 
+					+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, '"
+//					+" current_date() AS load_date, "+" unix_timestamp() AS load_id, '" 
 					+ profileExec.getVersion()+ "' AS version from " + profileTableName;
 			
 			logger.info("query is : " + sql);

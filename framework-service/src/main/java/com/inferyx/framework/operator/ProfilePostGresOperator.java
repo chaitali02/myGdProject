@@ -6,6 +6,8 @@ package com.inferyx.framework.operator;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
@@ -18,6 +20,7 @@ import com.inferyx.framework.enums.RunMode;
  * @author Ganesh
  *
  */
+@Service
 public class ProfilePostGresOperator extends ProfileOperator {
 	
 	public ProfilePostGresOperator() {
@@ -51,8 +54,9 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "COUNT(" + attrName1 + ") AS numNull,"				
 					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
 					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ") AS sixSigma," 
-					+ "CURRENT_DATE AS load_date, " 
-					+ "UNIX_TIMESTAMP() AS load_id, " + profileExec.getVersion() + " AS version"
+//					+ "CURRENT_DATE AS load_date, " 
+//					+ "UNIX_TIMESTAMP() AS load_id, "
+					+ profileExec.getVersion() + " AS version"
 					+ " FROM " + profileTableName;
 //		else 
 //			sql = null;

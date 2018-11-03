@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -218,6 +219,7 @@ public class LoadServiceImpl {
 
 	/**********************
 	 * UNUSED
+	 * @param desc 
 	 * 
 	 * @throws ParseException
 	 * @throws JSONException
@@ -235,7 +237,7 @@ public class LoadServiceImpl {
 	 * refMeta.setRef(ref); return refMeta; }
 	 */
 
-	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode)
+	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode, String desc)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -272,7 +274,7 @@ public class LoadServiceImpl {
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
-				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);				
+				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName, datapod);				
 				count = rsHolder.getCountRows();
 			}
 			
@@ -282,7 +284,7 @@ public class LoadServiceImpl {
 					new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()),
 					new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()), load.getAppInfo(),
 					load.getCreatedBy(), SaveMode.Overwrite.toString(), resultRef, count,
-					Helper.getPersistModeFromRunMode(runMode.toString()));				
+					Helper.getPersistModeFromRunMode(runMode.toString()), desc);				
 
 			status = new Status(Status.Stage.Completed, new Date());
 			statusList.add(status);
@@ -377,7 +379,11 @@ public class LoadServiceImpl {
 		boolean requestIdExistFlag = false;
 
 		StringBuilder orderBy = new StringBuilder();
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(loadExecUUID, loadExecVersion);
+		
+		LoadExec loadExec = (LoadExec) commonServiceImpl.getOneByUuidAndVersion(loadExecUUID, loadExecVersion,
+				MetaType.loadExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(loadExec.getResult().getRef().getUuid(),
+				loadExec.getResult().getRef().getVersion());
 		dataStoreServiceImpl.setRunMode(runMode);
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
 				runMode);
@@ -387,8 +393,9 @@ public class LoadServiceImpl {
 		if (requestId == null || requestId.equals("null") || requestId.isEmpty()) {
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-						+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+//				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+//						+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+				data = exec.executeAndFetch("SELECT * FROM " + tableName + " AS tab limit " + limit, null);
 			else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 				data = exec.executeAndFetch("SELECT * FROM " + tableName + " AS tab WHERE rownum <= " + limit, null);
 			else
@@ -423,10 +430,12 @@ public class LoadServiceImpl {
 					} else {
 						if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 								|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-							data = exec.executeAndFetch(
-									"SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-											+ tableName + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1",
-									null);
+//							data = exec.executeAndFetch(
+//									"SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
+//											+ tableName + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1",
+//									null);
+							data = exec.executeAndFetch("SELECT * FROM (SELECT * FROM " + tableName
+									+ " AS tab ORDER BY " + orderBy.toString() + ") AS tab1 limit " + limit, null);
 						else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
 							data = exec.executeAndFetch("SELECT * FROM (SELECT * FROM " + tableName
 									+ " AS tab ORDER BY " + orderBy.toString() + ") AS tab1 WHERE rownum <= " + limit,
@@ -535,7 +544,7 @@ public class LoadServiceImpl {
 			MetaIdentifier targetMI = load.getTarget().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
 			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), runMode);
-			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode);
+			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode, null);
 			return loadExec;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -546,7 +555,9 @@ public class LoadServiceImpl {
 				// TODO: handle exception
 			}
 			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Load execution failed.");
 		}
 	}

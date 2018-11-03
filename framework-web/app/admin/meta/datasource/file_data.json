@@ -1,0 +1,38 @@
+{
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+	"version": "1464977196",
+	"name": "file_data",
+	"desc": "File Data Source to store file data",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+                {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }
+	],
+	"type": "FILE",
+	"access": "OS",
+	"driver": "",
+	"host": "localhost",
+	"dbname": "",
+	"port": "",
+	"username": "",
+	"password": "",
+	"path": "/user/hive/warehouse/framework/data/",
+	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
+}

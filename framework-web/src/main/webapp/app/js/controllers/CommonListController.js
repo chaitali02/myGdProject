@@ -3,8 +3,18 @@ CommonModule = angular.module('CommonModule');
 CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
-  $scope.select = $stateParams.type.toLowerCase();
-  $scope.newType = $stateParams.type.toLowerCase();
+  if($stateParams.type.indexOf("exec") !=-1){
+    $scope.select = $stateParams.type.toLowerCase();
+    $scope.newType = $stateParams.type.toLowerCase();
+   }else if($stateParams.type.indexOf("Exec") !=-1){
+    $scope.select = $stateParams.type.toLowerCase();
+    $scope.newType = $stateParams.type.toLowerCase();
+   }
+   else{
+    $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+    $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType; 
+  }
+  
   $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;
@@ -16,18 +26,23 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     content: '',
     timeout: 3000 //time in ms
   };
+ 
   $rootScope.isCommentDisabled=true;
-  $scope.paramTypes=["paramlist","paramset"];
+  $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
   $scope.handleGroup = -1;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-  
+  if($scope.select =="ingestexec"){
+    $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
+  }
   $scope.$on('privilegesUpdated', function (e, data) {
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-    
+  if($scope.select =="ingestexec"){
+    $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
+  }
   });
 
   $scope.updateStats = function () {
@@ -40,7 +55,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   if($scope.select !="paramlist")
   $scope.updateStats();
   
-  var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
+  var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec','ingestexec','ingestgroupexec'];
 
   if(!$scope.isJobExec) {
     $scope.handleGroup = groups.indexOf($scope.select.toLowerCase());
@@ -50,7 +65,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.addMode = function () {
     cacheService.searchCriteria = {};
-    var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    var stateName;
+    if($stateParams.type.toLowerCase() =="ingest2"){
+      stateName = dagMetaDataService.elementDefs['ingest2'].detailState;  
+    }else{
+      stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    }
+   // var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }
@@ -103,7 +124,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.action = function (data, mode, privilege) {
     $scope.setActivity(data.uuid, data.version, $scope.select, mode);
-    var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    var stateName;
+    if($stateParams.type.toLowerCase() =="ingest2"){
+      stateName = dagMetaDataService.elementDefs['ingest2'].detailState;  
+    }else{
+      stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    }
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }
@@ -132,10 +158,19 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       });
     }
   }
-
   $scope.setStatus = function (row, status) {
+    $scope.selectDetail=row;
+    $scope.selectDetail.setStatus=status
+    $('#killmodal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.okKill = function () {
+    
     var api = false;
-    switch ($scope.newType) {
+    switch ($scope.newType.toLowerCase()) {
       case 'dqexec':
         api = 'dataqual';
         break;
@@ -163,23 +198,85 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'dagexec':
         api = 'dag';
         break;
+      case 'batchexec':
+        api = 'batch';
+        break;
+      case 'ingestExec':
+        api = 'ingest';
+        break;
+      case 'ingestgroupExec':
+        api = 'ingest';
+        break;
     }
     if (!api) {
       return
     }
+    $('#killmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
-    notify.content = $scope.newType == "dagexec" ? "Pipeline Killed Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Killed Successfully" : "Rule Killed Successfully"
+    notify.content = $scope.newType == "dagexec" ? "Pipeline "+$scope.selectDetail.setStatus+" Successfully" :$scope.newType == "batchexec" ? "Batch "+$scope.selectDetail.setStatus+" Successfully": $scope.newType.indexOf("group") != -1 ? "Rule Group "+$scope.selectDetail.setStatus+" Successfully" : "Rule "+$scope.selectDetail.setStatus+" Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.put(url + '' + api + '/setStatus?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&status=' + status).then(function (response) {
+    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.setStatus).then(function (response) {
       console.log(response);
     });
   }
 
   $scope.restartExec = function (row, status) {
+    $scope.selectDetail=row;
+    $('#restartmodal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    // var api = false;
+    // switch ($scope.newType) {
+    //   case 'dqexec':
+    //     api = 'dataqual';
+    //     break;
+    //   case 'dqgroupExec':
+    //     api = 'dataqual';
+    //     break;
+    //   case 'profileExec':
+    //     api = 'profile';
+    //     break;
+    //   case 'profilegroupExec':
+    //     api = 'profile';
+    //     break;
+    //   case 'ruleExec':
+    //     api = 'rule';
+    //     break;
+    //   case 'rulegroupExec':
+    //     api = 'rule';
+    //     break;
+    //   case 'dagexec':
+    //     api = 'dag';
+    //     break;
+    //   case 'reconExec':
+    //     api = 'recon';
+    //     break;
+    //   case 'recongroupExec':
+    //     api = 'recon';
+    //     break;
+    // }
+    // if (!api) {
+    //   return
+    // }
+    // notify.type = 'success',
+    // notify.title = 'Success',
+    // notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
+    // $scope.$emit('notify', notify);
+
+    // var url = $location.absUrl().split("app")[0];
+    // $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
+    //   //console.log(response);
+    // });
+  }
+
+
+   $scope.okRestart=function(){
     var api = false;
+    
     switch ($scope.newType) {
       case 'dqexec':
         api = 'dataqual';
@@ -208,21 +305,30 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'recongroupExec':
         api = 'recon';
         break;
+      case 'batchexec':
+        api = 'batch';
+        break;
+      case 'ingestExec':
+        api = 'ingest';
+        break;
+      case 'ingestgroupExec':
+        api = 'ingest';
+        break;
     }
     if (!api) {
       return
     }
+    $('#restartmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
-    notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
+    notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType == "batchexec" ? "Batch Restarted Successfully": $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
+    $http.post(url + '' + api + '/restart?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
       //console.log(response);
     });
-  }
-
+   }
   
   $scope.selectData = function (data) {
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
@@ -531,6 +637,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
     var onSuccesGetParamListByTrain = function (response) {
       $scope.allParamList=response;
+      if(response.length == 0){
+      $scope.isParamListRquired=false;
+      }
     }
   }
   
@@ -694,24 +803,46 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // if($scope.select == 'rule') {  //|| $scope.select == 'train'
     //   $scope.getExecParamsSet();
     // }
-    if($scope.select == 'train' || $scope.select == 'rule'){
+    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
       $scope.paramTypes=null;
       $scope.selectParamType=null;
       $scope.isParamLsitTable=false;
-      setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
-      if($scope.select =='rule'){
+      setTimeout(function(){    $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
+      ; },100);
+      if($scope.select =='rule' || $scope.select =='dag'){
         $scope.isParamListRquired=false;
-      }else{
-        $scope.isParamListRquired=true;
+        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
+        var onSuccessGetOneByUuidAndVersion = function (response) {
+          if(response.paramList !=null){
+            $('#responsive').modal({
+              backdrop: 'static',
+              keyboard: false
+            });   
+          }else{
+            $scope.executionmsg = $scope.caption + " Submited Successfully"
+            notify.type = 'success',
+            notify.title = 'Success',
+            notify.content = $scope.executionmsg
+            $scope.$emit('notify', notify);
+            CommonService.execute($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version, null).then(function (response){ onSuccessExecute(response.data)});
+            var onSuccessExecute = function (response) {
+                console.log("RuleExec: " + JSON.stringify(response))
+            }
+          }
+        }
       }
-      $('#responsive').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
+      else{
+        $scope.isParamListRquired=true;
+        $('#responsive').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+      }
     }
+
     else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
     }
@@ -745,11 +876,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid
     var version = data.version
-    $scope.uploadDetail={
-      uuid:data.uuid,
-      index:data.index
-    }
-  
+    $scope.uploadDetail=data;
     $(":file").jfilestyle('clear')
     $("#csv_file").val("");
     $('#fileupload').modal({
@@ -762,7 +889,17 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     console.log(data)
     $scope.isFileNameValid=data.valid;
     $scope.isFileSubmitDisable=!data.valid;
-}
+  }
+  $scope.getGridOptionsDataIndex=function(id){
+    var index=-1;
+    for(var i=0;i<$scope.gridOptions.data.length;i++){
+      if(id == $scope.gridOptions.data[i].id){
+       index=i;
+       break;
+      }
+    }
+    return index;
+  } 
 
   $scope.uploadFile = function () {
     if($scope.isFileSubmitDisable){
@@ -778,10 +915,27 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
-    $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
-    CommonService.uploadFile($scope.uploaaduuid, fd, "datapod").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+    if(!$scope.searchtext){
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
+    }
+    else{
+      var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+      if(index!=-1){
+        $scope.gridOptions.data[index].isupload=true;
+      }
+    }
+    CommonService.uploadFile($scope.uploaaduuid, fd, "datapod",$scope.fileUpladDesc || "").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      $scope.fileUpladDesc="";
+      if(!$scope.searchtext){
+        $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      }
+      else{
+        var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+        if(index!=-1){
+          $scope.gridOptions.data[index].isupload=false;
+        }
+      }
       $scope,uploadDetail=null;
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
@@ -792,7 +946,15 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     var onError = function (response) {
       $('#fileupload').modal('hide');
-      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      if(!$scope.searchtext){
+        $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      }
+      else{
+        var index=$scope.getGridOptionsDataIndex($scope.uploadDetail.id)
+        if(index!=-1){
+          $scope.gridOptions.data[index].isupload=false;
+        }
+      }
       $scope,uploadDetail=null;
     }
   }

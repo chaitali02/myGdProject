@@ -1,0 +1,149 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df1f"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureName" : "customer_id",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureName" : "address_id",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "featureName" : "branch_id",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "3",
+            "feature" : {
+                "featureId" : "3",
+                "featureName" : "commute_distance_miles",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "feature" : {
+                "featureId" : "5",
+                "featureName" : "censor",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            }
+        }
+    ],
+    "labelInfo" : {
+        "attrId" : "4",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "trainInfo" : {
+        "ref" : {
+            "type" : "train",
+            "uuid" : "46bcd068-eca9-4b80-a25d-913e8fd463ec"
+        }
+    },
+    "uuid" : "8dd10724-03eb-4cfd-ac59-4f90b8650209",
+    "version" : "1536052144",
+    "name" : "predict_naive_bayes_classifier",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-04T09:09:04.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

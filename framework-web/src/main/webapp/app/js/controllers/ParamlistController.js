@@ -21,7 +21,7 @@ DatascienceModule.directive('lowercase', function () {
 });
 DatascienceModule.controller('CreateParamListController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, ParamListService, privilegeSvc,$timeout,$filter) {
 
-	$scope.mode="";
+	$scope.mode=false;
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -53,6 +53,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.isEdit = true;
 	}
 	$scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -69,18 +70,18 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramtable = null;
 	$scope.isUseTemlate=false;
 	$scope.isTemplageInfoRequired=false;
-	$scope.typeSimple = ["string", "double", "date", "integer", "list"];
+	$scope.typeSimple = ["string", "double", "integer", "list"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
 	 	{"name":"date","caption":"date"}, 
 		{"name":"integer","caption":"integer"},
-		// {"name":"ONEDARRAY","caption":"double [ ]"},
-		// {"name":"TWODARRAY","caption":"double [ ][ ]"},
+		{"name":"decimal","caption":"decimal"},
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
 		{"name":"distribution","caption":"distribution"},
 		{"name":"datapod","caption":"datapod"},
+		{"name":"function","caption":"function"},
 	    {"name":"list","caption":"list"}, ];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
@@ -93,7 +94,26 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		content: '',
 		timeout: 3000 //time in ms
 	};
+    
+    $scope.popup2 = {
+    	opened: false
+    };
+	$scope.dateOptions = {
+		dateDisabled: disabled,
+		formatYear: 'yy',
+	//	maxDate: new Date(2020, 5, 22),
+	//	minDate: new Date(),
+		startingDay: 1
+	};
+	function disabled(data) {
+		var date = data.date,
+		  mode = data.mode;
+		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+	}
 	
+	$scope.open2 = function() {
+		$scope.popup2.opened = true;
+	};
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -181,10 +201,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		if($scope.isUseTemlate){
 			$scope.getAllLatestParamListByTemplate();
 			$scope.isTemplageInfoRequired=true;
+			$scope.isTableDisable=true;
 		}else{
 			$scope.isTemplageInfoRequired=false;
 			$scope.allParamList=null;
 			$scope.paramtable=null;
+			$scope.isTableDisable=false;
 			
 		}
 	}
@@ -341,14 +363,42 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		ParamListService.getAllLatest(type).then(function (response) { onGetAllLatest(response.data) });
 		var onGetAllLatest = function (response) {
 			$scope.allDistribution=response;
+			if($scope.paramtable[index].paramValue ==null)
 			$scope.paramtable[index].selectedParamValue=response[0];
+			else{
+				$scope.paramtable[index].selectedParamValue=$scope.paramtable[index].paramValue
+			}
+
 		}
+	}
+	
+	$scope.getFunctionByCriteria=function(type,index){
+		CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
+		var onSuccressGetFunction = function (response) {
+			$scope.allFunction = response;
+			if($scope.paramtable[index].paramValue ==null)
+			$scope.paramtable[index].selectedParamValue=response[0];
+			else{
+				$scope.paramtable[index].selectedParamValue=$scope.paramtable[index].paramValue
+			}
+		}
+	}
+    $scope.onNgInit=function(type,index){
+		if(type =='distribution')
+			$scope.getAllLatest(type,index);
+		else
+		$scope.getFunctionByCriteria(type,index)
+		  
 	}
 
 	$scope.onChangeParamType=function(type,index){
 		if($scope.typeSimple.indexOf(type) !=-1){
 			$scope.paramtable[index].paramValueType='simple';
-		}else{
+		}
+		else if(type =='date'){
+			$scope.paramtable[index].paramValueType='date';
+		}
+		else{
 			$scope.paramtable[index].paramValueType=type;
 		}
 	}
@@ -408,7 +458,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				 paraminfo.paramValue =paramValue
 				 paramInfoArray[i] = paraminfo; 
 				}
-				else if($scope.paramtable[i].paramType =='distribution'){
+				else if($scope.paramtable[i].paramType =='distribution' || $scope.paramtable[i].paramType =='function'){
 					var paramRef={};
 					paramRef.type=$scope.paramtable[i].paramType;
 					if($scope.paramtable[i].selectedParamValue !=null)
@@ -416,6 +466,15 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					paramValue.ref=paramRef;
 					paraminfo.paramValue =paramValue
 					paramInfoArray[i] = paraminfo; 
+				}
+				else if($scope.paramtable[i].paramType =='date'){
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value="'"+$filter('date')($scope.paramtable[i].paramValue, "MM/dd/yyyy")+"'";
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
+
 				}
 				else {
 					paramValue=null;
@@ -452,7 +511,6 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$('#paramlistsave').css("dispaly", "none");
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			
 			setTimeout(function () { $scope.close(); }, 2000);
 		}
 	}

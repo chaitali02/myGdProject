@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,10 +29,13 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -43,12 +47,15 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
@@ -170,7 +177,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		return execute(metaExecutor, (ReconExec)baseRuleExec, datapodKey, taskList, execParams, runMode);
+		return execute(baseRuleExec.getDependsOn().getRef().getUuid(), baseRuleExec.getDependsOn().getRef().getVersion()
+				, metaExecutor, (ReconExec) baseRuleExec, null, taskList, execParams, runMode);
 	}
 	
 	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception{
@@ -222,6 +230,16 @@ public class ReconServiceImpl extends RuleTemplate {
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
 		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExecUUID, reconExecVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, dependsOn);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
 		List<Map<String, Object>> results =getReconResults(reconExecUUID,reconExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(reconExecUUID, reconExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec,reconExecUUID,reconExecVersion)));
 	
@@ -234,131 +252,24 @@ public class ReconServiceImpl extends RuleTemplate {
 		try {
 			limit = offset+limit;
 			offset = offset+1;
-
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reconExecUUID, reconExecVersion);
-			
+			ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(reconExecUUID, reconExecVersion,
+					MetaType.reconExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(reconExec.getResult().getRef().getUuid(),
+					reconExec.getResult().getRef().getVersion());
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 			
-			/*String appUuid = null;
-			boolean requestIdExistFlag = false;
-			StringBuilder orderBy = new StringBuilder();
-			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reconExecUUID, reconExecVersion);
-			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			ExecContext execContext = null;
-			IExecutor exec = null;
-			String sql= null;
-			if (runMode.equals(Mode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
-			exec = execFactory.getExecutor(execContext.toString());
-			appUuid = commonServiceImpl.getApp().getUuid();
-			if(requestId == null || requestId.equals("null") || requestId.isEmpty())	{
-				if(datasource.getType().toLowerCase().toLowerCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY version DESC) AS rownum, * FROM " + tableName + ") AS tab WHERE rownum >= " +offset+ " AND rownum <= " + limit, appUuid);
-				}else {
-					if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-						if(runMode.equals(Mode.ONLINE))
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-						else	
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-					else
-						data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-				}
-			} else {
-				List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
-				List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));		
-				
-				for(int i=0; i<sortList.size(); i++) 
-						orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));			
-				if (requestId != null) {
-					String tabName = null;
-					for(Map.Entry<String, String> entry : requestMap.entrySet()) {
-						String id = entry.getKey();
-						if(id.equals(requestId)) {
-							requestIdExistFlag = true;
-						}					
-					}
-					if(requestIdExistFlag) {						
-						tabName = requestMap.get(requestId);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM "+tabName+" WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-						} else {
-							if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-								if(runMode.equals(Mode.ONLINE))
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								else	
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-							else{
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-							}
-						}
-					}else { 
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-								data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-										+tableName+" ORDER BY "+ orderBy.toString() +") AS tab) AS tab1", appUuid);
-							}else {
-								if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-									if(runMode.equals(Mode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-									else	
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-								else{
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								}
-							}
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-						}else {
-							if(datasource.getType().toLowerCase().toLowerCase().contains("oracle"))
-								if(runMode.equals(Mode.ONLINE))
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-								else	
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit, appUuid);
-							else{
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-							}
-						}
-					}
-				}
-			}*/
 		}catch (Exception e) {
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if(response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				}else
-					logger.info("HttpServletResponse response is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExecUUID, reconExecVersion));
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
@@ -385,8 +296,10 @@ public class ReconServiceImpl extends RuleTemplate {
 					}catch (Exception e2) {
 						// TODO: handle exception
 					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
-					throw new Exception((message != null) ? message : "Can not parse Recon.");
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Recon.", dependsOn);
+					throw new Exception((message != null) ? message : "Can not restart Recon.");
 				}
 			}
 			e.printStackTrace();
@@ -396,8 +309,10 @@ public class ReconServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
-			throw new Exception((message != null) ? message : "Can not parse Recon.");
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not restart Recon.",dependsOn);
+			throw new Exception((message != null) ? message : "Can not restart Recon.");
 		}
 	}
 
@@ -420,5 +335,89 @@ public class ReconServiceImpl extends RuleTemplate {
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
-	
+
+	public List<ReconExec> findReconExecByRecon(String reconExecUuid, String startDate, String endDate, String type,
+			String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		Query query = new Query();
+		query.fields().include("statusList");
+		query.fields().include("dependsOn");
+		query.fields().include("exec");
+		query.fields().include("result");
+		query.fields().include("refKeyList");
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("published");
+		query.fields().include("appInfo");
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
+
+		try {
+			if ((startDate != null && !StringUtils.isEmpty(startDate))
+					&& (endDate != null && !StringUtils.isEmpty(endDate))) {
+				query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate))
+						.lte(simpleDateFormat.parse(endDate)));
+			} else if ((startDate != null && !startDate.isEmpty()) && StringUtils.isEmpty(endDate)) {
+				query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
+			} else if (endDate != null && !endDate.isEmpty())
+				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
+
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(reconExecUuid));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		List<ReconExec> ReconExecObjList = new ArrayList<>();
+		ReconExecObjList = (List<ReconExec>) mongoTemplate.find(query, ReconExec.class);
+
+		return ReconExecObjList;
+	}
+
+	public List<ReconExec> findReconExecByDatapod(String datapodUuid, String startDate, String endDate, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException {
+		List<ReconExec> ReconExecObjList = new ArrayList<>();
+		List<ReconExec> ExecObjList = new ArrayList<>();
+
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("dependsOn");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+
+		try {
+			if ((datapodUuid != null && !StringUtils.isEmpty(datapodUuid)))
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(datapodUuid));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		List<Recon> ReconList = new ArrayList<>();
+		ReconList = (List<Recon>) mongoTemplate.find(query, Recon.class);
+
+		for (Recon dq : ReconList) {
+			ReconExecObjList = findReconExecByRecon(dq.getUuid(), startDate, endDate, null, null);
+			
+			if (!ReconExecObjList.isEmpty()) {
+				ExecObjList.addAll(ReconExecObjList);
+			}
+
+		}
+		return ExecObjList;
+	}
 }

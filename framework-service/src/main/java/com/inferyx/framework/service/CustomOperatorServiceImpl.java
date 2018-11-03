@@ -12,22 +12,17 @@ package com.inferyx.framework.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.FutureTask;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SaveMode;
-import org.python.antlr.ast.operatorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -38,7 +33,6 @@ import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -93,8 +87,6 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	SparkContext sparkContext;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
@@ -151,11 +143,14 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
 					Status.Stage.NotStarted);
 		}
+		logger.info(" After Set not started status");
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
+		logger.info(" After operator fetch");
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
+		logger.info(" Before customCreate");
 		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");
 		return operatorExec;
@@ -170,8 +165,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion,
-			int rowLimit) throws Exception {
+	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion, int rowLimit) throws Exception {
 		List<Map<String, Object>> data = null;
 		try {
 			OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid,
@@ -180,9 +174,14 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
 					operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
 					MetaType.datastore.toString());
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			data = exec.fetchResults(datastore, null, rowLimit, null, commonServiceImpl.getApp().getUuid());
+			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), getFilePath(datapod, operatorExecVersion));
+			datastore.setLocation(filePathUrl);
+			data = exec.fetchResults(datastore, datapod, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -192,12 +191,19 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				// TODO: handle exception
 			}
 
+
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion));
 			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "No data found.");
+					(message != null) ? message : "No data found.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
 
 		return data;
+	}
+	
+	protected String getFilePath (Datapod locationDatapod, String execVersion) {
+		return "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
 	}
 
 	/**
@@ -250,7 +256,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 								datasource);
 						String sql = transposeOldOperator.generateSql(datapod, tabName);
 						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod,
-								SaveMode.Append.toString(), appUuid);
+								SaveMode.Append.toString(), true, appUuid);
 					}
 				}
 			}
@@ -282,8 +288,10 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			}
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
 					Status.Stage.Failed);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Operator execution failed.");
+					(message != null) ? message : "Operator execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Operator execution failed.");
 		}
 		return isSuccess;
@@ -339,8 +347,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
+			
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Can not create executable Operator.");
+					(message != null) ? message : "Can not create executable Operator.",dependsOn);
 			throw new RuntimeException((message != null) ? message : "Can not create executable Operator.");
 		}
 		return operatorExec;
@@ -409,5 +420,25 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		return newOperator.parse(baseExec, execParams, runMode);
 	}
+	
+	public HttpServletResponse download(String uuid, String version, String format, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
+			RunMode runMode) throws Exception {
+		
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
+		List<Map<String, Object>> results =getOperatorResults(uuid,version,rowLimit);
+		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+	
+		return response;
+
+	}
+	
 
 }

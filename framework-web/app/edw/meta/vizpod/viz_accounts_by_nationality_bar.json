@@ -1,0 +1,75 @@
+{
+  "id": "5b9aa26157fb10181968d879",
+  "uuid": "887b311f-bb30-43aa-836a-93f9093b858b",
+  "version": "1536860769",
+  "name": "viz_accounts_by_nationality_bar",
+  "desc": "Accounts By Nationality - Bar Chart",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Sep 13 13:46:09 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "relation",
+      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+      "version": null,
+      "name": "relation_datawarehouse"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": null,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+        "version": null,
+        "name": "dim_account"
+      },
+      "attributeId": 6,
+      "function": null,
+      "value": null,
+      "attributeName": "nationality"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
+        "version": null,
+        "name": "formula_total_accounts"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ]
+}

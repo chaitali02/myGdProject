@@ -35,17 +35,17 @@
     "functionInfo" : [     	 
         {
             "type" : "file",
-            "name" : "current_date",
+            "name" : "current_date()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "mysql",
-            "name" : "curdate",
+            "name" : "curdate()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "hive",
-            "name" : "current_date",
+            "name" : "current_date()",
             "paramInfoHolder" : []
         }, 					
         {
@@ -83,7 +83,7 @@
         }, 
         {
             "type" : "postgres",
-            "name" : "CURRENTDATE",
+            "name" : "currentdate()",
             "paramInfoHolder" : []
         }
     ],

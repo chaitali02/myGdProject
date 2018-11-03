@@ -1,0 +1,645 @@
+<div data-ng-controller="ReportDetailController">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="metadata({type:'report'})">{{$state.current.data.pageTitle}}</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="metadata({type:'report'})">Report</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="metadata({type:'report'})">{{report.name}}</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                <i class="icon-calendar"></i>&nbsp;
+                <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+
+    <div options="dirOptions" type="'report'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="report"
+        comment-panel-directive>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- <div class="portlet light bordered fullscreendashobard"> -->
+            <!-- <div class="portlet-title">
+                    <div class="caption">
+                        <i class=" icon-layers "></i>
+                        <span class="caption-subject bold">Report</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default" title="Run Report" data-toggle="tooltip" data-placement="top" tooltip
+                            data-ng-click="showSampleTable(report)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+                            <i class="fa fa-play" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+                        </a>
+                        <a class="btn btn-circle btn-icon-only btn-default" ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download"
+                            ng-show="isShowSimpleData" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
+                            <i class="fa fa-download" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+                        </a>
+
+                        <a class="btn btn-circle btn-icon-only btn-default" title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
+                            data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(report.uuid,report.version)"
+                            ng-hide="isAdd">
+                            <i class="fa fa-edit" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+                        </a>
+
+                        <a class="btn btn-circle btn-icon-only btn-default" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isShowSimpleData==false || isEdit==true)? 'currentpage':'notcurrentpage'"
+                            ng-click="showView(report.uuid,report.version)" ng-hide="isAdd">
+                            <span class="glyphicon glyphicon-file"></span>
+                        </a>
+
+                        <a class="btn btn-circle btn-icon-only btn-default" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip
+                            ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showGraph(report.uuid,report.version)">
+                            <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+                        </a>
+
+                        <a class="btn btn-circle btn-icon-only btn-default" title="Refresh" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+                            ng-click="isShowSimpleData ? showSampleTable(report) : broadcastRefreshData()" data-toggle="tooltip"
+                            data-placement="top" tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;"></i>
+                        </a>
+                        <a class="btn btn-circle btn-icon-only btn-default" title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'report')">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin:2px auto;color:#a0a0a0"></i>
+                        </a>
+                    </div>
+                </div> -->
+
+            <!-- <div class="portlet-body" style="margin-bottom:-15px;" > -->
+            <!-- <div class="portlet box green" style="border:1px solid #e7ecf1!important" ng-if="isShowSimpleData">
+                        <div class="portlet-title">
+                            <div class="caption">Filter
+                            </div>
+                            <div class="tools">
+                            <a uib-tooltip="Refresh" tooltip-placement="{{showtooltip}}" href="javascript:;" ng-click="refreshDashboard(filterAttribureIdValues.length)" style="height:14px;" ng-click="refreshDashboard(filterAttribureIdValues.length)">
+                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                            </a>
+                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="row" style="margin-top: 15px;">
+                            <div  class="col-lg-4 col-xs-12 col-sm-12" ng-repeat="data in filterAttribureIdValues" style="margin-bottom:25px;">
+                                <label><b>{{data.dname}}</b></label>
+                                <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]" ng-change="onChange()" ng-options="c as c.value for c in data.values" track by c.id>
+                                </select>   
+                            </div>
+                            </div>
+        
+                            <div class="row" style="margin-top: 15px;" ng-if="filterAttribureIdValues.length >0">  
+                                <div  class="col-lg-12 col-xs-12 col-sm-12" style="margin-bottom:25px;">                    
+                                    <input type="button" class="btn btn-success  pull-right" value="Apply"   name="submit" ng-disabled="isApplyFilter|| inprogressdata " ng-click="applyFilter()" style="margin-left:10px;">
+                                    <a ng-click="CancleFitler()"  class="btn btn-primary pull-right">Clear</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+            <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submit()" prevent-enter-submit>
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>{{report.name}}
+                        </div>
+                        <div class="tools">
+                            <a title="Run Report" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
+                                ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+                                <i class="fa fa-play" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                            </a>
+                            <!-- <div class="tools">
+                                <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
+                                ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+                                <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                            </a> -->
+
+                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
+                                <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                            </a>
+                            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
+                                data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(report.uuid,report.version)"
+                                ng-hide="isAdd" style="height:16px;">
+                                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                            </a>
+
+                            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isShowSimpleData==false || isEdit==true)? 'currentpage':'notcurrentpage'"
+                                ng-click="showView(report.uuid,report.version)" ng-hide="isAdd" style="height:16px;">
+                                <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                            </a>
+
+                            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+                                data-ng-click="showGraph(report.uuid,report.version)" style="height:14px;">
+                                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                            </a>
+
+                            <a title="Refresh" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(report) : broadcastRefreshData()"
+                                data-toggle="tooltip" data-placement="top" tooltip>
+                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                            </a>
+                            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'report')" style="height:14px;">
+                                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                    <!--End Protlet-title-->
+
+                    <div class="portlet-body">
+                        <div class="form-body" ng-show="isShowSimpleData">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div style="border-bottom: 1px solid darkgray;">
+                                        <div class="form-group">
+                                            <div class="col-md-11 col-sm-11">
+                                                <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                    {{filterdata.text}}
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top: 4px;cursor: pointer;"> -->
+
+                                            <div class="col-md-1 col-sm-1" style="margin-top: 4px;cursor: pointer;">
+                                                <span ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size:16px;" ><i  class="fa fa-filter" style="font-size:18px;padding-right: 2px"></i>Filter</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+
+                                <div class=" form-body col-md-12 col-sm-12 {{tableclass}}">
+                                    <div class="spinner" ng-show="spinner">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                    </div>
+                                    <div ng-show="isDataError">
+                                        <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="!isDataInpogress ">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:-3px;">
+                                                <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
+                                            </div> -->
+                                            <div class="col-md-10 col-sm-10">
+
+                                                <!-- <tags-input name="filterTag" ng-model="filterTag" min-length="0" style="height:33px;" on-tag-removed="onTagRemove($tag)" add-from-autocomplete-only="true"></tags-input> -->
+                                                <!-- <div class="chip" ng-repeat=" filterdata in filterTag">
+                                                     {{filterdata.text}}
+                                                    <span class="chipclosebtn" ng-click="onChipsRemove($index)">&times;</span>
+                                                  </div> -->
+                                            </div>
+                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:-22px;">
+                                                <span class="fa fa-filter" ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"></span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;margin-right: -4px;">
+                                                    <label>Search:</label>
+                                                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext"
+                                                        aria-controls="datastoredatatable">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+                                    <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-body graph-body" ng-if="showGraphDiv">
+                            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                            <div class="spinner" id="graphloader">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="report.uuid" version="reportVersion.defaultVersion.version">
+                            </div>
+                        </div>
+                        <div class="form-body" data-ng-show="showForm">
+                            <div class="form-body" data-ng-show="showForm">
+                                <div class="form-body">
+                                    <div class="form-group" ng-show="report.uuid">
+                                        <label class="col-md-3 control-label">UUID</label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" ng-disabled="true" ng-model="report.uuid" placeholder="" disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Name
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="name" ng-class="" ng-disabled="{{mode}}" ng-model="report.name" placeholder=""
+                                                disabled="disabled" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-show="report.uuid">
+                                        <label class="col-md-3 control-label">Version</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="reportVersion.defaultVersion.version"
+                                                ng-options="c.version as c.version for c in reportVersion.versions">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-show="report.uuid">
+                                        <label class="col-md-3 control-label">CreatedBy</label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" ng-disabled="true" placeholder="" disabled="disabled" ng-model="report.createdBy.ref.name">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-show="report.uuid">
+                                        <label class="col-md-3 control-label">CreatedOn</label>
+                                        <div class="col-md-6">
+                                            <input type="text" ng-disabled="true" class="form-control" placeholder="" disabled="disabled" ng-model="report.createdOn">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                                        <div class="col-md-6">
+                                            <tags-input ng-model="tags" ng-disabled="{{mode}}" add-from-autocomplete-only="false" min-length="0" add-on-enter="true"
+                                                add-on-space="true">
+                                                <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                                                </auto-complete>
+                                            </tags-input>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control  textarea-overflow noresize" ng-disabled="{{mode}}" ng-model="report.desc" rows="2" style="resize:none;"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
+                                                ng-change="selectType()" required>
+                                            </select>
+                                        </div>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                            <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="allSource.defaultoption"
+                                                ng-options="r as r.name for r in allSource.options  track by r.uuid ">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="btn-group" ng-init="report.active='Y'">
+                                                <label class="btn btn-default" ng-model="report.active" ng-disabled="{{showactive}}" uib-btn-radio="'Y'">Yes</label>
+                                                <label class="btn btn-default" ng-model="report.active" ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="btn-group" ng-init="report.published='N'">
+                                                <label class="btn btn-default" ng-model="report.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                <label class="btn btn-default" ng-model="report.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Title
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="title" ng-class="" ng-disabled="{{mode}}" ng-model="report.title" placeholder=""
+                                                disabled="disabled" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Header
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="header" ng-class="" ng-disabled="{{mode}}" ng-model="report.header" placeholder=""
+                                                disabled="disabled" required="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Header Align
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.headerAlign" ng-options="r for r in alignType"
+                                                required>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Footer
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="footer" ng-class="" ng-disabled="{{mode}}" ng-model="report.footer" placeholder=""
+                                                disabled="disabled" required="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Footer Align
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.footerAlign" ng-options="r for r in alignType"
+                                                required>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Filter</label>
+                                        <div class="col-md-6">
+                                            <tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+                                                add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                                                <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                                                    load-on-empty="true">
+                                                </auto-complete>
+                                            </tags-input>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                                                aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="padding-top:10px;">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                            <a ng-click="close()" class="btn btn-primary">Cancel</a>
+                                            <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false || mode == false || myform.$dirty == true)?false:true">
+                                            <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End formBody-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--End portlet box green 1-->
+                </div>
+
+
+
+                <div class="portlet box green" data-ng-show="showForm">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>Source Attribute
+                        </div>
+                        <div class="tools">
+                        </div>
+                    </div>
+                    <div class="portlet-body form">
+
+                        <div class="x_title" style="padding:10px;">
+                            <div id="hideshow" class="alert alert-danger pull-left " ng-if="isDuplication" style="margin-left:10px;width:33%;margin-bottom:0px;">
+                                <button class="close" data-close="alert"></button>
+                                <span>Duplication not allowed.</span>
+                            </div>
+                            <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
+                        </div>
+                        <div class="form-body" style="padding-top:50px;">
+                            <div>
+                                <div class="">
+                                    <table class=" row-border hover table  table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center; Vertical-align: middle;width:5%;">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllAttributeRow" ng-change="checkAllAttributeRow()"
+                                                            ng-disabled="{{mode}}" />
+                                                    </span>
+                                                </th>
+                                                <th style="width:6%; text-align:center">ID</th>
+                                                <th style="width:30%;text-align: center">Name</th>
+                                                <th style="width:20%;text-align: center">Source Type</th>
+                                                <th style="width:46%;text-align: center">Source Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="data in attributeTableArray">
+                                            <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                                data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}">
+                                                <td style="text-align: center; Vertical-align: middle;width:5%;">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <input class="form-control" ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
+                                                        />
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <input type="text" class="form-control" ng-model="$index" ng-value="$index+1" ng-disabled="true">
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                                                        <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message=""
+                                                            title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                                                            ng-disabled="{{mode}}" class="form-control" required></select>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <input type="text" class="form-control" ng-model="data.sourcesimple" required disable-validation-message="" ng-if="data.isSourceAtributeSimple"
+                                                            ng-disabled="{{mode}}" />
+                                                    </span>
+                                                    <div ng-if="data.isSourceAtributeDatapod">
+                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                            <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
+                                                                ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
+                                                                ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"
+                                                                required disable-validation-message=""></select>
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="data.isSourceAtributeFormula">
+                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                            <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}" on-select="onChangeFormula(data.sourceformula,$index)">
+                                                                <ui-select-match>
+                                                                    <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
+                                                                </ui-select-match>
+                                                                <ui-select-choices repeat="x in (allSourceFormula | filter: $select.search) track by x.uuid" position='up'>
+                                                                    <div ng-click="routeForFormula(x,data.id)">
+                                                                        <span class="{{x.iconclass}}"></span>
+                                                                        <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                    </div>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="data.isSourceAtributeExpression">
+                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                            <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
+                                                                <ui-select-match>
+                                                                    <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
+                                                                </ui-select-match>
+                                                                <ui-select-choices repeat="x in (allExpress | filter: $select.search) track by x.uuid" position='up'>
+                                                                    <div ng-click="routeForExpression(x,data.id)">
+                                                                        <span class="{{x.iconclass}}"></span>
+                                                                        <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                    </div>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="data.isSourceAtributeFunction">
+                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                            <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allSourceFunction track by c.uuid"></select>
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="data.isSourceAtributeParamList">
+                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                            <select select2 class="form-control" data-ng-model="data.sourceparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
+                                                                ng-disabled="{{mode}}" required disable-validation-message=""
+                                                                ng-change="onChangeParamlist(data.sourceparamlist,$index)"></select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </div> -->
+            </form>
+            </div>
+        </div>
+        <div id="attrFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" style="width:40%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Filter</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="slimScrollDiv" style="margin-top:10px;">
+                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: scroll;max-height: 300px;">
+                                <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
+                                    <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
+                                        <div class="spinner">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 15px;">
+                                        <div class="form-group" ng-repeat="data in filterAttribureIdValues">
+                                            <label class="col-md-3 control-label" title="{{data.dname}}">{{data.attrName}}</label>
+                                            <div class="col-md-6">
+                                                <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
+                                                    ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-lg-4 col-xs-12 col-sm-12" ng-repeat="data in filterAttribureIdValues" style="margin-bottom:25px;">
+                                            <label>
+                                                <b>{{data.dname}}</b>
+                                            </label>
+                                            <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
+                                                ng-change="onChange()" ng-options="c as c.value for c in data.values" track by
+                                                c.id>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="CancleFitler()">Close</button>
+                        <button type="button" class="btn green" ng-click="applyFilter()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+            <div class="modal-dialog" style="width:40%">
+                <div class="modal-content" style="resize: both;overflow: auto;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Download </h4>
+                    </div>
+                    <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+                        <div class="modal-body" style="padding-top:0px">
+                            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Rows</label>
+                                                <div class="col-md-8">
+                                                    <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Format</label>
+                                                <div class="col-md-8">
+                                                    <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Model Body-->
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                            <button type="submit" class="btn green">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
