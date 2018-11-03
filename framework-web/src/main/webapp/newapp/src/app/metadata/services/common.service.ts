@@ -112,8 +112,8 @@ getAttributesByDataset(type:String,uuid:Number): Observable<any[]> {
    .catch(this.handleError);
 }
 
-getRegistryByDatasource(uuid:any): Observable<any[]> {
-  let url ='/metadata/getRegistryByDatasource?type=datasource&action=view&datasourceUuid='+uuid;
+getRegistryByDatasource(uuid:any,status): Observable<any[]> {
+  let url ='/metadata/getRegistryByDatasource?type=datasource&action=view&datasourceUuid='+uuid+"&status="+status;
   return this._sharedService.getCall(url)
   .map((response: Response) => {
     return <any[]>response.json();

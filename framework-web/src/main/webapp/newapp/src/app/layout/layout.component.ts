@@ -48,6 +48,7 @@ export class LayoutComponent {
     }
   }    
   getAppRole(): void {
+    
     this._layoutService.getAppRole()
       .subscribe(
       response => { this.OnSuccesGetAppRole(response) },
@@ -70,12 +71,13 @@ export class LayoutComponent {
      jQuery(this.myModal.nativeElement).modal('hide'); 
   }
   getSelectedApp(){
-
+    
     this.RoleData=this.selectedApp.roleInfo
     this.selectedRole=this.selectedApp.roleInfo[0]
   }
   setAppRole(){
     localStorage.isAppRoleExists=true
+    localStorage.setItem('appDetails',this.selectedApp.appId.ref.uuid);
     jQuery(this.myModal.nativeElement).modal('hide');
     this._layoutService.setAppRole(this.selectedApp.appId.ref.uuid,this.selectedRole.ref.uuid)
     .subscribe(

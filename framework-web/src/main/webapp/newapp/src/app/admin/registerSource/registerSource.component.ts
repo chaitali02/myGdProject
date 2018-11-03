@@ -11,6 +11,9 @@ import { RegisterSourceService } from '../../metadata/services/registerSource.se
   templateUrl: './registerSource.template.html'
 })
 export class RegisterSourceComponent implements OnInit {
+  isDataSourceInpogress: boolean;
+  searchButtonText: string="Register";
+  registered: boolean =false;
   tableData: any;
   id : any;
   version : any;
@@ -54,11 +57,13 @@ export class RegisterSourceComponent implements OnInit {
       this.version = params['version'];
       this.mode = params['mode'];     
     })
+    this.selectType()
   }
 
   selectType() { 
     this.tableData= null
-    this._datapodService.getDatasourceByType(this.type).subscribe(
+    let appId=localStorage.getItem('appDetails');
+    this._datapodService.getDatasourceByApp(appId).subscribe(
       response => { this.OnSuccesGetSelectType(response)},
       error => console.log('Error :: ' + error)
     ) 
@@ -76,9 +81,24 @@ export class RegisterSourceComponent implements OnInit {
       this.allNamesTypes[i]=allNameType;                      
     } 
   }
+  search(){
+    let registeredStatus
+    this.searchButtonText = "Register";
+    this.isDataSourceInpogress = true;
+    if(this.registered==true){
 
+       registeredStatus = 'Registered';
+    }
+    else {
+      registeredStatus = 'UnRegistered';
+    }
+    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"],registeredStatus).subscribe(
+      response => { this.onSuccessGetRegistryByDatasource(response)},
+      error => console.log('Error :: ' + error)
+    )
+  }
   ChangeTableData() {
-    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"]).subscribe(
+    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"],this.registered).subscribe(
       response => { this.onSuccessGetRegistryByDatasource(response)},
       error => console.log('Error :: ' + error)
     ) 
@@ -116,10 +136,13 @@ export class RegisterSourceComponent implements OnInit {
 
   submitRegisterSource(){
     let count = 0;
+    this.searchButtonText = "Registering";
     this.registerArray=[];
     for(let i=0;i<this.tableData.length;i++){
-      let registerObj = {}
-      if(this.tableData[i].selected == true){      
+      let registerObj = {}   
+
+      if(this.tableData[i].selected == true){  
+        this.tableData[i].status="Registering"    
         registerObj["id"]=this.tableData[i].id;
         registerObj["name"]=this.tableData[i].name;
         registerObj["desc"]=this.tableData[i].desc;
@@ -131,13 +154,14 @@ export class RegisterSourceComponent implements OnInit {
     }
     console.log(JSON.stringify(this.registerArray))
     
-    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"]["uuid"],this.allNamesTypes[0]["uuid"]["version"],this.registerArray,this.type).subscribe(
+    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"]["uuid"],this.allNamesTypes[0]["value"]["version"],this.registerArray,this.type).subscribe(
     response => { this.OnSuccessubmit(response)},
     error => console.log('Error :: ' + error)
     )}
 
     OnSuccessubmit(response){
       console.log('success');
+      this.searchButtonText = "Register";
       this.registerdata = response;
           
       for(let i=0;i<this.registerdata.length;i++){
@@ -170,5 +194,12 @@ export class RegisterSourceComponent implements OnInit {
     this.tableData[i].selected =false;
     this.registerArray=null;
   }
-  
+  onChange(event) {
+    if (event === true) {
+      this.registered = true;
+    }
+    else {
+      this.registered = false;
+    }
+  }
 }
