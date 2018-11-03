@@ -31,7 +31,7 @@ import { FunctionComponent } from './function/function.component';
 import { MapComponent } from './map/map.component';
 import { RelationComponent } from './relation/relation.component';
 import { TooltipModule } from 'primeng/components/tooltip/tooltip';
-
+import { StorageServiceModule } from 'angular-webstorage-service'
 
 @NgModule({
     imports: [
@@ -49,7 +49,8 @@ import { TooltipModule } from 'primeng/components/tooltip/tooltip';
         DataTableModule,
         SharedModule,
         GrowlModule,
-        TooltipModule        
+        TooltipModule,
+        StorageServiceModule        
     ],
     declarations: [
         DataPreparationComponent,

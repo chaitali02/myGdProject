@@ -47,7 +47,9 @@ const routes: Routes = [
         {path: 'relation', component: RelationComponent, pathMatch: 'full'},   
         {path: 'load/:id/:version/:mode', component: LoadComponent, pathMatch: 'full'},
         {path: 'load/filter/:id/:version/:mode', component: LoadComponent, pathMatch: 'full'},
-        {path: 'load', component: LoadComponent, pathMatch: 'full'}
+        {path: 'load', component: LoadComponent, pathMatch: 'full'},
+
+        {path: 'expressionDataset/:depends/:dependsOnLabel/:dependsOnUuid', component: ExpressionComponent, pathMatch: 'full'}, 
         ]
     }
 ]

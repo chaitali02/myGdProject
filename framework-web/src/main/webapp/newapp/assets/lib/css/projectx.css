@@ -887,14 +887,15 @@ border-bottom: 0px!important;
 font-family: "Open Sans", sans-serif !important; 
 }
 .ui-dropdown:not(.ui-state-disabled):hover {
-  background: white !important;
+  /* background: white !important; */
 }
 .ui-dropdown-panel .ui-dropdown-item{
 padding: 8px !important;
+
 }
 ui-dropdown.ui-state-disabled .ui-dropdown-trigger, .ui-dropdown.ui-state-disabled .ui-dropdown-label {
   cursor: default !important;
-  background-color: #eef1f5 !important;
+  /* background-color: #eef1f5 !important; */
   opacity: 1 !important;
 }
 .ui-state-disabled, .ui-widget:disabled {
@@ -1115,8 +1116,20 @@ cursor: not-allowed !important;
   .ui-state-disabled{
     pointer-events: none !important;
     cursor: not-allowed !important;
-    opacity: 0.4 !important;
+    opacity: 0.7 !important;
   }
   .ui-multiselect-label-container{
     height : 30px
+  }
+  
+  p-dropdown{
+    background:gainsboro !important;
+    box-shadow: 0px 0px 0px !important;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    cursor: not-allowed;
+  }
+
+  .ui-dropdown{
+    border: 1px solid #c2cad8 !important; 
   }

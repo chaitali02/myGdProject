@@ -16,6 +16,7 @@ import { debug } from 'util';
   templateUrl: './filter.template.html',
 })
 export class FilterComponent {
+  attributesArrayRhs: any[];
   rhsFormulaArray: any[];
   varBoolean: boolean;
   rhsTypeArray: { 'value': string; 'label': string; 'disabled1': boolean; }[];
@@ -84,6 +85,8 @@ export class FilterComponent {
     this.varBoolean = false;
     this.selectVersion = { "version": "" };
     this.dependsOn = { 'uuid': "", "label": "" }
+    this.attributesArrayRhs = [];
+    this.attributesArray = [];
     this.filterData = {};
     this.active = true;
     this.isSubmitEnable = true;
@@ -252,11 +255,11 @@ export class FilterComponent {
             .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
             error => console.log("Error ::", error))
 
-          let rhsAttri = {}
-          rhsAttri["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["label"] = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
-          rhsAttri["attributeId"] = response.filterInfo[k].operand[0].attributeId;
-          filterInfo["rhsAttribute"] = rhsAttri;
+          let rhsAttri1 = {}
+          rhsAttri1["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri1["label"] = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+          rhsAttri1["attributeId"] = response.filterInfo[k].operand[1].attributeId;
+          filterInfo["rhsAttribute"] = rhsAttri1;
         }
 
         else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
@@ -306,7 +309,7 @@ export class FilterComponent {
   }
 
   onSuccessgetAllAttributeBySourceLhs(response) {
-    this.attributesArray = []
+    
     let temp1 = [];
     for (const i in response) {
       let attributeObj = {};
@@ -316,8 +319,8 @@ export class FilterComponent {
       attributeObj["value"]["label"] = response[i].dname;
       attributeObj["value"]["attributeId"] = response[i].attributeId;
       temp1[i] = attributeObj
-      this.attributesArray = temp1;
-    }
+    }this.attributesArray = temp1;
+    console.log(JSON.stringify(this.attributesArray))
   }
 
   getAllAttributeBySource() {
@@ -478,7 +481,7 @@ export class FilterComponent {
   }
 
   onSuccessgetAllAttributeBySourceRhs(response) {
-    this.attributesArray = []
+    
     let temp1 = [];
     for (const i in response) {
       let attributeObj = {};
@@ -487,9 +490,10 @@ export class FilterComponent {
       attributeObj["value"]["uuid"] = response[i].uuid;
       attributeObj["value"]["label"] = response[i].dname;
       attributeObj["value"]["attributeId"] = response[i].attributeId;
-      temp1[i] = attributeObj
-      this.attributesArray = temp1;
+      temp1[i] = attributeObj    
     }
+    this.attributesArrayRhs = temp1;
+    console.log(JSON.stringify(this.attributesArrayRhs))
   }
 
   submitFilter() {

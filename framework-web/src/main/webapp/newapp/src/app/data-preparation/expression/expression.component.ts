@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
 import { CommonService } from './../../metadata/services/common.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
@@ -12,6 +12,8 @@ import { DependsOn } from './dependsOn'
   styleUrls: ['./expression.component.css']
 })
 export class ExpressionComponent implements OnInit {
+  @Input() 
+  childMessage: string;
   VersionList: SelectItem[] = [];
   selectedVersion: Version
   allNames: SelectItem[] = [];
@@ -47,7 +49,9 @@ export class ExpressionComponent implements OnInit {
   logicalOperators: any;
   operators: any;
   isSubmitEnable: any;
+  isDependonDisabled : boolean;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+    this.isDependonDisabled = false;
     this.showExpression = true;
     this.expression = {};
     this.tags = [];
@@ -91,6 +95,17 @@ export class ExpressionComponent implements OnInit {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
+      this.depends = params['depends'];
+      this.dependsOn["uuid"] = params['dependsOnUuid'];
+      this.dependsOn["label"] = params['dependsOnLabel'];
+      if(this.depends != null){
+        this._commonService.getAllLatest(this.depends).subscribe(
+          response => { 
+            this.isDependonDisabled = true;
+            this.OnSuccesgetAllLatest(response, false) },
+          error => console.log('Error :: ' + error)
+        )
+      }
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
@@ -103,19 +118,19 @@ export class ExpressionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
-      if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
-        this.getAllVersionByUuid();
-      }
-      else {
-        this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"] = true
-        this.expressionmetnotmat["metinfo"]["ismetlhsSimple"] = true
-      }
-    })
+    // this.activatedRoute.params.subscribe((params: Params) => {
+    //   this.id = params['id'];
+    //   this.version = params['version'];
+    //   this.mode = params['mode'];
+    //   if (this.mode !== undefined) {
+    //     this.getOneByUuidAndVersion(this.id, this.version);
+    //     this.getAllVersionByUuid();
+    //   }
+    //   else {
+    //     this.expressionmetnotmat["notmetinfo"]["isnotmetlhsSimple"] = true
+    //     this.expressionmetnotmat["metinfo"]["ismetlhsSimple"] = true
+    //   }
+    // })
   }
 
   getOneByUuidAndVersion(id, version) {
@@ -164,7 +179,7 @@ export class ExpressionComponent implements OnInit {
     this.dependsOn = dependOnTemp
     this.breadcrumbDataFrom[2].caption = this.expression.name;
     this.depends = response["dependsOn"]["ref"]["type"];
-    //this.dependsOn.uuid=response["dependsOn"]["ref"]["uuid"];
+    this.dependsOn.uuid=response["dependsOn"]["ref"]["uuid"];
     let expressionjson = {};
     expressionjson["expression"] = response;
     let expressionListArray = [];
@@ -306,8 +321,8 @@ export class ExpressionComponent implements OnInit {
     )
   }
   public goBack() {
-    // this._location.back();
-    this.router.navigate(['app/list/expression']);
+     this._location.back();
+    //this.router.navigate(['app/list/expression']);
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
@@ -350,7 +365,6 @@ export class ExpressionComponent implements OnInit {
     )
   }
   OnSuccesgetAllAttributeBySource(response2, defaultValue, index, type) {
-    //   
     let temp = []
     for (const n in response2) {
       let allname1 = {};

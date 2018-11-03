@@ -24,7 +24,7 @@ export class SharedService {
     return this.http.get(url,{headers: this.headers});
   }
   
-  postCall(apiUrl:string,data:any):Observable<any> {
+  postCall(apiUrl:string,data:any):Observable<any> {debugger
     this.headers = new Headers({'sessionId':this.sessionId});
     this.headers.append('Accept','*/*')
     this.headers.append('content-Type',"application/json");
