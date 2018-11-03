@@ -5,10 +5,6 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import collections
 
 import numpy as np
@@ -231,7 +227,7 @@ def main(argv):
   eval_result = model.evaluate(input_fn=input_test)
 
   #build model
-  builder = tf.saved_model.builder.SavedModelBuilder("/user/hive/warehouse/framework/train/tf_model")
+  builder = tf.saved_model.builder.SavedModelBuilder("/user/hive/warehouse/framework/train/lr_model")
 
   # The evaluation returns a Python dictionary. The "average_loss" key holds the
   # Mean Squared Error (MSE).
@@ -253,8 +249,8 @@ def main(argv):
 
   
   with tf.Session() as sess:  
-	builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING])
-	builder.save(True)
+    builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING])
+    builder.save(True)
 
   # Print the prediction results.
   print("\nPrediction results:")
