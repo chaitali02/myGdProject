@@ -1118,9 +1118,10 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setDeleteMode(true);
 						sqoopInput.setFieldsTerminatedBy(',');
 						sqoopInput.setLinesTerminatedBy('\n');
+						sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
 						if(mappedAttrs != null && areAllAttrs) {
-							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
-							sqoopInput.setTable(tableName);
+//							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+							sqoopInput.setTable(sourceDp.getName());
 						}
 						
 						sqoopInput.setHiveTableName(targetDp.getName());

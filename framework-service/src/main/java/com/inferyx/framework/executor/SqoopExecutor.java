@@ -276,6 +276,8 @@ public class SqoopExecutor {
 			sqoopOptions.setDeleteMode(sqoopInput.isDeleteMode());
 		}
 		
+		sqoopOptions.setConnManagerClassName(sqoopInput.getConnManagerClassName());
+		
 		if (StringUtils.isNotBlank(sqoopInput.getFileLayout() == null ? "" : sqoopInput.getFileLayout().toString())) {
 			switch(sqoopInput.getFileLayout()) {
 			case AvroDataFile : sqoopOptions.setFileLayout(FileLayout.AvroDataFile);
