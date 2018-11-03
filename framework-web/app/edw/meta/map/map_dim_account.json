@@ -594,6 +594,33 @@
       "attrMapId": "20",
       "sourceAttr": {
         "ref": {
+          "type": "dataset",
+          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
+          "version": null,
+          "name": "ds_dim_account"
+        },
+        "value": null,
+        "attrId": "20",
+        "attrName": "customer_id",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+          "version": null,
+          "name": "dim_account"
+        },
+        "value": null,
+        "attrId": "20",
+        "attrName": "customer_id",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "21",
+      "sourceAttr": {
+        "ref": {
           "type": "function",
           "uuid": "9e3de26e-02fb-11e7-93ae-92361f002671",
           "version": null,
@@ -612,13 +639,13 @@
           "name": "dim_account"
         },
         "value": null,
-        "attrId": "20",
+        "attrId": "21",
         "attrName": "load_date",
         "attrType": null
       }
     },
     {
-      "attrMapId": "21",
+      "attrMapId": "22",
       "sourceAttr": {
         "ref": {
           "type": "function",
@@ -639,35 +666,8 @@
           "name": "dim_account"
         },
         "value": null,
-        "attrId": "21",
+        "attrId": "22",
         "attrName": "load_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "22",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "customer_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "customer_id",
         "attrType": null
       }
     }

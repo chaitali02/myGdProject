@@ -283,7 +283,7 @@
       "desc": "load_date",
       "expression": null,
       "key": "",
-      "partition": "Y",
+      "partition": "N",
       "dispName": "load_date",
       "active": "Y",
       "length": null
@@ -295,7 +295,7 @@
       "desc": "load_id",
       "expression": null,
       "key": "",
-      "partition": "Y",
+      "partition": "N",
       "dispName": "load_id",
       "active": "Y",
       "length": null

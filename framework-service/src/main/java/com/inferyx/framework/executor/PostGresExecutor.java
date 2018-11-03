@@ -416,7 +416,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -573,7 +573,7 @@ public class PostGresExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -767,6 +767,13 @@ public class PostGresExecutor implements IExecutor {
 	public List<Double> featureImportance(Object trainedModel, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName,
+			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

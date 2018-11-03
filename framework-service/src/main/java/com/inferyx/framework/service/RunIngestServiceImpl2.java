@@ -905,7 +905,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("targetDir : " + targetDir);
 //						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setDeleteMode(true);
 						if(mappedAttrs != null && areAllAttrs) {
 							sqoopInput.setTable(sourceDp.getName());
@@ -918,6 +918,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 								sqoopInput.setWhereClause(whereClause);
 							}
 						} else if(mappedAttrs != null && !areAllAttrs) {
+							sqoopInput.setTargetDirectory(targetDir);
+							sqoopInput.setWarehouseDirectory(null);
 							sqoopInput.setSqlQuery(query);
 						}
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
@@ -1096,7 +1098,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setDeleteMode(true);
 						sqoopInput.setFieldsTerminatedBy(',');
 						sqoopInput.setLinesTerminatedBy('\n');
@@ -1110,7 +1112,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("this is export block from POSTGRES to other table");
 //						sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
 //						logger.info("sourceDir : " + sourceDir);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						sqoopInput.setDeleteMode(true);
@@ -1134,7 +1136,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						} 
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 						sqoopInput.setDeleteMode(true);
@@ -1154,6 +1156,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							sqoopInput.setWhereClause(whereClause);
 						}
 					} else if(mappedAttrs != null && !areAllAttrs) {
+						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(null);
 						sqoopInput.setSqlQuery(query);
 					}
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
@@ -1272,6 +1276,49 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		}
 		
 		return ingestExec;
+	}
+	
+	/**
+	 * 
+	 * @param sqoopInput
+	 * @param mappedAttrs
+	 * @param areAllAttrs
+	 * @param whereClause
+	 * @param query
+	 */
+	private void setTableOrQuery(SqoopInput sqoopInput, 
+									String[] mappedAttrs, 
+									boolean areAllAttrs, 
+									String whereClause, 
+									String query) {
+		if(mappedAttrs != null && areAllAttrs) {
+			sqoopInput.setAttributeMap(mappedAttrs);
+			if(!whereClause.isEmpty()) {
+				sqoopInput.setWhereClause(whereClause);
+			}
+		} else if(mappedAttrs != null && !areAllAttrs) {
+			sqoopInput.setSqlQuery(query);
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param sqoopInput
+	 * @param incrLastValue
+	 * @param incrColName
+	 */
+	private void setIncremental (SqoopInput sqoopInput, 
+									String incrLastValue, 
+									String incrColName) {
+		if(incrLastValue != null) {
+			sqoopInput.setIncrementalTestColumn(incrColName);
+			if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				sqoopInput.setIncrementalLastValue(incrLastValue);
+			}
+		} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			sqoopInput.setIncrementalTestColumn(incrColName);
+		}
 	}
 
 	/**

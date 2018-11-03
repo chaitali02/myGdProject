@@ -79,7 +79,7 @@ public class BatchSchedulerServiceImpl {
     		case "WEEKLY" : return getNextWeelyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "BIWEEKLY" : return getNextBiWeeklyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "MONTHLY" : return getNextMonthlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
-    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
+    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		case "YEARLY" : return getNextYearlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		default : return null;	
 		}
@@ -124,6 +124,14 @@ public class BatchSchedulerServiceImpl {
 //		}
 	}
 
+	/**
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @param previousRunTime
+	 * @return
+	 * @throws ParseException
+	 */
 	private Date getNextYearlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
 		Date tempCurrDate = new Date();
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
@@ -139,9 +147,23 @@ public class BatchSchedulerServiceImpl {
 //		}
 	}
 
-	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Shall provide run time after a quarter compared to current data
+	 * @param startDate
+	 * @param endDate
+	 * @param previousRunTime
+	 * @return
+	 * @throws ParseException
+	 */
+	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+		Date tempCurrDate = new Date();
+		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
+		Date nextRunTime = DateUtils.addMonths(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 3);
+		if(nextRunTime.compareTo(endDate) <= 0) {
+			return simpleDateFormat.parse(nextRunTime.toString());
+		} else {
+			return null; 
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -183,7 +205,7 @@ public class BatchSchedulerServiceImpl {
 		Date nextWeekEndDate = DateUtils.addDays(nextWeekStartDate, 6);
 		return getBiWeekDate(nextWeekStartDate, nextWeekEndDate, currDate, frequencyDetail);
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	private Date getNextWeelyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
 		

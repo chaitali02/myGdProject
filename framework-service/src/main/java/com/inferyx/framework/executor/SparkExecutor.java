@@ -70,6 +70,9 @@ import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics;
+import org.apache.spark.mllib.evaluation.MulticlassMetrics;
+import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
 import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
@@ -1823,7 +1826,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam ) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -1857,7 +1860,13 @@ public class SparkExecutor<T> implements IExecutor {
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
-			}
+			}	
+
+			for(String col : trainingDf.columns())
+				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+
+			for(String col : validateDf.columns())
+				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
@@ -1867,7 +1876,15 @@ public class SparkExecutor<T> implements IExecutor {
 				} else {
 					trngModel = pipeline.fit(trainingDf);
 				}
-				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);				
+				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
+				trainedDataSet.show(false); 
+				if(trainOtherParam !=null) {
+					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
+					
+				}
+			
+				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 				return trngModel;
 			} catch (Exception e) {
@@ -2167,7 +2184,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2203,6 +2220,11 @@ public class SparkExecutor<T> implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
+			for(String col : trainingDf.columns())
+				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+
+			for(String col : validateDf.columns())
+				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
@@ -2231,7 +2253,14 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new RuntimeException("Training failed.");
 			}
-			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);			
+			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);
+			
+			trainedDataSet.show();
+				if(trainOtherParam !=null) {
+					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
+					
+				}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 //			trainedDataSet.show(false);
 			return cvModel;
@@ -3182,5 +3211,62 @@ public class SparkExecutor<T> implements IExecutor {
 			sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		}
 		return rsHolder;
+	}
+	
+	@Override
+	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
+		String assembledDFSQL = "SELECT * FROM " + tableName;
+		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		trainedDataSet.printSchema();
+		trainedDataSet.show();
+		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet);
+		
+		Matrix confusion = metrics.confusionMatrix();		
+		int size = metrics.confusionMatrix().numCols();
+	    double[] matrixArray = metrics.confusionMatrix().toArray();
+	    double[][] matrix = new double[size][size];
+	    // set values of matrix into a 2D array
+	    for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	              matrix[i][j] = matrixArray[(j * size) + i];
+	            }
+	        }
+	    System.out.println("Confusion matrix: \n" + confusion);
+	    summary.put("confusionMatrix",matrix);
+	    summary.put("accuracy",metrics.accuracy());
+	    
+	    // Stats by labels
+	    for (int i = 0; i < metrics.labels().length; i++) {
+	    	summary.put("precision",metrics.precision(metrics.labels()[i]));
+	      System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
+	        metrics.labels()[i]));
+	      summary.put("accuracy",metrics.recall(metrics.labels()[i]));
+	      System.out.format("Class %f recall = %f\n", metrics.labels()[i], metrics.recall(
+	        metrics.labels()[i]));
+	      summary.put("recall",metrics.accuracy());
+	      System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
+	        metrics.labels()[i]));
+	    }
+
+	    //Weighted stats
+	    System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
+	    System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
+	    System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
+	    System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
+	    
+	    //For Roc
+	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
+		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
+		
+		List<Object> rocList = new ArrayList<>();
+		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
+			rocList.add("("+tuple2._1()+","+tuple2._2()+")");
+		}
+		if(!rocList.isEmpty()) {
+			summary.put("roc", rocList);
+		}
+		// AUPRC
+	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
+		return summary ;
 	}
 }

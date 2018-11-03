@@ -289,6 +289,18 @@
     },
     {
       "attributeId": 20,
+      "name": "customer_id",
+      "type": "string",
+      "desc": "customer_id",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "customer_id",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 21,
       "name": "load_date",
       "type": "string",
       "desc": "load_date",
@@ -300,7 +312,7 @@
       "length": null
     },
     {
-      "attributeId": 21,
+      "attributeId": 22,
       "name": "load_id",
       "type": "integer",
       "desc": "load_id",
@@ -308,18 +320,6 @@
       "key": "",
       "partition": "Y",
       "dispName": "load_id",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 22,
-      "name": "customer_id",
-      "type": "string",
-      "desc": "customer_id",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "customer_id",
       "active": "Y",
       "length": null
     }
