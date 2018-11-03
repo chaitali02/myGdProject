@@ -1326,6 +1326,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	}
     $scope.onChangeSourceAttribute = function (type, index) {
+		debugger
+		$scope.ingestTableArray[index].sourcesimple=null;
 		if (type == "string") {
 			$scope.ingestTableArray[index].isSourceAtributeSimple = true;
 			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
@@ -1333,7 +1335,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.ingestTableArray[index].sourcesimple;
 			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
 			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
-
+            
 		}
 		else if (type == "datapod") {
             if($scope.selectedSourceType =="FILE" ||$scope.selectedSourceType =="STREAM"){
@@ -1609,7 +1611,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                     sourceAttr.value = $scope.ingestTableArray[i].sourcesimple;
                     attributemap.sourceAttr = sourceAttr;
 				}
-				if ($scope.ingestTableArray[i].sourceAttributeType.text == "datapod" && typeof $scope.ingestTableArray[i].sourcesimple != "undefined") {
+				
+				if ($scope.ingestTableArray[i].sourceAttributeType.text == "datapod" &&  $scope.ingestTableArray[i].sourcesimple && typeof $scope.ingestTableArray[i].sourcesimple != "undefined") {
                     sourceref.type = "attribute";
                     sourceAttr.ref = sourceref;
                     sourceAttr.value = $scope.ingestTableArray[i].sourcesimple;
