@@ -229,9 +229,12 @@ public class PythonExecutor implements IExecutor {
 		try {
 			String command = "python3 ".concat(scriptPath);
 			Process p = Runtime.getRuntime().exec(command);
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String ret = in.readLine();
-			System.out.println("value is : "+ret);	
+			BufferedReader bfrIn = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+			while((line = bfrIn.readLine()) != null) {
+			// display each output line form python script
+			System.out.println(line);
+			}				
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
