@@ -112,3 +112,7 @@
 /* End Graph css*/
 
  /*End Metadata*/
+ .glyphicon.spinning {
+  animation: spin 1s infinite linear;
+  -webkit-animation: spin2 1s infinite linear;
+}

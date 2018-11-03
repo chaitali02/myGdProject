@@ -18,7 +18,7 @@
 
   <div class="portlet-body">
     <form class="form-horizontal">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
@@ -31,22 +31,31 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-12">          
-          <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+          <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
-              <div class="col-md-9 col-sm-9 col-xs-6">
+              <div class="col-md- col-sm- col-xs-6">
                   <p-dropdown [options]="allNamesTypes"
                    [(ngModel)]="select" 
                    name="type" 
                    [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                   [filter]="true" 
                    placeholder="Select"
-                    (onChange)="ChangeTableData()">
+                    >
                 </p-dropdown>
 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6">Registered</label>
+              <div class="btn-group">
+                <ui-switch (change)="onChange($event)" [(ngModel)]="registered" name="registered"
+                  [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
               </div>
             </div>
           </div>
@@ -58,7 +67,7 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                <input type="submit" class="btn btn-success" value="Register" name="submit" [disabled]="isSubmitEnable" (click)="submitRegisterSource()">
+                <input type="submit" class="btn btn-success" value="Search" name="Search"  (click)="search()">
               </div>
             </div>
           </div>
@@ -72,11 +81,12 @@
     <div class="caption">
       <i class="fa fa-gift"></i> Details
     </div>
-    <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" data-original-title=""  title="" >
-        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"click="refreshTableData"></i>
-      </a>
-      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+    <div class="actions">
+      <button type="submit" class="btn btn-default btn-sm" [disabled]="isRSDisable" style="color:white;" (click)="submitRegisterSource()"> 
+        <span *ngIf="searchButtonText == 'Registering'"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+        <span *ngIf="searchButtonText == 'Register'"><i class="fa fa-plus"></i></span>
+        {{ searchButtonText }}
+      </button>
     </div>
   </div>
   <div class="portlet-body form">
@@ -107,7 +117,11 @@
               <td style="width:5%; Vertical-align: middle;">{{tabledata.name}}</td>  
               <td></td>
               <td style="width:5%; text-align: center;Vertical-align: middle;">{{tabledata.registeredOn}}</td> 
-              <td style="width:5%;text-align: center; Vertical-align: middle;">{{tabledata.status}}</td>                 
+              <td style="width:5%;text-align: center; Vertical-align: middle;">
+                <i *ngIf="tabledata.status=='Registering'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i>
+                
+                <span *ngIf="tabledata.status!='Registering'">{{tabledata.status}}</span>
+              </td>                 
             </tr> 
           </tbody> 
         </table>

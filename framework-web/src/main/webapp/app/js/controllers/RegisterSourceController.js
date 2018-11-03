@@ -240,41 +240,41 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       count = count + 1;
     }
     console.log(JSON.stringify(registerSourceArray))
-    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
-    var onSuccessGetcreateAndLoad = function (response) {
-     // console.log(JSON.stringify(response))
-      $scope.searchButtonText = "Register";
-      $scope.dataLoading = false;
-      $scope.selectedAllRow = false;
-      for (var i = 0; i < response.length; i++) {
-        if(!$scope.searchtext){
-          var id = response[i].id - 1
-          $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
-          $scope.gridOptions.data[id].desc = response[i].desc;
-          $scope.gridOptions.data[id].status = response[i].status;
-          $scope.gridOptions.data[id].selected= false;
-          $scope.gridOptions.data[id].isDisabled=true;
-          $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
-        }
-        else{
-          var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
-          if(index!=-1){
-            $scope.gridOptions.data[index].registeredOn = response[i].registeredOn;
-            $scope.gridOptions.data[index].desc = response[i].desc;
-            $scope.gridOptions.data[index].status = response[i].status;
-            $scope.gridOptions.data[index].selected= false;
-            $scope.gridOptions.data[index].isDisabled=true;
-            $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
-        }
-        }
-        //$scope.gridOptions.data.splice(i,1);
-       // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
-      }
-      notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = 'Datapod Registered Successfully'
-      $scope.$emit('notify', notify);
-    }
+    // RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
+    // var onSuccessGetcreateAndLoad = function (response) {
+    //  // console.log(JSON.stringify(response))
+    //   $scope.searchButtonText = "Register";
+    //   $scope.dataLoading = false;
+    //   $scope.selectedAllRow = false;
+    //   for (var i = 0; i < response.length; i++) {
+    //     if(!$scope.searchtext){
+    //       var id = response[i].id - 1
+    //       $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
+    //       $scope.gridOptions.data[id].desc = response[i].desc;
+    //       $scope.gridOptions.data[id].status = response[i].status;
+    //       $scope.gridOptions.data[id].selected= false;
+    //       $scope.gridOptions.data[id].isDisabled=true;
+    //       $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+    //     }
+    //     else{
+    //       var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+    //       if(index!=-1){
+    //         $scope.gridOptions.data[index].registeredOn = response[i].registeredOn;
+    //         $scope.gridOptions.data[index].desc = response[i].desc;
+    //         $scope.gridOptions.data[index].status = response[i].status;
+    //         $scope.gridOptions.data[index].selected= false;
+    //         $scope.gridOptions.data[index].isDisabled=true;
+    //         $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
+    //     }
+    //     }
+    //     //$scope.gridOptions.data.splice(i,1);
+    //    // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+    //   }
+    //   notify.type = 'success',
+    //   notify.title = 'Success',
+    //   notify.content = 'Datapod Registered Successfully'
+    //   $scope.$emit('notify', notify);
+    // }
   }
   
 

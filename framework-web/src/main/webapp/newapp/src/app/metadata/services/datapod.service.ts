@@ -62,7 +62,14 @@ export class DatapodService{
       })
       .catch(this.handleError);
     }
-  
+    getDatasourceByApp(type): Observable<any[]> {
+        let url ="metadata/getDatasourceByApp?action=view&type=application&uuid="+type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
 
 
 }

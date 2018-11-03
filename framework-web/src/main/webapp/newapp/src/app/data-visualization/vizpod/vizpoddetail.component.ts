@@ -40,6 +40,7 @@ export class VizpodDetailComponent {
     version: any;
     uuid: any;
     vizpodTypes: any;
+    limit: any;
     filterAttributeTags: any;
     dropdownList: any[];
     dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
@@ -164,7 +165,7 @@ export class VizpodDetailComponent {
         )
     }
 
-   OnSuccesgetAllAttributeBySource(response) {
+    OnSuccesgetAllAttributeBySource(response) {
         let attribute = []
         for (const n in response) {
             let allname = {};
@@ -183,9 +184,9 @@ export class VizpodDetailComponent {
         this.getAllExpression();
         this.dropdownList = attribute;
     }
-  
 
-getAllExpression() {
+
+    getAllExpression() {
         this._commonService.getExpressionByType(this.sourcedata.uuid, this.source).subscribe(
             response => { this.onSuccessExpression(response) },
             error => console.log('Error :: ' + error)
@@ -268,7 +269,7 @@ getAllExpression() {
         this.selectedVersion = version;
         this.vizpoddata.published = response["published"] == 'Y' ? true : false
         this.vizpoddata.active = response["active"] == 'Y' ? true : false;
-
+        this.vizpoddata.limit = response.limit
         var tags = [];
         if (response.tags != null) {
             for (var i = 0; i < response.tags.length; i++) {
@@ -302,7 +303,7 @@ getAllExpression() {
         }
 
         this.vizpoddata.detailAttr = tmp;
- }
+    }
 
     indexOfByMultiplaValue(array, data) {
         let result = -1;
@@ -521,13 +522,13 @@ getAllExpression() {
     }
     enableEdit(uuid, version) {
         this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'false']);
-        this.dropdownSettings.disabled =true
-         
+        this.dropdownSettings.disabled = true
+
     }
     showview(uuid, version) {
         this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'true']);
-        this.dropdownSettings.disabled =false;
-        
+        this.dropdownSettings.disabled = false;
+
     }
 
 }
