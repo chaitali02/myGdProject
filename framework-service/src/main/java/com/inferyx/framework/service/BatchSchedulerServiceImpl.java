@@ -79,7 +79,7 @@ public class BatchSchedulerServiceImpl {
     		case "WEEKLY" : return getNextWeelyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "BIWEEKLY" : return getNextBiWeeklyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "MONTHLY" : return getNextMonthlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
-    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
+    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "YEARLY" : return getNextYearlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		default : return null;	
 		}
@@ -155,12 +155,50 @@ public class BatchSchedulerServiceImpl {
 	 * @return
 	 * @throws ParseException
 	 */
-	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
 		Date tempCurrDate = new Date();
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
-		Date nextRunTime = DateUtils.addMonths(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 3);
-		if(nextRunTime.compareTo(endDate) <= 0) {
-			return simpleDateFormat.parse(nextRunTime.toString());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currDate);
+		
+		int month = cal.get(Calendar.MONTH);
+		System.out.println("Month now : " + month);
+	
+		System.out.println("cal.getActualMinimum(Calendar.MONTH) : " + cal.getActualMinimum(Calendar.MONTH));
+		cal.set(Calendar.MONTH, cal.getActualMinimum(Calendar.MONTH));
+		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
+		Date firstDayOfTheYear = cal.getTime();
+		System.out.println("First day of the year : " + firstDayOfTheYear);
+		firstDayOfTheYear.setHours(startDate.getHours());
+		firstDayOfTheYear.setMinutes(startDate.getMinutes());
+		firstDayOfTheYear.setSeconds(startDate.getSeconds());
+		
+		cal.set(Calendar.MONTH, cal.getActualMaximum(Calendar.MONTH));
+		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+		Date lastDayOfTheYear = cal.getTime();
+		System.out.println("Last day of the year : " + lastDayOfTheYear);
+		lastDayOfTheYear.setHours(startDate.getHours());
+		lastDayOfTheYear.setMinutes(startDate.getMinutes());
+		lastDayOfTheYear.setSeconds(startDate.getSeconds());
+		
+		Date nextRunTime = null;
+		for(String quarter : frequencyDetail) {
+			Date date = DateUtils.addMonths(firstDayOfTheYear, 3*(Integer.parseInt(quarter)-1));
+			Date lastDayOfQuarter = DateUtils.addMonths(lastDayOfTheYear, -(12-3*(Integer.parseInt(quarter))));
+			System.out.println("First day of the quarter : " + date);
+			System.out.println("Last day of the quarter : " + lastDayOfQuarter);
+			System.out.println("End date : " + endDate);
+			if(date.compareTo(currDate) >= 0) {
+				nextRunTime = date;
+				break;
+			}
+		}		
+		
+		System.out.println("Next Run Time : " + nextRunTime);
+		
+		if(nextRunTime!=null && nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
 		} else {
 			return null; 
 		}
