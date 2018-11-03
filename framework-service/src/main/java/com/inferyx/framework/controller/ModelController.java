@@ -185,7 +185,7 @@ public class ModelController {
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return new ObjectMapper().writeValueAsString(
-				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion, null));
+				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion));
 	}
 
 	/********************** UNUSED **********************/

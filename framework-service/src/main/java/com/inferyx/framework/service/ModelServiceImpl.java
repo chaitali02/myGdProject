@@ -183,6 +183,8 @@ public class ModelServiceImpl {
 	private MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private PythonExecutor pythonExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -795,20 +797,25 @@ public class ModelServiceImpl {
 		return fileName;
 	}
 
-	public boolean executeScript(String type, String scriptName, String modelExecUuid, String modelExecVersion, String object) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Model model = (Model) commonServiceImpl.getDomainFromDomainExec(MetaType.modelExec.toString(), modelExecUuid, modelExecVersion);
-		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + modelExecUuid + "_" + modelExecVersion + "_"+ model.getVersion()+".log";
+	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
+//		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
 		String scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/"+scriptName;
-		
-		IExecutor exec = execFactory.getExecutor(type);
-		if(exec instanceof PythonExecutor) {
-			PythonExecutor pythonExecutor = (PythonExecutor) exec;
-			pythonExecutor.setLogPath(logPath);
-		} else if(exec instanceof RExecutor) {
-			RExecutor rExecutor = (RExecutor) exec;
-			rExecutor.setLogPath(logPath);
-		}		
-		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
+//		
+//		IExecutor exec = execFactory.getExecutor(type);
+//		if(exec instanceof PythonExecutor) {
+//			PythonExecutor pythonExecutor = (PythonExecutor) exec;
+//			pythonExecutor.setLogPath(logPath);
+//		} else if(exec instanceof RExecutor) {
+//			RExecutor rExecutor = (RExecutor) exec;
+//			rExecutor.setLogPath(logPath);
+//		}		
+//		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
+		try {
+			return pythonExecutor.executTFScript(scriptPath, commonServiceImpl.getApp().getUuid());
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException {
@@ -2387,33 +2394,40 @@ public class ModelServiceImpl {
 			List<ParamMap> paramMapList = new ArrayList<>();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-			Algorithm algorithm= null;
-			if (model.getDependsOn().getRef().getVersion() != null)
-				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-			else 
-				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-				
-			String algoClassName = algorithm.getTrainClass();
-			Object algoClass = Class.forName(algoClassName).newInstance();
 			
-			if (train.getUseHyperParams().equalsIgnoreCase("N") 
-					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					if(trainExec == null)
-						trainExec = create(train, model, execParams, paramMap, trainExec);
-					Thread.sleep(1000); // Should be parameterized in a class
-					train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
-					trainExec = null;
-				}
-			} else {
+			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
-				train(train, model, trainExec, execParams, null, runMode,algoClass);
-			}
+				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion());
+			} else {
+				Algorithm algorithm= null;
+				if (model.getDependsOn().getRef().getVersion() != null)
+					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+				else 
+					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+					
+				String algoClassName = algorithm.getTrainClass();
+				Object algoClass = Class.forName(algoClassName).newInstance();
+				
+				if (train.getUseHyperParams().equalsIgnoreCase("N") 
+						&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
+						&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
+				}
+				if (paramMapList.size() > 0) {
+					for (ParamMap paramMap : paramMapList) {
+						if(trainExec == null)
+							trainExec = create(train, model, execParams, paramMap, trainExec);
+						Thread.sleep(1000); // Should be parameterized in a class
+						train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+						trainExec = null;
+					}
+				} else {
+					if(trainExec == null)
+						trainExec = create(train, model, execParams, null, trainExec);
+					train(train, model, trainExec, execParams, null, runMode,algoClass);
+				}
+			}			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
