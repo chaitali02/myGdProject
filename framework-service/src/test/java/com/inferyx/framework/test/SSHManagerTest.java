@@ -12,7 +12,7 @@ public void testSendCommand()
 {
     System.out.println("sendCommand");
 
-    String command = "python3 /home/rohini/Desktop/1c0c6bdc-bc9f-4755-a4a2-47ccde5b6193_1540965064.py";
+    String command = "python3 /home/rohini/Desktop/train_linear_regression_model_tensorflow.py";
    
 //    String command = "python3\n"
 //    				+"import subprocess\n" 
