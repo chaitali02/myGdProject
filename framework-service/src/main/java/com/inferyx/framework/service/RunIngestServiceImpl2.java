@@ -1084,6 +1084,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							tableName = targetDp.getName();
 						}
 						sqoopInput.setTable(tableName);
+						if (targetDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+							sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
+						}
 //						sqoopInput.setHiveTableName(sourceDp.getName());
 //						sqoopInput.setOverwriteHiveTable("Y");
 //						sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
