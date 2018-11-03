@@ -10,10 +10,12 @@
  *******************************************************************************/
 package com.inferyx.framework.executor;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -221,6 +223,23 @@ public class PythonExecutor implements IExecutor {
 			}
 		}
 		return isSuccessful;
+	}
+	
+	public boolean executTFScript(String scriptPath, String clientContext) throws Exception {
+		try {
+			String command = "python3 ".concat(scriptPath);
+			Process p = Runtime.getRuntime().exec(command);
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String ret = in.readLine();
+			System.out.println("value is : "+ret);	
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

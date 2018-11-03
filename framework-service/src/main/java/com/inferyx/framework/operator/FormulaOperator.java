@@ -65,7 +65,7 @@ public class FormulaOperator {
 		StringBuilder builder = new StringBuilder();
 		Datasource source = commonServiceImpl.getDatasourceByApp();
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
-			builder.append("");
+			builder.append(" ");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {

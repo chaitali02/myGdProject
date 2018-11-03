@@ -637,6 +637,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
     var onSuccesGetParamListByTrain = function (response) {
       $scope.allParamList=response;
+      if(response.length == 0){
+      $scope.isParamListRquired=false;
+      }
     }
   }
   
