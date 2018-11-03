@@ -1567,24 +1567,26 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListByTrain(String trainUuid, String trainVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
-		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
+
 		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
-		
 		List<ParamListHolder> plHolderList = new ArrayList<>();
-		MetaIdentifier plMI = null;
-		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
-			plMI = algorithm.getParamListWH().getRef();
-		} else {
-			plMI = algorithm.getParamListWoH().getRef();			
-		}
-		
-		ParamListHolder plHolder = new ParamListHolder();
-		plHolder.setRef(plMI);
-		plHolderList.add(plHolder);
-		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
-		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
-			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
-			plHolderList.addAll(persistPLTemplateChilds(childs));
+		if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
+			MetaIdentifier plMI = null;
+			if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
+				plMI = algorithm.getParamListWH().getRef();
+			} else {
+				plMI = algorithm.getParamListWoH().getRef();			
+			}
+			
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
 		}
 		
 		return plHolderList;
