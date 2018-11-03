@@ -1,0 +1,66 @@
+{
+  "id": "5bdd3d85275052145b8000c6",
+  "uuid": "821dd874-c720-4f91-8557-ef3fd5618eed",
+  "version": "1541225861",
+  "name": "test_train",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Nov 03 11:47:41 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "606527f4-be8f-465b-82e3-10f17c700cd4",
+      "version": null,
+      "name": "model_train_linear_regression_python_TF"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "e79c813c-40da-4b7d-9b5c-4012ae68bf2b",
+      "version": null,
+      "name": "glass"
+    },
+    "value": null
+  },
+  "featureAttrMap": [],
+  "trainPercent": 70,
+  "valPercent": 30,
+  "labelInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "e79c813c-40da-4b7d-9b5c-4012ae68bf2b",
+      "version": null,
+      "name": "glass"
+    },
+    "value": null,
+    "attrId": "0",
+    "attrName": "RI",
+    "attrType": null
+  },
+  "useHyperParams": "N",
+  "featureImportance": null
+}
