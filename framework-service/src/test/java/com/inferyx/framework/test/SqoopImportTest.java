@@ -39,7 +39,7 @@ public class SqoopImportTest {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void importTest() throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		System.out.println("Running importTest ...");
@@ -54,7 +54,7 @@ public class SqoopImportTest {
 		datasource.setType("MYSQL");
 		input.setSourceDs(datasource);
 		input.setTable("customer");
-		input.setTargetDirectory("/user/cloudera/ingest/raw/customers");
+		input.setWarehouseDirectory("/user/cloudera/ingest/raw/customers");
 		input.setImportIntended(true);
 		sqoopExecutor.execute(input);
 //		input.setso

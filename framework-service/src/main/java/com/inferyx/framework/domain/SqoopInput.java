@@ -11,6 +11,7 @@ public class SqoopInput {
 	private Datasource sourceDs;
 	private Datasource targetDs;
 	private String sourceDirectory;
+	private String warehouseDirectory;
 	private String targetDirectory;
 	private boolean hiveImport;
 	private String partitionKey;
@@ -259,6 +260,20 @@ public class SqoopInput {
 	 */
 	public void setSourceDirectory(String sourceDirectory) {
 		this.sourceDirectory = sourceDirectory;
+	}
+
+	/**
+	 * @return the warehouseDirectory
+	 */
+	public String getWarehouseDirectory() {
+		return warehouseDirectory;
+	}
+
+	/**
+	 * @param warehouseDirectory the warehouseDirectory to set
+	 */
+	public void setWarehouseDirectory(String warehouseDirectory) {
+		this.warehouseDirectory = warehouseDirectory;
 	}
 
 	/**
@@ -559,7 +574,7 @@ public class SqoopInput {
 	@Override
 	public String toString() {
 		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
-				+ sourceDirectory + ", targetDirectory=" + targetDirectory + ", hiveImport=" + hiveImport
+				+ sourceDirectory + ", warehouseDirectory=" + warehouseDirectory + ", hiveImport=" + hiveImport
 				+ ", partitionKey=" + partitionKey + ", partitionValue=" + partitionValue + ", whereClause="
 				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn=" + checkColumn
 				+ ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode=" + incrementalMode
@@ -579,7 +594,7 @@ public class SqoopInput {
 //	@Override
 //	public String toString() {
 //		return "SqoopInput [table=" + table + ", sourceDs=" + sourceDs + ", targetDs=" + targetDs + ", sourceDirectory="
-//				+ sourceDirectory + ", targetDirectory=" + targetDirectory + ", hiveImport=" + hiveImport
+//				+ sourceDirectory + ", warehouseDirectory=" + warehouseDirectory + ", hiveImport=" + hiveImport
 //				+ ", partitionKey=" + partitionKey + ", partitionValue=" + partitionValue + ", whereClause="
 //				+ whereClause + ", compressionCodec=" + compressionCodec + ", checkColumn=" + checkColumn
 //				+ ", lastVale=" + lastVale + ", appendMode=" + appendMode + ", incrementalMode=" + incrementalMode

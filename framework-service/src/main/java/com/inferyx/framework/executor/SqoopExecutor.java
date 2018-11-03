@@ -193,9 +193,8 @@ public class SqoopExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getTable())) {
 			sqoopOptions.setTableName(sqoopInput.getTable());
 		}
-		if (StringUtils.isNotBlank(sqoopInput.getTargetDirectory())) {
-			sqoopOptions.setWarehouseDir(sqoopInput.getTargetDirectory());
-			sqoopOptions.setTargetDir(sqoopInput.getTargetDirectory());
+		if (StringUtils.isNotBlank(sqoopInput.getWarehouseDirectory())) {
+			sqoopOptions.setWarehouseDir(sqoopInput.getWarehouseDirectory());
 		}
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionKey())) {
 			sqoopOptions.setHivePartitionKey(sqoopInput.getPartitionKey());
