@@ -12,6 +12,5 @@ CREATE TABLE FACT_TRANSACTION_JOURNAL
      reciever_country           VARCHAR2(50), 
      amount_usd                 DECIMAL(10, 2), 
      LOAD_DATE                  VARCHAR2(10), 
-     LOAD_ID                    INTEGER, 
-     CONSTRAINT FACT_TRANSACTION_JOURNAL_PK PRIMARY KEY (TRANSACTION_ID) 
+     LOAD_ID                    INTEGER
   ); 

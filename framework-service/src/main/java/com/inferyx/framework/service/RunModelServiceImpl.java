@@ -830,7 +830,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
 					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
 				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
-						trainExec.getVersion(), null);
+						trainExec.getVersion());
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 

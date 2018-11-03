@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.inferyx.framework.test;
 
 import java.io.IOException;
@@ -17,10 +17,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.SqoopInput;
 import com.inferyx.framework.executor.SqoopExecutor;
 
-/**
+*//**
  * @author joy
  *
- */
+ *//*
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath*:/framework-batch.xml"})
@@ -32,9 +32,9 @@ public class SqoopImportTest {
 	private static final String username = "root";
 	private static final String password = "root";
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	public SqoopImportTest() {
 		// TODO Auto-generated constructor stub
 	}
@@ -61,3 +61,4 @@ public class SqoopImportTest {
 	}
 
 }
+*/
