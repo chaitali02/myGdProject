@@ -360,12 +360,27 @@ public class ModelController {
 		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
 	}	
 	
-	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
-	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+//	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
+//	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+//	}
+	
+	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
+	public boolean setStatus(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("status") String status,
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) {
+		try {
+			modelExecServiceImpl.setStatus(type,uuid,version,status);			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	@RequestMapping(value = "/train/restart",  method = RequestMethod.GET)
@@ -379,21 +394,21 @@ public class ModelController {
 		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
 	}
 	
-	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
-	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
-	}
-	
-	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
-	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
-						  @RequestParam(value = "type", required = false) String type,
-						  @RequestParam(value = "action", required = false) String action) {
-		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
-	}
+//	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
+//	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
+//	}
+//	
+//	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
+//	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+//						  @RequestParam(value = "version") String trainExecVersion,
+//						  @RequestParam(value = "type", required = false) String type,
+//						  @RequestParam(value = "action", required = false) String action) {
+//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
+//	}
 	
 	@RequestMapping(value = "/predict/restart",  method = RequestMethod.GET)
 	public void restartPredict(@RequestParam(value = "uuid") String trainExecUuid,

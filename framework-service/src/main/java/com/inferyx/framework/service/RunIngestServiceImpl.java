@@ -789,7 +789,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
 						sqoopInput.setExportDir(targetDir);
 //						sqoopInput.setSourceDirectory(sourceDir);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
@@ -950,7 +950,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
@@ -961,7 +961,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						logger.info("this is export block from POSTGRES to other table");
 //						sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
 //						logger.info("sourceDir : " + sourceDir);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
 						tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
@@ -978,7 +978,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setTable(sourceDp.getName());
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
-						sqoopInput.setTargetDirectory(targetDir);
+						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
