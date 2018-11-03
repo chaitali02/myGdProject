@@ -196,6 +196,9 @@ public class SqoopExecutor {
 		if (StringUtils.isNotBlank(sqoopInput.getWarehouseDirectory())) {
 			sqoopOptions.setWarehouseDir(sqoopInput.getWarehouseDirectory());
 		}
+		if (StringUtils.isNotBlank(sqoopInput.getTargetDirectory())) {
+			sqoopOptions.setTargetDir(sqoopInput.getTargetDirectory());
+		}
 		if (StringUtils.isNotBlank(sqoopInput.getPartitionKey())) {
 			sqoopOptions.setHivePartitionKey(sqoopInput.getPartitionKey());
 		}
@@ -364,6 +367,7 @@ public class SqoopExecutor {
 			} else {
 				sqoopOptions = (SqoopOptions) sqoopConnector.getConnection(sqoopInput.getTargetDs(), sqoopOptions).getConObject();
 			}
+			logger.info("SqoopInput before execution : " + sqoopInput);
 			setSqoopOptions(sqoopOptions, sqoopInput, inputParams);
 		}
 		int res;
