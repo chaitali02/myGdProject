@@ -2,7 +2,6 @@
  **/
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
-
 MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	if ($stateParams.mode == 'true') {
@@ -40,7 +39,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.isAdd = true;
 		$scope.isDragable = "true";
 	}
-	$scope.continueCount=1;
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -136,7 +134,25 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		});
 	};
 	$scope.getLovByType();
-	
+	// $scope.onOverCallBackRow=function(event,ui,index){
+	// 	 console.log($scope.indexDragg)
+	// 	console.log(index)
+	// 		var data=ui.draggable.scope().tabledata
+	// 		if(index == 0 ){
+	// 			var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
+	// 			$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
+	// 			$scope.filterTableArray[index].logicalOperator=temp;
+	// 		}
+	// 		// else if($scope.indexDragg == 0){
+	// 		// 	var temp=$scope.filterTableArray[index].logicalOperator;
+	// 		// 	$scope.filterTableArray[index].logicalOperator=" "
+	// 		// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
+	// 		// }
+	// }
+	// $scope.onDragCallBackRow=function(event,ui,index){
+	// 	$scope.indexDragg=null
+	// 	$scope.indexDragg=index.index;
+	// }
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -167,26 +183,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 		return style;
 	}
-
-	$scope.countContinue = function () {
-	    if($scope.continueCount == 3){
-			if($scope.myform3.$dirty ==true){
-				return true;
-			}
-		}
-		$scope.continueCount = $scope.continueCount + 1;
-        if ($scope.continueCount >= 4) {
-            $scope.isSubmitShow = true;
-        } else {
-            $scope.isSubmitShow = false;
-        }
-    }
-
-    $scope.countBack = function () {
-        $scope.continueCount = $scope.continueCount - 1;
-        $scope.isSubmitShow = false;
-    }
-    
 
 	$scope.routeForFormula = function (data, index) {
 		if (data.uuid == null) {
@@ -319,7 +315,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray = null;
 			$scope.filterTableArray = null;
 			$scope.addAttribute();
-		//	$scope.addRowFilter();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -983,39 +979,31 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.isDublication = function (arr, field, index, name) {
-		
+
 		var res = -1;
 		for (var i = 0; i < arr.length - 1; i++) {
 			if (arr[i][field] == arr[index][field] && i != index) {
-			    $scope.myform3[name].$invalid = true;
+				$scope.myform[name].$invalid = true;
 				res = i;
 				break
 			} else {
-				$scope.myform3[name].$invalid = false;
-				
+				$scope.myform[name].$invalid = false;
 			}
 		}
 		return res;
 	}
 
 	$scope.onChangeSourceName = function (index) {
-		
+
 		$scope.attributeTableArray[index].isSourceName = true;
 		if ($scope.attributeTableArray[index].name) {
 			var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
-			
 			if (res != -1) {
 				$scope.isDuplication = true;
-				$scope.myform3.$dirty=true;
-				
-			
 			} else {
 				$scope.isDuplication = false;
-				$scope.myform3.$dirty=false;
-				
 			}
 		}
-		console.log($scope.myform3)
 
 	}
 
@@ -1119,7 +1107,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 
-	$scope.submit = function () {
+	$scope.submitDataset = function () {
 		var upd_tag = "N"
 		delete $sessionStorage.datasetjosn;
 		delete $sessionStorage.index
@@ -1128,9 +1116,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.datasetHasChanged = true;
-		$scope.myform3.$dirty = false;
-		$scope.myform2.$dirty = false;
-		$scope.myform1.$dirty = false;
+		$scope.myform.$dirty = false;
 
 		var dataSetJson = {}
 		dataSetJson.uuid = $scope.dataset.uuid
@@ -1163,10 +1149,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 		//filterInfo
 		var filterInfoArray = [];
-		if ( $scope.filterTableArray && $scope.filterTableArray.length > 0) {
+		if ($scope.filterTableArray.length > 0) {
 			for (var i = 0; i < $scope.filterTableArray.length; i++) {
 				var filterInfo = {};
-				var operand  = []
+				var operand = []
 				var lhsoperand = {}
 				var lhsref = {}
 				var rhsoperand = {}

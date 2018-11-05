@@ -1326,7 +1326,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	}
     $scope.onChangeSourceAttribute = function (type, index) {
-		debugger
+		
 		$scope.ingestTableArray[index].sourcesimple=null;
 		if (type == "string") {
 			$scope.ingestTableArray[index].isSourceAtributeSimple = true;
