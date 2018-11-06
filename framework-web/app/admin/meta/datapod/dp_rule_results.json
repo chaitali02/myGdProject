@@ -12,7 +12,7 @@
     "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : null,
     "active" : "Y",
-  "locked" : "N",
+    "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {
@@ -51,8 +51,7 @@
             "partition" : "N",
             "dispName" : "DatapodUUID",
             "active" : "Y",
-  "locked" : "N",
-            "expr" : null
+              "expr" : null
         }, 
         {
             "attributeId" : 1,
@@ -63,8 +62,7 @@
             "partition" : "N",
             "dispName" : "DatapodVersion",
             "active" : "Y",
-  "locked" : "N",
-            "expr" : null
+              "expr" : null
         }, 
         {
             "attributeId" : 2,
@@ -75,7 +73,6 @@
             "partition" : "N",
             "dispName" : "DatapodName",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -87,7 +84,6 @@
             "partition" : "N",
             "dispName" : "AttributeId",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -99,7 +95,6 @@
             "partition" : "N",
             "dispName" : "AttributeName",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -111,7 +106,6 @@
             "partition" : "N",
             "dispName" : "numRows",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -123,7 +117,6 @@
             "partition" : "N",
             "dispName" : "minVal",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -135,7 +128,6 @@
             "partition" : "N",
             "dispName" : "maxVal",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -147,7 +139,6 @@
             "partition" : "N",
             "dispName" : "avgVal",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -159,7 +150,6 @@
             "partition" : "N",
             "dispName" : "medianVal",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -171,7 +161,6 @@
             "partition" : "N",
             "dispName" : "stdDev",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -183,7 +172,6 @@
             "partition" : "N",
             "dispName" : "numDistinct",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -195,7 +183,6 @@
             "partition" : "N",
             "dispName" : "perDistinct",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -207,7 +194,6 @@
             "partition" : "N",
             "dispName" : "numNull",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -219,7 +205,6 @@
             "partition" : "N",
             "dispName" : "perNull",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -231,7 +216,6 @@
             "partition" : "N",
             "dispName" : "sixSigma",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }, 
         {
@@ -243,7 +227,6 @@
             "partition" : "N",
             "dispName" : "version",
             "active" : "Y",
-  "locked" : "N",
             "expr" : null
         }
     ]

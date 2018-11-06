@@ -127,7 +127,6 @@
                     "xPos" : 360.0,
                     "yPos" : 130.0,
                     "active" : "Y",
-  "locked" : "N",
                     "statusList" : []
                 }, 
                 {
@@ -220,7 +219,6 @@
                     "xPos" : 360.0,
                     "yPos" : 390.0,
                     "active" : "Y",
-  "locked" : "N",
                     "statusList" : []
                 }, 
                 {
@@ -372,7 +370,6 @@
                     "xPos" : 470.0,
                     "yPos" : 250.0,
                     "active" : "Y",
-  "locked" : "N",
                     "statusList" : []
                 }
             ],
@@ -380,7 +377,6 @@
             "xPos" : 190.0,
             "yPos" : 250.0,
             "active" : "Y",
-  "locked" : "N",
             "statusList" : []
         }
     ],

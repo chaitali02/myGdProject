@@ -63,7 +63,6 @@
           "xPos": 600,
           "yPos": 50,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -92,7 +91,6 @@
           "xPos": 820,
           "yPos": 70,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -121,7 +119,6 @@
           "xPos": 980,
           "yPos": 130,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -150,7 +147,6 @@
           "xPos": 1090,
           "yPos": 310,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -179,7 +175,6 @@
           "xPos": 1090,
           "yPos": 430,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -208,7 +203,6 @@
           "xPos": 970,
           "yPos": 530,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         },
         {
@@ -237,7 +231,6 @@
           "xPos": 610,
           "yPos": 620,
           "active" : "Y",
-  "locked" : "N",
           "statusList": []
         }
       ],
@@ -245,7 +238,6 @@
       "xPos": 420,
       "yPos": 320,
       "active" : "Y",
-  "locked" : "N",
       "statusList": []
     }
   ],

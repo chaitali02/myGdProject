@@ -49,8 +49,7 @@
       "partition": "N",
       "dispName": "id",
       "active" : "Y",
-  "locked" : "N",
-      "expr": null
+       "expr":   null
     },
     {
       "attributeId": 1,
@@ -61,8 +60,7 @@
       "partition": "N",
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
-      "expr": null
+       "expr":   null
     },
     {
       "attributeId": 2,
@@ -73,8 +71,7 @@
       "partition": "N",
       "dispName": "interest_rate",
       "active" : "Y",
-  "locked" : "N",
-      "expr": null
+       "expr":   null
     },
     {
       "attributeId": 3,
@@ -85,8 +82,7 @@
       "partition": "N",
       "dispName": "account_type_id",
       "active" : "Y",
-  "locked" : "N",
-      "expr": null
+       "expr":   null
     },
     {
       "attributeId": 4,
@@ -97,8 +93,7 @@
       "partition": "N",
       "dispName": "account_status_id",
       "active" : "Y",
-  "locked" : "N",
-      "expr": null
+       "expr":   null
     }
   ]
 }

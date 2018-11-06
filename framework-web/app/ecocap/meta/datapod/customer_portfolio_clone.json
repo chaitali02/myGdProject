@@ -41,7 +41,6 @@
       "partition": null,
       "dispName": "cust_id",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -53,7 +52,6 @@
       "partition": null,
       "dispName": "industry",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -65,7 +63,6 @@
       "partition": null,
       "dispName": "pd",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -77,7 +74,6 @@
       "partition": null,
       "dispName": "exposure",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -89,7 +85,6 @@
       "partition": null,
       "dispName": "lgd",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -101,7 +96,6 @@
       "partition": null,
       "dispName": "lgd_var",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -113,7 +107,6 @@
       "partition": null,
       "dispName": "correlation",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -125,7 +118,6 @@
       "partition": null,
       "dispName": "sqrt_correlation",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -137,7 +129,6 @@
       "partition": null,
       "dispName": "def_point",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -149,7 +140,6 @@
       "partition": null,
       "dispName": "reporting_date",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -161,7 +151,6 @@
       "partition": null,
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     }
   ]

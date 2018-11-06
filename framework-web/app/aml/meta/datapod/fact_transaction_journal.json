@@ -49,8 +49,7 @@
       "partition": "N",
       "dispName": "transaction_id",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+           "expr" : null
     },
     {
       "attributeId": 1,
@@ -62,8 +61,7 @@
       "partition": "N",
       "dispName": "direction",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 2,
@@ -75,8 +73,7 @@
       "partition": "N",
       "dispName": "account_id",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 3,
@@ -88,8 +85,7 @@
       "partition": "N",
       "dispName": "customer_id",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 4,
@@ -101,8 +97,7 @@
       "partition": "N",
       "dispName": "transaction_type_code",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 5,
@@ -114,8 +109,7 @@
       "partition": "N",
       "dispName": "transaction_date",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 6,
@@ -127,8 +121,7 @@
       "partition": "N",
       "dispName": "transaction_country",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 7,
@@ -140,8 +133,7 @@
       "partition": "N",
       "dispName": "sender_country",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 8,
@@ -153,8 +145,7 @@
       "partition": "N",
       "dispName": "reciever_country",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 9,
@@ -166,8 +157,7 @@
       "partition": "N",
       "dispName": "amount_usd",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 10,
@@ -179,8 +169,7 @@
       "partition": "Y",
       "dispName": "load_date",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     },
     {
       "attributeId": 11,
@@ -192,8 +181,7 @@
       "partition": "Y",
       "dispName": "load_id",
       "active" : "Y",
-  "locked" : "N",
-      "length": null
+        "expr" : null
     }
   ]
 }

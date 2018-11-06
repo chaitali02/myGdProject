@@ -41,7 +41,6 @@
       "partition": "N",
       "dispName": "id",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -53,7 +52,6 @@
       "partition": "N",
       "dispName": "data",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -65,7 +63,6 @@
       "partition": "N",
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     }
   ]

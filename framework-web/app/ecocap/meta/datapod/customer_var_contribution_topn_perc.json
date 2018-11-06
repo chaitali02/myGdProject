@@ -48,7 +48,6 @@
       "partition": "N",
       "dispName": "reporting_date",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -60,7 +59,6 @@
       "partition": "N",
       "dispName": "top_n",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -72,7 +70,6 @@
       "partition": "N",
       "dispName": "var_contribution_perc",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -84,7 +81,6 @@
       "partition": "N",
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     }
   ]

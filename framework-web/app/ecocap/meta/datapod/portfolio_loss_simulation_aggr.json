@@ -49,7 +49,6 @@
       "partition": "N",
       "dispName": "expected_loss",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -61,7 +60,6 @@
       "partition": "N",
       "dispName": "value_at_risk",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -73,7 +71,6 @@
       "partition": "N",
       "dispName": "economic_capital",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -85,7 +82,6 @@
       "partition": "N",
       "dispName": "reporting_date",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -97,7 +93,6 @@
       "partition": "N",
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     }
   ]

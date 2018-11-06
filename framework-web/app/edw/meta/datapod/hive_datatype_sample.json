@@ -16,8 +16,7 @@
             "partition" : "N",
             "dispName" : "id",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 1,
@@ -28,8 +27,7 @@
             "partition" : "N",
             "dispName" : "code",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 2,
@@ -40,8 +38,7 @@
             "partition" : "N",
             "dispName" : "name",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 3,
@@ -52,8 +49,7 @@
             "partition" : "N",
             "dispName" : "desciption",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 4,
@@ -64,8 +60,7 @@
             "partition" : "N",
             "dispName" : "comment",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 5,
@@ -76,8 +71,7 @@
             "partition" : "N",
             "dispName" : "percentage",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 10
+        "length": null : 10
         }, 
         {
             "attributeId" : 6,
@@ -88,8 +82,7 @@
             "partition" : "N",
             "dispName" : "currency",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 10
+        "length": null : 10
         }, 
         {
             "attributeId" : 7,
@@ -100,8 +93,7 @@
             "partition" : "N",
             "dispName" : "flag",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 0
+        "length": null : 0
         }, 
         {
             "attributeId" : 8,
@@ -112,8 +104,7 @@
             "partition" : "N",
             "dispName" : "date",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 9,
@@ -124,8 +115,7 @@
             "partition" : "N",
             "dispName" : "address_line",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 10,
@@ -136,8 +126,7 @@
             "partition" : "N",
             "dispName" : "phone",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 11,
@@ -148,8 +137,7 @@
             "partition" : "N",
             "dispName" : "ssn",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 12,
@@ -160,8 +148,7 @@
             "partition" : "N",
             "dispName" : "xyz",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 13,
@@ -172,8 +159,7 @@
             "partition" : "N",
             "dispName" : "load_date",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }, 
         {
             "attributeId" : 14,
@@ -184,8 +170,7 @@
             "partition" : "N",
             "dispName" : "load_id",
             "active" : "Y",
-  "locked" : "N",
-            "length" : 2147483647
+        "length": null : 2147483647
         }
     ],
     "uuid" : "50f1e2e2-dac2-4b0b-9d5b-bc48e77be6ae",

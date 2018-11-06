@@ -48,7 +48,6 @@
       "partition": "N",
       "dispName": "cust_id",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -60,7 +59,6 @@
       "partition": "N",
       "dispName": "portfolio_ul_cust_allocation",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -72,7 +70,6 @@
       "partition": "N",
       "dispName": "reporting_date",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     },
     {
@@ -84,7 +81,6 @@
       "partition": "N",
       "dispName": "version",
       "active" : "Y",
-  "locked" : "N",
       "expr": null
     }
   ]

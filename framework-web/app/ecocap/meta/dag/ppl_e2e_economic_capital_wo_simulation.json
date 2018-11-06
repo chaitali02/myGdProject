@@ -202,7 +202,7 @@
           "xPos": 450,
           "yPos": 210,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1474,7 +1474,7 @@
           "xPos": 450,
           "yPos": 440,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1506,7 +1506,7 @@
           "xPos": 680,
           "yPos": 320,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1537,7 +1537,7 @@
           "xPos": 890,
           "yPos": 320,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1568,7 +1568,7 @@
           "xPos": 1080,
           "yPos": 320,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1599,7 +1599,7 @@
           "xPos": 1210,
           "yPos": 220,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1630,7 +1630,7 @@
           "xPos": 1210,
           "yPos": 420,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1661,7 +1661,7 @@
           "xPos": 1330,
           "yPos": 100,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1692,7 +1692,7 @@
           "xPos": 1340,
           "yPos": 530,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1723,7 +1723,7 @@
           "xPos": 1470,
           "yPos": 230,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1754,7 +1754,7 @@
           "xPos": 1470,
           "yPos": 430,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1785,7 +1785,7 @@
           "xPos": 1640,
           "yPos": 110,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1816,7 +1816,7 @@
           "xPos": 1640,
           "yPos": 320,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         },
         {
@@ -1847,7 +1847,7 @@
           "xPos": 1620,
           "yPos": 530,
           "active" : "Y",
-  "locked" : "N",
+  
           "statusList": []
         }
       ],
@@ -1855,7 +1855,7 @@
       "xPos": 200,
       "yPos": 330,
       "active" : "Y",
-  "locked" : "N",
+  
       "statusList": []
     }
   ],

@@ -120,7 +120,7 @@
                     "xPos" : 500.0,
                     "yPos" : 150.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -971,7 +971,7 @@
                     "xPos" : 500.0,
                     "yPos" : 370.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -999,7 +999,7 @@
                     "xPos" : 680.0,
                     "yPos" : 260.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1026,7 +1026,7 @@
                     "xPos" : 820.0,
                     "yPos" : 160.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1053,7 +1053,7 @@
                     "xPos" : 970.0,
                     "yPos" : 260.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1080,7 +1080,7 @@
                     "xPos" : 1090.0,
                     "yPos" : 160.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1107,7 +1107,7 @@
                     "xPos" : 1240.0,
                     "yPos" : 260.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1134,7 +1134,7 @@
                     "xPos" : 1370.0,
                     "yPos" : 160.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }, 
                 {
@@ -1161,7 +1161,7 @@
                     "xPos" : 1510.0,
                     "yPos" : 260.0,
                     "active" : "Y",
-  "locked" : "N",
+  
                     "statusList" : []
                 }
             ],
@@ -1169,7 +1169,7 @@
             "xPos" : 340.0,
             "yPos" : 260.0,
             "active" : "Y",
-  "locked" : "N",
+  
             "statusList" : []
         }
     ],
