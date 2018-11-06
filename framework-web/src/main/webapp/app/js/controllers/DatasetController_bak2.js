@@ -2,10 +2,8 @@
  **/
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
-
 MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER) {
 	$rootScope.isCommentVeiwPrivlage = true;
-
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -41,7 +39,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.isAdd = true;
 		$scope.isDragable = "true";
 	}
-	$scope.continueCount=1;
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -111,14 +108,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			});
 		}
 	}
-	$scope.showHome=function(uuid, version,mode){
-		$scope.showPage()
-		$state.go('metaListdataset', {
-			id: uuid,
-			version: version,
-			mode: mode
-		});
-	}
 	var notify = {
 		type: 'success',
 		title: 'Success',
@@ -145,7 +134,25 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		});
 	};
 	$scope.getLovByType();
-	
+	// $scope.onOverCallBackRow=function(event,ui,index){
+	// 	 console.log($scope.indexDragg)
+	// 	console.log(index)
+	// 		var data=ui.draggable.scope().tabledata
+	// 		if(index == 0 ){
+	// 			var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
+	// 			$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
+	// 			$scope.filterTableArray[index].logicalOperator=temp;
+	// 		}
+	// 		// else if($scope.indexDragg == 0){
+	// 		// 	var temp=$scope.filterTableArray[index].logicalOperator;
+	// 		// 	$scope.filterTableArray[index].logicalOperator=" "
+	// 		// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
+	// 		// }
+	// }
+	// $scope.onDragCallBackRow=function(event,ui,index){
+	// 	$scope.indexDragg=null
+	// 	$scope.indexDragg=index.index;
+	// }
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -176,26 +183,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 		return style;
 	}
-
-	$scope.countContinue = function () {
-	    if($scope.continueCount == 3){
-			if($scope.isDuplication ==true){
-				return true;
-			}
-		}
-		$scope.continueCount = $scope.continueCount + 1;
-        if ($scope.continueCount >= 4) {
-            $scope.isSubmitShow = true;
-        } else {
-            $scope.isSubmitShow = false;
-        }
-    }
-
-    $scope.countBack = function () {
-        $scope.continueCount = $scope.continueCount - 1;
-        $scope.isSubmitShow = false;
-    }
-    
 
 	$scope.routeForFormula = function (data, index) {
 		if (data.uuid == null) {
@@ -328,7 +315,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray = null;
 			$scope.filterTableArray = null;
 			$scope.addAttribute();
-		//	$scope.addRowFilter();
+			$scope.addRowFilter();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -567,7 +554,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.selectVersion = function () {
 		$scope.datasetRelation = null;
 		$scope.selectSourceType = null;
-		//$scope.myform3.$dirty = false;
+		$scope.myform.$dirty = false;
 		$scope.datasetHasChanged = true;
 		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
@@ -893,20 +880,18 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.addAttribute = function () {
-		
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
 		var len = $scope.attributeTableArray.length + 1
-		var attributeinfo = {};
+		var attrivuteinfo = {};
 
-		attributeinfo.name = "attribute" + len;
-		attributeinfo.id = len - 1;
-		attributeinfo.index = len;
-		attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
-		attributeinfo.isSourceAtributeSimple = true;
-		attributeinfo.isSourceAtributeDatapod = false;
-		$scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attributeinfo);
+		attrivuteinfo.name = "attribute" + len;
+		attrivuteinfo.id = len - 1;
+		attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
+		attrivuteinfo.isSourceAtributeSimple = true;
+		attrivuteinfo.isSourceAtributeDatapod = false;
+		$scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
 	}
 
 	$scope.removeAttribute = function () {
@@ -994,39 +979,31 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.isDublication = function (arr, field, index, name) {
-		
+
 		var res = -1;
 		for (var i = 0; i < arr.length - 1; i++) {
 			if (arr[i][field] == arr[index][field] && i != index) {
-			    $scope.myform3[name].$invalid = true;
+				$scope.myform[name].$invalid = true;
 				res = i;
 				break
 			} else {
-				$scope.myform3[name].$invalid = false;
-				
+				$scope.myform[name].$invalid = false;
 			}
 		}
 		return res;
 	}
 
 	$scope.onChangeSourceName = function (index) {
-		
+
 		$scope.attributeTableArray[index].isSourceName = true;
 		if ($scope.attributeTableArray[index].name) {
 			var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
-			
 			if (res != -1) {
 				$scope.isDuplication = true;
-			//	$scope.myform3.$dirty=true;
-				
-			
 			} else {
 				$scope.isDuplication = false;
-			//	$scope.myform3.$dirty=false;
-				
 			}
 		}
-		console.log($scope.myform3)
 
 	}
 
@@ -1130,7 +1107,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 
-	$scope.submit = function () {
+	$scope.submitDataset = function () {
 		var upd_tag = "N"
 		delete $sessionStorage.datasetjosn;
 		delete $sessionStorage.index
@@ -1139,9 +1116,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.datasetHasChanged = true;
-		$scope.myform3.$dirty = false;
-		$scope.myform2.$dirty = false;
-		$scope.myform1.$dirty = false;
+		$scope.myform.$dirty = false;
 
 		var dataSetJson = {}
 		dataSetJson.uuid = $scope.dataset.uuid
@@ -1174,10 +1149,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 		//filterInfo
 		var filterInfoArray = [];
-		if ( $scope.filterTableArray && $scope.filterTableArray.length > 0) {
+		if ($scope.filterTableArray.length > 0) {
 			for (var i = 0; i < $scope.filterTableArray.length; i++) {
 				var filterInfo = {};
-				var operand  = []
+				var operand = []
 				var lhsoperand = {}
 				var lhsref = {}
 				var rhsoperand = {}
@@ -1268,8 +1243,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var sourceAttributesArray = [];
 		for (var l = 0; l < $scope.attributeTableArray.length; l++) {
 			attributeinfo = {}
-			attributeinfo.attrSourceId =$scope.attributeTableArray[l].id;
-			attributeinfo.attrDisplaySeq = l;
+			attributeinfo.attrSourceId = l;
 			attributeinfo.attrSourceName = $scope.attributeTableArray[l].name
 			var ref = {};
 			var sourceAttr = {};
@@ -1360,10 +1334,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 		}
 	}
-    $scope.ondrop = function(e) {
-		console.log(e);
-		$scope.myform3.$dirty=true;
-	  }
+
 	$scope.expandAll = function (expanded) {
 		// $scope is required here, hence the injection above, even though we're using "controller as" syntax
 		$scope.$broadcast('onExpandAll', { expanded: expanded });
@@ -1410,134 +1381,3 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
   	        }]
   	    };
   	});*/
-	
-	  MetadataModule.directive("dragDrop", ["$parse",
-	  function($parse) {
-		var sourceParent = "";
-		var sourceIndex = -1;
-		return {
-		  link: function($scope, elm, attr, ctrl) {
-	
-			// #region Initialization
-	
-			// Get TBODY of a element  
-			var tbody = elm.parent();
-			// Set draggable true
-			//elm.attr("draggable", true);jitender
-
-			// If id of TBODY of current element already set then it won't set again
-			tbody.attr('drag-id') ? void 0 : tbody.attr("drag-id", $scope.$id);
-			// This add drag pointer 
-			elm.css("cursor", "move");
-	
-			// Events of element :- dragstart | dragover | drop | dragend
-			elm.on("dragstart", onDragStart);
-			elm.on("dragover", onDragOver);
-			elm.on("drop", onDrop);
-			elm.on("dragend", onDragEnd);
-	
-			// #endregion
-	
-			// This will trigger when user pick e row
-			function onDragStart(e) {
-	
-			  //Mozilla Hack
-		//	  e.dataTransfer.setData("Text", "");
-	
-			  if (!sourceParent) {
-	
-				// Set selected element's parent id
-				sourceParent = tbody.attr('drag-id') ? tbody.attr('drag-id') : void 0;
-	
-				// Set selected element's index
-				sourceIndex = $scope.$index;
-	
-				// This don't support in IE but other browser support it
-				// This will set drag Image with it's position
-				// IE automically set image by himself
-				// typeof e.dataTransfer.setDragImage !== "undefined" ?
-				//   e.dataTransfer.setDragImage(e.target, -10, -10) : void 0;
-	
-				// This element will only drop to the element whose have drop effect 'move'
-			//	e.dataTransfer.effectAllowed = 'move';
-			  }
-			  return true;
-			}
-	
-			// This will trigger when user drag source element on another element
-			function onDragOver(e) {
-	
-			  // Prevent Default actions
-			  e.preventDefault ? e.preventDefault() : void 0;
-			  e.stopPropagation ? e.stopPropagation() : void 0;
-	
-			  // This get current elements parent id
-			  var targetParent = tbody.attr('drag-id') ? tbody.attr('drag-id') : void 0;
-	
-	
-			  // If user drag elemnt from its boundary then cursor will show block icon else it will show move icon [ i.e : this effect work perfectly in google chrome]
-			//  e.dataTransfer.dropEffect = sourceParent !== targetParent || typeof attr.ngRepeat === "undefined" ? 'none' : 'move';
-	
-			  return false;
-			}
-	
-			//This will Trigger when user drop source element on target element
-			function onDrop(e) {
-	
-			  // Prevent Default actions
-			  e.preventDefault ? e.preventDefault() : void 0;
-			  e.stopPropagation ? e.stopPropagation() : void 0;
-	
-			  if (typeof attr.ngRepeat === "undefined")
-				return false;
-			  // Get this item List
-			  var itemList = $parse(attr.ngRepeat.split("in")[1].trim())($scope);
-	
-	
-			  // Get target element's index
-			  var targetIndex = $scope.$index;
-	
-			  // Get target element's parent id
-			  var targetParent = tbody.attr('drag-id') ? tbody.attr('drag-id') : void 0;
-	
-			  // Get properties names which will be changed during the drag and drop
-			  var elements = attr.dragDrop ? attr.dragDrop.trim().split(",") : void 0;
-	
-			  // If user dropped element into it's boundary and on another source not himself
-			  if (sourceIndex !== targetIndex && targetParent === sourceParent) {
-	
-				// If user provide element list by ',' 
-				typeof elements !== "undefined" ? elements.forEach(function(element) {
-				  element = element.trim();
-				  typeof itemList[targetIndex][element] !== "undefined" ?
-					itemList[targetIndex][element] = [itemList[sourceIndex][element], itemList[sourceIndex][element] = itemList[targetIndex][element]][0] : void 0;
-				}) : void 0;
-				// Visual row change 
-				itemList[targetIndex] = [itemList[sourceIndex], itemList[sourceIndex] = itemList[targetIndex]][0];
-				// After completing the task directive send changes to the controller 
-				$scope.$apply(function() {
-				  typeof attr.afterDrop != "undefined" ?
-					$parse(attr.afterDrop)($scope)({
-					  sourceIndex: sourceIndex,
-					  sourceItem: itemList[sourceIndex],
-					  targetIndex: targetIndex,
-					  targetItem: itemList[targetIndex]
-					}) : void 0;
-	
-				});
-			  }
-			}
-			// This will trigger after drag and drop complete
-			function onDragEnd(e) {
-	
-			  //clearing the source
-			  sourceParent = "";
-			  sourceIndex = -1;
-			}
-	
-		  }
-		}
-	  }
-	]);
-	
-	

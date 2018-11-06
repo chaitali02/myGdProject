@@ -694,11 +694,13 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				}
 			}
 			datasetviewjson.filterInfo = filterInfoArray
-			console.log(JSON.stringify(datasetviewjson.filterInfo));
+			//console.log(JSON.stringify(datasetviewjson.filterInfo));
 			var sourceAttributesArray = [];
 			for (var n = 0; n < response.attributeInfo.length; n++) {
 				var attributeInfo = {};
-				attributeInfo.name = response.attributeInfo[n].attrSourceName
+				attributeInfo.name = response.attributeInfo[n].attrSourceName;
+				attributeInfo.id = response.attributeInfo[n].attrSourceId;
+				attributeInfo.index = n+1;
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
