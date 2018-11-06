@@ -5,6 +5,7 @@ MetadataModule = angular.module('MetadataModule');
 
 MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER) {
 	$rootScope.isCommentVeiwPrivlage = true;
+
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -110,6 +111,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			});
 		}
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListdataset', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	var notify = {
 		type: 'success',
 		title: 'Success',
@@ -170,7 +179,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 	$scope.countContinue = function () {
 	    if($scope.continueCount == 3){
-			if($scope.myform3.$dirty ==true){
+			if($scope.isDuplication ==true){
 				return true;
 			}
 		}
@@ -884,18 +893,20 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.addAttribute = function () {
+		
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
 		var len = $scope.attributeTableArray.length + 1
-		var attrivuteinfo = {};
+		var attributeinfo = {};
 
-		attrivuteinfo.name = "attribute" + len;
-		attrivuteinfo.id = len - 1;
-		attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
-		attrivuteinfo.isSourceAtributeSimple = true;
-		attrivuteinfo.isSourceAtributeDatapod = false;
-		$scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
+		attributeinfo.name = "attribute" + len;
+		attributeinfo.id = len - 1;
+		attributeinfo.index = len;
+		attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
+		attributeinfo.isSourceAtributeSimple = true;
+		attributeinfo.isSourceAtributeDatapod = false;
+		$scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attributeinfo);
 	}
 
 	$scope.removeAttribute = function () {
@@ -1257,7 +1268,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var sourceAttributesArray = [];
 		for (var l = 0; l < $scope.attributeTableArray.length; l++) {
 			attributeinfo = {}
-			attributeinfo.attrSourceId = l;
+			attributeinfo.attrSourceId =$scope.attributeTableArray[l].id;
+			//attributeinfo.attrSourceId = l;
 			attributeinfo.attrSourceName = $scope.attributeTableArray[l].name
 			var ref = {};
 			var sourceAttr = {};
@@ -1395,3 +1407,4 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
   	        }]
   	    };
   	});*/
+	

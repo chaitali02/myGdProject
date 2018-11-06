@@ -51,18 +51,22 @@
             </span>
           </div>
           <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
-              tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
-              <i class="fa fa-table" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
               data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
               data-ng-click="enableEdit(dataset.uuid,dataset.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+            <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
               tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataset.uuid,dataset.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a> -->
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
+              tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-table" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
               tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph()">
@@ -154,7 +158,7 @@
                     </span>
                   </a>
                 </li>
-                <li ng-class="{'active' : continueCount == 3,'done':continueCount>4}">
+                <li ng-class="{'active' : continueCount == 3,'done':continueCount>3}">
                   <a href="javascript:;" data-toggle="tab" class="step">
                     <span class="number"> 3 </span>
                     <span class="desc">
@@ -310,6 +314,7 @@
                           <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="{{mode}}"></button>
                         </div>
                         <div class="form-body" style="padding-top:50px;">
+                           
                           <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                             <thead>
                               <tr>
@@ -531,7 +536,7 @@
                                           ng-disabled="{{mode}}" />
                                       </span>
                                     </th>
-                                    <th style="width:6%; text-align:center">ID</th>
+                                    <th style="width:7%; text-align:center">ID</th>
                                     <th style="width:30%;text-align: center">Name</th>
                                     <th style="width:20%;text-align: center">Source Type</th>
                                     <th style="width:46%;text-align: center">Source Name</th>
@@ -548,7 +553,7 @@
                                     </td>
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <input type="text" class="form-control" ng-model="$index" ng-value="$index+1" ng-disabled="true">
+                                        <input type="text" class="form-control" ng-value="$index+1" ng-disabled="true">
                                       </span>
                                     </td>
                                     <td>
