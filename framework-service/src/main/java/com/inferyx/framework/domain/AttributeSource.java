@@ -12,10 +12,17 @@ package com.inferyx.framework.domain;
 
 public class AttributeSource {
 	
-	private String attrSourceId;	
+	private String attrSourceId;
+	private String attrDisplaySeq;
 	private String attrSourceName;
 	private AttributeRefHolder sourceAttr;
 	
+	public String getAttrDisplaySeq() {
+		return attrDisplaySeq;
+	}
+	public void setAttrDisplaySeq(String attrDisplaySeq) {
+		this.attrDisplaySeq = attrDisplaySeq;
+	}
 	public String getAttrSourceId() {
 		return attrSourceId;
 	}

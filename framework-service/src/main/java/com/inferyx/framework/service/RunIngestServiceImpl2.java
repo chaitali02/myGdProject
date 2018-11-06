@@ -912,16 +912,17 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
 						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setAttributeMap(mappedAttrs);
-							if(!whereClause.isEmpty()) {
-								sqoopInput.setWhereClause(whereClause);
-							}
-						} else if(mappedAttrs != null && !areAllAttrs) {
-							sqoopInput.setTargetDirectory(targetDir);
-							sqoopInput.setWarehouseDirectory(null);
-							sqoopInput.setSqlQuery(query);
-						}
+//						if(mappedAttrs != null && areAllAttrs) {
+//							sqoopInput.setAttributeMap(mappedAttrs);
+//							if(!whereClause.isEmpty()) {
+//								sqoopInput.setWhereClause(whereClause);
+//							}
+//						} else if(mappedAttrs != null && !areAllAttrs) {
+//							sqoopInput.setTargetDirectory(targetDir);
+//							sqoopInput.setWarehouseDirectory(null);
+//							sqoopInput.setSqlQuery(query);
+//						}
+						setTableOrQuery(sqoopInput, mappedAttrs, areAllAttrs, whereClause, query, targetDir);
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 //						if(incrLastValue != null) {
 //							sqoopInput.setIncrementalTestColumn(incrColName);
@@ -1091,12 +1092,21 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //						sqoopInput.setOverwriteHiveTable("Y");
 //						sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //						sqoopInput.sethCatTableName(sourceDp.getName());
-					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+							|| sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 						//this is import block from ORACLE table to HIVE
 						logger.info("this is import block from ORACLE table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setTable(sourceDp.getName().toUpperCase());
+						if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							if(mappedAttrs != null && areAllAttrs) {
+								sqoopInput.setTable(sourceDp.getName().toUpperCase());
+							}
+						} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+							sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
+							if(mappedAttrs != null && areAllAttrs) {
+//								tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+								sqoopInput.setTable(sourceDp.getName());
+							}
 						}						
 //						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
@@ -1109,7 +1119,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
-					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+					} /*else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 						//this is import block from POSTGRES to HIVE table
 
 						logger.info("this is export block from POSTGRES to other table");
@@ -1130,7 +1140,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.sethCatTableName(sourceDp.getName());
-					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					}*/ else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 						//this is import block from other table to HIVE
 
 						logger.info("this is import block from other table to HIVE");
@@ -1154,25 +1164,29 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					} 
 
 					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
-					if(mappedAttrs != null && areAllAttrs) {
-						sqoopInput.setAttributeMap(mappedAttrs);
-						if(!whereClause.isEmpty()) {
-							sqoopInput.setWhereClause(whereClause);
-						}
-					} else if(mappedAttrs != null && !areAllAttrs) {
-						sqoopInput.setTargetDirectory(targetDir);
-						sqoopInput.setWarehouseDirectory(null);
-						sqoopInput.setSqlQuery(query);
-					}
+//					if(mappedAttrs != null && areAllAttrs) {
+//						sqoopInput.setAttributeMap(mappedAttrs);
+//						if(!whereClause.isEmpty()) {
+//							sqoopInput.setWhereClause(whereClause);
+//						}
+//					} else if(mappedAttrs != null && !areAllAttrs) {
+//						sqoopInput.setTargetDirectory(targetDir);
+//						sqoopInput.setWarehouseDirectory(null);
+//						sqoopInput.setSqlQuery(query);
+//					}
+					setTableOrQuery(sqoopInput, mappedAttrs, areAllAttrs, whereClause, query, targetDir);
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-					if(incrLastValue != null) {
-						sqoopInput.setIncrementalTestColumn(incrColName);
-						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-							sqoopInput.setIncrementalLastValue(incrLastValue);
-						}
-					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-						sqoopInput.setIncrementalTestColumn(incrColName);
-					}
+//					if(incrLastValue != null) {
+//						sqoopInput.setIncrementalTestColumn(incrColName);
+//						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//							sqoopInput.setIncrementalLastValue(incrLastValue);
+//						}
+//					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//						sqoopInput.setIncrementalTestColumn(incrColName);
+//					}
+					
+					setIncremental(sqoopInput, incrLastValue, incrColName);
+					
 					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
@@ -1294,13 +1308,16 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 									String[] mappedAttrs, 
 									boolean areAllAttrs, 
 									String whereClause, 
-									String query) {
+									String query,
+									String targetDir) {
 		if(mappedAttrs != null && areAllAttrs) {
 			sqoopInput.setAttributeMap(mappedAttrs);
 			if(!whereClause.isEmpty()) {
 				sqoopInput.setWhereClause(whereClause);
 			}
 		} else if(mappedAttrs != null && !areAllAttrs) {
+			sqoopInput.setTargetDirectory(targetDir);
+			sqoopInput.setWarehouseDirectory(null);
 			sqoopInput.setSqlQuery(query);
 		}
 		
