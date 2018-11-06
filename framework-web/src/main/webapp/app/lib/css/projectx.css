@@ -42,7 +42,7 @@ a, a:hover, a:active, a:visited, a:focus {
     text-decoration:none;
 }
 .has-error .form-control{
-  outline: 1px solid #e73d4a !important;
+  /* outline: 1px solid #e73d4a !important; */
 }
 /* Start Loding*/
 .notification{
@@ -1172,4 +1172,5 @@ transition: right 1m
   margin-bottom:-4px;
   text-overflow:ellipsis;
 }
+
 
