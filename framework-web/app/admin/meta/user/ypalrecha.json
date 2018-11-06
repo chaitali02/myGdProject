@@ -13,7 +13,8 @@
 	"tags": [
 		"DEMO"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"appInfo": [
 		{
 			"ref": {

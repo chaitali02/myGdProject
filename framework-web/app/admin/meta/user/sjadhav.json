@@ -37,7 +37,8 @@
 	"tags": [
 		"DEMO"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
 	"appInfo": [
 		{

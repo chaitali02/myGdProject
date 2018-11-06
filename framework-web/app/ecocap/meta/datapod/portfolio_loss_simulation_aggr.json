@@ -15,7 +15,8 @@
   },
   "createdOn": "Sun Jul 29 21:58:12 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -47,7 +48,7 @@
       "key": "",
       "partition": "N",
       "dispName": "expected_loss",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -58,7 +59,7 @@
       "key": "",
       "partition": "N",
       "dispName": "value_at_risk",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -69,7 +70,7 @@
       "key": "",
       "partition": "N",
       "dispName": "economic_capital",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -80,7 +81,7 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -91,7 +92,7 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     }
   ]

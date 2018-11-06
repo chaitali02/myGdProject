@@ -14,7 +14,8 @@
   },
   "createdOn": "Fri Aug 10 23:18:23 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -126,6 +127,7 @@
                     "xPos" : 360.0,
                     "yPos" : 140.0,
                     "active" : "Y",
+
                     "statusList" : []
                 }, 
                 {
@@ -218,6 +220,7 @@
                     "xPos" : 350.0,
                     "yPos" : 370.0,
                     "active" : "Y",
+
                     "statusList" : []
                 }
             ],

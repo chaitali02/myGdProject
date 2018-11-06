@@ -15,6 +15,7 @@
     "createdOn" : ISODate("2018-08-04T06:58:33.246Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
     "appInfo" : [ 

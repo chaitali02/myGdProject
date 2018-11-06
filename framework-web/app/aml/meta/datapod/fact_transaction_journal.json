@@ -14,7 +14,8 @@
   },
   "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -47,8 +48,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "transaction_id",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+           "expr" : null
     },
     {
       "attributeId": 1,
@@ -59,8 +60,8 @@
       "key": "1",
       "partition": "N",
       "dispName": "direction",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 2,
@@ -71,8 +72,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_id",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 3,
@@ -83,8 +84,8 @@
       "key": "",
       "partition": "N",
       "dispName": "customer_id",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 4,
@@ -95,8 +96,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_type_code",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 5,
@@ -107,8 +108,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_date",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 6,
@@ -119,8 +120,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_country",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 7,
@@ -131,8 +132,8 @@
       "key": "",
       "partition": "N",
       "dispName": "sender_country",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 8,
@@ -143,8 +144,8 @@
       "key": "",
       "partition": "N",
       "dispName": "reciever_country",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 9,
@@ -155,8 +156,8 @@
       "key": "",
       "partition": "N",
       "dispName": "amount_usd",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 10,
@@ -167,8 +168,8 @@
       "key": "",
       "partition": "Y",
       "dispName": "load_date",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     },
     {
       "attributeId": 11,
@@ -179,8 +180,8 @@
       "key": "",
       "partition": "Y",
       "dispName": "load_id",
-      "active": "Y",
-      "length": null
+      "active" : "Y",
+        "expr" : null
     }
   ]
 }

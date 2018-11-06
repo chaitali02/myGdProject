@@ -14,7 +14,8 @@
   },
   "createdOn": "Thu Jul 26 18:09:03 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,7 @@
       "key": "",
       "partition": "N",
       "dispName": "cust_id",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -57,7 +58,7 @@
       "key": "",
       "partition": "N",
       "dispName": "industry",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -68,7 +69,7 @@
       "key": "",
       "partition": "N",
       "dispName": "pd",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -79,7 +80,7 @@
       "key": "",
       "partition": "N",
       "dispName": "exposure",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -90,7 +91,7 @@
       "key": "",
       "partition": "N",
       "dispName": "lgd",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -101,7 +102,7 @@
       "key": "",
       "partition": "N",
       "dispName": "lgd_var",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -112,7 +113,7 @@
       "key": "",
       "partition": "N",
       "dispName": "correlation",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -123,7 +124,7 @@
       "key": "",
       "partition": "N",
       "dispName": "sqrt_correlation",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -134,7 +135,7 @@
       "key": "",
       "partition": "N",
       "dispName": "def_point",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -145,7 +146,7 @@
       "key": "",
       "partition": "N",
       "dispName": "unexpected_loss",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -156,7 +157,7 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -167,7 +168,7 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     }
   ]

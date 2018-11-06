@@ -55,6 +55,7 @@
     "createdOn" : ISODate("2018-07-24T23:27:43.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {
