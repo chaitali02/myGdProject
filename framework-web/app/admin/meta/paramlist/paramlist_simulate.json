@@ -15,7 +15,8 @@
   },
   "createdOn": "Wed May 16 11:59:59 IST 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
   "appInfo": [

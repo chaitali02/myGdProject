@@ -36,6 +36,7 @@
         "DEMO"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "inputReq": "Y",
     "appInfo" : [ 

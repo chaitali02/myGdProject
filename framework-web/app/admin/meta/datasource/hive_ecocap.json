@@ -11,6 +11,7 @@
     },
     "createdOn" : ISODate("2018-08-07T13:31:24.877Z"),
     "active" : "Y",
+  "locked" : "N",
     "appInfo" : [ 
         {
             "ref" : {

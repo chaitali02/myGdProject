@@ -14,7 +14,8 @@
   },
   "createdOn": "Mon Sep 03 15:22:14 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -90,7 +91,8 @@
           ],
           "xPos": 640,
           "yPos": 30,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -147,7 +149,8 @@
           ],
           "xPos": 810,
           "yPos": 70,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -204,7 +207,8 @@
           ],
           "xPos": 970,
           "yPos": 130,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -261,7 +265,8 @@
           ],
           "xPos": 1090,
           "yPos": 200,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -318,7 +323,8 @@
           ],
           "xPos": 1090,
           "yPos": 310,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -375,7 +381,8 @@
           ],
           "xPos": 1090,
           "yPos": 440,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -432,7 +439,8 @@
           ],
           "xPos": 970,
           "yPos": 530,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -489,7 +497,8 @@
           ],
           "xPos": 800,
           "yPos": 600,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -546,14 +555,16 @@
           ],
           "xPos": 620,
           "yPos": 620,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         }
       ],
       "name": "stage",
       "xPos": 420,
       "yPos": 320,
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "statusList": []
     }
   ],

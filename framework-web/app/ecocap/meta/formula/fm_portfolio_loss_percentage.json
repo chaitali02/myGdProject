@@ -14,7 +14,8 @@
   },
   "createdOn": "Fri Aug 10 22:26:02 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {

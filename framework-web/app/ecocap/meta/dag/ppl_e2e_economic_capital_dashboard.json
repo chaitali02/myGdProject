@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Aug 11 16:21:21 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -126,6 +127,7 @@
                     "xPos" : 360.0,
                     "yPos" : 130.0,
                     "active" : "Y",
+  "locked" : "N",
                     "statusList" : []
                 }, 
                 {
@@ -218,6 +220,7 @@
                     "xPos" : 360.0,
                     "yPos" : 390.0,
                     "active" : "Y",
+  "locked" : "N",
                     "statusList" : []
                 }, 
                 {
@@ -369,6 +372,7 @@
                     "xPos" : 470.0,
                     "yPos" : 250.0,
                     "active" : "Y",
+  "locked" : "N",
                     "statusList" : []
                 }
             ],
@@ -376,6 +380,7 @@
             "xPos" : 190.0,
             "yPos" : 250.0,
             "active" : "Y",
+  "locked" : "N",
             "statusList" : []
         }
     ],

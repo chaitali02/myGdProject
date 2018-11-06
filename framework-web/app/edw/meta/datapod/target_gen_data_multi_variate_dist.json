@@ -15,7 +15,8 @@
   },
   "createdOn": "Wed May 16 00:05:49 IST 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -47,7 +48,8 @@
       "key": "",
       "partition": "N",
       "dispName": "id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -58,7 +60,8 @@
       "key": "",
       "partition": "N",
       "dispName": "col1",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -69,7 +72,8 @@
       "key": "",
       "partition": "N",
       "dispName": "col2",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -80,7 +84,8 @@
       "key": "",
       "partition": "N",
       "dispName": "col3",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -91,7 +96,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]

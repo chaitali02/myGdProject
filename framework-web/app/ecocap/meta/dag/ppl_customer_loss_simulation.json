@@ -14,7 +14,8 @@
   },
   "createdOn": "Fri Aug 17 14:27:52 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -257,7 +258,8 @@
           ],
           "xPos": 390,
           "yPos": 330,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         },
         {
@@ -287,14 +289,16 @@
           ],
           "xPos": 640,
           "yPos": 330,
-          "active": "Y",
+          "active" : "Y",
+  "locked" : "N",
           "statusList": []
         }
       ],
       "name": "new stage",
       "xPos": 210,
       "yPos": 330,
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "statusList": []
     }
   ],

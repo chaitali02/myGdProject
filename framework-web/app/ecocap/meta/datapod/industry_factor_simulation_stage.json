@@ -14,7 +14,8 @@
   },
   "createdOn": "Mon Aug 06 22:43:33 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,8 @@
       "key": "",
       "partition": "N",
       "dispName": "iteration_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -57,7 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "factor1",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -68,7 +71,8 @@
       "key": "",
       "partition": "N",
       "dispName": "factor2",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -79,7 +83,8 @@
       "key": "",
       "partition": "N",
       "dispName": "factor3",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -90,7 +95,8 @@
       "key": "",
       "partition": "N",
       "dispName": "factor4",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -101,7 +107,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]

@@ -14,7 +14,8 @@
   },
   "createdOn": "Tue Aug 14 22:38:28 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,8 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -57,7 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "bucket",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -68,7 +71,8 @@
       "key": "",
       "partition": "N",
       "dispName": "frequency",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -79,7 +83,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]

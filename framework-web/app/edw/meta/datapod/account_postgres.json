@@ -11,7 +11,8 @@
   },
   "createdOn": "Fri Oct 05 06:39:53 GMT 2018",
   "tags": null,
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -38,7 +39,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "account_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -50,7 +52,8 @@
       "key": null,
       "partition": "N",
       "dispName": "account_type_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -62,7 +65,8 @@
       "key": null,
       "partition": "N",
       "dispName": "account_status_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -74,7 +78,8 @@
       "key": null,
       "partition": "N",
       "dispName": "product_type_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -86,7 +91,8 @@
       "key": null,
       "partition": "N",
       "dispName": "customer_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -98,7 +104,8 @@
       "key": null,
       "partition": "N",
       "dispName": "pin_number",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -110,7 +117,8 @@
       "key": null,
       "partition": "N",
       "dispName": "nationality",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -122,7 +130,8 @@
       "key": null,
       "partition": "N",
       "dispName": "primary_iden_doc",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -134,7 +143,8 @@
       "key": null,
       "partition": "N",
       "dispName": "primary_iden_doc_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -146,7 +156,8 @@
       "key": null,
       "partition": "N",
       "dispName": "secondary_iden_doc",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -158,7 +169,8 @@
       "key": null,
       "partition": "N",
       "dispName": "secondary_iden_doc_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -170,7 +182,8 @@
       "key": null,
       "partition": "N",
       "dispName": "account_open_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -182,7 +195,8 @@
       "key": null,
       "partition": "N",
       "dispName": "account_number",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -194,7 +208,8 @@
       "key": null,
       "partition": "N",
       "dispName": "opening_balance",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -206,7 +221,8 @@
       "key": null,
       "partition": "N",
       "dispName": "current_balance",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -218,7 +234,8 @@
       "key": null,
       "partition": "N",
       "dispName": "overdue_balance",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -230,7 +247,8 @@
       "key": null,
       "partition": "N",
       "dispName": "overdue_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -242,7 +260,8 @@
       "key": null,
       "partition": "N",
       "dispName": "currency_code",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -254,7 +273,8 @@
       "key": null,
       "partition": "N",
       "dispName": "interest_type",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -266,7 +286,8 @@
       "key": null,
       "partition": "N",
       "dispName": "interest_rate",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -278,7 +299,8 @@
       "key": null,
       "partition": "Y",
       "dispName": "load_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -290,7 +312,8 @@
       "key": null,
       "partition": "Y",
       "dispName": "load_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     }
   ]

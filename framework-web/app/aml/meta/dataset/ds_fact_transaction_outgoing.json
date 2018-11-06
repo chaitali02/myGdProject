@@ -169,6 +169,7 @@
         "DEMO"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

@@ -152,6 +152,7 @@
                     "xPos" : 750.0,
                     "yPos" : 200.0,
                     "active" : "Y",
+  "locked" : "N",
                     "statusList" : []
                 }
             ],
@@ -159,6 +160,7 @@
             "xPos" : 350.0,
             "yPos" : 250.0,
             "active" : "Y",
+  "locked" : "N",
             "statusList" : []
         }
     ],
@@ -177,6 +179,7 @@
     "createdOn" : ISODate("2018-07-15T09:22:11.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

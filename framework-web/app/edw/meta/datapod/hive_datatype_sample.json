@@ -16,6 +16,7 @@
             "partition" : "N",
             "dispName" : "id",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -27,6 +28,7 @@
             "partition" : "N",
             "dispName" : "code",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -38,6 +40,7 @@
             "partition" : "N",
             "dispName" : "name",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -49,6 +52,7 @@
             "partition" : "N",
             "dispName" : "desciption",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -60,6 +64,7 @@
             "partition" : "N",
             "dispName" : "comment",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -71,6 +76,7 @@
             "partition" : "N",
             "dispName" : "percentage",
             "active" : "Y",
+  "locked" : "N",
             "length" : 10
         }, 
         {
@@ -82,6 +88,7 @@
             "partition" : "N",
             "dispName" : "currency",
             "active" : "Y",
+  "locked" : "N",
             "length" : 10
         }, 
         {
@@ -93,6 +100,7 @@
             "partition" : "N",
             "dispName" : "flag",
             "active" : "Y",
+  "locked" : "N",
             "length" : 0
         }, 
         {
@@ -104,6 +112,7 @@
             "partition" : "N",
             "dispName" : "date",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -115,6 +124,7 @@
             "partition" : "N",
             "dispName" : "address_line",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -126,6 +136,7 @@
             "partition" : "N",
             "dispName" : "phone",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -137,6 +148,7 @@
             "partition" : "N",
             "dispName" : "ssn",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -148,6 +160,7 @@
             "partition" : "N",
             "dispName" : "xyz",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -159,6 +172,7 @@
             "partition" : "N",
             "dispName" : "load_date",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }, 
         {
@@ -170,6 +184,7 @@
             "partition" : "N",
             "dispName" : "load_id",
             "active" : "Y",
+  "locked" : "N",
             "length" : 2147483647
         }
     ],
@@ -186,6 +201,7 @@
     },
     "createdOn" : ISODate("2018-10-04T12:35:34.000Z"),
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

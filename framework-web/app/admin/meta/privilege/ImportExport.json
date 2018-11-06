@@ -15,7 +15,8 @@
 	},
 	"createdOn": "Tue Aug 08 11:23:24 IST 2017",
 	"tags": [],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"appInfo": [
 		{
 			"ref": {

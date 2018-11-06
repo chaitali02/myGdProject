@@ -14,7 +14,8 @@
   },
   "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -47,7 +48,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "transaction_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -59,7 +61,8 @@
       "key": "1",
       "partition": "N",
       "dispName": "direction",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -71,7 +74,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -83,7 +87,8 @@
       "key": "",
       "partition": "N",
       "dispName": "customer_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -95,7 +100,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_type_code",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -107,7 +113,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -119,7 +126,8 @@
       "key": "",
       "partition": "N",
       "dispName": "transaction_country",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -131,7 +139,8 @@
       "key": "",
       "partition": "N",
       "dispName": "sender_country",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -143,7 +152,8 @@
       "key": "",
       "partition": "N",
       "dispName": "reciever_country",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -155,7 +165,8 @@
       "key": "",
       "partition": "N",
       "dispName": "amount_usd",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -167,7 +178,8 @@
       "key": "",
       "partition": "Y",
       "dispName": "load_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     },
     {
@@ -179,7 +191,8 @@
       "key": "",
       "partition": "Y",
       "dispName": "load_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "length": null
     }
   ]

@@ -11,7 +11,8 @@
   },
   "createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": null,
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
     "appInfo" : [ 
         {
@@ -49,7 +50,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "SourceUUID",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -60,7 +62,8 @@
       "key": null,
       "partition": "N",
       "dispName": "SourceVersion",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -71,7 +74,8 @@
       "key": null,
       "partition": "N",
       "dispName": "SourceName",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -82,7 +86,8 @@
       "key": null,
       "partition": "N",
       "dispName": "SourceAttributeId",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -93,7 +98,8 @@
       "key": null,
       "partition": "N",
       "dispName": "SourceAttributeName",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -104,7 +110,8 @@
       "key": null,
       "partition": "N",
       "dispName": "SourceValue",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },    
     {
@@ -115,7 +122,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "TargetUUID",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -126,7 +134,8 @@
       "key": null,
       "partition": "N",
       "dispName": "TargetVersion",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -137,7 +146,8 @@
       "key": null,
       "partition": "N",
       "dispName": "TargetName",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -148,7 +158,8 @@
       "key": null,
       "partition": "N",
       "dispName": "TargetAttributeId",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -159,7 +170,8 @@
       "key": null,
       "partition": "N",
       "dispName": "TargetAttributeName",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -170,7 +182,8 @@
       "key": null,
       "partition": "N",
       "dispName": "TargetValue",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -181,7 +194,8 @@
       "key": null,
       "partition": "N",
       "dispName": "status",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -192,7 +206,8 @@
       "key": null,
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]

@@ -14,7 +14,8 @@
   },
   "createdOn": "Thu Jul 26 18:52:50 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,8 @@
       "key": "",
       "partition": "N",
       "dispName": "cust_id",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -57,7 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_ul_cust_allocation",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -68,7 +71,8 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -79,7 +83,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]

@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Aug 11 01:06:33 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_avg_pd",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -57,7 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_avg_lgd",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -68,7 +71,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_total_ead",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -79,7 +83,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_expected_loss",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -90,7 +95,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_value_at_risk",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -101,7 +107,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_economic_capital",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -112,7 +119,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_expected_sum",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -123,7 +131,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_es_percentage",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -134,7 +143,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_val_percentage",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -145,7 +155,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_el_percentage",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -156,7 +167,8 @@
       "key": "",
       "partition": "N",
       "dispName": "portfolio_ec_percentage",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -167,7 +179,8 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     },
     {
@@ -178,7 +191,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
+  "locked" : "N",
       "expr": null
     }
   ]
