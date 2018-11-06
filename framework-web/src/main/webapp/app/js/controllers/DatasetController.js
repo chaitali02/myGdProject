@@ -567,7 +567,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.selectVersion = function () {
 		$scope.datasetRelation = null;
 		$scope.selectSourceType = null;
-		$scope.myform.$dirty = false;
+		//$scope.myform3.$dirty = false;
 		$scope.datasetHasChanged = true;
 		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
