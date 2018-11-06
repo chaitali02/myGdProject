@@ -68,12 +68,13 @@
               tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-table" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
-              tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph()">
-              <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
-            </a>
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" title=""
-              ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
+            <a  class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+            data-ng-click="showGraph(dataset.uuid,dataset.version)">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:#a0a0a0;"></i>
+          </a>
+           
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()"
+            data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
@@ -506,6 +507,7 @@
 
                 <!-- Start Tab3 -->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
+                  
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
                     <div class="portlet light bordered" data-ng-show="showForm">
                       <div class="portlet-title">
@@ -542,9 +544,11 @@
                                     <th style="width:46%;text-align: center">Source Name</th>
                                   </tr>
                                 </thead>
-                                <tbody ng-repeat="data in attributeTableArray">
-                                  <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
-                                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}">
+                                <tbody ng-repeat="data in attributeTableArray" drag-drop draggable ="{{isDragable}}" after-drop="ondrop">
+                                  <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
+                                    <tr>
+                                      
                                     <td style="text-align: center; Vertical-align: middle;width:5%;">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <input class="form-control" ng-disabled="{{mode}}" style="height:16px;" type="checkbox" ng-model="data.selected" />
@@ -711,6 +715,7 @@
     </div>
   </div>
 </div>
+
 <br>
 <br>
 <br>
