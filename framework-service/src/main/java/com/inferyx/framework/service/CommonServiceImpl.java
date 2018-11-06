@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -184,6 +185,7 @@ import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
@@ -2161,14 +2163,36 @@ public class CommonServiceImpl <T> {
 			Log log= mapper.convertValue(object, Log.class);
 			return (T) logServiceImpl.save(log);
 			}
-			MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-			List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 			MetaType metaType = Helper.getMetaType(type);
-			
-			metaIdentifierHolderList.add(meta);
+			MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
+			BaseEntity baseEntityLatest=null;
+			Map<String,Object> map=null;
+			String uuid =null;
+			if (object instanceof Map) {
+				map = (Map<String, Object>) object;
+			}
+		
+			if (object instanceof Map && map.containsKey("uuid"))
+				uuid = (String) map.get("uuid");
+		
+			if (!(object instanceof Map))
+				uuid = object.getClass().getMethod("getUuid").invoke(object).toString();
+		
+			if (uuid != null)
+				baseEntityLatest = (BaseEntity) getLatestByUuid(uuid, metaType.toString());
+			List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
+		
+			if (uuid != null && baseEntityLatest == null) {
+				metaIdentifierHolderList.add(meta);
+			} else if (baseEntityLatest == null && object instanceof Map && !map.entrySet().contains("uuid")) {
+				metaIdentifierHolderList.add(meta);
+			} else {
+				metaIdentifierHolderList.addAll(baseEntityLatest.getAppInfo());
+			}
 			BaseEntity objDet = null;
 
 			Object metaObj = mapper.convertValue(object,Helper.getDomainClass(metaType));
+			
 //			if (Helper.getDomainClass(metaType).getMethod("getAppInfo", List.class).invoke(metaObj) == null) {
 				Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
 //			}
