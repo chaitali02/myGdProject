@@ -594,11 +594,11 @@
 		    <artifactId>pdfbox</artifactId>
 		    <version>2.0.12</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.bytedeco</groupId>
 		    <artifactId>javacpp</artifactId>
 		    <version>1.1</version>
-		</dependency>
+		</dependency> -->
 
 	<!-- jsch -->
 		<!-- <dependency>
@@ -613,6 +613,40 @@
 		    <artifactId>spark-tensorflow-connector_2.11</artifactId>
 		    <version>1.11.0</version>
 		</dependency> -->
+		
+		<!-- DeepLearning4J -->
+		<dependency>
+	  		<groupId>org.nd4j</groupId>
+	  		<artifactId>nd4j-native-platform</artifactId>
+	  		<version>0.9.1</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.deeplearning4j</groupId>
+	  		<artifactId>deeplearning4j-core</artifactId>
+	  		<version>0.9.1</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.datavec</groupId>
+	  		<artifactId>datavec-spark_2.11</artifactId>
+	  		<version>0.9.1_spark_2</version>
+	  		<exclusions>
+	  			<exclusion>
+		          <groupId>org.scala-lang</groupId>
+		          <artifactId>scala-compiler</artifactId>
+		        </exclusion>
+	  		</exclusions>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.deeplearning4j</groupId>
+	  		<artifactId>dl4j-spark_2.11</artifactId>
+	  		<version>0.9.1_spark_2</version>
+	  		<exclusions>
+	  			<exclusion>
+		          <groupId>org.scala-lang</groupId>
+		          <artifactId>scala-compiler</artifactId>
+		        </exclusion>
+	  		</exclusions>
+	  	</dependency>
 		
 	</dependencies>
 	
