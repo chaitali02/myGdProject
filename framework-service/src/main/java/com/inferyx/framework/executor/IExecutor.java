@@ -369,7 +369,7 @@ public interface IExecutor {
 	 * @return
 	 * @throws IOException
 	 */
-	public PipelineModel trainDL(ParamList paramList, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
 	
 	/**
 	 * 

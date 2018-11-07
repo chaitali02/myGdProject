@@ -780,7 +780,7 @@ public class PostGresExecutor implements IExecutor {
 	}
 
 	@Override
-	public PipelineModel trainDL(ParamList paramList, String[] fieldArray, String label, String trainName,
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
 			Map<String, String> trainOtherParam) throws IOException {
 		// TODO Auto-generated method stub
