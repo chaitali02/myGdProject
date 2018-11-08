@@ -760,6 +760,7 @@ public class MetadataServiceImpl {
 			baseEntity.setCreatedOn(baseEntityTmp.getCreatedOn());
 			baseEntity.setTags(baseEntityTmp.getTags());
 			baseEntity.setActive(baseEntityTmp.getActive());
+			baseEntity.setLocked(baseEntityTmp.getLocked());
 			baseEntity.setPublished(baseEntityTmp.getPublished());
 			baseEntity.setAppInfo(baseEntityTmp.getAppInfo());
 			baseEntityList.add(baseEntity);
