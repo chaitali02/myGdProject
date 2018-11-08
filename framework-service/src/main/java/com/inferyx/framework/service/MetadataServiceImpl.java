@@ -1446,6 +1446,7 @@ public class MetadataServiceImpl {
 		query2.fields().include("active");
 		query2.fields().include("desc");
 		query2.fields().include("published");
+		query2.fields().include("locked");
 		query2.addCriteria(			
 				Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 				paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);

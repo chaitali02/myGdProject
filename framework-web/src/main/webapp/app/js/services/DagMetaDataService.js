@@ -127,8 +127,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate: ['<div class="ui-grid-cell-contents">',
-        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i class="fa fa-lock" style="color:#555;font-size:20px;"></i></li></div>',
-        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i class="fa fa-unlock" style="color:#555;font-size:20px;"></i></li></div>',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#555;font-size:20px;"></i></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock" style="color:#555;font-size:20px;"></i></li></div>',
          ].join('')
       },
       {
