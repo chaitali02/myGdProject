@@ -799,6 +799,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.showactive = "true"
 		IngestRuleService.getAllVersionByUuid($stateParams.id, "ingest").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -915,6 +916,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$scope.ingestData={};
 		$scope.ingestData.sourceHeader="N";
 		$scope.ingestData.targetHeader="N"
+		$scope.ingestData.locked="N";
 	//	$scope.onChangeRuleType();
 	}
 
@@ -1397,6 +1399,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		ingestJson.name = $scope.ingestData.name;
 		ingestJson.desc = $scope.ingestData.desc;
 		ingestJson.active = $scope.ingestData.active;
+		ingestJson.locked = $scope.ingestData.locked;
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.sourceHeader = $scope.ingestData.sourceHeader;

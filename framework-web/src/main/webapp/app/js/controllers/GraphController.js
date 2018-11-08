@@ -256,6 +256,8 @@ angular.module('InferyxApp')
       }//End If
       else {
         //$scope.mode="false";
+        $scope.dagdata={};
+        $scope.dagdata.locked="N";
         $scope.addMode = true;
         $scope.allDagTemplate = [];
         $scope.allparamlist=null;
@@ -381,6 +383,7 @@ angular.module('InferyxApp')
         }
         dagJson.tags = tagArray
         dagJson.active = $scope.dagdata.active;
+        dagJson.locked = $scope.dagdata.locked;
         dagJson.published = $scope.dagdata.published;
         dagJson.desc = $scope.dagdata.desc;
         dagJson.stages = inArrayFormat[0].stages;

@@ -28,7 +28,8 @@
     <br>
     <!-- END PAGE HEADER-->
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div  options="dirOptions" type="'profilegroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="profileGroupDetail" comment-panel-directive></div>
+    <div options="dirOptions" type="'profilegroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="profileGroupDetail"
+      comment-panel-directive></div>
 
     <div class="portlet light bordered" id="form_wizard_1">
       <div class="portlet-title">
@@ -39,25 +40,6 @@
           </span>
         </div>
         <div class="actions">
-          <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-            ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-          <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-            ng-hide="isAdd" data-ng-click="showview(profileGroupDetail.uuid,profileGroupDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'"
-            data-ng-click="showProfileGroupGraph(profileGroupDetail.uuid,profileGroupDetail.version)" style="border:0px solid transparent !important;">
-                        <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
-                    </a>
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless" ng-click="broadcastRefreshData()" data-original-title="" title="" style="border:0px solid transparent !important;">
-                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-          <a class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="border:0px solid transparent !important;">
-                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
-
-                    </a> -->
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
@@ -93,8 +75,8 @@
           </div>
           <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="profileGroupDetail.uuid" version="profilegroup.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()" prevent-enter-submit
-          ng-show="showProfileGroupForm">
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"
+          prevent-enter-submit ng-show="showProfileGroupForm">
           <div class="form-wizard">
             <div class="form-body">
 
@@ -146,11 +128,11 @@
                 </label>
                 <div class="col-md-6">
                   <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                    add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                     </auto-complete>
-                </tags-input>
+                  </tags-input>
                 </div>
               </div>
               <div class="form-group">
@@ -168,6 +150,17 @@
                     <label class="btn btn-default" ng-model="profileGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                       uib-btn-radio="'Y'">Yes</label>
                     <label class="btn btn-default" ng-model="profileGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'N'" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6">
+                  <div class="btn-group" >
+                    <label class="btn btn-default" ng-model="profileGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="profileGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                       uib-btn-radio="'N'" uncheckable>No</label>
                   </div>
                 </div>

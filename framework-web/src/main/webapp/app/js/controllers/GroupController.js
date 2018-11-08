@@ -152,7 +152,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	/*start If*/
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
-
+        $scope.showactive="true"
 		$scope.isDependencyShow = true;
 		AdminGroupService.getAllVersionByUuid($stateParams.id, "group").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
@@ -171,20 +171,8 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.group.defaultVersion = defaultversion;
-			//$scope.roleInfoTags=response.roleInfo;
 			$scope.appId = response.appId.ref
 			$scope.roleId = response.roleId.ref
-			//    	    var roleInfo=[];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//    	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-
-			// $scope.roleInfoTags=roleInfo;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -197,7 +185,8 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		}//End getLatestByUuid
 	}/*End If*/
 	else {
-
+		$scope.groupdata={};
+		$scope.groupdata.locked="N";
 
 	}//End Else
 
@@ -213,17 +202,6 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.group.defaultVersion = defaultversion;
-			//    	    var roleInfo=[];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//    	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-
-			// $scope.roleInfoTags=roleInfo;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -264,6 +242,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		groupJson.name = $scope.groupdata.name;
 		groupJson.desc = $scope.groupdata.desc;
 		groupJson.active = $scope.groupdata.active;
+		groupJson.locked = $scope.groupdata.locked;
 		groupJson.published = $scope.groupdata.published;
 		var Appid = {};
 		var refAppid = {};

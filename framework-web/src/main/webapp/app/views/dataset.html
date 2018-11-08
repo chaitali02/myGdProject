@@ -253,6 +253,15 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="btn-group">
+                            <label class="btn btn-default" ng-model="dataset.locked" ng-disabled="{{showactive}}" uib-btn-radio="'Y'">Yes</label>
+                            <label class="btn btn-default" ng-model="dataset.locked" ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group" ng-init="dataset.published='N'">
@@ -261,12 +270,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" class="form-control" name="linit" ng-class="" ng-disabled="{{mode}}" ng-model="dataset.limit" placeholder="">
-                        </div>
-                      </div>
+                     
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4">
@@ -651,6 +655,12 @@
                 <!-- Start Tab4 -->
                 <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
                   <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="submit()" novalidate="novalidate">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit</label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="number" class="form-control" name="linit" ng-class="" ng-disabled="{{mode}}" ng-model="dataset.limit" placeholder="">
+                      </div>
+                    </div>
                     <div class="form-group" style="padding-top:10px;">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <!-- <a ui-sref="metadata({type:'dataset'})" class="btn btn-primary">Cancel</a> -->

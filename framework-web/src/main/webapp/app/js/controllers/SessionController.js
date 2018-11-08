@@ -127,6 +127,9 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 				}
 			}
 		}
+	}else{
+		$scope.sessiondata={};
+		$scope.sessiondata.locked="N";
 	}
 
 	$scope.selectVersion = function () {

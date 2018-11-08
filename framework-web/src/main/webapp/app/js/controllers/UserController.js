@@ -227,19 +227,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		//if(typeof $sessionStorage.fromParams != "undefined"){
-		/*//if($sessionStorage.fromParams.type !="user"){
-			$scope.state=$sessionStorage.fromStateName;
-			$scope.stateparme=$sessionStorage.fromParams;
-			$sessionStorage.showgraph=true;
-			var data=$stateParams.id.split("_");
-			var uuid=data[0];
-			var version=data[1]
-			$scope.getAllVersion(uuid)//Call SelectAllVersion Function
-			$scope.selectVersion(uuid,version);//Call SelectVersion Function
-		//}//End Inner If*/
-		// }
-		//else{
 		$scope.getAllVersion($stateParams.id)//Call SelectAllVersion Function
 		if (!$stateParams.version) {
 			AdminUserService.getLatestByUuid($stateParams.id, "user").then(function (response) { onGetLatestByUuid(response.data) });
@@ -265,18 +252,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				groupInfo[j] = grouptag
 			}
 			$scope.groupInfoTags = groupInfo;
-
-			//	    	    var roleInfo=[];
-			//	    	    for(var j=0;j<response.roleInfo.length;j++){
-			//	    	    	var roletag={};
-			//	      	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//	    	    	roletag.type=response.roleInfo[j].ref.type;
-			//	    	    	roletag.name=response.roleInfo[j].ref.name;
-			//	    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//	    	    	roleInfo[j]=roletag
-			//	    	    }
-			//	    	    $scope.roleInfoTags=roleInfo;
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -289,6 +264,10 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		}//End getLatestByUuid
 		//}//End Inner Else
 	}/*End If*/
+	else{
+		$scope.userdata={};
+		$scope.userdata.locked="N";
+	}
 
 
 
@@ -327,6 +306,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.name = $scope.userdata.name;
 		userJson.desc = $scope.userdata.desc;
 		userJson.active = $scope.userdata.active;
+		userJson.locked = $scope.userdata.locked;
 		userJson.published = $scope.userdata.published;
 		userJson.password = $scope.userdata.password;
 		userJson.firstName = $scope.userdata.firstName;

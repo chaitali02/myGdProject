@@ -157,6 +157,8 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		}
 	}//End If
 	else {
+		$scope.distributionData={};
+		$scope.distributionData.locked="N";
 		DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allParamlist = response;
@@ -204,6 +206,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		distributionJson.name = $scope.distributionData.name;
 		distributionJson.desc = $scope.distributionData.desc;
 		distributionJson.active = $scope.distributionData.active;
+		distributionJson.locked = $scope.distributionData.locked;
 		distributionJson.published = $scope.distributionData.published;
 		distributionJson.library = $scope.selectedLibrary;
 		distributionJson.className = $scope.distributionData.className;

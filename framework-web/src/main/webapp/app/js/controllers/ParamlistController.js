@@ -323,6 +323,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			}
 		}
 	}//End If
+	else{
+		$scope.paramlistData={};
+        $scope.paramlistData.locked="N"		
+	}
 
 
 	$scope.selectVersion = function (uuid, version) {
@@ -414,6 +418,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.name = $scope.paramlistData.name
 		paramlistJson.desc = $scope.paramlistData.desc
 		paramlistJson.active = $scope.paramlistData.active;
+		paramlistJson.locked = $scope.paramlistData.locked;
 		paramlistJson.published = $scope.paramlistData.published;
 		paramlistJson.templateFlg = $scope.paramlistData.templateFlg;
 		var templateInfo={};

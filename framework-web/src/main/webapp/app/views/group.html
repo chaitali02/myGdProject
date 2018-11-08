@@ -122,7 +122,6 @@
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
                         max-results-to-show="10">
@@ -145,6 +144,15 @@
                   <div class="btn-group" ng-init="groupdata.active='Y'">
                     <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
                     <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" >
+                    <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                   </div>
                 </div>
               </div>

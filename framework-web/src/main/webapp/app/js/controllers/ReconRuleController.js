@@ -301,7 +301,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable[index].isrhsFunction = true;
       CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
         onSuccressGetFunction(response.data)});	
-			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allSourceFilterFunction = response;
 			}
@@ -414,7 +413,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable[index].isrhsFunction = true;
       CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
         onSuccressGetFunction(response.data)});	
-			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allTargetFilterFunction = response;
 			}
@@ -698,6 +696,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }else{
     $scope.getAllLatest("source",$scope.selectSourceType,true,{});
     $scope.getAllLatest("target",$scope.selectTargetType,true,{});
+    $scope.reconruledata={};
+    $scope.reconruledata.locked="N";
   }
   $scope.selectVersion=function(){
     ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon').then(function(response) { onSuccess(response.data)});
@@ -748,6 +748,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     jsonObj.name = $scope.reconruledata.name;
     jsonObj.desc = $scope.reconruledata.desc;
     jsonObj.active = $scope.reconruledata.active;
+    jsonObj.locked = $scope.reconruledata.locked;
     jsonObj.published = $scope.reconruledata.published;
     jsonObj.sourceDistinct=$scope.reconruledata.sourceDistinct;
     jsonObj.targetDistinct=$scope.reconruledata.targetDistinct;
@@ -1201,6 +1202,9 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
       }
       $scope.ruleTags = ruleTagArray
     }
+  }else{
+    $scope.ruleGroupDetail={};
+    $scope.ruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function() {
@@ -1252,6 +1256,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
+    ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
     ruleGroupJson.published = $scope.ruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {

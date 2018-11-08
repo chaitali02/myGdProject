@@ -383,7 +383,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}//End IF
 
 	else {
-
+	 $scope.dashboarddata={};
+	 $scope.dashboarddata.locked="N";
 
 	}//End Else
 
@@ -496,16 +497,14 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		var dashboardjson = {}
-		/*dashboardjson.srcChg="n";
-		if($scope.dashboardCompare == null){
-
-	    	dashboardjson.srcChg="y";
-	    	dashboardjson.filterChg="y";
-   	    }*/
+	
 		dashboardjson.uuid = $scope.dashboarddata.uuid
 		dashboardjson.name = $scope.dashboarddata.name
 		dashboardjson.desc = $scope.dashboarddata.desc
 		dashboardjson.active = $scope.dashboarddata.active;
+		dashboardjson.locked = $scope.dashboarddata.locked;
+
+		
 		dashboardjson.published = $scope.dashboarddata.published;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -525,15 +524,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		ref.type = $scope.selectDependsOnType
 		dependson.ref = ref;
 		dashboardjson.dependsOn = dependson;
-		/* if($scope.dashboardCompare != null && $scope.dashboardCompare.dependsOn.ref.uuid !=$scope.alldependsOn.defaultoption.uuid){
-			dashboardjson.srcChg="y";
-
-		}*/
-        /* else if($scope.dashboardCompare != null){
-
-        	 dashboardjson.srcChg="y";
-
-         }*/
 
 		//SectionInfo
 		var sectionArray = [];
@@ -562,7 +552,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				var ref = {};
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
-				// ref.version=$scope.profileTags[i].version;
 				filterInfo.ref = ref;
 				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
 				filterInfoArray[i] = filterInfo;

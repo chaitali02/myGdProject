@@ -1,7 +1,7 @@
 AdminModule = angular.module('AdminModule');
 
 AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc, CommonService, $timeout, $filter) {
-	$scope.mode = " ";
+	
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -36,6 +36,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.mode = "false";
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -339,6 +340,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.showactive="true";
 		var id;
 		id = $stateParams.id;
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
@@ -380,6 +382,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			}
 		}
 	}//End IF
+	else{
+		$scope.applicationdata={};
+		$scope.applicationdata.locked="N";
+	}
 	
 
 
@@ -408,6 +414,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.name = $scope.applicationdata.name
 		applicationJson.desc = $scope.applicationdata.desc
 		applicationJson.active = $scope.applicationdata.active;
+		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

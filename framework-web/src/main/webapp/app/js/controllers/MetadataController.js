@@ -808,6 +808,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			}
 		}
 	} /*End If*/
+	else{
+		$scope.datapoddata={};
+		$scope.datapoddata.locked="N";
+	}
 
 
 	/* Start selectVersion*/
@@ -881,6 +885,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 		datapodJson.tags = tagArray
 		datapodJson.active = $scope.datapoddata.active;
+		datapodJson.locked = $scope.datapoddata.locked;
 		datapodJson.published = $scope.datapoddata.published;
 		datapodJson.cache = $scope.datapoddata.cache;
 		var datasource = {};

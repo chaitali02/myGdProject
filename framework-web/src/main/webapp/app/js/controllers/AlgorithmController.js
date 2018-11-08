@@ -196,6 +196,8 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		// 	$scope.selectparamlist = $scope.allparamlist[0];
 		// }
 		$scope.getAllLatestParamListByTemplate();
+		$scope.algorithmData={};
+		$scope.algorithmData.locked="N";
 	}
 
 
@@ -257,6 +259,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.name = $scope.algorithmData.name
 		algorithmJson.desc = $scope.algorithmData.desc
 		algorithmJson.active = $scope.algorithmData.active;
+		algorithmJson.locked = $scope.algorithmData.locked;
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;

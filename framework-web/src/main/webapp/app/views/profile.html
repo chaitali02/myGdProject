@@ -22,10 +22,12 @@
                     <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
                 </div>
             </div>
-        </div> <!-- END PAGE HEADER-->
+        </div>
+        <!-- END PAGE HEADER-->
         <br>
         <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-        <div  options="dirOptions" type="'profile'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="profileDetail" comment-panel-directive></div>
+        <div options="dirOptions" type="'profile'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="profileDetail"
+            comment-panel-directive></div>
 
         <div class="portlet light bordered" id="form_wizard_1">
 
@@ -36,24 +38,6 @@
                     </span>
                 </div>
                 <div class="actions">
-                    <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                    ng-hide="isAdd" data-ng-click="enableEdit(profileDetail.uuid,profileDetail.version)">
-                    <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
-                  </a>
-                  <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                    ng-hide="isAdd" data-ng-click="showview(profileDetail.uuid,profileDetail.version)">
-                    <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
-                  </a>
-                    <a  style="border:0px solid transparent !important;" class="borderless btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'"  data-ng-click="showProfileGroupGraph(profileDetail.uuid,profileDetail.version)">
-                        <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
-                    </a>
-                    </a>
-                    <a style="border:0px solid transparent !important;" href="javascript:;" class="reload borderless btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white " ng-click="broadcastRefreshData()" data-original-title="" title="">
-                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a style="border:0px solid transparent !important;" class="borderless btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white " ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip >
-                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a> -->
                     <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
                         tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
                         data-ng-click="enableEdit(profileDetail.uuid,profileDetail.version)">
@@ -90,12 +74,12 @@
                         <div class="bounce1"></div>
                         <div class="bounce3"></div>
                     </div>
-                    
-                    <div class="form-body show-graph-body tree-graph" id="graphWrapper"  tree-graph-directive uuid="profileDetail.uuid" version="profilegroup.defaultVersion.version"></div>
+
+                    <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="profileDetail.uuid" version="profilegroup.defaultVersion.version"></div>
                 </div>
 
-                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"prevent-enter-submit
-                    ng-show="showProfileGroup">
+                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"
+                    prevent-enter-submit ng-show="showProfileGroup">
                     <div class="form-wizard">
                         <div class="form-body">
 
@@ -144,9 +128,9 @@
                                 <label class="control-label col-md-3">Tag</label>
                                 <div class="col-md-6">
                                     <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
-                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                                            max-results-to-show="10">
+                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                                        add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                                         </auto-complete>
                                     </tags-input>
                                 </div>
@@ -155,7 +139,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3">Desc</label>
                                 <div class="col-md-6">
-                                  
+
                                     <textarea class="form-control" ng-disabled="{{mode}}" ng-model="profileDetail.desc" rows="2" style="resize:none;"></textarea>
                                 </div>
                             </div>
@@ -167,6 +151,17 @@
                                         <label class="btn btn-default" ng-model="profileDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                                             uib-btn-radio="'Y'">Yes</label>
                                         <label class="btn btn-default" ng-model="profileDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                            uib-btn-radio="'N'" uncheckable>No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                                <div class="col-md-6">
+                                    <div class="btn-group">
+                                        <label class="btn btn-default" ng-model="profileDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                            uib-btn-radio="'Y'">Yes</label>
+                                        <label class="btn btn-default" ng-model="profileDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                                             uib-btn-radio="'N'" uncheckable>No</label>
                                     </div>
                                 </div>
@@ -235,7 +230,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div><!--End form-body-->
+                        </div>
+                        <!--End form-body-->
                         <div class="form-actions">
                             <div class="row">
                                 <label class="control-label col-md-3"></label>
@@ -250,7 +246,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div><!--End form-wizard-->
+                    </div>
+                    <!--End form-wizard-->
                 </form>
             </div>
         </div>

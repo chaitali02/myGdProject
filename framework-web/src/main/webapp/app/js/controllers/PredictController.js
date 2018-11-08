@@ -373,6 +373,9 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id,$stateParams.version);
+  } else{
+    $scope.predictData={};
+    $scope.predictData.locked="N"
   }
  
   $scope.selectVersion=function(uuid,version){
@@ -400,6 +403,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     predictJson.name = $scope.predictData.name
     predictJson.desc = $scope.predictData.desc
     predictJson.active = $scope.predictData.active;
+    predictJson.locked = $scope.predictData.locked;
     predictJson.published=$scope.predictData.published; 
     var tagArray = [];
     if ($scope.tags != null) {

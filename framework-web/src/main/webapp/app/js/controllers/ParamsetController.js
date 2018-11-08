@@ -222,6 +222,8 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		}
 	}//End If
 	else {
+		$scope.paramsetdata={};
+		$scope.paramsetdata.locked="N"
 		ParamSetService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allparamlist = response;
@@ -267,6 +269,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		paramsetJson.name = $scope.paramsetdata.name
 		paramsetJson.desc = $scope.paramsetdata.desc
 		paramsetJson.active = $scope.paramsetdata.active;
+		paramsetJson.locked = $scope.paramsetdata.locked;
 		paramsetJson.published = $scope.paramsetdata.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

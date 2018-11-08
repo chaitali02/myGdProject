@@ -57,6 +57,7 @@ public class ApplicationViewServiceImpl {
 		applicationView.setVersion(application.getVersion());
 		applicationView.setName(application.getName());
 		applicationView.setActive(application.getActive());
+		applicationView.setLocked(application.getLocked());
 		applicationView.setAppInfo(application.getAppInfo());
 		applicationView.setCreatedBy(application.getCreatedBy());
 		applicationView.setCreatedOn(application.getCreatedOn());
@@ -85,6 +86,7 @@ public class ApplicationViewServiceImpl {
 			//setting application baseEntity
 			application.setName(applicationView.getName());
 			application.setTags(applicationView.getTags());
+			application.setLocked(applicationView.getLocked());
 			application.setBaseEntity();
 			if(applicationView.getParamList() != null) {
 				paramListMIH = processParamList(applicationView, application.getUuid());
@@ -138,6 +140,7 @@ public class ApplicationViewServiceImpl {
     public MetaIdentifierHolder processParamList(ApplicationView applicationView, String applicationUuid) throws JsonProcessingException, JSONException, ParseException {
     	ParamList appParamList = applicationView.getParamList();
     	appParamList.setName("paramlist_"+applicationView.getName());
+    	appParamList.setLocked(applicationView.getLocked());
     	appParamList.setBaseEntity();
     	BaseEntity savedParamList = (BaseEntity) commonServiceImpl.save(MetaType.paramlist.toString(), appParamList);
 		return new MetaIdentifierHolder(new MetaIdentifier(MetaType.paramlist, savedParamList.getUuid(), null));

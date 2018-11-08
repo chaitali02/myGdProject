@@ -120,7 +120,6 @@
                             <div class="form-group">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                 <div class="col-md-6">
-                                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
                                     <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                                         <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
                                             max-results-to-show="10">
@@ -164,8 +163,17 @@
                                         <label class="btn btn-default" ng-model="expressiondata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                     </div>
                                 </div>
-
                             </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="btn-group" >
+                                        <label class="btn btn-default" ng-model="expressiondata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                        <label class="btn btn-default" ng-model="expressiondata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">

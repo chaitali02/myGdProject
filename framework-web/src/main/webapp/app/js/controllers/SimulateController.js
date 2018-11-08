@@ -337,6 +337,8 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     $scope.getOneByUuidandVersion($stateParams.id, $stateParams.version);
   }else{
     $scope.getAllLetestParamList(false,null);
+    $scope.simulateData={};
+    $scope.simulateData.locked="N"
   }
 
   $scope.selectVersion = function (uuid, version) {
@@ -459,6 +461,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     SimulateJson.name = $scope.simulateData.name
     SimulateJson.desc = $scope.simulateData.desc
     SimulateJson.active = $scope.simulateData.active;
+    SimulateJson.locked = $scope.simulateData.locked;
     SimulateJson.published = $scope.simulateData.published;
     SimulateJson.numIterations = $scope.simulateData.numIterations;
     SimulateJson.type=$scope.selectSimulationType;

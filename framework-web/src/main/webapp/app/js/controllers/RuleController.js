@@ -346,6 +346,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
       $scope.allparamlistParams=[];
+      $scope.ruleData={};
+      $scope.ruleData.locked="N";
+      $scope.ruleData.active="Y";
+      $scope.ruleData.published="N";
+      
     }
   } //End Else
 
@@ -1231,6 +1236,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     ruleJson.name = $scope.ruleData.name;
     ruleJson.desc = $scope.ruleData.desc;
     ruleJson.active = $scope.ruleData.active;
+    ruleJson.locked = $scope.ruleData.locked;
     ruleJson.published = $scope.ruleData.published;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1630,6 +1636,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       }
       $scope.ruleTags = ruleTagArray
     }
+  }else{
+    $scope.ruleGroupDetail={};
+    $scope.ruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function () {
@@ -1687,6 +1696,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
+    ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
     ruleGroupJson.published = $scope.ruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {

@@ -352,9 +352,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 
 		}
 	} //End if
-
 	else {
-
 		if ($sessionStorage.fromStateName  && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListformula") {
 			$scope.showactive = "false"
 			$scope.selectedDependsOnType = $sessionStorage.dependon.type
@@ -373,6 +371,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				}
 			}
 		}//End Inner If
+		else{
+			$scope.formuladata={};
+			$scope.formuladata.locked="N";
+		}
 	}//End Else
 
 	$scope.clear = function () {
@@ -457,7 +459,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			}
 		}
 		else if($scope.attributeType.text == "paramlist"){
-			debugger
+			
 			data.type = $scope.attributeType.text
 			data.value = $scope.sourceparamlist.dname
 			data.uuid = $scope.sourceparamlist.uuid;
@@ -637,7 +639,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		ref.uuid = $scope.allformuladepands.defaultoption.uuid
 		dependsOn.ref = ref;
 		formulaJson.dependsOn = dependsOn;
-		formulaJson.active = $scope.formuladata.active
+		formulaJson.active = $scope.formuladata.active;
+		formulaJson.locked = $scope.formuladata.locked;
 		formulaJson.published = $scope.formuladata.published
 		var formulaArray = [];
 		if ($scope.formulainfoarray.length > 0) {

@@ -382,6 +382,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       $scope.metaTags = metaTagArray
       $scope.scheduleTableArray=response.scheduleInfoArray;
     }
+  }else{
+    $scope.batchDetail={};
+    $scope.batchDetail.locked="N";
   }
 
   $scope.selectVersion = function() {
@@ -474,6 +477,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.name = $scope.batchDetail.name;
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
+    batchJson.locked = $scope.batchDetail.locked;
     batchJson.published = $scope.batchDetail.published;
     batchJson.inParallel= $scope.batchDetail.inParallel;
     if($scope.isAdd ==true){
@@ -508,6 +512,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     
     batchJson.pipelineInfo = metaInfoArray;
     var scheduleTableArray=[];
+    if($scope.scheduleTableArray && $scope.scheduleTableArray.length >0){
     for(var i=0;i<$scope.scheduleTableArray.length;i++){
       var scheduleInfo={};
       if($scope.scheduleTableArray[i].scheduleChg =="Y"){
@@ -539,7 +544,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     }
     //  scheduleInfo.recurring=$scope.scheduleTableArray[i].recurring==true ?'Y':'N';
       scheduleTableArray[i]=scheduleInfo;
-    }  
+    } 
+    } 
     batchJson.scheduleInfo=scheduleTableArray; 
     console.log(JSON.stringify(batchJson))
     BatchService.submit(batchJson,"batchview",upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});

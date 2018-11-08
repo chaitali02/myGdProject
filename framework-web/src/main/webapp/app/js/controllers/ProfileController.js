@@ -188,6 +188,8 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		}
 	}
 	else {
+		$scope.profileDetail={};
+		$scope.profileDetail.locked="N";
 		ProfileService.getAllDatapod($scope.porfiletype).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			$scope.allDatapod = response;
@@ -266,6 +268,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		profileJson.name = $scope.profileDetail.name;
 		profileJson.desc = $scope.profileDetail.desc;
 		profileJson.active = $scope.profileDetail.active;
+		profileJson.locked = $scope.profileDetail.locked;
 		profileJson.published = $scope.profileDetail.published;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -510,6 +513,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			}
 			$scope.profileTags = profileTagArray
 		}
+	}else{
+		$scope.profileGroupDetail={}
+		$scope.profileGroupDetail.locked="N";
 	}
 
 	$scope.selectVersion = function () {
@@ -568,6 +574,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		profileGroupJson.name = $scope.profileGroupDetail.name;
 		profileGroupJson.desc = $scope.profileGroupDetail.desc;
 		profileGroupJson.active = $scope.profileGroupDetail.active;
+		profileGroupJson.locked = $scope.profileGroupDetail.locked;
 		profileGroupJson.published = $scope.profileGroupDetail.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

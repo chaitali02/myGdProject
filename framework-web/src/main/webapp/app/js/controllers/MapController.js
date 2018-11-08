@@ -342,28 +342,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 	}//End If
 	else {
-
-		// MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
-		// var onSuccessGetAllLatestByTarget = function (response) {
-		// 	$scope.allMapTarget = response;
-		// 	MetadataMapSerivce.getAttributesByDatapod($scope.allMapTarget.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
-		// 	var onSuccessGetAttributesByDatapod = function (response) {
-		// 		$scope.allMapTargetAttribute = response
-
-		// 		for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
-		// 			var mapinfo = {};
-		// 			var obj = {}
-		// 			obj.text = "datapod";
-		// 			obj.caption = "attribute";
-		// 			mapinfo.isSourceAtributeSimple = false;
-		// 			mapinfo.isSourceAtributeDatapod = true;
-		// 			mapinfo.isSourceAtributeFormula = false;
-		// 			mapinfo.isSourceAtributeExpression = false;
-		// 			mapinfo.sourceAttributeType = obj
-		// 			$scope.mapTableArray[i] = mapinfo;
-		// 		}
-		// 	}
-		// }
+		$scope.mapdata={};
+		$scope.mapdata.locked="N";
 	}
 
 	$scope.selectVersion = function () {
@@ -453,6 +433,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		mapJson.tags = tagArray;
 		mapJson.desc = $scope.mapdata.desc;
 		mapJson.active = $scope.mapdata.active;
+		mapJson.locked = $scope.mapdata.locked;
 		mapJson.published = $scope.mapdata.published;
 
 		var sourece = {};

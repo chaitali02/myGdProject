@@ -373,7 +373,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id, $stateParams.version);
   }
-
+  else{
+    $scope.trainData={};
+    $scope.trainData.locked="N"
+  }
   $scope.selectVersion = function (uuid, version) {
 
     $scope.allSource = [];
@@ -399,6 +402,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.name = $scope.trainData.name
     TrainJson.desc = $scope.trainData.desc
     TrainJson.active = $scope.trainData.active;
+    TrainJson.locked = $scope.trainData.locked;
     TrainJson.published = $scope.trainData.published;
     TrainJson.published = $scope.trainData.published;
     TrainJson.valPercent = $scope.trainData.valPercent;

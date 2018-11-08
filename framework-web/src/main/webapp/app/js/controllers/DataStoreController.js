@@ -197,7 +197,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 			}//End Innter if
 		}
 	}//End If
-
+	else{
+		$scope.datastoredata={};
+		$scope.datastoredata.locked="N";
+	}
 
 	$scope.selectVersion = function () {
 		$scope.datastoreAllMata = null;
@@ -263,6 +266,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		datastroreJson.name = $scope.datastoredata.name
 		datastroreJson.desc = $scope.datastoredata.desc
 		datastroreJson.active = $scope.datastoredata.active;
+		datastroreJson.locked = $scope.datastoredata.locked;
 		datastroreJson.published = $scope.datastoredata.published;
 		datastroreJson.location = $scope.datastoredata.location;
 		var tagArray = [];

@@ -283,7 +283,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     }
   }
   else {
-    $scope.showactive = "false"
+    $scope.showactive = "false";
+    $scope.dataqualitydata.locked="N";
   }
 
   $scope.selectVersion = function () {
@@ -751,7 +752,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     }
     dataqualityjosn.tags = tagArray;
-    dataqualityjosn.active = $scope.dataqualitydata.active
+    dataqualityjosn.active = $scope.dataqualitydata.active;
+    dataqualityjosn.locked = $scope.dataqualitydata.locked;
     dataqualityjosn.published = $scope.dataqualitydata.published
     var attributeref = {}
     var attribute = {};
@@ -908,7 +910,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         
       }
     } else {
-      dataqualityjosn.filter = null;
+      dataqualityjosn.filterInfo = null;
      
     }
     console.log(JSON.stringify(dataqualityjosn))
@@ -1138,6 +1140,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       }
       $scope.ruleTags = ruleTagArray
     }
+  }else{
+    $scope.dqruleGroupDetail={};
+    $scope.dqruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function () {
@@ -1200,6 +1205,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     dqruleGroupJson.name = $scope.dqruleGroupDetail.name;
     dqruleGroupJson.desc = $scope.dqruleGroupDetail.desc;
     dqruleGroupJson.active = $scope.dqruleGroupDetail.active;
+    dqruleGroupJson.locked = $scope.dqruleGroupDetail.locked;
     dqruleGroupJson.published = $scope.dqruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {

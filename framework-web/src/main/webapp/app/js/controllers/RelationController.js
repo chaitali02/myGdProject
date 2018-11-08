@@ -206,7 +206,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 
 	}//End IF
 	else {
-		$scope.showactive = "false"
+		$scope.showactive = "false";
+		$scope.relationdata={};
+		$scope.relationdata.locked="N";
 		MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			$scope.alldatapod = response
@@ -448,6 +450,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		relationjson.uuid = $scope.relationdata.uuid;
 		relationjson.name = $scope.relationdata.name;
 		relationjson.active = $scope.relationdata.active;
+		relationjson.locked = $scope.relationdata.locked;
 		relationjson.desc = $scope.relationdata.desc;
 		relationjson.published = $scope.relationdata.published;
 		var tagArray = [];

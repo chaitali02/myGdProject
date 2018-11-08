@@ -244,6 +244,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		}//End onGetLatestByUuid
 
 	}//End If
+	else{
+		$scope.functiondata={};
+		$scope.functiondata.locked="N"
+	}
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
@@ -296,6 +300,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.name = $scope.functiondata.name
 		functionJson.desc = $scope.functiondata.desc
 		functionJson.active = $scope.functiondata.active;
+		functionJson.locked = $scope.functiondata.locked;
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
 		functionJson.category = $scope.selectCatogory;

@@ -816,7 +816,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 		}//End onSuccessResult
 	}//End If
-
+    else{
+		$scope.report={};
+		$scope.report.locked="N";
+	}
 
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
@@ -1366,6 +1369,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.name = $scope.report.name;
 		reportJson.desc = $scope.report.desc
 		reportJson.active = $scope.report.active;
+		reportJson.locked = $scope.report.locked;
 		reportJson.published = $scope.report.published;
 		reportJson.title = $scope.report.title;
 		reportJson.header = $scope.report.header;

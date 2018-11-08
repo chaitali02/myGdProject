@@ -378,7 +378,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 	}
-
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
@@ -561,6 +560,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			//delete $sessionStorage.datasetjosn;
 		}//End Inner If
+		else{
+			$scope.dataset={};
+			$scope.dataset.locked="N";
+		}
 	}//End Else
 
 	/* Start selectVersion*/
@@ -1150,6 +1153,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		dataSetJson.active = $scope.dataset.active;
 		dataSetJson.published = $scope.dataset.published;
 		dataSetJson.limit = $scope.dataset.limit;
+		dataSetJson.locked = $scope.dataset.locked;
+		
 
 		var tagArray = [];
 		if ($scope.tags != null) {

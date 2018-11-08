@@ -404,6 +404,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.keylist = [];
 		$scope.valuelist = [];
 		$scope.grouplist = [];
+		$scope.vizpoddata={};
+		$scope.vizpoddata.locked="N";
 	}//End Else
 
 	$scope.loadProfiles = function (query) {
@@ -481,6 +483,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		vizpodjson.tags = tagArray;
 		vizpodjson.desc = $scope.vizpoddata.desc;
 		vizpodjson.active = $scope.vizpoddata.active;
+		vizpodjson.locked = $scope.vizpoddata.locked;
 		vizpodjson.published = $scope.vizpoddata.published;
 
 		var sourece = {};

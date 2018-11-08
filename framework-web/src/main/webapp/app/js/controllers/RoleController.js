@@ -177,7 +177,10 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 			}//End Innter If
 		}
 	}/*End If*/
-
+    else{
+		$scope.roledata={};
+		$scope.roledata.locked="N";
+	}
 
 	
 
@@ -244,7 +247,8 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		roleJson.uuid = $scope.roledata.uuid;
 		roleJson.name = $scope.roledata.name;
 		roleJson.desc = $scope.roledata.desc;
-		roleJson.active = $scope.roledata.active
+		roleJson.active = $scope.roledata.active;
+		roleJson.locked = $scope.roledata.locked;
 		roleJson.published = $scope.roledata.published
 		var tagArray = [];
 		if ($scope.tags != null) {

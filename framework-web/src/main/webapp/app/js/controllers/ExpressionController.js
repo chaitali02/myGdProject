@@ -204,6 +204,8 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	else {
 		$scope.showactive = "false"
 		$scope.expressionmetnotmat = {}
+		$scope.expressiondata={};
+		$scope.expressiondata.locked="N";
 		var metinfo = {}
 		metinfo.ismetlhsSimple = true;
 		//metinfo.metlhsvalu="''"
@@ -211,7 +213,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		var notmetinfo = {}
 		notmetinfo.isnotmetlhsSimple = true;
 		$scope.expressionmetnotmat.notmetinfo = notmetinfo;
-		if (typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListexpression") {
+		if ($sessionStorage.fromStateName && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListexpression") {
 			$scope.selectExpression = $sessionStorage.dependon.type
 			$scope.isDependonDisabled = true;
 			MetadataExpressionSerivce.getAllLatest($scope.selectExpression).then(function (response) { onSuccessRelation(response.data) });
@@ -453,6 +455,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		expressionjson.uuid = $scope.expressiondata.uuid;
 		expressionjson.name = $scope.expressiondata.name;
 		expressionjson.active = $scope.expressiondata.active;
+		expressionjson.locked = $scope.expressiondata.locked;
 		expressionjson.desc = $scope.expressiondata.desc;
 		expressionjson.published = $scope.expressiondata.published;
 
@@ -618,7 +621,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id, 'version': $scope.stageParams.version, 'mode': $scope.stageParams.mode }); }, 2000);
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName, { 'type': $scope.stageParams.type }); }, 2000);
+				setTimeout(function () { $state.go('metadata', { 'type': 'expression' }); }, 2000);
 			}
 		}
 

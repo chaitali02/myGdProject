@@ -159,6 +159,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		}
 	}//End If
 	else {
+		$scope.graphpodData={};
+		$scope.graphpodData.locked="N"
 		
 	}
 
@@ -498,6 +500,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		graphpodJson.name = $scope.graphpodData.name
 		graphpodJson.desc = $scope.graphpodData.desc
 		graphpodJson.active = $scope.graphpodData.active;
+		graphpodJson.locked = $scope.graphpodData.locked;
 		graphpodJson.published = $scope.graphpodData.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

@@ -156,6 +156,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		}
 	}//End If
 	else {
+		$scope.OperatorData={};
+		$scope.OperatorData.locked="N";
 		OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allParamlist = response;
@@ -202,6 +204,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		OperatorJson.name = $scope.OperatorData.name
 		OperatorJson.desc = $scope.OperatorData.desc
 		OperatorJson.active = $scope.OperatorData.active;
+		OperatorJson.locked = $scope.OperatorData.locked;
 		OperatorJson.published = $scope.OperatorData.published;
 		OperatorJson.operatorType=$scope.selectedOperatorType;
 		var tagArray = [];

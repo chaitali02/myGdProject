@@ -1286,6 +1286,9 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 			}
 			$scope.ruleTags = ruleTagArray
 		}
+	}else{
+		$scope.ruleGroupDetail={};
+		$scope.ruleGroupDetail.locked="N";
 	}
 
 	$scope.selectVersion = function () {
@@ -1337,6 +1340,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		ruleGroupJson.name = $scope.ruleGroupDetail.name;
 		ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
 		ruleGroupJson.active = $scope.ruleGroupDetail.active;
+		ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
 		ruleGroupJson.published = $scope.ruleGroupDetail.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

@@ -173,7 +173,8 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 	}
 	//end of if
 	else {
-
+		$scope.privilegedata={};
+		$scope.privilegedata.locked="N"
 		AdminPrivilegeService.getAll("meta").then(function (response) { onGetAll(response.data) });
 		var onGetAll = function (response) {
 			$scope.allmeta = response
@@ -227,6 +228,7 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		privilegeJson.name = $scope.privilegedata.name;
 		privilegeJson.desc = $scope.privilegedata.desc;
 		privilegeJson.active = $scope.privilegedata.active;
+		privilegeJson.locked = $scope.privilegedata.locked;
 		privilegeJson.published = $scope.privilegedata.published;
 		privilegeJson.privType = $scope.selectprivilegeType;
 		var defaultoption = {};

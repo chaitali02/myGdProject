@@ -133,6 +133,15 @@
                   </div>
                 </div>
               </div>
+              <div class="form-group" ng-show="exportdata.uuid">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" >
+                    <label class="btn btn-default" ng-model="exportdata.locked" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="exportdata.locked" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
 
               <div class="form-group" ng-show="exportdata.uuid">
                 <label class="col-md-3 control-label">Location</label>

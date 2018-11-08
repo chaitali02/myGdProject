@@ -133,7 +133,6 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 
 
 	$scope.onChangeDatasoureType = function () {
-		debugger
 		if ($scope.datasourcetype == $scope.datasourceTypes[0]) {
 			$scope.isHiveFieldDisabled = false;
 			$scope.isFileFieldDisabled = true;
@@ -213,6 +212,10 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		}//End getLatestByUuid
 		/*}//End Inner Else */
 	}//End If
+	else{
+		$scope.datasourcedata={};
+		$scope.datasourcedata.locked="N";
+	}
 
 
 
@@ -239,6 +242,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		datasourceJson.password = $scope.datasourcedata.password
 		datasourceJson.path = $scope.datasourcedata.path
 		datasourceJson.active = $scope.datasourcedata.active;
+		datasourceJson.locked = $scope.datasourcedata.locked;
 		datasourceJson.published = $scope.datasourcedata.published;
 		datasourceJson.sessionParameters = $scope.datasourcedata.sessionParameters
 		var tagArray = [];

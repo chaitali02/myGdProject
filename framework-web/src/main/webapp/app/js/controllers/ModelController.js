@@ -457,6 +457,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }//End 
   } //End If onSuccessGetLatestByUuid
   else {
+    $scope.modeldata={};
+    $scope.modeldata.locked="N";
     $scope.showactive="false"
    // $scope.getAllLatestAlgorithm();
     $scope.onChangeDependsOnType(true);
@@ -544,6 +546,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     modelJson.name = $scope.modeldata.name
     modelJson.desc = $scope.modeldata.desc
     modelJson.active = $scope.modeldata.active;
+    modelJson.locked = $scope.modeldata.locked;
     modelJson.published=$scope.modeldata.published;
    // modelJson.trainPercent=70//$scope.modeldata.trainPercent
     //modelJson.valPercent=30//$scope.modeldata.valPercent
