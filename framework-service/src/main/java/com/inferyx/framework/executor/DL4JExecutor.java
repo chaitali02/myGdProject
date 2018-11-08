@@ -760,7 +760,7 @@ public class DL4JExecutor implements IExecutor {
 			
 			// Create DataSetIterator
 			
-			getDataSet(trainingDf, batchSize, trainingDf.schema().fieldIndex("label"), (int)trainingDf.select("label").distinct().count());
+			DataSetIterator iterator = getDataSet(trainingDf, batchSize, trainingDf.schema().fieldIndex("label"), (int)trainingDf.select("label").distinct().count());
 			
 
 			for(String col : trainingDf.columns())
@@ -778,8 +778,8 @@ public class DL4JExecutor implements IExecutor {
 	
 			// Train the network on the full data set, and evaluate in periodically
 			for (int i = 0; i < nEpochs; i++) {
-				/*iterator.reset();
-				net.fit(iterator);*/
+				iterator.reset();
+				net.fit(iterator);
 			}
 		} catch (IllegalAccessException 
 				| IllegalArgumentException
