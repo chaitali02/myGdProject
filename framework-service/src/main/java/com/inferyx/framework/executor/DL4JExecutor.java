@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -17,14 +18,24 @@ import java.util.concurrent.ExecutionException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructType;
+import org.datavec.api.records.reader.RecordReader;
+import org.datavec.api.records.reader.impl.collection.ListStringRecordReader;
+import org.datavec.api.records.reader.impl.transform.TransformProcessRecordReader;
+import org.datavec.api.split.ListStringSplit;
+import org.datavec.api.transform.TransformProcess;
+import org.datavec.api.transform.schema.Schema;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder;
@@ -35,6 +46,7 @@ import org.deeplearning4j.nn.conf.layers.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,13 +68,13 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -76,7 +88,9 @@ public class DL4JExecutor implements IExecutor {
 	private Helper helper;
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
-
+	@Autowired
+	private ConnectionFactory connectionFactory;
+	
 	/**
 	 * 
 	 */
@@ -690,6 +704,8 @@ public class DL4JExecutor implements IExecutor {
 	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
 			Map<String, String> trainOtherParam) throws IOException {
+		
+		int batchSize = 50;
 
 		int nEpochs = Integer.parseInt(paramSetServiceImpl.getParamByName(execParams, "nEpochs").getParamValue().getValue());
 		int seed = Integer.parseInt(paramSetServiceImpl.getParamByName(execParams, "seed").getParamValue().getValue());
@@ -744,6 +760,8 @@ public class DL4JExecutor implements IExecutor {
 			
 			// Create DataSetIterator
 			
+			getDataSet(trainingDf, batchSize, trainingDf.schema().fieldIndex("label"), (int)trainingDf.select("label").distinct().count());
+			
 
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
@@ -775,6 +793,63 @@ public class DL4JExecutor implements IExecutor {
 			throw new RuntimeException(e);
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param df
+	 * @param reader
+	 * @return
+	 */
+	private RecordReader transform(Dataset<Row> df, RecordReader reader) {
+		
+		Schema.Builder schemaBuilder = new Schema.Builder();
+		StructType sparkSchema = df.schema();
+		
+		for (String col : df.columns()) {
+			if (col.equals("label")) {
+				schemaBuilder.addColumnCategorical("label", df.select("label").distinct().map(new MapFunction<Row, String>() {
+
+					@Override
+					public String call(Row row) throws Exception {
+						return row.mkString();
+					}
+				}, Encoders.STRING()).collectAsList());
+			} else { 
+				schemaBuilder.addColumnDouble(col);
+			}
+
+		}
+		Schema schema = schemaBuilder.build();
+                
+
+		TransformProcess transformProcess = new TransformProcess.Builder(schema)  
+                .categoricalToOneHot("label")//Applying one-hot encoding                                        
+                .build();
+		RecordReader transformProcessRecordReader = new TransformProcessRecordReader(reader,transformProcess);
+		return transformProcessRecordReader;
+	}
+	
+	/**
+	 * 
+	 * @param df
+	 * @param batchSize
+	 * @param labelIndex
+	 * @param numPossibleLabels
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private DataSetIterator getDataSet(Dataset<Row> df, int batchSize, int labelIndex, int numPossibleLabels) throws IOException, InterruptedException {
+		int nSamples = (int) df.count();
+		List<String> rows = df.map(row -> row.mkString(), Encoders.STRING()).collectAsList();
+		ListStringSplit input = new ListStringSplit(Collections.singletonList(rows));
+        ListStringRecordReader rr = new ListStringRecordReader();
+        rr.initialize(input);
+        RecordReader transformedRR = transform(df, rr);
+        DataSetIterator iterator = new RecordReaderDataSetIterator(transformedRR, batchSize, labelIndex, numPossibleLabels);
+		return iterator;
+
 	}
 
 }

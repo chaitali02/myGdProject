@@ -707,10 +707,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				Object trndModel = null;
 			    
-				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
+				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
-				} else {		
+				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
 					if(execParams != null) {
@@ -744,6 +744,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
 						}
 					}
+				} else {
+					trndModel = exec.trainDL(execParams, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
 				}
 								
 				result = trndModel;				

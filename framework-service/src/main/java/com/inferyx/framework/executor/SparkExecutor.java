@@ -1833,6 +1833,7 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
+		df.show();
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
@@ -1862,9 +1863,12 @@ public class SparkExecutor<T> implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}	
+			trainingDf.show();
 
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+			
+			trainingDf.show();
 
 			for(String col : validateDf.columns())
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
