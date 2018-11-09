@@ -1281,7 +1281,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
 
         .state('metaListdatapod', {
-            url: "/dataPreparation/datapod?id&mode&returnBack&version",
+            url: "/dataPreparation/datapod?id&mode&version&returnBack",
             templateUrl: "views/datapod.html",
             data: { pageTitle: 'Data Preparation' },
             controller: "",

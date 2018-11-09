@@ -135,6 +135,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.datapoddata.locked =="Y"){
+          return false;
+		}
 		$scope.showPage()
 		$state.go('metaListdatapod', {
 			id: uuid,

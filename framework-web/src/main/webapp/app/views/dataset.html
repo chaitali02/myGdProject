@@ -53,12 +53,12 @@
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
               tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
-              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+              <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
             data-placement="top" tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
             data-ng-click="enableEdit(dataset.uuid,dataset.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            <i class="fa fa-edit icon-circle"></i>
           </a>
             <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
               data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
@@ -71,20 +71,20 @@
             </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
               tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
-              <i class="fa fa-table" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+              <i class="fa fa-table icon-circle"></i>
             </a>
-            <a  class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+            <a  class="btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
             data-ng-click="showGraph(dataset.uuid,dataset.version)">
-            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:#a0a0a0;"></i>
+            <i class="fa fa-sitemap icon-circle sitemap-icon-circle"></i>
           </a>
            
             <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()"
             data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+              <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
               title="Close" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+              <i class="fa fa-times   icon-circle"></i>
             </a>
           </div>
         </div>
@@ -662,7 +662,7 @@
                   <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="submit()" novalidate="novalidate">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="col-md-3 col-sm-3 col-xs-12">
                         <input type="number" class="form-control" name="linit" ng-class="" ng-disabled="{{mode}}" ng-model="dataset.limit" placeholder="">
                       </div>
                     </div>

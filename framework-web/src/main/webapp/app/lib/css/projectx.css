@@ -1173,4 +1173,16 @@ transition: right 1m
   text-overflow:ellipsis;
 }
 
-
+.icon-circle{
+  display: inherit;
+  margin: 1px auto !important;
+  color:#a0a0a0;
+}
+.home-icon-circle{
+  margin: 0px 0px 0px 0px !important;
+  font-size: 16px !important;
+}
+.sitemap-icon-circle{
+  display: block !important;
+  margin: 2px 0px 0px 0px !important;
+}

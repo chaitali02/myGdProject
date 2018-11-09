@@ -115,17 +115,19 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.gridOptions = $scope.isJobExec ? dagMetaDataService.gridOptionsJobExec : ($scope.isExec ? dagMetaDataService.gridOptionsResults : dagMetaDataService.gridOptions);
   if($scope.isJobExec !=true && $scope.isExec !=true){
-    $scope.gridOptions.columnDefs.splice(0,0,{
-      displayName: 'Locked',
-      name: 'locked',
-      minWidth: 20,
-      cellClass: 'text-center',
-      headerCellClass: 'text-center',
-      cellTemplate: ['<div class="ui-grid-cell-contents">',
-      '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#555;font-size:20px;"></i></li></div>',
-      '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock" style="color:#555;font-size:20px;"></i></li></div>',
-       ].join('')
-    })
+    if($scope.gridOptions.columnDefs[0].name !="locked"){
+      $scope.gridOptions.columnDefs.splice(0,0,{
+        displayName: 'Locked',
+        name: 'locked',
+        minWidth: 20,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        cellTemplate: ['<div class="ui-grid-cell-contents">',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
+        ].join('')
+      });
+    }
   }
   $scope.filteredRows = [];
   $scope.gridOptions.onRegisterApi = function (gridApi) {

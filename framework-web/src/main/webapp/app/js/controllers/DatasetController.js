@@ -94,6 +94,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 
 	$scope.enableEdit = function (uuid, version) {
+		
 		$scope.showPage()
 		$state.go('metaListdataset', {
 			id: uuid,
@@ -563,6 +564,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		else{
 			$scope.dataset={};
 			$scope.dataset.locked="N";
+			$scope.dataset.limit=-1;
 		}
 	}//End Else
 
