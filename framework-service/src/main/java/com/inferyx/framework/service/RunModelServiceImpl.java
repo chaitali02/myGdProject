@@ -51,6 +51,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -84,6 +85,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private TrainExec trainExec;
 	private Train train;
 	private Object algoclass;
+	private DL4JExecutor dl4jExecutor;
 	
 
 	private String name;
@@ -610,6 +612,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	 * }
 	 */
 	
+	/**
+	 * @return the dl4jExecutor
+	 */
+	public DL4JExecutor getDl4jExecutor() {
+		return dl4jExecutor;
+	}
+
+	/**
+	 * @param dl4jExecutor the dl4jExecutor to set
+	 */
+	public void setDl4jExecutor(DL4JExecutor dl4jExecutor) {
+		this.dl4jExecutor = dl4jExecutor;
+	}
+
 	@Override
 	public TaskHolder call() {
 		try {
@@ -745,7 +761,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						}
 					}
 				} else {
-					trndModel = exec.trainDL(execParams, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
+					trndModel = dl4jExecutor.trainDL(execParams, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
 				}
 								
 				result = trndModel;				

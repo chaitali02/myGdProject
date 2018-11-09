@@ -98,10 +98,10 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SimulationType;
+import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
-import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -185,6 +185,8 @@ public class ModelServiceImpl {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private PythonExecutor pythonExecutor;
+	@Autowired
+	private DL4JExecutor dl4jExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -1497,6 +1499,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setExecType(MetaType.trainExec);
 		runModelServiceImpl.setMetadataServiceImpl(metadataServiceImpl);
 		runModelServiceImpl.setAlgoclass(algoClass);
+		runModelServiceImpl.setDl4jExecutor(dl4jExecutor);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);

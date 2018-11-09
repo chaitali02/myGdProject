@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.spark.api.java.function.MapFunction;
+import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.param.ParamMap;
@@ -52,6 +52,7 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SerializableHelper;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
@@ -90,6 +91,12 @@ public class DL4JExecutor implements IExecutor {
 	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	private ConnectionFactory connectionFactory;
+	@Autowired
+	private SparkExecutor sparkExecutor;
+	@Autowired
+	private SerializableHelper serializableHelper; 
+	
+	static final Logger logger = Logger.getLogger(DL4JExecutor.class);
 	
 	/**
 	 * 
@@ -726,7 +733,7 @@ public class DL4JExecutor implements IExecutor {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
-		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		Dataset<Row> df = sparkExecutor.executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -805,16 +812,12 @@ public class DL4JExecutor implements IExecutor {
 		
 		Schema.Builder schemaBuilder = new Schema.Builder();
 		StructType sparkSchema = df.schema();
+		String colName = null;
 		
 		for (String col : df.columns()) {
 			if (col.equals("label")) {
-				schemaBuilder.addColumnCategorical("label", df.select("label").distinct().map(new MapFunction<Row, String>() {
-
-					@Override
-					public String call(Row row) throws Exception {
-						return row.mkString();
-					}
-				}, Encoders.STRING()).collectAsList());
+				colName = "label";
+				serializableHelper.addColToSchemaBuilder(colName, schemaBuilder, df);
 			} else { 
 				schemaBuilder.addColumnDouble(col);
 			}
@@ -841,13 +844,20 @@ public class DL4JExecutor implements IExecutor {
 	 * @throws InterruptedException
 	 */
 	private DataSetIterator getDataSet(Dataset<Row> df, int batchSize, int labelIndex, int numPossibleLabels) throws IOException, InterruptedException {
+		logger.info("Inside getDataSet ");
 		int nSamples = (int) df.count();
+		logger.info("Number of samples : " + nSamples);
 		List<String> rows = df.map(row -> row.mkString(), Encoders.STRING()).collectAsList();
+		logger.info("After map number of rows : " + rows.size());
 		ListStringSplit input = new ListStringSplit(Collections.singletonList(rows));
+		logger.info("After split");
         ListStringRecordReader rr = new ListStringRecordReader();
         rr.initialize(input);
+        logger.info("After initialization");
         RecordReader transformedRR = transform(df, rr);
+        logger.info("After transformation");
         DataSetIterator iterator = new RecordReaderDataSetIterator(transformedRR, batchSize, labelIndex, numPossibleLabels);
+        logger.info("After iterator creation");
 		return iterator;
 
 	}
