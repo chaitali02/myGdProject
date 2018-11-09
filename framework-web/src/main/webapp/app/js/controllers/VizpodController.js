@@ -88,7 +88,14 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.graphDataStatus = false;
 		$scope.showgraphdiv = false
 	}//End showVizpodPage
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showVizpodPage()
+		$state.go('dvvizpod', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showVizpodPage()
 		$state.go('dvvizpod', {

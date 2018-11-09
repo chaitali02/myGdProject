@@ -147,17 +147,25 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.graphDataStatus = false;
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
-		$scope.showPage()
-		$state.go('createparamlist', {
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
 			version: version,
 			mode: 'false'
 		});
 	}
 	$scope.showview = function (uuid, version) {
-		$scope.showPage()
-		$state.go('createparamlist', {
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
 			version: version,
 			mode: 'true'

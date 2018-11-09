@@ -88,6 +88,14 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createparamset', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('createparamset', {

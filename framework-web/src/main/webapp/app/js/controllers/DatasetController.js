@@ -112,7 +112,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 	}
 	$scope.showHome=function(uuid, version,mode){
-		$scope.showPage()
+		$scope.showPage();
 		$state.go('metaListdataset', {
 			id: uuid,
 			version: version,

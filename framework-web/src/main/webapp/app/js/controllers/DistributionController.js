@@ -73,6 +73,14 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createdistribution', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage();
 		$state.go('createdistribution', {

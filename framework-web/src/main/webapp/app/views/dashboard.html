@@ -43,7 +43,16 @@
           </div>
 
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdashboard==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showdashboard==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(dashboarddata.uuid,dashboarddata.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dashboarddata.uuid,dashboarddata.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdashboard==true && isEdit==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dashboarddata.uuid,dashboarddata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -51,9 +60,9 @@
             <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==true && isEdit==false)? 'currentpage':'notcurrentpage'"
               ng-click="showview(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
+            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'"
-              data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;">
+              data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;" ng-hide="isAdd">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 

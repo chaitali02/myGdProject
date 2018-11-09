@@ -40,14 +40,22 @@
           </span>
         </div>
         <div class="actions">
+          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+            tooltip  ng-hide="isAdd"  ng-class="(showProfileGroup==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(profileGroupDetail.uuid,profileGroupDetail.version,mode)">
+            <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+          </a>
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+            tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+          <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showProfileGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(profileGroupDetail.uuid,profileGroupDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
+          </a> -->
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
             tooltip ng-show="isDependencyShow" ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'" data-ng-click="showProfileGroupGraph(profileGroupDetail.uuid,profileGroupDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>

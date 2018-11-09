@@ -133,7 +133,14 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.showFrom = true;
     $scope.showGraphDiv = false
   }
-  
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createpredict', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit=function (uuid,version) {
     $scope.showPage()
     $state.go('createpredict', {

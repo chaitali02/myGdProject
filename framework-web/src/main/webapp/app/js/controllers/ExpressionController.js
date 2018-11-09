@@ -95,7 +95,14 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.showForm = false;
 		$scope.showGraphDiv = true
 	}
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListexpression', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListexpression', {

@@ -81,7 +81,14 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListrelation', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListrelation', {

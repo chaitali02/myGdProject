@@ -126,7 +126,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 
 	}/*End ShowGraph*/
-
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListdatapod', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListdatapod', {

@@ -109,7 +109,15 @@ angular.module('InferyxApp')
         $scope.showgraphdiv = false;
         $scope.showdagflow = false;
       }/*End showDatapodPage*/
-
+      
+      $scope.showHome=function(uuid, version,mode){
+        $scope.showDagPage();
+        $state.go('createwf', {
+          id: uuid,
+          version: version,
+          mode: mode
+        });
+      }
       $scope.enableEdit = function (uuid, version) {
         $scope.showDagPage()
         $state.go('createwf', {

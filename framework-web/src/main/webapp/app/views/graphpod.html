@@ -1,4 +1,4 @@
-nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-controller="GraphpodDetailController">
+<div data-ng-controller="GraphpodDetailController">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
     <ul class="page-breadcrumb">
@@ -40,7 +40,16 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
               <i class="fa fa-gift"></i>{{graphpodData.name | strReplace:'_':' '|capitalize}}
             </div>
             <div class="tools">
-              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(graphpodData.uuid,graphpodData.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a title="Edit" ng-disabled="isPrivlage" ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
+                style="height:16px;">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                 data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
                 style="height:16px;">
                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -48,7 +57,7 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
               <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true ||showForm==true) ? 'currentpage':'notcurrentpage'"
                 ng-click="showView(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
-              </a>
+              </a> -->
               <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                 data-ng-click="showGraph(graphpodData.uuid,graphpodData.version)" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>

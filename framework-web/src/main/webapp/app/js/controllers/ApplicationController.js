@@ -111,6 +111,15 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListapplication', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('adminListapplication', {

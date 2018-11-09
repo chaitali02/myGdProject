@@ -99,6 +99,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.showGraphDiv = false
 	}
 
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createalgorithm', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('createalgorithm', {

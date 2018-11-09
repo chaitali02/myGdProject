@@ -96,6 +96,15 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.showForm = true
     $scope.showGraphDiv = false
   }
+
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createreconerule', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false
@@ -1128,9 +1137,17 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   $scope.showPage = function() {
     $scope.showForm = true;
     $scope.showGraphDiv = false;
-  
   }
-
+  
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createreconerulegroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+   
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false;
     $scope.showGraphDiv = true;

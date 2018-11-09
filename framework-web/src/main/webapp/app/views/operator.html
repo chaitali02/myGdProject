@@ -37,7 +37,16 @@
             <i class="fa fa-gift"></i>{{OperatorData.name | strReplace:'_':' '|capitalize}}
           </div>
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(OperatorData.uuid,OperatorData.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(OperatorData.uuid,OperatorData.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(OperatorData.uuid,OperatorData.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -45,7 +54,7 @@
             <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true ||showForm==true) ? 'currentpage':'notcurrentpage'"
               ng-click="showView(OperatorData.uuid,OperatorData.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
+            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(OperatorData.uuid,OperatorData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -115,7 +124,6 @@
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
                         max-results-to-show="10">

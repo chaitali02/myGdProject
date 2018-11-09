@@ -78,6 +78,14 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListmap', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListmap', {

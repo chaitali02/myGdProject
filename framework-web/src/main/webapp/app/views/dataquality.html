@@ -39,33 +39,22 @@
           </div>
 
           <div class="actions">
-            <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRule==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip ng-hide="isAdd"  ng-class="(showRule==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
-            <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRule==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
-              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
+             <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" ng-show="isDependencyShow" ng-class="showRule==false? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
-                        <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
-                    </a>
-            <a style="border:0px solid transparent !important;" href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless" ng-click="broadcastRefreshData()" data-original-title="" title="">
-                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-            <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip>
-                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
-
-                    </a> -->
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+            <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
               tooltip ng-class="(showRule==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
               tooltip ng-class="(showRule==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
+            </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" ng-show="isDependencyShow"
               ng-class="showRule==false? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
               data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">

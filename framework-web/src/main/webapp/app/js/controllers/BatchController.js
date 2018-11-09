@@ -100,7 +100,14 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.showGraphDiv = false;
   
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].detailState, {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false;
     $scope.showGraphDiv = true;

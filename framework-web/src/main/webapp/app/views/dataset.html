@@ -52,14 +52,19 @@
           </div>
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
               <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
+            data-placement="top" tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+            data-ng-click="enableEdit(dataset.uuid,dataset.version)">
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+          </a>
+            <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
               data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
               data-ng-click="enableEdit(dataset.uuid,dataset.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a>
+            </a> -->
             <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
               tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataset.uuid,dataset.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>

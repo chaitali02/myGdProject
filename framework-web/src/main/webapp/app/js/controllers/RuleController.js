@@ -138,7 +138,14 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.showFrom = true
     $scope.showGraphDiv = false
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createrules', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.showGraph = function (uuid, version) {
     $scope.showFrom = false
     $scope.showGraphDiv = true;
@@ -1570,6 +1577,16 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       mode: 'false'
     });
   }
+
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createrulesgroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+  }
+  
   $scope.showview = function (uuid, version) {
     if(!$scope.isEdit){
       $scope.showPage()

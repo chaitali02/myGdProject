@@ -79,6 +79,14 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.showGraphDiv = false
 	}//End showPage
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListdatasource', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('adminListdatasource', {

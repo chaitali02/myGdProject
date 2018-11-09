@@ -75,7 +75,17 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-
+	
+	
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListuser', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+	
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('adminListuser', {

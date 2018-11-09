@@ -225,6 +225,15 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.graphDataStatus = false;
 		$scope.showgraphdiv = false
 	}//End showDashboardPage
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showDashboardPage()
+		$state.go('metaListdashboard', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {

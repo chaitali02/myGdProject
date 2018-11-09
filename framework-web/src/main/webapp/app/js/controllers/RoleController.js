@@ -73,6 +73,15 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListrole', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('adminListrole', {

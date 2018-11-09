@@ -80,7 +80,17 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.showGraphDiv = false
 	}
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListload', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+
 	$scope.enableEdit = function (uuid, version) {
+		debugger
 		$scope.showPage()
 		$state.go('metaListload', {
 			id: uuid,

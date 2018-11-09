@@ -96,6 +96,14 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.showProfileGroupForm = true;
 	}
 
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showProfileGroupePage();
+		$state.go('createprofile', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showProfileGroupePage()
 		$state.go('createprofile', {
@@ -415,6 +423,15 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.graphDataStatus = false;
 		$scope.showProfileGroupForm = true;
 
+	}
+
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showProfileGroupePage();
+		$state.go('createprofilegroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
 	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showProfileGroupePage()

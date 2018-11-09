@@ -72,7 +72,15 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-	
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListgroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('adminListgroup', {

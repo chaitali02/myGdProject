@@ -101,7 +101,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.graphDataStatus = false;
     $scope.showgraphdiv = false
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showRulePage();
+		$state.go('createdataquality', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit = function (uuid, version) {
     $scope.showRulePage()
     $state.go('createdataquality', {
@@ -1039,7 +1046,14 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.graphDataStatus = false;
     $scope.showRuleGroupForm = true;
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showRulGroupePage();
+		$state.go('createdataqualitygroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit = function (uuid, version) {
     $scope.showRulGroupePage()
     $state.go('createdataqualitygroup', {

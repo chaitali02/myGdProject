@@ -52,6 +52,17 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 	$scope.gridOptions = {};
 	$scope.gridOptions = angular.copy(dagMetaDataService.gridOptionsDefault);
+	$scope.gridOptions.columnDefs.splice(0,0,{
+		displayName: 'Locked',
+		name: 'locked',
+		minWidth: 20,
+		cellClass: 'text-center',
+		headerCellClass: 'text-center',
+		cellTemplate: ['<div class="ui-grid-cell-contents">',
+		'<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#555;font-size:20px;"></i></li></div>',
+		'<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock" style="color:#555;font-size:20px;"></i></li></div>',
+		 ].join('')
+	  })
 	$scope.gridOptions.columnDefs.push({
 		displayName: 'Status',
 		name: 'active',
@@ -69,11 +80,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 			name: 'action',
 			cellClass: 'text-center',
 			headerCellClass: 'text-center',
-			maxWidth: 150,
+			maxWidth: 110,
 			cellTemplate: [
 
 				'<div class="ui-grid-cell-contents">',
-				'<div class="col-md-12" style="display:inline-flex;">',
+				'<div class="col-md-12" style="display:inline-flex;padding-left:0px;padding-right:0px;">',
 				'  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
 				'    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
 				'    <i class="fa fa-angle-down"></i></button>',
@@ -381,7 +392,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		var state = dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
+		$state.go(state, {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		var state = dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState

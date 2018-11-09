@@ -38,8 +38,16 @@
           </div>
 
           <div class="tools">
-          
-            <a title="Edit"  ng-class="(showForm==true && isEdit==true && isPrivlage)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(activitydata.uuid,activitydata.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-class="(isEdit==true && isPrivlage)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <!-- <a title="Edit" ng-class="(showForm==true && isEdit==true && isPrivlage)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -47,7 +55,7 @@
             <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
               ng-click="showView(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
+            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==false? 'currentpage':'notcurrentpage'"
               ng-show="isDependencyShow" data-ng-click="showGraph(activitydata.uuid,activitydata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
