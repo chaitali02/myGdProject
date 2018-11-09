@@ -899,6 +899,7 @@ public class VizpodServiceImpl {
 			MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
 			vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
 			vizExec.setDependsOn(vizpodRef);
+			vizExec.setBaseEntity();
 			commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
 			/**** Get sql and update in vizpodexec - END ****/
 		} catch (Exception e) {

@@ -15,7 +15,7 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{ruleexecdata.name}}</span>
+        <span>{{execData.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
@@ -27,7 +27,7 @@
   </div>
   <!-- END PAGE HEADER-->
   <br>
-  <div options="dirOptions" type="'ruleExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="ruleexecdata"
+  <div options="dirOptions" type="'ruleExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData"
     comment-panel-directive></div>
 
   <!-- BEGIN MAIN CONTENT -->
@@ -36,17 +36,20 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{ruleexecdata.name }}
+            <i class="fa fa-gift"></i>{{execData.name }}
           </div>
 
           <div class="tools">
-
-            <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==true? 'currentpage':'notcurrentpage'"
-              data-ng-click="showRuleExecPage()" style="height:16px;">
+            <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
+              <span class="fa fa-home"  style="display: block;margin: 2px auto;color:white;"></span>
+            </a> 
+            <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showExecPage()" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==false? 'currentpage':'notcurrentpage'"
-              data-ng-click="showLoadGraph(ruleexecdata.uuid,ruleexecdata.version)" style="height:14px;">
+            </a> -->
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
             <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
@@ -60,58 +63,58 @@
 
         <div class="portlet-body">
           <!-- BEGIN FORM-->
-          <div class="form-body graph-body" ng-if="showgraphdiv">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="ruleexecdata.uuid" version="ruleexecdata.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="execData.uuid" version="execData.version">
             </div>
           </div>
 
           <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" ng-show="showruleexec" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()">
+            <form class="form-horizontal" ng-show="showExec" name="myform">
 
               <div class="form-group">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="ruleexecdata.uuid">
+                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.uuid">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">Name</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="ruleexecdata.name">
+                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.name">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-3 control-label">Version</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="ruleexecdata.version">
+                  <input type="text" class="form-control" ng-disabled="true" ng-model="execData.version">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-3 control-label">CreatedBy</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="ruleexecdata.createdBy.ref.name">
+                  <input type="text" class="form-control" ng-disabled="true" ng-model="execData.createdBy.ref.name">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" ng-model="ruleexecdata.createdOn" ng-disabled="true" class="form-control">
+                  <input type="text" ng-model="execData.createdOn" ng-disabled="true" class="form-control">
                 </div>
               </div>
 
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input ng-model="ruleexecdata.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  <tags-input ng-model="execData.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
                 </div>
               </div>
 
@@ -119,7 +122,7 @@
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
                 </label>
                 <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ruleexecdata.desc" rows="2" style="resize:none;"></textarea>
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.desc" rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -127,17 +130,17 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <label class="btn btn-default" ng-model="ruleexecdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="ruleexecdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="ruleexecdata.published='N'">
-                    <label class="btn btn-default" ng-model="ruleexecdata.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="ruleexecdata.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                  <div class="btn-group" ng-init="execData.published='N'">
+                    <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                   </div>
                 </div>
               </div>
@@ -151,7 +154,7 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">Depends On</label>
                 <div class="col-md-6">
-                  <input type="text" ng-model="ruleexecdata.dependsOn.ref.name" ng-disabled="true" class="form-control">
+                  <input type="text" ng-model="execData.dependsOn.ref.name" ng-disabled="true" class="form-control">
                 </div>
               </div>
 
@@ -165,7 +168,7 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">Result</label>
                 <div class="col-md-6">
-                  <input type="text" ng-model="ruleexecdata.result.ref.name" ng-disabled="true" class="form-control">
+                  <input type="text" ng-model="execData.result.ref.name" ng-disabled="true" class="form-control">
                 </div>
               </div>
 
@@ -173,7 +176,7 @@
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Exec
                 </label>
                 <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ruleexecdata.exec" rows="8" style="resize:none;"></textarea>
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.exec" rows="8" style="resize:none;"></textarea>
                 </div>
                 <div class="col-md-1" tooltip-placement="left" uib-tooltip="Show Query" style="padding:0px;" ng-click="showSqlFormater()">
                   <i class="fa fa-external-link"></i>

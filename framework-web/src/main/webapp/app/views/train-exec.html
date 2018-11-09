@@ -27,7 +27,8 @@
     </div>
     <!-- END PAGE HEADER-->
     <br>
-    <div  options="dirOptions" type="'trainExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData" comment-panel-directive></div>
+    <div options="dirOptions" type="'trainExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData"
+        comment-panel-directive></div>
 
     <!-- BEGIN MAIN CONTENT -->
     <div class="row">
@@ -39,10 +40,14 @@
                     </div>
 
                     <div class="tools">
-                        <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+                        <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
+                            <span class="fa fa-home" style="display: block;margin: 2px auto;color:white;"></span>
+                        </a>
+                        <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
                             data-ng-click="showExecPage()" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                        </a>
+                        </a> -->
                         <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -171,7 +176,8 @@
                             <div class="form-group" style="padding-top:10px;">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <a href="javascript:;" ng-click="close()" class="btn btn-primary">Cancel</a>
-                                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"value="Submit" name="submit">
+                                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+                                        value="Submit" name="submit">
                                     <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
                                         <div class="bounce1"></div>
                                         <div class="bounce2"></div>
@@ -184,5 +190,6 @@
                 </div>
             </div>
         </div>
-    </div><!-- END MAIN CONTENT -->
+    </div>
+    <!-- END MAIN CONTENT -->
 </div>

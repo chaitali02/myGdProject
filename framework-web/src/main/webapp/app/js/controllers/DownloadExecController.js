@@ -3,7 +3,7 @@
   JobMonitoringModule.controller('DetailDownloadExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
-    $scope.showdownloadexec = true;
+    $scope.showExec = true;
    
     $scope.selectTitle = dagMetaDataService.elementDefs['downloadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['downloadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['downloadexec'].execType + "'})"
@@ -37,23 +37,19 @@
       onSuccess(response.data)
     });
     var onSuccess = function(response) {
-      $scope.downloadexecdata = response;
+      $scope.execData = response;
     }
 
     
     $scope.showGraph = function(uuid, version) {
-      $scope.showdownloadexec = false;
-      $scope.showgraph = false
-      $scope.graphDatastatusList = true
-      $scope.showgraphdiv = true;
+      $scope.showExec = false;
+      $scope.showGraphDiv = true;
 
     }
 
-    $scope.showdownloadexecPage = function() {
-      $scope.showdownloadexec = true
-      $scope.showgraph = false
-      $scope.graphDatastatusList = false
-      $scope.showgraphdiv = false;
+    $scope.showExecPage = function() {
+      $scope.showExec = true
+      $scope.showGraphDiv = false;
     }
 
 

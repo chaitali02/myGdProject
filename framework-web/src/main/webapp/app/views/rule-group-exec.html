@@ -15,7 +15,7 @@
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <span>{{rulegroupexecdata.name}}</span>
+                <span>{{execData.name}}</span>
             </li>
         </ul>
         <div class="page-toolbar">
@@ -27,7 +27,8 @@
     </div>
     <!-- END PAGE HEADER-->
     <br>
-    <div options="dirOptions" type="'rulegroupExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="rulegroupexecdata" comment-panel-directive></div>
+    <div options="dirOptions" type="'rulegroupExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData"
+        comment-panel-directive></div>
 
     <!-- BEGIN MAIN CONTENT -->
     <div class="row">
@@ -35,18 +36,20 @@
             <div class="portlet box green">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-gift"></i>{{rulegroupexecdata.name }}
+                        <i class="fa fa-gift"></i>{{execData.name }}
                     </div>
 
                     <div class="tools">
-
-                        <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showrulegroupexec==true? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showRuleGroupExecPage()" style="height:16px;">
-                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                        <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
+                            <span class="fa fa-home" style="display: block;margin: 2px auto;color:white;"></span>
                         </a>
-                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showrulegroupexec==false? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showLoadGraph(rulegroupexecdata.uuid,rulegroupexecdata.version)" style="height:14px;">
-                            <!-- <img src="lib/images/check.png" style="margin:2px auto;display:block;"></img> -->
+                        <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showExecPage()" style="height:16px;">
+                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                        </a> -->
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
                         <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
@@ -59,42 +62,38 @@
                 </div>
 
                 <div class="portlet-body">
-                    <!-- BEGIN FORM-->
-                    <div class="form-body graph-body" ng-if="showgraphdiv">
-                        <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader">
-                        </i> -->
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
+
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="rulegroupexecdata.uuid" version="rulegroupexecdata.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="execData.uuid" version="execData.version">
                         </div>
                     </div>
 
                     <div class="form-body" style="padding-top:50px;">
-                        <form class="form-horizontal" ng-show="showrulegroupexec" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()">
+                        <form class="form-horizontal" ng-show="showExec" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()">
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label">UUID</label>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="rulegroupexecdata.uuid">
+                                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.uuid">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Name</label>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="rulegroupexecdata.name">
+                                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.name">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Version</label>
                                 <div class="col-md-6">
-                                    <!--   <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}"
-                                    ng-change="selectVersion()" data-ng-model="loadexecdata.defaultVersion.version" ng-options="c.version as c.version for c in load.versions"> -->
-                                    <input type="text" class="form-control" ng-disabled="true" ng-model="rulegroupexecdata.version">
+                                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.version">
                                     </select>
                                 </div>
                             </div>
@@ -102,21 +101,21 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">CreatedBy</label>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" ng-disabled="true" ng-model="rulegroupexecdata.createdBy.ref.name">
+                                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.createdBy.ref.name">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label">CreatedOn</label>
                                 <div class="col-md-6">
-                                    <input type="text" ng-model="rulegroupexecdata.createdOn" ng-disabled="true" class="form-control">
+                                    <input type="text" ng-model="execData.createdOn" ng-disabled="true" class="form-control">
                                 </div>
                             </div>
 
                             <div class="form-group taginput">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <tags-input ng-model="rulegroupexecdata.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                    <tags-input ng-model="execData.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
                                 </div>
                             </div>
 
@@ -125,7 +124,7 @@
                                 </label>
                                 <div class="col-md-6">
 
-                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="rulegroupexecdata.desc" rows="2" style="resize:none;"></textarea>
+                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.desc" rows="2" style="resize:none;"></textarea>
                                 </div>
                             </div>
 
@@ -133,17 +132,17 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="btn-group">
-                                        <label class="btn btn-default" ng-model="rulegroupexecdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="rulegroupexecdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                        <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                        <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="btn-group" ng-init="rulegroupexecdata.published='N'">
-                                        <label class="btn btn-default" ng-model="rulegroupexecdata.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="rulegroupexecdata.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                    <div class="btn-group" ng-init="execData.published='N'">
+                                        <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                        <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +157,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Depends On</label>
                                 <div class="col-md-6">
-                                    <input type="text" ng-model="rulegroupexecdata.dependsOn.ref.name" ng-disabled="true" class="form-control">
+                                    <input type="text" ng-model="execData.dependsOn.ref.name" ng-disabled="true" class="form-control">
                                 </div>
                             </div>
 
@@ -176,13 +175,11 @@
                                             </a>
                                         </li>
                                     </ul>
-                                    <!-- <tags-input class="cross" ng-model="ruleExecList"  ng-disabled="{{mode}}" min-length="0"></tags-input> -->
                                 </div>
                             </div>
                             <div class="form-group" style="padding-top:10px;">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <a ui-sref="{{state}}" class="btn btn-primary">Cancel</a>
-                                    <!--  loadHasChanged == false || -->
                                     <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
                                         value="Submit" name="submit">
                                     <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
@@ -192,29 +189,6 @@
                                     </span>
                                 </div>
                             </div>
-                            <!--  <div>
-                        <table  class=" row-border hover table  table-striped table-bordered">
-                         <thead>
-                            <tr>
-                             <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/></th>
-                              <th  style="width:6%;text-align:center">ID</th>
-                              <th  class="text-center">Type</th>
-                              <th  class="text-center">Name</th>
-                            </tr>
-                         </thead>
-                         <tbody>
-                          <tr ng-repeat="tabledata in rulegroupexecdata.ruleExecList">
-                            <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/></td>
-                           <td ><input type="text"  ng-model="$index" ng-disabled="true"class="form-control"></td>
-                            <td><input type="text"  ng-model="tabledata.ref.type" ng-disabled="{{mode}}" class="form-control">
-                            </td>
-                            <td><input type="text"  ng-model="tabledata.ref.name" ng-disabled="{{mode}}" class="form-control">
-                            </td>
-                          </tr>
-                        </tbody>
-                       </table>
-                    </div>
- -->
 
                         </form>
                     </div>
