@@ -813,8 +813,12 @@ public class DL4JExecutor implements IExecutor {
 		Schema.Builder schemaBuilder = new Schema.Builder();
 		StructType sparkSchema = df.schema();
 		String colName = null;
-		
+		int count = 0;
 		for (String col : df.columns()) {
+			if (count>=4) {
+				break;
+			}
+			count++;
 			if (col.equals("label")) {
 				colName = "label";
 				serializableHelper.addColToSchemaBuilder(colName, schemaBuilder, df);
@@ -860,6 +864,13 @@ public class DL4JExecutor implements IExecutor {
         logger.info("After iterator creation");
 		return iterator;
 
+	}
+
+	@Override
+	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

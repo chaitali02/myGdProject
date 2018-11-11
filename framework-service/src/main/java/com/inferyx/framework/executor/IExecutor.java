@@ -681,4 +681,19 @@ public interface IExecutor {
 
 	Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext)
 			throws IOException;
+
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param trainName
+	 * @param trainPercent
+	 * @param valPercent
+	 * @param tableName
+	 * @param clientContext
+	 * @param saveFileName
+	 * @return
+	 * @throws IOException
+	 */
+	Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException;
 }

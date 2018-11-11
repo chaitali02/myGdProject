@@ -787,4 +787,11 @@ public class PostGresExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

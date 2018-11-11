@@ -26,12 +26,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -799,7 +802,7 @@ public class ModelServiceImpl {
 		return fileName;
 	}
 
-	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion, List<String> arguments) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
 //		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
 		String scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/"+scriptName;
@@ -814,7 +817,7 @@ public class ModelServiceImpl {
 //		}		
 //		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
 		try {
-			return pythonExecutor.executTFScript(scriptPath, commonServiceImpl.getApp().getUuid());
+			return pythonExecutor.executTFScript(scriptPath, commonServiceImpl.getApp().getUuid(), arguments);
 		} catch (Exception e) {
 			return false;
 		}
@@ -2401,7 +2404,35 @@ public class ModelServiceImpl {
 			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
-				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion());
+				// Save the data as csv
+				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
+				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
+				String sql = generateSQLBySource(source, execParams);
+				String appUuid = commonServiceImpl.getApp().getUuid();
+				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				IExecutor exec = null;
+				exec = execFactory.getExecutor(datasource.getType());
+				exec.executeAndRegister(sql, (tableName), appUuid);
+				
+				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
+				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
+				exec = execFactory.getExecutor(datasource.getType());
+				exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+				logger.info("Saved file name : " + saveFileName);
+				logger.info("Model file name : " + modelFileName);
+				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+				String []args = paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
+						.collect(Collectors.joining("~")).split("~");
+				List<String> argList = new ArrayList<String>(Arrays.asList(args));
+				argList.add("filename");
+				argList.add(saveFileName);
+				argList.add("modelFileName");
+				argList.add(modelFileName);
+				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
 			} else {
 				Algorithm algorithm= null;
 				if (model.getDependsOn().getRef().getVersion() != null)

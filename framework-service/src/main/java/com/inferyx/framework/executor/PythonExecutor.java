@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
@@ -226,9 +227,12 @@ public class PythonExecutor implements IExecutor {
 		return isSuccessful;
 	}
 	
-	public boolean executTFScript(String scriptPath, String clientContext) throws Exception {
+	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		try {
 			String command = "python3 ".concat(scriptPath);
+			if (arguments != null && arguments.size() > 0) {
+				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
+			}
 			Process p = Runtime.getRuntime().exec(command);
 			BufferedReader bfrIn = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";

@@ -13,11 +13,13 @@ package com.inferyx.framework.service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
@@ -671,6 +673,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	@SuppressWarnings({ "unused" })
 	public void execute() throws Exception {
 		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Map<String,String> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
@@ -683,6 +687,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}
 			boolean isSuccess = false;
 			Object result = null;
+			String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
+			String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
@@ -695,18 +704,12 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				}
 
 
-				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
-				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 
 				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
-				Datasource datasource = commonServiceImpl.getDatasourceByApp();
-				IExecutor exec = execFactory.getExecutor(datasource.getType());
+				datasource = commonServiceImpl.getDatasourceByApp();
+				exec = execFactory.getExecutor(datasource.getType());
 
-				String appUuid = commonServiceImpl.getApp().getUuid();
-				
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
 				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
@@ -847,8 +850,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}
 			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
 					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
+				// Save the data as csv
+				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
+				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
+				exec = execFactory.getExecutor(datasource.getType());
+				exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+				List<String> argList = Arrays.asList(paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
+										.collect(Collectors.joining("~")).split("~"));
+				argList.add("filename");
+				argList.add(saveFileName);
+				argList.add("modelFileName");
+				argList.add(modelFileName);
 				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
-						trainExec.getVersion());
+						trainExec.getVersion(), argList);
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 

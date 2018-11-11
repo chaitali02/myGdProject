@@ -48,7 +48,6 @@ import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
-import org.apache.spark.ml.classification.RandomForestClassificationModel;
 import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.clustering.LocalLDAModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
@@ -124,7 +123,6 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -1824,6 +1822,45 @@ public class SparkExecutor<T> implements IExecutor {
 //			}
 		}		
 		return rsHolder;
+	}
+	
+	@Override
+	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, String saveFileName) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		String assembledDFSQL = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		df.printSchema();
+		df.show();
+		try {
+			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+			Dataset<Row> trngDf = splits[0];
+			Dataset<Row> valDf = splits[1];
+			Dataset<Row> trainingDf = null;
+			Dataset<Row> validateDf = null;
+			
+			VectorAssembler vectorAssembler = new VectorAssembler();
+			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			
+			/*Class<?> dynamicClass = Class.forName(trainName);
+			Object obj = dynamicClass.newInstance();*/
+			trainingDf = trngDf;
+			validateDf = valDf;
+			trainingDf.show();
+
+			for(String col : trainingDf.columns())
+				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+			
+			trainingDf.show();
+
+			for(String col : validateDf.columns())
+				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+			df.coalesce(1).write().csv(saveFileName);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
