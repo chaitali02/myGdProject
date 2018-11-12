@@ -55,8 +55,8 @@
               tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
               <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip"
+            data-placement="top" ng-class="(isEdit==true || isPrivlage || dataset.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
             data-ng-click="enableEdit(dataset.uuid,dataset.version)">
             <i class="fa fa-edit icon-circle"></i>
             </a>

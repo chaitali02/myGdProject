@@ -90,6 +90,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.relationdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListrelation', {
 			id: uuid,

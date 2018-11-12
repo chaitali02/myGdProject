@@ -97,6 +97,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.vizpoddata.locked =="Y"){
+			return false;
+		}
 		$scope.showVizpodPage()
 		$state.go('dvvizpod', {
 			id: uuid,

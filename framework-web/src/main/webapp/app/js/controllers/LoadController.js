@@ -90,7 +90,9 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 	}
 
 	$scope.enableEdit = function (uuid, version) {
-		debugger
+		if($scope.isPrivlage || $scope.loaddata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListload', {
 			id: uuid,

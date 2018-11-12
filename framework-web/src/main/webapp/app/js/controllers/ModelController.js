@@ -146,6 +146,10 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 		});
 	}
   $scope.enableEdit=function (uuid,version) {
+    
+    if($scope.isPrivlage || $scope.modeldata.locked =="Y"){
+      return false;
+    }   
     $scope.showPage()
     $state.go('createmodel', {
       id: uuid,

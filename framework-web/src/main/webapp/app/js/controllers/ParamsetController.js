@@ -97,6 +97,9 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.paramsetdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createparamset', {
 			id: uuid,

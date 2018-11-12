@@ -137,6 +137,9 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
 		});
 	}
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.simulateData.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go('createsimulate', {
       id: uuid,

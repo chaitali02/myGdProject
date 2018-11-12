@@ -113,6 +113,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.ingestData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestruledetail2', {
 			id: uuid,

@@ -45,7 +45,7 @@
                         tooltip  ng-hide="isAdd"  ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(predictData.uuid,predictData.version,mode)">
                         <i class="fa fa-home icon-circle home-icon-circle"></i>
                     </a>
-                    <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'"
+                    <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || predictData.locked == 'Y')? 'currentpage':'notcurrentpage'"
                         ng-hide="isAdd" data-ng-click="enableEdit(predictData.uuid,predictData.version)">
                         <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a> 

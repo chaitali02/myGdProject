@@ -82,6 +82,9 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.groupdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListgroup', {
 			id: uuid,

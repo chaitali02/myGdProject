@@ -105,6 +105,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.profileDetail.locked =="Y"){
+			return false;
+		}
 		$scope.showProfileGroupePage()
 		$state.go('createprofile', {
 			id: uuid,
@@ -434,6 +437,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.profileGroupDetail.locked =="Y"){
+			return false;
+		}
 		$scope.showProfileGroupePage()
 		$state.go('createprofilegroup', {
 			id: uuid,

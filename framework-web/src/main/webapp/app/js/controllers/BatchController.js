@@ -114,6 +114,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.batchDetail.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].detailState, {
       id: uuid,

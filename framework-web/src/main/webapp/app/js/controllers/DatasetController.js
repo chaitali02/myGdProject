@@ -94,7 +94,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 
 	$scope.enableEdit = function (uuid, version) {
-		
+		if($scope.isPrivlage || $scope.dataset.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListdataset', {
 			id: uuid,

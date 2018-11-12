@@ -154,6 +154,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 	}
   
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.trainData.locked =="Y"){
+      return false;
+   }   
     $scope.showPage()
     $state.go('createtrain', {
       id: uuid,

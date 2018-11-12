@@ -65,6 +65,9 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 	}
 
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.sessiondata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListsession', {
 			id: uuid,

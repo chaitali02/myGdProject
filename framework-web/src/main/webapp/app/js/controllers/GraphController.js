@@ -119,6 +119,9 @@ angular.module('InferyxApp')
         });
       }
       $scope.enableEdit = function (uuid, version) {
+        if($scope.isPrivlage || $scope.dagdata.locked =="Y"){
+          return false;
+		    }  
         $scope.showDagPage()
         $state.go('createwf', {
           id: uuid,

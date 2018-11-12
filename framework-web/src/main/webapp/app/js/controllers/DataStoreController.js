@@ -86,6 +86,9 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	}
 
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.datastoredata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListdatastore', {
 			id: uuid,

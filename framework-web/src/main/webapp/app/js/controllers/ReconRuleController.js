@@ -111,6 +111,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.showGraphDiv = true;
   };
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.reconruledata.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go('createreconerule', {
       id: uuid,
@@ -1154,6 +1157,9 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   }
 
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go('createreconerulegroup', {
       id: uuid,

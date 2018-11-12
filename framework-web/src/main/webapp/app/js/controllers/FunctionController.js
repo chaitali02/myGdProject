@@ -98,6 +98,9 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	}
 
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.functiondata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListfunction', {
 			id: uuid,

@@ -83,6 +83,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.formuladata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListformula', {
 			id: uuid,
