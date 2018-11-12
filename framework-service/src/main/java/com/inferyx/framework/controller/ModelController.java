@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
@@ -176,8 +175,9 @@ public class ModelController {
 		 */
 		return modelServiceImpl.uploadScript(customScriptFile, model, modelId, modelUuid, modelVersion, scriptName);
 	}
-
-	@RequestMapping(value = "/executeScript", method = RequestMethod.GET)
+	
+	/********************** UNUSED **********************/
+	/*@RequestMapping(value = "/executeScript", method = RequestMethod.GET)
 	public @ResponseBody String executeScript(@RequestParam("scriptName") String scriptName,
 			@RequestParam("modelType") String modelType,
 			@RequestParam(value = "modelExecUuid", required = false) String modelExecUuid,
@@ -186,7 +186,7 @@ public class ModelController {
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return new ObjectMapper().writeValueAsString(
 				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion));
-	}
+	}*/
 
 	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getAlgorithmByModelExec", method = RequestMethod.GET)
