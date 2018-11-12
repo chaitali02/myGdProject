@@ -3117,6 +3117,7 @@ public class CommonServiceImpl <T> {
 		Helper.getDomainClass(metaType).getMethod("setPublished", String.class).invoke(obj, "Y");
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
+	
 	public BaseEntity unPublished(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
@@ -3138,7 +3139,48 @@ public class CommonServiceImpl <T> {
 		else
 			return null;
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
-	}	
+	}
+	
+	public BaseEntity locked(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+		String appUuid = null;
+		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+		}
+		MetaType metaType = Helper.getMetaType(type);
+		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object obj = null;
+		if (appUuid != null)
+			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+		else
+			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+		Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "Y");
+		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
+	}
+	public BaseEntity unLocked(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+		String appUuid = null;
+		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+		}
+		MetaType metaType = Helper.getMetaType(type);
+		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object obj = null;
+		if (appUuid != null)
+			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+		else
+			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) obj.getClass().getMethod("getCreatedBy").invoke(obj);
+		if(isCurrentUser(createdBy))
+			Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "N");
+		else
+			return null;
+		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
+	}
 	public boolean isCurrentUser(MetaIdentifierHolder createdBy) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		User currentUser = metadataServiceImpl.getCurrentUser();
 		if(currentUser != null && currentUser.getUuid().equalsIgnoreCase(createdBy.getRef().getUuid())) {

@@ -156,6 +156,8 @@
       }
       return deferred.promise;
     } /*End Restore*/
+
+
     this.publish = function(id, type) {
       var deferred = $q.defer();
       var url = $location.absUrl().split("app")[0];
@@ -169,9 +171,9 @@
         });
       }
       return deferred.promise;
-    } /*End Delete*/
+    } /*End Publish*/
 
-    /*Start Restore*/
+    /*Start unpublish*/
     this.unpublish = function(id, type) {
       var deferred = $q.defer();
       var url = $location.absUrl().split("app")[0];
@@ -186,6 +188,38 @@
       }
       return deferred.promise;
     }
+
+    this.lock = function(id, type) {
+      var deferred = $q.defer();
+      var url = $location.absUrl().split("app")[0];
+      url =  url + "common/lock?action=lock&id=" + id + "&type=" + type;
+       $http.put(url).then(function(response) {
+         OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End Lock*/
+
+    /*Start unLock*/
+    this.unLock = function(id, type) {
+      var deferred = $q.defer();
+      var url = $location.absUrl().split("app")[0];
+      url =  url + "common/unLock?action=lock&id=" + id + "&type=" + type;
+      $http.put(url).then(function(response) {
+      OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
+
     /*Start getOneById*/
     this.getOneById = function(id, type) {
       var deferred = $q.defer();

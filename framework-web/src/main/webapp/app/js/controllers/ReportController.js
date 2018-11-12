@@ -59,9 +59,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		cellClass: 'text-center',
 		headerCellClass: 'text-center',
 		cellTemplate: ['<div class="ui-grid-cell-contents">',
-		'<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
-		'<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
-		 ].join('')
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'UnLock\')"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'Lock\')"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        ].join('')
 	  })
 	$scope.gridOptions.columnDefs.push({
 		displayName: 'Status',
@@ -183,6 +183,17 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		});
 	}
 
+	$scope.lockOrUnLock = function (data, action) {
+		var uuid = data.uuid;
+		var version = data.version;
+		$scope.obj = data;
+		$scope.msg = action;
+		$('#confModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+
 
 	$scope.submitOk = function (action) {
 		if (action == "Clone") {
@@ -201,6 +212,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		}
 		else if (action == "Unpublish") {
 			$scope.okPublished();
+		}else if(action == "Lock"){
+			$scope.okLocked();
+		}
+		else if(action == "UnLock"){
+			$scope.okLocked();
 		}
 	}
 
@@ -287,7 +303,33 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 					$scope.gridOptions.data[$scope.obj.index].published = "N"
 				notify.type = 'success',
 					notify.title = 'Success',
-					notify.content = "Dashboard Unpublish Successfully"
+					notify.content = "Report Unpublish Successfully"
+				$scope.$emit('notify', notify);
+			}
+		}
+	}
+	$scope.okLocked = function () {
+		$('#confModal').modal('hide');
+		if ($scope.obj.locked == 'N') {
+			CommonService.lock($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessLock(response.data) });
+			var OnSuccessLock = function (response) {
+				
+				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
+					$scope.gridOptions.data[$scope.obj.index].locked ="Y";
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = "Report Lock Successfully"
+				$scope.$emit('notify', notify);
+			}
+		}
+		else {
+			CommonService.unLock($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessUnLock(response.data) });
+			var OnSuccessUnLock = function (response) {
+				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
+					$scope.gridOptions.data[$scope.obj.index].locked = "N"
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = "Report Unpublish Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
