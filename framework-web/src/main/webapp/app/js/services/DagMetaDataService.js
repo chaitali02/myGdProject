@@ -156,6 +156,83 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       }
     ]
   };
+  obj.gridOptionsResultDefault = {
+    // paginationPageSizes: [10, 25, 50, 75],
+    // paginationPageSize: 10,
+    // enableFiltering: true,
+    enableGridMenu: true,
+    rowHeight: 40,
+    exporterSuppressCtiolumns: [ 'action' ],
+    exporterMenuPdf: true,
+    exporterPdfOrientation: 'landscape',
+    exporterPdfPageSize: 'A4',
+    exporterPdfDefaultStyle: {fontSize: 9},
+    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+    columnDefs: [
+      {
+        displayName: 'UUID',
+        name: 'uuid',
+        visible: false,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center'
+      },
+     
+      {
+        displayName: 'Name',
+        name: 'name',
+        minWidth: 150,
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Version',
+        name: 'version',
+        visible: false,
+        maxWidth:110,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.DESC,
+         // priority: 0,
+        },
+      },
+      {
+        displayName: 'Execute By',
+        name: 'createdBy.ref.name',
+        cellClass: 'text-center',
+        maxWidth:100,
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Start Time',
+        name: 'startTime',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 190,
+        sort: {
+          direction: uiGridConstants.ASC,
+         // priority: 0,
+        },
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.startTime}}</div></div>'
+      },
+      {
+        displayName: 'End Time',
+        name: 'endtime',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 190,
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.endTime}}</div></div>'
+      },
+      {
+        displayName: 'Duration',
+        name: 'duration',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 110,
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.duration}}</div></div>'
+      }
+    ]
+  };
+
 
   obj.gridOptions = angular.copy(obj.gridOptionsDefault);
   obj.gridOptions.columnDefs.push({
@@ -210,7 +287,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   )
 
 
-  obj.gridOptionsResults = angular.copy(obj.gridOptionsDefault);
+  obj.gridOptionsResults = angular.copy(obj.gridOptionsResultDefault);
   obj.gridOptionsResults.columnDefs.push(
     {
       displayName: 'Status',
