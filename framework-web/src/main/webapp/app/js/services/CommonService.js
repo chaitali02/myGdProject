@@ -567,7 +567,7 @@
             if(response[i].status[len].stage == "Completed"){
               result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
               var date1 = new Date(result.startTime)
-                   var date2 = new Date(result.endTime)
+              var date2 = new Date(result.endTime)
               result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
                    
             }

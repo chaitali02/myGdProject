@@ -341,19 +341,22 @@
                                     <th style="width:10%; text-align:center">Min Value</th>
                                     <th style="width:10%; text-align:center">Max Value</th>
                                     <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
+                                    <th style="width:10%;text-align: center">Up/Down</th>
                                   </tr>
                                 </thead>
-                                <tbody ng-repeat="data in featureTableArray">
-                                  <tr  id="{{$index}}"
+                                <tbody ng-repeat="data in featureTableArray" id="{{$index}}" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                                  <!-- <tr  id="{{$index}}"
                                     data-drop="true" data-drag={{isDragable}}
                                     ng-model="featureTableArray"
                                     jqyoui-droppable="{index: {{$index}}}" 
                                     jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
                                     data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-                                    data-direction="{{data.name.jqyouiDirection}}" >
+                                    data-direction="{{data.name.jqyouiDirection}}" 
+                                    drag-drop draggable="{{isDragable}}" after-drop="ondrop"> -->
+                                    <tr  >
                                     <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}" focus-me="true"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}" focus-me="true" required disable-validation-message=""></span></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
                                           ng-change="onChangeFeatureType($index)">
@@ -367,6 +370,18 @@
                                       
                                       <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
                                       </select>
+                                    </td>
+                                    <td>
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <div style="text-align: center;">
+                                          <a ng-disabled="$index == 0 ?true:false" ng-click="onAttrRowUp($index)">
+                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                          </a>
+                                          <a ng-disabled="$index == attributeTableArray.length-1 ? true:false" ng-click="onAttrRowDown($index)">
+                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                          </a>
+                                        </div>
+                                      </span>
                                     </td>
                                   </tr>
                                 </tbody>

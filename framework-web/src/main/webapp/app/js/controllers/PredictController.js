@@ -225,7 +225,9 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var featureMap={};
         var sourceFeature={};
         var targetFeature={};
-        featureMap.featureMapId=i;
+        featureMap.featureMapId = i;
+        featureMap.id =i;
+        featureMap.index =i;
         sourceFeature.uuid = response.uuid;
         sourceFeature.type = "model";
         sourceFeature.featureId = response.features[i].featureId;
@@ -357,6 +359,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var sourceFeature={};
         var targetFeature={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
+        featureMap.id = response.featureAttrMap[i].featureMapId;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
@@ -402,7 +405,22 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     },100)
   }
 
-
+  $scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform3.$dirty=true;
+	}
+  $scope.onAttrRowDown=function(index){
+		var rowTempIndex=$scope.featureMapTableArray[index];
+    var rowTempIndexPlus=$scope.featureMapTableArray[index+1];
+		$scope.featureMapTableArray[index]=rowTempIndexPlus;
+		$scope.featureMapTableArray[index+1]=rowTempIndex;
+	}
+	$scope.onAttrRowUp=function(index){
+		var rowTempIndex=$scope.featureMapTableArray[index];
+    var rowTempIndexMines=$scope.featureMapTableArray[index-1];
+		$scope.featureMapTableArray[index]=rowTempIndexMines;
+		$scope.featureMapTableArray[index-1]=rowTempIndex;
+  }
   $scope.submitModel = function() {
     var upd_tag="N"
     $scope.isshowPredict = true;
@@ -469,7 +487,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     if($scope.featureMapTableArray.length >0){
       for(var i=0;i<$scope.featureMapTableArray.length;i++){
         var featureMapObj={};
-        featureMapObj.featureMapId=i;
+        featureMapObj.featureMapId =$scope.featureMapTableArray[i].id;
+        featureMapObj.featureDisplaySeq =i
         var sourceFeature={};
         var sourceFeatureRef={};
         var targetFeature={};

@@ -1179,8 +1179,8 @@ transition: right 1m
   color:#a0a0a0;
 }
 .home-icon-circle{
-  margin: 0px 0px 0px 0px !important;
-  font-size: 16px !important;
+  margin: 0px 0px 0px -1px !important;
+  font-size: 17px !important;
 }
 .sitemap-icon-circle{
   display: block !important;
