@@ -41,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "fraud_class",
       "sourceAttr": {
         "ref": {
@@ -57,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "fraud_ind",
       "sourceAttr": {
         "ref": {
@@ -73,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "fraud_count",
       "sourceAttr": {
         "ref": {
