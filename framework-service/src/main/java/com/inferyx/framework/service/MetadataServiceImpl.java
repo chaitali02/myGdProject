@@ -2222,4 +2222,21 @@ public class MetadataServiceImpl {
 		messages = (List<Message>) mongoTemplate.find(query, Message.class);		
 		return messages;
 	}
+
+	public List<Algorithm> getAlgorithmByLibrary(String libraryType) throws JsonProcessingException {
+		List<Algorithm> latestAlgoList = new ArrayList<>();
+		
+		MatchOperation filter = match(new Criteria("libraryType").is(libraryType.toUpperCase()));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation algoAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Algorithm> algoAggrResults = mongoTemplate.aggregate(algoAggr, MetaType.algorithm.toString().toLowerCase(), Algorithm.class);
+		List<Algorithm> sortedAlgoList = algoAggrResults.getMappedResults();
+		
+		for(Algorithm algorithm : sortedAlgoList) {
+			latestAlgoList.add((Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithm.getId(), algorithm.getVersion(), MetaType.algorithm.toString()));
+		}
+		
+		return latestAlgoList;
+	}
 }

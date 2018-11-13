@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -1056,5 +1057,12 @@ public class MetadataController {
 			@RequestParam(value = "uuid") String uuid,
 			@RequestParam(value = "version", required = false) String version) {
 		return metadataServiceImpl.getMessageByUuidAndVersion(uuid, version);
+	}
+	
+	@RequestMapping(value = "/getAlgorithmByLibrary",method=RequestMethod.GET)
+	public @ResponseBody List<Algorithm> getAlgorithmByLibrary(@RequestParam(value="libraryType") String libraryType, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getAlgorithmByLibrary(libraryType);
 	}
 }
