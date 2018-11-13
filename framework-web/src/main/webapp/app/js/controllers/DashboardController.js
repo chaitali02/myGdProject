@@ -179,6 +179,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 
 	$scope.mode = " ";
 	$scope.dataLoading = false;
+	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -235,6 +236,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.dashboarddata.locked =="Y"){
+			return false;
+		}
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {
 			id: uuid,

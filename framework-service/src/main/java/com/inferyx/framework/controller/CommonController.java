@@ -248,6 +248,28 @@ public class CommonController<T> {
 			return objectWriter.writeValueAsString(unAuthorised);
 		}			
 	}
+	@RequestMapping(value = "/lock", method = RequestMethod.PUT)
+	public String lock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.locked(id, type);
+		return objectWriter.writeValueAsString(baseEntity);
+	}
+	
+	@RequestMapping(value = "/unLock", method = RequestMethod.PUT)
+	public String unLock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.unLocked(id, type);
+		if(baseEntity != null)
+			return objectWriter.writeValueAsString(baseEntity);
+		else {
+			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unpublish."));
+			response.setStatus(401);
+			return objectWriter.writeValueAsString(unAuthorised);
+		}			
+	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getAsOf", method = RequestMethod.GET)

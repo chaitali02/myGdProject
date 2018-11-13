@@ -45,7 +45,7 @@
               tooltip  ng-hide="isAdd"  ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(privilegedata.uuid,privilegedata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a title="Edit"  ng-class="(isEdit==true || isPrivlage || privilegedata.locked == 'Y')? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(privilegedata.uuid,privilegedata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>

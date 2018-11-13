@@ -123,8 +123,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate: ['<div class="ui-grid-cell-contents">',
-        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
-        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></li></div>',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,true)"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,false)"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
         ].join('')
       });
     }
@@ -429,6 +429,34 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       });
     }
     $('#publishedConfModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.lockOrUnLock = function (data, unLock){
+    
+    var action = unLock== true ? "unLock" : "lock";
+    $scope.setActivity(data.uuid, data.version, $scope.select, action);
+    var uuid = data.id;
+    $scope.selectuuid = uuid;
+    $scope.lockModalMsg = unLock ? 'unLock' : 'Lock';
+    $scope.onSuccessLockOrUnLock = function (response) {
+      data.locked = unLock ? 'N' : 'Y';
+      $scope.lockmessage = $scope.caption + (unLock ? " unLocked" : " Locked") + " Successfully";
+    }
+
+    $scope.okLocked = function () {
+      $('#lockedConfModal').modal('hide');
+      CommonService[unLock ? 'unLock' : 'lock']($scope.selectuuid, $scope.select).then(function (response) {
+      $scope.onSuccessLockOrUnLock(response.data);
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.lockmessage;
+        $scope.$emit('notify', notify);
+      });
+    }
+    $('#lockedConfModal').modal({
       backdrop: 'static',
       keyboard: false
     });

@@ -1228,6 +1228,9 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestrulegroupdetail', {
 			id: uuid,

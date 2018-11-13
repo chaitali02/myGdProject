@@ -156,6 +156,9 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.paramlistData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,

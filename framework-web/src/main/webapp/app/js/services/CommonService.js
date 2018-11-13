@@ -105,7 +105,7 @@
     return factory;
   });
 
-  CommonModule.service('CommonService', function($http, CommonFactory, $q, sortFactory, $location) {
+  CommonModule.service('CommonService', function($http, CommonFactory, $q,$filter, sortFactory, $location) {
 
     /*Start MetaStats*/
     this.getMetaStats = function(type) {
@@ -156,6 +156,8 @@
       }
       return deferred.promise;
     } /*End Restore*/
+
+
     this.publish = function(id, type) {
       var deferred = $q.defer();
       var url = $location.absUrl().split("app")[0];
@@ -169,9 +171,9 @@
         });
       }
       return deferred.promise;
-    } /*End Delete*/
+    } /*End Publish*/
 
-    /*Start Restore*/
+    /*Start unpublish*/
     this.unpublish = function(id, type) {
       var deferred = $q.defer();
       var url = $location.absUrl().split("app")[0];
@@ -186,6 +188,38 @@
       }
       return deferred.promise;
     }
+
+    this.lock = function(id, type) {
+      var deferred = $q.defer();
+      var url = $location.absUrl().split("app")[0];
+      url =  url + "common/lock?action=lock&id=" + id + "&type=" + type;
+       $http.put(url).then(function(response) {
+         OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End Lock*/
+
+    /*Start unLock*/
+    this.unLock = function(id, type) {
+      var deferred = $q.defer();
+      var url = $location.absUrl().split("app")[0];
+      url =  url + "common/unLock?action=lock&id=" + id + "&type=" + type;
+      $http.put(url).then(function(response) {
+      OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
+
     /*Start getOneById*/
     this.getOneById = function(id, type) {
       var deferred = $q.defer();
@@ -514,6 +548,31 @@
           result.createdBy = response[i].createdBy;
           result.createdOn = response[i].createdOn;
           result.active = response[i].active;
+          result.startTime="-NA-";
+          result.endTime="-NA-";
+          result.duration="-NA-"
+          if(response[i].status !=null && response[i].status.length > 1){
+            for(var j=0;j<response[i].status.length;j++){
+              if(response[i].status[j].stage == "InProgress"){
+                result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+                break;
+              }
+            }
+            // for(var j=0;j<response[i].statusList.length;j++){
+            // 	if(response[i].statusList[j].stage == "InProgress"){
+            // 		result.InProgressTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+            // 		break;
+            // 	}
+            // }
+            if(response[i].status[len].stage == "Completed"){
+              result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+              var date1 = new Date(result.startTime)
+                   var date2 = new Date(result.endTime)
+              result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
+                   
+            }
+    
+            }
           if(response[i].status !=null && response[i].status.length > 0){
             if (response[i].status[len].stage == "NotStarted") {
               result.status = "Not Started"

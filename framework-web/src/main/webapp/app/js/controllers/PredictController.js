@@ -142,6 +142,9 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 		});
 	}
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.predictData.locked =="Y"){
+      return false;
+    }  
     $scope.showPage()
     $state.go('createpredict', {
       id: uuid,

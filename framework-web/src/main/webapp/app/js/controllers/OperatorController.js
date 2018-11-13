@@ -84,6 +84,9 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.OperatorData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createoperator', {
 			id: uuid,

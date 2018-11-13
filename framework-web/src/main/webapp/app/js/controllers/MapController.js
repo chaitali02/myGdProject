@@ -87,6 +87,9 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.mapdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListmap', {
 			id: uuid,

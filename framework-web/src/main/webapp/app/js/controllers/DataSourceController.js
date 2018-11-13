@@ -88,6 +88,9 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.datasourcedata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListdatasource', {
 			id: uuid,

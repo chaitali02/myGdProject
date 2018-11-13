@@ -104,6 +104,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.expressiondata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListexpression', {
 			id: uuid,

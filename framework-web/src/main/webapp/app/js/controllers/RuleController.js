@@ -152,6 +152,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.ruleData.locked =="Y"){
+      return false;
+    } 
     $scope.showPage()
     $state.go('createrules', {
       id: uuid,
@@ -1570,6 +1573,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   }
 
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+      return false;
+    } 
     $scope.showPage()
     $state.go('createrulesgroup', {
       id: uuid,

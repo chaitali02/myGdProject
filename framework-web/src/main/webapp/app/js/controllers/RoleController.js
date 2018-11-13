@@ -83,6 +83,9 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 	}
 
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.roledata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListrole', {
 			id: uuid,

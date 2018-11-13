@@ -108,6 +108,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.algorithmData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createalgorithm', {
 			id: uuid,

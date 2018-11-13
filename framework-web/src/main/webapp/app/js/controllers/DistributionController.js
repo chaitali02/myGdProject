@@ -82,6 +82,9 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.distributionData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createdistribution', {
 			id: uuid,

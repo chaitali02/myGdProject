@@ -79,6 +79,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.graphpodData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('creaetgraphpod', {
 			id: uuid,

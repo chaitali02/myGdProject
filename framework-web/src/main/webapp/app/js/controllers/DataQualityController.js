@@ -110,6 +110,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 		});
 	}
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.dataqualitydata.locked =="Y"){
+      return false; 
+    } 
     $scope.showRulePage()
     $state.go('createdataquality', {
       id: uuid,
@@ -1055,6 +1058,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 		});
 	}
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.dqruleGroupDetail.locked =="Y"){
+      return false; 
+    } 
     $scope.showRulGroupePage()
     $state.go('createdataqualitygroup', {
       id: uuid,

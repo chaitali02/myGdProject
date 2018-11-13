@@ -35,8 +35,8 @@ mkdir /user/hive/warehouse/framework/predict
 mkdir /user/hive/warehouse/framework/simulate
 mkdir /user/hive/warehouse/framework/comment
 mkdir /user/hive/warehouse/framework/upload
-mkdir /user/hive/warehouse/framework/model
-mkdir /user/hive/warehouse/framework/model/script
+mkdir -p /user/hive/warehouse/framework/model/script
+mkdir -p /user/hive/warehouse/framework/algorithm/script
 mkdir /user/hive/warehouse/framework/download
 mkdir /user/hive/warehouse/framework/import
 mkdir /user/hive/warehouse/framework/export
@@ -49,7 +49,8 @@ mkdir /user/hive/warehouse/framework/app
 cp -r ../app/*/data/csv/header/* /user/hive/warehouse/framework/upload/
 cp -r ../deploy/* /user/hive/warehouse/framework/deploy/
 cp -r ../app/* /user/hive/warehouse/framework/app/
-cp -r ../app/script/* /user/hive/warehouse/framework/model/script/
+cp -r ../app/script/model/* /user/hive/warehouse/framework/model/script/
+cp -r ../app/script/algorithm/* /user/hive/warehouse/framework/algorithm/script/
 
 echo "All Done...Enjoy !!!"
 

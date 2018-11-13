@@ -89,6 +89,9 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 	}
 
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.privilegedata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListprivilege', {
 			id: uuid,

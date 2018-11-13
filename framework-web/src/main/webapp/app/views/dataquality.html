@@ -41,10 +41,10 @@
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
               tooltip ng-hide="isAdd"  ng-class="(showRule==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
-              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+              <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
              <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
+              tooltip ng-class="(isEdit==true || isPrivlage || dataqualitydata.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
             <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
