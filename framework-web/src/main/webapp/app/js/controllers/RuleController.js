@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER,$location,$anchorScroll) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -82,6 +82,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    $scope.isDragable = "false";
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -97,6 +98,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen=true;
+    $scope.isDragable = "true";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -109,6 +111,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
   else {
     $scope.isAdd = true;
+    $scope.isDragable = "true";
   }
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -737,7 +740,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.modelExecute(result.data);
     } 
   }
-
+  $scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform3.$dirty=true;
+	}
   $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
@@ -1178,13 +1184,35 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray = [];
     }
     var len = $scope.attributeTableArray.length + 1
-    var attrivuteinfo = {};
-    attrivuteinfo.name = "attribute" + len;
-    attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
-    attrivuteinfo.isSourceAtributeSimple = true;
-    attrivuteinfo.sourcesimple;
-    attrivuteinfo.isSourceAtributeDatapod = false;
-    $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
+    var attributeinfo = {};
+    attributeinfo.name = "attribute" + len;
+    attributeinfo.id = len - 1;
+		attributeinfo.index = len;
+    attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
+    attributeinfo.isSourceAtributeSimple = true;
+    attributeinfo.sourcesimple;
+    attributeinfo.isSourceAtributeDatapod = false;
+    $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attributeinfo);
+    $scope.focusRow(len-1)
+  }
+
+  $scope.onAttrRowDown=function(index){  
+    var rowTempIndex=$scope.attributeTableArray[index];
+    var rowTempIndexPlus=$scope.attributeTableArray[index+1];
+    $scope.attributeTableArray[index]=rowTempIndexPlus;
+    $scope.attributeTableArray[index+1]=rowTempIndex;
+  }
+  $scope.onAttrRowUp=function(index){
+    var rowTempIndex=$scope.attributeTableArray[index];
+    var rowTempIndexMines=$scope.attributeTableArray[index-1];
+    $scope.attributeTableArray[index]=rowTempIndexMines;
+    $scope.attributeTableArray[index-1]=rowTempIndex;
+  }
+  $scope.focusRow = function(rowId){
+    $timeout(function() {
+      $location.hash(rowId);
+      $anchorScroll();
+    });
   }
 
   $scope.removeAttribute = function () {
@@ -1398,7 +1426,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     if ($scope.attributeTableArray) {
       for (var l = 0; l < $scope.attributeTableArray.length; l++) {
         attributeinfo = {}
-        attributeinfo.attrSourceId = l;
+        attributeinfo.attrSourceId =$scope.attributeTableArray[l].id;
+			  attributeinfo.attrDisplaySeq = l;
         attributeinfo.attrSourceName = $scope.attributeTableArray[l].name
         var ref = {};
         var sourceAttr = {};

@@ -536,8 +536,8 @@
                         </div>
                       </div>
                       <div class="portlet-body">
-                        <div class="">
-                          <table class=" row-border hover table  table-striped table-bordered">
+                        <div class="" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                          <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                             <thead>
                               <tr>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -547,13 +547,14 @@
                                   </span>
                                 </th>
                                 <th style="width:7%; text-align:center">ID</th>
-                                <th style="width:18%;">Name</th>
-                                <th style="width:20%;">Source Type</th>
-                                <th style="width:30%;">Source Name</th>
+                                <th style="width:30%;text-align: center">Name</th>
+                                <th style="width:20%;text-align: center">Source Type</th>
+                                <th style="width:40%;text-align: center">Source Name</th>
+                                <th style="width:10%;text-align: center">Up/Down</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr ng-repeat="data in attributeTableArray">
+                              <tr id="{{$index}}"  ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                 <td style="text-align: center; Vertical-align: middle;width:5%;">
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                     <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
@@ -561,7 +562,7 @@
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true">
+                                    <input type="text" class="form-control" ng-value="$index+1" ng-disabled="true">
                                   </span>
                                 </td>
                                 <td>
@@ -586,30 +587,42 @@
                                         ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
                                     </span>
                                   </div>
-                                  <div ng-show="data.isSourceAtributeFormula">
+                                  <div ng-show="data.isSourceAtributeFormula" >
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <select select2 ng-model="data.sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFormula track by c.uuid"
                                         ng-change="onChangeFormula(data.sourceformula,$index)"></select>
                                     </span>
                                   </div>
-                                  <div ng-show="data.isSourceAtributeExpression">
+                                  <div ng-show="data.isSourceAtributeExpression" >
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeExpression track by c.uuid"
                                         ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
                                     </span>
                                   </div>
-                                  <div ng-show="data.isSourceAtributeFunction">
+                                  <div ng-show="data.isSourceAtributeFunction" >
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
                                         ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
                                     </span>
                                   </div>
-                                  <div ng-show="data.isSourceAtributeParamList">
+                                  <div ng-show="data.isSourceAtributeParamList" >
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <select select2 ng-model="data.sourceparamlist" ng-show="data.isSourceAtributeParamList" ng-disabled="{{mode}}" class="form-control"
                                         ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attributeId" ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index)"></select>
                                     </span>
                                   </div>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <div style="text-align: center;">
+                                      <a ng-disabled="$index == 0 ?true:false" ng-click="onAttrRowUp($index)">
+                                        <i class="glyphicon glyphicon-arrow-up"></i>
+                                      </a>
+                                      <a ng-disabled="$index == attributeTableArray.length-1 ? true:false" ng-click="onAttrRowDown($index)">
+                                        <i class="glyphicon glyphicon-arrow-down"></i>
+                                      </a>
+                                    </div>
+                                  </span>
                                 </td>
                               </tr>
                             </tbody>

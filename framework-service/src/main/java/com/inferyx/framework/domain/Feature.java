@@ -13,6 +13,13 @@ package com.inferyx.framework.domain;
 
 public class Feature {
 	private String featureId;
+	private String featureDisplaySeq;
+	public String getFeatureDisplaySeq() {
+		return featureDisplaySeq;
+	}
+	public void setFeatureDisplaySeq(String featureDisplaySeq) {
+		this.featureDisplaySeq = featureDisplaySeq;
+	}
 	private String name;
 	private String type;
 	private String desc;

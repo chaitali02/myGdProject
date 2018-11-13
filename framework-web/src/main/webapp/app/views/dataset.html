@@ -52,13 +52,13 @@
           </div>
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
+              tooltip ng-hide="isAdd" ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataset.uuid,dataset.version,mode)">
               <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" ng-class="(isEdit==true || isPrivlage || dataset.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-            data-ng-click="enableEdit(dataset.uuid,dataset.version)">
-            <i class="fa fa-edit icon-circle"></i>
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              ng-class="(isEdit==true || isPrivlage || dataset.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+              data-ng-click="enableEdit(dataset.uuid,dataset.version)">
+              <i class="fa fa-edit icon-circle"></i>
             </a>
             <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
               data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
@@ -73,13 +73,15 @@
               tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-table icon-circle"></i>
             </a>
-            <a  class="btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
-            data-ng-click="showGraph(dataset.uuid,dataset.version)">
-            <i class="fa fa-sitemap icon-circle sitemap-icon-circle"></i>
-          </a>
-           
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()"
-            data-toggle="tooltip" data-placement="top" tooltip>
+            <a class="btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip
+              ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(dataset.uuid,dataset.version)">
+              <i class="fa fa-sitemap icon-circle sitemap-icon-circle"></i>
+            </a>
+
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+              ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()" data-toggle="tooltip" data-placement="top"
+              tooltip>
               <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
@@ -275,7 +277,7 @@
                           </div>
                         </div>
                       </div>
-                     
+
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4">
@@ -324,7 +326,7 @@
                           <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right" ng-click="addRowFilter();" ng-disabled="{{mode}}"></button>
                         </div>
                         <div class="form-body" style="padding-top:50px;">
-                           
+
                           <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                             <thead>
                               <tr>
@@ -516,28 +518,41 @@
 
                 <!-- Start Tab3 -->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
-                  
+
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
-                    <div class="portlet light bordered" data-ng-show="showForm">
-                      <div class="portlet-title">
-                        <div class="caption">
-                          <span class="caption-subject  sbold ">Source Attribute</span>
-                        </div>
-                        <div class="tools">
-                        </div>
-                      </div>
-                      <div class="portlet-body form">
-                        <div class="x_title" style="padding:10px;">
-                          <div id="hideshow" class="alert alert-danger pull-left" ng-if="isDuplication" style="margin-left:10px;width:33%;margin-bottom:0px;">
-                            <button class="close" data-close="alert"></button>
-                            <span>Duplication not allowed.</span>
+                    <div class="row">
+                      <div class="portlet light bordered">
+                        <div class="portlet-title">
+                          <div class="caption">
+                            <span class="caption-subject  sbold ">Source Attribute</span>
                           </div>
-                          <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="{{mode}}"></button>
-                          <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
+                          <div class="actions">
+
+                          </div>
                         </div>
-                        <div class="form-body" style="padding-top:50px;">
-                          <div>
-                            <div class="">
+
+                        <div class="portlet-body">
+                          <div class="row">
+                            <div class="col-md-12" style="margin-bottom:10px;">
+                              <div class="col-md-6" style="padding:0px;">
+                                <div class="btn-group btn-group-devided" data-toggle="buttons" style="width:45%;">
+                                  <div id="hideshow" class="alert alert-danger pull-left" ng-if="isDuplication" style="margin:0px;width:100%;">
+                                    <button class="close" data-close="alert"></button>
+                                    <div>Duplication not allowed. </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="x_title" style="padding:10px;">
+                                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="{{mode}}"></button>
+                                  <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                            <div class="col-md-12">
                               <table class=" row-border hover table  table-striped table-bordered">
                                 <thead>
                                   <tr>
@@ -550,14 +565,15 @@
                                     <th style="width:7%; text-align:center">ID</th>
                                     <th style="width:30%;text-align: center">Name</th>
                                     <th style="width:20%;text-align: center">Source Type</th>
-                                    <th style="width:46%;text-align: center">Source Name</th>
+                                    <th style="width:40%;text-align: center">Source Name</th>
+                                    <th style="width:15%;text-align: center">Up/Down</th>
                                   </tr>
                                 </thead>
-                                <tbody ng-repeat="data in attributeTableArray" drag-drop draggable ="{{isDragable}}" after-drop="ondrop">
+                                <tbody id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                   <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
-                                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
-                                    <tr>
-                                      
+                                            data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
+                                  <tr>
+
                                     <td style="text-align: center; Vertical-align: middle;width:5%;">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <input class="form-control" ng-disabled="{{mode}}" style="height:16px;" type="checkbox" ng-model="data.selected" />
@@ -572,7 +588,8 @@
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform3['sourceName'+$index].$invalid}">
                                         <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message=""
-                                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}"
+                                          focus-me="true">
                                       </span>
                                     </td>
                                     <td>
@@ -635,14 +652,29 @@
                                         </span>
                                       </div>
                                     </td>
+                                    <td>
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <div style="text-align: center;">
+                                          <a ng-disabled="$index == 0 ?true:false" ng-click="onAttrRowUp($index)">
+                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                          </a>
+                                          <a ng-disabled="$index == attributeTableArray.length-1 ? true:false" ng-click="onAttrRowDown($index)">
+                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                          </a>
+                                        </div>
+                                      </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
+
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+
+
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4">
@@ -653,6 +685,7 @@
                         </button>
                       </div>
                     </div>
+
                   </form>
                 </div>
                 <!-- End Tab3 -->

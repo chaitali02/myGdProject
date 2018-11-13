@@ -119,16 +119,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.gridOptions.columnDefs.splice(0,0,{
         displayName: 'Locked',
         name: 'locked',
-        minWidth: 20,
+        maxWidth: 100,
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate: ['<div class="ui-grid-cell-contents">',
-        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,true)"><i  title ="Lock" class="fa fa-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
-        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,false)"><i title ="UnLock" class="fa fa-unlock-alt" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,true)"><i  title ="Lock" class="icon-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,false)"><i title ="UnLock" class="icon-lock-open" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
         ].join('')
       });
     }
   }
+  //fa fa-lock
+  //fa fa-unlock-alt
   $scope.filteredRows = [];
   $scope.gridOptions.onRegisterApi = function (gridApi) {
     $scope.gridApi = gridApi;

@@ -796,7 +796,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
       var sourceAttributesArray = [];
       for (var n = 0; n < response.attributeInfo.length; n++) {
         var attributeInfo = {};
-        attributeInfo.name = response.attributeInfo[n].attrSourceName
+        attributeInfo.name = response.attributeInfo[n].attrSourceName;
+        attributeInfo.id = response.attributeInfo[n].attrSourceId;
         if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
           var obj = {}
           obj.text = "string"

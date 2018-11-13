@@ -199,7 +199,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }
     var len = $scope.featureTableArray.length + 1
     var feature= {};
-    feature.featureId="1"
+    feature.featureId="1";
+    feature.id = len - 1;
     feature.name = "";
     feature.type =  $scope.featuureType[0];
     feature.desc = "";
@@ -209,6 +210,24 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
     $scope.focusRow(len-1)
   }
+  $scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform2.$dirty=true;
+	}
+  $scope.onAttrRowDown=function(index){
+	  var rowTempIndex=$scope.featureTableArray[index];
+    var rowTempIndexPlus=$scope.featureTableArray[index+1];
+		$scope.featureTableArray[index]=rowTempIndexPlus;
+		$scope.featureTableArray[index+1]=rowTempIndex;
+  }
+  
+	$scope.onAttrRowUp=function(index){
+		var rowTempIndex=$scope.featureTableArray[index];
+    var rowTempIndexMines=$scope.featureTableArray[index-1];
+		$scope.featureTableArray[index]=rowTempIndexMines;
+		$scope.featureTableArray[index-1]=rowTempIndex;
+	}
+
 
   $scope.removeRow = function() {
     $scope.slectAllRow = false;
@@ -445,7 +464,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
-          featureObj.featureId=$scope.modeldata.features[i].featureId
+          featureObj.featureId=$scope.modeldata.features[i].featureId;
+          featureObj.id=$scope.modeldata.features[i].featureId;
           featureObj.name=$scope.modeldata.features[i].name
           featureObj.type=$scope.modeldata.features[i].type
           featureObj.desc=$scope.modeldata.features[i].desc
@@ -619,7 +639,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       if($scope.featureTableArray.length >0){
         for(var i=0;i< $scope.featureTableArray.length;i++){
         var featureObj={};
-        featureObj.featureId=i
+        featureObj.featureId =$scope.featureTableArray[i].id;
+			  featureObj.featureDisplaySeq = i;
         featureObj.name=$scope.featureTableArray[i].name
         featureObj.type=$scope.featureTableArray[i].type
         featureObj.desc=$scope.featureTableArray[i].desc
