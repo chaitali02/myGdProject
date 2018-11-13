@@ -49,7 +49,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	$scope.algorithm.versions = [];
 	$scope.isshowmodel = false;
 	//$scope.librarytypes = ["sparkML", "R", "Java"];
-	$scope.librarytypes = ["SPARKML", "R", "JAVA","PYTHON"];
+	$scope.librarytypes = ["SPARKML", "R", "JAVA","PYTHON","DL4J","TENSORFLOW"];
 	$scope.paramtable = null;
 	//$scope.types = ["clustering", "classification", "regression", "simulation"];
 	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION"];

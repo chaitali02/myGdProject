@@ -57,8 +57,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   $scope.dependsOnType= ["algorithm", "formula"];
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
   $scope.type = ["string", "double", "date"];
-  $scope.scriptTypes= ["SPARK","PYTHON", "R"];
-  $scope.scriptTypeMapping={"SPARK":"SPARKML","PYTHON":"PYTHON","R":"R"};
+  $scope.scriptTypes= ["SPARK","PYTHON", "R","DL4J","TENSORFLOW"];
+  $scope.scriptTypeMapping={"SPARK":"SPARKML","PYTHON":"PYTHON","R":"R","DL4J":"DL4J","TENSORFLOW":"TENSORFLOW"};
   //$scope.scriptType="SPARK"
   $scope.count = 0;
   $scope.isSubmitShow = false;
