@@ -45,6 +45,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "address_id",
       "sourceAttr": {
         "ref": {
@@ -61,6 +62,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "src_address_id",
       "sourceAttr": {
         "ref": {
@@ -77,6 +79,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "address_line1",
       "sourceAttr": {
         "ref": {
@@ -93,6 +96,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "address_line2",
       "sourceAttr": {
         "ref": {
@@ -109,6 +113,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "address_line3",
       "sourceAttr": {
         "ref": {
@@ -125,6 +130,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "city",
       "sourceAttr": {
         "ref": {
@@ -141,6 +147,7 @@
     },
     {
       "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
       "attrSourceName": "county",
       "sourceAttr": {
         "ref": {
@@ -157,6 +164,7 @@
     },
     {
       "attrSourceId": "7",
+      "attrDisplaySeq" : "7",
       "attrSourceName": "state",
       "sourceAttr": {
         "ref": {
@@ -173,6 +181,7 @@
     },
     {
       "attrSourceId": "8",
+      "attrDisplaySeq" : "8",
       "attrSourceName": "zipcode",
       "sourceAttr": {
         "ref": {
@@ -189,6 +198,7 @@
     },
     {
       "attrSourceId": "9",
+      "attrDisplaySeq" : "9",
       "attrSourceName": "country",
       "sourceAttr": {
         "ref": {
@@ -205,6 +215,7 @@
     },
     {
       "attrSourceId": "10",
+      "attrDisplaySeq" : "10",
       "attrSourceName": "latitude",
       "sourceAttr": {
         "ref": {
@@ -221,6 +232,7 @@
     },
     {
       "attrSourceId": "11",
+      "attrDisplaySeq" : "11",
       "attrSourceName": "longitude",
       "sourceAttr": {
         "ref": {
@@ -237,6 +249,7 @@
     },
     {
       "attrSourceId": "12",
+      "attrDisplaySeq" : "12",
       "attrSourceName": "load_date",
       "sourceAttr": {
         "ref": {
@@ -253,6 +266,7 @@
     },
     {
       "attrSourceId": "13",
+      "attrDisplaySeq" : "13",
       "attrSourceName": "load_id",
       "sourceAttr": {
         "ref": {

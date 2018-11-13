@@ -702,7 +702,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
                         filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.filter.dependsOn.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
+                    else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.sourceDetail.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"

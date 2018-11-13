@@ -40,6 +40,27 @@ public class StreamInput<T, K> {
 	private String fileFormat;
 	private String ingestionType;
 	private ExecParams execParams;
+	private DataSet sourceDataSet;
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the sourceDataSet
+	 */
+	public DataSet getSourceDataSet() {
+		return sourceDataSet;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param sourceDataSet the sourceDataSet to set
+	 */
+	public void setSourceDataSet(DataSet sourceDataSet) {
+		this.sourceDataSet = sourceDataSet;
+	}
 
 	/**
 	 *
