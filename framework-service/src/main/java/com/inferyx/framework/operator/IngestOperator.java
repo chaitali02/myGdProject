@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -31,6 +32,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author Ganesh
@@ -42,9 +44,11 @@ public class IngestOperator {
 	@Autowired
 	private AttributeMapOperator attributeMapOperator;
 	@Autowired
-	private FilterOperator filterOperator;
+	private FilterOperator2 filterOperator2;
 	@Autowired
-	FilterOperator2 filterOperator2;
+	private DatasetOperator datasetOperator;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static Logger logger = Logger.getLogger(IngestOperator.class);
 	
@@ -52,7 +56,7 @@ public class IngestOperator {
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		return generateSelect(ingest, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
-				.concat(generateFrom(ingest, tableName))
+				.concat(generateFrom(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, tableName))
 				.concat(generateWhere(ingest, incrColName, incrLastValue))
 				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams))
@@ -97,8 +101,14 @@ public class IngestOperator {
 				+ (!ingestionType.equals(IngestionType.TABLETOTABLE) ? "" : " AND $CONDITIONS");
 	}
 
-	public String generateFrom(Ingest ingest, String tableName) {
-		return tableName;
+	public String generateFrom(Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, String tableName) throws Exception {
+		if(ingest.getSourceDetail().getRef().getType().equals(MetaType.dataset)) {
+			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ingest.getSourceDetail().getRef().getUuid(), ingest.getSourceDetail().getRef().getVersion(), ingest.getSourceDetail().getRef().getType().toString());
+			return "( "+datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)+" ) " + dataset.getName();
+		} else {
+			return tableName;
+		}
 	}
 
 	public String getFrom() {
