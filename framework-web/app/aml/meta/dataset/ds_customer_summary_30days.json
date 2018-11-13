@@ -72,6 +72,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "customer_id",
       "sourceAttr": {
         "ref": {
@@ -88,6 +89,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "in_wire_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -104,6 +106,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "in_wire_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {
@@ -120,6 +123,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "out_wire_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -136,6 +140,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "out_wire_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {
@@ -152,6 +157,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "net_wire_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -168,6 +174,7 @@
     },
     {
       "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
       "attrSourceName": "net_wire_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {
@@ -184,6 +191,7 @@
     },
     {
       "attrSourceId": "7",
+      "attrDisplaySeq" : "7",
       "attrSourceName": "in_cash_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -200,6 +208,7 @@
     },
     {
       "attrSourceId": "8",
+      "attrDisplaySeq" : "8",
       "attrSourceName": "in_cash_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {
@@ -216,6 +225,7 @@
     },
     {
       "attrSourceId": "9",
+      "attrDisplaySeq" : "9",
       "attrSourceName": "out_cash_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -232,6 +242,7 @@
     },
     {
       "attrSourceId": "10",
+      "attrDisplaySeq" : "10",
       "attrSourceName": "out_cash_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {
@@ -248,6 +259,7 @@
     },
     {
       "attrSourceId": "11",
+      "attrDisplaySeq" : "11",
       "attrSourceName": "net_cash_transfers_trans_count",
       "sourceAttr": {
         "ref": {
@@ -264,6 +276,7 @@
     },
     {
       "attrSourceId": "12",
+      "attrDisplaySeq" : "12",
       "attrSourceName": "net_cash_transfers_trans_amount_usd",
       "sourceAttr": {
         "ref": {

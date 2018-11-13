@@ -9,6 +9,7 @@
     "attributeInfo" : [ 
         {
             "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
             "attrSourceName" : "account_balance",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -20,6 +21,7 @@
         }, 
         {
             "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
             "attrSourceName" : "min_daily_balance",
             "sourceAttr" : {
                 "attrId" : "2",
@@ -31,6 +33,7 @@
         }, 
         {
             "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
             "attrSourceName" : "max_daily_balance",
             "sourceAttr" : {
                 "attrId" : "3",
@@ -42,6 +45,7 @@
         }, 
         {
             "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
             "attrSourceName" : "avg_daily_balance",
             "sourceAttr" : {
                 "attrId" : "4",
@@ -53,6 +57,7 @@
         }, 
         {
             "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
             "attrSourceName" : "min_monthly_balance",
             "sourceAttr" : {
                 "attrId" : "5",
@@ -64,6 +69,7 @@
         }, 
         {
             "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
             "attrSourceName" : "max_monthly_balance",
             "sourceAttr" : {
                 "attrId" : "6",
@@ -75,6 +81,7 @@
         }, 
         {
             "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
             "attrSourceName" : "avg_monthly_balance",
             "sourceAttr" : {
                 "attrId" : "7",
@@ -86,6 +93,7 @@
         }, 
         {
             "attrSourceId" : "7",
+            "attrDisplaySeq" : "7",
             "attrSourceName" : "min_quarterly_balance",
             "sourceAttr" : {
                 "attrId" : "8",
@@ -97,6 +105,7 @@
         }, 
         {
             "attrSourceId" : "8",
+            "attrDisplaySeq" : "8",
             "attrSourceName" : "max_quarterly_balance",
             "sourceAttr" : {
                 "attrId" : "9",
@@ -108,6 +117,7 @@
         }, 
         {
             "attrSourceId" : "9",
+            "attrDisplaySeq" : "9",
             "attrSourceName" : "avg_quarterly_balance",
             "sourceAttr" : {
                 "attrId" : "10",
@@ -119,6 +129,7 @@
         }, 
         {
             "attrSourceId" : "10",
+            "attrDisplaySeq" : "10",
             "attrSourceName" : "min_yearly_balance",
             "sourceAttr" : {
                 "attrId" : "11",
@@ -130,6 +141,7 @@
         }, 
         {
             "attrSourceId" : "11",
+            "attrDisplaySeq" : "11",
             "attrSourceName" : "max_yearly_balance",
             "sourceAttr" : {
                 "attrId" : "12",
@@ -141,6 +153,7 @@
         }, 
         {
             "attrSourceId" : "12",
+            "attrDisplaySeq" : "12",
             "attrSourceName" : "avg_yearly_balance",
             "sourceAttr" : {
                 "attrId" : "13",
@@ -152,6 +165,7 @@
         }, 
         {
             "attrSourceId" : "13",
+            "attrDisplaySeq" : "13",
             "attrSourceName" : "transaction_amount",
             "sourceAttr" : {
                 "attrId" : "14",
@@ -163,6 +177,7 @@
         }, 
         {
             "attrSourceId" : "14",
+            "attrDisplaySeq" : "14",
             "attrSourceName" : "min_daily_tran_amount",
             "sourceAttr" : {
                 "attrId" : "15",
@@ -174,6 +189,7 @@
         }, 
         {
             "attrSourceId" : "15",
+            "attrDisplaySeq" : "15",
             "attrSourceName" : "max_daily_tran_amount",
             "sourceAttr" : {
                 "attrId" : "16",
@@ -185,6 +201,7 @@
         }, 
         {
             "attrSourceId" : "16",
+            "attrDisplaySeq" : "16",
             "attrSourceName" : "avg_daily_tran_amount",
             "sourceAttr" : {
                 "attrId" : "17",
@@ -196,6 +213,7 @@
         }, 
         {
             "attrSourceId" : "17",
+            "attrDisplaySeq" : "17",
             "attrSourceName" : "min_monthly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "18",
@@ -207,6 +225,7 @@
         }, 
         {
             "attrSourceId" : "18",
+            "attrDisplaySeq" : "18",
             "attrSourceName" : "max_monthly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "19",
@@ -218,6 +237,7 @@
         }, 
         {
             "attrSourceId" : "19",
+            "attrDisplaySeq" : "19",
             "attrSourceName" : "avg_monthly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "20",
@@ -229,6 +249,7 @@
         }, 
         {
             "attrSourceId" : "20",
+            "attrDisplaySeq" : "20",
             "attrSourceName" : "min_yearly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "21",
@@ -240,6 +261,7 @@
         }, 
         {
             "attrSourceId" : "21",
+            "attrDisplaySeq" : "21",
             "attrSourceName" : "max_yearly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "22",
@@ -251,6 +273,7 @@
         }, 
         {
             "attrSourceId" : "22",
+            "attrDisplaySeq" : "22",
             "attrSourceName" : "avg_yearly_tran_amount",
             "sourceAttr" : {
                 "attrId" : "23",
@@ -262,6 +285,7 @@
         }, 
         {
             "attrSourceId" : "23",
+            "attrDisplaySeq" : "23",
             "attrSourceName" : "num_daily_transactions",
             "sourceAttr" : {
                 "attrId" : "24",
@@ -273,6 +297,7 @@
         }, 
         {
             "attrSourceId" : "24",
+            "attrDisplaySeq" : "24",
             "attrSourceName" : "num_monthly_transactions",
             "sourceAttr" : {
                 "attrId" : "25",
@@ -284,6 +309,7 @@
         }, 
         {
             "attrSourceId" : "25",
+            "attrDisplaySeq" : "25",
             "attrSourceName" : "num_quarterly_transactions",
             "sourceAttr" : {
                 "attrId" : "26",
@@ -295,6 +321,7 @@
         }, 
         {
             "attrSourceId" : "26",
+            "attrDisplaySeq" : "26",
             "attrSourceName" : "num_yearly_transactions",
             "sourceAttr" : {
                 "attrId" : "27",
@@ -306,6 +333,7 @@
         }, 
         {
             "attrSourceId" : "27",
+            "attrDisplaySeq" : "27",
             "attrSourceName" : "num_payment_default_times",
             "sourceAttr" : {
                 "attrId" : "28",

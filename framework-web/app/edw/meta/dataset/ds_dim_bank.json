@@ -9,6 +9,7 @@
     "attributeInfo" : [ 
         {
             "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
             "attrSourceName" : "bank_id",
             "sourceAttr" : {
                 "ref" : {
@@ -19,6 +20,7 @@
         }, 
         {
             "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
             "attrSourceName" : "src_bank_id",
             "sourceAttr" : {
                 "attrId" : "0",
@@ -31,6 +33,7 @@
         }, 
         {
             "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
             "attrSourceName" : "bank_code",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -43,6 +46,7 @@
         }, 
         {
             "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
             "attrSourceName" : "bank_name",
             "sourceAttr" : {
                 "attrId" : "2",
@@ -55,6 +59,7 @@
         }, 
         {
             "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
             "attrSourceName" : "bank_account_number",
             "sourceAttr" : {
                 "attrId" : "3",
@@ -67,6 +72,7 @@
         }, 
         {
             "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
             "attrSourceName" : "bank_currency_code",
             "sourceAttr" : {
                 "attrId" : "4",
@@ -79,6 +85,7 @@
         }, 
         {
             "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
             "attrSourceName" : "bank_check_digits",
             "sourceAttr" : {
                 "attrId" : "5",
@@ -91,6 +98,7 @@
         }, 
         {
             "attrSourceId" : "7",
+            "attrDisplaySeq" : "7",
             "attrSourceName" : "load_date",
             "sourceAttr" : {
                 "ref" : {
@@ -101,6 +109,7 @@
         }, 
         {
             "attrSourceId" : "8",
+            "attrDisplaySeq" : "8",
             "attrSourceName" : "load_id",
             "sourceAttr" : {
                 "ref" : {
