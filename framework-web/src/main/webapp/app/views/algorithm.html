@@ -200,22 +200,38 @@
 
                 </div>
               </div>
-              
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Flag</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-model="algorithmData.customFlag" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="algorithmData.customFlag" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-md-3 control-label">Script Path
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="algorithmData.scriptName">
+                  </div>
+              </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">Train Class
-                  <span class="required" aria-required="true"> * </span>
+                  <!-- <span class="required" aria-required="true"> * </span> -->
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmData.trainClass">
+                  <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="algorithmData.trainClass">
                 </div>
               </div>
               
               <div class="form-group">
                 <label class="col-md-3 control-label">Model Class 
-                  <span class="required" aria-required="true"> * </span>
+                  <!-- <span class="required" aria-required="true"> * </span> -->
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmData.modelClass">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.modelClass">
                 </div>
               </div>
               

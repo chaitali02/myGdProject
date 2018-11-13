@@ -49,7 +49,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	$scope.algorithm.versions = [];
 	$scope.isshowmodel = false;
 	//$scope.librarytypes = ["sparkML", "R", "Java"];
-	$scope.librarytypes = ["SPARKML", "R", "JAVA"];
+	$scope.librarytypes = ["SPARKML", "R", "JAVA","PYTHON"];
 	$scope.paramtable = null;
 	//$scope.types = ["clustering", "classification", "regression", "simulation"];
 	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION"];
@@ -209,6 +209,8 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.getAllLatestParamListByTemplate();
 		$scope.algorithmData={};
 		$scope.algorithmData.locked="N";
+		$scope.algorithmData.customFlag="N";
+		
 	}
 
 
@@ -271,6 +273,8 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.desc = $scope.algorithmData.desc
 		algorithmJson.active = $scope.algorithmData.active;
 		algorithmJson.locked = $scope.algorithmData.locked;
+		algorithmJson.customFlag = $scope.algorithmData.customFlag;
+		algorithmJson.scriptName = $scope.algorithmData.scriptName;
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;

@@ -58,7 +58,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
   $scope.type = ["string", "double", "date"];
   $scope.scriptTypes= ["SPARK","PYTHON", "R"];
-  $scope.scriptType="SPARK"
+  $scope.scriptTypeMapping={"SPARK":"SPARKML","PYTHON":"PYTHON","R":"R"};
+  //$scope.scriptType="SPARK"
   $scope.count = 0;
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
@@ -169,7 +170,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }     
   }
   $scope.changeScript= function(){
-    $scope.checkboxCustom=$scope.scriptType =="SPARK"?false:true
+    $scope.checkboxCustom=$scope.scriptType =="SPARK"?false:true;
+    $scope.onChangeDependsOnType(true);
 
   }
 
@@ -261,8 +263,16 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   } //End GetAllVersion
   
   $scope.getAllLatest=function(defaultValue){
-    ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
-    var onGetAllLatest = function(response) {
+    // ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
+    // var onGetAllLatest = function(response) {
+    //   $scope.allDependsOn= response
+    //   if(defaultValue)
+    //     $scope.selectedDependsOn= $scope.allDependsOn[0];
+    //   $scope.onChangeDependsOn();
+    // }
+
+    ModelService.getAlgorithmByLibrary($scope.scriptTypeMapping[$scope.scriptType],$scope.selectedDependsOnType).then(function(response) { onSuccessGetAlgorithmByLibrary(response.data)});
+    var onSuccessGetAlgorithmByLibrary = function(response) {
       $scope.allDependsOn= response
       if(defaultValue)
         $scope.selectedDependsOn= $scope.allDependsOn[0];
@@ -425,7 +435,17 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 					$scope.tags = tags;
 				}
 			}
-
+      $scope.selectLabel = $scope.modeldata.label;
+      $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
+      $scope.onChangeDependsOnType(false);
+      var selectedDependsOn = {}
+      selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
+      selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
+      $scope.selectedDependsOn = selectedDependsOn;
+      if($scope.selectedDependsOnType =="formula"){
+        $scope.getParamListByFormula();
+        $scope.isParamListShow=true
+      }
       if($scope.modeldata.type=='SPARK'){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
@@ -494,7 +514,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.modeldata.locked="N";
     $scope.showactive="false"
    // $scope.getAllLatestAlgorithm();
-    $scope.onChangeDependsOnType(true);
+   // $scope.onChangeDependsOnType(true);
   }
   
 
@@ -595,6 +615,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 			}
     }
     modelJson.tags = tagArray;
+    var dependsOn = {};
+    var ref = {};
+    ref.type = $scope.selectedDependsOnType;
+    ref.uuid = $scope.selectedDependsOn.uuid;
+    dependsOn.ref = ref;
+    modelJson.dependsOn = dependsOn;
     if(!$scope.checkboxCustom){
       modelJson.type="SPARK"
       modelJson.customFlag="N"
@@ -612,12 +638,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       // algorithm.ref = ref;
       // modelJson.algorithm = algorithm;
 
-      var dependsOn = {};
-      var ref = {};
-      ref.type = $scope.selectedDependsOnType;
-      ref.uuid = $scope.selectedDependsOn.uuid;
-      dependsOn.ref = ref;
-      modelJson.dependsOn = dependsOn;
+      // var dependsOn = {};
+      // var ref = {};
+      // ref.type = $scope.selectedDependsOnType;
+      // ref.uuid = $scope.selectedDependsOn.uuid;
+      // dependsOn.ref = ref;
+      // modelJson.dependsOn = dependsOn;
       
       
       // if ($scope.isLabelDisable == false) {

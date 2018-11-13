@@ -221,6 +221,15 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       url: url + "model/operator/getResults?action=view&uuid=" + uuid + "&version=" + version,
     }).then(function (response, status, headers) { return response; })
   }
+  factory.findAlgorithmByLibrary = function (libraryType,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url +"metadata/getAlgorithmByLibrary?action=view&libraryType=" + libraryType + "&type=" + type,
+    }).then(function (response, status, headers) { return response; })
+  }
+  
+
   
   return factory;
 })
@@ -265,7 +274,16 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     }
     return deferred.promise;
   }
-
+  this.getAlgorithmByLibrary = function (libraryType,type) {
+    var deferred = $q.defer();
+    ModelFactory.findAlgorithmByLibrary(libraryType,type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAlgorithmByTrainExec = function (uuid, version, type) {
     var deferred = $q.defer();
     ModelFactory.findAlgorithumByTrainExec(uuid, version, type).then(function (response) { onSuccess(response.data) });
