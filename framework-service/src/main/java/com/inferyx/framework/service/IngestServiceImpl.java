@@ -56,7 +56,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
@@ -84,6 +83,7 @@ import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.FunctionOperator;
 import com.inferyx.framework.operator.IngestOperator;
@@ -122,7 +122,9 @@ public class IngestServiceImpl extends RuleTemplate {
 	@Autowired
 	private FormulaOperator formulaOperator;	
 	@Autowired
-	private IngestOperator ingestOperator;
+	private IngestOperator ingestOperator;	
+	@Autowired
+	private DatasetOperator datasetOperator;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -187,7 +189,7 @@ public class IngestServiceImpl extends RuleTemplate {
 
 			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
 			Datapod sourceDp = null;
-			DataSet sourceDataset = null;
+			DataSet sourceDataSet = null;
 //			String incrLastValue = null;
 //			String latestIncrLastValue = null;
 //			String incrColName = null;
@@ -195,7 +197,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				if(sourceDpMI.getType().equals(MetaType.datapod)) {
 					sourceDp = (Datapod) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
 				} else if(sourceDpMI.getType().equals(MetaType.dataset)) {
-					sourceDataset = (DataSet) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
+					sourceDataSet = (DataSet) commonServiceImpl.getLatestByUuid(sourceDpMI.getUuid(), sourceDpMI.getType().toString());
 				}
 			}			
 			
@@ -285,8 +287,9 @@ public class IngestServiceImpl extends RuleTemplate {
 				runIngestServiceImpl2.setTargetDS(targetDS);
 				runIngestServiceImpl2.setKafkaExecutor(kafkaExecutor);
 				runIngestServiceImpl2.setSparkStreamingExecutor(sparkStreamingExecutor);
-				runIngestServiceImpl2.setSourceDataset(sourceDataset);
+				runIngestServiceImpl2.setSourceDataSet(sourceDataSet);
 				runIngestServiceImpl2.setIngestOperator(ingestOperator);
+				runIngestServiceImpl2.setDatasetOperator(datasetOperator);
 				
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					//check whether target file already exist (when save mode is null)
@@ -384,14 +387,13 @@ public class IngestServiceImpl extends RuleTemplate {
 		return partitions;
 	}
 
-	public String getColName(Datapod datapod, AttributeRefHolder incrAttrHolder) {
+	public String getColName(Datapod datapod, DataSet dataSet, AttributeRefHolder incrAttrHolder) {
 		String attrName = null;
-		for(Attribute attribute : datapod.getAttributes()) {
-			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
-				attrName = attribute.getName();
-				break;
-			}
-		}
+		if(datapod != null) {
+			attrName = datapod.getAttributeName(Integer.parseInt(incrAttrHolder.getAttrId()));
+		} else {
+			attrName = dataSet.getAttributeName(Integer.parseInt(incrAttrHolder.getAttrId()));
+		}		
 		return attrName;
 	}
 
@@ -610,20 +612,23 @@ public class IngestServiceImpl extends RuleTemplate {
 //		return resolvedIngestExec;
 	}
 	
-	public String getNewIncrValue(Datapod datapod, Datasource datasource, AttributeRefHolder incrAttrHolder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, SQLException {
-		String attrName = getColName(datapod, incrAttrHolder);
-//		for(Attribute attribute : datapod.getAttributes()) {
-//			if(attribute.getAttributeId().equals(Integer.parseInt(incrAttrHolder.getAttrId()))) {
-//				attrName = attribute.getName();
-//				break;
-//			}
-//		}
+	public String getNewIncrValue(Datapod datapod, Datasource datasource, DataSet dataSet, AttributeRefHolder incrAttrHolder, RunMode runMode) throws Exception {
+		String attrName = getColName(datapod, dataSet, incrAttrHolder);
 		
 		if(attrName == null || attrName.isEmpty() || attrName.equalsIgnoreCase("null")) {
-			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in datapod '"+datapod.getName()+"' attributes");
+			throw new RuntimeException("Incremental attribute with attr id '"+incrAttrHolder.getAttrId()+"' not found in "+(datapod != null ? "datapod '"+datapod.getName() : "dataset '"+dataSet.getName())+"' attributes");
 		}
+		
 		String appUuid = commonServiceImpl.getApp().getUuid();
-		String sql = "SELECT MAX("+attrName+") FROM " + datasource.getDbname() + "." + datapod.getName();
+		
+		String sql = null;
+		if(datapod != null) {
+			sql = "SELECT MAX("+attrName+") FROM " + datasource.getDbname() + "." + datapod.getName();
+		} else {
+			sql = "SELECT MAX("+attrName+") FROM (" + datasetOperator.generateSql(dataSet, null, null, new HashSet<>(), null, runMode) + ") " + dataSet.getName();
+		}
+		 
+		
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		ResultSetHolder rsHolder = exec.executeSqlByDatasource(sql, datasource, appUuid);
 		return exec.getIncrementalLastValue(rsHolder, appUuid);
@@ -806,12 +811,12 @@ public class IngestServiceImpl extends RuleTemplate {
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
 				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
 				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDpMI.getUuid(), sourceDpMI.getVersion(), sourceDpMI.getType().toString());
-				for(Attribute attribute : datapod.getAttributes()) {
-					if(attrRefHolder.getAttrId().equalsIgnoreCase(attribute.getAttributeId().toString())) {
-						return attribute.getName();
-					}
-				}
-			} else if(attrRefHolder.getRef().getType().equals(MetaType.function)) {
+				return datapod.getAttributeName(Integer.parseInt(attrRefHolder.getAttrId()));
+			} else if(attrRefHolder.getRef().getType().equals(MetaType.dataset)) {
+				MetaIdentifier sourceDsMI = attrRefHolder.getRef();
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDsMI.getUuid(), sourceDsMI.getVersion(), sourceDsMI.getType().toString());
+				return dataSet.getAttributeName(Integer.parseInt(attrRefHolder.getAttrId()));
+			}  else if(attrRefHolder.getRef().getType().equals(MetaType.function)) {
 				MetaIdentifier functionMI = attrRefHolder.getRef();
 				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString());
 				return functionOperator.generateSql(function, null, null);
