@@ -254,8 +254,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           var sourceFeature = {};
           var targetFeature = {};
           featureMap.featureMapId = i;
-          attributeinfo.id = len - 1;
-          attributeinfo.index = len;
+          featureMap.id =i;
+          featureMap.index =i;
           sourceFeature.uuid = response.uuid;
           sourceFeature.type = "model";
           sourceFeature.featureId = response.features[i].featureId;

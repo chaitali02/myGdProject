@@ -297,23 +297,37 @@
                                                                 <thead>
                                                                     <tr>
                                                                     <th style="width:2%; text-align:center">ID</th>
-                                                                    <th style="width:18%;">Features</th>
-                                                                    <th style="width:20%;">Attributes</th>
+                                                                    <th style="width:18%;text-align: center">Features</th>
+                                                                    <th style="width:20%;text-align: center">Attributes</th>
+                                                                    <th style="width:3%;text-align: center">Up/Down</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody ng-repeat="data in featureMapTableArray">
-                                                                    <tr 
+                                                                <tbody ng-repeat="data in featureMapTableArray"  drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                                                                    <!-- <tr 
                                                                     data-drop="true" data-drag={{isDragable}}
                                                                     ng-model="featureMapTableArray"
                                                                     jqyoui-droppable="{index: {{$index}}}" 
                                                                     jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
                                                                     data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-                                                                    data-direction="{{data.sourceFeature.featureName.jqyouiDirection}}" >
+                                                                    data-direction="{{data.sourceFeature.featureName.jqyouiDirection}}" > -->
+                                                                    <tr>
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <div style="text-align: center;">
+                                                                                <a ng-disabled="$index == 0 ?true:false" ng-click="onAttrRowUp($index)">
+                                                                                    <i class="glyphicon glyphicon-arrow-up"></i>
+                                                                                </a>
+                                                                                <a ng-disabled="$index == featureMapTableArray.length-1 ? true:false" ng-click="onAttrRowDown($index)">
+                                                                                    <i class="glyphicon glyphicon-arrow-down"></i>
+                                                                                </a>
+                                                                                </div>
                                                                             </span>
                                                                         </td>
                                                                     </tr>
