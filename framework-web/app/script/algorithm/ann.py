@@ -32,48 +32,52 @@ layerNames=""
 fileName=""
 modelFileName=""
 # Iteration over all arguments:
+i=0
 for eachArg in sys.argv:   
         print(eachArg)
-        if paramName == "nEpochs":
-            nEpochs = int(eachArg)
-        if paramName == "fileName":
-            fileName = eachArg
-        if paramName == "modelFileName":
-            modelFileName = eachArg
-        if paramName == "seed":
-            seed = eachArg
-        if paramName == "iterations":
-            iterations = eachArg
-        if paramName == "learningRate":
-            learningRate = eachArg
-        if paramName == "optimizationAlgo":
-            optimizationAlgo = eachArg
-        if paramName == "weightInit":
-            weightInit = eachArg
-        if paramName == "updater":
-            updater = eachArg
-        if paramName == "momentum":
-            momentum = eachArg
-        if paramName == "numInput":
-            numInput = eachArg
-        if paramName == "numOutputs":
-            numOutputs = eachArg
-        if paramName == "numHidden":
-            numHidden = eachArg
-        if paramName == "numLayers":
-            numLayers = eachArg
-        if paramName == "layerNames":
-            layerNames = eachArg
-        if paramName == "activation":
-            activation = eachArg
-        if paramName == "lossFunction":
-            lossFunction = eachArg
         
-        if eachArg in ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "fileName", "modelFileName"]:
+        if eachArg in ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "filename", "modelFileName"]:
             paramName = eachArg
         else:
             paramName = ""
-        
+
+        if paramName == "nEpochs":
+            nEpochs = int(sys.argv[i+1])
+        if paramName == "filename":
+            fileName = sys.argv[i+1]
+        if paramName == "modelFileName":
+            modelFileName = sys.argv[i+1]
+        if paramName == "seed":
+            seed = sys.argv[i+1]
+        if paramName == "iterations":
+            iterations = sys.argv[i+1]
+        if paramName == "learningRate":
+            learningRate = sys.argv[i+1]
+        if paramName == "optimizationAlgo":
+            optimizationAlgo =sys.argv[i+1]
+        if paramName == "weightInit":
+            weightInit = sys.argv[i+1]
+        if paramName == "updater":
+            updater = sys.argv[i+1]
+        if paramName == "momentum":
+            momentum = sys.argv[i+1]
+        if paramName == "numInput":
+            numInput = sys.argv[i+1]
+        if paramName == "numOutputs":
+            numOutputs = sys.argv[i+1]
+        if paramName == "numHidden":
+            numHidden = sys.argv[i+1]
+        if paramName == "numLayers":
+            numLayers = sys.argv[i+1]
+        if paramName == "layerNames":
+            layerNames = sys.argv[i+1]
+        if paramName == "activation":
+            activation = sys.argv[i+1]
+        if paramName == "lossFunction":
+            lossFunction = sys.argv[i+1]
+        i = i+1
+        print(i)
+print("Printing arguments provided")
 print(nEpochs)
 print(seed)
 print(iterations)
@@ -90,17 +94,18 @@ print(lossFunction)
 print(layerNames)
 print(fileName)
 print(modelFileName)
+print("Printing provided arguments finished")
 # Importing the dataset
 dataset = pd.read_csv(fileName)
 
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X_1 = LabelEncoder()
-dataset['account_type_id'] = labelencoder_X_1.fit_transform(dataset['account_type_id'])
-labelencoder_X_2 = LabelEncoder()
-dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
+dataset['label'] = labelencoder_X_1.fit_transform(dataset['label'])
+#labelencoder_X_2 = LabelEncoder()
+#dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
 print('label encoding done')
-X = dataset.iloc[:, 3:6].values
+X = dataset.iloc[:, 2:].values
 y = dataset.iloc[:, 2].values
 
 print(X)
@@ -133,7 +138,7 @@ from keras.models import model_from_json
 classifier = Sequential()
 
 # Adding the input layer and the first hidden layer
-classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 3))
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 2))
 
 # Adding the second hidden layer
 classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
@@ -158,12 +163,12 @@ print("Saved model to disk")
 # later...
  
 # load json and create model
-json_file = open('model.json', 'r')
+json_file = open(modelFileName+".json", 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights("model.h5")
+loaded_model.load_weights(modelFileName+".h5")
 print("Loaded model from disk")
 
 # Part 3 - Making the predictions and evaluating the model
@@ -176,4 +181,5 @@ y_pred = (y_pred > 0.5)
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+print(cm)
 print(cm)
