@@ -67,8 +67,15 @@ export class CommonService{
   .catch(this.handleError);
   }
 
-submit(type:any,data:any): Observable<any[]> {debugger
-    let url ='/common/submit?action=edit&type='+type;
+submit(type:any,data:any,upd_tag?): Observable<any[]> {
+  let url
+  if(upd_tag){
+    url ='/common/submit?action=edit&type='+type+'&upd_tag='+upd_tag;
+  }
+  else{
+    url ='/common/submit?action=edit&type='+type;
+  }
+     
     return this._sharedService.postCall(url,data)
     .map((response: Response) => {
       return <any>response.text();

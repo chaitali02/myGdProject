@@ -310,7 +310,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
          // this.lhsdatapodattributefilter.splice(0,1);
         }
     getOneByUuidAndVersion(id,version){
-      this._dataReconService.getOneByUuidAndVersion(id,version,'reconview')
+      this._dataReconService.getOneByUuidAndVersion(id,version,'recon')
       .subscribe(
       response =>{
         this.onSuccessgetOneByUuidAndVersion(response)},
@@ -365,19 +365,19 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       this.selectTargetAtrribute=targetAttr;
   
       //this.selectTargetType=this.reconruledata.targetAttr.ref.type; 
-      if(response.dqdata["sourcefilter"]){
-        this.sourceTableArray=response.dqdata["sourcefilter"]["filterInfo"]
+      if(response.dqdata["sourceFilter"]){
+        this.sourceTableArray=response.dqdata["sourceFilter"]
       }
       // else{
       //   this.sourceTableArray=[]
       // }
-      if(response.dqdata["targetfilter"]){
-        this.targettableArray=response.dqdata["targetfilter"]["filterInfo"]
+      if(response.dqdata["targetFilter"]){
+        this.targettableArray=response.dqdata["targetFilter"]
       }
       else{
 
       }
-      if (this.sourceTableArray) {debugger
+      if (this.sourceTableArray) {
         for (var i = 0; i < this.sourceTableArray.length; i++) {
           this.sourceTableArray[i].lhstype={}
           this.sourceTableArray[i].rhstype={}
@@ -838,7 +838,7 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
       }
       this.sourceTableArray = newDataList;
     }
-    submit(){debugger
+    submit(){
       this.isSubmitEnable = true;
       this.isSubmit="true"
       let dqJson={};
@@ -947,14 +947,14 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
           expressioninfoArray[i] = expressioninfo
           
         }
-        var test={}
-        test["filterInfo"]=expressioninfoArray
-        dqJson["sourcefilter"]=test
-        dqJson["sourcefilterChg"]='Y'
+        //var test={}
+        //test["filterInfo"]=expressioninfoArray
+        dqJson["sourceFilter"]=expressioninfoArray
+        //dqJson["sourcefilterChg"]='Y'
       }
       else{
-        dqJson["sourcefilter"]=null
-        dqJson["sourcefilterChg"]='Y'
+        dqJson["sourceFilter"]=null
+       // dqJson["sourcefilterChg"]='Y'
       }
       var expressioninfoArray1=[]
       if (this.targettableArray) {
@@ -1019,22 +1019,22 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
         }
         var test1={}
         test1["filterInfo"]=expressioninfoArray1
-        dqJson["targetfilter"]=test1
-        dqJson["targetfilterChg"]='Y'
+        dqJson["targetFilter"]=test1
+       // dqJson["targetFilterChg"]='Y'
       }
       else{
-        dqJson["targetfilter"]=null
-        dqJson["targetfilterChg"]='Y'
+        dqJson["targetFilter"]=null
+       // dqJson["targetFilterChg"]='Y'
       }
       console.log(JSON.stringify(dqJson))
-      this._commonService.submit("reconview", dqJson).subscribe(
+      this._commonService.submit("recon", dqJson,'N').subscribe(
         response => { this.OnSuccessubmit(response) },
         error => console.log('Error :: ' + error)
       )
     }
     OnSuccessubmit(response){
       if (this.checkboxModelexecution == true) {
-        this._commonService.getOneById("reconview",response).subscribe(
+        this._commonService.getOneById("recon",response).subscribe(
             response => {this.OnSucessGetOneById(response);
               this.goBack() },
             error => console.log('Error :: ' + error)
