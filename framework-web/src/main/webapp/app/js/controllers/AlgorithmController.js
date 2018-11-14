@@ -129,7 +129,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			});
 	    }
 	}
-	
+	$scope.onChangeCusFlg=function(){
+		if($scope.algorithmData.customFlag =='Y'){
+			$scope.algorithmData.scriptName="";
+		}else{
+			$scope.algorithmData.trainClass="";
+			$scope.algorithmData.modelClass="";
+		}
+	}
 	$scope.getAllLatestParamListByTemplate=function(){
 		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","model").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
