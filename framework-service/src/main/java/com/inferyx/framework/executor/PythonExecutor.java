@@ -229,7 +229,7 @@ public class PythonExecutor implements IExecutor {
 	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
-			String command = "python3 ".concat(scriptPath);
+			String command = "python3".concat(" ").concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}

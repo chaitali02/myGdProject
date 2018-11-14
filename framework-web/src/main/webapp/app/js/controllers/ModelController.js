@@ -450,7 +450,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.getParamListByFormula();
         $scope.isParamListShow=true
       }
-      if($scope.modeldata.type=='SPARK'){
+      if($scope.modeldata.type=='SPARK' || $scope.modeldata.type=='PYTHON'){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
       // $scope.getAllLatest();

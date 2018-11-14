@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -79,6 +80,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -86,6 +88,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
@@ -855,7 +859,11 @@ public class ModelServiceImpl {
 					execDependsOn.getRef().getVersion(), MetaType.train.toString());
 			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString());
-			filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
+			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
+			} else {
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getName() + ".json";
+			}
 		}
 		//FileInputStream fstream = new FileInputStream("/user/hive/warehouse/framework/model/train/3dfc4042_00db_48f5_a075_572c5aead3ca/1530799218/1531305060/3dfc4042_00db_48f5_a075_572c5aead3ca_1530799218_1531305060.result");
 		FileInputStream fstream = new FileInputStream(filePath);
@@ -2405,14 +2413,17 @@ public class ModelServiceImpl {
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 			
 			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+				boolean result = false;
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 				List<String> argList = null;
 				if (StringUtils.isNotBlank(model.getCustomFlag()) && model.getCustomFlag().equalsIgnoreCase("N")) {
-					if (model.getDependsOn().getRef().getVersion() != null)
+//					if (model.getDependsOn().getRef().getVersion() != null)
 						algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-					else 
-						algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+//					else 
+//						algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 					
 					String scriptName = algorithm.getTrainClass();
 					// Save the data as csv
@@ -2423,7 +2434,7 @@ public class ModelServiceImpl {
 					String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
 					Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 							train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-					String sql = generateFeatureSQLBySource(source, execParams, fieldArray, label);
+					String sql = generateFeatureSQLBySource(train, source, execParams, fieldArray, label);
 					String appUuid = commonServiceImpl.getApp().getUuid();
 					Datasource datasource = commonServiceImpl.getDatasourceByApp();
 					IExecutor exec = null;
@@ -2434,20 +2445,34 @@ public class ModelServiceImpl {
 					String modelFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+model.getName();
 					exec = execFactory.getExecutor(datasource.getType());
 					exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+					
+					saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+					
 					logger.info("Saved file name : " + saveFileName);
 					logger.info("Model file name : " + modelFileName);
-					List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+//					List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+					List<ParamListHolder> resolvedParamInfoList = getParamByParamList(execParams.getParamListInfo().get(0).getRef().getUuid());
 					// Get paramList
-					String []args = paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
+					String []args = resolvedParamInfoList.stream().map(p -> p.getParamName() + "~" + p.getParamValue().getValue() + "")
 							.collect(Collectors.joining("~")).split("~");
 					argList = new ArrayList<String>(Arrays.asList(args));
 					argList.add("filename");
 					argList.add(saveFileName);
 					argList.add("modelFileName");
 					argList.add(modelFileName);
-					return executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
+					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
+					dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+					dataStoreServiceImpl.create(modelFileName, trainName,
+							new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
+							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+					trainExec.setResult(resultRef);
+					trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
+					return result;
 				}
-				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
+				result =  executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
+				return result;
 			} else {
 				
 				if (model.getDependsOn().getRef().getVersion() != null)
@@ -2480,9 +2505,47 @@ public class ModelServiceImpl {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public String renameFileAndGetFilePathFromDir(String directory, String fileExt) throws IOException {
+		File folder = new File(directory);
+		for (File file : folder.listFiles()) {
+			String dirFileName = file.getName();
+			if(fileExt != null) {
+				fileExt = fileExt.startsWith(".") ? fileExt : ".".concat(fileExt);
+			} 
+			
+			if (file.isFile() && dirFileName.toLowerCase().endsWith(fileExt)) {
+				String pathName = directory.endsWith("/") ? directory.concat("input_data").concat(fileExt) : directory.concat("/").concat("input_data").concat(fileExt);
+				FileUtils.moveFile(file, new File(pathName));
+				return pathName;
+			}
+		}
+		return null;
+	}
+	
+	public List<ParamListHolder> getParamByParamList(String paramListUuid) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString());			
+		
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			paramListHolder.setParamValue(param.getParamValue());	
+			
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
+	}	
+	
 	
 	/**
 	 * 
@@ -2493,17 +2556,25 @@ public class ModelServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public String generateFeatureSQLBySource(Object source, ExecParams execParams, String []fieldArray, String label) throws Exception {
+	public String generateFeatureSQLBySource(Train train, Object source, ExecParams execParams, String []fieldArray, String label) throws Exception {
 		String sql = generateSQLBySource(source, execParams);
 		StringBuilder sb = new StringBuilder("SELECT ");
+		
 		if (StringUtils.isNotBlank(label)) {
 			sb.append(label).append(" AS label").append(", ");
 		}
-		if (fieldArray != null && fieldArray.length > 0) {
+		
+		for(FeatureAttrMap featureAttrMap : train.getFeatureAttrMap()) {
+			if (fieldArray != null && fieldArray.length > 0) {
+				sb.append(featureAttrMap.getAttribute().getAttrName()).append(" AS ").append(featureAttrMap.getFeature().getFeatureName()).append(", ");
+			}
+		}
+		
+		/*if (fieldArray != null && fieldArray.length > 0) {
 			for (String field : fieldArray) {
 				sb.append(field).append(", ");
 			}
-		}
+		}*/
 		sb.append("'' AS result")
 			.append(" FROM (")
 			.append(sql)
