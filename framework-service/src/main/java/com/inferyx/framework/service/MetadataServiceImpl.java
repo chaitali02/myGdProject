@@ -1572,7 +1572,7 @@ public class MetadataServiceImpl {
 
 		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
 		List<ParamListHolder> plHolderList = new ArrayList<>();
-		if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+		if(model.getType().equalsIgnoreCase(ExecContext.spark.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
 			MetaIdentifier plMI = null;
 			if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
