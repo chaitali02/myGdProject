@@ -807,6 +807,8 @@ public class ModelServiceImpl {
 //		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
 		String scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/"+scriptName;
 //		
+		logger.info("Script name to run : " + scriptPath);
+		
 //		IExecutor exec = execFactory.getExecutor(type);
 //		if(exec instanceof PythonExecutor) {
 //			PythonExecutor pythonExecutor = (PythonExecutor) exec;
@@ -2396,6 +2398,7 @@ public class ModelServiceImpl {
 	}
 		
 	public boolean prepareTrain(String trainUuid, String trainVersion, TrainExec trainExec, ExecParams execParams, RunMode runMode) throws Exception {
+		Algorithm algorithm= null;
 		try {
 			List<ParamMap> paramMapList = new ArrayList<>();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
@@ -2406,6 +2409,12 @@ public class ModelServiceImpl {
 					trainExec = create(train, model, execParams, null, trainExec);
 				List<String> argList = null;
 				if (StringUtils.isNotBlank(model.getCustomFlag()) && model.getCustomFlag().equalsIgnoreCase("N")) {
+					if (model.getDependsOn().getRef().getVersion() != null)
+						algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+					else 
+						algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+					
+					String scriptName = algorithm.getTrainClass();
 					// Save the data as csv
 					String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
 					String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
@@ -2428,6 +2437,7 @@ public class ModelServiceImpl {
 					logger.info("Saved file name : " + saveFileName);
 					logger.info("Model file name : " + modelFileName);
 					List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+					// Get paramList
 					String []args = paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
 							.collect(Collectors.joining("~")).split("~");
 					argList = new ArrayList<String>(Arrays.asList(args));
@@ -2435,10 +2445,11 @@ public class ModelServiceImpl {
 					argList.add(saveFileName);
 					argList.add("modelFileName");
 					argList.add(modelFileName);
+					return executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 				}
 				return executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
 			} else {
-				Algorithm algorithm= null;
+				
 				if (model.getDependsOn().getRef().getVersion() != null)
 					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 				else 

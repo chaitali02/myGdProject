@@ -227,11 +227,13 @@ public class PythonExecutor implements IExecutor {
 	}
 	
 	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
+		logger.info("Before executing tf script ");
 		try {
 			String command = "python3 ".concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}
+			logger.info("Before executing tf script command : " + command);
 			Process p = Runtime.getRuntime().exec(command);
 			BufferedReader bfrIn = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
