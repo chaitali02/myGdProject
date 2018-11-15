@@ -11,6 +11,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		$scope.mode="true";
+		$scope.isDragable = "false";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -24,9 +26,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
+		$scope.mode="false";
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
 		$scope.isPanelActiveOpen = true;
+		$scope.isDragable = "true";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -39,6 +43,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.mode="false";
 	}
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
@@ -52,7 +57,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
 	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
-	$scope.mode = ""
+	
 	$scope.dataLoading = false;
 	$scope.datapoddata = null;
 	$scope.attributetable = null;
@@ -650,7 +655,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	
-
+	$scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform.$dirty=true;
+	}
 	$scope.selectPage = function (pageNo) {
 		$scope.pagination.currentPage = pageNo;
 	};
@@ -906,9 +914,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		datapodJson.datasource = datasource;
 		var attributesarray = [];
 		var count = 0;
-		for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
+		// for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
+			for (var datapodattr = 0; datapodattr < $scope.attributetable.length; datapodattr++) {
 			var attributes = {};
-			attributes.attributeId = datapodattr
+			/*attributes.attributeId = datapodattr
 			attributes.name = $scope.gridOptionsDatapod.data[datapodattr].name;
 			attributes.type = $scope.gridOptionsDatapod.data[datapodattr].type;
 			attributes.desc = $scope.gridOptionsDatapod.data[datapodattr].desc;
@@ -924,6 +933,28 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			}
 			if ($scope.gridOptionsDatapod.data[datapodattr].partition == "Y") {
 				attributes.partition = $scope.gridOptionsDatapod.data[datapodattr].partition;
+			}
+			else {
+				attributes.partition = "N"
+			}*/
+            
+			attributes.attributeId = $scope.attributetable[datapodattr].attributeId
+			attributes.displaySeq=datapodattr;
+			attributes.name = $scope.attributetable[datapodattr].name;
+			attributes.type = $scope.attributetable[datapodattr].type;
+			attributes.desc = $scope.attributetable[datapodattr].desc;
+			attributes.dispName = $scope.attributetable[datapodattr].dispName;
+			attributes.active = $scope.attributetable[datapodattr].active;
+			attributes.length = $scope.attributetable[datapodattr].length;
+			if ($scope.attributetable[datapodattr].key == "Y") {
+				attributes.key = count;
+				count = count + 1;
+			}
+			else {
+				attributes.key = ""
+			}
+			if ($scope.attributetable[datapodattr].partition == "Y") {
+				attributes.partition = $scope.attributetable[datapodattr].partition;
 			}
 			else {
 				attributes.partition = "N"
@@ -952,9 +983,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 
 	$scope.addRow = function () {
+		if($scope.attributetable ==null){
+			$scope.attributetable=[];
+		}
 		var attributejson = {}
-		attributejson.attributeId = $scope.gridOptionsDatapod.data.length//$scope.attributetable.length;
-		$scope.gridOptionsDatapod.data.push(attributejson);
+		attributejson.attributeId = $scope.attributetable.length//$scope.attributetable.length;
+		//$scope.gridOptionsDatapod.data.push(attributejson);
+		$scope.attributetable.push(attributejson)
 	}
 
 	$scope.selectAllRow = function () {
@@ -964,9 +999,32 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	$scope.removeRow = function () {
 		$scope.iSSubmitEnable = true;
-		angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
-			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
+		// angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
+		// 	$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
+		// });
+		var newDataList = [];
+		$scope.selectallattribute = false;
+		angular.forEach($scope.attributetable, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
 		});
+		$scope.attributetable = newDataList;
+	}
+
+	$scope.onAttrRowDown=function(index){
+		var rowTempIndex=$scope.attributetable[index];
+        var rowTempIndexPlus=$scope.attributetable[index+1];
+		$scope.attributetable[index]=rowTempIndexPlus;
+		$scope.attributetable[index+1]=rowTempIndex;
+
+	}
+	
+	$scope.onAttrRowUp=function(index){
+		var rowTempIndex=$scope.attributetable[index];
+        var rowTempIndexMines=$scope.attributetable[index-1];
+		$scope.attributetable[index]=rowTempIndexMines;
+		$scope.attributetable[index-1]=rowTempIndex;
 	}
 	$scope.downloadFileByDatastore = function (data) {
 		$scope.download.uuid = data.uuid;

@@ -370,10 +370,56 @@
                 <hr>
               </div>
               <br/>
-              <div>
-                <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit
-                  ui-grid-cellNav class="grid" ng-style="getGridStyle()"></div>
+              <div style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                <!-- <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit
+                  ui-grid-cellNav class="grid" ng-style="getGridStyle()"></div> -->
                 <!-- <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div> -->
+               <table  class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/></th>
+                      <th  style="width:6%;text-align:center">ID</th>
+                      <th  style="width:6%;"class="text-center">Key</th>
+                      <th  style="width:6%;" class="text-center">Partition</th>
+                      <th  style="width:6%;" class="text-center">Active</th>
+                      <th  class="text-center">Display Name</th>
+                      <th  class="text-center">Name</th>
+                      <th  class="text-center" style="width:14%;">Type</th>
+                      <th  class="text-center">Length</th>
+                      <th  class="text-center">Desc</th>
+                      <th  class="text-center">Move</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                      <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/></td>
+                      <td ><input type="text" ng-value="$index+1" ng-disabled="true"class="form-control"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.key"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.partition"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.active"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td><input type="text"  ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"class="form-control">
+                        <td><input type="text"ng-model="tabledata.name"  title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"class="form-control">
+                        </td>
+                        <td><select ng-model="tabledata.type" ng-options="x for x in type"  ng-disabled="{{mode}}" class="form-control"></select>
+                        </td>
+                        <td>
+                          <input type="text"  ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}" class="form-control">
+                        </td>
+                        <td><input type="text"  ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
+                        </td>
+                        <td>
+                          <div style="text-align: center;">
+                            <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
+                              <i class="glyphicon glyphicon-arrow-up"></i>
+                            </a>
+                            <a ng-disabled="($index == attributetable.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
+                              <i class="glyphicon glyphicon-arrow-down"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+              </table>
               </div>
             </form>
           </div>
