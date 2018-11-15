@@ -1,0 +1,136 @@
+{
+  "id": "5bed7762d02c7712a5bcb04c",
+  "uuid": "fa5874c3-31b0-4f42-b1a4-e7fc052c2729",
+  "version": "1542289250",
+  "name": "Predict ANN",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Nov 15 19:10:50 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": "1521430822",
+        "name": "Fraud Analytics"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
+      "version": null,
+      "name": "model_ann_classifier"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+      "version": null,
+      "name": "cc_transactions"
+    },
+    "value": null
+  },
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "c78b8538-af6b-4a7f-94e7-c483780a335c",
+      "version": null,
+      "name": "cc_transactions_predictions"
+    },
+    "value": null
+  },
+  "featureAttrMap": [
+    {
+      "featureMapId": "0",
+      "featureDisplaySeq": "0",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
+          "version": null,
+          "name": "model_ann_classifier"
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": "f1"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+          "version": null,
+          "name": "cc_transactions"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "V1",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "1",
+      "featureDisplaySeq": "1",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
+          "version": null,
+          "name": "model_ann_classifier"
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": "f2"
+      },
+      "attribute": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+          "version": null,
+          "name": "cc_transactions"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "V2",
+        "attrType": null
+      }
+    }
+  ],
+  "labelInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+      "version": null,
+      "name": "cc_transactions"
+    },
+    "value": null,
+    "attrId": "30",
+    "attrName": "class",
+    "attrType": null
+  },
+  "trainInfo": {
+    "ref": {
+      "type": "train",
+      "uuid": "8ae08eb3-0634-48fc-a9de-c40e7be87c9b",
+      "version": null,
+      "name": "train_ann_classifier"
+    },
+    "value": null
+  }
+}

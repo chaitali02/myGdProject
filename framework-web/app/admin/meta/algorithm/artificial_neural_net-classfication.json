@@ -1,5 +1,5 @@
 {
-  "id": "5bebec00fd9a9594013c90a7",
+
   "uuid": "1f91c98a-faf6-42c0-ac16-d7309d041bd9",
   "version": "1542052266",
   "name": "Artificial Neural Net - Classfication",
@@ -58,7 +58,7 @@
   ],
   "type": "CLASSIFICATION",
   "libraryType": "PYTHON",
-  "trainClass": "ann.py",
+  "trainClass": null,
   "modelClass": "",
   "summaryMethods": [
     "a"
@@ -85,5 +85,5 @@
     "value": null
   },
   "customFlag": "N",
-  "scriptName": null
+  "scriptName": "ann.py"
 }
