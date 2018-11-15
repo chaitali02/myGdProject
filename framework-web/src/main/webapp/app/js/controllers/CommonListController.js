@@ -442,10 +442,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
     $scope.selectuuid = uuid;
-    $scope.lockModalMsg = unLock ? 'unLock' : 'Lock';
+    $scope.lockModalMsg = unLock ? 'UnLock' : 'Lock';
     $scope.onSuccessLockOrUnLock = function (response) {
       data.locked = unLock ? 'N' : 'Y';
-      $scope.lockmessage = $scope.caption + (unLock ? " unLocked" : " Locked") + " Successfully";
+      $scope.lockmessage = $scope.caption + (unLock ? " UnLocked" : " Locked") + " Successfully";
     }
 
     $scope.okLocked = function () {
