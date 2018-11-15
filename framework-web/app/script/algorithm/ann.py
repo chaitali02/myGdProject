@@ -1,18 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 10 23:40:38 2018
-
-@author: joy
-"""
-
+# Module sys has to be imported:
+import sys  
 import pandas as pd
 import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
-import sys
 
-print("Inside python script")              
+
+
+print("Inside python training script")              
 
 paramName = ""
 nEpochs=0
@@ -32,52 +27,49 @@ layerNames=""
 fileName=""
 modelFileName=""
 # Iteration over all arguments:
-i=0
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "filename", "modelFileName"]
 for eachArg in sys.argv:   
         print(eachArg)
-        
-        if eachArg in ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "filename", "modelFileName"]:
-            paramName = eachArg
-        else:
-            paramName = ""
-
         if paramName == "nEpochs":
-            nEpochs = int(sys.argv[i+1])
+            nEpochs = int(eachArg)
         if paramName == "filename":
-            fileName = sys.argv[i+1]
+            fileName = eachArg
         if paramName == "modelFileName":
-            modelFileName = sys.argv[i+1]
+            modelFileName = eachArg
         if paramName == "seed":
-            seed = sys.argv[i+1]
+            seed = eachArg
         if paramName == "iterations":
-            iterations = sys.argv[i+1]
+            iterations = eachArg
         if paramName == "learningRate":
-            learningRate = sys.argv[i+1]
+            learningRate = eachArg
         if paramName == "optimizationAlgo":
-            optimizationAlgo =sys.argv[i+1]
+            optimizationAlgo = eachArg
         if paramName == "weightInit":
-            weightInit = sys.argv[i+1]
+            weightInit = eachArg
         if paramName == "updater":
-            updater = sys.argv[i+1]
+            updater = eachArg
         if paramName == "momentum":
-            momentum = sys.argv[i+1]
+            momentum = eachArg
         if paramName == "numInput":
-            numInput = sys.argv[i+1]
+            numInput = int(eachArg)
         if paramName == "numOutputs":
-            numOutputs = sys.argv[i+1]
+            numOutputs = eachArg
         if paramName == "numHidden":
-            numHidden = sys.argv[i+1]
+            numHidden = eachArg
         if paramName == "numLayers":
-            numLayers = sys.argv[i+1]
+            numLayers = eachArg
         if paramName == "layerNames":
-            layerNames = sys.argv[i+1]
+            layerNames = eachArg
         if paramName == "activation":
-            activation = sys.argv[i+1]
+            activation = eachArg
         if paramName == "lossFunction":
-            lossFunction = sys.argv[i+1]
-        i = i+1
-        print(i)
-print("Printing arguments provided")
+            lossFunction = eachArg
+        if eachArg in plist:
+            paramName=eachArg
+        else:
+            paramName=""
+	
+        
 print(nEpochs)
 print(seed)
 print(iterations)
@@ -94,29 +86,31 @@ print(lossFunction)
 print(layerNames)
 print(fileName)
 print(modelFileName)
-print("Printing provided arguments finished")
+# Importing the dataset
+#dataset = pd.read_csv(fileName)
+
+# Importing the dataset
+#dataset = pd.read_csv(fileName)
+
 # Importing the dataset
 dataset = pd.read_csv(fileName)
 
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X_1 = LabelEncoder()
-dataset['label'] = labelencoder_X_1.fit_transform(dataset['label'])
+dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
 #labelencoder_X_2 = LabelEncoder()
 #dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
 print('label encoding done')
-X = dataset.iloc[:, 2:].values
-y = dataset.iloc[:, 2].values
+#X = dataset.iloc[:, 1:-2].values
+#y = dataset.iloc[:, -1].values
+X = dataset.iloc[:, 1:(numInput+1)].values
+y = dataset.iloc[:, (numInput+1)].values
 
+#print("printing X:")
 print(X)
+#print("printing y:")
 print(y)
-#X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
-#labelencoder_X_2 = LabelEncoder()
-#X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-#onehotencoder = OneHotEncoder(categorical_features = [1])
-#X = onehotencoder.fit_transform(X).toarray()
-#X = X[:, 1:]
-
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
@@ -128,6 +122,12 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
+#print("printing X_train:")
+print(X_train)
+#print("printing X_test:")
+print(X_test)
+
+print("Importing the Keras libraries and packages")
 # Importing the Keras libraries and packages
 import keras
 from keras.models import Sequential
@@ -138,7 +138,7 @@ from keras.models import model_from_json
 classifier = Sequential()
 
 # Adding the input layer and the first hidden layer
-classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 2))
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
 
 # Adding the second hidden layer
 classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
@@ -160,6 +160,8 @@ with open(modelFileName+".json", "w") as json_file:
 classifier.save_weights(modelFileName+".h5")
 print("Saved model to disk")
 
+
+
 # later...
  
 # load json and create model
@@ -176,10 +178,23 @@ print("Loaded model from disk")
 # Predicting the Test set results
 y_pred = loaded_model.predict(X_test)
 print(y_pred)
+
 y_pred = (y_pred > 0.5)
+#if y_pred.all() == "true":
+#    y_pred[:] = 1
+#else:
+#    y_pred[:] = 0
+
+#for col in y_pred.columns:
+#   if (y_pred.all() == true):
+#        y_pred[col].values[:] = 1
+#    else:
+#        y_pred[col].values[:] = 0
+
+print(y_pred)
 
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
-print(cm)
+
