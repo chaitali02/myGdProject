@@ -566,7 +566,7 @@
                                     <th style="width:30%;text-align: center">Name</th>
                                     <th style="width:20%;text-align: center">Source Type</th>
                                     <th style="width:40%;text-align: center">Source Name</th>
-                                    <th style="width:15%;text-align: center">Up/Down</th>
+                                    <th style="width:15%;text-align: center">Move</th>
                                   </tr>
                                 </thead>
                                 <tbody id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
@@ -655,10 +655,10 @@
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <div style="text-align: center;">
-                                          <a ng-disabled="$index == 0 ?true:false" ng-click="onAttrRowUp($index)">
+                                          <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
                                             <i class="glyphicon glyphicon-arrow-up"></i>
                                           </a>
-                                          <a ng-disabled="$index == attributeTableArray.length-1 ? true:false" ng-click="onAttrRowDown($index)">
+                                          <a ng-disabled="($index == attributeTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
                                             <i class="glyphicon glyphicon-arrow-down"></i>
                                           </a>
                                         </div>

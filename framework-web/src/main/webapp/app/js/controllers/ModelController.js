@@ -170,7 +170,11 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }     
   }
   $scope.changeScript= function(){
-    $scope.checkboxCustom=$scope.scriptType =="SPARK"?false:true;
+    if($scope.scriptType =="SPARK" || $scope.scriptType =="PYTHON"){
+      $scope.checkboxCustom=false;
+    }else{
+      $scope.checkboxCustom=true;
+    }
     $scope.onChangeDependsOnType(true);
 
   }
@@ -446,7 +450,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.getParamListByFormula();
         $scope.isParamListShow=true
       }
-      if($scope.modeldata.type=='SPARK'){
+      if($scope.modeldata.type=='SPARK' || $scope.modeldata.type=='PYTHON'){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
       // $scope.getAllLatest();

@@ -1855,7 +1855,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 			for(String col : validateDf.columns())
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
-			df.coalesce(1).write().csv(saveFileName);
+			df.coalesce(1).write().option("header", "true").csv(saveFileName);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;

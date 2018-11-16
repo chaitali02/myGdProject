@@ -1,18 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 10 23:40:38 2018
-
-@author: joy
-"""
-
+# Module sys has to be imported:
+import sys  
 import pandas as pd
 import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
-import sys
 
-print("Inside python script")              
+
+
+print("Inside python training script")              
 
 paramName = ""
 nEpochs=0
@@ -32,11 +27,12 @@ layerNames=""
 fileName=""
 modelFileName=""
 # Iteration over all arguments:
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "filename", "modelFileName"]
 for eachArg in sys.argv:   
         print(eachArg)
         if paramName == "nEpochs":
             nEpochs = int(eachArg)
-        if paramName == "fileName":
+        if paramName == "filename":
             fileName = eachArg
         if paramName == "modelFileName":
             modelFileName = eachArg
@@ -55,7 +51,7 @@ for eachArg in sys.argv:
         if paramName == "momentum":
             momentum = eachArg
         if paramName == "numInput":
-            numInput = eachArg
+            numInput = int(eachArg)
         if paramName == "numOutputs":
             numOutputs = eachArg
         if paramName == "numHidden":
@@ -68,11 +64,11 @@ for eachArg in sys.argv:
             activation = eachArg
         if paramName == "lossFunction":
             lossFunction = eachArg
-        
-        if eachArg in ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "fileName", "modelFileName"]:
-            paramName = eachArg
+        if eachArg in plist:
+            paramName=eachArg
         else:
-            paramName = ""
+            paramName=""
+	
         
 print(nEpochs)
 print(seed)
@@ -91,27 +87,30 @@ print(layerNames)
 print(fileName)
 print(modelFileName)
 # Importing the dataset
+#dataset = pd.read_csv(fileName)
+
+# Importing the dataset
+#dataset = pd.read_csv(fileName)
+
+# Importing the dataset
 dataset = pd.read_csv(fileName)
 
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X_1 = LabelEncoder()
-dataset['account_type_id'] = labelencoder_X_1.fit_transform(dataset['account_type_id'])
-labelencoder_X_2 = LabelEncoder()
-dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
-print('label encoding done')
-X = dataset.iloc[:, 3:6].values
-y = dataset.iloc[:, 2].values
-
-print(X)
-print(y)
-#X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
+dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
 #labelencoder_X_2 = LabelEncoder()
-#X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-#onehotencoder = OneHotEncoder(categorical_features = [1])
-#X = onehotencoder.fit_transform(X).toarray()
-#X = X[:, 1:]
+#dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
+print('label encoding done')
+#X = dataset.iloc[:, 1:-2].values
+#y = dataset.iloc[:, -1].values
+X = dataset.iloc[:, 1:(numInput+1)].values
+y = dataset.iloc[:, (numInput+1)].values
 
+#print("printing X:")
+print(X)
+#print("printing y:")
+print(y)
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
@@ -123,6 +122,12 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
+#print("printing X_train:")
+print(X_train)
+#print("printing X_test:")
+print(X_test)
+
+print("Importing the Keras libraries and packages")
 # Importing the Keras libraries and packages
 import keras
 from keras.models import Sequential
@@ -133,7 +138,7 @@ from keras.models import model_from_json
 classifier = Sequential()
 
 # Adding the input layer and the first hidden layer
-classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 3))
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
 
 # Adding the second hidden layer
 classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
@@ -155,15 +160,17 @@ with open(modelFileName+".json", "w") as json_file:
 classifier.save_weights(modelFileName+".h5")
 print("Saved model to disk")
 
+
+
 # later...
  
 # load json and create model
-json_file = open('model.json', 'r')
+json_file = open(modelFileName+".json", 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights("model.h5")
+loaded_model.load_weights(modelFileName+".h5")
 print("Loaded model from disk")
 
 # Part 3 - Making the predictions and evaluating the model
@@ -171,9 +178,23 @@ print("Loaded model from disk")
 # Predicting the Test set results
 y_pred = loaded_model.predict(X_test)
 print(y_pred)
+
 y_pred = (y_pred > 0.5)
+#if y_pred.all() == "true":
+#    y_pred[:] = 1
+#else:
+#    y_pred[:] = 0
+
+#for col in y_pred.columns:
+#   if (y_pred.all() == true):
+#        y_pred[col].values[:] = 1
+#    else:
+#        y_pred[col].values[:] = 0
+
+print(y_pred)
 
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
+

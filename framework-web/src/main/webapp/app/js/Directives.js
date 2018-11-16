@@ -1531,11 +1531,12 @@ return {
   // Get TBODY of a element  
   var tbody = elm.parent();
   // Set draggable true
-  //elm.attr("draggable", true);jitender
+  elm.attr("draggable", true);//jitender
 
   // If id of TBODY of current element already set then it won't set again
   tbody.attr('drag-id') ? void 0 : tbody.attr("drag-id", $scope.$id);
   // This add drag pointer 
+  
   elm.css("cursor", "move");
 
   // Events of element :- dragstart | dragover | drop | dragend
@@ -1548,7 +1549,9 @@ return {
 
   // This will trigger when user pick e row
   function onDragStart(e) {
-
+    if(attr.draggable =="false"){
+      return false
+    }
     //Mozilla Hack
 //	  e.dataTransfer.setData("Text", "");
 

@@ -196,10 +196,10 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         },
       },
       {
-        displayName: 'Execute By',
+        displayName: 'Submitted By',
         name: 'createdBy.ref.name',
         cellClass: 'text-center',
-        maxWidth:100,
+        maxWidth:140,
         headerCellClass: 'text-center'
       },
       {

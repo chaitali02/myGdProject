@@ -70,7 +70,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramtable = null;
 	$scope.isUseTemlate=false;
 	$scope.isTemplageInfoRequired=false;
-	$scope.typeSimple = ["string", "double", "integer", "list"];
+	$scope.typeSimple = ["string", "double", "integer", "list","decimal"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
