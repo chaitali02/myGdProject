@@ -85,5 +85,5 @@
     "value": null
   },
   "customFlag": "N",
-  "scriptName": "ann.py"
+  "scriptName": "ann_classifier.py"
 }
