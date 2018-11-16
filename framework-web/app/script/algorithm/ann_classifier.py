@@ -10,7 +10,7 @@ os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 from pyspark.sql import SparkSession
 
 
-print("Inside python training script")              
+print("Inside python script")              
 
 paramName = ""
 nEpochs=0
@@ -34,6 +34,7 @@ dsType=""
 tableName=""
 operation=""
 url=""
+isSuccessful = True
 
 # Iteration over all arguments:
 
@@ -91,7 +92,6 @@ for eachArg in sys.argv:
         else:
             paramName=""
 	
-        
 print(nEpochs)
 print(seed)
 print(iterations)
@@ -129,7 +129,7 @@ def train():
 	#X = dataset.iloc[:, 1:-2].values
 	#y = dataset.iloc[:, -1].values
 	X = dataset.iloc[:, 1:(numInput+1)].values
-	y = dataset.iloc[:, (numInput+1)].values
+	y = dataset.iloc[:, 0].values
 
 	#print("printing X:")
 	print(X)
@@ -176,6 +176,10 @@ def train():
 	# Fitting the ANN to the Training set
 	classifier.fit(X_train, y_train, batch_size = 10, nb_epoch = nEpochs)
 
+	score = classifier.evaluate(X_test, y_test, batch_size=10)
+	print("model score:")
+	print(score)
+
 	# serialize model to JSON
 	model_json = classifier.to_json()
 	with open(modelFileName+".json", "w") as json_file:
@@ -220,8 +224,9 @@ def train():
 	# Making the Confusion Matrix
 	from sklearn.metrics import confusion_matrix
 	cm = confusion_matrix(y_test, y_pred)
+	print("confusion mattrix:")
 	print(cm)
-	return true
+	return isSuccessful
 
 #prediction operation
 def predict():
@@ -234,10 +239,12 @@ def predict():
 
 	sc = StandardScaler()
 	pred_dataset = sc.fit_transform(dataset)
-
+	
+	print("Data to be predicted:")
 	print(pred_dataset)
 
 	# load json and create model
+	print("Loading model from disk")
 	json_file = open(modelFileName+".json", 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
@@ -248,26 +255,39 @@ def predict():
 
 	# Predicting the results
 	result_pred = loaded_model.predict(pred_dataset)
-	print(result_pred)
 
 	#converting predicted dataframe to panda dataframe
 	pred_pd_df = pd.DataFrame(result_pred)
-#	pred_pd_df = pred_pd_df.astype(str)
 
 	#saving converted dataframe
+	from pyspark.sql.types import DoubleType
+	from pyspark.sql.types import StructType
+	from pyspark.sql.types import StructField
+
 	spark = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
-	pred_pd_df = spark.createDataFrame(pred_pd_df)
-	pred_pd_df.write.save(savePredict, format="parquet")	
-#	pred_pd_df.show()	
+	pred_pd_df = spark.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
+	print("prediction result:")	
+	pred_pd_df.show(20, False)
+	
+	print("saving prediction result at: "+savePredict)
+	pred_pd_df.write.save(savePredict, format="parquet")		
 
 	#saving converted dataframe
 	#engine can be of the type: auto/pyarrow/fastparquet
 #	pred_pd_df.to_parquet(savePredict+".parquet", engine='auto')
 #	print(pred_pd_df)
-	return true
+	return isSuccessful
 
 #calling method as per operation
 if operation == "train":
-	train()
+	result = train()
+	if result:
+		print("Successfull training operation.")
+	else:
+		print("Unsuccessfull training operation.")
 elif operation == "predict":
-	predict()
+	result = predict()
+	if result:
+		print("Successfull prediction operation.")
+	else:
+		print("Unsuccessfull prediction operation.")
