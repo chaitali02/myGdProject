@@ -433,7 +433,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
 
 
 //Start ShowDashboradController
-DatavisualizationModule.controller('ShowDashboradController2', function ($location, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce,CF_DOWNLOAD) {
+DatavisualizationModule.controller('ShowDashboradController2', function ($location,privilegeSvc,$http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce,CF_DOWNLOAD) {
   $scope.showmap = true;
   $scope.isApplyFilter = true
   $scope.datax = [];
@@ -507,7 +507,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
     return style;
   }
-
+  $scope.privilegesDashboard = privilegeSvc.privileges['dashboard'] || [];
+  $scope.isPrivlageDashboard = $scope.privilegesDashboard.indexOf('Edit') == -1;
+  $scope.privilegesVizpod = privilegeSvc.privileges['vizpod'] || [];
+	$scope.isPrivlageVizpod = $scope.privilegesVizpod.indexOf('Edit') == -1;
+	$scope.$on('privilegesUpdated', function (e, data) {
+    $scope.privilegesDashboard = privilegeSvc.privileges['dashboard'] || [];
+    $scope.isPrivlageDashboard = $scope.privilegesDashboard.indexOf('Edit') == -1;
+    $scope.privilegesVizpod = privilegeSvc.privileges['vizpod'] || [];
+    $scope.isPrivlageVizpod = $scope.privilegesVizpod.indexOf('Edit') == -1;
+	});
   $scope.filterSearch = function (s) {
     var data = $filter('filter')($scope.orignalData, s, undefined);
     $scope.getResults(data)
@@ -709,7 +718,27 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 			backdrop: 'static',
 			keyboard: false
 		});
-	}
+  }
+  
+  $scope.onClickEditDashboard=function(uuid,lock){
+    if(lock =='Y' || $scope.isPrivlageDashboard){
+      return false;
+    }
+    $state.go('metaListdashboard', {
+      id: uuid,
+      mode: 'true'
+    });
+  }
+  $scope.onClickEditVizpod=function(uuid,version,lock){
+    if(lock =='Y' || $scope.isPrivlageVizpod){
+      return false;
+    }
+    $state.go('dvvizpod', {
+      id: uuid,
+      version:version,
+      mode: 'true'
+    });
+  }
   $scope.onFilterChange = function (index) {
     // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
     // console.log(JSON.stringify($scope.selectedAttributeValue))
@@ -797,6 +826,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         vizpoddetailjson.version = $scope.sectionRows[i].columns[j].vizpodInfo.version
         vizpoddetailjson.name = $scope.sectionRows[i].columns[j].vizpodInfo.name;
         vizpoddetailjson.type = $scope.sectionRows[i].columns[j].vizpodInfo.type;
+        vizpoddetailjson.locked = $scope.sectionRows[i].columns[j].vizpodInfo.locked;
         vizpoddetailjson.class = "";
         vizpoddetailjson.iconclass = "fa fa-expand";
         vizpoddetailjson.showtooltiptitle = "Maximize";
