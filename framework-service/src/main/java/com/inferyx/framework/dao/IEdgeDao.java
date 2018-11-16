@@ -84,6 +84,9 @@ public interface IEdgeDao extends MongoRepository<Edge, String> {
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
+	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	public void deleteAll(String appUuid);
+	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
