@@ -369,7 +369,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 
   $scope.selectVersion = function () {
     $scope.attributeTableArray = null;
-    $scope.myform.$dirty = false;
+    $scope.myform1.$dirty = false;
+    $scope.myform2.$dirty = false;
+    $scope.myform3.$dirty = false;
     RuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid, $scope.rule.defaultVersion.version, 'rule')
     .then(function (response) { onSuccess(response.data)});
     var onSuccess = function (response) {

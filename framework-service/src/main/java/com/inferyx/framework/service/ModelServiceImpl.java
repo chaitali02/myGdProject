@@ -27,7 +27,6 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1791,6 +1790,16 @@ public class ModelServiceImpl {
 					modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
 			Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
 					sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+			
+			Datapod target = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+			
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
+					MetaType.algorithm.toString());
+			
 			String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -1845,7 +1854,7 @@ public class ModelServiceImpl {
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
 					
-					String scriptName = "ann_predict.py";
+					String scriptName = algorithm.getScriptName();
 					
 					List<String> argList = new ArrayList<>();
 					argList.add("numInput");
@@ -1856,21 +1865,17 @@ public class ModelServiceImpl {
 					argList.add(modelFileName);
 					argList.add("savePredict");
 					argList.add(savePredict);
+					argList.add("dsType");
+					argList.add("file");
+					argList.add("operation");
+					argList.add("predict");
+					
 					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					
 				} else {
 					throw new Exception("Model type has been changed from \'"+model.getType().toUpperCase()+"\' to \'"+trainModel.getType().toUpperCase()+"\'.");
 				}
-			} else {
-				Datapod target = null;
-				if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-					target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-							targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-				
-				Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
-						model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
-						MetaType.algorithm.toString());
-				
+			} else {				
 				String sql = generateSQLBySource(source, execParams);
 				exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 				
@@ -2549,6 +2554,11 @@ public class ModelServiceImpl {
 					argList.add(saveFileName);
 					argList.add("modelFileName");
 					argList.add(modelFileName);
+					argList.add("dsType");
+					argList.add("file");
+					argList.add("operation");
+					argList.add("train");
+					
 					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 					dataStoreServiceImpl.create(modelFileName, trainName,

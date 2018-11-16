@@ -439,18 +439,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 					$scope.tags = tags;
 				}
 			}
-      $scope.selectLabel = $scope.modeldata.label;
-      $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
-      $scope.onChangeDependsOnType(false);
-      var selectedDependsOn = {}
-      selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
-      selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
-      $scope.selectedDependsOn = selectedDependsOn;
-      if($scope.selectedDependsOnType =="formula"){
-        $scope.getParamListByFormula();
-        $scope.isParamListShow=true
-      }
-      if($scope.modeldata.type=='SPARK' || $scope.modeldata.type=='PYTHON'){
+      if($scope.modeldata.type=='SPARK' || ($scope.modeldata.type=='PYTHON' && $scope.modeldata.customFlag =="N")){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
       // $scope.getAllLatest();
@@ -479,11 +468,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           $scope.getParamListByFormula();
           $scope.isParamListShow=true
         }
-        //$scope.getAllLatestAlgorithm();
-        // var algorithm = {}
-        // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
-        // algorithm.name = $scope.modeldata.algorithm.ref.name;
-        // $scope.selectalgorithm = algorithm
+        
         $scope.checkboxCustom=false
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
