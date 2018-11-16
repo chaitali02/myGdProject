@@ -108,6 +108,7 @@ import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Vertex;

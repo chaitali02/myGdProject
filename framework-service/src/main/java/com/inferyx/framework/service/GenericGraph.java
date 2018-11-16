@@ -597,7 +597,7 @@ public class GenericGraph {
 		active=document.get("active").toString();		
 		vertexRow = RowFactory.create(UUID,Version,Name,type, null, null, CreatedOn, active);
 		
-		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active, null);
+		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active, null,null);
 		graphServiceImpl.saveVertex(vertex);
 		
 		verticesRowList.add(vertexRow);
