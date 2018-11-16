@@ -439,8 +439,6 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 					$scope.tags = tags;
 				}
 			}
-
-      debugger
       if($scope.modeldata.type=='SPARK' || ($scope.modeldata.type=='PYTHON' && $scope.modeldata.customFlag =="N")){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
