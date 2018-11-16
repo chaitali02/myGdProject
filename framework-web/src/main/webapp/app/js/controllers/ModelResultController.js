@@ -360,10 +360,12 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
     };
 
     if ($stateParams.type == "train") {
+        $scope.modelresult=null;
         $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
     }
 
     $scope.refreshMoldeResult = function () {
+        $scope.modelresult=null;
         $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
     }
 
