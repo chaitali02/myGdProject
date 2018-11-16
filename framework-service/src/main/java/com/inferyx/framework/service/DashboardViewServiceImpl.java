@@ -115,6 +115,7 @@ public class DashboardViewServiceImpl {
 		dashboardView.setCreatedBy(resolvedDashboard.getCreatedBy());
 		dashboardView.setTags(resolvedDashboard.getTags());
 		dashboardView.setActive(resolvedDashboard.getActive());
+		dashboardView.setLocked(resolvedDashboard.getLocked());
 		dashboardView.setCreatedOn(resolvedDashboard.getCreatedOn());
 
 		List<Section> sectionInfo = resolvedDashboard.getSectionInfo();
