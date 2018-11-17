@@ -9,12 +9,12 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "kye",
+            "name" : "key",
             "type" : "integer",
-            "desc" : "kye",
+            "desc" : "key",
             "key" : "0",
             "partition" : "N",
-            "dispName" : "kye",
+            "dispName" : "key",
             "active" : "Y"
         }, 
         {
