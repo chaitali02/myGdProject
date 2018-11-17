@@ -3157,6 +3157,15 @@ public class RegisterService {
 
 		return result;
 	}
+    
+	public String getFormulaByApp() throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByApp());
+		return result;
+	}
+	
+	
 
 	public String getVizpodByType(String uuid) throws JsonProcessingException {
 		String result = null;

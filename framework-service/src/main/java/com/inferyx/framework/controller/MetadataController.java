@@ -623,6 +623,13 @@ public class MetadataController {
 
 		return registerService.getFormulaByType(uuid);
 	}
+	@RequestMapping(value = "/getFormulaByApp", method = RequestMethod.GET)
+	public @ResponseBody String getFormulaByType(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws JsonProcessingException, JSONException {
+		return registerService.getFormulaByApp();
+	}
 
 	@RequestMapping(value = "/getVizpodByType", method = RequestMethod.GET)
 	public @ResponseBody String getVizpodByType(@RequestParam("uuid") String uuid,

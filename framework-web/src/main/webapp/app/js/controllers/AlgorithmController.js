@@ -227,7 +227,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.selectparamlist = null;
 		$scope.selecttype = null;
 		$scope.selectlibrary = null;
-		AlgorithmService.getOneByUuidandVersion(uuid, version, 'algorithm').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		CommonService.getOneByUuidAndVersion(uuid, version, 'algorithm').then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
 			$scope.algorithmData = response
 			var defaultversion = {};

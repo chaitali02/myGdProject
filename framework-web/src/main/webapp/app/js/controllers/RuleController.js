@@ -1292,7 +1292,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     var ref = {};
     ref.type = $scope.rulsourcetype
     ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-    ref.version = $scope.ruleRelation.defaultoption.version;
+   // ref.version = $scope.ruleRelation.defaultoption.version;
     source.ref = ref;
     ruleJson.source = source;
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
