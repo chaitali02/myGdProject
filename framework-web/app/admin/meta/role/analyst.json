@@ -2732,13 +2732,94 @@
 			"value": null
 		},
 		{
-			"ref": {
-				"type": "privilege",
-				"uuid": "440c3165-1cea-42a1-bfb6-3f728b3323d7",
-				"version": null,
-				"name": "TrainView"
-			},
-			"value": null
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "440c3165-1cea-42a1-bfb6-3f728b3323d7",
+		 			"version" : null,
+		            "name" : "TrainView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "13243591-212e-4fed-aa07-e153641f4373",
+		 			"version" : null,
+		            "name" : "TrainUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "09997f0d-1d6d-48f9-bbcd-1348cbff2d32",
+		 			"version" : null,
+		            "name" : "TrainRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2570a19d-fa2d-4397-986e-c44fb9e9b960",
+		 			"version" : null,
+		            "name" : "TrainPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "616342ec-a8dd-4321-b058-ec3bfc5b41cf",
+		 			"version" : null,
+		            "name" : "TrainExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "21adc6cd-2e22-4a68-b4e2-bf75be7081d0",
+		 			"version" : null,
+		            "name" : "TrainExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d528766c-0496-4830-a5ff-7ee68cd2c7dd",
+		 			"version" : null,
+		            "name" : "TrainEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b9a9f293-e9b0-469c-9f7d-408267ea4822",
+		 			"version" : null,
+		            "name" : "TrainDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "e4a70a06-911a-433d-af52-9ee8ea8be756",
+		 			"version" : null,
+		            "name" : "TrainClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3a2c3f20-85b4-4e2b-a1a8-e0432792ce0b",
+		 			"version" : null,
+		            "name" : "TrainAdd"
+				},
+				"value" : null
 		},
 		{
 			"ref": {

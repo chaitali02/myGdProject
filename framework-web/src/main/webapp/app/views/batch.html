@@ -77,7 +77,7 @@
           </div>
           <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="batchDetail.uuid" version="batch.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit()" ng-show="showForm"
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit(myform.$dirty)" ng-show="showForm"
           prevent-enter-submit>
           <div class="form-wizard">
 
@@ -228,7 +228,7 @@
               <div class="row">
                 <label class="control-label col-md-3"></label>
                 <div class="col-md-6">
-                  <a ng-click="close()" class="btn btn-primary">Cancel</a>
+                  <a ng-click="close()" class="btn btn-primary">Cancel</a>{{myform.$dirty}}
                   <button type="submit" class="btn green" ng-disabled="(mode == false || myform.$dirty == true)?false:true">Submit</button>
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isSubmitProgess">
                     <div class="bounce1"></div>

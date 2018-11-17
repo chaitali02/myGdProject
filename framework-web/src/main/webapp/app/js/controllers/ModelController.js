@@ -604,14 +604,9 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 			}
     }
     modelJson.tags = tagArray;
-    var dependsOn = {};
-    var ref = {};
-    ref.type = $scope.selectedDependsOnType;
-    ref.uuid = $scope.selectedDependsOn.uuid;
-    dependsOn.ref = ref;
-    modelJson.dependsOn = dependsOn;
+    
+    modelJson.type=$scope.scriptType;
     if(!$scope.checkboxCustom){
-      modelJson.type="SPARK"
       modelJson.customFlag="N"
       //  var source = {};
       // var ref = {};
@@ -680,6 +675,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       ModelService.submit(modelJson, 'model',upd_tag).then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
+      var dependsOn = {};
+      var ref = {};
+      ref.type = $scope.selectedDependsOnType;
+      ref.uuid = $scope.selectedDependsOn.uuid;
+      dependsOn.ref = ref;
+      modelJson.dependsOn = dependsOn;
       modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();
