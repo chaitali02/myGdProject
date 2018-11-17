@@ -1228,7 +1228,13 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 						StreamInput streamInput = getKafkaStreamInput();
 						streamInput.setIngestionType(IngestionType.STREAMTOTABLE.toString());
-						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+						String targetTableName = null;
+						if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+								|| targetDS.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+							targetTableName = targetDp.getName();
+						} else {
+							targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+						}
 						streamInput.setTargetTableName(targetTableName);
 						SaveMode saveMode = ingest.getSaveMode();
 						if(saveMode == null) {

@@ -146,6 +146,16 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.findFormulaByApp = function (type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getFormulaByApp?action=view&type=" + type
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	factory.disableRhsType = function (arrayStr) {
 		var rTypes = [
 			{ "text": "string", "caption": "string", "disabled": false },
@@ -310,6 +320,30 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 
 		return deferred.promise;
 	}
+
+	this.getFormulaByApp = function (type) {
+		var deferred = $q.defer();
+		MetadataDatasetFactory.findFormulaByApp(type).then(function (response) { onSuccess(response.data) });
+		var formulaarray = [];
+		var onSuccess = function (response) {
+			for (var i = 0; i < response.length; i++) {
+				var formulajson = {}
+				formulajson.name = response[i].name;
+				formulajson.uuid = response[i].uuid;
+				formulajson.class = "";
+				formulajson.iconclass = "";
+				formulaarray.push(formulajson);
+
+			}
+
+			deferred.resolve({
+				data: formulaarray
+			})
+			
+		}
+		return deferred.promise;
+	}
+
 	this.getFormulaByType = function (uuid, type) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findFormulaByType(uuid, type).then(function (response) { onSuccess(response.data) });
