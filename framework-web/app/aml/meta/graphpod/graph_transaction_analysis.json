@@ -1242,7 +1242,7 @@
     ],
     "uuid" : "e5e1aee8-86a3-11e8-adc0-fa7ae01bbebc",
     "version" : "1531489940",
-    "name" : "end_to_end_graph",
+    "name" : "graph_transaction_analysis",
     "desc" : " node : account,customer,branch,bank  && edges : account ...",
     "createdBy" : {
         "ref" : {
@@ -1261,7 +1261,7 @@
         {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
                 "version" : "1464977196"
             }
         }

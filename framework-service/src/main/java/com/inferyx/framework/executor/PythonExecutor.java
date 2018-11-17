@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.connector.PythonConnector;
@@ -229,7 +230,8 @@ public class PythonExecutor implements IExecutor {
 	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
-			String command = "python3".concat(" ").concat(scriptPath);
+			String pythonExec = Helper.getPropertyValue("framework.python.exec");			
+			String command = pythonExec+"/python3".concat(" ").concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}
