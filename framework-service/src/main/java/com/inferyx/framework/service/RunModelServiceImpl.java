@@ -688,9 +688,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			boolean isSuccess = false;
 			Object result = null;
 			String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
-			String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+			String trainName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", train.getUuid(), train.getVersion(), trainExec.getVersion());
+			String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())

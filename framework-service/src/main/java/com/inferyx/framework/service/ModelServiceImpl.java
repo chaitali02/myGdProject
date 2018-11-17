@@ -859,7 +859,7 @@ public class ModelServiceImpl {
 			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString());
 			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + train.getUuid().replaceAll("-", "_") + "_" + train.getVersion() + "_" + trainExec.getVersion() + ".result";
 			} else {
 				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.json";
 			}
