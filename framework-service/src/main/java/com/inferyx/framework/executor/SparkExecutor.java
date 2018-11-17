@@ -42,6 +42,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -3261,9 +3262,14 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
 		trainedDataSet.show();
-		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet);
+	    
+		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+																		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
+																				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+																				Encoders.kryo(Row.class)));
 		
-		Matrix confusion = metrics.confusionMatrix();		
+		Matrix confusion = metrics.confusionMatrix();	
+		
 		int size = metrics.confusionMatrix().numCols();
 	    double[] matrixArray = metrics.confusionMatrix().toArray();
 	    double[][] matrix = new double[size][size];
