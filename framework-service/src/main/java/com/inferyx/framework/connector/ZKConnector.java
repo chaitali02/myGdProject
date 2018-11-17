@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.zookeeper.ZooKeeper;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
 
 /**
@@ -31,7 +32,7 @@ public class ZKConnector {
 	}
 	
 	public ConnectionHolder getConnection(Datasource ds) throws IOException {
-		String connectionString = ds.getHost() + ":" + ds.getPort();
+		String connectionString = ds.getHost() + ":" + Helper.getPropertyValue("framework.kafka.topic.port");
 		ConnectionHolder connHolder = new ConnectionHolder();
 		if (zkConnMap.containsKey(connectionString)) {
 			connHolder.setConObject(zkConnMap.get(connectionString));
