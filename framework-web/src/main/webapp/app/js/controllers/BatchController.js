@@ -474,7 +474,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     $scope.batchDetail.batchChg="Y";
   }
 
-  $scope.submit = function() {
+  $scope.submit = function(isTrue) {
    
     var upd_tag="N"
     $scope.isSubmitProgess = true;
@@ -556,6 +556,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       scheduleTableArray[i]=scheduleInfo;
     } 
     } 
+
+    if(isTrue){
+      batchJson.batchChg="Y";
+    }
     batchJson.scheduleInfo=scheduleTableArray; 
     console.log(JSON.stringify(batchJson))
     BatchService.submit(batchJson,"batchview",upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
