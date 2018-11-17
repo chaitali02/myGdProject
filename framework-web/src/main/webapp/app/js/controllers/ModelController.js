@@ -645,6 +645,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       //   modelJson.labelRequired="N"
       // }
       modelJson.label=$scope.selectLabel;
+      var dependsOn = {};
+      var ref = {};
+      ref.type = $scope.selectedDependsOnType;
+      ref.uuid = $scope.selectedDependsOn.uuid;
+      dependsOn.ref = ref;
+      modelJson.dependsOn = dependsOn;
       var featureArray=[];
       if($scope.featureTableArray.length >0){
         for(var i=0;i< $scope.featureTableArray.length;i++){
@@ -675,12 +681,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       ModelService.submit(modelJson, 'model',upd_tag).then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
-      var dependsOn = {};
-      var ref = {};
-      ref.type = $scope.selectedDependsOnType;
-      ref.uuid = $scope.selectedDependsOn.uuid;
-      dependsOn.ref = ref;
-      modelJson.dependsOn = dependsOn;
+    
       modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();
