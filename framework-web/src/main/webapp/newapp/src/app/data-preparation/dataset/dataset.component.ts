@@ -924,12 +924,7 @@ export class DatasetComponent implements OnInit {
     }
   }
   onChangeOperators(index) {
-    this.datasetCompare["filterChg"] = "y";
     this.dataset.filterTableArray[index]["rhsType"] = null;
-  }
-
-  onChangeFilterData() {
-    this.datasetCompare["filterChg"] = "y";
   }
 
   enableEdit(uuid, version) {
@@ -1123,7 +1118,7 @@ export class DatasetComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Dataset Submitted Successfully' });
     setTimeout(() => {
-      this.goBack()
+      this.goBack();
     }, 1000);
   }
   //   enableEdit(uuid, version) {
