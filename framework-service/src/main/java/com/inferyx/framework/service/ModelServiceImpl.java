@@ -808,9 +808,9 @@ public class ModelServiceImpl {
 	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion, List<String> arguments) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
 //		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
-		String scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/"+scriptName;
+		String scriptPath = Helper.getPropertyValue("framework.algo.script.path")+"/"+scriptName;
 //		
-		logger.info("Script name to run : " + scriptPath);
+		logger.info("Script path to run : " + scriptPath);
 		
 //		IExecutor exec = execFactory.getExecutor(type);
 //		if(exec instanceof PythonExecutor) {
@@ -859,9 +859,9 @@ public class ModelServiceImpl {
 			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString());
 			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
 			} else {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getName() + ".json";
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.json";
 			}
 		}
 		//FileInputStream fstream = new FileInputStream("/user/hive/warehouse/framework/model/train/3dfc4042_00db_48f5_a075_572c5aead3ca/1530799218/1531305060/3dfc4042_00db_48f5_a075_572c5aead3ca_1530799218_1531305060.result");
@@ -1806,9 +1806,9 @@ public class ModelServiceImpl {
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 
-			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", predict.getUuid(), predict.getVersion(), predictExec.getVersion());
+			String tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
@@ -1829,9 +1829,9 @@ public class ModelServiceImpl {
 					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
 					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
 
-					filePath = String.format("/%s/%s/%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
+//					filePath = String.format("/%s/%s/%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
+//					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
+//					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 					
 					String sql = generateSQLBySource(source, execParams);
 					exec.executeAndRegister(sql, tableName, appUuid);
@@ -1924,7 +1924,7 @@ public class ModelServiceImpl {
 				}
 			}
 
-			createDatastore(filePathUrl, modelName,
+			createDatastore(filePathUrl, predictName,
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
@@ -2521,9 +2521,9 @@ public class ModelServiceImpl {
 					// Save the data as csv
 					String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
 					String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
-					String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-					String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-					String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+					String trainName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
+					String filePath = String.format("/%s/%s/%s", train.getUuid(), train.getVersion(), trainExec.getVersion());
+					String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
 					Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 							train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
 					String sql = generateFeatureSQLBySource(train, source, execParams, fieldArray, label);
@@ -2534,8 +2534,7 @@ public class ModelServiceImpl {
 					exec.executeAndRegister(sql, (tableName), appUuid);
 					
 					String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+tableName;
-					String modelFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+model.getName().replaceAll(" ", "_");
-					exec = execFactory.getExecutor(datasource.getType());
+					String modelFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"model";
 					exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 					
 					saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
