@@ -358,8 +358,32 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 	}
+	 
+	$scope.getFormulaByApp=function(temp1){
+		MetadataDatasetSerivce.getFormulaByApp("formula").then(function (response) { onSuccessGetFormulaByApp(response.data) });
+		var onSuccessGetFormulaByApp = function (response) {
+			if($scope.allFormula && $scope.allFormula.length >0){
+				var temp = $scope.allFormula.concat(response);
+				$scope.allFormula=temp;
+			}
+			else{
+				$scope.allFormula = response;
+			}
+			
+			console.log(response);
+		    console.log($scope.allFormula);
+		}
+	}
+    $scope.getFormulaByType=function(){
+		MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+		var onSuccessFormula = function (response) {
+			$scope.datasetLodeFormula = response
+			$scope.allFormula = response;
+			$scope.allFormula.splice(0, 1);
+			$scope.getFormulaByApp();
+		}
+	}
 	$scope.getParamByApp = function () {
-
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 			then(function (response) { onSuccessGetParamByApp(response.data) });
 		var onSuccessGetParamByApp = function (response) {
@@ -484,12 +508,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				var onSuccessExpression = function (response) {
 					$scope.datasetLodeExpression = response
 				}
-				MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-				var onSuccessFormula = function (response) {
-					$scope.datasetLodeFormula = response
-					$scope.allFormula = response;
-					$scope.allFormula.splice(0, 1);
-				}
+				// MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+				// var onSuccessFormula = function (response) {
+				// 	$scope.datasetLodeFormula = response
+				// 	$scope.allFormula = response;
+				// 	$scope.allFormula.splice(0, 1);
+				// }
+				$scope.getFormulaByType();
 				MetadataDatasetSerivce.getAllAttributeBySource($scope.dataset.dependsOn.ref.uuid, $scope.dataset.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 				var onSuccessGetDatapodByRelation = function (response) {
 					$scope.sourcedatapodattribute = response;
@@ -531,12 +556,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			var onSuccessExpression = function (response) {
 				$scope.datasetLodeExpression = response
 			}
-			MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.datasetLodeFormula = response;
-				$scope.allFormula = response;
-				$scope.allFormula.splice(0, 1);
-			}
+			// MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			// var onSuccessFormula = function (response) {
+			// 	$scope.datasetLodeFormula = response;
+			// 	$scope.allFormula = response;
+			// 	$scope.allFormula.splice(0, 1);
+			// }
+			$scope.getFormulaByType();
 			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
 
@@ -601,11 +627,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.datasetLodeExpression = response
 			}
 			MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.datasetLodeFormula = response
-				$scope.allFormula = response;
-				$scope.allFormula.splice(0, 1);
-			}
+			// var onSuccessFormula = function (response) {
+			// 	$scope.datasetLodeFormula = response
+			// 	$scope.allFormula = response;
+			// 	$scope.allFormula.splice(0, 1);
+			// }
+			$scope.getFormulaByType();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.dataset.dependsOn.ref.uuid, $scope.dataset.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -793,11 +820,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].islhsFormula = true;
 			$scope.filterTableArray[index].islhsSimple = false;
 			$scope.filterTableArray[index].islhsDatapod = false;
-			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
-			var onSuccressGetFormula = function (response) {
-				response.splice(0, 1);
-				$scope.allFormula = response;
-			}
+			if(typeof $stateParams.id == "undefined") {
+				MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+				var onSuccressGetFormula = function (response) {
+					response.splice(0, 1);
+					$scope.allFormula = response;
+					$scope.getFormulaByApp();
+				}
+		    }
 		}
 	}
 
@@ -834,12 +864,15 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = false;
-
-			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
-			var onSuccressGetFormula = function (response) {
-				$scope.allFormula = response;
-				$scope.allFormula.splice(0, 1);
+			if(typeof $stateParams.id == "undefined") {
+				MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+				var onSuccressGetFormula = function (response) {
+					$scope.allFormula = response;
+					$scope.allFormula.splice(0, 1);
+					$scope.getFormulaByApp();
+			    }
 			}
+			
 		}
 		else if (type == "function") {
 
