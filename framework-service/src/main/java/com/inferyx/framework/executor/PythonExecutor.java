@@ -230,7 +230,8 @@ public class PythonExecutor implements IExecutor {
 	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
-			String pythonExec = Helper.getPropertyValue("framework.python.exec");			
+			String pythonExec = Helper.getPropertyValue("framework.python.exec");	
+			pythonExec = pythonExec.endsWith("/") ? pythonExec : pythonExec.concat("/");
 			String command = pythonExec+"/python3".concat(" ").concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));

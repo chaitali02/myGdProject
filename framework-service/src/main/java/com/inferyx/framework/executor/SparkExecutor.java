@@ -398,6 +398,7 @@ public class SparkExecutor<T> implements IExecutor {
 		df.createOrReplaceGlobalTempView(tableName);
 		registerTempTable(df, tableName);
 		logger.info("temp table registered: " + tableName);
+		df.show(false);
 		return resHolder;
 	}
 	
@@ -1541,7 +1542,6 @@ public class SparkExecutor<T> implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
-		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
@@ -1551,7 +1551,6 @@ public class SparkExecutor<T> implements IExecutor {
 			fieldArray = df.columns();
 
 		df.printSchema();
-		df.show(false);
 		
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
@@ -1582,7 +1581,7 @@ public class SparkExecutor<T> implements IExecutor {
 				|| trainName.contains("LogisticRegression")) {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			Dataset<Row> trainingTmp = va.transform(df);
-			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
+			transformedDf = trainingTmp.withColumn("label", trainingTmp.col("label").cast("Double"))
 					.select("label", "features");
 
 			logger.info("DataFrame count: " + transformedDf.count());
@@ -1731,7 +1730,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-//		df.show(false);
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 //		df.show(true);
@@ -1832,7 +1831,7 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
-		df.show();
+		
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
@@ -1847,13 +1846,10 @@ public class SparkExecutor<T> implements IExecutor {
 			Object obj = dynamicClass.newInstance();*/
 			trainingDf = trngDf;
 			validateDf = valDf;
-			trainingDf.show();
 
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-			
-			trainingDf.show();
-
+		
 			for(String col : validateDf.columns())
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 			df.coalesce(1).write().option("header", "true").csv(saveFileName);
@@ -1871,7 +1867,7 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
-		df.show();
+
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
@@ -1895,19 +1891,16 @@ public class SparkExecutor<T> implements IExecutor {
 				method = algoClass.getClass().getMethod("setLabelCol", String.class);
 				method.invoke(algoClass, "label");
 				
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+				validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}	
-			trainingDf.show();
 
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 			
-			trainingDf.show();
-
 			for(String col : validateDf.columns())
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 			
@@ -1920,7 +1913,7 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trainingDf);
 				}
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
-				trainedDataSet.show(false); 
+
 				if(trainOtherParam !=null) {
 					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
 					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
@@ -2298,12 +2291,11 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);
 			
-			trainedDataSet.show();
-				if(trainOtherParam !=null) {
-					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
-					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-					
-				}
+			if(trainOtherParam !=null) {
+				String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
+				
+			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 //			trainedDataSet.show(false);
 			return cvModel;
@@ -3261,7 +3253,6 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
-		trainedDataSet.show();
 	    
 		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
 																		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
