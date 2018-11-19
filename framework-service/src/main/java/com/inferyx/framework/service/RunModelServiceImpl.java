@@ -865,8 +865,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				argList.add(saveFileName);
 				argList.add("modelFileName");
 				argList.add(modelFileName);
-				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
+				List<String> scriptPrintedMsgs = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
 						trainExec.getVersion(), argList);
+				if(scriptPrintedMsgs.isEmpty()) {
+					isSuccess = false;
+				}
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 

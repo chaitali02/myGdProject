@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -31,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -56,6 +58,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -805,7 +808,7 @@ public class ModelServiceImpl {
 		return fileName;
 	}
 
-	public boolean executeScript(String type, String scriptName, String execUuid, String execVersion, List<String> arguments) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<String> executeScript(String type, String scriptName, String execUuid, String execVersion, List<String> arguments) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
 //		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
 		String scriptPath = Helper.getPropertyValue("framework.algo.script.path")+"/"+scriptName;
@@ -824,7 +827,7 @@ public class ModelServiceImpl {
 		try {
 			return pythonExecutor.executTFScript(scriptPath, commonServiceImpl.getApp().getUuid(), arguments);
 		} catch (Exception e) {
-			return false;
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -861,7 +864,7 @@ public class ModelServiceImpl {
 			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
 				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + train.getUuid().replaceAll("-", "_") + "_" + train.getVersion() + "_" + trainExec.getVersion() + ".result";
 			} else {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.json";
+				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.result";
 			}
 		}
 		//FileInputStream fstream = new FileInputStream("/user/hive/warehouse/framework/model/train/3dfc4042_00db_48f5_a075_572c5aead3ca/1530799218/1531305060/3dfc4042_00db_48f5_a075_572c5aead3ca_1530799218_1531305060.result");
@@ -1840,10 +1843,10 @@ public class ModelServiceImpl {
 					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
-					
+
+					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
 					String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
 					String modelFileName = dataStore.getLocation();
-					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
 					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 					
@@ -1852,6 +1855,7 @@ public class ModelServiceImpl {
 					
 					saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
 					
+					saveFileName = URI+saveFileName;
 					logger.info("Saved file name : " + saveFileName);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
@@ -2571,7 +2575,19 @@ public class ModelServiceImpl {
 					argList.add("operation");
 					argList.add("train");
 					
-					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
+					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
+					if(!scriptPrintedMsgs.isEmpty()) {
+						result = true;
+					} else {
+						result = false;
+					}
+					
+					if(result) {
+						Map<String, Object> summary = summary(modelFileName, scriptPrintedMsgs);
+						String fileName = "model.result";
+						String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
+						writeSummaryToFile(summary, defaultDir, fileName);
+					}
 					dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 					dataStoreServiceImpl.create(modelFileName, trainName,
 							new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
@@ -2581,11 +2597,15 @@ public class ModelServiceImpl {
 					trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
 					return result;
 				}
-				result =  executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
+				List<String> scriptPrintedMsgs =  executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
+				if(!scriptPrintedMsgs.isEmpty()) {
+					result = true;
+				} else {
+					result = false;
+				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
 				return result;
-			} else {
-				
+			} else {				
 				if (model.getDependsOn().getRef().getVersion() != null)
 					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 				else 
@@ -2619,6 +2639,51 @@ public class ModelServiceImpl {
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public Map<String, Object> summary(Object trndModel, List<String> scriptPrintedMsgs) throws IOException {
+		Map<String, Object> summary = new HashMap<>();
+		String modelPath = (String) trndModel;
+		modelPath = modelPath  + ".spec";
+		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
+		boolean isReadingScore = false;
+		boolean isReadingConfuMat = false;
+		List<String> confusionMatrx = new ArrayList<>();
+		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
+			//reading confusion mattrix
+			if(scriptPrintedMsgs.get(line).contains("confusion mattrix")) {
+				isReadingConfuMat = true;
+			}
+			if(isReadingConfuMat) {
+				if(scriptPrintedMsgs.get(line).equalsIgnoreCase(" ")) {
+					isReadingConfuMat = false;
+				} else {
+					if(!scriptPrintedMsgs.get(line).contains("confusion mattrix")) {
+						confusionMatrx.add(scriptPrintedMsgs.get(line));
+					}
+				}
+			}			
+			
+			//reading confusion score
+			if(scriptPrintedMsgs.get(line).contains("model score")) {
+				isReadingScore = true;
+				summary.put("model score", scriptPrintedMsgs.get(line+1));
+			}
+			if(isReadingScore) {
+				isReadingScore = false;
+			}
+		}
+		summary.put("confusion mattrix", confusionMatrx);
+		return summary;
+	}
+	
+	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
+		String filePath = directory +"/"+ fileName;		
+		String resultJson = new ObjectMapper().writeValueAsString(summary);
+		PrintWriter printWriter = new PrintWriter(filePath);
+		printWriter.write(resultJson);
+		printWriter.close();
+		return null;
 	}
 	
 	public String renameFileAndGetFilePathFromDir(String directory, String fileExt) throws IOException {

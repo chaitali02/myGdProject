@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +39,7 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.nd4j.shade.jackson.databind.ObjectMapper;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -227,7 +230,7 @@ public class PythonExecutor implements IExecutor {
 		return isSuccessful;
 	}
 	
-	public boolean executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
+	public List<String> executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
 			String pythonExec = Helper.getPropertyValue("framework.python.exec");	
@@ -240,11 +243,28 @@ public class PythonExecutor implements IExecutor {
 			Process p = Runtime.getRuntime().exec(command);
 			BufferedReader bfrIn = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
+			boolean isSuccessful = false;
+			List<String> scriptPrintedMsgs = new ArrayList<>();
 			while((line = bfrIn.readLine()) != null) {
 			// display each output line form python script
-			System.out.println(line);
-			}				
-			return true;
+				if(line.contains("Successfull operation")) {
+					isSuccessful = true;
+				} 
+				scriptPrintedMsgs.add(line);
+				System.out.println(line);
+			}		
+			if(!isSuccessful) {
+				BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+				String errLine = "";
+				String errMessage = "";
+				while((errLine = errBuffRdrIn.readLine()) != null) {
+				// display each output line form python script
+					logger.error(errLine);
+					errMessage = errMessage.concat(errLine).concat("\n");
+				}
+				throw new RuntimeException(errMessage);
+			}
+			return scriptPrintedMsgs;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -509,8 +529,11 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> summary = new HashMap<>();
+		String modelPath = (String) trndModel;
+		modelPath = modelPath  + "/" + "model.spec";
+		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
+		return summary;
 	}
 
 	@Override
