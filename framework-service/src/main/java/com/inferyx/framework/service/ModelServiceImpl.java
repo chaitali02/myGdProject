@@ -1833,11 +1833,11 @@ public class ModelServiceImpl {
 //					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 //					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 					
-					String sql = generateSQLBySource(source, execParams);
-					exec.executeAndRegister(sql, tableName, appUuid);
+//					String sql = generateSQLBySource(source, execParams);
+//					exec.executeAndRegister(sql, tableName, appUuid);
 					
 					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
-					String mappedFeatureAttrSql = generateFeatureSQLBySourceForPredict(predict, source, execParams, fieldArray, label);
+					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
 					
 					String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+tableName;
@@ -1876,10 +1876,10 @@ public class ModelServiceImpl {
 					throw new Exception("Model type has been changed from \'"+model.getType().toUpperCase()+"\' to \'"+trainModel.getType().toUpperCase()+"\'.");
 				}
 			} else {				
-				String sql = generateSQLBySource(source, execParams);
-				exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 				
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+					String sql = generateSQLBySource(source, execParams);
+					exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 					String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
 						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, target, SaveMode.Append.toString(), false, appUuid);
@@ -1902,6 +1902,9 @@ public class ModelServiceImpl {
 						throw new Exception("No trained model found.");
 
 					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_pred_data"));
+					exec.executeAndRegister(mappedFeatureAttrSql, (tableName+"_pred_data"), appUuid);
+					fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
 					exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), label, appUuid);
 					Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 					ResultSetHolder rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
@@ -1957,20 +1960,28 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 	
-	private String generateFeatureSQLBySourceForPredict(Predict predict, Object source, ExecParams execParams,
-			String[] fieldArray, String label) throws Exception {
+	public String[] getMappedAttrs(List<FeatureAttrMap> mappedFeatures) {
+		String[] mappedAttrs = new String[mappedFeatures.size()];
+		
+		for(int i=0; i < mappedFeatures.size(); i++) {
+			mappedAttrs[i] = mappedFeatures.get(i).getFeature().getFeatureName();
+		}
+		return mappedAttrs;
+	}
+	
+	public String generateFeatureSQLBySource(List<FeatureAttrMap> mappedFeatures, Object source, ExecParams execParams, String[] fieldArray, String label,  String tableName) throws Exception {
 		String sql = generateSQLBySource(source, execParams);
 		StringBuilder sb = new StringBuilder("SELECT ");
 		
-//		if (StringUtils.isNotBlank(label)) {
-//			sb.append(label).append(" AS label").append(", ");
-//		}
+		if (StringUtils.isNotBlank(label)) {
+			sb.append(label).append(" AS label").append(", ");
+		}
 		
 		int i = 0;
-		for(FeatureAttrMap featureAttrMap : predict.getFeatureAttrMap()) {
+		for(FeatureAttrMap featureAttrMap : mappedFeatures) {
 			if (fieldArray != null && fieldArray.length > 0) {
 				sb.append(featureAttrMap.getAttribute().getAttrName()).append(" AS ").append(featureAttrMap.getFeature().getFeatureName());
-				if(i<predict.getFeatureAttrMap().size()-1)
+				if(i < mappedFeatures.size()-1)
 				sb.append(", ");
 			}
 			i++;
@@ -1984,7 +1995,7 @@ public class ModelServiceImpl {
 //		sb.append("'' AS result")
 			sb.append(" FROM (")
 			.append(sql)
-			.append(") t");
+			.append(") "+tableName);
 		return sb.toString();
 	}
 
@@ -2526,7 +2537,7 @@ public class ModelServiceImpl {
 					String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
 					Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 							train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-					String sql = generateFeatureSQLBySource(train, source, execParams, fieldArray, label);
+					String sql = generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					String appUuid = commonServiceImpl.getApp().getUuid();
 					Datasource datasource = commonServiceImpl.getDatasourceByApp();
 					IExecutor exec = null;
@@ -2654,7 +2665,7 @@ public class ModelServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public String generateFeatureSQLBySource(Train train, Object source, ExecParams execParams, String []fieldArray, String label) throws Exception {
+	/*public String generateFeatureSQLBySource(Train train, Object source, ExecParams execParams, String []fieldArray, String label) throws Exception {
 		String sql = generateSQLBySource(source, execParams);
 		StringBuilder sb = new StringBuilder("SELECT ");
 		
@@ -2668,15 +2679,15 @@ public class ModelServiceImpl {
 			}
 		}
 		
-		/*if (fieldArray != null && fieldArray.length > 0) {
+		if (fieldArray != null && fieldArray.length > 0) {
 			for (String field : fieldArray) {
 				sb.append(field).append(", ");
 			}
-		}*/
+		}
 		sb.append("'' AS result")
 			.append(" FROM (")
 			.append(sql)
 			.append(") t");
 		return sb.toString();
-	}
+	}*/
 }

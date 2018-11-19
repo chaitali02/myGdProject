@@ -712,8 +712,13 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
-				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
+				
+				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+//				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
+//				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
+				
+				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_data"));
+				exec.executeAndRegister(featureMappedSQL, (tableName+"_train_data"), appUuid);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
 				Map<String, String> mappingList = new LinkedHashMap<>();
@@ -721,7 +726,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
 				}
 
-				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
 				
 				Object trndModel = null;

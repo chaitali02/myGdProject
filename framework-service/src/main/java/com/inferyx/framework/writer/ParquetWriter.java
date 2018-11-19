@@ -43,7 +43,7 @@ public class ParquetWriter implements IWriter {
 		try { 
 //			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			Dataset<Row> df = rsHolder.getDataFrame();
-//			df.show(true);
+//			df.show(false);
 			if(datapod !=null) {
 				if(df.columns().length != datapod.getAttributes().size())
 					throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
@@ -59,7 +59,7 @@ public class ParquetWriter implements IWriter {
 				}
 			} 
 			df.printSchema();
-//			df.show(true);
+//			df.show(false);
 			if(saveMode.equalsIgnoreCase("append"))	{
 				df.write().mode(SaveMode.Append).parquet(filePathUrl);
 			}else if(saveMode.equalsIgnoreCase("overwrite")) {
