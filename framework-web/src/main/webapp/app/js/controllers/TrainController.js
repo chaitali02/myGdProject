@@ -483,7 +483,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       for (var i = 0; i < $scope.featureMapTableArray.length; i++) {
         var featureMapObj = {};
         featureMapObj.featureMapId =$scope.featureMapTableArray[i].id;
-        featureMapObj.featureDisplaySeq =$scope.featureMapTableArray[i].id;
+        featureMapObj.featureDisplaySeq =i;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};
