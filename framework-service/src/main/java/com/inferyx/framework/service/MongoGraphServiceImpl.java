@@ -99,24 +99,24 @@ public class MongoGraphServiceImpl {
 		map.put("active", vertex.getActive());
 		GraphMetaIdentifierHolder graphmetaholder = new GraphMetaIdentifierHolder();
 		GraphMetaIdentifier graphmi = new GraphMetaIdentifier();
-		if(degree.equalsIgnoreCase("1")) {
-		if (vertex.getGraphMetaHolder() != null) {
-			graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
-			graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
-			graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
-		} else {
-			graphmi.setType(vertex.getNodeType());
+		if (degree.equalsIgnoreCase("1")) {
+			if (vertex.getGraphMetaHolder() != null) {
+				graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
+				graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
+				graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
+			} else {
+				graphmi.setType(vertex.getNodeType());
 
-			String[] tokens = vertex.getUuid().split("_");
-			graphmi.setUuid(tokens[0]);
-			graphmi.setVersion(vertex.getVersion());
-		}
-		// graphmi.setName(vertex.getName());
-		graphmetaholder.setRef(graphmi);
-		/*
-		 * if(graphmetaholder.equals(null) ) { map.put("metaRef",graphmetaholder); }
-		 */
-		}else {
+				String[] tokens = vertex.getUuid().split("_");
+				graphmi.setUuid(tokens[0]);
+				graphmi.setVersion(vertex.getVersion());
+			}
+			// graphmi.setName(vertex.getName());
+			graphmetaholder.setRef(graphmi);
+			/*
+			 * if(graphmetaholder.equals(null) ) { map.put("metaRef",graphmetaholder); }
+			 */
+		} else {
 			if (vertex.getGraphMetaHolder() != null) {
 				graphmi.setVersion(vertex.getVersion());
 				graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
@@ -318,13 +318,13 @@ public class MongoGraphServiceImpl {
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
-					String srcUuid=edge.getSrc();
-					GraphMetaIdentifierHolder srcMetaRef=edge.getSrcMetaRef();
+					String srcUuid = edge.getSrc();
+					GraphMetaIdentifierHolder srcMetaRef = edge.getSrcMetaRef();
 					uuidList.add(edge.getSrc());
-					if(degree=="1") {
+					if (degree == "1") {
 						nodetype.add(edge.getRelationType());
 
-					}else {				
+					} else {
 						nodetype.add(edge.getSrcMetaRef().getRef().getType());
 
 					}
@@ -332,8 +332,7 @@ public class MongoGraphServiceImpl {
 					edge.setDst(srcUuid);
 					edge.setSrcMetaRef(edge.getDstMetaRef());
 					edge.setDstMetaRef(srcMetaRef);
-		
-				
+
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
