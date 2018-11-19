@@ -4171,4 +4171,27 @@ public class CommonServiceImpl <T> {
 		}
 		return paramHolderList;
 	}
+	
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param label
+	 * @param tableName
+	 * @return
+	 */
+	public String getTrainingSql(String[] fieldArray, String label, String tableName) {
+		String labelAlias = "label";
+		if (StringUtils.isBlank(label) || fieldArray == null || fieldArray.length <= 0) {
+			return " SELECT * FROM " + tableName;
+		}
+		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
+		sb.append(label).append(ConstantsUtil.AS).append(labelAlias);
+		for (String field : fieldArray) {
+			sb.append(ConstantsUtil.COMMA).append(field);
+		}
+		sb.append(ConstantsUtil.FROM)
+			.append(tableName);
+		return sb.toString();
+	}
+	
 }

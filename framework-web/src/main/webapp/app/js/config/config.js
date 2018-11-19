@@ -1,7 +1,9 @@
 InferyxApp=angular.module('InferyxApp');
 //CF:CONSTANT_FLAG
 InferyxApp.constant("CF_APP_SETTING",{
-    "companyName":"INFERYX"
+    "companyName":"INFERYX",
+    "companyLog":"assets/layouts/layout/img/logo.png"
+
 });
 
 
