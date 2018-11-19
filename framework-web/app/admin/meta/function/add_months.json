@@ -78,7 +78,6 @@
     }
   ],
   "inputReq": "Y",
-  "funcType": "hive",
   "functionInfo": [
     {
       "name": "add_months",
@@ -111,5 +110,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "date"
+  "category": "DATE"
 }

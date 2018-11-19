@@ -1171,6 +1171,39 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$scope.filterTableArray = newDataList;
 	}
 
+	$scope.onAttrFilterRowDown=function(index){	
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexPlus=$scope.filterTableArray[index+1];
+		$scope.filterTableArray[index]=rowTempIndexPlus;
+		$scope.filterTableArray[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrFilterRowUp=function(index){
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexMines=$scope.filterTableArray[index-1];
+		$scope.filterTableArray[index]=rowTempIndexMines;
+		$scope.filterTableArray[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
+			$scope.filterTableArray[index-1].logicalOperator=""
+		}
+	}  
+	
+	$scope.onFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=$scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
+		}
+	}
+
 	$scope.selectlhsType = function (type, index) {
 		if ($scope.ingestCompare != null) {
 			$scope.ingestCompare.filterChg = "y"
@@ -1512,6 +1545,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				var lhsref = {};
 				var rhsoperand = {};
 				var rhsref = {};
+				filterInfo.display_seq=i;
 				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
 					filterInfo.logicalOperator = ""
 				}

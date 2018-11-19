@@ -1138,7 +1138,7 @@ public class MetadataServiceImpl {
 		query.fields().include("category");
 		
 
-		query.addCriteria(Criteria.where("category").is(category));
+		query.addCriteria(Criteria.where("category").is(category.toUpperCase()));
 
 		List<Function> function = new ArrayList<>();
 		function = (List<Function>) mongoTemplate.find(query, Function.class);

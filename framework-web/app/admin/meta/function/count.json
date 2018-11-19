@@ -65,7 +65,7 @@
             "paramInfoHolder" : []
         }
     ],
-    "funcType" : "hive",
-    "category" : "aggregate"
+
+    "category" : "AGGREGATE"
 }
 

@@ -60,7 +60,7 @@
     }
   ],
   "inputReq": "N",
-  "funcType": "hive",
+
   "functionInfo": [
     {
       "name": "row_number() OVER (order by 1)",
@@ -93,5 +93,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "string"
+  "category": "STRING"
 }
