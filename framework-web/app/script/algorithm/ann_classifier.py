@@ -179,10 +179,11 @@ def train():
 	score = classifier.evaluate(X_test, y_test, batch_size=10)
 	print("model score:")
 	print(score)
+	print(" ")
 
 	# serialize model to JSON
 	model_json = classifier.to_json()
-	with open(modelFileName+".json", "w") as json_file:
+	with open(modelFileName+".spec", "w") as json_file:
 	    json_file.write(model_json)
 	# serialize weights to HDF5
 	classifier.save_weights(modelFileName+".h5")
@@ -193,7 +194,7 @@ def train():
 	# later...
 	 
 	# load json and create model
-	json_file = open(modelFileName+".json", 'r')
+	json_file = open(modelFileName+".spec", 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
 	loaded_model = model_from_json(loaded_model_json)
@@ -226,12 +227,14 @@ def train():
 	cm = confusion_matrix(y_test, y_pred)
 	print("confusion mattrix:")
 	print(cm)
+	print(" ")
 	return isSuccessful
 
 #prediction operation
 def predict():
 	# Importing the dataset
 	dataset = pd.read_csv(fileName)
+	dataset = dataset.iloc[:, 1:(numInput+1)].values
 
 	# Feature Scaling
 	from sklearn.preprocessing import StandardScaler
@@ -245,7 +248,7 @@ def predict():
 
 	# load json and create model
 	print("Loading model from disk")
-	json_file = open(modelFileName+".json", 'r')
+	json_file = open(modelFileName+".spec", 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
 	loaded_model = model_from_json(loaded_model_json)
@@ -282,12 +285,12 @@ def predict():
 if operation == "train":
 	result = train()
 	if result:
-		print("Successfull training operation.")
+		print("Successfull operation: "+"Training")
 	else:
-		print("Unsuccessfull training operation.")
+		print("Unsuccessfull operation: "+"Training")
 elif operation == "predict":
 	result = predict()
 	if result:
-		print("Successfull prediction operation.")
+		print("Successfull operation: "+"prediction")
 	else:
-		print("Unsuccessfull prediction operation.")
+		print("Unsuccessfull operation: "+"prediction")
