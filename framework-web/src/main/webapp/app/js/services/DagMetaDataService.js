@@ -2018,12 +2018,12 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         childMenu:[],
         allowInChildMenu : false,
       },
-      'schedule':{
-          name : 'schedule',
-          caption:'schedule',
-          execType:'schedule',
-          metaType:'schedule',
-          color : '#fff8dc',
+      'lov':{
+          name : 'lov',
+          caption:'lov',
+          execType:'lov',
+          metaType:'lov',
+          color : '#FF3AF5',
           parentIconCaption:'',
           allowInMenu : false,
           listState : '',

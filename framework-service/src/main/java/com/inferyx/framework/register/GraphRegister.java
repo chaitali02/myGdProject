@@ -1211,7 +1211,8 @@ public class GraphRegister<T> {
 		//java.util.Map<String, Object> objectMap = new HashMap<String, Object>();
 		//ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		
+	    
+
 		logger.info("Graph flag is set to " + graphFlag.isMode());
 		if (!graphFlag.isMode()) {
 			logger.info("Skipping building of graph.");
@@ -1248,12 +1249,15 @@ public class GraphRegister<T> {
 		this.edgeRowMap = edgeRowMap;
 		
 	    graphServiceImpl.deleteAllVertices();
+		
+		logger.info(" Total vertex size after delete old vertex by current appInfo: " + verticesRowMap.size());
 		totalVertexList = createTotVertexList(verticesRowMap);
 		graphServiceImpl.saveVertices(totalVertexList, null);
 		graphServiceImpl.deleteAllEdges();
+		logger.info(" Total edge size after delete old edge by current appInfo: " + edgeRowMap.size());
 		//totalEdgeList = createTotEdgeList(edgeRowMap);
 		graphServiceImpl.saveEdges(totalEdgeList, null);
-	}
+		}
 	
 	/*public void loadGraph() {
 		
