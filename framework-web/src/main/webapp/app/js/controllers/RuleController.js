@@ -877,7 +877,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
-      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['string','dataset']);
+      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}

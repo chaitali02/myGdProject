@@ -482,7 +482,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.targetFilterTable[index].operator) !=-1){
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['string', 'dataset']);
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['dataset']);
   		$scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
 		}
@@ -507,7 +507,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.sourceFilterTable[index].operator) !=-1){
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['string', 'dataset']);
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['dataset']);
   		$scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}

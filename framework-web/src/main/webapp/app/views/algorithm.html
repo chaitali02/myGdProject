@@ -209,7 +209,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
                   <label class="col-md-3 control-label">Script Path
                     <span class="required" aria-required="true"> * </span>
                   </label>
@@ -217,7 +217,7 @@
                     <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="algorithmData.scriptName" required>
                   </div>
               </div>
-              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
                 <label class="col-md-3 control-label">Script Path
                   <span aria-required="true"> * </span>
                 </label>
@@ -225,7 +225,7 @@
                   <input type="text" class="form-control"  ng-disabled="true" ng-model="algorithmData.scriptName" >
                 </div>
             </div>
-              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
                 <label class="col-md-3 control-label">Train Class
                   <span aria-required="true"> * </span>
                 </label>
@@ -233,7 +233,7 @@
                   <input type="text" class="form-control" ng-disabled="true"  ng-model="algorithmData.trainClass" >
                 </div>
               </div>
-              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
                 <label class="col-md-3 control-label">Train Class
                   <span class="required" aria-required="true"> * </span>
                 </label>
@@ -242,7 +242,7 @@
                 </div>
               </div>
               
-              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
                 <label class="col-md-3 control-label">Model Class 
                   <span aria-required="true"> * </span>
                 </label>
@@ -250,7 +250,7 @@
                   <input type="text" class="form-control" ng-disabled="true" ng-model="algorithmData.modelClass">
                 </div>
               </div>
-              <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
+              <div class="form-group" ng-if="algorithmData.customFlag =='N'">
                 <label class="col-md-3 control-label">Model Class 
                   <span class="required" aria-required="true"> * </span>
                 </label>

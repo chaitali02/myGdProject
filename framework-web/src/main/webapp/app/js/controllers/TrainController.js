@@ -102,9 +102,14 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.autoMapFeature=function(){
+    var allTargetAttribute={};
+    angular.forEach($scope.allTargetAttribute, function (val, key) {
+      allTargetAttribute[val.name] = val;
+    });
+
     if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
       for(var i=0;i<$scope.featureMapTableArray.length;i++){
-        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+        $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
       }
     }
   }
@@ -407,7 +412,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
   else{
     $scope.trainData={};
-    $scope.trainData.locked="N"
+    $scope.trainData.locked="N";
+    $scope.trainData.trainPercent=80;
+    $scope.trainData.valPercent=20;
   }
   $scope.selectVersion = function (uuid, version) {
 
@@ -483,7 +490,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       for (var i = 0; i < $scope.featureMapTableArray.length; i++) {
         var featureMapObj = {};
         featureMapObj.featureMapId =$scope.featureMapTableArray[i].id;
-        featureMapObj.featureDisplaySeq =$scope.featureMapTableArray[i].id;
+        featureMapObj.featureDisplaySeq =i;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};

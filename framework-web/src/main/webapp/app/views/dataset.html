@@ -420,7 +420,7 @@
                                           tooltip-placement="left" ng-change="onChangeSimple()">
                                       </span>
 
-                                      <span ng-if="['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                      <span ng-if="(['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 || spacialOperator.indexOf(tabledata.operator) !=-1) && tabledata.rhstype.caption=='string'">
                                         <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required disable-validation-message="" ng-change="onChangeSimple()">
                                       </span>
