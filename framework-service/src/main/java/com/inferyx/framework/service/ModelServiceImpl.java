@@ -883,6 +883,7 @@ public class ModelServiceImpl {
 				trainExec.getResult().getRef().getVersion());
 
 		String location = datastore.getLocation();
+		location = location.replaceAll("/model", "");
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/bestModel/stages"))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/bestModel");
@@ -1840,9 +1841,10 @@ public class ModelServiceImpl {
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
 					
-					String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+tableName;
+					String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
 					String modelFileName = dataStore.getLocation();
-					String savePredict = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+predict.getName().replaceAll(" ", "_");
+					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
+					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 					
 					exec = execFactory.getExecutor(datasource.getType());
@@ -2544,7 +2546,7 @@ public class ModelServiceImpl {
 					exec = execFactory.getExecutor(datasource.getType());
 					exec.executeAndRegister(sql, (tableName), appUuid);
 					
-					String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+tableName;
+					String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 					String modelFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"model";
 					exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 					

@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -705,7 +704,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 
 
-				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
+				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
 				datasource = commonServiceImpl.getDatasourceByApp();
 				exec = execFactory.getExecutor(datasource.getType());
@@ -774,7 +773,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				result = trndModel;				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trndModel);
 
-				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl);
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl+"/model");
 				String defaultDir = null;
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 					try {
@@ -782,7 +781,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
 							filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 						defaultDir = filePathUrl_2;
-						String pmmlLocation = filePathUrl_2 + "/" + model.getUuid() + "_" + model.getVersion() + "_"
+						String pmmlLocation = filePathUrl_2 + "/" + train.getUuid() + "_" + train.getVersion() + "_"
 								+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
 						boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
 						if(isSaved)
@@ -798,7 +797,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				if (isModelSved) {	
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
-						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
+						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
 //						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
@@ -816,7 +815,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
-						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
+						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 //						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
 //							try {
