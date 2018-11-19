@@ -407,7 +407,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
   else{
     $scope.trainData={};
-    $scope.trainData.locked="N"
+    $scope.trainData.locked="N";
+    $scope.trainData.trainPercent=80;
+    $scope.trainData.valPercent=20;
   }
   $scope.selectVersion = function (uuid, version) {
 
