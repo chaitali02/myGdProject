@@ -25,7 +25,7 @@
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
+  	"locked" : "N",
 	"published": "N",
 	"inputReq": "Y",
 	"appInfo": [
@@ -36,8 +36,8 @@
 			}
 		}
 	],
-	"funcType": "hive",
-	"category": "string",
+
+	"category": "STRING",
 	"functionInfo" : [ 
         {
             "type" : "file",

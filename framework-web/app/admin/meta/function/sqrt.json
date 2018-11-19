@@ -41,8 +41,8 @@
         }
     ],
     "functionInfo" : "sqrt",
-    "funcType" : "hive",
-    "category" : "math",
+
+    "category" : "MATH",
     "functionInfo" : [ 
         {
             "type" : "file",

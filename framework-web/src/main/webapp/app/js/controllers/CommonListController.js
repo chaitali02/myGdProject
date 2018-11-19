@@ -665,6 +665,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.paramtablecol = null
     $scope.paramtable = null;
     $scope.isTabelShow = false;
+    $scope.isPramsetInProgess=true;
     CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
       onSuccessGetExecuteModel(response.data)
     });
@@ -673,15 +674,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         backdrop: 'static',
         keyboard: false
       });
+      $scope.isPramsetInProgess=false;
       $scope.allparamset = response;
     }
   }
   
   $scope.getParamListByTrainORRule=function(){
     $scope.paramlistdata=null;
+    $scope.isPramlistInProgess=true;
     CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
     var onSuccesGetParamListByTrain = function (response) {
       $scope.allParamList=response;
+      $scope.isPramlistInProgess=false;
       if(response.length == 0){
       $scope.isParamListRquired=false;
       }

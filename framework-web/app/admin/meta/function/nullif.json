@@ -52,8 +52,8 @@
             }
         }
 	],
-    "funcType" : "hive",
-    "category" : "simple",
+
+    "category" : "SIMPLE",
     "functionInfo" : [  
         {
             "type" : "file",

@@ -78,7 +78,6 @@
     }
   ],
   "inputReq": "Y",
-  "funcType": "hive",
   "functionInfo": [
     {
       "name": "concat",
@@ -111,5 +110,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "string"
+  "category": "STRING"
 }

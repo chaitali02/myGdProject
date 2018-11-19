@@ -46,7 +46,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	$scope.funcType = ["hive", "impala", "oracle"];
 	$scope.allTypes = ["file", "hive", "impala", "mysql", "oracle"];
 	$scope.allParamTypes = ["string", "function"]
-	$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
+	//$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
+	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE"];
 	$scope.isDependencyShow = false;
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'distinct', 'binary', 'number',
 		'decimal'
@@ -316,7 +317,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
 		functionJson.category = $scope.selectCatogory;
-		functionJson.funcType = $scope.selectFunctionType;
+	// 	functionJson.funcType = $scope.selectFunctionType;
 		functionJson.inputReq = $scope.functiondata.inputReq;
 		var tagArray = [];
 		if ($scope.tags != null) {

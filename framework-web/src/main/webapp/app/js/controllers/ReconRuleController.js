@@ -163,7 +163,69 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		}
 		return rshTypes;
 	}
+  $scope.onAttrSourceFilterRowDown=function(index){	
+		var rowTempIndex=$scope.sourceFilterTable[index];
+    var rowTempIndexPlus=$scope.sourceFilterTable[index+1];
+		$scope.sourceFilterTable[index]=rowTempIndexPlus;
+		$scope.sourceFilterTable[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.sourceFilterTable[index+1].logicalOperator=$scope.sourceFilterTable[index].logicalOperator;
+			$scope.sourceFilterTable[index].logicalOperator=""
+		}
+	}
 
+	$scope.onAttrSourceFilterRowUp=function(index){
+		var rowTempIndex=$scope.sourceFilterTable[index];
+        var rowTempIndexMines=$scope.sourceFilterTable[index-1];
+		$scope.sourceFilterTable[index]=rowTempIndexMines;
+		$scope.sourceFilterTable[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.sourceFilterTable[index].logicalOperator=$scope.sourceFilterTable[index-1].logicalOperator;
+			$scope.sourceFilterTable[index-1].logicalOperator=""
+		}
+  }  
+  
+  $scope.onAttrTargetFilterRowDown=function(index){	
+		var rowTempIndex=$scope.targetFilterTable[index];
+    var rowTempIndexPlus=$scope.targetFilterTable[index+1];
+		$scope.targetFilterTable[index]=rowTempIndexPlus;
+		$scope.targetFilterTable[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.targetFilterTable[index+1].logicalOperator=$scope.targetFilterTable[index].logicalOperator;
+			$scope.targetFilterTable[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrTargetFilterRowUp=function(index){
+		var rowTempIndex=$scope.targetFilterTable[index];
+    var rowTempIndexMines=$scope.targetFilterTable[index-1];
+		$scope.targetFilterTable[index]=rowTempIndexMines;
+		$scope.targetFilterTable[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.targetFilterTable[index].logicalOperator=$scope.targetFilterTable[index-1].logicalOperator;
+			$scope.targetFilterTable[index-1].logicalOperator=""
+		}
+  } 
+  $scope.onSourceFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.sourceFilterTable[index.sourceIndex].logicalOperator=$scope.sourceFilterTable[index.targetIndex].logicalOperator;
+			$scope.sourceFilterTable[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.sourceFilterTable[index.targetIndex].logicalOperator=$scope.sourceFilterTable[index.sourceIndex].logicalOperator;
+			$scope.sourceFilterTable[index.sourceIndex].logicalOperator=""
+		}
+	}
+  $scope.onTargetFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.targetFilterTable[index.sourceIndex].logicalOperator=$scope.targetFilterTable[index.targetIndex].logicalOperator;
+			$scope.targetFilterTable[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.targetFilterTable[index.targetIndex].logicalOperator=$scope.targetFilterTable[index.sourceIndex].logicalOperator;
+			$scope.targetFilterTable[index.sourceIndex].logicalOperator=""
+		}
+	}
   $scope.addSourceFilterRow = function() {
     if($scope.sourceFilterTable == null) {
       $scope.sourceFilterTable = [];
@@ -208,7 +270,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.lhsvalue ;
     $scope.targetFilterTable.splice($scope.targetFilterTable.length, 0, filertable);
   }
-
+   
   $scope.removeSourceFilterRow = function() {
     var newDataList = [];
     $scope.checkAll = false;
@@ -818,6 +880,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
           var lhsref = {}
           var rhsoperand = {}
           var rhsref = {};
+          filterInfo.display_seq=i;
           if(typeof $scope.sourceFilterTable[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
@@ -908,13 +971,13 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     if($scope.targetFilterTable !=null){
       if($scope.targetFilterTable.length>0){
         for(var i=0;i<$scope.targetFilterTable.length;i++) {
-        
           var  filterInfo  = {};
-          var operand = []
-          var lhsoperand = {}
-          var lhsref = {}
-          var rhsoperand = {}
+          var operand = [];
+          var lhsoperand = {};
+          var lhsref = {};
+          var rhsoperand = {};
           var rhsref = {};
+          filterInfo.display_seq=i;
           if(typeof $scope.targetFilterTable[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
