@@ -706,7 +706,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 							formulaJson.formulaType = $scope.formulainfoarray[i].formulatype;
 					}
 					if ($scope.formulainfoarray[i].type == "function") {
-						if ($scope.formulainfoarray[i].category == "aggregate") {
+						if ($scope.formulainfoarray[i].category == "AGGREGATE") {
 							formulaJson.formulaType = "aggr"
 						}
 					}

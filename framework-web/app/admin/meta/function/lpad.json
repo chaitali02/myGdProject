@@ -78,7 +78,7 @@
     }
   ],
   "inputReq": "Y",
-  "funcType": "hive",
+
   "functionInfo": [
     {
       "name": "lpad",
@@ -111,5 +111,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "string"
+  "category": "STRING"
 }

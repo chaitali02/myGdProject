@@ -296,16 +296,17 @@
                                     />
                                   </span>
                                 </th>
-                                <th style="width:15%;text-align:center;">Logical Operator</th>
-                                <th style="width:14%;text-align:center;"> LHS Type</th>
-                                <th style="width:190px;text-align:center;">LHS Attribute</th>
+                                <th style="width:16%;text-align:center;">Logical Operator</th>
+                                <th style="width:13%;text-align:center;"> LHS Type</th>
+                                <th style="width:180px;text-align:center;">LHS Attribute</th>
                                 <th style="width:13%;text-align:center;">Operator</th>
-                                <th style="width:14%;text-align:center;">RHS Type</th>
-                                <th style="width:190px;text-align:center;">RHS Attribute</th>
+                                <th style="width:13%;text-align:center;">RHS Type</th>
+                                <th style="width:180px;text-align:center;">RHS Attribute</th>
+                                <th style="width:8%;text-align:center;">Move</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr ng-repeat="tabledata in filterTableArray">
+                              <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
                                 <td style="text-align:center;Vertical-align:middle;">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
@@ -473,6 +474,18 @@
                                          required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <div style="text-align: center;">
+                                      <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
+                                        <i class="glyphicon glyphicon-arrow-up"></i>
+                                      </a>
+                                      <a ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
+                                        <i class="glyphicon glyphicon-arrow-down"></i>
+                                      </a>
+                                    </div>
+                                  </span>
                                 </td>
                               </tr>
                             </tbody>

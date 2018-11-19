@@ -65,7 +65,6 @@
             "paramInfoHolder" : []
         }
     ],
-    "funcType" : "hive",
-    "category" : "date"
+    "category" : "DATE"
 }
 

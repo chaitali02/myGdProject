@@ -60,7 +60,7 @@
     }
   ],
   "inputReq": "N",
-  "funcType": "hive",
+
   "functionInfo": [
     {
       "name": "rank()",
@@ -93,5 +93,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "string"
+  "category": "STRING"
 }

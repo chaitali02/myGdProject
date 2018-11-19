@@ -78,7 +78,7 @@
     }
   ],
   "inputReq": "Y",
-  "funcType": "hive",
+
   "functionInfo": [
     {
       "name": "year",
@@ -111,5 +111,5 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "date"
+  "category": "DATE"
 }

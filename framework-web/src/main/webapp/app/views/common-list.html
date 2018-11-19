@@ -251,46 +251,69 @@
                           <div class="col-md-12">
                             <br>
                             <div class="form-group">
+                              <div class="row"> 
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
-                              </label>
-                              <div class="col-md-6">
-                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r.text  as r.caption disable when ['dag'].indexOf(select) !=-1  && r.text =='paramset' ?true:false for r in paramTypes">
-                                    <option value="">-Select-</option>
-                                </select>
-                                <input type="hidden" name="ParamType" ng-model="selectParamType" required>
+                                </label>
+                                <div class="col-md-6">
+                                  <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r.text  as r.caption disable when ['dag'].indexOf(select) !=-1  && r.text =='paramset' ?true:false for r in paramTypes">
+                                      <option value="">-Select-</option>
+                                  </select>
+                                  <input type="hidden" name="ParamType" ng-model="selectParamType" required>
+                                </div>
                               </div>
                             </div>
                             <div class="form-group" ng-show ="selectParamType =='paramset'">
-                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
-                              </label>
-                              <div class="col-md-6" >
-                                <select class="form-control"  name="paramsetdata" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
-                                  <option value="" style="color:red;">USE DEFAULT VALUE</option>
-                                </select>
-                              
+                              <div class="row"> 
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                </label>
+                                <div class="col-md-6" >
+                                  <select class="form-control"  name="paramsetdata" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
+                                    <option value="" style="color:red;">USE DEFAULT VALUE</option>
+                                  </select>
+                                </div>
+                                <div class="col-md-3" ng-if="isPramsetInProgess">
+                                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;">
+                                      <div class="bounce1"></div>
+                                      <div class="bounce2"></div>
+                                      <div class="bounce3"></div>
+                                    </span>
+                                  </div>
                               </div>
                             </div>
                           
-                            <div class="form-group" ng-if="selectParamType =='paramlist'" > 
-                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
-                              </label>
-                              <div class="col-md-6">
-                                <div>  
-                                  <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()"  data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
-                                      <option value="" >-Select-</option>
-                                  </select>
-                                  <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" ng-required="isParamListRquired">
+                            <div class="form-group" ng-if="selectParamType =='paramlist'" >
+                              <div class="row"> 
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                </label>
+                                <div class="col-md-6">
+                                  <div>  
+                                    <select class="form-control" name="paramlistdata" ng-disabled="allParamList.length >0?false:true" select2 ng-change="onChangeParamList()"  data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
+                                        <option value="" >-Select-</option>
+                                    </select>
+                                  
+                                    <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" ng-required="isParamListRquired">
+                                  </div> 
+                                
+                                </div>
+                                <div class="col-md-3" ng-if="isPramlistInProgess">
+                                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                  </span>
                                 </div>
                               </div>
                             </div>
                             <div class="form-group" ng-if="selectParamType== null">
-                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
-                                </label> 
-                              <div class="col-md-6" >
-                                <select class="form-control" select2  name="paramlistdata1"  data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
-                                    <option value="">-Select-</option>
-                                </select>
-                                <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" required>
+                              <div class="row"> 
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                  </label> 
+                                <div class="col-md-6" >
+                                  <select class="form-control" select2  name="paramlistdata1"  data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
+                                      <option value="">-Select-</option>
+                                  </select>
+                                  <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" required>
+                                </div>
                               </div>
                             </div>
                             <br>

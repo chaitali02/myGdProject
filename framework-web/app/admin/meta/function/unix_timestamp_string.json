@@ -27,8 +27,8 @@
 			}
 		}
 	],
-	"funcType": "hive",
-	"category": "date",
+
+	"category": "DATE",
 	"functionInfo" : [ 
         {
             "type" : "file",

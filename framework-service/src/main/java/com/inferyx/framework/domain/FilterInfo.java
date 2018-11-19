@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterInfo {
-	
+	private String  display_seq;
 	private String logicalOperator;
 	private String operator;
 	private List<SourceAttr> operand = new ArrayList<>(0); 
@@ -38,6 +38,12 @@ public class FilterInfo {
 	}
 	public void setOperand(List<SourceAttr> operand) {
 		this.operand = operand;
+	}
+	public String getDisplay_seq() {
+		return display_seq;
+	}
+	public void setDisplay_seq(String display_seq) {
+		this.display_seq = display_seq;
 	}
 	
 	/*public String sql(MetaIdentifierUtil commonActivity) {

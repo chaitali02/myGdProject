@@ -43,8 +43,8 @@
 			}
 		}
 	],
-	"funcType": "hive",
-	"category": "conditional",
+
+	"category": "CONDITIONAL",
 	"functionInfo" : [ 		
         {
             "type" : "file",
