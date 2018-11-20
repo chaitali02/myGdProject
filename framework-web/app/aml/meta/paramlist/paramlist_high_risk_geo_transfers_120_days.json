@@ -1,71 +1,71 @@
 {
-    "params" : [ 
-        {
-            "paramId" : "0",
-            "paramName" : "trans_count",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "1"
-            }
-        }, 
-        {
-            "paramId" : "1",
-            "paramName" : "trans_amount_usd",
-            "paramType" : "double",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "1"
-            }
-        }, 
-        {
-            "paramId" : "2",
-            "paramName" : "lookback_days",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "120"
-            }
-        }
-    ],
-    "paramListType" : "rule",
-    "templateFlg" : "N",
-    "templateInfo" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "ce0492ec-6240-4b5c-87cf-139a58c111b2"
-        }
-    },
-    "uuid" : "1e78665b-912d-4ab7-a4c6-ead80c55b810",
-    "version" : "1540367596",
-    "name" : "paramlist_high_risk_geo_transfers_120_days",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-24T07:53:16.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822",
-                "name" : "Anti Money Laundering"
-            }
-        }
-    ]
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "trans_count",
+			"paramType" : "integer",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "trans_amount_usd",
+			"paramType" : "double",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1"
+			}
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "lookback_days",
+			"paramType" : "integer",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "120"
+			}
+		}
+	],
+	"paramListType" : "rule",
+	"templateFlg" : "N",
+	"templateInfo" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "ce0492ec-6240-4b5c-87cf-139a58c111b2"
+		}
+	},
+	"uuid" : "1e78665b-912d-4ab7-a4c6-ead80c55b810",
+	"version" : "1540367596",
+	"name" : "paramlist_high_risk_geo_transfers_120_days",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
 }

@@ -1,0 +1,1432 @@
+{
+  "id": "5bf340a9132c86aaec16d1c9",
+  "uuid": "6516ac65-3698-4a01-8f6e-7cad45675888",
+  "version": "1542656285",
+  "name": "AML - Suspicious Transaction Activity - LR",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Nov 19 14:38:05 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+      "version": null,
+      "name": "AML - Suspicious Transaction Activity - LR"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+      "version": null,
+      "name": "ds_customer_summary_3years"
+    },
+    "value": null
+  },
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "b54ff86b-c58e-460e-bb2f-e67bd94f5999",
+      "version": null,
+      "name": "predict_suspicious_activity_lr"
+    },
+    "value": null
+  },
+  "featureAttrMap": [
+    {
+      "featureMapId": "0",
+      "featureDisplaySeq": "0",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": "in_wire_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "in_wire_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "1",
+      "featureDisplaySeq": "1",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": "in_wire_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "in_wire_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "2",
+      "featureDisplaySeq": "2",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "2",
+        "featureName": "out_wire_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "out_wire_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "3",
+      "featureDisplaySeq": "3",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "3",
+        "featureName": "out_wire_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "out_wire_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "4",
+      "featureDisplaySeq": "4",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "4",
+        "featureName": "net_wire_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "net_wire_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "5",
+      "featureDisplaySeq": "5",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "5",
+        "featureName": "net_wire_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "net_wire_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "6",
+      "featureDisplaySeq": "6",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "6",
+        "featureName": "in_cash_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "in_cash_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "7",
+      "featureDisplaySeq": "7",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "7",
+        "featureName": "in_cash_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "in_cash_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "8",
+      "featureDisplaySeq": "8",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "8",
+        "featureName": "out_cash_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "out_cash_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "9",
+      "featureDisplaySeq": "9",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "9",
+        "featureName": "out_cash_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "out_cash_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "10",
+      "featureDisplaySeq": "10",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "10",
+        "featureName": "net_cash_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "net_cash_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "11",
+      "featureDisplaySeq": "11",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "11",
+        "featureName": "net_cash_transfers_trans_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "net_cash_transfers_trans_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "12",
+      "featureDisplaySeq": "12",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "12",
+        "featureName": "all_wire_transfers_round_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "13",
+        "attrName": "all_wire_transfers_round_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "13",
+      "featureDisplaySeq": "13",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "13",
+        "featureName": "all_cash_transfers_round_amount_usd"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "14",
+        "attrName": "all_cash_transfers_round_amount_usd",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "14",
+      "featureDisplaySeq": "14",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "14",
+        "featureName": "all_cash_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "15",
+        "attrName": "all_cash_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "15",
+      "featureDisplaySeq": "15",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "15",
+        "featureName": "all_wire_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "16",
+        "attrName": "all_wire_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "16",
+      "featureDisplaySeq": "16",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "16",
+        "featureName": "all_cash_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "17",
+        "attrName": "all_cash_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "17",
+      "featureDisplaySeq": "17",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "17",
+        "featureName": "all_wire_transfers_trans_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "18",
+        "attrName": "all_wire_transfers_trans_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "18",
+      "featureDisplaySeq": "18",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "18",
+        "featureName": "in_cash_transfers_trans_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "20",
+        "attrName": "out_wire_transfers_trans_amount_min",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "19",
+      "featureDisplaySeq": "19",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "19",
+        "featureName": "out_wire_transfers_trans_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "21",
+        "attrName": "all_wire_transfers_round_amount_min",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "20",
+      "featureDisplaySeq": "20",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "20",
+        "featureName": "all_wire_transfers_round_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "22",
+        "attrName": "all_cash_transfers_round_amount_min",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "21",
+      "featureDisplaySeq": "21",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "21",
+        "featureName": "all_cash_transfers_round_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "23",
+        "attrName": "in_wire_transfers_trans_amount_min",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "22",
+      "featureDisplaySeq": "22",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "22",
+        "featureName": "in_wire_transfers_trans_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "24",
+        "attrName": "out_cash_transfers_trans_amount_min",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "23",
+      "featureDisplaySeq": "23",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "23",
+        "featureName": "out_cash_transfers_trans_amount_min"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "25",
+        "attrName": "all_cash_transfers_round_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "24",
+      "featureDisplaySeq": "24",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "24",
+        "featureName": "all_cash_transfers_round_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "25",
+        "attrName": "all_cash_transfers_round_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "25",
+      "featureDisplaySeq": "25",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "25",
+        "featureName": "all_wire_transfers_round_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "26",
+        "attrName": "all_wire_transfers_round_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "26",
+      "featureDisplaySeq": "26",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "26",
+        "featureName": "in_wire_transfers_trans_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "27",
+        "attrName": "in_wire_transfers_trans_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "27",
+      "featureDisplaySeq": "27",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "27",
+        "featureName": "in_cash_transfers_trans_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "28",
+        "attrName": "in_cash_transfers_trans_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "28",
+      "featureDisplaySeq": "28",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "28",
+        "featureName": "out_wire_transfers_trans_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "29",
+        "attrName": "out_wire_transfers_trans_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "29",
+      "featureDisplaySeq": "29",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "29",
+        "featureName": "out_cash_transfers_trans_amount_max"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "30",
+        "attrName": "out_cash_transfers_trans_amount_max",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "30",
+      "featureDisplaySeq": "30",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "30",
+        "featureName": "all_wire_transfers_round_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "31",
+        "attrName": "all_wire_transfers_round_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "31",
+      "featureDisplaySeq": "31",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "31",
+        "featureName": "all_cash_transfers_round_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "32",
+        "attrName": "all_cash_transfers_round_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "32",
+      "featureDisplaySeq": "32",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "32",
+        "featureName": "in_wire_transfers_trans_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "33",
+        "attrName": "in_wire_transfers_trans_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "33",
+      "featureDisplaySeq": "33",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "33",
+        "featureName": "in_cash_transfers_trans_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "34",
+        "attrName": "in_cash_transfers_trans_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "34",
+      "featureDisplaySeq": "34",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "34",
+        "featureName": "out_wire_transfers_trans_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "35",
+        "attrName": "out_wire_transfers_trans_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "35",
+      "featureDisplaySeq": "35",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "35",
+        "featureName": "out_cash_transfers_trans_amount_avg"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "36",
+        "attrName": "out_cash_transfers_trans_amount_avg",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "36",
+      "featureDisplaySeq": "36",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "36",
+        "featureName": "all_cash_transfers_round_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "37",
+        "attrName": "all_cash_transfers_round_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "37",
+      "featureDisplaySeq": "37",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "37",
+        "featureName": "in_cash_transfers_trans_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "38",
+        "attrName": "in_cash_transfers_trans_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "38",
+      "featureDisplaySeq": "38",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "38",
+        "featureName": "out_cash_transfers_trans_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "39",
+        "attrName": "out_cash_transfers_trans_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "39",
+      "featureDisplaySeq": "39",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "39",
+        "featureName": "all_wire_transfers_round_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "40",
+        "attrName": "all_wire_transfers_round_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "40",
+      "featureDisplaySeq": "40",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "40",
+        "featureName": "in_wire_transfers_trans_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "41",
+        "attrName": "in_wire_transfers_trans_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "41",
+      "featureDisplaySeq": "41",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "41",
+        "featureName": "out_wire_transfers_trans_amount_stddev"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "42",
+        "attrName": "out_wire_transfers_trans_amount_stddev",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "42",
+      "featureDisplaySeq": "42",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "42",
+        "featureName": "in_cash_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "43",
+        "attrName": "in_cash_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "43",
+      "featureDisplaySeq": "43",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "43",
+        "featureName": "in_wire_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "44",
+        "attrName": "in_wire_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "44",
+      "featureDisplaySeq": "44",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "44",
+        "featureName": "out_wire_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "45",
+        "attrName": "out_wire_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "45",
+      "featureDisplaySeq": "45",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "45",
+        "featureName": "out_cash_transfers_round_amount_count"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "46",
+        "attrName": "out_cash_transfers_round_amount_count",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "46",
+      "featureDisplaySeq": "46",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "46",
+        "featureName": "out_cash_transfers_round_amount_sum"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "47",
+        "attrName": "out_cash_transfers_round_amount_sum",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "47",
+      "featureDisplaySeq": "47",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "47",
+        "featureName": "out_wire_transfers_round_amount_sum"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "48",
+        "attrName": "out_wire_transfers_round_amount_sum",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "48",
+      "featureDisplaySeq": "48",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "48",
+        "featureName": "in_wire_transfers_round_amount_sum"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "49",
+        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrType": null
+      }
+    },
+    {
+      "featureMapId": "49",
+      "featureDisplaySeq": "49",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80",
+          "version": null,
+          "name": "AML - Suspicious Transaction Activity - LR"
+        },
+        "value": null,
+        "featureId": "49",
+        "featureName": "in_cash_transfers_round_amount_sum"
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+          "version": null,
+          "name": "ds_customer_summary_3years"
+        },
+        "value": null,
+        "attrId": "50",
+        "attrName": "in_cash_transfers_round_amount_sum",
+        "attrType": null
+      }
+    }
+  ],
+  "labelInfo": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6",
+      "version": null,
+      "name": "ds_customer_summary_3years"
+    },
+    "value": null,
+    "attrId": "51",
+    "attrName": "suspicious_ind",
+    "attrType": null
+  },
+  "trainInfo": {
+    "ref": {
+      "type": "train",
+      "uuid": "83ecfcc0-19f6-4a6d-a352-c2d61e3b0690",
+      "version": null,
+      "name": "AML - Suspicious Transaction Activity - LR"
+    },
+    "value": null
+  }
+}
