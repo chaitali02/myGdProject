@@ -3249,7 +3249,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
+	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext) throws IOException{
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
