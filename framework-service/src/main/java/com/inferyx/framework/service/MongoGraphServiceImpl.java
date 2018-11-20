@@ -281,11 +281,13 @@ public class MongoGraphServiceImpl {
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		Map<String, Edge> edgeMap = new HashMap<>();
 		Map<String, Vertex> vertexMap = new HashMap<>();
-		Map<String, Vertex> uniqueVertexList = new HashMap<>();
+		Map<String, Vertex> uniqueVertexMap = new HashMap<>();
+		Map<String, Edge> uniqueEdgeList = new HashMap<>();
 
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
-		List<Vertex> vertexList1 =new ArrayList<Vertex>();
+		List<Vertex> uniqueVertexList =new ArrayList<Vertex>();
+		List<Edge> edgeList1 =new ArrayList<Edge>();
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
 		List<String> nodetype = null;
@@ -312,14 +314,20 @@ public class MongoGraphServiceImpl {
 
 			if (!version.equalsIgnoreCase("0")) {
 				edgeList = iEdgeDao.findAllByDst(uuid + "_" + version);
+
+				for (Edge edge : edgeList) {
+					uniqueEdgeList.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
+				}
+				edgeList1.addAll(uniqueEdgeList.values());
+
 			} else {
-				edgeList = iEdgeDao.findAllByDst(uuid);
+				edgeList1 = iEdgeDao.findAllByDst(uuid);
 			}
 			// Get all srcs from edgeList
-			if (edgeList != null) {
+			if (edgeList1 != null) {
 				uuidList = new ArrayList<>();
 				nodetype = new ArrayList<>();
-				for (Edge edge : edgeList) {
+				for (Edge edge : edgeList1) {
 					edgeMap.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
@@ -347,14 +355,19 @@ public class MongoGraphServiceImpl {
 
 		// vertexList = iVertexDao.findAllByUuidContaining(uuidList);
 		if (degree.equalsIgnoreCase("1")) {
-			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining( uuidList, nodetype);
+			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
 			for (Vertex vertex : vertexList) {
-				uniqueVertexList.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+				uniqueVertexMap.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
 			}
-			vertexList1.addAll(uniqueVertexList.values());
+			uniqueVertexList.addAll(uniqueVertexMap.values());
 			
 		} else {
-			vertexList1 =  iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
+			vertexList =  iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
+			for (Vertex vertex : vertexList) {
+				uniqueVertexMap.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+			}
+			uniqueVertexList.addAll(uniqueVertexMap.values());
+			
 		}
 		
 	/*for (String uuid_nodetype : uniqVertexList.keySet()) {
@@ -364,8 +377,8 @@ public class MongoGraphServiceImpl {
 		}
 		//List<Vertex> vertexList1 = vertexList.stream().distinct().collect(Collectors.toList());
 */
-		if (vertexList1 != null) {
-			for (Vertex vertex : vertexList1) {
+		if (uniqueVertexList != null) {
+			for (Vertex vertex : uniqueVertexList) {
 				String relationName = null;
 				// if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
 				// System.out.println("********"+relationName);

@@ -1249,7 +1249,7 @@ public class GraphRegister<T> {
 		this.vertexRowMap = verticesRowMap;
 		this.edgeRowMap = edgeRowMap;
 		
-	    graphServiceImpl.deleteAllVertices();
+	   graphServiceImpl.deleteAllVertices();
 		
 		logger.info(" Total vertex size current appInfo: " + verticesRowMap.size());
 		totalVertexList = createTotVertexList(verticesRowMap);
