@@ -1909,7 +1909,7 @@ public class CommonServiceImpl <T> {
 		}*/
 
 	public String resolveName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		if(type == MetaType.simple || type == MetaType.attribute)
+		if(type == MetaType.simple || type == MetaType.attribute || type == null)
 			return null;
 		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
 		BaseEntity baseEntity = null;
