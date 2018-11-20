@@ -15,9 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -269,7 +273,7 @@ public class MongoGraphServiceImpl {
 //		return result;
 //	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null", "unused" })
 	public String getTreeGraphJson(String uuid, String version, String degree) {
 		NodeDetail nodeDetail = new NodeDetail();
 		String result = null;
@@ -277,9 +281,11 @@ public class MongoGraphServiceImpl {
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		Map<String, Edge> edgeMap = new HashMap<>();
 		Map<String, Vertex> vertexMap = new HashMap<>();
+		Map<String, Vertex> uniqVertexList = new HashMap<>();
+
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
-
+		List<Vertex> vertexList1 =new ArrayList<Vertex>();
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
 		List<String> nodetype = null;
@@ -321,18 +327,11 @@ public class MongoGraphServiceImpl {
 					String srcUuid = edge.getSrc();
 					GraphMetaIdentifierHolder srcMetaRef = edge.getSrcMetaRef();
 					uuidList.add(edge.getSrc());
-					if (degree == "1") {
-						nodetype.add(edge.getRelationType());
-
-					} else {
-						nodetype.add(edge.getSrcMetaRef().getRef().getType());
-
-					}
+					nodetype.add(edge.getSrcMetaRef().getRef().getType());
 					edge.setSrc(edge.getDst());
 					edge.setDst(srcUuid);
 					edge.setSrcMetaRef(edge.getDstMetaRef());
 					edge.setDstMetaRef(srcMetaRef);
-
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
@@ -347,14 +346,26 @@ public class MongoGraphServiceImpl {
 		}
 
 		// vertexList = iVertexDao.findAllByUuidContaining(uuidList);
-		if (degree == "1") {
-			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
+		if (degree.equalsIgnoreCase("1")) {
+			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining( uuidList, nodetype);
+			for (Vertex vertex : vertexList) {
+				uniqVertexList.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+			}
+			vertexList1.addAll(uniqVertexList.values());
+			
 		} else {
-			vertexList = (List<Vertex>) iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
+			vertexList1 =  iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
 		}
 		
-		if (vertexList != null) {
-			for (Vertex vertex : vertexList) {
+	/*for (String uuid_nodetype : uniqVertexList.keySet()) {
+			Vertex vertex = uniqVertexList.get(uuid_nodetype);
+			if (vertex != null)
+				vertexList1.add(vertex);
+		}
+		//List<Vertex> vertexList1 = vertexList.stream().distinct().collect(Collectors.toList());
+*/
+		if (vertexList1 != null) {
+			for (Vertex vertex : vertexList1) {
 				String relationName = null;
 				// if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
 				// System.out.println("********"+relationName);
