@@ -582,7 +582,7 @@ InferyxApp.filter('capitalize', function () {
 
 InferyxApp.directive('modal', function () {
   return {
-    template: '<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-sm"><div class="modal-content" ng-transclude><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">Modal title</h4></div></div></div></div>',
+    template: '<div class="modal fade bs-example-modal-lg"  role="dialog" ><div class="modal-dialog modal-lg" style="width:30%;"><div class="modal-content" ng-transclude><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">Modal title</h4></div></div></div></div>',
     restrict: 'E',
     transclude: true,
     replace: true,
@@ -596,7 +596,7 @@ InferyxApp.directive('modal', function () {
       $(element).modal({
         show: false,
         keyboard: attrs.keyboard,
-        backdrop: attrs.backdrop
+        backdrop: 'static'//attrs.backdrop
       });
 
       scope.$watch(function () {
@@ -623,12 +623,14 @@ InferyxApp.directive('modal', function () {
       });
 
       $(element).on('hidden.bs.modal', function () {
+        
         scope.$apply(function () {
           scope.$parent[attrs.visible] = false;
         });
       });
 
       $(element).on('hidden.bs.modal', function () {
+        
         scope.$apply(function () {
           scope.onHide({});
         });
