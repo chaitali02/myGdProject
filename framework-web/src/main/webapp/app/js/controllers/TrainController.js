@@ -66,6 +66,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.continueCount = 1;
   $scope.backCount;
   $scope.isDependencyShow = false;
+  $scope.allAutoMap=["By Name","By Order"];
   var notify = {
     type: 'success',
     title: 'Success',
@@ -102,16 +103,27 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.autoMapFeature=function(){
-    var allTargetAttribute={};
-    angular.forEach($scope.allTargetAttribute, function (val, key) {
-      allTargetAttribute[val.name] = val;
-    });
+    if($scope.selectedAutoMode =="By Name"){
+      var allTargetAttribute={};
+      angular.forEach($scope.allTargetAttribute, function (val, key) {
+        allTargetAttribute[val.name] = val;
+      });
 
-    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
-      for(var i=0;i<$scope.featureMapTableArray.length;i++){
-        $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
+      if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+        for(var i=0;i<$scope.featureMapTableArray.length;i++){
+          $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
+        }
       }
     }
+    if($scope.selectedAutoMode =="By Order"){
+      if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
+    }
+
+    }
+
   }
 
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {

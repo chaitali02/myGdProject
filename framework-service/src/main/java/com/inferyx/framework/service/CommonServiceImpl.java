@@ -3175,10 +3175,7 @@ public class CommonServiceImpl <T> {
 		else
 			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) obj.getClass().getMethod("getCreatedBy").invoke(obj);
-		if(isCurrentUser(createdBy))
 			Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "N");
-		else
-			return null;
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
 	public boolean isCurrentUser(MetaIdentifierHolder createdBy) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {

@@ -582,7 +582,7 @@ InferyxApp.filter('capitalize', function () {
 
 InferyxApp.directive('modal', function () {
   return {
-    template: '<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-sm"><div class="modal-content" ng-transclude><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">Modal title</h4></div></div></div></div>',
+    template: '<div class="modal fade bs-example-modal-lg"  role="dialog" ><div class="modal-dialog modal-lg" style="width:30%;"><div class="modal-content" ng-transclude><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">Modal title</h4></div></div></div></div>',
     restrict: 'E',
     transclude: true,
     replace: true,
@@ -596,7 +596,7 @@ InferyxApp.directive('modal', function () {
       $(element).modal({
         show: false,
         keyboard: attrs.keyboard,
-        backdrop: attrs.backdrop
+        backdrop: 'static'//attrs.backdrop
       });
 
       scope.$watch(function () {
@@ -623,12 +623,14 @@ InferyxApp.directive('modal', function () {
       });
 
       $(element).on('hidden.bs.modal', function () {
+        
         scope.$apply(function () {
           scope.$parent[attrs.visible] = false;
         });
       });
 
       $(element).on('hidden.bs.modal', function () {
+        
         scope.$apply(function () {
           scope.onHide({});
         });
@@ -1650,3 +1652,93 @@ return {
 }
 }
 ]);
+
+
+InferyxApp.directive('loadingPane', function ($timeout, $window) {
+  return {
+      restrict: 'A',
+      link: function (scope, element, attr) {
+          var directiveId = 'loadingPane';
+
+          var targetElement;
+          var paneElement;
+          var throttledPosition;
+
+          function init(element) {
+              targetElement = element;
+
+              paneElement = angular.element('<div>');
+              paneElement.addClass('loading-pane modal');
+
+              if (attr['id']) {
+                  paneElement.attr('data-target-id', attr['id']);
+              }
+
+              var spinnerImage = angular.element('<div>');
+              spinnerImage.addClass('spinner-image');
+              spinnerImage.appendTo(paneElement);
+
+              angular.element('body').append(paneElement);
+
+              setZIndex();
+
+              //reposition window after a while, just in case if:
+              // - watched scope property will be set to true from the beginning
+              // - and initial position of the target element will be shifted during page rendering
+              $timeout(position, 100);
+              $timeout(position, 200);
+              $timeout(position, 300);
+
+              throttledPosition = _.throttle(position, 50);
+              angular.element($window).scroll(throttledPosition);
+              angular.element($window).resize(throttledPosition);
+          }
+
+          function updateVisibility(isVisible) {
+              if (isVisible) {
+                  show();
+              } else {
+                  hide();
+              }
+          }
+
+          function setZIndex() {                
+              var paneZIndex = 500;
+
+              paneElement.css('zIndex', paneZIndex).find('.spinner-image').css('zIndex', paneZIndex + 1);
+          }
+
+          function position() {
+            
+              paneElement.css({
+                  'left': targetElement.offset().left,
+                  'top': targetElement.offset().top - $(window).scrollTop(),
+                  'width': targetElement.outerWidth(),
+                 // 'bottom':"35px"
+                 // 'height': window.outerHeight//targetElement.outerHeight()
+              });
+          }
+
+          function show() {
+              paneElement.show();
+              position();
+          }
+
+          function hide() {
+              paneElement.hide();
+          }
+
+          init(element);
+
+          scope.$watch(attr[directiveId], function (newVal) {
+              updateVisibility(newVal);
+          });
+
+          scope.$on('$destroy', function cleanup() {
+              paneElement.remove();
+              $(window).off('scroll', throttledPosition);
+              $(window).off('resize', throttledPosition);
+          });
+      }
+  };
+});

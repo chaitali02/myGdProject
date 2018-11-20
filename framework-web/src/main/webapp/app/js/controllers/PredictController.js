@@ -62,6 +62,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.continueCount = 1;
   $scope.backCount;
   $scope.isDependencyShow = false;    
+  $scope.allAutoMap=["By Name","By Order"];
+
   var notify = {
     type: 'success',
     title: 'Success',
@@ -164,21 +166,26 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }     
   }
   $scope.autoMapFeature=function(){
-    var allTargetAttribute={};
-    angular.forEach($scope.allTargetAttribute, function (val, key) {
-      allTargetAttribute[val.name] = val;
-    });
+    if($scope.selectedAutoMode =="By Name"){
+      var allTargetAttribute={};
+      angular.forEach($scope.allTargetAttribute, function (val, key) {
+        allTargetAttribute[val.name] = val;
+      });
 
-    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
-      for(var i=0;i<$scope.featureMapTableArray.length;i++){
-        $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
+      if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+        for(var i=0;i<$scope.featureMapTableArray.length;i++){
+          $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
+        }
       }
     }
-    // if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
-    //   for(var i=0;i<$scope.featureMapTableArray.length;i++){
-    //     $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
-    //   }
-    // }
+    if($scope.selectedAutoMode =="By Order"){
+      if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
+    }
+
+    }
   }
   $scope.getAllLetestModel=function(defaultValue){
     PredictService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
@@ -193,8 +200,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     var onGetAllLatest = function(response) {
       $scope.allSource = response;
       if(typeof $stateParams.id == "undefined") {
-        $scope.selectSource=response[0];
-        $scope.getAllAttribute();
+       // $scope.selectSource=response[0];
+       // $scope.getAllAttribute();
       }
     }
   }

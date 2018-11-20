@@ -210,6 +210,15 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		// $scope is required here, hence the injection above, even though we're using "controller as" syntax
 		$scope.$broadcast('onExpandAll', { expanded: expanded });
 	};
+
+	$scope.onChangeInputReq=function(){
+		if($scope.functiondata.inputReq =="Y"){
+			$scope.addrow();
+		}else{
+			$scope.functionTableArray=[];
+		}
+		
+	}
 	
 
 	$scope.convertUppdercase = function (value) {
@@ -259,7 +268,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	}//End If
 	else{
 		$scope.functiondata={};
-		$scope.functiondata.locked="N"
+		$scope.functiondata.locked="N";
+		$scope.functiondata.inputReq="N";
+		
+
 	}
 
 	$scope.selectVersion = function () {

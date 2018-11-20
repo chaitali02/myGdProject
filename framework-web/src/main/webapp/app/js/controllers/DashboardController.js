@@ -54,6 +54,12 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.getLovByType();
 	
 	$scope.onChangeVizpod=function(vizpodInfo,parentIndex,index){
+		if(parentIndex ==-1){
+			parentIndex=0;
+		}
+		if(index == -1){
+			index =0;
+		}
 		$scope.sectionRows[parentIndex].columns[index].name=vizpodInfo.name;
 	}
 	

@@ -392,22 +392,58 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
-                      <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/></td>
-                      <td ><input type="text" ng-value="$index+1" ng-disabled="true"class="form-control"></td>
-                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.key"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
-                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.partition"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
-                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.active"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
-                      <td><input type="text"  ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"class="form-control">
-                        <td><input type="text"ng-model="tabledata.name"  title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"class="form-control">
-                        </td>
-                        <td><select ng-model="tabledata.type" ng-options="x for x in type"  ng-disabled="{{mode}}" class="form-control"></select>
-                        </td>
-                        <td>
-                          <input type="text"  ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}" class="form-control">
-                        </td>
-                        <td><input type="text"  ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
-                        </td>
-                        <td>
+                      <td style="text-align: center; Vertical-align: middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-value="$index+1" ng-disabled="true"class="form-control">
+                        </span>
+                      </td>
+                      <td style="text-align: center; Vertical-align: middle;"> 
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.key" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                        </span>  
+                      </td>
+                      <td style="text-align:center;Vertical-align:middle;">
+                        <span class="form-group" style="margin-left:0px;margin-right:0px;"> 
+                          <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                        </span>
+                      </td>
+                      <td style="text-align: center; Vertical-align: middle;"> 
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="checkbox"  style="width: 16px;height:16px;" ng-model="tabledata.active" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text"  ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text"ng-model="tabledata.name"  title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <select ng-model="tabledata.type" ng-options="x for x in type"  ng-disabled="{{mode}}" class="form-control" required disable-validation-message="" ></select>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}" class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <div style="text-align: center;">
                             <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
                               <i class="glyphicon glyphicon-arrow-up"></i>
@@ -416,9 +452,10 @@
                               <i class="glyphicon glyphicon-arrow-down"></i>
                             </a>
                           </div>
-                        </td>
-                      </tr>
-                    </tbody>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
               </table>
               </div>
             </form>
