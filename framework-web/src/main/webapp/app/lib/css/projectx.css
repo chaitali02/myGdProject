@@ -1187,7 +1187,7 @@ transition: right 1m
   margin: 2px 0px 0px 0px !important;
 }
 
-.loading-pane {
+/* .loading-pane {
   position: fixed;
   background: url("http://oi62.tinypic.com/2pqsuc0.jpg");
 }
@@ -1251,4 +1251,4 @@ transition: right 1m
 @-webkit-keyframes rotate {
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
-}
+} */

@@ -193,8 +193,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     var onGetAllLatest = function(response) {
       $scope.allSource = response;
       if(typeof $stateParams.id == "undefined") {
-        $scope.selectSource=response[0];
-        $scope.getAllAttribute();
+       // $scope.selectSource=response[0];
+       // $scope.getAllAttribute();
       }
     }
   }

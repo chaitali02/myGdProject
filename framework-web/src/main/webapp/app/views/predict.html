@@ -218,15 +218,16 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                            <select name="modelName" select2 class="form-control" ng-disabled="{{mode}}" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid" ng-change="onChangeModel()">
+                                            <select name="modelName" select2 class="form-control" ng-disabled="false" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid" ng-change="onChangeModel()">
+                                                <option value="">-Select-</option> 
                                             </select>
                                             <input name="modelName" type="hidden"  ng-model="selectModel.uuid" required />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Train Info</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Train Version</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                            <select name="trainName" select2 class="form-control"  ng-disabled="{{mode}}"  data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
+                                            <select name="trainName" select2 class="form-control" ng-disabled="{{mode}}"  data-ng-model="selectTrain" ng-options="r as  (r.name + ' (' + r.createdOn +') ') for r in allTrain | orderBy:'name':true track by r.uuid" ng-change="onChangeTrain()">
                                                 <option value="">-Select-</option>    
                                             </select>
                                             <!-- <input name="trainNameNull" type="hidden"   ng-model="selectTrain.uuid" required />    -->
@@ -243,8 +244,11 @@
                                         </label>
                                         <div class="col-md-3 col-sm-3 col-xs-12">
                                             <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
+                                                <option value="">-Select-</option> 
                                             </select>
+                                            <input name="sourceName" type="hidden"  ng-model="selectSource.uuid" required />
                                         </div>
+
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Label
@@ -253,7 +257,9 @@
                                         
                                             <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable" data-ng-model="selectLabel"
                                                 ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                                <option value="">-Select-</option> 
                                             </select>
+                                            <input name="sourceLable" type="hidden"  ng-model="selectLabel.uuid" required />
                                         </div>
                                     </div>
                                     <div class="row">

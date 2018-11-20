@@ -13,7 +13,7 @@ package com.inferyx.framework.domain;
 public class Attribute {
 	
 	private Integer attributeId;
-	private String displaySeq;
+	private Integer displaySeq;
     private String name;
     private String type;
     private String desc;
@@ -166,11 +166,11 @@ public class Attribute {
         this.expression = expression;
     }
 
-	public String getDisplaySeq() {
+	public Integer getDisplaySeq() {
 		return displaySeq;
 	}
 
-	public void setDisplaySeq(String displaySeq) {
+	public void setDisplaySeq(Integer displaySeq) {
 		this.displaySeq = displaySeq;
 	}
     
