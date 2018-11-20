@@ -265,7 +265,7 @@ public class CommonController<T> {
 		if(baseEntity != null)
 			return objectWriter.writeValueAsString(baseEntity);
 		else {
-			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unpublish."));
+			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unlockdd."));
 			response.setStatus(401);
 			return objectWriter.writeValueAsString(unAuthorised);
 		}			
