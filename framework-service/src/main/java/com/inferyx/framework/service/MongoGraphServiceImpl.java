@@ -281,7 +281,7 @@ public class MongoGraphServiceImpl {
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		Map<String, Edge> edgeMap = new HashMap<>();
 		Map<String, Vertex> vertexMap = new HashMap<>();
-		Map<String, Vertex> uniqVertexList = new HashMap<>();
+		Map<String, Vertex> uniqueVertexList = new HashMap<>();
 
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
@@ -349,9 +349,9 @@ public class MongoGraphServiceImpl {
 		if (degree.equalsIgnoreCase("1")) {
 			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining( uuidList, nodetype);
 			for (Vertex vertex : vertexList) {
-				uniqVertexList.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+				uniqueVertexList.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
 			}
-			vertexList1.addAll(uniqVertexList.values());
+			vertexList1.addAll(uniqueVertexList.values());
 			
 		} else {
 			vertexList1 =  iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
@@ -407,7 +407,7 @@ public class MongoGraphServiceImpl {
 				Vertex vertex = vertexMap.get(vertexKey);
 				if (!vertex.getUuid().equals(uuid)) {
 					// vertex.setParent(parentvertex.getName());
-					Map<String, Object> mapresult = getVertexMap(vertex,degree);
+					Map<String, Object> mapresult = getVertexMap(vertex, degree);
 					// mapresult.put("id",mapresult.get("id")+parentvertex.getUuid());
 					graphVertex.add(mapresult);
 				}
