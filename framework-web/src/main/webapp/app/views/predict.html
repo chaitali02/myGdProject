@@ -296,6 +296,20 @@
                                                         </div>
                                                     </div> -->
                                                 <!-- </div> -->
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div  style="float:right;">
+                                                        <label>Auto Map</label>
+                                                        <select class="form-control input-inline" data-ng-model="selectedAutoMode" ng-options="r  for r in allAutoMap"
+                                                            ng-disabled="{{mode}}" ng-change="autoMapFeature()">
+                                                            <option value="">-select-</option>
+                                                        </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
                                                 <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                     <div class="col-md-12">
                                                         <div class="">

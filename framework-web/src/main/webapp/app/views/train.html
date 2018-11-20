@@ -279,9 +279,9 @@
                                                         <span class="caption-subject  sbold ">Features</span>
                                                     </div>
                                                     <div class="actions">
-                                                        <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map">
+                                                        <!-- <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map">
                                                             <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
-                                                        </a>
+                                                        </a> -->
                                                         <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                             <!-- <div class="x_title" style="padding:10px;">
                                                                 <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true"></button>
@@ -305,7 +305,20 @@
                                                             <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
                                                             </div>
                                                         </div> -->
+                                                       
+                                                        <div class="col-md-6 col-sm-6">
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <div  style="float:right;">
+                                                            <label>Auto Map</label>
+                                                            <select class="form-control input-inline" data-ng-model="selectedAutoMode" ng-options="r  for r in allAutoMap"
+                                                                ng-disabled="{{mode}}" ng-change="autoMapFeature()">
+                                                                <option value="">-select-</option>
+                                                            </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <br>
                                                     <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                         <div class="col-md-12">
                                                             <div class="">
