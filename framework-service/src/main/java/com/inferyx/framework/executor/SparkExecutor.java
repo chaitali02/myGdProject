@@ -1311,7 +1311,13 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new Exception();
 		}
 //		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
-		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+		Datasource datasource = null;
+		if(datapod != null) {
+			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+		} else {
+			datasource = commonServiceImpl.getDatasourceByApp();
+		}
+		
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
 
@@ -3003,18 +3009,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException {
-
 		logger.info("inside method registerAndPersistDataframe");
-//		IWriter datapodWriter = null;
-//		try {
-//			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-//		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-//				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			throw new IOException("Can not write data.");
-//		}		
-//		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);

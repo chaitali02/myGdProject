@@ -1926,7 +1926,9 @@ public class ModelServiceImpl {
 								predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 					} else {
-						ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
+//						ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePathUrl, null, SaveMode.Append.toString(), false, appUuid);
+						ResultSetHolder rsHolder2 = exec.executeSql(query, appUuid);
+						rsHolder2 = sparkExecutor.registerAndPersistDataframe(rsHolder2, target, SaveMode.Append.toString(), filePathUrl, (tableName+"_pred_data"), "true", true);
 						result = rsHolder2;					
 						count = rsHolder2.getCountRows();
 					}
