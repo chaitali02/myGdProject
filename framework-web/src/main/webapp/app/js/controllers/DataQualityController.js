@@ -833,8 +833,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     dataqualityjosn.rangeCheck = rengeCheck;
     dataqualityjosn.dataTypeCheck = $scope.selectDataType
     dataqualityjosn.dateFormatCheck = $scope.selectdatefromate
-    if (typeof $scope.dataqualitydata.CustomFormatCheck != "undefined") {
-      dataqualityjosn.customFormatCheck = $scope.dataqualitydata.CustomFormatCheck
+    debugger
+    if (typeof $scope.dataqualitydata.customFormatCheck != "undefined") {
+      dataqualityjosn.customFormatCheck = $scope.dataqualitydata.customFormatCheck
     }
 
     var lengthCheck = {}
