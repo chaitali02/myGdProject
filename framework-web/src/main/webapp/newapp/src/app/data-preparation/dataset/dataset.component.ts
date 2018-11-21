@@ -77,7 +77,7 @@ export class DatasetComponent implements OnInit {
   //version: Version
   isSubmitEnable1: any;
   baseUrl: any;
- 
+
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
     this.showdatapod = true;
@@ -248,8 +248,9 @@ export class DatasetComponent implements OnInit {
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
-    let filterInfoArray = [];
-    if (response.filterInfo.length > 0) {
+
+    if (response.filterInfo != null) {
+      let filterInfoArray = [];
       for (let k = 0; k < response.filterInfo.length; k++) {
         let filterInfo = {};
         let lhsFilter = {};
@@ -338,100 +339,105 @@ export class DatasetComponent implements OnInit {
           }
         }
         filterInfoArray.push(filterInfo);
+        filterjson["filterInfo"] = filterInfoArray
+        this.dataset.filterTableArray = filterInfoArray
       }
     }
-    filterjson["filterInfo"] = filterInfoArray
-    this.dataset.filterTableArray = filterInfoArray
+
 
 
     let attributeJson = {};
     attributeJson["attributeData"] = response;
-    let attributearray = [];
-    for (let i = 0; i < response.attributeInfo.length; i++) {
-      let attributeinfojson = {};
-      attributeinfojson["name"] = response.attributeInfo[i].attrSourceName
-      if (response.attributeInfo[i].sourceAttr.ref.type == "datapod" || response.attributeInfo[i].sourceAttr.ref.type == "dataset" || response.attributeInfo[i].sourceAttr.ref.type == "rule") {
-        var sourceattribute = {}
-        sourceattribute["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceattribute["label"] = response.attributeInfo[i].sourceAttr.ref.name;
-        sourceattribute["dname"] = response.attributeInfo[i].sourceAttr.ref.name + '.' + response.attributeInfo[i].sourceAttr.attrName;
-        sourceattribute["type"] = response.attributeInfo[i].sourceAttr.ref.type;
-        sourceattribute["attributeId"] = response.attributeInfo[i].sourceAttr.attrId;
-        sourceattribute["id"] = sourceattribute["uuid"] + "_" + sourceattribute["attributeId"]
-        let obj = {}
-        obj["value"] = "datapod"
-        obj["label"] = "attribute"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = true;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-      }
-      else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
-        let obj = {}
-        obj["value"] = "string"
-        obj["label"] = "string"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["isSourceAtributeSimple"] = true;
-        attributeinfojson["sourcesimple"] = response.attributeInfo[i].sourceAttr.value
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = false;
 
+    if (response.attributeInfo != null) {
+      let attributearray = [];
+      for (let i = 0; i < response.attributeInfo.length; i++) {
+        let attributeinfojson = {};
+        attributeinfojson["name"] = response.attributeInfo[i].attrSourceName
+        if (response.attributeInfo[i].sourceAttr.ref.type == "datapod" || response.attributeInfo[i].sourceAttr.ref.type == "dataset" || response.attributeInfo[i].sourceAttr.ref.type == "rule") {
+          var sourceattribute = {}
+          sourceattribute["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceattribute["label"] = response.attributeInfo[i].sourceAttr.ref.name;
+          sourceattribute["dname"] = response.attributeInfo[i].sourceAttr.ref.name + '.' + response.attributeInfo[i].sourceAttr.attrName;
+          sourceattribute["type"] = response.attributeInfo[i].sourceAttr.ref.type;
+          sourceattribute["attributeId"] = response.attributeInfo[i].sourceAttr.attrId;
+          sourceattribute["id"] = sourceattribute["uuid"] + "_" + sourceattribute["attributeId"]
+          let obj = {}
+          obj["value"] = "datapod"
+          obj["label"] = "attribute"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = true;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+        }
+        else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
+          let obj = {}
+          obj["value"] = "string"
+          obj["label"] = "string"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["isSourceAtributeSimple"] = true;
+          attributeinfojson["sourcesimple"] = response.attributeInfo[i].sourceAttr.value
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "expression") {
+          let sourceexpression = {};
+          sourceexpression["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceexpression["label"] = response.attributeInfo[i].sourceAttr.ref.name
+          let obj = {}
+          obj["value"] = "expression"
+          obj["label"] = "expression"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourceexpression"] = sourceexpression;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = true;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+          this.getAllExpression(false, 0)
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "formula") {
+          let sourceformula = {};
+          sourceformula["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceformula["label"] = response.attributeInfo[i].sourceAttr.ref.name;
+          let obj = {}
+          obj["value"] = "formula"
+          obj["label"] = "formula"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourceformula"] = sourceformula;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = true;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+          this.getAllFormula(false, 0);
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "function") {
+          let sourcefunction = {};
+          sourcefunction["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourcefunction["label"] = response.attributeInfo[i].sourceAttr.ref.name
+          let obj = {}
+          obj["value"] = "function"
+          obj["label"] = "function"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourcefunction"] = sourcefunction;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = true;
+          this.getAllFunctions(false, 0);
+        }
+        attributeinfojson["sourceattribute"] = sourceattribute;
+        attributearray[i] = attributeinfojson
       }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "expression") {
-        let sourceexpression = {};
-        sourceexpression["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceexpression["label"] = response.attributeInfo[i].sourceAttr.ref.name
-        let obj = {}
-        obj["value"] = "expression"
-        obj["label"] = "expression"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourceexpression"] = sourceexpression;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = true;
-        attributeinfojson["isSourceAtributeFunction"] = false;
-        this.getAllExpression(false, 0)
-      }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "formula") {
-        let sourceformula = {};
-        sourceformula["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceformula["label"] = response.attributeInfo[i].sourceAttr.ref.name;
-        let obj = {}
-        obj["value"] = "formula"
-        obj["label"] = "formula"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourceformula"] = sourceformula;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = true;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = false;
-        this.getAllFormula(false, 0);
-      }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "function") {
-        let sourcefunction = {};
-        sourcefunction["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourcefunction["label"] = response.attributeInfo[i].sourceAttr.ref.name
-        let obj = {}
-        obj["value"] = "function"
-        obj["label"] = "function"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourcefunction"] = sourcefunction;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = true;
-        this.getAllFunctions(false, 0);
-      }
-      attributeinfojson["sourceattribute"] = sourceattribute;
-      attributearray[i] = attributeinfojson
+      this.dataset.attributeTableArray = attributearray
     }
-    this.dataset.attributeTableArray = attributearray
+
   }
 
   OnSuccesgetAllVersionByUuid(response) {
@@ -857,7 +863,7 @@ export class DatasetComponent implements OnInit {
 
   onChangeLhsType(index) {
     this.dataset.filterTableArray[index]["lhsAttribute"] == null;
-    this.datasetCompare["filterChg"] = "y";
+ 
     if (this.dataset.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
@@ -877,7 +883,7 @@ export class DatasetComponent implements OnInit {
 
   onChangeRhsType(index) {
     this.dataset.filterTableArray[index]["rhsAttribute"] == null;
-    this.datasetCompare["filterChg"] = "y";
+  
     if (this.dataset.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },

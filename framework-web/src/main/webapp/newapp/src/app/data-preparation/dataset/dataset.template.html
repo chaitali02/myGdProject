@@ -255,7 +255,7 @@
                             </p-dropdown>
                           </td>
                           <td>
-                            <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style= "width:100%" (click)="onChangeRhsType()" 
+                            <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style= "width:100%" (click)="onChangeRhsType(i)" 
                                 [disabled]="mode == 'true'" placeholder="--Select--">
                               <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
                                 <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
