@@ -1889,9 +1889,9 @@ public class ModelServiceImpl {
 					predictInput.setDsType(dsType);
 					predictInput.setOperation(MetaType.predict.toString().toLowerCase());
 
-					String inputConfigFilePath = defaultDir.concat("input_config.json");
+					String inputConfigFilePath = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json");
 					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(new File(defaultDir.concat("input_config.json")), predictInput);
+					mapper.writeValue(new File(Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json")), predictInput);
 					
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
