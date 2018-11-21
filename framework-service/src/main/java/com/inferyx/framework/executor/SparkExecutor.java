@@ -42,6 +42,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -87,8 +88,10 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.execution.columnar.DOUBLE;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.DoubleType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
@@ -143,10 +146,12 @@ import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
+import scala.Function1;
 import scala.Tuple2;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
+import scala.runtime.BoxedUnit;
 
 @Component
 public class SparkExecutor<T> implements IExecutor {
@@ -3310,5 +3315,28 @@ public class SparkExecutor<T> implements IExecutor {
 			Map<String, String> trainOtherParam) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public ResultSetHolder createAndRegisterDataset(List<Row> rowRDD, StructType schema, String tableName)
+			throws AnalysisException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = null;
+		try {
+			sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
+		for (String col : dataset.columns()) {
+			dataset = dataset.withColumn(col, dataset.col(col).cast(DataTypes.DoubleType));
+		}
+		dataset.createOrReplaceTempView(tableName);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setCountRows(dataset.count());
+		rsHolder.setDataFrame(dataset);
+		rsHolder.setTableName(tableName);
+		rsHolder.setType(ResultType.dataframe);
+		return rsHolder;
 	}
 }

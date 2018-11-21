@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -31,6 +32,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,9 +47,21 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
+import org.bouncycastle.jcajce.util.AlgorithmParametersUtils;
 import org.codehaus.jettison.json.JSONException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -76,6 +91,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
@@ -2759,4 +2775,78 @@ public class ModelServiceImpl {
 			.append(") t");
 		return sb.toString();
 	}*/
+	
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public List<Map<String, Object>> getPrediction(String trainExecUuid, Object feature) throws Exception {
+
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, null,
+				MetaType.trainExec.toString());
+
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(),
+				trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),
+				train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+		
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+				model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
+				MetaType.algorithm.toString());
+		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(),
+				trainExec.getDependsOn().getRef().getVersion(), MetaType.predict.toString());
+
+		List<StructField> fields = new ArrayList<StructField>();
+		String tableName = String.format("%s", trainExecUuid.replace("-", "_"));
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+
+		Map<String, Object> feature1 = (Map<String, Object>) feature;
+		Map<String, List<Map<String, Object>>> list = null;
+		List<Map<String, Object>> list2 = null;
+		Iterator it = feature1.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			list = (Map<String, List<Map<String, Object>>>) pair.getValue();
+		}
+
+		Iterator it1 = list.entrySet().iterator();
+		while (it1.hasNext()) {
+			Map.Entry pair = (Map.Entry) it1.next();
+			list2 = (List<Map<String, Object>>) pair.getValue();
+		}
+
+		List<Row> data = new ArrayList<>();
+		List<Object> value = new ArrayList<>();
+		for (Map<String, Object> map : list2) {
+			if (map.get("value") instanceof java.lang.Integer) {
+				Integer i = (Integer) map.get("value"); // Auto-boxing to Integer
+				Double b = new Double(i);
+				value.add(b);
+			} else {
+				value.add(map.get("value"));
+			}
+		}
+
+		for (Map<String, Object> map : list2) {
+			fields.add(DataTypes.createStructField(map.get("key").toString(), DataTypes.DoubleType, true));
+		}
+		data.add(RowFactory.create(value.toArray(new Double[value.size()])));
+
+		data.forEach(t -> System.out.println(t.get(0)));
+
+		ResultSetHolder rsHolder = sparkExecutor.createAndRegisterDataset(data, DataTypes.createStructType(fields),
+				(tableName + "_pred_data"));
+		rsHolder.getDataFrame().show();
+		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+		//String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+
+
+		//exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), predict.getLabelInfo().toString(), appUuid);
+		
+	
+		ResultSetHolder rsHolder1 = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		rsHolder1.getDataFrame().show();
+
+		return null;
+	}
 }
