@@ -187,7 +187,7 @@
 											<label class="col-md-3 control-label">Parameter List
 												<span class="required" aria-required="true"> * </span>
 											</label>
-											<div class="col-md-6">{{selectParameterlist |json}}
+											<div class="col-md-6">
 												<p-dropdown [options]="allParameterList" [(ngModel)]="selectParameterlist" name="sourcedata" dataKey="uuid" [disabled]="mode == 'true'"
 												 [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeParamertLsitType()">
 												</p-dropdown>
