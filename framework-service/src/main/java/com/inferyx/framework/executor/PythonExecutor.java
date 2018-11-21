@@ -235,7 +235,7 @@ public class PythonExecutor implements IExecutor {
 		try {
 			String pythonExec = Helper.getPropertyValue("framework.python.exec");	
 			pythonExec = pythonExec.endsWith("/") ? pythonExec : pythonExec.concat("/");
-			String command = pythonExec+"/python3".concat(" ").concat(scriptPath);
+			String command = pythonExec+"python3".concat(" ").concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}

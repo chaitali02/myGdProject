@@ -111,6 +111,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.PredictInput;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
@@ -119,6 +120,7 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainInput;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -1758,7 +1760,7 @@ public class ModelServiceImpl {
 			if (datastore == null) {
 				logger.error("Datastore is not available for this datapod");
 				throw new Exception();
-			}
+			}			
 		
 			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 			String sql = "SELECT * FROM "+tableName;
@@ -1852,45 +1854,63 @@ public class ModelServiceImpl {
 //					filePath = String.format("/%s/%s/%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 //					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 //					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-					
-//					String sql = generateSQLBySource(source, execParams);
-//					exec.executeAndRegister(sql, tableName, appUuid);
+	
+					List<String> argList = new ArrayList<>();
+					PredictInput predictInput = new PredictInput();
 					
 					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
-					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
-					exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
+					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);	
 
 					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
-					String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
+					String defaultDir = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
 					String modelFileName = dataStore.getLocation();
 					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
-					
-					exec = execFactory.getExecutor(datasource.getType());
-					exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
-					
-					saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
-					
-					saveFileName = URI+saveFileName;
-					logger.info("Saved file name : " + saveFileName);
+
+					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
+					String dsType = null;
+					if(source instanceof Rule || source instanceof DataSet) {
+						dsType = datasource.getType().toLowerCase();
+						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
+						exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
+						exec = execFactory.getExecutor(datasource.getType());
+						exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+						
+						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+						
+						saveFileName = URI+saveFileName;
+						logger.info("Saved file name : " + saveFileName);
+
+						predictInput.setSourceFilePath(saveFileName);
+					} else if(source instanceof Datapod) {
+						Datasource datasource2 = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						dsType = datasource2.getType().toLowerCase();
+						predictInput.setQuery(mappedFeatureAttrSql);
+						predictInput.setHostName(datasource.getHost());
+						predictInput.setDbName(datasource.getDbname());
+						predictInput.setUserName(datasource.getUsername());
+						predictInput.setPassword(datasource.getPassword());
+						predictInput.setPort(datasource.getPort());
+						//creating default directory to allow script/python-code to store file in this location
+						new File(defaultDir).mkdirs();
+					}
 					
 					String scriptName = algorithm.getScriptName();
 					
-					List<String> argList = new ArrayList<>();
-					argList.add("numInput");
-					argList.add(fieldArray.length+"");
-					argList.add("filename");
-					argList.add(saveFileName);
-					argList.add("modelFileName");
-					argList.add(modelFileName);
-					argList.add("savePredict");
-					argList.add(savePredict);
-					argList.add("dsType");
-					argList.add("file");
-					argList.add("operation");
-					argList.add("predict");
+					predictInput.setNumInput(fieldArray.length);
+					predictInput.setModelFilePath(modelFileName);
+					predictInput.setTargetPath(savePredict);
+					predictInput.setDsType(dsType);
+					predictInput.setOperation(MetaType.predict.toString().toLowerCase());
+
+					String inputConfigFilePath = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json");
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.writeValue(new File(Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json")), predictInput);
+					
+					argList.add("inputConfigFilePath");
+					argList.add(inputConfigFilePath);
 					
 					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					
@@ -2547,11 +2567,8 @@ public class ModelServiceImpl {
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 				List<String> argList = null;
 				if (StringUtils.isNotBlank(model.getCustomFlag()) && model.getCustomFlag().equalsIgnoreCase("N")) {
-//					if (model.getDependsOn().getRef().getVersion() != null)
-						algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-//					else 
-//						algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-					
+					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+
 					String scriptName = algorithm.getScriptName();
 					// Save the data as csv
 					String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
@@ -2563,35 +2580,70 @@ public class ModelServiceImpl {
 							train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
 					String sql = generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					String appUuid = commonServiceImpl.getApp().getUuid();
-					Datasource datasource = commonServiceImpl.getDatasourceByApp();
-					IExecutor exec = null;
-					exec = execFactory.getExecutor(datasource.getType());
-					exec.executeAndRegister(sql, (tableName), appUuid);
-					
-					String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
-					String modelFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"model";
-					exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
-					
-					saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
-					
-					logger.info("Saved file name : " + saveFileName);
-					logger.info("Model file name : " + modelFileName);
-//					List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+
+					TrainInput trainInput = new TrainInput();
+
 					List<ParamListHolder> resolvedParamInfoList = getParamByParamList(execParams.getParamListInfo().get(0).getRef().getUuid());
 					// Get paramList
-					String []args = resolvedParamInfoList.stream().map(p -> p.getParamName() + "~" + p.getParamValue().getValue() + "")
-							.collect(Collectors.joining("~")).split("~");
-					argList = new ArrayList<String>(Arrays.asList(args));
-					argList.add("numInput");
-					argList.add(fieldArray.length+"");
-					argList.add("filename");
-					argList.add(saveFileName);
-					argList.add("modelFileName");
-					argList.add(modelFileName);
-					argList.add("dsType");
-					argList.add("file");
-					argList.add("operation");
-					argList.add("train");
+//					String []args = resolvedParamInfoList.stream().map(p -> p.getParamName() + "~" + p.getParamValue().getValue() + "")
+//						.collect(Collectors.joining("~")).split("~");
+//					argList = new ArrayList<String>(Arrays.asList(args));
+
+					argList = new ArrayList<>();
+					Map<String, Object> otherParams = new HashMap<>();
+					for(ParamListHolder paramListHolder : resolvedParamInfoList) {
+						otherParams.put(paramListHolder.getParamName(), paramListHolder.getParamValue().getValue());
+					}
+					
+					trainInput.setOtherParams(otherParams);
+					
+					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
+					String modelFileName = defaultDir.concat("model");
+
+					logger.info("Default dir name : " + defaultDir);
+					logger.info("Model file name : " + modelFileName);
+					
+					String dsType = null;
+					if(source instanceof DataSet || source instanceof Rule) {
+						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
+						logger.info("Saved file name : " + saveFileName);
+						
+						dsType = MetaType.file.toString().toLowerCase();
+						Datasource datasource = commonServiceImpl.getDatasourceByApp();
+						IExecutor exec = null;
+						exec = execFactory.getExecutor(datasource.getType());
+						exec.executeAndRegister(sql, (tableName), appUuid);
+						
+						exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+						
+						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+
+						trainInput.setSourceFilePath(saveFileName);
+					} else if(source instanceof Datapod) {
+						Datasource datasource = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						dsType = datasource.getType().toLowerCase();
+
+						trainInput.setQuery(sql);
+						trainInput.setHostName(datasource.getHost());
+						trainInput.setDbName(datasource.getDbname());
+						trainInput.setUserName(datasource.getUsername());
+						trainInput.setPassword(datasource.getPassword());
+						trainInput.setPort(datasource.getPort());
+						//creating default directory to allow script/python-code to store file in this location
+						new File(defaultDir).mkdirs();
+					}
+					
+					trainInput.setNumInput(fieldArray.length);
+					trainInput.setModelFilePath(modelFileName);
+					trainInput.setDsType(dsType);
+					trainInput.setOperation(MetaType.train.toString().toLowerCase());
+		
+					String inputConfigFilePath = defaultDir.concat("input_config.json");
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.writeValue(new File(defaultDir.concat("input_config.json")), trainInput);
+					
+					argList.add("inputConfigFilePath");
+					argList.add(inputConfigFilePath);
 					
 					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					if(!scriptPrintedMsgs.isEmpty()) {
@@ -2603,7 +2655,6 @@ public class ModelServiceImpl {
 					if(result) {
 						Map<String, Object> summary = summary(modelFileName, scriptPrintedMsgs);
 						String fileName = "model.result";
-						String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					}
 					dataStoreServiceImpl.setRunMode(RunMode.BATCH);
