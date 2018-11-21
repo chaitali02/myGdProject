@@ -1,0 +1,55 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "%"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "1000"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "8b1238dd-fa1b-4d47-b5c8-b560cf11033a",
+	"version" : "1542600244",
+	"name" : "fm_trans_round_amount_check",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T04:04:04Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822"
+			}
+		}
+	]
+}

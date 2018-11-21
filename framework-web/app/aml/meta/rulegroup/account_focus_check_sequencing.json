@@ -1,0 +1,43 @@
+{
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "d7a70a7b-3489-4865-99da-5d5007589d85"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "79b26214-c9ae-4db4-a099-eae969a2c67c"
+			}
+		}
+	],
+	"inParallel" : "true",
+	"uuid" : "3d25b41a-e469-452f-ba47-2656b0971ae3",
+	"version" : "1542604457",
+	"name" : "Account Focus - Check Sequencing",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T05:14:17Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

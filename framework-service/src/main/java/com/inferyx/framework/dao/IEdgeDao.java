@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.Vertex;
 
 public interface IEdgeDao extends MongoRepository<Edge, String> {
 
@@ -104,6 +105,12 @@ public interface IEdgeDao extends MongoRepository<Edge, String> {
 	
 	@Query(value="{'src' : ?0,'dst' : ?1,'relationType' : ?2}")
 	public Edge findOneBySrcAndDstAndRelationType(String src,String dst,String relationtype);
+	
+	@Query(value="{'src' :{ $in: ?0 },'dst' : { $in: ?1 },'relationType' : { $in: ?2 }}")
+	public List<Edge> findBySrcAndDstAndRelationType(List<String> src,List<String> dst,List<String> nodeType);
+	
+	
+
 	
 	@Query(value="{'dst' : ?0,'src' : ?1}")
 	public Edge findOneByDstAndSrc(String dst,String src);

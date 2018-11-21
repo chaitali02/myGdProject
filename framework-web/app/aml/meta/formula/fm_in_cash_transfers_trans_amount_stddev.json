@@ -1,0 +1,142 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2fb2-02fb-11e7-93ae-92361f002671"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 1
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'INCOMING'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "AND"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'CA'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "NULL"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		}
+	],
+	"formulaType" : "aggr",
+	"uuid" : "8e515135-2baf-4168-b9ea-18b814d017c2",
+	"version" : "1542415658",
+	"name" : "fm_in_cash_transfers_trans_amount_stddev",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-17T00:47:38Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

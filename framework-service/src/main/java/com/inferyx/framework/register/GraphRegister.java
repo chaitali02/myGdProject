@@ -1234,7 +1234,7 @@ public class GraphRegister<T> {
 					result = writer.writeValueAsString(obj);
 					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), null);
 				}
-				logger.info(" Total vertex size after "+mType + " : " + objectList.size());
+				logger.info("  Vertex size after "+mType + " : " + objectList.size()+" Total : "+verticesRowMap.size());
 				//logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 					| SecurityException | NullPointerException e) {
@@ -1249,7 +1249,7 @@ public class GraphRegister<T> {
 		this.vertexRowMap = verticesRowMap;
 		this.edgeRowMap = edgeRowMap;
 		
-	    graphServiceImpl.deleteAllVertices();
+	   graphServiceImpl.deleteAllVertices();
 		
 		logger.info(" Total vertex size current appInfo: " + verticesRowMap.size());
 		totalVertexList = createTotVertexList(verticesRowMap);
