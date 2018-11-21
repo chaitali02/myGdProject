@@ -231,7 +231,7 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-2 col-sm-2 col-xs-12">
-                        <select class="form-control" ng-change="selectSourceType()" ng-disabled="{{mode}}" data-ng-model="rulsourcetype" ng-options="r for r in ruleSourceTypes"
+                        <select class="form-control" ng-change="selectSourceType('{{rulsourcetype}}',rulsourcetype)" ng-disabled="{{mode}}" data-ng-model="rulsourcetype" ng-options="r for r in ruleSourceTypes"
                           required>
                         </select>
                       </div>
@@ -239,7 +239,7 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3 col-sm-3 col-xs-12">
-                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="ruleRelation.defaultoption"
+                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectOption('{{ruleRelation.defaultoption}}',ruleRelation.defaultoption)" data-ng-model="ruleRelation.defaultoption"
                           ng-options="r as r.name for r in ruleRelation.options  track by r.uuid ">
                         </select>
                       </div>
@@ -274,11 +274,12 @@
                             <modal ng-show="showModal1" visible="showModal1" on-sown="modalOneShown()" on-hide="modalOneHide()">
                               <modal-header title="Warning"></modal-header>
                               <modal-body>
-                                <span>Do you want remove LHS attributes ?</span>
+                                <!-- <span>Do you want remove LHS attributes ?</span> -->
+                                <span>changing  source clear wiil all configulation Y/N</span>
                               </modal-body>
                               <modal-footer>
-                                <button type="button" class="btn btn-success" ng-click="hideOk(1)">Ok</button>
-                                <button type="button" class="btn btn-primary" ng-click="hideCancel(1)">Cancel</button>
+                                <button type="button" class="btn btn-success" ng-click="hideOk(true)">Ok</button>
+                                <button type="button" class="btn btn-primary" ng-click="hideCancel(false)">Cancel</button>
                               </modal-footer>
                             </modal>
                           </div>

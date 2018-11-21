@@ -47,15 +47,11 @@
     },
     "value": null
   },
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "c78b8538-af6b-4a7f-94e7-c483780a335c",
-      "version": null,
-      "name": "cc_transactions_predictions"
+     "target" : {
+        "ref" : {
+            "type" : "file"
+        }
     },
-    "value": null
-  },
   "featureAttrMap": [
     {
       "featureMapId": "0",

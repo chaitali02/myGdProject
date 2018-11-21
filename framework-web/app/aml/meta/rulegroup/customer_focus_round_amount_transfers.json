@@ -1,0 +1,67 @@
+{
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "32218345-dbfa-4110-b750-dab9460379d8"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "1be3ed7e-f778-4ec6-8a9e-1311e47606a6"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "f6179ec4-4453-4977-a252-583900380097"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "5f112b31-2f3e-4078-9fd3-7c671b358b65"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "2eb5c90a-e313-47e1-91c8-ab530de2c923"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "f605fea1-44f6-44d2-a543-07a2950a6cc0"
+			}
+		}
+	],
+	"inParallel" : "true",
+	"uuid" : "3dbdcb76-6266-4f96-80a0-30834df46e2f",
+	"version" : "1542602666",
+	"name" : "Customer Focus - Round Amount Transfers",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T04:44:26Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

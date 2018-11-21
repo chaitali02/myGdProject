@@ -11,10 +11,9 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
-    "target" : {
+       "target" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "4a92b971-5741-4dcc-a8e0-96c1fa92a327"
+            "type" : "file"
         }
     },
     "labelInfo" : {

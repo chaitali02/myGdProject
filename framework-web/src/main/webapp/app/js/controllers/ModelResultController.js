@@ -976,10 +976,20 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
         // Make sure that the interval is destroyed too
         clearInterval(myVarResult);
     });
+    $scope.selectPage = function(pageNo) {
+        $scope.pagination.currentPage = pageNo;
+      };
+
+      $scope.onPerPageChange = function() {
+
+        $scope.pagination.currentPage = 1;
+        $scope.gridOptions.data=$scope.getResults( $scope.pagination,$scope.originalData)
+      }
     $scope.onPageChanged = function () {
         $scope.gridOptions.data = $scope.getResults($scope.pagination, $scope.originalData);
         console.log($scope.gridOptions.data);
     };
+
     $scope.getResults = function (pagination, params) {
         pagination.totalItems = params.length;
         if (pagination.totalItems > 0) {

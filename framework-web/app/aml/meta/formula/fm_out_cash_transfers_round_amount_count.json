@@ -1,0 +1,178 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 1
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'OUTGOING'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "AND"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'CA'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "AND"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "%"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "1000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "1"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		}
+	],
+	"formulaType" : "aggr",
+	"uuid" : "c22b692c-2dbe-4d19-a40c-f711aabb3b2c",
+	"version" : "1542492679",
+	"name" : "fm_out_cash_transfers_round_amount_count",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-17T22:11:19Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}
