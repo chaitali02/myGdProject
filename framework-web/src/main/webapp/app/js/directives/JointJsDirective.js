@@ -2937,6 +2937,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
         var onSuccessGetExecuteModel = function (response) {
           $scope.allparamset = response;
+          $scope.isPramlistInProgess=false;
           if($scope.popupModel.modelData.operators[0].operatorParams !=null){
             $scope.isExecParamSet=true;
             for(var i=0;i< response.length;i++){
@@ -2954,6 +2955,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         CommonService.getParamListByTrainORRule(data.uuid,data.version,data.type).then(function (response){ onSuccesGetParamListByTrain(response.data)});
         var onSuccesGetParamListByTrain = function (response) {
           $scope.allParamList=response;
+          $scope.isPramlistInProgess=false;
           if($scope.popupModel.modelData.operators[0].operatorParams !=null){
             $scope.isExecParamSet=true;
             for(var i=0;i< response.length;i++){
@@ -2971,6 +2973,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         $scope.allParamList=null;
         $scope.isParamLsitTable=false;
         $scope.selectParamList=null;
+        $scope.isPramlistInProgess=true;
         $scope.popupModel.modelData.operators[0].operatorInfo;
         var objDetail={};
         objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;

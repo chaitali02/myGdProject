@@ -13,8 +13,7 @@
     },
     "target" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "3cdb9b07-d449-4dfc-af2f-3b1245eb30e5"
+            "type" : "file"
         }
     },
     "featureAttrMap" : [ 

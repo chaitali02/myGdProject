@@ -3,25 +3,24 @@
     font-family: FontAwesome;
     font-size: x-large;
     content: "\f0c5";
-    right:35px;
-    position: absolute; 
+    right: 35px;
+    position: absolute;
     top: 4px;
-    opacity:0;
-}
+    opacity: 0;
+  }
 
-.showClips .copyClip:hover:after{
- opacity:1;
-}
+  .showClips .copyClip:hover:after {
+    opacity: 1;
+  }
 
-.showClips{
-padding: 20px 0 0;}
-
-
+  .showClips {
+    padding: 20px 0 0;
+  }
 </style>
 <div class="row" ng-controller="ResultModelController">
-   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <div class="col-md-12">
-  
+
     <div class="page-bar">
       <ul class="page-breadcrumb">
         <li>
@@ -38,7 +37,7 @@ padding: 20px 0 0;}
       </ul>
       <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-       
+
           <i class="icon-calendar"></i>&nbsp;
           <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
         </div>
@@ -52,21 +51,23 @@ padding: 20px 0 0;}
           <i class="fa fa-cogs"></i>{{caption}} Result
         </div>
         <div class="tools">
-          <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;">
-              <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
+            style="pointer-events: auto;">
+            <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
           </a>
-          <a title="Show Result" data-toggle="tooltip" data-placement="top" class="currentpage" tooltip  style="height:16px;">
+          <a title="Show Result" data-toggle="tooltip" data-placement="top" class="currentpage" tooltip style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color: white;" ng-disabled="true"></span>
           </a>
-          <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+          <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
+            style="pointer-events: auto;" ng-show="type=='train'" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
             <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
           </a>
-               
-          <a  title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+
+          <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
           </a>
           <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
           </a>
           <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
         </div>
@@ -76,9 +77,12 @@ padding: 20px 0 0;}
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
               <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autoRefreshResult" ng-change="autoRefreshResultOnChange()"/>
+                <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline" type="checkbox"
+                  ng-model="autoRefreshResult" ng-change="autoRefreshResultOnChange()" />
                 <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
-                <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autoRefreshCounterResult" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                <input style="width:55px !important;" min="5" max="99" type="number" class="form-control input-sm input-small input-inline"
+                  ng-model="autoRefreshCounterResult" />
+                <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
               </div>
             </div>
           </div>
@@ -86,36 +90,47 @@ padding: 20px 0 0;}
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter">
               <!-- <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre> -->
-                <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
+              <json-formatter open="1" key="'Result'" json='modelresult'></json-formatter>
             </div>
-          
-            </div>
-            <br>
-            <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if ="modelresult != null">
-                <div class="portlet light bordered">
-                    <div class="portlet-title">
-                      <div class="caption">
-                        <span class="caption-subject font-dark bold "> Confusion Metrix</span>
-                      </div>
-                      <div class="actions">
-                      </div>
-                    </div>
-                    <div class="portlet-body">
-                        <confusion-metrix  execjson='modelresult'></confusion-metrix>
-                    </div>
-                  </div>
-             
-            </div>        
+
           </div>
-       </div><!--End Train result-->
-       <div ng-if="type =='predict' || type == 'simulate' || type == 'operator'">
-          <div class="row" >
-            <div class="col-md-12 col-sm-12" ng-if="isTableShow">
-                <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                  <label>Search:</label>
-                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+          <br>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelresult != null">
+              <div class="portlet light bordered">
+                <div class="portlet-title">
+                  <div class="caption">
+                    <span class="caption-subject font-dark bold "> Confusion Metrix</span>
+                  </div>
+                  <div class="actions">
+                  </div>
                 </div>
+                <div class="portlet-body">
+                  <confusion-metrix execjson='modelresult'></confusion-metrix>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!--End Train result-->
+        <div ng-if="type =='predict' || type == 'simulate' || type == 'operator'">
+          <div class="row">
+            <div class="col-md-6 col-sm-6" ng-if="isTableShow">
+              <div class="dataTables_length" id="sample_1_length">
+                <label>Show
+                  <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
+                    ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6" ng-if="isTableShow">
+              <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                <label>Search:</label>
+                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                  aria-controls="datastoredatatable">
+              </div>
             </div>
           
             <div class="col-md-12" ng-if="isTableShow">
@@ -132,110 +147,109 @@ padding: 20px 0 0;}
                 </div>
                 <div class="col-md-6">
                   <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
-                    ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
-                    max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
-                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                    ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
+                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                    last-text="&raquo;">
                   </ul>
                 </div>
               </div>
             </div>
             <div class=" col-md-12">
-            <div class="spinner centercontent" ng-show="showProgress">
+              <div class="spinner centercontent" ng-show="showProgress">
                 <div class="bounce1"></div>
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
+              </div>
+              <div class="centercontent" style="color:blue;" ng-show="isDataError">{{dataMessage}}</div>
             </div>
-            <div class="centercontent" style="color:blue;" ng-show="isDataError">{{dataMessage}}</div>
-          </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="portlet box green" ng-show="isShowPMML">
-        <div class="portlet-title">
-          <div class="caption">
-            <i class="fa fa-cogs"></i>PMML Result
-          </div>
-          <div class="tools">  
-           <a title="Download" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
-              <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Show Result" data-toggle="tooltip" data-placement="top"  tooltip  style="height:16px;" ng-click="isShowPMML=false">
-              <span class="glyphicon glyphicon-file" style="color: white;" ></span>
-            </a>
-            <a title="Show PMML" ng-click="showPMMLResult()" class="currentpage" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="true"  style="pointer-events: auto;" ng-show="type=='train'">
-              <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a> 
-            <a  title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
-                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-            </a>
-            <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
-          </div>
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>PMML Result
         </div>
-        <div class="portlet-body" style="min-heigth:100px;">
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-              <div>
-                <div class="showClips" >
-                  <div id="" style="height:500px;overflow: auto;">
-                    <div class ="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
-                    <div id="showPMML" style="height:500px;overflow: auto;"></div>
-                  </div>
+        <div class="tools">
+          <a title="Download" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
+            <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Show Result" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;" ng-click="isShowPMML=false">
+            <span class="glyphicon glyphicon-file" style="color: white;"></span>
+          </a>
+          <a title="Show PMML" ng-click="showPMMLResult()" class="currentpage" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="true"
+            style="pointer-events: auto;" ng-show="type=='train'">
+            <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+          </a>
+          <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
+        </div>
+      </div>
+      <div class="portlet-body" style="min-heigth:100px;">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+            <div>
+              <div class="showClips">
+                <div id="" style="height:500px;overflow: auto;">
+                  <div class="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
+                  <div id="showPMML" style="height:500px;overflow: auto;"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-          
+
     <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-        <div class="modal-dialog" style="width:40%">
-          <div class="modal-content" style="resize: both;overflow: auto;">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-              <h4 class="modal-title">Download</h4>
-            </div>
-            <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
-              <div class="modal-body" style="padding-top:0px">
-                <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                  <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-md-3 control-label">Rows</label>
-                          <div class="col-md-8">
-                            <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload" >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+      <div class="modal-dialog" style="width:40%">
+        <div class="modal-content" style="resize: both;overflow: auto;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Download</h4>
+          </div>
+          <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+            <div class="modal-body" style="padding-top:0px">
+              <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                  data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="col-md-3 control-label">Rows</label>
+                        <div class="col-md-8">
+                          <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
 
-                          </div>
                         </div>
-                        <div class="form-group">
-                          <label class="col-md-3 control-label">Format</label>
-                          <div class="col-md-8">
-                            <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-                            </select>
-                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-md-3 control-label">Format</label>
+                        <div class="col-md-8">
+                          <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                          </select>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <!--End Model Body-->
-              <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                <button type="submit" class="btn green">Submit</button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <!--End Model Body-->
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+              <button type="submit" class="btn green">Submit</button>
+            </div>
+          </form>
         </div>
       </div>
+    </div>
   </div>
 </div>
-
-

@@ -726,7 +726,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
     $state.go('metaListdashboard', {
       id: uuid,
-      mode: 'true'
+      mode: 'false'
     });
   }
   $scope.onClickEditVizpod=function(uuid,version,lock){
@@ -736,7 +736,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $state.go('dvvizpod', {
       id: uuid,
       version:version,
-      mode: 'true'
+      mode: 'false'
     });
   }
   $scope.onFilterChange = function (index) {
