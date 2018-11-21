@@ -5,6 +5,7 @@ import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
 import os
+import json
 os.environ["PYSPARK_PYTHON"]="/usr/bin/python3"
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 from pyspark.sql import SparkSession
@@ -27,71 +28,148 @@ numLayers=0
 activation=""
 lossFunction=""
 layerNames=""
-fileName=""
-modelFileName=""
+sourceFilePath=""
+modelFilePath=""
 savePredict=""
 dsType=""
 tableName=""
 operation=""
 url=""
 isSuccessful = True
+hostName=""
+dbName=""
+userName=""
+password=""
+port=""
+query=""
+special_space_replacer=""
+inputConfigFilePath=""
+otherParams=None
+paramList=None
+
 
 # Iteration over all arguments:
 
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "filename", "modelFileName", "savePredict", "dsType", "tableName", "operation", "url"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "savePredict", "dsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams"]
 
-for eachArg in sys.argv:   
-        print(eachArg)
-        if paramName == "nEpochs":
-            nEpochs = int(eachArg)
-        if paramName == "filename":
-            fileName = eachArg
-        if paramName == "modelFileName":
-            modelFileName = eachArg
-        if paramName == "seed":
-            seed = eachArg
-        if paramName == "iterations":
-            iterations = eachArg
-        if paramName == "learningRate":
-            learningRate = eachArg
-        if paramName == "optimizationAlgo":
-            optimizationAlgo = eachArg
-        if paramName == "weightInit":
-            weightInit = eachArg
-        if paramName == "updater":
-            updater = eachArg
-        if paramName == "momentum":
-            momentum = eachArg
-        if paramName == "numInput":
-            numInput = int(eachArg)
-        if paramName == "numOutputs":
-            numOutputs = eachArg
-        if paramName == "numHidden":
-            numHidden = eachArg
-        if paramName == "numLayers":
-            numLayers = eachArg
-        if paramName == "layerNames":
-            layerNames = eachArg
-        if paramName == "activation":
-            activation = eachArg
-        if paramName == "lossFunction":
-            lossFunction = eachArg
-        if paramName == "savePredict":
-            savePredict = eachArg
-        if paramName == "dsType":
-            dsType = eachArg
-        if paramName == "tableName":
-            tableName = eachArg
-        if paramName == "operation":
-            operation = eachArg
-        if paramName == "url":
-            url = eachArg
+i = 0
+for eachArg in sys.argv:
+	print(eachArg)
+	if eachArg == "inputConfigFilePath":
+		inputConfigFilePath = sys.argv[i+1]
+	i = i+1
 
-        if eachArg in plist:
-            paramName=eachArg
-        else:
-            paramName=""
-	
+print("Input Configuration File Path:")
+print(inputConfigFilePath)
+
+with open(inputConfigFilePath, 'r') as json_file:
+    input_config = json.load(json_file)
+
+for value in input_config:   
+        print(value)
+
+        if value == "nEpochs":
+            nEpochs = int(input_config[value])
+
+        if value == "sourceFilePath":
+            sourceFilePath = input_config[value]
+
+        if value == "modelFilePath":
+            modelFilePath = input_config[value]
+
+        if value == "seed":
+            seed = input_config[value]
+
+        if value == "iterations":
+            iterations = input_config[value]
+
+        if value == "learningRate":
+            learningRate = input_config[value]
+
+        if value == "optimizationAlgo":
+            optimizationAlgo = input_config[value]
+
+        if value == "weightInit":
+            weightInit = input_config[value]
+
+        if value == "updater":
+            updater = input_config[value]
+
+        if value == "momentum":
+            momentum = input_config[value]
+
+        if value == "numInput":
+            numInput = int(input_config[value])
+
+        if value == "numOutputs":
+            numOutputs = input_config[value]
+
+        if value == "numHidden":
+            numHidden = input_config[value]
+
+        if value == "numLayers":
+            numLayers = input_config[value]
+
+        if value == "layerNames":
+            layerNames = input_config[value]
+
+        if value == "activation":
+            activation = input_config[value]
+
+        if value == "lossFunction":
+            lossFunction = input_config[value]
+
+        if value == "savePredict":
+            savePredict = input_config[value]
+
+        if value == "dsType":
+            dsType = input_config[value]
+
+        if value == "tableName":
+            tableName = input_config[value]
+
+        if value == "operation":
+            operation = input_config[value]
+
+        if value == "url":
+            url = input_config[value]
+
+        if value == "hostName":
+            hostName = input_config[value]
+
+        if value == "dbName":
+            dbName = input_config[value]
+
+        if value == "userName":
+            userName = input_config[value]
+
+        if value == "password":
+            password = input_config[value]
+
+        if value == "query":
+            query = input_config[value] 
+
+        if value == "port":
+            port = input_config[value] 
+
+        if value == "otherParams":
+            otherParams = input_config[value]
+
+for value in otherParams:
+	if value == "nEpochs":
+            nEpochs = int(otherParams[value])
+
+	if value == "seed":
+            seed = otherParams[value]
+
+	if value == "iterations":
+            iterations = otherParams[value]
+
+	if value == "learningRate":
+            learningRate = otherParams[value]
+
+print()
+print("printing params:")
 print(nEpochs)
 print(seed)
 print(iterations)
@@ -106,19 +184,60 @@ print(numLayers)
 print(activation)
 print(lossFunction)
 print(layerNames)
-print(fileName)
-print(modelFileName)
+print(sourceFilePath)
+print(modelFilePath)
 print(savePredict)
 print(dsType)
 print(tableName)
 print(operation)
 print(url)
+print(hostName)
+print(dbName)
+print(userName)
+print(password)
+print(query)
+print(port)
+print(otherParams)
+
+# Importing the dataset
+dataset = None
+if dsType == "file":
+	dataset = pd.read_csv(sourceFilePath)
+
+elif dsType == "mysql":	
+	import mysql.connector as sql
+	db_connection = sql.connect(host=hostName, database=dbName, user=userName, password=password)
+	dataset = pd.read_sql(query, con=db_connection)
+
+elif dsType == "postgres":
+	from sqlalchemy import create_engine
+#	engine = create_engine('postgresql://user@localhost:5432/mydb')
+	engine = create_engine("postgresql://"+userName+"@"+hostName+":"+port+"/"+dbName)
+	dataset = pd.read_sql_query(query, con=engine)
+
+elif dsType == "postgres":
+	import cx_Oracle
+	SID = dbName
+	dsn_tns = cx_Oracle.makedsn(hostName, port, SID)
+	connection = cx_Oracle.connect(userName, password, dsn_tns)
+	dataset = pd.read_sql(query, con=connection)
+
+elif dsType == "hive":
+	from pyhive import hive
+	connection = hive.Connection(host=hostName, port=port, auth='NOSASL', username=hostName, database=dbName)
+	dataset = pd.read_sql(query, con=connection)
+
+elif dsType == "impala":
+	import ibis
+#	hdfs = ibis.hdfs_connect(host=os.environ['IP_HDFS'], port=50070)
+#	client = ibis.impala.connect(host=os.environ['IP_IMPALA'], port=21050, hdfs_client=hdfs)
+	hdfs = ibis.hdfs_connect(host=hostName, port=50070)
+	client = ibis.impala.connect(host=hostName, port=port, hdfs_client=hdfs)
+	requete = client.sql(query)
+	dataset = requete.execute(limit=None)
 
 #train operation
 def train():
-	# Importing the dataset
-	dataset = pd.read_csv(fileName)
-
 	# Encoding categorical data
 	from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 	labelencoder_X_1 = LabelEncoder()
@@ -183,10 +302,10 @@ def train():
 
 	# serialize model to JSON
 	model_json = classifier.to_json()
-	with open(modelFileName+".spec", "w") as json_file:
+	with open(modelFilePath+".spec", "w") as json_file:
 	    json_file.write(model_json)
 	# serialize weights to HDF5
-	classifier.save_weights(modelFileName+".h5")
+	classifier.save_weights(modelFilePath+".h5")
 	print("Saved model to disk")
 
 
@@ -194,12 +313,12 @@ def train():
 	# later...
 	 
 	# load json and create model
-	json_file = open(modelFileName+".spec", 'r')
+	json_file = open(modelFilePath+".spec", 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
 	loaded_model = model_from_json(loaded_model_json)
 	# load weights into new model
-	loaded_model.load_weights(modelFileName+".h5")
+	loaded_model.load_weights(modelFilePath+".h5")
 	print("Loaded model from disk")
 
 	# Part 3 - Making the predictions and evaluating the model
@@ -233,27 +352,27 @@ def train():
 #prediction operation
 def predict():
 	# Importing the dataset
-	dataset = pd.read_csv(fileName)
-	dataset = dataset.iloc[:, 1:(numInput+1)].values
+#	dataset = pd.read_csv(sourceFilePath)
+	dataset2 = dataset.iloc[:, 1:(numInput+1)].values
 
 	# Feature Scaling
 	from sklearn.preprocessing import StandardScaler
 	from keras.models import model_from_json
 
 	sc = StandardScaler()
-	pred_dataset = sc.fit_transform(dataset)
+	pred_dataset = sc.fit_transform(dataset2)
 	
 	print("Data to be predicted:")
 	print(pred_dataset)
 
 	# load json and create model
 	print("Loading model from disk")
-	json_file = open(modelFileName+".spec", 'r')
+	json_file = open(modelFilePath+".spec", 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
 	loaded_model = model_from_json(loaded_model_json)
 	# load weights into new model
-	loaded_model.load_weights(modelFileName+".h5")
+	loaded_model.load_weights(modelFilePath+".h5")
 	print("Loaded model from disk")
 
 	# Predicting the results
