@@ -30,7 +30,7 @@ lossFunction=""
 layerNames=""
 sourceFilePath=""
 modelFilePath=""
-savePredict=""
+targetPath=""
 dsType=""
 tableName=""
 operation=""
@@ -50,7 +50,7 @@ paramList=None
 
 # Iteration over all arguments:
 
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "savePredict", "dsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "dsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams"]
 
 i = 0
 for eachArg in sys.argv:
@@ -119,8 +119,8 @@ for value in input_config:
         if value == "lossFunction":
             lossFunction = input_config[value]
 
-        if value == "savePredict":
-            savePredict = input_config[value]
+        if value == "targetPath":
+            targetPath = input_config[value]
 
         if value == "dsType":
             dsType = input_config[value]
@@ -155,18 +155,19 @@ for value in input_config:
         if value == "otherParams":
             otherParams = input_config[value]
 
-for value in otherParams:
-	if value == "nEpochs":
-            nEpochs = int(otherParams[value])
+if otherParams != None:
+	for value in otherParams:
+		if value == "nEpochs":
+		    nEpochs = int(otherParams[value])
 
-	if value == "seed":
-            seed = otherParams[value]
+		if value == "seed":
+		    seed = otherParams[value]
 
-	if value == "iterations":
-            iterations = otherParams[value]
+		if value == "iterations":
+		    iterations = otherParams[value]
 
-	if value == "learningRate":
-            learningRate = otherParams[value]
+		if value == "learningRate":
+		    learningRate = otherParams[value]
 
 print()
 print("printing params:")
@@ -186,7 +187,7 @@ print(lossFunction)
 print(layerNames)
 print(sourceFilePath)
 print(modelFilePath)
-print(savePredict)
+print(targetPath)
 print(dsType)
 print(tableName)
 print(operation)
@@ -391,12 +392,12 @@ def predict():
 	print("prediction result:")	
 	pred_pd_df.show(20, False)
 	
-	print("saving prediction result at: "+savePredict)
-	pred_pd_df.write.save(savePredict, format="parquet")		
+	print("saving prediction result at: "+targetPath)
+	pred_pd_df.write.save(targetPath, format="parquet")		
 
 	#saving converted dataframe
 	#engine can be of the type: auto/pyarrow/fastparquet
-#	pred_pd_df.to_parquet(savePredict+".parquet", engine='auto')
+#	pred_pd_df.to_parquet(targetPath+".parquet", engine='auto')
 #	print(pred_pd_df)
 	return isSuccessful
 
