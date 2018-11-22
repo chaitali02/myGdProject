@@ -1256,12 +1256,32 @@ transition: right 1m
 .fa-downcase-string:before {
   font-family: cursive; /* your font family here! */
   font-style: italic;
-  opacity: .5;
-  content: '(Ex. ABC)';
+  /* opacity: .5; */
+  border-radius: 25px;
+  background-color: #F1C40F;
+  padding: 1px 6px 3px 6px;
+  color: white;
+  content: 'a';
 }
 .fa-downcase-integer:before {
   font-family: cursive; /* your font family here! */
   font-style: italic;
-  opacity: .5;
-  content: '(Ex 123)';
+  border-radius: 25px;
+  background-color: #36c6d3;
+  padding: 3px 6px 1px 6px;
+  color: white;
+  /* opacity: .5; */
+  content: '#';
+}
+
+.fa-downcase-decimal:before {
+  font-family: cursive; /* your font family here! */
+  font-style: italic;
+  border-radius: 4px;
+  background-color:#006df0;
+  padding: 3px 8px 3px 6px;
+  color: white;
+  /* opacity: .5; */
+  content: '.0';
+  font-size: 10px;
 }

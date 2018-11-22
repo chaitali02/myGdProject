@@ -502,6 +502,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.modeldata={};
     $scope.modeldata.locked="N";
     $scope.showactive="false"
+    $scope.addRow();
    // $scope.getAllLatestAlgorithm();
    // $scope.onChangeDependsOnType(true);
   }

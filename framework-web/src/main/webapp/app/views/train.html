@@ -357,8 +357,9 @@
                                                                                         <!-- ui-disable-choice="x.attrType=='string'" -->
                                                                                         <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id" position='up' >
                                                                                             <!-- <span class="{{x.iconclass}}"></span> -->
+                                                                                            <div class="{{x.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf(x.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"></div>
                                                                                             <span  style="font-family: 'Open Sans', sans-serif;padding:6px;"  title="{{x.dname}}"  ng-bind-html="x.name | highlight: $select.search"></span>
-                                                                                            <div class="{{x.attrType=='string'?'fa-downcase-string':'fa-downcase-integer'}}"></div>
+                                                                                           
                                                                                         </ui-select-choices>
                                                                                     </ui-select>
                                                                                     <!-- <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname disable when  x.attrType =='string' for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"

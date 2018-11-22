@@ -2738,7 +2738,7 @@ public class ModelServiceImpl {
 				isReadingScore = false;
 			}
 		}
-		summary.put("confusion mattrix", confusionMatrx);
+		summary.put("confusion matrix", confusionMatrx);
 		return summary;
 	}
 	
