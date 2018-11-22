@@ -228,7 +228,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <select name="modelName" select2 class="form-control" ng-disabled="false" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
                                                     ng-change="onChangeModel()">
-                                                    <option value="">-Select-</option>
+                                                    <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="modelName" type="hidden" ng-model="selectModel.uuid" required />
                                             </div>

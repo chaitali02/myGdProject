@@ -182,6 +182,19 @@
       "dispName": "load_id",
       "active" : "Y",
         "expr" : null
+    },
+    {
+      "attributeId": 12,
+      "displaySeq": null,
+      "name": "check_num",
+      "type": "integer",
+      "desc": "check_num",
+      "expression": null,
+      "key": "",
+      "partition": "Y",
+      "dispName": "check_num",
+      "active": "Y",
+      "length": null
     }
   ]
 }
