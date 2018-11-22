@@ -33,6 +33,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.PredictExec;
@@ -441,5 +442,11 @@ public class ModelController {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
 	
+	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST)
+	public List<Map<String, Object>> getPredict(@RequestParam("uuid") String trainExecUUID,
+			@RequestBody(required = false) Object feature,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return modelServiceImpl.getPrediction(trainExecUUID, feature);
+	}
 
 }
