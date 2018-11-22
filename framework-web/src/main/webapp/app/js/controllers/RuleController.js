@@ -1270,6 +1270,25 @@ var confirmDialog = function(newVal, yes, no) {
     $scope.focusRow(len-1)
   }
 
+  $scope.autoPopulate=function(){
+		$scope.attributeTableArray=[];
+		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
+			var attributeinfo = {};
+			attributeinfo.id =i;
+			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
+			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
+			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
+			attributeinfo.isSourceAtributeSimple = false;
+			attributeinfo.isSourceAtributeDatapod = true;
+			attributeinfo.isSourceAtributeFormula = false;
+			attributeinfo.isSourceAtributeExpression = false;
+			attributeinfo.isSourceAtributeFunction = false;
+			attributeinfo.isSourceAtributeParamList = false;
+			$scope.attributeTableArray.push(attributeinfo);
+		}
+		
+	}
+
   $scope.onAttrRowDown=function(index){  
     var rowTempIndex=$scope.attributeTableArray[index];
     var rowTempIndexPlus=$scope.attributeTableArray[index+1];

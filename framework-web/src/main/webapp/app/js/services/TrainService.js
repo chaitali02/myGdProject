@@ -216,6 +216,7 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType=response[j].attrType;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)
@@ -237,6 +238,7 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType=response[j].attrType;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)

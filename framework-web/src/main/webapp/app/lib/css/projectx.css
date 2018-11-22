@@ -1252,3 +1252,16 @@ transition: right 1m
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
 } */
+
+.fa-downcase-string:before {
+  font-family: cursive; /* your font family here! */
+  font-style: italic;
+  opacity: .5;
+  content: '(Ex. ABC)';
+}
+.fa-downcase-integer:before {
+  font-family: cursive; /* your font family here! */
+  font-style: italic;
+  opacity: .5;
+  content: '(Ex 123)';
+}

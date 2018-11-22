@@ -1015,6 +1015,25 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.attributeTableArray = newDataList;
 	}
 
+    $scope.autoPopulate=function(){
+		$scope.attributeTableArray=[];
+		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
+			var attributeinfo = {};
+			attributeinfo.id =i;
+			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
+			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
+			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
+			attributeinfo.isSourceAtributeSimple = false;
+			attributeinfo.isSourceAtributeDatapod = true;
+			attributeinfo.isSourceAtributeFormula = false;
+			attributeinfo.isSourceAtributeExpression = false;
+			attributeinfo.isSourceAtributeFunction = false;
+			attributeinfo.isSourceAtributeParamList = false;
+			$scope.attributeTableArray.push(attributeinfo);
+		}
+		
+	}
+
 	$scope.onChangeSourceAttribute = function (type, index) {
 		if (type == "string") {
 			$scope.attributeTableArray[index].isSourceAtributeSimple = true;

@@ -322,7 +322,7 @@
                                                     <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                         <div class="col-md-12">
                                                             <div class="">
-                                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                                <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                                                     <thead>
                                                                         <tr>
                                                                             <th style="width:5%; text-align:center">ID</th>
@@ -349,8 +349,21 @@
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
-                                                                                        ng-disabled="{{mode}}" class="form-control"></select>
+                                                                                    <div style="width:100%;">
+                                                                                    <ui-select required disable-validation-message="" ng-model="data.targetFeature" append-to-body="true" theme="" ng-disabled="{{mode}}" on-select="onChangeSourceAttribute(data.sourceAttributeType.text,$index)">
+                                                                                        <ui-select-match>
+                                                                                            <span title="{{data.targetFeature.dname}}" style="font-family: 'Open Sans', sans-serif;color:#555"  >{{data.targetFeature.name}}</span>
+                                                                                        </ui-select-match>
+                                                                                        <!-- ui-disable-choice="x.attrType=='string'" -->
+                                                                                        <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id" position='up' >
+                                                                                            <!-- <span class="{{x.iconclass}}"></span> -->
+                                                                                            <span  style="font-family: 'Open Sans', sans-serif;padding:6px;"  title="{{x.dname}}"  ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                                            <div class="{{x.attrType=='string'?'fa-downcase-string':'fa-downcase-integer'}}"></div>
+                                                                                        </ui-select-choices>
+                                                                                    </ui-select>
+                                                                                    <!-- <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname disable when  x.attrType =='string' for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                                                                                        ng-disabled="{{mode}}" class="form-control"></select> -->
+                                                                                    </div>
                                                                                 </span>
                                                                             </td>
                                                                             <td>

@@ -335,7 +335,8 @@
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select>
+                                                                                    <!-- disable when  x.attrType =='string' -->
+                                                                                <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname  for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select>
                                                                             </span>
                                                                         </td>
                                                                         <td>

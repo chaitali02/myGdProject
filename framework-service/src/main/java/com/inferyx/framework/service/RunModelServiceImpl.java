@@ -873,6 +873,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 
+//			List<String> tempTableList = new ArrayList<>();
+//			tempTableList.add((tableName+"_pred_data"));
+//			sparkExecutor.dropTempTable(tempTableList);
+			
 			if (!isSuccess) {
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
 				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())

@@ -648,7 +648,7 @@ public class MySqlExecutor implements IExecutor {
 					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
 				}
 				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-				ConnectionHolder connectionHolder = connector.getConnection();
+				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//getConnection();
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				
 				DatabaseMetaData dbMetaData = con.getMetaData();

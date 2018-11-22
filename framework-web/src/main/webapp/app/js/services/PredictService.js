@@ -252,6 +252,7 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
@@ -273,6 +274,7 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;

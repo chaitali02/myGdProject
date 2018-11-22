@@ -74,7 +74,7 @@ public class HiveRegister extends DataSourceRegister {
 
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 		Datapod datapod = null;
 		MetaIdentifierHolder datastoreMeta = new MetaIdentifierHolder();
 		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, uuid, version);
@@ -82,7 +82,7 @@ public class HiveRegister extends DataSourceRegister {
 		datastoreMeta.setRef(datasourceRef);
 		try {
 			IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
-			ConnectionHolder connectionHolder = connector.getConnection();
+			ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetaData = con.getMetaData();
 

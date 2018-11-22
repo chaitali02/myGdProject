@@ -3505,7 +3505,7 @@ public class RegisterService {
 			Map<String, String> tablesWithPath = new Hashtable<>();
 			try {				
 				IConnector connector = connectionFactory.getConnector(datasource.getType());
-				ConnectionHolder connectionHolder = connector.getConnection();
+				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				DatabaseMetaData dbMetaData = con.getMetaData();
 				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
@@ -3693,17 +3693,18 @@ public class RegisterService {
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
 			throws Exception {
-		if (type.equalsIgnoreCase(ExecContext.FILE.toString())) {
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
+		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
 		} /*else if (type.equalsIgnoreCase("impala")) {
 			return impalaRegister.registerDB(uuid, version, registryList);
-		} */else if (type.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+		} */else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;

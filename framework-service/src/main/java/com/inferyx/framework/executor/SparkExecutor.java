@@ -3339,4 +3339,19 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setType(ResultType.dataframe);
 		return rsHolder;
 	}
+	
+	public boolean dropTempTable(List<String> tempTableList) {
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			for(String tempTableName : tempTableList) {
+				sparkSession.sqlContext().dropTempTable(tempTableName);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 }
