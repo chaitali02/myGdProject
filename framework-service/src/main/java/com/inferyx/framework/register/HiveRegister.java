@@ -85,7 +85,7 @@ public class HiveRegister extends DataSourceRegister {
 			ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetaData = con.getMetaData();
-
+			
 			for (int i = 0; i < registryList.size(); i++) {
 				String tableName = registryList.get(i).getName();
 				Datapod savedDp = new Datapod();
@@ -99,6 +99,7 @@ public class HiveRegister extends DataSourceRegister {
 				}
 				datapod.setName(tableName);
 				ResultSet rs = dbMetaData.getColumns(null, null, tableName, null);
+				
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Column Name is : " + rs.getString("COLUMN_NAME"));
 					logger.info("Column type is : " + rs.getString("TYPE_NAME"));
@@ -131,10 +132,10 @@ public class HiveRegister extends DataSourceRegister {
 				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
-				IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
-				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				//IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
+				//ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			//	rsHolder.getResultSet().next();
+				datastore.setNumRows(0);
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);

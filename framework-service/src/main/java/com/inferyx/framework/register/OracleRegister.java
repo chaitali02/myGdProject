@@ -129,13 +129,13 @@ public class OracleRegister {
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.ORACLE.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			/*	ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
 				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				datastore.setNumRows(rsHolder.getResultSet().getInt(1));*/
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
