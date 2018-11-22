@@ -2826,7 +2826,30 @@ public class ModelServiceImpl {
 			.append(") t");
 		return sb.toString();
 	}*/
-	
+	public List<Predict> getPredictByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<Predict> predictList = new ArrayList<>();
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		
+		Application application = commonServiceImpl.getApp();
+		
+		if(modelVersion != null)
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		else
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		query.addCriteria(Criteria.where("active").is("Y"));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(application.getUuid()));
+		query.with(new Sort(Sort.Direction.DESC, "version"));
+		
+		predictList = mongoTemplate.find(query, Predict.class);
+		return predictList;
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 	public List<Map<String, Object>> getPrediction(String trainExecUuid, Object feature) throws Exception {
 
@@ -2842,9 +2865,12 @@ public class ModelServiceImpl {
 		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
 				model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 				MetaType.algorithm.toString());
-		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(),
-				trainExec.getDependsOn().getRef().getVersion(), MetaType.predict.toString());
+		List<Predict> predictList = (List<Predict>) getPredictByModel(model.getUuid(), model.getVersion());
 
+		
+		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictList.get(0).getUuid(),
+				predictList.get(0).getVersion(), MetaType.predict.toString());
+		
 		List<StructField> fields = new ArrayList<StructField>();
 		String tableName = String.format("%s", trainExecUuid.replace("-", "_"));
 		String appUuid = commonServiceImpl.getApp().getUuid();
