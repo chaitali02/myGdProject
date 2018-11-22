@@ -1,6 +1,6 @@
 /****/
 AdminModule = angular.module('AdminModule');
-AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService) {
+AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService,CommonService) {
   $scope.isSearchDisable = true;
   $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
@@ -116,20 +116,29 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     $scope.selectDataSource= {};
     $scope.allDataSource=[];
     $scope.searchtext=null;
-    $scope.getDatasourceByApp();
+    //$scope.getDatasourceByApp();
+    $scope.getAllLatestDatasource(); 
     $scope.gridOptions.data=[];
   }
 
-  $scope.getDatasourceByApp = function () {
+  // $scope.getDatasourceByApp = function () {
+  //   $scope.selectDataSource = null;
+  //   $scope.allDataSource = null;
+  //   RegisterSourceService.getDatasourceByApp($rootScope.appUuid).then(function (response){ onSuccessGetDatasourceByType(response.data)})
+  //   var onSuccessGetDatasourceByType = function (response) {
+  //     $scope.allDataSource = response
+  //   }
+  // }
+  // $scope.getDatasourceByApp();
+  $scope.getAllLatestDatasource = function () {
     $scope.selectDataSource = null;
     $scope.allDataSource = null;
-    RegisterSourceService.getDatasourceByApp($rootScope.appUuid).then(function (response){ onSuccessGetDatasourceByType(response.data)})
-    var onSuccessGetDatasourceByType = function (response) {
+    CommonService.getAllLatest("datasource").then(function (response){ onSuccessGetAllLatest(response.data)})
+    var onSuccessGetAllLatest = function (response) {
       $scope.allDataSource = response
     }
   }
-  $scope.getDatasourceByApp();
-  
+  $scope.getAllLatestDatasource(); 
   $scope.onChangeSource=function(){
     console.log($scope.selectDataSource)
     if($scope.selectDataSource !=null){
