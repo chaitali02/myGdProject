@@ -1846,7 +1846,7 @@ public class ModelServiceImpl {
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);	
 
 					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
-					String defaultDir = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
+					String defaultDir = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
 					String modelFileName = dataStore.getLocation();
 					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
@@ -1869,14 +1869,14 @@ public class ModelServiceImpl {
 
 						predictInput.setSourceFilePath(saveFileName);
 					} else if(source instanceof Datapod) {
-						Datasource datasource2 = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
-						dsType = datasource2.getType().toLowerCase();
+						Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						dsType = datapodDS.getType().toLowerCase();
 						predictInput.setQuery(mappedFeatureAttrSql);
-						predictInput.setHostName(datasource.getHost());
-						predictInput.setDbName(datasource.getDbname());
-						predictInput.setUserName(datasource.getUsername());
-						predictInput.setPassword(datasource.getPassword());
-						predictInput.setPort(datasource.getPort());
+						predictInput.setHostName(datapodDS.getHost());
+						predictInput.setDbName(datapodDS.getDbname());
+						predictInput.setUserName(datapodDS.getUsername());
+						predictInput.setPassword(datapodDS.getPassword());
+						predictInput.setPort(datapodDS.getPort());
 						//creating default directory to allow script/python-code to store file in this location
 						new File(defaultDir).mkdirs();
 					}
@@ -1889,20 +1889,21 @@ public class ModelServiceImpl {
 					predictInput.setDsType(dsType);
 					predictInput.setOperation(MetaType.predict.toString().toLowerCase());
 
-					String inputConfigFilePath = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json");
+					String inputConfigFilePath = defaultDir.concat("input_config.json");
 					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(new File(Helper.getPropertyValue("framework.model.predict.path")+filePath+"/".concat("input_config.json")), predictInput);
+					mapper.writeValue(new File(defaultDir.concat("input_config.json")), predictInput);
 					
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
 					
 					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
-					
+					List<String> tempTableList = new ArrayList<>();
+					tempTableList.add(tableName);
+					sparkExecutor.dropTempTable(tempTableList);
 				} else {
 					throw new Exception("Model type has been changed from \'"+model.getType().toUpperCase()+"\' to \'"+trainModel.getType().toUpperCase()+"\'.");
 				}
-			} else {				
-				
+			} else {	
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 					String sql = generateSQLBySource(source, execParams);
 					exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
@@ -1921,6 +1922,9 @@ public class ModelServiceImpl {
 						result = rsHolder;					
 						count = rsHolder.getCountRows();
 					}
+					List<String> tempTableList = new ArrayList<>();
+					tempTableList.add((tableName+"_pred_data"));
+					sparkExecutor.dropTempTable(tempTableList);
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					//TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(), model.getVersion());
 					TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
@@ -1952,6 +1956,9 @@ public class ModelServiceImpl {
 						result = rsHolder2;					
 						count = rsHolder2.getCountRows();
 					}
+					List<String> tempTableList = new ArrayList<>();
+					tempTableList.add((tableName+"_pred_data"));
+					sparkExecutor.dropTempTable(tempTableList);
 				}
 			}
 
@@ -2596,7 +2603,7 @@ public class ModelServiceImpl {
 						Datasource datasource = commonServiceImpl.getDatasourceByApp();
 						IExecutor exec = null;
 						exec = execFactory.getExecutor(datasource.getType());
-						exec.executeAndRegister(sql, (tableName), appUuid);
+						exec.executeAndRegister(sql, tableName, appUuid);
 						
 						exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 						
@@ -2641,6 +2648,11 @@ public class ModelServiceImpl {
 						String fileName = "model.result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					}
+					
+					List<String> tempTableList = new ArrayList<>();
+					tempTableList.add(tableName);
+					sparkExecutor.dropTempTable(tempTableList);
+					
 					dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 					dataStoreServiceImpl.create(modelFileName, trainName,
 							new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
