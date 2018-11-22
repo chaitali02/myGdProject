@@ -79,12 +79,12 @@ public class MySqlRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-			ConnectionHolder conHolder = connector.getConnection();	
+			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();	
 			Connection con = ((Statement) conHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetadata = con.getMetaData();
 

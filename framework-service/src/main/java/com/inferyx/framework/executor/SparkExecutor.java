@@ -3311,4 +3311,19 @@ public class SparkExecutor<T> implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public boolean dropTempTable(List<String> tempTableList) {
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			for(String tempTableName : tempTableList) {
+				sparkSession.sqlContext().dropTempTable(tempTableName);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 }

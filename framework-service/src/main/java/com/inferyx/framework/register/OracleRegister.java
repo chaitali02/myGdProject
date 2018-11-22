@@ -75,12 +75,12 @@ public class OracleRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(datasource.getType());
-			ConnectionHolder conHolder = connector.getConnection();
+			ConnectionHolder conHolder =connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Statement stmt = (Statement) conHolder.getStmtObject();			
 
 			for (int i = 0; i < registryList.size(); i++) {
