@@ -283,12 +283,20 @@
                                                         <!-- <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map">
                                                             <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
                                                         </a> -->
-                                                        
-                                                        <div class="btn-group btn-group-devided" data-toggle="buttons">
-                                                            <!-- <div class="x_title" style="padding:10px;">
-                                                            <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true"></button>
-                                                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="true"></button>
-                                                        </div> -->
+                                                        <div class="btn-group">
+                                                            <a class="btn green-haze btn-outline btn-circle btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+                                                                <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li ng-click="autoMapFeature('By Name')">
+                                                                    <a href="javascript:;">By Name</a>
+                                                                </li>
+                                                                <li class="divider" style="margin: 0px;"> </li>
+                                                                <li  ng-click="autoMapFeature('By Order')">
+                                                                    <a href="javascript:;">By Order</a>
+                                                                </li>
+                                                              
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -308,7 +316,7 @@
                                                         </div>
                                                     </div> -->
                                                     <!-- </div> -->
-                                                    <div class="row">
+                                                    <!-- <div class="row">
                                                         <div class="col-md-6 col-sm-6">
                                                         </div>
                                                         <div class="col-md-6 col-sm-6">
@@ -320,7 +328,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     
                                                     <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                         <div class="col-md-12">
@@ -363,10 +371,14 @@
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div style="text-align: center;">
                                                                                         <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                                                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                                                                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+
                                                                                         </a>
                                                                                         <a ng-disabled="($index == attributeTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                                                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                                                                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+
                                                                                         </a>
                                                                                     </div>
                                                                                 </span>

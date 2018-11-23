@@ -1551,20 +1551,23 @@ return {
 
   // This will trigger when user pick e row
   function onDragStart(e) {
+
+    console.log("onDragStart")
+    // console.log(e);
     if(attr.draggable =="false"){
       return false
     }
     //Mozilla Hack
 //	  e.dataTransfer.setData("Text", "");
-
+sourceIndex = $scope.$index;
     if (!sourceParent) {
 
     // Set selected element's parent id
     sourceParent = tbody.attr('drag-id') ? tbody.attr('drag-id') : void 0;
-
+    console.log(tbody.attr('id'))
     // Set selected element's index
-    sourceIndex = $scope.$index;
-
+    // sourceIndex = $scope.$index;
+    // console.log($scope.$index);
     // This don't support in IE but other browser support it
     // This will set drag Image with it's position
     // IE automically set image by himself
@@ -1579,7 +1582,8 @@ return {
 
   // This will trigger when user drag source element on another element
   function onDragOver(e) {
-
+    // console.log("onDragOver")
+    // console.log(e);
     // Prevent Default actions
     e.preventDefault ? e.preventDefault() : void 0;
     e.stopPropagation ? e.stopPropagation() : void 0;
@@ -1596,11 +1600,12 @@ return {
 
   //This will Trigger when user drop source element on target element
   function onDrop(e) {
-
+    
     // Prevent Default actions
     e.preventDefault ? e.preventDefault() : void 0;
     e.stopPropagation ? e.stopPropagation() : void 0;
-
+  //  console.log("onDrop")
+   // console.log(e)
     if (typeof attr.ngRepeat === "undefined")
     return false;
     // Get this item List
@@ -1609,10 +1614,10 @@ return {
 
     // Get target element's index
     var targetIndex = $scope.$index;
-
+    console.log($scope.$index);
     // Get target element's parent id
     var targetParent = tbody.attr('drag-id') ? tbody.attr('drag-id') : void 0;
-
+    console.log(tbody.attr('id'))
     // Get properties names which will be changed during the drag and drop
     var elements = attr.dragDrop ? attr.dragDrop.trim().split(",") : void 0;
 
@@ -1626,7 +1631,12 @@ return {
       itemList[targetIndex][element] = [itemList[sourceIndex][element], itemList[sourceIndex][element] = itemList[targetIndex][element]][0] : void 0;
     }) : void 0;
     // Visual row change 
-    itemList[targetIndex] = [itemList[sourceIndex], itemList[sourceIndex] = itemList[targetIndex]][0];
+    debugger
+    // itemList[targetIndex] = [itemList[sourceIndex], itemList[sourceIndex] = itemList[targetIndex]][0];
+   var item= itemList[sourceIndex];
+   itemList.splice(sourceIndex, 1);
+   itemList.splice(targetIndex, 0, item);
+   item=null;
     // After completing the task directive send changes to the controller 
     $scope.$apply(function() {
       typeof attr.afterDrop != "undefined" ?

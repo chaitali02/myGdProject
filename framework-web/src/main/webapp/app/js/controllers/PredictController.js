@@ -165,7 +165,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       });
     }     
   }
-  $scope.autoMapFeature=function(){
+  $scope.autoMapFeature=function(type){
+    $scope.selectedAutoMode=type
     if($scope.selectedAutoMode =="By Name"){
       var allTargetAttribute={};
       angular.forEach($scope.allTargetAttribute, function (val, key) {

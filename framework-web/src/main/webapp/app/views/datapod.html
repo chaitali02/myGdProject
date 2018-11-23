@@ -387,7 +387,7 @@
                       <th  class="text-center" style="width:14%;">Type</th>
                       <th  class="text-center">Length</th>
                       <th  class="text-center">Desc</th>
-                      <th  class="text-center">Move</th>
+                      <th  class="text-center;" style="width: 7%;">Move</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -446,10 +446,12 @@
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <div style="text-align: center;">
                             <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                              <i class="glyphicon glyphicon-arrow-up"></i>
+                              <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                              <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                             </a>
                             <a ng-disabled="($index == attributetable.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                              <i class="glyphicon glyphicon-arrow-down"></i>
+                              <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                              <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                             </a>
                           </div>
                         </span>
