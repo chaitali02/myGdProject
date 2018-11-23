@@ -972,8 +972,9 @@ public class SparkExecutor<T> implements IExecutor {
 		} else {
 			rsHolder2.setDataFrame(dfTask);
 			rsHolder2.setType(ResultType.dataframe);
+			
 		}
-		
+		rsHolder2.setTableName(datapodTableName);
 		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod, daoRegister);
 		datapodWriter.write(rsHolder2, filePathUrl, datapod, SaveMode.Overwrite.toString());
 		return count;
@@ -1805,7 +1806,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df.show(false);
+		df.show(false);
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
@@ -2160,7 +2161,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = sparkSession.read()
 									  .format("com.databricks.spark.csv")
 									  .option("dateFormat", "dd-MM-yyyy")
-									  .option("inferSchema", "true")
+									  .option("inferSchema", "false")
 									  .option("header", "true")
 									  .option("treatEmptyValuesAsNulls", true)
 									  .option("nullValue", "0")
@@ -2168,9 +2169,10 @@ public class SparkExecutor<T> implements IExecutor {
 //		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setTableName(targetTableName);
+		df.show(false);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
-		rsHolder = persistDataframe(rsHolder, datasource, datapod, null);
+		rsHolder = persistDataframe(rsHolder, datasource, datapod, "append");
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}
