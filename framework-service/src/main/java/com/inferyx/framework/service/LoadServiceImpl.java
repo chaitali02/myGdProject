@@ -258,12 +258,18 @@ public class LoadServiceImpl {
 			Datapod datapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			long count = 0; 
 			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))	{
-				count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
-					datapod, appUuid);
+				if(datapodDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+					count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
+							datapod, appUuid);
+				} else {
+					ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
+					count = rsHolder.getCountRows();
+				}				
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
@@ -274,7 +280,7 @@ public class LoadServiceImpl {
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
-				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName, datapod);				
+				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
 				count = rsHolder.getCountRows();
 			}
 			
