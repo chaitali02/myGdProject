@@ -1818,7 +1818,11 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 
-			df.write().mode(saveMode).insertInto(rsHolder.getTableName());
+				Map<String, String> options = new HashMap<>();
+				options.put("driver", datasource.getDriver());
+				options.put("user", datasource.getUsername());
+				options.put("password", datasource.getPassword());
+				df.write().mode(saveMode).options(options).insertInto(rsHolder.getTableName());
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();

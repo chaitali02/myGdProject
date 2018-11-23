@@ -266,7 +266,12 @@ public class LoadServiceImpl {
 				if(datapodDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
 							datapod, appUuid);
-				} else {
+				}
+				else if(datapodDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())  || datapodDS.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())){
+					loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
+					exec.executeSql(loadExec.getExec(), appUuid);
+				}
+				else {
 					ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
 					count = rsHolder.getCountRows();
 				}				
