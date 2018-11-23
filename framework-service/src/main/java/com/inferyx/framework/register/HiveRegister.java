@@ -139,7 +139,7 @@ public class HiveRegister extends DataSourceRegister {
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-				
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -160,7 +160,8 @@ public class HiveRegister extends DataSourceRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				dataStoreServiceImpl.save(datastore);
 				dpList.add(savedDp);
 			}

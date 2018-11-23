@@ -156,7 +156,8 @@ public class OracleRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
 				dpList.add(savedDp);
