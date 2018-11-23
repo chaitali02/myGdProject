@@ -608,4 +608,11 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

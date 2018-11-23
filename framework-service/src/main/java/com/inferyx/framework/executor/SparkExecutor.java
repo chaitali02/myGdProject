@@ -390,6 +390,26 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext) throws IOException {
+		logger.info(" Inside executeAndFetchByDatasource  for SQL : " + sql);
+		List<Map<String, Object>> data = new ArrayList<>();
+		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+		Dataset<Row> dfSorted = rsHolder.getDataFrame();
+		dfSorted.printSchema();
+		Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
+		String[] columns = dfSorted.columns();
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+		return data;
+	}
+	
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
 		ResultSetHolder resHolder = executeSql(sql, clientContext);
 		Dataset<Row> df = resHolder.getDataFrame();

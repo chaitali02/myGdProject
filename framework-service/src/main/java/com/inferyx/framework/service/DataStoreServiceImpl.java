@@ -670,7 +670,7 @@ public class DataStoreServiceImpl {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows, dependsOn);
 			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 		}
-		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(),ds.getVersion(),null,0,rows,null,rows,null,null,null, runMode);
+		List<Map<String, Object>> results = getDatapodResultsByDatapodDatasource(ds.getUuid(), ds.getVersion(), null, 0, rows,rows, null, null, null, runMode);
 		return results;
 
 	}	
@@ -947,6 +947,172 @@ public class DataStoreServiceImpl {
 				}
 			}*/
 
+			return data;
+		}catch (IOException | NullPointerException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			throw new RuntimeException((message != null) ? message : "Table not found.");
+		}catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			throw new RuntimeException((message != null) ? message : "Table not found.");
+		}
+	}
+	
+	public List<Map<String, Object>> getDatapodResultsByDatapodDatasource(String uuid, String version, String format,
+			int offset, int limit, int rowLimit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
+			
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
+			String tn = getTableNameByDatastore(ds.getUuid(), ds.getVersion(), runMode);
+			logger.info("Table name:" + tn);
+			boolean requestIdExistFlag = false;
+			
+			List<String> orderList = new ArrayList<>();
+			List<String> sortList = new ArrayList<>();
+			if(StringUtils.isNotBlank(order)) {	
+			 orderList = Arrays.asList(order.split("\\s*,\\s*"));
+			}
+			if(StringUtils.isNotBlank(sortBy)) {
+			 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
+			}
+			
+			StringBuilder orderBy = new StringBuilder();
+			
+			ExecContext execContext = null;
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
+				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
+			} else {
+				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			}
+			IExecutor exec = execFactory.getExecutor(execContext.toString());
+
+			limit = offset + limit;
+			offset = offset + 1;
+			String appUuid = null;
+			appUuid = commonServiceImpl.getApp().getUuid();
+
+			MetaIdentifier datapodMI = ds.getMetaId().getRef();
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodMI.getUuid(), datapodMI.getVersion(), datapodMI.getType().toString());
+			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
+			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
+				for (int i = 0; i < sortList.size(); i++) {
+					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+				}
+				if (requestId != null) {
+					for (Map.Entry<String, String> entry : requestMap.entrySet()) {
+						String id = entry.getKey();
+						if (id.equals(requestId)) 
+							requestIdExistFlag = true;
+					}
+					if (requestIdExistFlag) {
+						tn = requestMap.get(requestId);
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							if(datapodDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+							}	
+						} else 
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
+										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+								} else {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+								}
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+							}
+					} else {
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							if(datapodDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+							}	
+						} else {
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
+										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+								} else {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+								}
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM "+ tn + " LIMIT ", datapodDS, appUuid);
+							}
+						}
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							tn = requestId.replace("-", "_");
+						}
+						requestMap.put(requestId, tn);
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							if(datapodDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+							}	
+						} else {
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
+										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+								} else {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+								}
+							} else {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+							}
+						}
+					}
+				}
+			} else {
+				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+					if(datapodDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+					} else {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+					}					
+				} else {
+					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
+								|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+						} else {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+						}
+					} else {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+					}
+				}
+			}
 			return data;
 		}catch (IOException | NullPointerException e) {
 			e.printStackTrace();

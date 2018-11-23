@@ -1854,9 +1854,18 @@ public class ModelServiceImpl {
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
-					String dsType = null;
+					String sourceDsType = null;
 					if(source instanceof Rule || source instanceof DataSet) {
-						dsType = datasource.getType().toLowerCase();
+						sourceDsType = datasource.getType().toLowerCase();
+						predictInput.setSourceDsType(sourceDsType);
+					} else if(source instanceof Datapod) {
+						Datasource sourceDpDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						sourceDsType = sourceDpDS.getType().toLowerCase();
+						predictInput.setSourceDsType(sourceDsType);
+					}
+					
+					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+						sourceDsType = datasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
 						exec.executeAndRegister(mappedFeatureAttrSql, tableName, appUuid);
 						exec = execFactory.getExecutor(datasource.getType());
@@ -1868,25 +1877,59 @@ public class ModelServiceImpl {
 						logger.info("Saved file name : " + saveFileName);
 
 						predictInput.setSourceFilePath(saveFileName);
-					} else if(source instanceof Datapod) {
-						Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
-						dsType = datapodDS.getType().toLowerCase();
+					} else {
+						Datasource sourceDpDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						sourceDsType = sourceDpDS.getType().toLowerCase();
 						predictInput.setQuery(mappedFeatureAttrSql);
-						predictInput.setHostName(datapodDS.getHost());
-						predictInput.setDbName(datapodDS.getDbname());
-						predictInput.setUserName(datapodDS.getUsername());
-						predictInput.setPassword(datapodDS.getPassword());
-						predictInput.setPort(datapodDS.getPort());
+						
+						java.util.Map<String, Object> sourceDsDetails = new HashMap<>();						
+						sourceDsDetails.put("sourceHostName", sourceDpDS.getHost());
+						sourceDsDetails.put("sourceDbName", sourceDpDS.getDbname());
+						if(sourceDsType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							sourceDsDetails.put("sourceDbName", sourceDpDS.getSid());						
+						} else {
+							sourceDsDetails.put("sourceDbName", sourceDpDS.getDbname());
+						}
+						sourceDsDetails.put("sourcePort", sourceDpDS.getPort());
+						sourceDsDetails.put("sourceUserName", sourceDpDS.getUsername());
+						sourceDsDetails.put("sourcePassword", sourceDpDS.getPassword());
+						
+						predictInput.setSourceDsDetails(sourceDsDetails);
 						//creating default directory to allow script/python-code to store file in this location
 						new File(defaultDir).mkdirs();
 					}
 					
 					String scriptName = algorithm.getScriptName();
 					
+					MetaIdentifier targetMI = predict.getTarget().getRef();
+					if(targetMI.getType().equals(MetaType.datapod)) {
+						Datapod targetDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
+						Datasource targetDpDs = commonServiceImpl.getDatasourceByDatapod(targetDP);
+						String targetDsType = targetDpDs.getType();
+						predictInput.setTargetDsType(targetDsType.toLowerCase());
+						
+						java.util.Map<String, Object> targetDsDetails = new HashMap<>();
+						targetDsDetails.put("targetHostName", targetDpDs.getHost());
+						if(targetDsType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							targetDsDetails.put("targetDbName", targetDpDs.getSid());						
+						} else {
+							targetDsDetails.put("targetDbName", targetDpDs.getDbname());
+						}
+						targetDsDetails.put("targetPort", targetDpDs.getPort());
+						targetDsDetails.put("targetUserName", targetDpDs.getUsername());
+						targetDsDetails.put("targetPassword", targetDpDs.getPassword());
+						targetDsDetails.put("targetDriver", targetDpDs.getDriver());
+						
+						predictInput.setTargetDsDetails(targetDsDetails);
+						predictInput.setTargetTableName(targetDP.getName());
+						predictInput.setUrl(Helper.genUrlByDatasource(targetDpDs));
+					} else if(targetMI.getType().equals(MetaType.file)) {
+						predictInput.setTargetPath(savePredict);
+						predictInput.setTargetDsType(MetaType.file.toString().toLowerCase());
+					}					
+					
 					predictInput.setNumInput(fieldArray.length);
 					predictInput.setModelFilePath(modelFileName);
-					predictInput.setTargetPath(savePredict);
-					predictInput.setDsType(dsType);
 					predictInput.setOperation(MetaType.predict.toString().toLowerCase());
 
 					String inputConfigFilePath = defaultDir.concat("input_config.json");
@@ -1895,7 +1938,8 @@ public class ModelServiceImpl {
 					
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
-					
+
+					logger.info("Object PredictInput: "+predictInput.toString());
 					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					List<String> tempTableList = new ArrayList<>();
 					tempTableList.add(tableName);
@@ -2594,12 +2638,21 @@ public class ModelServiceImpl {
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					
-					String dsType = null;
-					if(source instanceof DataSet || source instanceof Rule) {
+					String sourceDsType = null;
+					if(source instanceof Rule || source instanceof DataSet) {
+						sourceDsType = MetaType.file.toString().toLowerCase();
+						trainInput.setSourceDsType(sourceDsType);
+					} else if(source instanceof Datapod) {
+						Datasource sourceDpDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						sourceDsType = sourceDpDS.getType().toLowerCase();
+						trainInput.setSourceDsType(sourceDsType);
+					}
+					
+					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + saveFileName);
 						
-						dsType = MetaType.file.toString().toLowerCase();
+						sourceDsType = MetaType.file.toString().toLowerCase();
 						Datasource datasource = commonServiceImpl.getDatasourceByApp();
 						IExecutor exec = null;
 						exec = execFactory.getExecutor(datasource.getType());
@@ -2610,23 +2663,31 @@ public class ModelServiceImpl {
 						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
 
 						trainInput.setSourceFilePath(saveFileName);
-					} else if(source instanceof Datapod) {
-						Datasource datasource = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
-						dsType = datasource.getType().toLowerCase();
+					} else {
+						Datasource sourceDpDS = commonServiceImpl.getDatasourceByDatapod((Datapod) source);
+						sourceDsType = sourceDpDS.getType().toLowerCase();
 
 						trainInput.setQuery(sql);
-						trainInput.setHostName(datasource.getHost());
-						trainInput.setDbName(datasource.getDbname());
-						trainInput.setUserName(datasource.getUsername());
-						trainInput.setPassword(datasource.getPassword());
-						trainInput.setPort(datasource.getPort());
+						
+						java.util.Map<String, Object> sourceDsDetails = new HashMap<>();						
+						sourceDsDetails.put("sourceHostName", sourceDpDS.getHost());
+						sourceDsDetails.put("sourceDbName", sourceDpDS.getDbname());
+						if(sourceDsType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							sourceDsDetails.put("sourceDbName", sourceDpDS.getSid());						
+						} else {
+							sourceDsDetails.put("sourceDbName", sourceDpDS.getDbname());
+						}
+						sourceDsDetails.put("sourcePort", sourceDpDS.getPort());
+						sourceDsDetails.put("sourceUserName", sourceDpDS.getUsername());
+						sourceDsDetails.put("sourcePassword", sourceDpDS.getPassword());
+						
+						trainInput.setSourceDsDetails(sourceDsDetails);
 						//creating default directory to allow script/python-code to store file in this location
 						new File(defaultDir).mkdirs();
 					}
 					
 					trainInput.setNumInput(fieldArray.length);
 					trainInput.setModelFilePath(modelFileName);
-					trainInput.setDsType(dsType);
 					trainInput.setOperation(MetaType.train.toString().toLowerCase());
 		
 					String inputConfigFilePath = defaultDir.concat("input_config.json");
@@ -2636,6 +2697,7 @@ public class ModelServiceImpl {
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
 					
+					logger.info("Object TrainInput: "+trainInput.toString());
 					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					if(!scriptPrintedMsgs.isEmpty()) {
 						result = true;

@@ -696,4 +696,16 @@ public interface IExecutor {
 	 */
 	Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
 			String tableName, String clientContext, String saveFileName) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return 
+	 * @throws IOException
+	 */
+	List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException;
 }
