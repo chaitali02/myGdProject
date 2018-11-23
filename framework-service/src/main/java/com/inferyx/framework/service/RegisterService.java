@@ -3684,6 +3684,7 @@ public class RegisterService {
 				registry.setDesc(null);
 				registry.setRegisteredOn(null);
 				registry.setStatus("UnRegistered");
+				registry.setCompareStatus(Compare.NEW.toString());
 				registryList.add(registry);
 			}
 			i++;
@@ -3708,6 +3709,21 @@ public class RegisterService {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
+		}
+
+	}
+	
+	
+	public String getdataTypeBydbType(String dbtype, String datatype)
+			throws Exception {
+	    if (dbtype.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+			return mysqlRegister.getconvertedDataType(datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			return oracleRegister.getconvertedDataType( datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.getconvertedDataType( datatype);
+		} else {
+			return datatype;
 		}
 
 	}

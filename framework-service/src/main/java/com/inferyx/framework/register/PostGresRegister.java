@@ -106,7 +106,7 @@ public class PostGresRegister {
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -170,5 +170,26 @@ public class PostGresRegister {
 			e.printStackTrace();
 		}
 		return registryList;
+	}
+
+	public String getconvertedDataType( String datatype) {
+		 // TODO Auto-generated method stub
+		
+			switch (datatype) {
+			case "VARCHAR":
+				return "VARCHAR";
+			case "INTEGER":
+				return "INTEGER";
+			case "DECIMAL":
+				return "DECIMAL";
+			case "BIGDECIMAL":
+				return "DECIMAL";
+			case "CHAR":
+				return "CHAR";
+			case "BOOLEAN":
+				return "BOOLEAN";
+			default:
+				return datatype;
+			}
 	}
 }

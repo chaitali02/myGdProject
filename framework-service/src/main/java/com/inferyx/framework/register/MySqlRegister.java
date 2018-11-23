@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -102,13 +103,13 @@ public class MySqlRegister {
 				datapod.setName(tableName);
 				ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
-					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
+					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + getconvertedDataType(rs.getString("TYPE_NAME")));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -184,5 +185,26 @@ public class MySqlRegister {
 			}
 		}*/
 		return registryList;
+	}
+
+	public String getconvertedDataType(String datatype) {
+	
+		switch (datatype) {
+		case "VARCHAR":
+			return "VARCHAR";
+		case "INT":
+			return "INTEGER";
+		case "DECIMAL":
+			return "DECIMAL";
+		case "BIGDECIMAL":
+			return "DECIMAL";
+		case "CHAR":
+			return "CHAR";
+		case "BOOLEAN":
+			return "BOOLEAN";
+		default:
+			return datatype;
+		}
+
 	}
 }

@@ -103,7 +103,7 @@ public class OracleRegister {
 					String colType = rs.getString(2);
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -166,5 +166,25 @@ public class OracleRegister {
 			e.printStackTrace();
 		}
 		return registryList;
+	}
+
+	public String getconvertedDataType( String datatype) {
+
+		switch (datatype) {
+		case "VARCHAR":
+			return "VARCHAR2";
+		case "INTEGER":
+			return "INTEGER";
+		case "DECIMAL":
+			return "DECIMAL";
+		case "BIGDECIMAL":
+			return "DECIMAL";
+		case "CHAR":
+			return "CHAR";
+		case "BOOLEAN":
+			return "CHAR";
+		default:
+			return datatype;
+		}
 	}
 }
