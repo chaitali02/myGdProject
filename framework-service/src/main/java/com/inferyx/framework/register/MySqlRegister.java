@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -79,12 +80,12 @@ public class MySqlRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-			ConnectionHolder conHolder = connector.getConnection();	
+			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();	
 			Connection con = ((Statement) conHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetadata = con.getMetaData();
 
@@ -102,13 +103,13 @@ public class MySqlRegister {
 				datapod.setName(tableName);
 				ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
-					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
+					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + getconvertedDataType(rs.getString("TYPE_NAME")));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -133,14 +134,14 @@ public class MySqlRegister {
 				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
-				IExecutor exec = execFactory.getExecutor(ExecContext.MYSQL.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
-				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				//IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
+				//ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			//	rsHolder.getResultSet().next();
+				datastore.setNumRows(0);
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-				
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -161,7 +162,8 @@ public class MySqlRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
 				dpList.add(savedDp);
@@ -183,5 +185,26 @@ public class MySqlRegister {
 			}
 		}*/
 		return registryList;
+	}
+
+	public String getconvertedDataType(String datatype) {
+	
+		switch (datatype) {
+		case "VARCHAR":
+			return "VARCHAR";
+		case "INT":
+			return "INTEGER";
+		case "DECIMAL":
+			return "DECIMAL";
+		case "BIGDECIMAL":
+			return "DECIMAL";
+		case "CHAR":
+			return "CHAR";
+		case "BOOLEAN":
+			return "BOOLEAN";
+		default:
+			return datatype;
+		}
+
 	}
 }

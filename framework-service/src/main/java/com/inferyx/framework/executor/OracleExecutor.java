@@ -504,7 +504,7 @@ public class OracleExecutor implements IExecutor {
 					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
 				}
 				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
-				ConnectionHolder connectionHolder = connector.getConnection();
+				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//getConnection();
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				
 				DatabaseMetaData dbMetaData = con.getMetaData();
@@ -560,7 +560,7 @@ public class OracleExecutor implements IExecutor {
 		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
 		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
 			String status = null;			
-			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().contains(attribute.getType().toLowerCase())) {
+			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().equalsIgnoreCase(attribute.getType().toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();

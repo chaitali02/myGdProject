@@ -77,12 +77,12 @@ public class PostGresRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
-			ConnectionHolder conHolder = connector.getConnection();
+			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Connection con = ((Statement) conHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetadata = con.getMetaData();
 
@@ -106,7 +106,7 @@ public class PostGresRegister {
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -131,14 +131,14 @@ public class PostGresRegister {
 				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
-				IExecutor exec = execFactory.getExecutor(ExecContext.POSTGRES.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
-				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				//IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
+				//ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			//	rsHolder.getResultSet().next();
+				datastore.setNumRows(0);
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-				
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -159,7 +159,8 @@ public class PostGresRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
 				dpList.add(savedDp);
@@ -169,5 +170,26 @@ public class PostGresRegister {
 			e.printStackTrace();
 		}
 		return registryList;
+	}
+
+	public String getconvertedDataType( String datatype) {
+		 // TODO Auto-generated method stub
+		
+			switch (datatype) {
+			case "VARCHAR":
+				return "VARCHAR";
+			case "INTEGER":
+				return "INTEGER";
+			case "DECIMAL":
+				return "DECIMAL";
+			case "BIGDECIMAL":
+				return "DECIMAL";
+			case "CHAR":
+				return "CHAR";
+			case "BOOLEAN":
+				return "BOOLEAN";
+			default:
+				return datatype;
+			}
 	}
 }

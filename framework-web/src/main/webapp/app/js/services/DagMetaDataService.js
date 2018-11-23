@@ -888,7 +888,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
 
     'dataset':{
       name : 'dataset',
-      caption : 'Data Set',
+      caption : 'Dataset',
       execType:'',
       metaType:'dataset',
       color : '#00695C',

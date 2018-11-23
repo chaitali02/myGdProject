@@ -1030,6 +1030,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			attributeinfo.isSourceAtributeFunction = false;
 			attributeinfo.isSourceAtributeParamList = false;
 			$scope.attributeTableArray.push(attributeinfo);
+			$scope.onChangeSourceName(i);
 		}
 		
 	}
@@ -1109,7 +1110,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 	$scope.isDublication = function (arr, field, index, name) {
 		var res = -1;
-		for (var i = 0; i < arr.length - 1; i++) {
+		console.log(name)
+		for (var i = 0; i < arr.length ; i++) {
 			if (arr[i][field] == arr[index][field] && i != index) {
 			    $scope.myform3[name].$invalid = true;
 				res = i;

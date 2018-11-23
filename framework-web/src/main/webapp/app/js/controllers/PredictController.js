@@ -165,7 +165,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       });
     }     
   }
-  $scope.autoMapFeature=function(){
+  $scope.autoMapFeature=function(type){
+    $scope.selectedAutoMode=type
     if($scope.selectedAutoMode =="By Name"){
       var allTargetAttribute={};
       angular.forEach($scope.allTargetAttribute, function (val, key) {
@@ -173,20 +174,32 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       });
 
       if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+        var featureMapTableArray= $scope.featureMapTableArray;
         for(var i=0;i<$scope.featureMapTableArray.length;i++){
-          $scope.featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
+          featureMapTableArray[i].targetFeature=allTargetAttribute[$scope.featureMapTableArray[i].sourceFeature.featureName]//$scope.allTargetAttribute[i];
         }
+        $scope.featureMapTableArray=null;
+        setTimeout(function(){
+          $scope.featureMapTableArray=featureMapTableArray;
+        },10);
       }
     }
     if($scope.selectedAutoMode =="By Order"){
-      if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
-      for(var i=0;i<$scope.featureMapTableArray.length;i++){
-        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      var featureMapTableArray= $scope.featureMapTableArray;
+      if(featureMapTableArray && featureMapTableArray.length >0){
+        for(var i=0;i<featureMapTableArray.length;i++){
+          featureMapTableArray[i].targetFeature=null;
+          featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+        }
+        $scope.featureMapTableArray=null;
+        setTimeout(function(){
+          $scope.featureMapTableArray=featureMapTableArray;
+        },10);
       }
     }
-
-    }
   }
+
+
   $scope.getAllLetestModel=function(defaultValue){
     PredictService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {

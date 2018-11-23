@@ -110,8 +110,6 @@ public interface IEdgeDao extends MongoRepository<Edge, String> {
 	public List<Edge> findBySrcAndDstAndRelationType(List<String> src,List<String> dst,List<String> nodeType);
 	
 	
-
-	
 	@Query(value="{'dst' : ?0,'src' : ?1}")
 	public Edge findOneByDstAndSrc(String dst,String src);
 	

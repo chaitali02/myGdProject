@@ -75,12 +75,12 @@ public class OracleRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(datasource.getType());
-			ConnectionHolder conHolder = connector.getConnection();
+			ConnectionHolder conHolder =connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Statement stmt = (Statement) conHolder.getStmtObject();			
 
 			for (int i = 0; i < registryList.size(); i++) {
@@ -103,7 +103,7 @@ public class OracleRegister {
 					String colType = rs.getString(2);
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
+					attr.setType(getconvertedDataType(rs.getString(2)));
 					attr.setDesc("");
 					attr.setKey("");
 					attr.setPartition("N");
@@ -129,13 +129,13 @@ public class OracleRegister {
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.ORACLE.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			/*	ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
 				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				datastore.setNumRows(rsHolder.getResultSet().getInt(1));*/
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -156,7 +156,8 @@ public class OracleRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
 				dpList.add(savedDp);
@@ -165,5 +166,25 @@ public class OracleRegister {
 			e.printStackTrace();
 		}
 		return registryList;
+	}
+
+	public String getconvertedDataType(String datatype) {
+
+		switch (datatype) {
+		case "VARCHAR2":
+			return "VARCHAR";
+		case "INTEGER":
+			return "INTEGER";
+		case "DECIMAL":
+			return "DECIMAL";
+		case "BIGDECIMAL":
+			return "DECIMAL";
+		case "CHAR":
+			return "CHAR";
+		case "BOOLEAN":
+			return "CHAR";
+		default:
+			return datatype;
+		}
 	}
 }

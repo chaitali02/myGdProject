@@ -27,15 +27,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +44,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -2800,7 +2803,7 @@ public class ModelServiceImpl {
 				isReadingScore = false;
 			}
 		}
-		summary.put("confusion mattrix", confusionMatrx);
+		summary.put("confusion matrix", confusionMatrx);
 		return summary;
 	}
 	
@@ -2884,4 +2887,104 @@ public class ModelServiceImpl {
 			.append(") t");
 		return sb.toString();
 	}*/
+	public List<Predict> getPredictByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<Predict> predictList = new ArrayList<>();
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		
+		Application application = commonServiceImpl.getApp();
+		
+		if(modelVersion != null)
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		else
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		query.addCriteria(Criteria.where("active").is("Y"));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(application.getUuid()));
+		query.with(new Sort(Sort.Direction.DESC, "version"));
+		
+		predictList = mongoTemplate.find(query, Predict.class);
+		return predictList;
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public List<Map<String, Object>> getPrediction(String trainExecUuid, Object feature) throws Exception {
+
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, null,
+				MetaType.trainExec.toString());
+
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(),
+				trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),
+				train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+		
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+				model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
+				MetaType.algorithm.toString());
+		List<Predict> predictList = (List<Predict>) getPredictByModel(model.getUuid(), model.getVersion());
+
+		
+		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictList.get(0).getUuid(),
+				predictList.get(0).getVersion(), MetaType.predict.toString());
+		
+		List<StructField> fields = new ArrayList<StructField>();
+		String tableName = String.format("%s", trainExecUuid.replace("-", "_"));
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+
+		Map<String, Object> feature1 = (Map<String, Object>) feature;
+		Map<String, List<Map<String, Object>>> list = null;
+		List<Map<String, Object>> list2 = null;
+		Iterator it = feature1.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			list = (Map<String, List<Map<String, Object>>>) pair.getValue();
+		}
+
+		Iterator it1 = list.entrySet().iterator();
+		while (it1.hasNext()) {
+			Map.Entry pair = (Map.Entry) it1.next();
+			list2 = (List<Map<String, Object>>) pair.getValue();
+		}
+
+		List<Row> data = new ArrayList<>();
+		List<Object> value = new ArrayList<>();
+		for (Map<String, Object> map : list2) {
+			if (map.get("value") instanceof java.lang.Integer) {
+				Integer i = (Integer) map.get("value"); // Auto-boxing to Integer
+				Double b = new Double(i);
+				value.add(b);
+			} else {
+				value.add(map.get("value"));
+			}
+		}
+
+		for (Map<String, Object> map : list2) {
+			fields.add(DataTypes.createStructField(map.get("key").toString(), DataTypes.DoubleType, true));
+		}
+		data.add(RowFactory.create(value.toArray(new Double[value.size()])));
+
+		data.forEach(t -> System.out.println(t.get(0)));
+
+		ResultSetHolder rsHolder = sparkExecutor.createAndRegisterDataset(data, DataTypes.createStructType(fields),
+				(tableName + "_pred_data"));
+		rsHolder.getDataFrame().show();
+		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+		//String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+
+
+		//exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), predict.getLabelInfo().toString(), appUuid);
+		
+	
+		ResultSetHolder rsHolder1 = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		rsHolder1.getDataFrame().show();
+
+		return null;
+	}
 }
