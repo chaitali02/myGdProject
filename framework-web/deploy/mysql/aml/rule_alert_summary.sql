@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS RULE_ALERT_SUMMARY;
+drop table if exists rule_alert_summary;
 
-CREATE TABLE RULE_ALERT_SUMMARY
+create table rule_alert_summary
 ( 
-  RULE_TYPE VARCHAR(50),
-  FOCUS_TYPE VARCHAR(50),
-  ALERTED INTEGER(50), 
-  NON_ALERTED INTEGER(50), 
-  BUSINESS_DATE VARCHAR(50)
+  rule_type varchar(50),
+  focus_type varchar(50),
+  alerted integer(50), 
+  non_alerted integer(50), 
+  business_date varchar(50)
 );
 
 

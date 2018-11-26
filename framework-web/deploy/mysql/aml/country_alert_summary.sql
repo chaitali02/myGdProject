@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS COUNTRY_ALERT_SUMMARY;
+drop table if exists country_alert_summary;
 
-CREATE TABLE COUNTRY_ALERT_SUMMARY
+create table country_alert_summary
 (
-  COUNTRY_CODE VARCHAR(50),
-  ALERTED INTEGER(50), 
-  NON_ALERTED INTEGER(50), 
-  BUSINESS_DATE VARCHAR(50)
+  country_code varchar(50),
+  alerted integer(50), 
+  non_alerted integer(50), 
+  business_date varchar(50)
 );
 
