@@ -98,26 +98,77 @@ public class MySqlRegister {
 				datapod = new Datapod();
 				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
 
-				if (datapodList.size() > 0)
+				if (datapodList.size() > 0) {
 					datapod.setUuid(datapodList.get(0).getUuid());
-
+				}
+//				String partitionQuery = "EXPLAIN "+tableName;
+//				ResultSet rsPartition = ((Statement) conHolder.getStmtObject()).executeQuery(partitionQuery);
+//				while(rsPartition.next()) {
+//					System.out.println();
+//					System.out.println(rsPartition.getString("FIELD"));
+//					System.out.println();
+//				}
+				ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+//					System.out.println();
+//					System.out.println("TABLE_CAT: "+rsPriKey.getString("TABLE_CAT"));
+//					System.out.println("TABLE_SCHEM: "+rsPriKey.getString("TABLE_SCHEM"));
+//					System.out.println("TABLE_NAME: "+rsPriKey.getString("TABLE_NAME"));
+//					System.out.println("COLUMN_NAME: "+rsPriKey.getString("COLUMN_NAME"));
+//					System.out.println("KEY_SEQ: "+rsPriKey.getString("KEY_SEQ"));
+//					System.out.println("PK_NAME: "+rsPriKey.getString("PK_NAME"));
+//					System.out.println();
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
 				datapod.setName(tableName);
 				ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + getconvertedDataType(rs.getString("TYPE_NAME")));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
-					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);
 					attrList.add(attr);
+//					System.out.println();
+//					System.out.println("TABLE_CAT: "+rs.getString("TABLE_CAT"));
+//					System.out.println("TABLE_SCHEM: "+rs.getString("TABLE_SCHEM"));
+//					System.out.println("TABLE_NAME: "+rs.getString("TABLE_NAME"));
+//					System.out.println("COLUMN_NAME: "+rs.getString("COLUMN_NAME"));
+//					System.out.println("DATA_TYPE: "+rs.getString("DATA_TYPE"));
+//					System.out.println("TYPE_NAME: "+rs.getString("TYPE_NAME"));
+//					System.out.println("COLUMN_SIZE: "+rs.getString("COLUMN_SIZE"));
+//					System.out.println("BUFFER_LENGTH: "+rs.getString("BUFFER_LENGTH"));
+//					System.out.println("DECIMAL_DIGITS: "+rs.getString("DECIMAL_DIGITS"));
+//					System.out.println("NUM_PREC_RADIX: "+rs.getString("NUM_PREC_RADIX"));
+//					System.out.println("NULLABLE: "+rs.getString("NULLABLE"));
+//					System.out.println("SCOPE_CATALOG: "+rs.getString("SCOPE_CATALOG"));
+//					System.out.println("SCOPE_SCHEMA: "+rs.getString("SCOPE_SCHEMA"));
+//					System.out.println("SCOPE_TABLE: "+rs.getString("SCOPE_TABLE"));
+//					System.out.println("REMARKS: "+rs.getString("REMARKS"));
+//					System.out.println("COLUMN_DEF: "+rs.getString("COLUMN_DEF"));
+//					System.out.println("SQL_DATA_TYPE: "+rs.getString("SQL_DATA_TYPE"));
+//					System.out.println("SQL_DATETIME_SUB: "+rs.getString("SQL_DATETIME_SUB"));
+//					System.out.println("CHAR_OCTET_LENGTH: "+rs.getString("CHAR_OCTET_LENGTH"));
+//					System.out.println("ORDINAL_POSITION: "+rs.getString("ORDINAL_POSITION"));
+//					System.out.println("IS_NULLABLE: "+rs.getString("IS_NULLABLE"));
+//					System.out.println("SOURCE_DATA_TYPE: "+rs.getString("SOURCE_DATA_TYPE"));
+//					System.out.println("IS_AUTOINCREMENT: "+rs.getString("IS_AUTOINCREMENT"));
+//					System.out.println("IS_GENERATEDCOLUMN: "+rs.getString("IS_GENERATEDCOLUMN"));
+//					System.out.println();
 				}
+				
 				rs.close();
 				datapod.setAttributes(attrList);
 				datapod.setDatasource(datastoreMeta);

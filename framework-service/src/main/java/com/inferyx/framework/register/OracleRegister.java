@@ -11,6 +11,7 @@
 package com.inferyx.framework.register;
 
 
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -95,8 +96,18 @@ public class OracleRegister {
 					datapod.setUuid(datapodList.get(0).getUuid());
 				
 				datapod.setName(tableName);
+				
+				DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
+				ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
+				
 				ResultSet rs = stmt.executeQuery("SELECT column_name, data_type FROM all_tab_columns WHERE owner='"
 						+ datasource.getDbname().toUpperCase() + "' AND table_name='" + tableName + "'");
+
+				ResultSet rsTabMeta = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Col_Name: " + rs.getString(1) +",\t type: " + rs.getString(2));
 					Attribute attr = new Attribute();
@@ -105,8 +116,13 @@ public class OracleRegister {
 					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(getconvertedDataType(rs.getString(2)));
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					attr.setLength(Integer.parseInt(rsTabMeta.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);

@@ -3699,9 +3699,7 @@ public class RegisterService {
 			return csvRegister.register(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) || type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
-		} /*else if (type.equalsIgnoreCase("impala")) {
-			return impalaRegister.registerDB(uuid, version, registryList);
-		} */else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList, runMode);
