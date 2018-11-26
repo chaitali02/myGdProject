@@ -1,0 +1,10 @@
+Money Transfers,account,30,255,2018-07-01
+High Risk Geo Transfers,account,12,433,2018-07-01
+Cross Border Transfers,account,43,345,2018-07-01
+Transaction Velocity,account,23,346,2018-07-01
+Round Amount Transfers,account,70,222,2018-07-01
+Money Transfers,customer,45,433,2018-07-01
+High Risk Geo Transfers,customer,32,567,2018-07-01
+Cross Border Transfers,customer,66,467,2018-07-01
+Transaction Velocity,customer,34,489,2018-07-01
+Round Amount Transfers,customer,54,345,2018-07-01
