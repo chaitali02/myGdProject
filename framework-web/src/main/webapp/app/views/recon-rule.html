@@ -500,12 +500,12 @@
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <div style="text-align: center;">
-                                                                        <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrSourceFilterRowUp($index)">
+                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrSourceFilterRowUp($index)">
                                                                             <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
 
                                                                         </a>
-                                                                        <a ng-disabled="($index == sourceFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrSourceFilterRowDown($index)">
+                                                                        <a class="move-column" ng-disabled="($index == sourceFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrSourceFilterRowDown($index)">
                                                                             <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                                                         </a>
@@ -802,11 +802,11 @@
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <div style="text-align: center;">
-                                                                        <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrTargetFilterRowUp($index)">
+                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrTargetFilterRowUp($index)">
                                                                             <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                                                         </a>
-                                                                        <a ng-disabled="($index == targetFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrTargetFilterRowDown($index)">
+                                                                        <a class="move-column" ng-disabled="($index == targetFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrTargetFilterRowDown($index)">
                                                                             <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                                                         </a>

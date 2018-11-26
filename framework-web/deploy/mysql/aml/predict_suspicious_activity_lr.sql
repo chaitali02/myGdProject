@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS PREDICT_SUSPICIOUS_ACTIVITY_LR;
+drop table if exists predict_suspicious_activity_lr;
 
-CREATE TABLE PREDICT_SUSPICIOUS_ACTIVITY_LR 
+create table predict_suspicious_activity_lr 
 (
-  LABEL INTEGER(50),
-  FEATURES VARCHAR(50), 
-  RAWPREDICTION VARCHAR(50), 
-  PROBABILITY VARCHAR(50), 
-  PREDICTION DECIMAL(10,3));
+  label integer(50),
+  features varchar(50), 
+  rawprediction varchar(50), 
+  probability varchar(50), 
+  prediction decimal(10,3));

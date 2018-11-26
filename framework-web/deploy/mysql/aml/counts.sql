@@ -1,15 +1,15 @@
-SELECT TABNAME,CNT FROM
+select tabname,cnt from
 (
-SELECT 'FACT_TRANSACTION_JOURNAL' AS TABNAME, COUNT(*) AS CNT FROM FACT_TRANSACTION_JOURNAL
-UNION
-SELECT 'CUSTOMER_ALERT_SUMMARY' AS TABNAME, COUNT(*) AS CNT FROM CUSTOMER_ALERT_SUMMARY
-UNION
-SELECT 'RULE_ALERT_SUMMARY' AS TABNAME, COUNT(*) AS CNT FROM RULE_ALERT_SUMMARY
-UNION
-SELECT 'RULE_ALERT_SUMMARY' AS TABNAME, COUNT(*) AS CNT FROM RULE_ALERT_SUMMARY
-UNION
-SELECT 'PREDICT_SUSPICIOUS_ACTIVITY_GBT' AS TABNAME, COUNT(*) AS CNT FROM PREDICT_SUSPICIOUS_ACTIVITY_GBT
-UNION
-SELECT 'PREDICT_SUSPICIOUS_ACTIVITY_LR' AS TABNAME, COUNT(*) AS CNT FROM PREDICT_SUSPICIOUS_ACTIVITY_LR
-) T1
-ORDER BY TABNAME;
+select 'fact_transaction_journal' as tabname, count(*) as cnt from aml_small.fact_transaction_journal
+union
+select 'customer_alert_summary' as tabname, count(*) as cnt from aml_small.customer_alert_summary
+union
+select 'rule_alert_summary' as tabname, count(*) as cnt from aml_small.rule_alert_summary
+union
+select 'country_alert_summary' as tabname, count(*) as cnt from aml_small.country_alert_summary
+union
+select 'predict_suspicious_activity_gbt' as tabname, count(*) as cnt from aml_small.predict_suspicious_activity_gbt
+union
+select 'predict_suspicious_activity_lr' as tabname, count(*) as cnt from aml_small.predict_suspicious_activity_lr
+) t1
+order by tabname;

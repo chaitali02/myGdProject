@@ -1,13 +1,13 @@
-TRUNCATE TABLE FACT_TRANSACTION_JOURNAL;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/fact_transaction_journal.csv' IGNORE INTO TABLE FACT_TRANSACTION_JOURNAL FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+TRUNCATE TABLE fact_transaction_journal;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/fact_transaction_journal.csv' IGNORE INTO TABLE fact_transaction_journal FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
 
-TRUNCATE TABLE CUSTOMER_ALERT_SUMMARY;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/header/customer_alert_summary.csv' IGNORE INTO TABLE CUSTOMER_ALERT_SUMMARY FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+TRUNCATE TABLE customer_alert_summary;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/customer_alert_summary.csv' IGNORE INTO TABLE customer_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
 
 
-TRUNCATE TABLE RULE_ALERT_SUMMARY;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/header/rule_alert_summary.csv' IGNORE INTO TABLE RULE_ALERT_SUMMARY FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+TRUNCATE TABLE rule_alert_summary;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/rule_alert_summary.csv' IGNORE INTO TABLE rule_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
 
-TRUNCATE TABLE COUNTRY_ALERT_SUMMARY;
-LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/header/country_alert_summary.csv' IGNORE INTO TABLE COUNTRY_ALERT_SUMMARY FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+TRUNCATE TABLE country_alert_summary;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/country_alert_summary.csv' IGNORE INTO TABLE country_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
 

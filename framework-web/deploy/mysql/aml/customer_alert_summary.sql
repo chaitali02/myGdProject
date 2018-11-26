@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS CUSTOMER_ALERT_SUMMARY;
+drop table if exists customer_alert_summary;
 
-CREATE TABLE CUSTOMER_ALERT_SUMMARY
+create table customer_alert_summary
 (
-  CUSTOMER_ID VARCHAR(50),
-  ALERTED INTEGER(50), 
-  NON_ALERTED INTEGER(50), 
-  BUSINESS_DATE VARCHAR(50)
+  customer_id varchar(50),
+  alerted integer(50), 
+  non_alerted integer(50), 
+  business_date varchar(50)
 );
 
