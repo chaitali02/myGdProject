@@ -78,6 +78,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
+  $scope.ruleLodeFormula=null;
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
@@ -1143,7 +1144,8 @@ var confirmDialog = function(newVal, yes, no) {
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-        if($scope.ruleLodeFormula && $scope.ruleLodeFormula.length ==0)
+      debugger
+        if($scope.ruleLodeFormula==null)
         $scope.getSourceByFormula();
 
     } else if (type == "expression") {
