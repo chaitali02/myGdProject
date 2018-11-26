@@ -3697,7 +3697,7 @@ public class RegisterService {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) || type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
 		} /*else if (type.equalsIgnoreCase("impala")) {
 			return impalaRegister.registerDB(uuid, version, registryList);
