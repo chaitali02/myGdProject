@@ -34,13 +34,11 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.MySqlExecutor;
 import com.inferyx.framework.executor.PostGresExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -99,17 +97,28 @@ public class PostGresRegister {
 					datapod.setUuid(datapodList.get(0).getUuid());
 
 				datapod.setName(tableName);
+				
+				ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
+				
 				ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
-					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(getconvertedDataType( rs.getString("TYPE_NAME")));
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);

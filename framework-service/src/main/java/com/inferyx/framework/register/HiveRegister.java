@@ -99,6 +99,12 @@ public class HiveRegister extends DataSourceRegister {
 					datapod.setUuid(datapodList.get(0).getUuid());
 				}
 				datapod.setName(tableName);
+				
+				ResultSet rsPriKey = dbMetaData.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
 				ResultSet rs = dbMetaData.getColumns(null, null, tableName, null);
 				
 				for(int j = 0; rs.next(); j++) {
@@ -106,14 +112,17 @@ public class HiveRegister extends DataSourceRegister {
 					logger.info("Column type is : " + rs.getString("TYPE_NAME"));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
-					Integer colSize = rs.getInt("COLUMN_SIZE");
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(colType);
-					attr.setLength(colSize);
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);
