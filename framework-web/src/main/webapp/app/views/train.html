@@ -283,7 +283,7 @@
                                                             <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
                                                         </a> -->
                                                         <div class="btn-group">
-                                                            <a class="btn green-haze btn-outline btn-circle btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
                                                                 <i class="fa fa-angle-down"></i>
                                                             </a>
                                                             <ul class="dropdown-menu pull-right">
@@ -379,12 +379,12 @@
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div style="text-align: center;">
-                                                                                        <a ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
+                                                                                        <a  class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
                                                                                           <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                                                                           <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
 
                                                                                         </a>
-                                                                                        <a ng-disabled="($index == attributeTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
+                                                                                        <a class="move-column"  ng-disabled="($index == featureMapTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
                                                                                           <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                                                                           <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
 

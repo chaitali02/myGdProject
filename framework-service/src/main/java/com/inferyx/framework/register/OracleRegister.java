@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -135,6 +136,7 @@ public class OracleRegister {
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
+				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
 				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();

@@ -40,6 +40,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.ImpalaExecutor;
@@ -136,6 +137,7 @@ public class ImpalaRegister extends DataSourceRegister {
 				rsHolder.getResultSet().next();
 				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
 				datastore.setCreatedBy(datapod.getCreatedBy());
+				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
 				

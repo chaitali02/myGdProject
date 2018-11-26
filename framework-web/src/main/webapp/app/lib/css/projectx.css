@@ -1305,3 +1305,20 @@ box-sizing:border-box;
 box-sizing:border-box;
   
 }
+
+.btn.btn-outline.green-haze.auto-map{
+  border-color:#a0a0a0;
+  color:#a0a0a0;;
+}
+.btn.btn-outline.green-haze.auto-map:focus{
+  background-color: #a0a0a0;
+  color: white;
+}
+.btn.btn-outline.green-haze.auto-map:hover{
+  background-color: #a0a0a0;
+  color: white;
+}
+.move-column{
+  color: #a0a0a0;
+}
+

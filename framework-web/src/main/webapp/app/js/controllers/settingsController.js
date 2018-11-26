@@ -170,7 +170,7 @@ AdminModule.controller('settingsController', function (cacheService,$scope,$stat
     var onSuccess = function (response) {
       notify.type = 'success',
         notify.title = 'Success',
-        notify.content = 'Graph Build Successfully'
+        notify.content = 'Graph Refreshed Successfully'
       $scope.$emit('notify', notify);
       $scope.isDataLodingBG = false;
     }
