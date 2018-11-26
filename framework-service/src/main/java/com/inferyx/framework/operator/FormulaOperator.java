@@ -65,10 +65,13 @@ public class FormulaOperator {
 		StringBuilder builder = new StringBuilder();
 		Datasource source = commonServiceImpl.getDatasourceByApp();
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
-			builder.append(" ");
+			builder.append("");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
+				if(!sourceAttr.getValue().equals("("))
+					builder.append(" ");
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
+				builder.append(" ");
 				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				if (value != null) {
 					boolean isNumber = Helper.isNumber(value);
@@ -84,6 +87,7 @@ public class FormulaOperator {
 
 				}
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
+				builder.append(" ");
 //				String value = null;
 //				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
 //				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
@@ -95,7 +99,13 @@ public class FormulaOperator {
 						value = "'"+value+"'";
 					}
 				}
-				builder.append(value);
+				if (source.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub(")
+						&& builder.lastIndexOf(",") != -1) {
+					builder.append("INTERVAL " + value + " DAY");
+				} else {
+					builder.append(value);
+
+				}
 			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {
 				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
@@ -103,12 +113,14 @@ public class FormulaOperator {
 			}
 			// implementing nested formula
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
+				builder.append(" ");
 				Formula innerFormula = (Formula) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {
+				builder.append(" ");
 				Datapod datapod = (Datapod) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				
@@ -128,12 +140,14 @@ public class FormulaOperator {
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.dataset) {
+				builder.append(" ");
 				DataSet dataset = (DataSet) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.rule) {
+				builder.append(" ");
 				Rule rule = (Rule) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				builder.append(ruleServiceImpl.getAttributeSql(daoRegister, rule, sourceAttr.getAttributeId()+"")).append(" ").toString();

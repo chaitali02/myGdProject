@@ -11,3 +11,6 @@ LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader
 TRUNCATE TABLE country_alert_summary;
 LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/country_alert_summary.csv' IGNORE INTO TABLE country_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
 
+TRUNCATE TABLE dim_country;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/dim_country.csv' IGNORE INTO TABLE dim_country FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+
