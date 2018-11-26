@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -131,6 +132,7 @@ public class PostGresRegister {
 				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
+				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
 				//IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
 				//ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
 			//	rsHolder.getResultSet().next();
