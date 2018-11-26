@@ -17,6 +17,11 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
+  dialogAttriNameArray: any[];
+  dialogSelectName: any;
+  dialogAttributeName : any;
+  dialogAttriArray: any[];
+  displayDialogBox : boolean;
   sessionData: any[];
   lhsFormulaArray: any;
   rhsFormulaArray: any[];
@@ -49,7 +54,7 @@ export class DatasetComponent implements OnInit {
   filterTableArray: any[];
   sources: { 'value': string; 'label': string; }[];
   allNames: SelectItem[] = [];
-  sourcedata: DependsOn
+  sourcedata: any;
   source: any;
   versions: any[];
   dataset: any;
@@ -84,8 +89,11 @@ export class DatasetComponent implements OnInit {
     this.dataset = {};
     this.dataset["active"] = true
     this.isSubmitEnable1 = true;
+    this.displayDialogBox = false;
+    this.dialogAttributeName = {};
     this.dataset.filterTableArray = []
-    this.sourcedata = { 'uuid': "", "label": "" }
+    this.sourcedata = {}
+    this.dialogSelectName = {}
     this.operators = [
       { 'value': '<', 'label': 'LESS THAN' },
       { 'value': '>', 'label': 'GREATER THAN' },
@@ -929,6 +937,7 @@ export class DatasetComponent implements OnInit {
       this.attributesArray = temp1;
     }
   }
+
   onChangeOperators(index) {
     this.dataset.filterTableArray[index]["rhsType"] = null;
   }
@@ -949,6 +958,56 @@ export class DatasetComponent implements OnInit {
     this.showgraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false
+  }
+
+  searchOption(index){
+    this.displayDialogBox = true;
+    this._commonService.getAllLatest("dataset")
+    .subscribe(response => {this.onSuccessgetAllLatest(response)},
+    error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAllLatest(response){
+    this.dialogAttriArray =  [];
+    let temp = [];
+    for(const i in response){
+      let dialogAttriObj = {};
+      
+      dialogAttriObj["label"] = response[i].name;
+      dialogAttriObj["value"] = {};
+      dialogAttriObj["value"]["label"] = response[i].name;
+      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      temp[i] = dialogAttriObj;
+    }
+    this.dialogAttriArray = temp
+    console.log(JSON.stringify(this.dialogAttriArray));
+  }
+
+  onChangeDialogAttribute(){
+    this._commonService.getAttributesByDataset("dataset",this.dialogSelectName.uuid)
+    .subscribe(response => {this.onSuccessgetAttributesByDataset(response)},
+    error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAttributesByDataset(response){
+    this.dialogAttriNameArray =  [];
+    for(const i in response){
+      let dialogAttriNameObj = {};
+      dialogAttriNameObj["label"] = response[i].attrName;
+      dialogAttriNameObj["value"] = {};
+      dialogAttriNameObj["value"]["label"] = response[i].attrName;
+      dialogAttriNameObj["value"]["uuid"] = response[i].attrId;
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+
+  submitDialogBox(index){
+    this.displayDialogBox = false;
+    this.dataset.filterTableArray[index].rhsAttribute = this.dialogAttributeName.label; 
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
   }
 
   submitDataset() {
@@ -977,7 +1036,7 @@ export class DatasetComponent implements OnInit {
 
     let filterInfoArray = [];
 
-    if (this.dataset.filterTableArray.length > 0) {
+    if (this.dataset.filterTableArray != null ) {
       for (let i = 0; i < this.dataset.filterTableArray.length; i++) {
 
         let filterInfo = {};
