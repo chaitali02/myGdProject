@@ -57,78 +57,82 @@
             <form class="form-horizontal" name="myform" ng-submit="submitSettings()">
                 <uib-tabset active="activeForm"  >
                     <uib-tab index="0" heading="Summary" select="go(0)">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="portlet box green">
-                                        <div class="portlet-title">
-                                            <div class="caption">
-                                                <i class=""></i>Compare Results
-                                            </div>
-                                            <div class="tools">
-                                            </div>
-                                        </div>
-                                        <div class="portlet-body">
-                                            <table  class="table table-bordered" style="width:50%" >
-                                                <tr ng-repeat="data in modelresult.paramList ">
-                                                    <td><b>{{data.paramName}}</b></td>
-                                                    <td>{{data.paramValue.value}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>totalRecords</b></td>
-                                                    <td>{{modelresult.totalRecords}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>trainingSet</b></td>
-                                                    <td>{{modelresult.trainingSet}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>validationSet</b></td>
-                                                    <td>{{modelresult.validationSet}}</td>
-                                                </tr>
-                                                    
-                                            </table>
-                                        </div><!--End portlet-body -->
-                                    </div><!--End portlet box green -->
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Traning Details</h4>
+                                <hr>
+                                <table class="table table-bordered train-result" style="width:50%" >
+                                    <!-- <tr ng-repeat="data in modelresult.paramList ">
+                                        <td><b>{{data.paramName}}</b></td>
+                                        <td>{{data.paramValue.value}}</td>
+                                    </tr> -->
+                                    
+                                    <tr>
+                                        <td style="width:50%">Algorithm</td>
+                                        <td style="width:50%"><b>{{modelresult.algorithm}}</b></td>
+                                    </tr>	
+                                    <tr>
+                                        <td style="width:50%">Total Records</td>
+                                        <td style="width:50%"><b>{{modelresult.totalRecords}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%">Training Set</b></td>
+                                        <td style="width:50%" ><b>{{modelresult.trainingSet}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%">Validation Set</td>
+                                        <td style="width:50%"><b>{{modelresult.validationSet}}</b></td>
+                                    </tr>
+                                </table>
                             </div>
-                            
-                        
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Parameter Details</h4>
+                                <hr>
+                                <table class="table table-bordered train-result" style="width:50%" >
+                                    <tr ng-repeat="data in modelresult.paramList ">
+                                        <td style="width:50%">{{data.paramName}}</td>
+                                        <td style="width:50%"><b>{{data.paramValue.value}}</b></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </uib-tab>
                     <uib-tab index="1" heading="Feature Importance" select="go(1)">
                         <h4><strong>Feature Importance</strong></h4>
                     </uib-tab>
                     <uib-tab index="2" heading="Performance" select="go(2)">
-                        <table  class="table table-bordered" style="width:50%" >
+                        <table  class="table table-bordered train-result" style="width:50%" >
                             <tr>
-                                <td style="width:50%"><b>accuracy</b></td>
-                                <td style="width:50%">{{ modelresult.accuracy}}</td>
+                                <td style="width:50%">Accuracy</b></td>
+                                <td style="width:50%"><b>{{ modelresult.accuracy}}</b></td>
                             </tr>
                             <tr>
-                                <td style="width:50%"><b>recall</b></td>
-                                <td style="width:50%">{{ modelresult.recall}}</td>
+                                <td style="width:50%">Recall</b></td>
+                                <td style="width:50%"><b>{{ modelresult.recall}}</b></td>
                             </tr>
                             <tr>
-                                    <td style="width:50%"><b>precision</b></td>
-                                    <td style="width:50%">{{ modelresult.precision}}</td>
+                                <td style="width:50%">Precision</td>
+                                <td style="width:50%"><b>{{modelresult.precision}}</b></td>
                             </tr>
                             <tr>
-                                    <td style="width:50%"><b>f1Score</b></td>
-                                    <td style="width:50%">{{ modelresult.f1Score}}</td>
+                                <td style="width:50%">F1 Score</b></td>
+                                <td style="width:50%"><b>{{ modelresult.f1Score}}</b></td>
                             </tr>          
                             <tr>
-                                    <td style="width:50%"><b>logLoss</b></td>
-                                    <td style="width:50%">{{ modelresult.logLoss}}</td>
+                                <td style="width:50%">Log Loss</td>
+                                <td style="width:50%"><b>{{ modelresult.logLoss}}</b></td>
                                     
                             </tr>
-                               <tr>
-                                    <td style="width:50%"><b>lift</b></td>
-                                    <td style="width:50%">{{ modelresult.lift}}</td>
-                               </tr>
-                               <tr>
-                                    <td style="width:50%"><b>rocAUC</b></td>
-                                    <td style="width:50%">{{ modelresult.rocAUC}}</td>
-                               </tr>
-                                
+                            <tr>
+                                <td style="width:50%">lift</td>
+                                <td style="width:50%"><b>{{ modelresult.lift}}</b></td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">rocAUC</td>
+                                <td style="width:50%"><b>{{ modelresult.rocAUC}}</b></td>
+                            </tr>     
                         </table>
                     </uib-tab>                  
                 </uib-tabset> 

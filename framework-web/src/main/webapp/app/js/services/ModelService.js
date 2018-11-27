@@ -233,7 +233,7 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
     var url = $location.absUrl().split("app")[0]
     return $http({
       url: url + "model/getTrainResultByTrainExec?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
-      method: "get"
+      method: "GET"
     }).then(function (response) { return response })
   }; 
   return factory;
