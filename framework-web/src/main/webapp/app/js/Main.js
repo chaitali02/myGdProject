@@ -2612,6 +2612,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('trainrestultpage2', {
+            url: "/trainResults2?id&version&type&name",
+            templateUrl: "views/train-result2.html",
+            data: { pageTitle: 'Data Science' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ModelResultController.js',
+                            'js/services/ModelService.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
         .state('paramlistmodel', {
             url: "/DataScience/ParamList",
