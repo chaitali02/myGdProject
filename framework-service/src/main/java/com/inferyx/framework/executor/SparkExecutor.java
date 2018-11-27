@@ -103,6 +103,7 @@ import org.jpmml.model.MetroJAXBUtil;
 import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
@@ -1938,6 +1939,7 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setTotalRecords(df.count());
 			trainResult.setTrainingSet(trainingDf.count());
 			trainResult.setValidationSet(validateDf.count());
+			trainResult.setNumFeatures(fieldArray.length);
 			
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
@@ -1947,6 +1949,8 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
+				StopWatch stopWatch = new StopWatch();
+				stopWatch.start();
 				PipelineModel trngModel = null;
 				if (null != paramMap) {
 					trngModel = pipeline.fit(trainingDf, paramMap);
@@ -1954,13 +1958,13 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trainingDf);
 				}
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
-
+				stopWatch.stop();
+				trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+				
 				if(trainOtherParam !=null) {
-					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+					String cMTableName = trainOtherParam.get("confusionMatrixTableName");
 					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-					
-				}
-			
+				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 				return trngModel;
@@ -2262,7 +2266,10 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName
+			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
+			, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2302,6 +2309,7 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setTotalRecords(df.count());
 			trainResult.setTrainingSet(trainingDf.count());
 			trainResult.setValidationSet(validateDf.count());
+			trainResult.setNumFeatures(fieldArray.length);
 			
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
@@ -2327,6 +2335,8 @@ public class SparkExecutor<T> implements IExecutor {
 					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
+			StopWatch stopWatch = new StopWatch();
+			stopWatch.start();
 			try {
 				cvModel = cv.fit(trainingDf);
 			} catch (Exception e) {
@@ -2337,11 +2347,12 @@ public class SparkExecutor<T> implements IExecutor {
 				throw new RuntimeException("Training failed.");
 			}
 			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);
+			stopWatch.stop();
+			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
 			
 			if(trainOtherParam !=null) {
 				String cMTableName=trainOtherParam.get("confusionMatrixTableName");
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-				
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 //			trainedDataSet.show(false);

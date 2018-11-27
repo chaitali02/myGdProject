@@ -37,7 +37,45 @@ public class TrainResult extends BaseEntity {
 	private double lift;
 	private double[][] confusionMatrix;
 	private String algorithm;
+	private long numFeatures;
+	private String algoType;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the algoType
+	 */
+	public String getAlgoType() {
+		return algoType;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param algoType the algoType to set
+	 */
+	public void setAlgoType(String algoType) {
+		this.algoType = algoType;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the numFeatures
+	 */
+	public long getNumFeatures() {
+		return numFeatures;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param numFeatures the numFeatures to set
+	 */
+	public void setNumFeatures(long numFeatures) {
+		this.numFeatures = numFeatures;
+	}
 	/**
 	 *
 	 * @Ganesh

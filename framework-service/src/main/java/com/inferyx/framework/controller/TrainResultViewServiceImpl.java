@@ -108,7 +108,9 @@ public class TrainResultViewServiceImpl {
 		trainResultView.setRocAUC(trainResult.getRocAUC());
 		trainResultView.setLift(trainResult.getLift());
 		trainResultView.setConfusionMatrix(trainResult.getConfusionMatrix());	
-		trainResultView.setAlgorithm(trainResult.getAlgorithm());
+		trainResultView.setAlgorithm(trainResult.getAlgorithm());	
+		trainResultView.setNumFeatures(trainResult.getNumFeatures());
+		trainResultView.setAlgoType(trainResult.getAlgoType());
 		trainResultView.setParamList(metadataServiceImpl.getParamByParamList(trainResult.getParamList().getRef().getUuid()));
 		
 		MetaIdentifier trainResultDependsOnMI = trainResult.getDependsOn().getRef();
