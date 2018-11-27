@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 
 public interface IExecutor {
@@ -350,9 +351,10 @@ public interface IExecutor {
 	 * @param tableName
 	 * @param clientContext
 	 * @param trainOtherParam TODO
+	 * @param trainResult TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException;
 	
 	/**
 	 * 

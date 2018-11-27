@@ -133,6 +133,7 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -1897,7 +1898,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult ) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -1934,6 +1935,10 @@ public class SparkExecutor<T> implements IExecutor {
 				validateDf = valDf;
 			}	
 
+			trainResult.setTotalRecords(df.count());
+			trainResult.setTrainingSet(trainingDf.count());
+			trainResult.setValidationSet(validateDf.count());
+			
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 			
@@ -3297,7 +3302,7 @@ public class SparkExecutor<T> implements IExecutor {
 	            }
 	        }
 	    System.out.println("Confusion matrix: \n" + confusion);
-	    summary.put("confusionMatrix",matrix);
+	    summary.put("confusionMatrix", matrix);
 	    summary.put("accuracy",metrics.accuracy());
 	    
 	    // Stats by labels
@@ -3311,6 +3316,8 @@ public class SparkExecutor<T> implements IExecutor {
 	      summary.put("recall",metrics.accuracy());
 	      System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
 	        metrics.labels()[i]));
+	      summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
+	      
 	    }
 
 	    //Weighted stats
