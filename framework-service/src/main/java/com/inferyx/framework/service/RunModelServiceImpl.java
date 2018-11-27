@@ -712,6 +712,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				}
 
 				trainResult.setAlgorithm(algorithm.getName());
+				trainResult.setAlgoType(algorithm.getType());
 
 				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
