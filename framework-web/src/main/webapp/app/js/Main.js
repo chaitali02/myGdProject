@@ -477,7 +477,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "train", "type": "train", "typeCount": "train", "uuid": "null", "caption": "Training" },
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
             { "name": "simulate", "type": "simulate", "typeCount": "simulate", "uuid": "null", "caption": "Simulation" },
-            { "name": "resultmodelmodel", "type": "modelexec", "typeCount": "modelexec", "uuid": "null", "caption": "Results" }
+            { "name": "resultmodelmodel", "type": "trainexec", "typeCount": "trainexec", "uuid": "null", "caption": "Results" }
         ]
     };
 
