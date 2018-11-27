@@ -560,7 +560,7 @@ public class OracleExecutor implements IExecutor {
 		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
 		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
 			String status = null;			
-			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().contains(attribute.getType().toLowerCase())) {
+			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().equalsIgnoreCase(attribute.getType().toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();
@@ -674,6 +674,13 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
 			String tableName, String clientContext, String saveFileName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

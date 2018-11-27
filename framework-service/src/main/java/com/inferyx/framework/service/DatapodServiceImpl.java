@@ -1056,7 +1056,7 @@ public class DatapodServiceImpl {
 						if ( Character.isDigit(attribute.getName().charAt(0)) ) 
 							throw new Exception("CSV file column name contains <b>Numeric value</b>.");
 						
-						if(!attribute.getName().equals(dpAttr.getName())) {
+						if(!attribute.getName().equalsIgnoreCase(dpAttr.getName())) {
 							logger.info("CSV Column not matched : "+attribute.getName());
 							throw new Exception("CSV Column not matched:<b>"+attribute.getName()+"</b> Position:<b>"+(attributeIterator.nextIndex()+"</b>")	);
 						}

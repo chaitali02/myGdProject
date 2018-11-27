@@ -1,18 +1,18 @@
-DROP TABLE IF EXISTS FACT_TRANSACTION_JOURNAL;
+drop table if exists fact_transaction_journal;
 
-CREATE TABLE FACT_TRANSACTION_JOURNAL 
+create table fact_transaction_journal 
 (
-  TRANSACTION_ID VARCHAR(50),
-  DIRECTION VARCHAR(50), 
-  ACCOUNT_ID VARCHAR(50), 
-  CUSTOMER_ID VARCHAR(50), 
-  TRANSACTION_TYPE_CODE VARCHAR(50), 
-  TRANSACTION_DATE VARCHAR(50), 
-  TRANSACTION_COUNTRY VARCHAR(50), 
-  SENDER_COUNTRY VARCHAR(50), 
-  RECIEVER_COUNTRY VARCHAR(50), 
-  AMOUNT_USD DECIMAL(10,3), 
-  LOAD_DATE VARCHAR(50), 
-  LOAD_ID INTEGER(50), 
-CONSTRAINT TRANSACTION_ID_PK PRIMARY KEY(TRANSACTION_ID));
+  transaction_id varchar(50),
+  direction varchar(50), 
+  account_id varchar(50), 
+  customer_id varchar(50), 
+  transaction_type_code varchar(50), 
+  transaction_date varchar(50), 
+  transaction_country varchar(50), 
+  sender_country varchar(50), 
+  reciever_country varchar(50), 
+  amount_usd decimal(10,3), 
+  load_date varchar(50), 
+  load_id integer(50), 
+constraint transaction_id_pk primary key(transaction_id));
 

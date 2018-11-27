@@ -44,9 +44,11 @@ public class LoadOperator implements IOperator {
 	
 	public String generateSql(String targetTableName, MetaIdentifierHolder targetHolder, String filePathUrl) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		StringBuilder loadQuery = new StringBuilder();
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
+
 		loadQuery.append("LOAD DATA LOCAL INPATH '");
 		loadQuery.append(filePathUrl).append("' ");
 		loadQuery.append(" INTO TABLE ");

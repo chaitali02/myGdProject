@@ -40,6 +40,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -98,6 +99,12 @@ public class HiveRegister extends DataSourceRegister {
 					datapod.setUuid(datapodList.get(0).getUuid());
 				}
 				datapod.setName(tableName);
+				
+				ResultSet rsPriKey = dbMetaData.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
 				ResultSet rs = dbMetaData.getColumns(null, null, tableName, null);
 				
 				for(int j = 0; rs.next(); j++) {
@@ -105,14 +112,17 @@ public class HiveRegister extends DataSourceRegister {
 					logger.info("Column type is : " + rs.getString("TYPE_NAME"));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
-					Integer colSize = rs.getInt("COLUMN_SIZE");
 					String colType = rs.getString("TYPE_NAME");
 					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(colType);
-					attr.setLength(colSize);
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);
@@ -137,9 +147,10 @@ public class HiveRegister extends DataSourceRegister {
 			//	rsHolder.getResultSet().next();
 				datastore.setNumRows(0);
 				datastore.setCreatedBy(datapod.getCreatedBy());
+				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-				
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -160,7 +171,8 @@ public class HiveRegister extends DataSourceRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				dataStoreServiceImpl.save(datastore);
 				dpList.add(savedDp);
 			}

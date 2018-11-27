@@ -704,4 +704,10 @@ public class ImpalaExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

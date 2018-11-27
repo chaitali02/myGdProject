@@ -45,7 +45,7 @@ public class SparkConnector implements IConnector{
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
 					System.out.println("Creating a spark context as sparkSession is : " + this.sparkSession);
 					SparkContext sparkContext = new SparkContext(sparkConf);
-					this.sparkSession = new SparkSession(sparkContext).builder().getOrCreate();//.enableHiveSupport().getOrCreate();
+					this.sparkSession = new SparkSession(sparkContext).builder().enableHiveSupport().getOrCreate();
 					registerUDF.register(sparkSession);
 				}
 			}

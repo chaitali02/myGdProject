@@ -3684,6 +3684,7 @@ public class RegisterService {
 				registry.setDesc(null);
 				registry.setRegisteredOn(null);
 				registry.setStatus("UnRegistered");
+				registry.setCompareStatus(Compare.NEW.toString());
 				registryList.add(registry);
 			}
 			i++;
@@ -3696,11 +3697,9 @@ public class RegisterService {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) || type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
-		} /*else if (type.equalsIgnoreCase("impala")) {
-			return impalaRegister.registerDB(uuid, version, registryList);
-		} */else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList, runMode);
@@ -3708,6 +3707,21 @@ public class RegisterService {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
+		}
+
+	}
+	
+	
+	public String getdataTypeBydbType(String dbtype, String datatype)
+			throws Exception {
+	    if (dbtype.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+			return mysqlRegister.getconvertedDataType(datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			return oracleRegister.getconvertedDataType( datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.getconvertedDataType( datatype);
+		} else {
+			return datatype;
 		}
 
 	}

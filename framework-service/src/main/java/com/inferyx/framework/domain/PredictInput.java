@@ -28,7 +28,6 @@ public class PredictInput {
 	String activation;
 	String lossFunction;
 	String layerNames;
-	String dsType;
 	String tableName;
 	String operation;
 	String url;
@@ -40,7 +39,88 @@ public class PredictInput {
 	String port;
 	String query;
 	java.util.Map<String, Object> otherParams;
+	java.util.Map<String, Object> sourceDsDetails;
+	java.util.Map<String, Object> targetDsDetails;
+	String sourceDsType;
+	String targetDsType;
+	String targetTableName;
 	
+	/**
+	 * @return the targetTableName
+	 */
+	public String getTargetTableName() {
+		return this.targetTableName;
+	}
+	/**
+	 * @param targetTableName the targetTableName to set
+	 */
+	public void setTargetTableName(String targetTableName) {
+		this.targetTableName = targetTableName;
+	}
+	/**
+	 * 
+	 * @return the sourceDsType
+	 */
+	public String getSourceDsType() {
+		return this.sourceDsType;
+	}
+	/**
+	 * 
+	 * @param sourceDsType the sourceDsType to set
+	 */
+	public void setSourceDsType(String sourceDsType) {
+		this.sourceDsType = sourceDsType;
+	}
+	/**
+	 * 
+	 * @return the targetDsType
+	 */
+	public String getTargetDsType() {
+		return this.targetDsType;
+	}
+	/**
+	 * 
+	 * @param targetDsType the targetDsType to set
+	 */
+	public void setTargetDsType(String targetDsType) {
+		this.targetDsType = targetDsType;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the sourceDsDetails
+	 */
+	public java.util.Map<String, Object> getSourceDsDetails() {
+		return this.sourceDsDetails;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param sourceDsDetails the sourceDsDetails to set
+	 */
+	public void setSourceDsDetails(java.util.Map<String, Object> sourceDsDetails) {
+		this.sourceDsDetails = sourceDsDetails;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the targetDsDetails
+	 */
+	public java.util.Map<String, Object> getTargetDsDetails() {
+		return this.targetDsDetails;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param targetDsDetails the targetDsDetails to set
+	 */
+	public void setTargetDsDetails(java.util.Map<String, Object> targetDsDetails) {
+		this.targetDsDetails = targetDsDetails;
+	}
 	/**
 	 * 
 	 * @ Ganesh
@@ -298,24 +378,6 @@ public class PredictInput {
 	 * 
 	 * @ Ganesh
 	 * 
-	 * @return the dsType
-	 */
-	public String getDsType() {
-		return this.dsType;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param dsType the dsType to set
-	 */
-	public void setDsType(String dsType) {
-		this.dsType = dsType;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
 	 * @return the tableName
 	 */
 	public String getTableName() {
@@ -491,6 +553,26 @@ public class PredictInput {
 	 */
 	public void setQuery(String query) {
 		this.query = query;
+	}
+	/*
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PredictInput [sourceFilePath=" + this.sourceFilePath + ", modelFilePath=" + this.modelFilePath
+				+ ", targetPath=" + this.targetPath + ", optimizationAlgo=" + this.optimizationAlgo + ", weightInit="
+				+ this.weightInit + ", updater=" + this.updater + ", numInput=" + this.numInput + ", numOutputs="
+				+ this.numOutputs + ", numHidden=" + this.numHidden + ", numLayers=" + this.numLayers + ", activation="
+				+ this.activation + ", lossFunction=" + this.lossFunction + ", layerNames=" + this.layerNames
+				+ ", tableName=" + this.tableName + ", operation=" + this.operation + ", url=" + this.url
+				+ ", isSuccessful=" + this.isSuccessful + ", hostName=" + this.hostName + ", dbName=" + this.dbName
+				+ ", userName=" + this.userName + ", password=" + this.password + ", port=" + this.port + ", query="
+				+ this.query + ", otherParams=" + this.otherParams + ", sourceDsDetails=" + this.sourceDsDetails
+				+ ", targetDsDetails=" + this.targetDsDetails + ", sourceDsType=" + this.sourceDsType
+				+ ", targetDsType=" + this.targetDsType + ", targetTableName=" + this.targetTableName + "]";
 	}
 	
 }

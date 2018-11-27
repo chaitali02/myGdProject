@@ -185,31 +185,31 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.okKill = function () {
-    
+    debugger
     var api = false;
     switch ($scope.newType.toLowerCase()) {
       case 'dqexec':
         api = 'dataqual';
         break;
-      case 'dqgroupExec':
+      case 'dqgroupexec':
         api = 'dataqual';
         break;
-      case 'profileExec':
+      case 'profileexec':
         api = 'profile';
         break;
-      case 'profilegroupExec':
+      case 'profilegroupexec':
         api = 'profile';
         break;
-      case 'ruleExec':
+      case 'ruleexec':
         api = 'rule';
         break;
-      case 'rulegroupExec':
+      case 'rulegroupexec':
         api = 'rule';
         break;
-      case 'reconExec':
+      case 'reconexec':
         api = 'recon';
         break;
-      case 'recongroupExec':
+      case 'recongroupexec':
         api = 'recon';
         break;
       case 'dagexec':
@@ -218,10 +218,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'batchexec':
         api = 'batch';
         break;
-      case 'ingestExec':
+      case 'ingestexec':
         api = 'ingest';
         break;
-      case 'ingestgroupExec':
+      case 'ingestgroupexec':
         api = 'ingest';
         break;
     }
