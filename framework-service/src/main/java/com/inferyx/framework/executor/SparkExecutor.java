@@ -2262,7 +2262,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2298,6 +2298,11 @@ public class SparkExecutor<T> implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
+			
+			trainResult.setTotalRecords(df.count());
+			trainResult.setTrainingSet(trainingDf.count());
+			trainResult.setValidationSet(validateDf.count());
+			
 			for(String col : trainingDf.columns())
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 
