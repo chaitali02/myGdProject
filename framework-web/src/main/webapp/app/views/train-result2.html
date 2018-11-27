@@ -1,0 +1,138 @@
+<style type="text/css">
+    .trainResult .tab-pane {
+      margin: 20px 20px;
+      }
+      .nav>li>a {
+      position: relative;
+      display: block;
+      padding: 10px 15px;
+    }
+    .trainResult .tab-content { 
+      border-left: 1px solid #ddd; 
+      border-right: 1px solid #ddd;
+      padding: 10px; 
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .trainResult .nav-tabs, .trainResult .nav-pills{
+      margin-bottom: 0px !important;
+    }
+/*   
+  .trainResult .nav-tabs>li.active>a, .adminPage .nav-tabs>li.active>a:focus, .trainResult .nav-tabs>li.active>a:hover {
+      color: #555;
+      background-color: #fff;
+      border:none;
+      border-bottom: 4px solid  #9fe4ea;
+      cursor: default;
+    } */
+  </style>
+  
+<div class="row trainResult" ng-controller="ResultTrainController2">
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="col-md-12">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a ui-sref="home">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>{{$state.current.data.pageTitle}}</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>Train Results</span>
+                </li>
+            </ul>
+            <div class="page-toolbar">
+                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+
+                    <i class="icon-calendar"></i>&nbsp;
+                    <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                </div>
+            </div>
+        </div>
+        <br>
+        <div ng-hide="onAccess">
+            <form class="form-horizontal" name="myform" ng-submit="submitSettings()">
+                <uib-tabset active="activeForm"  >
+                    <uib-tab index="0" heading="Summary" select="go(0)">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="portlet box green">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class=""></i>Compare Results
+                                            </div>
+                                            <div class="tools">
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <table  class="table table-bordered" style="width:50%" >
+                                                <tr ng-repeat="data in modelresult.paramList ">
+                                                    <td><b>{{data.paramName}}</b></td>
+                                                    <td>{{data.paramValue.value}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>totalRecords</b></td>
+                                                    <td>{{modelresult.totalRecords}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>trainingSet</b></td>
+                                                    <td>{{modelresult.trainingSet}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>validationSet</b></td>
+                                                    <td>{{modelresult.validationSet}}</td>
+                                                </tr>
+                                                    
+                                            </table>
+                                        </div><!--End portlet-body -->
+                                    </div><!--End portlet box green -->
+                                </div>
+                            </div>
+                            
+                        
+                    </uib-tab>
+                    <uib-tab index="1" heading="Feature Importance" select="go(1)">
+                        <h4><strong>Feature Importance</strong></h4>
+                    </uib-tab>
+                    <uib-tab index="2" heading="Performance" select="go(2)">
+                        <table  class="table table-bordered" style="width:50%" >
+                            <tr>
+                                <td style="width:50%"><b>accuracy</b></td>
+                                <td style="width:50%">{{ modelresult.accuracy}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%"><b>recall</b></td>
+                                <td style="width:50%">{{ modelresult.recall}}</td>
+                            </tr>
+                            <tr>
+                                    <td style="width:50%"><b>precision</b></td>
+                                    <td style="width:50%">{{ modelresult.precision}}</td>
+                            </tr>
+                            <tr>
+                                    <td style="width:50%"><b>f1Score</b></td>
+                                    <td style="width:50%">{{ modelresult.f1Score}}</td>
+                            </tr>          
+                            <tr>
+                                    <td style="width:50%"><b>logLoss</b></td>
+                                    <td style="width:50%">{{ modelresult.logLoss}}</td>
+                                    
+                            </tr>
+                               <tr>
+                                    <td style="width:50%"><b>lift</b></td>
+                                    <td style="width:50%">{{ modelresult.lift}}</td>
+                               </tr>
+                               <tr>
+                                    <td style="width:50%"><b>rocAUC</b></td>
+                                    <td style="width:50%">{{ modelresult.rocAUC}}</td>
+                               </tr>
+                                
+                        </table>
+                    </uib-tab>                  
+                </uib-tabset> 
+            </form>
+        </div>
+    </div>
+</div>

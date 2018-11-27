@@ -455,7 +455,7 @@ public class ModelController {
 		return modelServiceImpl.getPrediction(trainExecUUID, feature);
 	}
 
-	@RequestMapping(value = "/getTrainResultByTrainExec", method = RequestMethod.POST)
+	@RequestMapping(value = "/getTrainResultByTrainExec", method = RequestMethod.GET)
 	public String getTrainResultByTrainExec(@RequestParam("uuid") String trainExecUuid,
 			@RequestParam(value = "version", required = false) String trainExecVersion,
 			@RequestParam(value = "type", required = false) String type,

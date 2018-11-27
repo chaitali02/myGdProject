@@ -14,8 +14,11 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -26,9 +29,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.FeatureAttrMap;
+import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -48,9 +53,10 @@ public class TrainResultViewServiceImpl {
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 	
+	private static Logger logger = Logger.getLogger(TrainResultViewServiceImpl.class);
+	
 	public TrainResult getTrainResultByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException {
-		//TrainResult trainResult = null;
-		
+		logger.info("Inside method: getTrainResultByTrainExec");
 		MatchOperation filter = null;
 		if(trainExecVersion != null && !trainExecVersion.isEmpty()) {
 			filter = match(new Criteria("dependsOn.ref.uuid").is(trainExecUuid).andOperator(new Criteria("dependsOn.ref.version").is(trainExecVersion)));
@@ -62,11 +68,16 @@ public class TrainResultViewServiceImpl {
 		Aggregation scheduleAggr = newAggregation(filter, groupByUuid);
 		AggregationResults<TrainResult> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.trainresult.toString().toLowerCase(), TrainResult.class);
 		TrainResult trainResult = (TrainResult) scheduleAggrResults.getUniqueMappedResult();	
-		return (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResult.getId(), trainResult.getVersion(), MetaType.trainresult.toString());
+		if(trainResult != null) {
+			return (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResult.getId(), trainResult.getVersion(), MetaType.trainresult.toString());
+		} else {
+			throw new RuntimeException("No train result found.");
+		}		
 	}
 
-	public TrainResultView getOneByUuidAndVersion(String uuid, String version) throws JsonProcessingException {
-		TrainResult trainResult = (TrainResult) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.trainresult.toString());
+	public TrainResultView getOneByUuidAndVersion(String trainResultUuid, String trainResultVersion) throws JsonProcessingException {
+		logger.info("Inside method: getTrainResultByTrainExec");
+		TrainResult trainResult = (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResultUuid, trainResultVersion, MetaType.trainresult.toString());
 		TrainResultView trainResultView = new TrainResultView();
 		
 		//setting base entity
@@ -99,9 +110,22 @@ public class TrainResultViewServiceImpl {
 		trainResultView.setConfusionMatrix(trainResult.getConfusionMatrix());		
 		trainResultView.setParamList(metadataServiceImpl.getParamByParamList(trainResult.getParamList().getRef().getUuid()));
 		
-//		trainResultView.setFeatureImportance(featureImportance);
+		MetaIdentifier trainResultDependsOnMI = trainResult.getDependsOn().getRef();
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainResultDependsOnMI.getUuid(), trainResultDependsOnMI.getVersion(), trainResultDependsOnMI.getType().toString());
+		MetaIdentifier trainExecDependsOnMI = trainExec.getDependsOn().getRef();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExecDependsOnMI.getUuid(), trainExecDependsOnMI.getVersion(), trainExecDependsOnMI.getType().toString());
+		List<FeatureAttrMap> featureAttrMapList = train.getFeatureAttrMap();
+		List<Double> featureImportanceList = trainResult.getFeatureImportance();
+		if(featureImportanceList != null && !featureImportanceList.isEmpty()) {
+			Map<String, Double> featureImportance = new LinkedHashMap<>();
+			for(int i=0; i < featureAttrMapList.size(); i++) {
+				featureImportance.put(featureAttrMapList.get(i).getFeature().getFeatureName(), featureImportanceList.get(i));
+			}
+			
+			if(!featureImportance.isEmpty()) {
+				trainResultView.setFeatureImportance(featureImportance);
+			}
+		}		
 		return trainResultView;
-	}
-
-	
+	}	
 }

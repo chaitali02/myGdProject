@@ -195,7 +195,7 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         $scope.getBaseEntityStatusByCriteria(false);
     }
     $scope.getExec = function (data) {
-        debugger
+        
         var stateName = dagMetaDataService.elementDefs[$scope.searchForm.modelType + "exec"].resultState;
         if (stateName) {
             $state.go(stateName, {
@@ -607,7 +607,20 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
 
 DatascienceModule.controller('ResultTrainController2', function ($filter, $state, $location, $http, $stateParams, dagMetaDataService, $rootScope, $scope, ModelService, CF_DOWNLOAD) {
     //  $scope.toClipboard = ngClipboard.toClipboard;
-  
+    $scope.getTrainResult = function (data) {
+        var uuid = data.uuid;
+        var version = data.version;
+        $scope.modelDetail = {};
+        $scope.modelDetail.uuid = uuid;
+        $scope.modelDetail.version = version;
+        ModelService.getTrainResultByTrainExec(uuid, version,'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
+        var onSuccessGetTrainResultByTrainExec = function (response) {
+            $scope.modelresult = response;
+           
+       } //End onSuccessGetModelResult
+    }
+    $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
+
 
 });
 

@@ -124,11 +124,13 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
       url: url + "metadata/getParamListByAlgorithm?action=view&uuid=" + uuid + "&version=" + version+"&type="+type+"&isHyperParam="+isHyperParam,
       method: "GET"
     }).then(function (response) { return response })
-  }; 
+  };
+ 
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
+  
   this.getParamListByAlgorithm = function (uuid,version,type,isHyperParam) {
     var deferred = $q.defer();
     TrainFactory.findParamListByAlgorithm(uuid,version,type,isHyperParam).then(function (response) { onSuccess(response.data) });
