@@ -142,6 +142,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Tag;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
@@ -325,6 +326,7 @@ public class Helper {
 				case ingestExec : return "iIngestExecDao";
 				case ingestgroup : return "iIngestGroupDao";
 				case ingestgroupExec : return "iIngestGroupExecDao";
+				case trainresult : return "iTrainResultDao";
 				default:
 					return null;
 			}
@@ -359,6 +361,7 @@ public class Helper {
 		case trainExec : return "ModelExecServiceImpl";
 		case predictExec : return "ModelExecServiceImpl";
 		case simulateExec : return "ModelExecServiceImpl";
+		case trainresult : return "TrainResultServiceImpl";
 		default: return null;
 		}
 	}
@@ -450,6 +453,7 @@ public class Helper {
 		case ingestExec : return IngestExec.class;
 		case ingestgroup : return IngestGroup.class;
 		case ingestgroupExec : return IngestGroupExec.class;
+		case trainresult : return TrainResult.class;
 		default:
 			return null;
 		}
@@ -545,6 +549,7 @@ public class Helper {
 				case "ingestexec" : return  MetaType.ingestExec; 
 				case "ingestgroup" : return MetaType.ingestgroup;
 				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
+				case "trainresult" : return MetaType.trainresult;
 				default : return null;
 			}
 		}

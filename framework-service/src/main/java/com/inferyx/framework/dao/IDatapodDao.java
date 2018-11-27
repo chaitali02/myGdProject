@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Datapod;
 
 public interface IDatapodDao extends MongoRepository<Datapod, String> {
