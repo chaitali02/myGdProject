@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -47,10 +48,12 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
@@ -669,9 +672,15 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		return taskHolder;
 	}
 	
-	@SuppressWarnings({ "unused" })
+	@SuppressWarnings({ "unused", "unchecked" })
 	public void execute() throws Exception {
 		try {
+			TrainResult trainResult = new TrainResult();
+			trainResult.setName(train.getName());
+			trainResult.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion())));
+			trainResult.setParamList(new MetaIdentifierHolder(execParams.getParamListInfo().get(0).getRef()));
+			trainResult.setBaseEntity();
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -717,7 +726,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_data"));
-				exec.executeAndRegister(featureMappedSQL, (tableName+"_train_data"), appUuid);
+				ResultSetHolder sourceRsHolder = exec.executeAndRegister(featureMappedSQL, (tableName+"_train_data"), appUuid);
+				long rowCount = sourceRsHolder.getCountRows();
+				
+//				trainResult.setTotalRecords(rowCount);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
 				Map<String, String> mappingList = new LinkedHashMap<>();
@@ -731,7 +743,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			    
 				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
-					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
+					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam, trainResult);
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -813,10 +825,21 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //						}
 						String fileName = tableName+".result";
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						
+						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						List<Double> featureImportance = Arrays.asList((Double[])summary.get("featureimportances"));
+						trainResult.setFeatureImportance(featureImportance);
+						trainResult.setAccuracy((double) summary.get("accuracy"));
+						trainResult.setRecall((double) summary.get("recall"));
+						trainResult.setF1Score((double) summary.get("f1Score"));
+						trainResult.setPrecision((double) summary.get("precision"));
+//						trainResult.setRocAUC((List<Double>) summary.get("roc"));
+						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						
 //						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
 //							try {
 //								Transformer[] transformer = ((PipelineModel) trndModel).stages();
@@ -831,6 +854,16 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						
 						String fileName = tableName+".result";
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						double[] featureimportancesArr = (double[])summary.get("featureimportances");						
+						List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+						trainResult.setFeatureImportance(featureImportance);
+						trainResult.setAccuracy((double) summary.get("accuracy"));
+						trainResult.setRecall((double) summary.get("recall"));
+						trainResult.setF1Score((double) summary.get("f1Score"));
+						trainResult.setPrecision((double) summary.get("precision"));
+						trainResult.setConfusionMatrix((double[][]) summary.get("confusionMatrix"));
+//						trainResult.setRocAUC((List<Double>) summary.get("roc"));
+						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
 						filePathUrl = null;
@@ -838,7 +871,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				} else {
 					filePathUrl = null;
 				}
-				
+				commonServiceImpl.save(MetaType.trainresult.toString(), trainResult);
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
 				dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 				dataStoreServiceImpl.create(filePathUrl, trainName,

@@ -144,6 +144,7 @@ import com.inferyx.framework.dao.ISimulateExecDao;
 import com.inferyx.framework.dao.ITagDao;
 import com.inferyx.framework.dao.ITrainDao;
 import com.inferyx.framework.dao.ITrainExecDao;
+import com.inferyx.framework.dao.ITrainResultDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.dao.IVertexDao;
@@ -466,14 +467,34 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IIngestGroupDao iIngestGroupDao;
 	@Autowired
-	IIngestGroupExecDao iIngestGroupExecDao;
-	
+	IIngestGroupExecDao iIngestGroupExecDao;	
 	@Autowired
-	IngestExecServiceImpl ingestExecServiceImpl;
-	
+	IngestExecServiceImpl ingestExecServiceImpl;	
 	@Autowired
 	IngestGroupServiceImpl ingestGroupServiceImpl;
+	@Autowired
+	ITrainResultDao iTrainResultDao;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the iTrainResultDao
+	 */
+	public ITrainResultDao getiTrainResultDao() {
+		return iTrainResultDao;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param iTrainResultDao the iTrainResultDao to set
+	 */
+	public void setiTrainResultDao(ITrainResultDao iTrainResultDao) {
+		this.iTrainResultDao = iTrainResultDao;
+	}
+
 	public IIngestGroupDao getiIngestGroupDao() {
 		return iIngestGroupDao;
 	}

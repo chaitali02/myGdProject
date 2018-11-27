@@ -1149,7 +1149,7 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamByParamList(String paramListUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(), "N");			
 		
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
