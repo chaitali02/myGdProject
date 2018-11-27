@@ -36,7 +36,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.PredictExec;
