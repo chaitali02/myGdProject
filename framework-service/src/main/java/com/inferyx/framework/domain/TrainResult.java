@@ -36,7 +36,26 @@ public class TrainResult extends BaseEntity {
 	private List<Double> rocAUC;
 	private double lift;
 	private double[][] confusionMatrix;
+	private String algorithm;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the algorithm
+	 */
+	public String getAlgorithm() {
+		return algorithm;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param algorithm the algorithm to set
+	 */
+	public void setAlgorithm(String algorithm) {
+		this.algorithm = algorithm;
+	}
 	/**
 	 *
 	 * @Ganesh

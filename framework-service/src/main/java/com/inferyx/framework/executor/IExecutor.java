@@ -566,11 +566,12 @@ public interface IExecutor {
 	 * @param hyperParamList 
 	 * @param clientContext
 	 * @param trainOtherParam TODO
+	 * @param trainResult TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult)
 			throws IOException;
 	
 	/**
