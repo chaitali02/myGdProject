@@ -54,5 +54,5 @@
 	"username": "inferyx",
 	"password": "inferyx",
     "path": "/user/hive/warehouse/framework",
-	"sessionParameters": ""
+	"sessionParameters": "useSSL=false"
 }
