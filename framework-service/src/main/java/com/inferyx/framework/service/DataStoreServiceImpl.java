@@ -526,6 +526,38 @@ public class DataStoreServiceImpl {
 		return null;
 	}*/
 	
+
+	/**
+	 * 
+	 * @param dataStoreUUID
+	 * @param dataStoreVersion
+	 * @param runMode
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	public Datasource getDatapodByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		DataStore dataStore = null;
+		dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
+		String metaid = dataStore.getMetaId().getRef().getUuid();
+		String metaV = dataStore.getMetaId().getRef().getVersion();
+		MetaType metaType = dataStore.getMetaId().getRef().getType();
+		Datasource datasource = null;
+		if (metaType == MetaType.datapod) {
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
+			if (dp == null) {
+				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
+			}
+			datasource = commonServiceImpl.getDatasourceByDatapod(dp);
+		}
+		return datasource;
+	}
 	// generating table Name from dataSource
 	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String tableName = null;
@@ -685,6 +717,7 @@ public class DataStoreServiceImpl {
 			//DataStore ds = findOneByUuidAndVersion(uuid, version);
 			DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 			String tn = getTableNameByDatastore(ds.getUuid(), ds.getVersion(), runMode);
+			Datasource datasource = getDatapodByDatastore(ds.getUuid(), ds.getVersion(), runMode);
 			logger.info("Table name:" + tn);
 			//String dpUuuid = ds.getMetaId().getRef().getUuid();
 			//String dsType = null;
@@ -711,7 +744,9 @@ public class DataStoreServiceImpl {
 				//Datasource dataSource = (Datasource) commonServiceImpl.getLatestByUuid(dsUuid, MetaType.datasource.toString());
 				//dsType = dataSource.getType();
 			}*/
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (datasource == null) {
+				datasource = commonServiceImpl.getDatasourceByApp();
+			}
 			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
 				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
