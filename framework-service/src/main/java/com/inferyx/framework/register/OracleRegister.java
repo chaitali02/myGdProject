@@ -122,6 +122,7 @@ public class OracleRegister {
 					} else {
 						attr.setKey("N");
 					}
+					rsTabMeta.next();
 					attr.setLength(Integer.parseInt(rsTabMeta.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
