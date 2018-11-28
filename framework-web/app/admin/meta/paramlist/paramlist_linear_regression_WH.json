@@ -53,6 +53,8 @@
             "paramId" : "0",
             "paramName" : "regParam",
             "paramType" : "list",
+  		    "paramDispName" : "Reg Param",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -64,6 +66,8 @@
             "paramId" : "1",
             "paramName" : "elasticNetParam",
             "paramType" : "list",
+  		    "paramDispName" : "Elastic Net Param",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -75,6 +79,8 @@
             "paramId" : "2",
             "paramName" : "numFolds",
             "paramType" : "integer",
+  		    "paramDispName" : "Num Folds",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

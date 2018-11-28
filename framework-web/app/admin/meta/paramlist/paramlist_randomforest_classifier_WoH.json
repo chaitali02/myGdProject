@@ -57,6 +57,8 @@
       "paramId": "0",
       "paramName": "maxBins",
       "paramType": "integer",
+   	  "paramDispName" : "Max Bins",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -68,6 +70,8 @@
       "paramId": "1",
       "paramName": "maxDepth",
       "paramType": "integer",
+   	  "paramDispName" : "Max Depth",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -80,6 +84,8 @@
       "paramId": "4",
       "paramName": "maxMemoryInMB",
       "paramType": "integer",
+   	  "paramDispName" : "Max MemoryInMB",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

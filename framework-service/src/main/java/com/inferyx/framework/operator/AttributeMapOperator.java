@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DefValue;
 import com.inferyx.framework.domain.ExecParams;
@@ -43,6 +44,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
@@ -69,6 +71,8 @@ public class AttributeMapOperator {
 	protected FunctionOperator functionOperator;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	private RunMode runMode;
 	
@@ -217,6 +221,8 @@ public class AttributeMapOperator {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		Object object = daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString());
+		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		try {
 
 			if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.datapod)  
@@ -289,12 +295,19 @@ public class AttributeMapOperator {
 					}
 					return "";
 				}
-				if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
+				/*if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
 					functionOperator.setRunMode(runMode);
 					if (function.getFunctionInfo().contains("(")) {
 						return functionOperator.generateSql((Function) object, refKeyMap, otherParams);
 					}
 					return functionOperator.generateSql((Function) object, refKeyMap, otherParams);//.concat("()");
+				}*/
+				if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
+					functionOperator.setRunMode(runMode);
+					if (function.getFunctionInfo().contains("(")) {
+						return functionOperator.generateSql((Function) object, refKeyMap, otherParams, mapSourceDS);
+					}
+					return functionOperator.generateSql((Function) object, refKeyMap, otherParams, mapSourceDS);//.concat("()");
 				}
 			}
 		}catch (Exception e) {

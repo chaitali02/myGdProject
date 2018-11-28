@@ -75,7 +75,7 @@ public class HiveRegister extends DataSourceRegister {
 
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
-		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		Datapod datapod = null;
 		MetaIdentifierHolder datastoreMeta = new MetaIdentifierHolder();
 		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, uuid, version);

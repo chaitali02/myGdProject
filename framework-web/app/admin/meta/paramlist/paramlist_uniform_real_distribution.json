@@ -49,6 +49,8 @@
       "paramId": "0",
       "paramName": "lower",
       "paramType": "double",
+   	  "paramDispName" : "Lower",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -60,6 +62,8 @@
       "paramId": "1",
       "paramName": "upper",
       "paramType": "double",
+   	  "paramDispName" : "Upper",
+      "paramDesc" : "",		
       "paramValue": {
         "ref" : {
             "type" : "simple"

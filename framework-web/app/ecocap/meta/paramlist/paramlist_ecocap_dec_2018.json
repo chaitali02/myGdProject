@@ -33,6 +33,8 @@
       "paramId": "0",
       "paramName": "reporting_date",
       "paramType": "string",
+      "paramDispName" : "Reporting Date",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple",

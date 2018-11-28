@@ -159,6 +159,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -168,6 +169,7 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
@@ -183,6 +185,9 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.Predict;
+import com.inferyx.framework.domain.Profile;
+import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Session;
@@ -4218,4 +4223,61 @@ public class CommonServiceImpl <T> {
 		return sb.toString();
 	}
 	
+	public Datasource getDatasourceByObject(Object object) throws JsonProcessingException {
+		if(object instanceof Datapod) {
+			return getDatasourceByDatapod((Datapod)object);
+		} else if(object instanceof DataSet) {
+			DataSet dataSet = (DataSet) object;
+			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if(object instanceof Rule) {
+			Rule rule = (Rule) object;
+			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if(object instanceof Relation) {
+			Relation relation = (Relation) object;
+			MetaIdentifier relationDependsOn = relation.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(), relationDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);		
+		} else if(object instanceof Profile) {
+			Profile profile = (Profile) object;
+			MetaIdentifier profileDependsOn = profile.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(), profileDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);		
+		}  else if(object instanceof DataQual) {
+			DataQual dataQual = (DataQual) object;
+			MetaIdentifier dataQualDependsOn = dataQual.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(dataQualDependsOn.getUuid(), dataQualDependsOn.getVersion(), dataQualDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);		
+		} else if(object instanceof Recon) {
+			Recon recon = (Recon) object;
+			MetaIdentifier reconDependsOn = recon.getSourceAttr().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(reconDependsOn.getUuid(), reconDependsOn.getVersion(), reconDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);		
+		} else if(object instanceof com.inferyx.framework.domain.Map) {
+			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) object;
+			MetaIdentifier mapDependsOn = map.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(mapDependsOn.getUuid(), mapDependsOn.getVersion(), mapDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Train) {
+			Train train = (Train) object;
+			MetaIdentifier trainDependsOn = train.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(trainDependsOn.getUuid(), trainDependsOn.getVersion(), trainDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Predict) {
+			Predict predict = (Predict) object;
+			MetaIdentifier predictDependsOn = predict.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(predictDependsOn.getUuid(), predictDependsOn.getVersion(), predictDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Formula) {
+			Formula formula = (Formula) object;
+			MetaIdentifier formulaDependsOn = formula.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(formulaDependsOn.getUuid(), formulaDependsOn.getVersion(), formulaDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		}
+		
+		return null;
+	}
 }

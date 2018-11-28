@@ -587,10 +587,10 @@ public class DataStoreServiceImpl {
 							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
 					filePath = String.format("%s%s", hdfsLocation, filePath);
 					tableName = Helper.genTableName(filePath);
-				} else if(!(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				} /*else if(!(dpDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 							|| dpDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
 					tableName = dpDatasource.getDbname() + "." + dp.getName();
-				} else {
+				}*/ else {
 					filePath = String.format("%s%s", hdfsLocation, filePath);
 					tableName = Helper.genTableName(filePath);
 				}

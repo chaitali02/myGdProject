@@ -47,7 +47,9 @@
         {
             "paramId" : "0",
             "paramName" : "distribution",
-            "paramType" : "distribution",
+            "paramType" : "distribution",   
+   	     	"paramDispName" : "Distribution",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "distribution",
@@ -59,7 +61,9 @@
         {
             "paramId" : "1",
             "paramName" : "numIterations",
-            "paramType" : "integer",
+            "paramType" : "integer", 
+   	     	"paramDispName" : "Num Iterations",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -72,6 +76,8 @@
             "paramId" : "2",
             "paramName" : "saveLocation",
             "paramType" : "datapod",
+   	     	"paramDispName" : "Save Location",
+            "paramDesc" : "",		
             "paramValue" : null,
             "paramRef" : null
         }, 
@@ -79,6 +85,8 @@
             "paramId" : "3",
             "paramName" : "valList",
             "paramType" : "simple",
+   	     	"paramDispName" : "Val List",
+            "paramDesc" : "",		
             "paramValue" : null,
             "paramRef" : null
         }, 
@@ -86,6 +94,8 @@
             "paramId" : "4",
             "paramName" : "min",
             "paramType" : "integer",
+   	     	"paramDispName" : "Min",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -97,6 +107,8 @@
             "paramId" : "5",
             "paramName" : "max",
             "paramType" : "integer",
+   	     	"paramDispName" : "Max",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

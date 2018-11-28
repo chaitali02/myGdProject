@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.SaveMode;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +38,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -493,13 +491,13 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
 		dataStoreServiceImpl.setRunMode(runMode);
-		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
+		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath,datapodKey, baseRuleExec.getRef(ruleExecType),
 				null,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}
 	
 	protected String getSaveMode() {
-		return SaveMode.Append.toString();
+		return SaveMode.APPEND.toString();
 	}
 
 	/**
@@ -566,37 +564,41 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext, runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
-			Datapod datapod = null;
+			
+			Datapod targetDp = null;
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
+			
 			/***** Replace internalVarMap - START *****/
 			checkInternalVarMap(execParams, baseRuleExec);
 			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
 			/***** Replace internalVarMap - END *****/
+			
+			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+			Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
-				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
-						datapod.getDatasource().getRef().getVersion(), 
-						datapod.getDatasource().getRef().getType().toString());
-				if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", true, appUuid);
+				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
+				MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
+				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(), targetDsMI.getVersion(), targetDsMI.getType().toString());
+				if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+						&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+					rsHolder = exec.executeSqlByDatasource(baseRuleExec.getExec(), ruleDatasource, appUuid);
+					if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+					} else {
+						tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+					}
+					rsHolder.setTableName(tableName);
+					rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+				} else if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, targetDp, "overwrite", true, appUuid);
 				} else {
-					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
+					String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, baseRuleExec.getExec());
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-//				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-//				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
-//				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-//						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
-//						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
-//							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-//					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
-//					exec.executeSql(sql, appUuid);
-//				} else {
-					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), Helper.genTableName(filePath), appUuid);
-					countRows = rsHolder.getCountRows();
-//				}
+				rsHolder = exec.executeAndRegisterByDatasource(baseRuleExec.getExec(), Helper.genTableName(filePath), ruleDatasource, appUuid);
+				countRows = rsHolder.getCountRows();
 			}
 				
 			logger.info("temp table registered: "+tableName);

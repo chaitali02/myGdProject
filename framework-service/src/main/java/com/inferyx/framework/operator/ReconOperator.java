@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +19,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Function;
@@ -138,8 +135,8 @@ public class ReconOperator {
 			Function sourceFun = (Function) daoRegister.getRefObject(recon.getSourceFunc().getRef());
 			Function targetFun = (Function) daoRegister.getRefObject(recon.getTargetFunc().getRef());
 			
-			String sourceVal = generateVal(sourceFun, SOURCE_ATTR_NAME, sourceDistinct);
-			String targetVal = generateVal(targetFun, TARGET_ATTR_NAME, targetDistinct);
+			String sourceVal = generateVal(sourceFun, SOURCE_ATTR_NAME, sourceDistinct, recon);
+			String targetVal = generateVal(targetFun, TARGET_ATTR_NAME, targetDistinct, recon);
 			
 			sql = SELECT 
 			      + SOURCE_UUID_ALIAS.toLowerCase() + " AS " + SOURCE_UUID_ALIAS + COMMA 
@@ -386,17 +383,18 @@ public class ReconOperator {
 		return "sourceValue" + "=" + "targetValue";
 	}
 	
-	public String generateVal(Function function, String attrName, String distinctFlg) throws Exception {
+	public String generateVal(Function function, String attrName, String distinctFlg, Recon recon) throws Exception {
 		StringBuilder val = new StringBuilder();
-			if(function.getCategory().equalsIgnoreCase(FunctionCategory.AGGREGATE.toString())) {
-				val
-				.append(functionOperator.generateSql(function, null, null))
-				.append(BRACKET_OPEN)
-				.append(distinctFlg != null && distinctFlg.equalsIgnoreCase("Y") ? " DISTINCT " : "")
-				.append(attrName)
-				.append(BRACKET_CLOSE);
-			}else
-				throw new Exception("Wrong function type.");
+		Datasource datasource = commonServiceImpl.getDatasourceByObject(recon); 
+		if(function.getCategory().equalsIgnoreCase(FunctionCategory.AGGREGATE.toString())) {
+			val
+			.append(functionOperator.generateSql(function, null, null, datasource))
+			.append(BRACKET_OPEN)
+			.append(distinctFlg != null && distinctFlg.equalsIgnoreCase("Y") ? " DISTINCT " : "")
+			.append(attrName)
+			.append(BRACKET_CLOSE);
+		}else
+			throw new Exception("Wrong function type.");
 		return val.toString();
 	}
 	

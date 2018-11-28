@@ -52,6 +52,8 @@
       "paramId": "0",
       "paramName": "k",
       "paramType": "list",
+      "paramDispName" : "K",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -63,6 +65,8 @@
       "paramId": "1",
       "paramName": "learningDecay",
       "paramType": "list",
+      "paramDispName" : "Learning Decay",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -72,8 +76,10 @@
     },
     {
       "paramId": "2",
-      "paramName": "learningOffset",
+      "paramName": "Learning Offset",
       "paramType": "list",
+      "paramDispName" : "Tol",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -85,6 +91,8 @@
       "paramId": "3",
       "paramName": "seed",
       "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -96,6 +104,8 @@
       "paramId": "4",
       "paramName": "numFolds",
       "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"

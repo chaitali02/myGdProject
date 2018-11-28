@@ -63,6 +63,8 @@
       "paramId": "1",
       "paramName": "aggregationDepth",
       "paramType": "list",
+  	  "paramDispName" : "Aggregation Depth",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -74,6 +76,8 @@
       "paramId": "2",
       "paramName": "threshold",
       "paramType": "list",
+  	  "paramDispName" : "Threshold",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -85,6 +89,8 @@
       "paramId": "3",
       "paramName": "numFolds",
       "paramType": "integer",
+  	  "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"

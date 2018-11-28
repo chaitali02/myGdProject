@@ -54,7 +54,7 @@ public class FormulaOperator {
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
@@ -63,7 +63,8 @@ public class FormulaOperator {
 		
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
-		Datasource source = commonServiceImpl.getDatasourceByApp();
+//		Datasource source = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByObject(formula);
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
 			builder.append("");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
@@ -79,7 +80,7 @@ public class FormulaOperator {
 						value = "'" + value + "'";
 					}
 				}
-				if (source.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub")
+				if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub")
 						&& builder.lastIndexOf(",") != -1) {
 					builder.append("INTERVAL " + value + " DAY");
 				} else {
@@ -99,7 +100,7 @@ public class FormulaOperator {
 						value = "'"+value+"'";
 					}
 				}
-				if (source.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub(")
+				if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub(")
 						&& builder.lastIndexOf(",") != -1) {
 					builder.append("INTERVAL " + value + " DAY");
 				} else {
@@ -109,7 +110,7 @@ public class FormulaOperator {
 			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {
 				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
-				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams));
+				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource));
 			}
 			// implementing nested formula
 			if (sourceAttr.getRef().getType() == MetaType.formula) {

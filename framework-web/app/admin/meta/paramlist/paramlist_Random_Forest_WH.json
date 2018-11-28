@@ -52,6 +52,8 @@
       "paramId": "0",
       "paramName": "numTrees",
       "paramType": "list",
+   	  "paramDispName" : "Num Trees",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -63,6 +65,8 @@
       "paramId": "1",
       "paramName": "maxDepth",
       "paramType": "list",
+   	  "paramDispName" : "Max Depth",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -74,6 +78,8 @@
       "paramId": "2",
       "paramName": "minInstancesPerNode",
       "paramType": "list",
+   	  "paramDispName" : "Min Instances PerNode",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -85,6 +91,8 @@
       "paramId": "3",
       "paramName": "maxBins",
       "paramType": "list",
+   	  "paramDispName" : "Max Bins",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -96,6 +104,8 @@
       "paramId": "4",
       "paramName": "seed",
       "paramType": "list",
+   	  "paramDispName" : "Seed",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -107,6 +117,8 @@
       "paramId": "5",
       "paramName": "numFolds",
       "paramType": "integer",
+   	  "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
