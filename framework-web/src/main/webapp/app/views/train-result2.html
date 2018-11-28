@@ -59,17 +59,16 @@
                     <uib-tab index="0" heading="Summary" select="go(0)">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4>Traning Details</h4>
+                                <h4>Training Details</h4>
                                 <hr>
                                 <table class="table table-bordered train-result" style="width:50%" >
-                                    <!-- <tr ng-repeat="data in modelresult.paramList ">
-                                        <td><b>{{data.paramName}}</b></td>
-                                        <td>{{data.paramValue.value}}</td>
-                                    </tr> -->
-                                    
                                     <tr>
                                         <td style="width:50%">Algorithm</td>
                                         <td style="width:50%"><b>{{modelresult.algorithm}}</b></td>
+                                    </tr>	
+                                    <tr>
+                                        <td style="width:50%">Type</td>
+                                        <td style="width:50%"><b>{{modelresult.algoType}}</b></td>
                                     </tr>	
                                     <tr>
                                         <td style="width:50%">Total Records</td>
@@ -82,6 +81,14 @@
                                     <tr>
                                         <td style="width:50%">Validation Set</td>
                                         <td style="width:50%"><b>{{modelresult.validationSet}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%">Time Taken</td>
+                                        <td style="width:50%"><b>{{modelresult.timeTaken}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50%">Num Features</td>
+                                        <td style="width:50%"><b>{{modelresult.numFeatures}}</b></td>
                                     </tr>
                                 </table>
                             </div>
@@ -106,19 +113,19 @@
                         <table  class="table table-bordered train-result" style="width:50%" >
                             <tr>
                                 <td style="width:50%">Accuracy</b></td>
-                                <td style="width:50%"><b>{{ modelresult.accuracy}}</b></td>
+                                <td style="width:50%"><b>{{ modelresult.accuracy}}%</b></td>
                             </tr>
                             <tr>
                                 <td style="width:50%">Recall</b></td>
-                                <td style="width:50%"><b>{{ modelresult.recall}}</b></td>
+                                <td style="width:50%"><b>{{ modelresult.recall}}%</b></td>
                             </tr>
                             <tr>
                                 <td style="width:50%">Precision</td>
-                                <td style="width:50%"><b>{{modelresult.precision}}</b></td>
+                                <td style="width:50%"><b>{{modelresult.precision}}%</b></td>
                             </tr>
                             <tr>
                                 <td style="width:50%">F1 Score</b></td>
-                                <td style="width:50%"><b>{{ modelresult.f1Score}}</b></td>
+                                <td style="width:50%"><b>{{ modelresult.f1Score}}%</b></td>
                             </tr>          
                             <tr>
                                 <td style="width:50%">Log Loss</td>
