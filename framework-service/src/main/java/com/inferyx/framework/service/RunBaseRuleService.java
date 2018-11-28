@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +78,24 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
 	
+	/**
+	 * @return the datasource
+	 */
+	public Datasource getDatasource() {
+		return datasource;
+	}
+
+
+
+	/**
+	 * @param datasource the datasource to set
+	 */
+	public void setDatasource(Datasource datasource) {
+		this.datasource = datasource;
+	}
+
+
+
 	/**
 	 * @return the executorServiceImpl
 	 */
@@ -537,7 +557,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				throw new Exception("sql not generated");
 			}
 			IExecutor exec = null;
-			this.datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;
 			String appUuid = null;
 			
@@ -624,5 +643,5 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		return taskHolder;
 
 	}
-
+	
 }
