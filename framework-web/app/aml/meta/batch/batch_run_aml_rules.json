@@ -39,14 +39,11 @@
       "value": null
     },
     {
-      "ref": {
-        "type": "dag",
-        "uuid": "65686d4b-e606-4b5b-9689-d1d495f801c6",
-        "version": null,
-        "name": null
-      },
-      "value": null
-    }
+            "ref" : {
+                "type" : "dag",
+                "uuid" : "36474a78-9118-4fc1-bb3d-037144ed4279"
+            }
+        }
   ],
   "inParallel": null
 }
