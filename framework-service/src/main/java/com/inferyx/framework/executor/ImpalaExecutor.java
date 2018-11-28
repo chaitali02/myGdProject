@@ -714,7 +714,6 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSqlByDatasource(sql, datasource, clientContext);
 	}
 }
