@@ -66,16 +66,7 @@ public class ProfileOperatorFactory /*extends CustomOperatorFactory*/ {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ProfileOperator getOperator(RunMode runMode) {
-		
-		Datasource datasource = null;
-		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
-		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public ProfileOperator getOperator(RunMode runMode, Datasource datasource) {
 		String datasourceName = datasource.getType();
 		if (runMode.equals(RunMode.ONLINE)) {
 			if(datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {

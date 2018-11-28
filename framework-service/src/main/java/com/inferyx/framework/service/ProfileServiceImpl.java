@@ -554,9 +554,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 					MetaType.profileExec.toString());
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
-			
+			Datasource datasource = commonServiceImpl.getDatasourceByObject(profile);
 			for (int i = 0; i < profile.getAttributeInfo().size(); i++) {
-				profileOperator = profileOperatorFactory.getOperator(runMode);
+				profileOperator = profileOperatorFactory.getOperator(runMode, datasource);
 				String sql = profileOperator.generateSql(profile, profileExec,
 						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, otherParams, runMode);
 				if(sql != null)

@@ -169,6 +169,7 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
@@ -184,6 +185,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
@@ -4254,6 +4256,26 @@ public class CommonServiceImpl <T> {
 			MetaIdentifier reconDependsOn = recon.getSourceAttr().getRef();
 			Object dependsOnObj = getOneByUuidAndVersion(reconDependsOn.getUuid(), reconDependsOn.getVersion(), reconDependsOn.getType().toString());
 			return getDatasourceByObject(dependsOnObj);		
+		} else if(object instanceof com.inferyx.framework.domain.Map) {
+			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) object;
+			MetaIdentifier mapDependsOn = map.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(mapDependsOn.getUuid(), mapDependsOn.getVersion(), mapDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Train) {
+			Train train = (Train) object;
+			MetaIdentifier trainDependsOn = train.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(trainDependsOn.getUuid(), trainDependsOn.getVersion(), trainDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Predict) {
+			Predict predict = (Predict) object;
+			MetaIdentifier predictDependsOn = predict.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(predictDependsOn.getUuid(), predictDependsOn.getVersion(), predictDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Formula) {
+			Formula formula = (Formula) object;
+			MetaIdentifier formulaDependsOn = formula.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(formulaDependsOn.getUuid(), formulaDependsOn.getVersion(), formulaDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
 		}
 		
 		return null;
