@@ -26,6 +26,7 @@ import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
@@ -723,4 +724,18 @@ public interface IExecutor {
 	 */
 	ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
 			String clientContext) throws IOException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param datasource
+	 * @param targetDatapod
+	 * @param saveMode
+	 * @return 
+	 * @throws IOException
+	 */
+	ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 }

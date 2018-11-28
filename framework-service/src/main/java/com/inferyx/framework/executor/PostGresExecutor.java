@@ -31,6 +31,7 @@ import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -806,6 +807,14 @@ public class PostGresExecutor implements IExecutor {
 	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
 			String clientContext) throws IOException {
 		return executeSqlByDatasource(sql, datasource, clientContext);
+	}
+
+	@Override
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
