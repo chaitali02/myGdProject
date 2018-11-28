@@ -605,21 +605,35 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
 
 });
 
-DatascienceModule.controller('ResultTrainController2', function ($filter, $state, $location, $http, $stateParams, dagMetaDataService, $rootScope, $scope, ModelService, CF_DOWNLOAD) {
-    //  $scope.toClipboard = ngClipboard.toClipboard;
+DatascienceModule.controller('ResultTrainController2', function ($filter, $state, $location, $http, $stateParams, dagMetaDataService, $rootScope, $scope, ModelService, CF_DOWNLOAD, $window,  $timeout) {
+    $scope.isTrainResultProgess=false;
+    $window.addEventListener('resize', function (e) {
+        $scope.showmap = false
+    });
+    
     $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
         $scope.modelDetail = {};
         $scope.modelDetail.uuid = uuid;
         $scope.modelDetail.version = version;
+        $scope.isTrainResultProgess=true;
         ModelService.getTrainResultByTrainExec(uuid, version,'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
         var onSuccessGetTrainResultByTrainExec = function (response) {
             $scope.modelresult = response;
+            $scope.isTrainResultProgess=false;
+          
        } //End onSuccessGetModelResult
     }
     $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
-
+    $scope.go = function (index) {
+    $scope.activeTabIndex=index;
+    if(index ==1){
+         $timeout(function () {
+          $scope.showChart = true;
+        }, 100);
+    }
+    }
 
 });
 
