@@ -121,6 +121,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
+import com.inferyx.framework.register.ImpalaRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
 import com.inferyx.framework.register.PostGresRegister;
@@ -234,6 +235,8 @@ public class RegisterService {
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
 	private ApplicationViewServiceImpl applicationViewServiceImpl;
+	@Autowired
+	private ImpalaRegister impalaRegister;
 	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -3697,9 +3700,11 @@ public class RegisterService {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) || type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+		}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+			return impalaRegister.registerDB(uuid, version, registryList);
+		}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList, runMode);

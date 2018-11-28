@@ -532,7 +532,7 @@ public class ImpalaExecutor implements IExecutor {
 				if(sourceTableName.contains(datasource.getDbname())) {
 					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
 				}
-				IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
+				IConnector connector = connectionFactory.getConnector(ExecContext.IMPALA.toString());
 				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//getConnection();
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				

@@ -48,6 +48,8 @@
             "paramId" : "0",
             "paramName" : "sourceLocation",
             "paramType" : "datapod",
+            "paramDispName" : "Source Location",
+            "paramDesc" : "",
             "paramValue" : null,
             "paramRef" : null
         }, 
@@ -55,6 +57,8 @@
             "paramId" : "1",
             "paramName" : "numRecords",
             "paramType" : "integer",
+            "paramDispName" : "Num Records",
+            "paramDesc" : "",
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -67,6 +71,8 @@
             "paramId" : "2",
             "paramName" : "saveLocation",
             "paramType" : "datapod",
+            "paramDispName" : "Save Location",
+            "paramDesc" : "",
             "paramValue" : null,
             "paramRef" : null
         }

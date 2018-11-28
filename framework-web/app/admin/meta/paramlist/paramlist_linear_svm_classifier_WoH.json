@@ -57,6 +57,8 @@
       "paramId": "0",
       "paramName": "maxIter",
       "paramType": "integer",
+  	  "paramDispName" : "Max Iter",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -68,6 +70,8 @@
       "paramId": "1",
       "paramName": "regParam",
       "paramType": "double",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

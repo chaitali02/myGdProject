@@ -58,6 +58,8 @@
       "paramId": "3",
       "paramName": "smoothing",
       "paramType": "double",
+   	  "paramDispName" : "Smoothing",
+       "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

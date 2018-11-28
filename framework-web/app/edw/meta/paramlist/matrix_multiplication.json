@@ -49,36 +49,48 @@
             "paramId" : "1",
             "paramName" : "lhsKeyAttr",
             "paramType" : "attributes",
+      		"paramDispName" : "Lhs Key Attr",
+  		    "paramDesc" : "",
             "paramRef" : null
         }, 
         {
             "paramId" : "2",
             "paramName" : "rhsKeyAttr",
             "paramType" : "attributes",
+      		"paramDispName" : "Rhs Key Attr",
+  		    "paramDesc" : "",
             "paramRef" : null
         }, 
         {
             "paramId" : "3",
             "paramName" : "lhsAttrs",
             "paramType" : "attributes",
+      		"paramDispName" : "Lhs Attrs",
+  		    "paramDesc" : "",
             "paramRef" : null
         }, 
         {
             "paramId" : "4",
             "paramName" : "rhsAttrs",
             "paramType" : "attributes",
+      		"paramDispName" : "Rhs Attrs",
+  		    "paramDesc" : "",
             "paramRef" : null
         }, 
         {
             "paramId" : "5",
             "paramName" : "saveLocation",
             "paramType" : "datapod",
+      		"paramDispName" : "Save Location",
+  		    "paramDesc" : "",
             "paramRef" : null
         }, 
         {
             "paramId" : "6",
             "paramName" : "operatorType",
             "paramType" : "string",
+      		"paramDispName" : "Operator Type",
+  		    "paramDesc" : "",
             "paramRef" : null,
             "paramValue" : {
                 "value" : "MUL"

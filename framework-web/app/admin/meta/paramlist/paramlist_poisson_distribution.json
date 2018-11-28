@@ -49,6 +49,8 @@
       "paramId": "0",
       "paramName": "p",
       "paramType": "double",
+   	  "paramDispName" : "P",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -60,6 +62,8 @@
       "paramId": "1",
       "paramName": "epsilon",
       "paramType": "double",
+   	  "paramDispName" : "Epsilon",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

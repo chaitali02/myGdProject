@@ -78,7 +78,7 @@ public class ImpalaRegister extends DataSourceRegister {
 
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		Datapod datapod = null;
 		MetaIdentifierHolder datastoreMeta = new MetaIdentifierHolder();
 		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, uuid, version);
@@ -86,7 +86,7 @@ public class ImpalaRegister extends DataSourceRegister {
 		datastoreMeta.setRef(datasourceRef);
 		try {
 			IConnector connector = connectionFactory.getConnector(ExecContext.IMPALA.toString());
-			ConnectionHolder connectionHolder = connector.getConnection();
+			ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);
 			Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetaData = con.getMetaData();
 
@@ -109,6 +109,7 @@ public class ImpalaRegister extends DataSourceRegister {
 					pkList.add(rsPriKey.getString("COLUMN_NAME"));
 				}
 				ResultSet rs = dbMetaData.getColumns(null, null, tableName, null);
+				
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Column Name is : " + rs.getString("COLUMN_NAME"));
 					logger.info("Column type is : " + rs.getString("TYPE_NAME"));
@@ -144,7 +145,7 @@ public class ImpalaRegister extends DataSourceRegister {
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.IMPALA.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+				ResultSetHolder rsHolder = exec.executeSqlByDatasource("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName, datasource, commonServiceImpl.getApp().getUuid());
 				rsHolder.getResultSet().next();
 				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
 				datastore.setCreatedBy(datapod.getCreatedBy());

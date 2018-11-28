@@ -4,7 +4,9 @@
 			"paramId" : "0",
 			"paramName" : "trans_count",
 			"paramType" : "integer",
-			"paramValue" : {
+            "paramDispName" : "Trans Count",
+            "paramDesc" : "",
+   			"paramValue" : {
 				"ref" : {
 					"type" : "simple"
 				},
@@ -15,6 +17,8 @@
 			"paramId" : "1",
 			"paramName" : "trans_amount_usd",
 			"paramType" : "double",
+            "paramDispName" : "Trans Amount Usd",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple"
@@ -26,6 +30,8 @@
 			"paramId" : "2",
 			"paramName" : "lookback_days",
 			"paramType" : "integer",
+            "paramDispName" : "Lookback Days",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple"

@@ -48,6 +48,8 @@
             "paramId" : "1",
             "paramName" : "factorMeans",
             "paramType" : "attribute",
+   	   	    "paramDispName" : "Factor Means",
+            "paramDesc" : "",	
             "paramValue" :null,
             "paramRef" : null
         }, 
@@ -55,6 +57,8 @@
             "paramId" : "2",
             "paramName" : "factorCovariance",
             "paramType" : "attributes",
+   	   	    "paramDispName" : "Factor Covariance",
+            "paramDesc" : "",	
             "paramValue" : null,
             "paramRef" : null
         }

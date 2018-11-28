@@ -616,7 +616,6 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         ModelService.getTrainResultByTrainExec(uuid, version,'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
         var onSuccessGetTrainResultByTrainExec = function (response) {
             $scope.modelresult = response;
-           
        } //End onSuccessGetModelResult
     }
     $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });

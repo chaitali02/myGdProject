@@ -52,6 +52,8 @@
       "paramId": "0",
       "paramName": "smoothing",
       "paramType": "list",
+   	  "paramDispName" : "Smoothing",
+       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -63,6 +65,8 @@
       "paramId": "1",
       "paramName": "numFolds",
       "paramType": "integer",
+   	  "paramDispName" : "Num Folds",
+       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
