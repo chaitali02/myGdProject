@@ -1747,7 +1747,7 @@ public class CommonServiceImpl <T> {
 							paramSetVal = info.getParamSetVal();
 							List<ParamListHolder> paramListHolders = new ArrayList<>();
 							for(ParamListHolder paramListHolder : paramSetVal) {
-								ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+								ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString(), "N");
 								for(Param param : paramList.getParams()) 
 									if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
 										paramListHolder.setParamName(param.getParamName());
@@ -1789,11 +1789,10 @@ public class CommonServiceImpl <T> {
 						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
 					 
-					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){
-							
+					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){	
 						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
 						if(paramListHolder != null) {
-							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString(), "N");
 							for(Param param : paramList.getParams()) {							
 								if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
 									paramListHolder.setParamName(param.getParamName());

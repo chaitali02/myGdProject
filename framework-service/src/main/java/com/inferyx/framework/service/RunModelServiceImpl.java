@@ -838,8 +838,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						
 						double[] featureimportancesArr = (double[])summary.get("featureimportances");						
-						List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
-						trainResult.setFeatureImportance(featureImportance);
+						if(featureimportancesArr != null) {
+							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+							trainResult.setFeatureImportance(featureImportance);
+						}
 						trainResult.setAccuracy((double) summary.get("accuracy"));
 						trainResult.setRecall((double) summary.get("recall"));
 						trainResult.setF1Score((double) summary.get("f1Score"));
@@ -865,9 +867,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						
 						String fileName = tableName+".result";
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
-						double[] featureimportancesArr = (double[])summary.get("featureimportances");						
-						List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
-						trainResult.setFeatureImportance(featureImportance);
+						double[] featureimportancesArr = (double[])summary.get("featureimportances");	
+						if(featureimportancesArr != null) {
+							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+							trainResult.setFeatureImportance(featureImportance);
+						}						
 						trainResult.setAccuracy((double) summary.get("accuracy"));
 						trainResult.setRecall((double) summary.get("recall"));
 						trainResult.setF1Score((double) summary.get("f1Score"));
