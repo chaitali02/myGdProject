@@ -22,6 +22,11 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         "index": "2",
         "name": "simulate",
         "caption": "Simulation"
+    },
+    {
+        "index": "3",
+        "name": "train2",
+        "caption": "Train Result"
     }
     ];
     var notify = {
@@ -141,14 +146,14 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         }
     }
     $scope.getAllLatest = function () {
-        CommonService.getAllLatest($scope.searchForm.modelType).then(function (response) { onSuccessGetAllLatestExec(response.data) });
+        CommonService.getAllLatest(dagMetaDataService.elementDefs[$scope.searchForm.modelType].metaType).then(function (response) { onSuccessGetAllLatestExec(response.data) });
         var onSuccessGetAllLatestExec = function (response) {
             $scope.allExecName = response;
         }
     }
     $scope.getAllLatest();
     $scope.onChangeModelType = function (type) {
-        $scope.searchForm.modelType = type
+        $scope.searchForm.modelType =type//dagMetaDataService.elementDefs[type].metaType
         $scope.getAllLatest();
         $scope.newType = type;
         $scope.getBaseEntityStatusByCriteria(false);
@@ -174,7 +179,7 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
             }
         }
         tags = tags.toString();
-        CommonService.getBaseEntityStatusByCriteria($scope.searchForm.modelType + "exec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
+        CommonService.getBaseEntityStatusByCriteria( dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
             $scope.loading = false;
         });
         var onSuccess = function (response) {
@@ -190,6 +195,7 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         $scope.getBaseEntityStatusByCriteria(false);
     }
     $scope.getExec = function (data) {
+        
         var stateName = dagMetaDataService.elementDefs[$scope.searchForm.modelType + "exec"].resultState;
         if (stateName) {
             $state.go(stateName, {
@@ -220,8 +226,8 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
             return
         }
         notify.type = 'success',
-            notify.title = 'Success',
-            notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
         $scope.$emit('notify', notify);
 
         var url = $location.absUrl().split("app")[0];
@@ -250,8 +256,8 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
             return
         }
         notify.type = 'success',
-            notify.title = 'Success',
-            notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
         $scope.$emit('notify', notify);
 
         var url = $location.absUrl().split("app")[0];
@@ -596,6 +602,24 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
         });
         return columnDefs;
     }
+
+});
+
+DatascienceModule.controller('ResultTrainController2', function ($filter, $state, $location, $http, $stateParams, dagMetaDataService, $rootScope, $scope, ModelService, CF_DOWNLOAD) {
+    //  $scope.toClipboard = ngClipboard.toClipboard;
+    $scope.getTrainResult = function (data) {
+        var uuid = data.uuid;
+        var version = data.version;
+        $scope.modelDetail = {};
+        $scope.modelDetail.uuid = uuid;
+        $scope.modelDetail.version = version;
+        ModelService.getTrainResultByTrainExec(uuid, version,'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
+        var onSuccessGetTrainResultByTrainExec = function (response) {
+            $scope.modelresult = response;
+       } //End onSuccessGetModelResult
+    }
+    $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
+
 
 });
 

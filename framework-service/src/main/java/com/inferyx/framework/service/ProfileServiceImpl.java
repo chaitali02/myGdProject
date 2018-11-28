@@ -16,6 +16,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +42,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -52,9 +54,11 @@ import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -796,5 +800,12 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+	
+	@Override
+	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		MetaIdentifier datapodRef = ((Profile)baseRule).getDependsOn().getRef();
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
+		return commonServiceImpl.getDatasourceByDatapod(datapod);
 	}
 }

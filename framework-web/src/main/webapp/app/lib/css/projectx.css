@@ -1322,3 +1322,8 @@ box-sizing:border-box;
   color: #a0a0a0;
 }
 
+.table-bordered.train-result>tbody>tr>td{
+  border-left:1px solid white !important;
+  border-right:1px solid white !important;
+
+}

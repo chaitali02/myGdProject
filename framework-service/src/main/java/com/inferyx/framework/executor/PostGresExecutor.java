@@ -56,6 +56,7 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -417,7 +418,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -574,7 +575,7 @@ public class PostGresExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

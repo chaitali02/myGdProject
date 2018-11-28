@@ -229,12 +229,27 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
     }).then(function (response, status, headers) { return response; })
   }
   
-
-  
+  factory.findTrainResultByTrainExec = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/getTrainResultByTrainExec?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET"
+    }).then(function (response) { return response })
+  }; 
   return factory;
 })
 
 DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory) {
+  this.getTrainResultByTrainExec = function (uuid, version, type) {
+    var deferred = $q.defer();
+    ModelFactory.findTrainResultByTrainExec(uuid, version ,type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getFormulaByType = function (type) {
     var deferred = $q.defer();
     ModelFactory.findFormulaByType(type).then(function (response) { onSuccess(response.data) });

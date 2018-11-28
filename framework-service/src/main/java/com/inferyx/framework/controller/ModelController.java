@@ -19,6 +19,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +36,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.PredictExec;
@@ -41,6 +43,7 @@ import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -63,6 +66,8 @@ public class ModelController {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private TrainResultViewServiceImpl trainResultViewServiceImpl; 
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
@@ -449,4 +454,12 @@ public class ModelController {
 		return modelServiceImpl.getPrediction(trainExecUUID, feature);
 	}
 
+	@RequestMapping(value = "/getTrainResultByTrainExec", method = RequestMethod.GET)
+	public String getTrainResultByTrainExec(@RequestParam("uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonGenerationException, JsonMappingException, IOException {
+		TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExecUuid, trainExecVersion);
+		return new ObjectMapper().writeValueAsString(trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion()));
+	}
 }

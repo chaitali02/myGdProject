@@ -28,7 +28,6 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -49,8 +48,8 @@ import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -64,8 +63,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -590,5 +587,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
-	
+
+	@Override
+	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		MetaIdentifier datapodRef = ((DataQual)baseRule).getDependsOn().getRef();
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
+		return commonServiceImpl.getDatasourceByDatapod(datapod);
+	}
 }

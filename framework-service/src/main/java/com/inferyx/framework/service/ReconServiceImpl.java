@@ -51,6 +51,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -58,6 +59,7 @@ import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -419,5 +421,12 @@ public class ReconServiceImpl extends RuleTemplate {
 
 		}
 		return ExecObjList;
+	}
+	
+	@Override
+	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		MetaIdentifier datapodRef = ((Recon)baseRule).getSourceAttr().getRef();
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
+		return commonServiceImpl.getDatasourceByDatapod(datapod);
 	}
 }
