@@ -351,7 +351,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray = null;
 			$scope.filterTableArray = null;
 			$scope.addAttribute();
-			$scope.addRowFilter();
+		//	$scope.addRowFilter();
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
@@ -1029,8 +1029,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			attributeinfo.isSourceAtributeExpression = false;
 			attributeinfo.isSourceAtributeFunction = false;
 			attributeinfo.isSourceAtributeParamList = false;
+			attributeinfo.isSourceName=true;
 			$scope.attributeTableArray.push(attributeinfo);
-			$scope.onChangeSourceName(i);
+			setTimeout(function(){
+				$scope.onChangeSourceName(i);
+			},10);
+			
 		}
 		
 	}
