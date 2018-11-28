@@ -765,4 +765,11 @@ public class HiveExecutor implements IExecutor{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

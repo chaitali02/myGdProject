@@ -711,4 +711,16 @@ public interface IExecutor {
 	 */
 	List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext)
 			throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return 
+	 * @throws IOException
+	 */
+	ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException;
 }

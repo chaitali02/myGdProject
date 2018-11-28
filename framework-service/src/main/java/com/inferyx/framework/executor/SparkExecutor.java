@@ -42,7 +42,6 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -88,10 +87,8 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.execution.columnar.DOUBLE;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.DoubleType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
@@ -148,12 +145,10 @@ import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
-import scala.Function1;
 import scala.Tuple2;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
-import scala.runtime.BoxedUnit;
 
 @Component
 public class SparkExecutor<T> implements IExecutor {
@@ -417,8 +412,22 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 	
+	@Override
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
 		ResultSetHolder resHolder = executeSql(sql, clientContext);
+		Dataset<Row> df = resHolder.getDataFrame();
+		long countRows = df.count();
+		resHolder.setCountRows(countRows);
+		df.createOrReplaceGlobalTempView(tableName);
+		registerTempTable(df, tableName);
+		logger.info("temp table registered: " + tableName);
+		df.show(false);
+		return resHolder;
+	}
+	
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource, String clientContext) throws IOException {
+		ResultSetHolder resHolder = executeSqlByDatasource(sql, datasource, clientContext);
 		Dataset<Row> df = resHolder.getDataFrame();
 		long countRows = df.count();
 		resHolder.setCountRows(countRows);
@@ -1864,8 +1873,8 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, String saveFileName) throws IOException {
-		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+//		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();

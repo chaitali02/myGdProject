@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -573,6 +571,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			checkInternalVarMap(execParams, baseRuleExec);
 			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
 			/***** Replace internalVarMap - END *****/
+			Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
 				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
@@ -585,18 +584,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-//				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-//				Datasource targetDs = commonServiceImpl.getDatasourceByDatapod(datapod);
-//				if((datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-//						|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))
-//						&& !(targetDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
-//							|| targetDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-//					String sql = helper.buildInsertQuery(executorServiceImpl.getExecContext(runMode, targetDs).toString(), tableName, datapod, baseRuleExec.getExec());
-//					exec.executeSql(sql, appUuid);
-//				} else {
-					rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), Helper.genTableName(filePath), appUuid);
-					countRows = rsHolder.getCountRows();
-//				}
+				rsHolder = exec.executeAndRegisterByDatasource(baseRuleExec.getExec(), Helper.genTableName(filePath), ruleDatasource, appUuid);
+				countRows = rsHolder.getCountRows();
 			}
 				
 			logger.info("temp table registered: "+tableName);

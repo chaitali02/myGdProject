@@ -93,7 +93,7 @@ public class DL4JExecutor implements IExecutor {
 	@Autowired
 	private ConnectionFactory connectionFactory;
 	@Autowired
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private SerializableHelper serializableHelper; 
 	
@@ -876,6 +876,13 @@ public class DL4JExecutor implements IExecutor {
 
 	@Override
 	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
