@@ -374,7 +374,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			
 			if(rsHolder.getType().equals(ResultType.resultset) 
 					&& appDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
-				rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " WHERE rownum<= " + 100 );
+				rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " WHERE rownum <= " + 100 );
 			else if(rsHolder.getType().equals(ResultType.resultset) &&
 					(/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 							||*/ !appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
