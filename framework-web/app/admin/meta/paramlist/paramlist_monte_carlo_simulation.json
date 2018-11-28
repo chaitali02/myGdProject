@@ -4,6 +4,8 @@
             "paramId" : "0",
             "paramName" : "seed",
             "paramType" : "integer",
+   	   	    "paramDispName" : "Seed",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -15,6 +17,8 @@
             "paramId" : "1",
             "paramName" : "minValue",
             "paramType" : "double",
+   	   	    "paramDispName" : "Min Value",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -26,6 +30,8 @@
             "paramId" : "2",
             "paramName" : "maxValue",
             "paramType" : "double",
+   	   	    "paramDispName" : "Max Value",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -37,6 +43,8 @@
             "paramId" : "3",
             "paramName" : "factorWeights",
             "paramType" : "attribute",
+   	   	    "paramDispName" : "Factor Weights",
+            "paramDesc" : "",	
 	    "paramValue" : null
         }
     ],

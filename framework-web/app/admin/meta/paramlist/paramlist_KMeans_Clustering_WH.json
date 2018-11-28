@@ -52,6 +52,8 @@
       "paramId": "0",
       "paramName": "kMeans",
       "paramType": "list",
+      "paramDispName" : "K Means",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -63,6 +65,8 @@
       "paramId": "1",
       "paramName": "initSteps",
       "paramType": "list",
+      "paramDispName" : "Init Steps",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -74,6 +78,8 @@
       "paramId": "2",
       "paramName": "seed",
       "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -85,6 +91,8 @@
       "paramId": "3",
       "paramName": "numFolds",
       "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"

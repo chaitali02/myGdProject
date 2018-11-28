@@ -48,6 +48,8 @@
             "paramId" : "0",
             "paramName" : "mean",
             "paramType" : "double",
+   	     	"paramDispName" : "Mean",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -58,7 +60,9 @@
         {
             "paramId" : "1",
             "paramName" : "size",
-            "paramType" : "long",
+            "paramType" : "long",            
+   	     	"paramDispName" : "Size",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -69,7 +73,9 @@
         {
             "paramId" : "2",
             "paramName" : "numPartitions",
-            "paramType" : "integer",
+            "paramType" : "integer",           
+   	     	"paramDispName" : "Num Partitions",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -80,7 +86,9 @@
         {
             "paramId" : "3",
             "paramName" : "seed",
-            "paramType" : "long",
+            "paramType" : "long",           
+   	     	"paramDispName" : "Seed",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

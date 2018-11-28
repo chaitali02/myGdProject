@@ -18,9 +18,37 @@ public class Param {
 	String paramId; // 0,1,2
 	String paramName; // param1, param2
 	String paramType; // string, date, double,datapod,attribute,attributes
+	String paramDispName;	
+	String paramDesc;
 	MetaIdentifierHolder paramValue;
 	MetaIdentifier paramRef;
 	
+	
+	
+	/**
+	 * @return the paramDispName
+	 */
+	public String getParamDispName() {
+		return this.paramDispName;
+	}
+	/**
+	 * @param paramDispName the paramDispName to set
+	 */
+	public void setParamDispName(String paramDispName) {
+		this.paramDispName = paramDispName;
+	}
+	/**
+	 * @return the paramDesc
+	 */
+	public String getParamDesc() {
+		return this.paramDesc;
+	}
+	/**
+	 * @param paramDesc the paramDesc to set
+	 */
+	public void setParamDesc(String paramDesc) {
+		this.paramDesc = paramDesc;
+	}
 	public String getParamId() {
 		return paramId;
 	}

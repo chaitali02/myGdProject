@@ -61,6 +61,8 @@
       "paramId": "0",
       "paramName": "nEpochs",
       "paramType": "integer",
+      "paramDispName" : "Epochs",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple",
@@ -76,6 +78,8 @@
       "paramId": "1",
       "paramName": "seed",
       "paramType": "integer",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple",
@@ -91,6 +95,8 @@
       "paramId": "2",
       "paramName": "iterations",
       "paramType": "integer",
+      "paramDispName" : "Iterations",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple",
@@ -106,6 +112,8 @@
       "paramId": "3",
       "paramName": "learningRate",
       "paramType": "decimal",
+      "paramDispName" : "Learning Rate",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple",

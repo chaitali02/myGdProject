@@ -42,6 +42,8 @@
             "paramId" : "0",
             "paramName" : "load_date",
             "paramType" : "string",
+    	    "paramDispName" : "Load Date",
+    	    "paramDesc" : "",
             "paramValue" : {
                 "ref" : {
                     "type" : "simple",
