@@ -3,7 +3,8 @@
     "libraryType" : "SPARKML",
     "trainClass" : "org.apache.spark.ml.classification.GBTClassifier",
     "modelClass" : "org.apache.spark.ml.classification.GBTClassificationModel",
-    "summaryMethods" : [ 
+    "summaryMethods" : [
+        "featureImportances", 
         "getMaxIter", 
         "getLossType", 
         "getCacheNodeIds", 

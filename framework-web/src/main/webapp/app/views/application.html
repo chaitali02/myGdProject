@@ -235,9 +235,11 @@
                         </span>
                       </th>
                       <th style="width:6%;text-align:center">ID</th>
-                      <th class="text-center" style="width:36%;">Name</th>
-                      <th class="text-center" style="width:20%;">Type</th>
-                      <th class="text-center">Default Value</th>
+                      <th class="text-center" style="width:20%;">Name</th>
+                      <th class="text-center" style="width:20%;">Display Name</th>
+                      <th class="text-center" style="width:14%;">Type</th>
+                      <th class="text-center" style="width:20%;">Default Value</th>
+                      <th class="text-center" style="width:20%;">Desc</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -256,7 +258,13 @@
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="{{mode}} || isTableDisable"
-                            class="form-control" ng-change="onChangeSimple()">
+                          class="form-control" required>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.paramDispName" title="{{tabledata.paramDispName}}" ng-disabled="{{mode}} || isTableDisable"
+                          class="form-control" required>
                         </span>
                       </td>
                       <td>
@@ -309,6 +317,12 @@
                         <div class="text-center" ng-if="['simple','distribution','date','function'].indexOf(tabledata.paramValueType) == -1">
                           NA
                         </div>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.paramDesc" title="{{tabledata.paramDesc}}" ng-disabled="{{mode}} || isTableDisable"
+                          class="form-control">
+                        </span>
                       </td>
                     </tr>
                   </tbody>

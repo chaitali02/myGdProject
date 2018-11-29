@@ -24,6 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -209,7 +212,8 @@ public class DatasourceServiceImpl {
 			}
 	}*/
 
-	/********************** UNUSED **********************/
+	/********************** UNUSED 
+	 * @throws JsonProcessingException **********************/
 	/*public List<Datasource> findAllLatestActive() {	   
 	   Aggregation datasourceAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
 	   AggregationResults<Datasource> datasourceResults = mongoTemplate.aggregate(datasourceAggr,"datasource", Datasource.class);	   
@@ -237,10 +241,28 @@ public class DatasourceServiceImpl {
 	   return result;
 	}*/
 	
-	public List<Datasource> getDatasourceByType(String type) {   
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();		
-		return iDatasourceDao.findDatasourceByType(appUuid,type);
-	}
+	public List<Datasource> getDatasourceByType(String type) throws JsonProcessingException {   
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
+		MatchOperation filter = null;
+		if(appUuid != null && !appUuid.isEmpty()) {
+			filter = match(new Criteria("type").is(type).andOperator(new Criteria("appInfo.ref.uuid").is(appUuid)));
+		} else {
+			filter = match(new Criteria("type").is(type));
+		}
+		 
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		Aggregation scheduleAggr = newAggregation(filter, groupByUuid);
+		AggregationResults<Datasource> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.datasource.toString().toLowerCase(), Datasource.class);
+		List<Datasource> datasourceResultList = (List<Datasource>) scheduleAggrResults.getMappedResults();
+		List<Datasource> datasourceList = new ArrayList<Datasource>();
+		if(datasourceResultList !=null &&  datasourceResultList.size() > 0) {
+			for(Datasource datasource :datasourceResultList) {
+				Datasource datasourceTemp=(Datasource) commonServiceImpl.getOneByUuidAndVersion(datasource.getId(), datasource.getVersion(), MetaType.datasource.toString());
+				datasourceList.add(datasourceTemp);
+			}
+		}		
+		return datasourceList; //iDatasourceDao.findDatasourceByType(appUuid,type);
+	} 
 	
 	public List<Datasource> getDatasourceByParms(String type,String dbname,String host) {   
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();		
