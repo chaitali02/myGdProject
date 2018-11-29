@@ -40,15 +40,12 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
-import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
 public class WorkbookUtil {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl; 
-	@Autowired
-	FilterOperator filterOperator;
 
 	public static HSSFWorkbook getWorkbook(Map<String, LinkedHashMap<String, String>> resultMap) {
 		HSSFWorkbook wb = new HSSFWorkbook();

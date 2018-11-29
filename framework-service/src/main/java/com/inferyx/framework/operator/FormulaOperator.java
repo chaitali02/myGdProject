@@ -32,7 +32,6 @@ import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.executor.ExecContext;
@@ -59,12 +58,12 @@ public class FormulaOperator {
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
 	public String generateSql(Formula formula,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource datasource) 
+					throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
 //		Datasource source = commonServiceImpl.getDatasourceByApp();
-		Datasource datasource = commonServiceImpl.getDatasourceByObject(formula);
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
 			builder.append("");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
@@ -117,7 +116,8 @@ public class FormulaOperator {
 				builder.append(" ");
 				Formula innerFormula = (Formula) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams) + ") ");
+				Datasource datasource2 = commonServiceImpl.getDatasourceByObject(formula);
+				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {
@@ -169,6 +169,121 @@ public class FormulaOperator {
 		LOGGER.info(String.format("Generalize formula %s", builder.toString()));
 		return builder.toString();
 	}
+	
+//	public String generateSql(Formula formula,
+//			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) 
+//					throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		
+//		boolean pctFormula = false;
+//		StringBuilder builder = new StringBuilder();
+////		Datasource source = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByObject(formula);
+//		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
+//			builder.append("");
+//			if (sourceAttr.getRef().getType() == MetaType.simple) {
+//				if(!sourceAttr.getValue().equals("("))
+//					builder.append(" ");
+//				builder.append(sourceAttr.getValue());
+//			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
+//				builder.append(" ");
+//				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+//				if (value != null) {
+//					boolean isNumber = Helper.isNumber(value);
+//					if (!isNumber) {
+//						value = "'" + value + "'";
+//					}
+//				}
+//				if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub")
+//						&& builder.lastIndexOf(",") != -1) {
+//					builder.append("INTERVAL " + value + " DAY");
+//				} else {
+//					builder.append(value);
+//
+//				}
+//			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
+//				builder.append(" ");
+////				String value = null;
+////				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
+////				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
+////				builder.append(value);
+//				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+//				if(value != null) {
+//					boolean isNumber = Helper.isNumber(value);			
+//					if(!isNumber) {
+//						value = "'"+value+"'";
+//					}
+//				}
+//				if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub(")
+//						&& builder.lastIndexOf(",") != -1) {
+//					builder.append("INTERVAL " + value + " DAY");
+//				} else {
+//					builder.append(value);
+//
+//				}
+//			}  
+//			if (sourceAttr.getRef().getType() == MetaType.function) {
+//				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
+//				
+//				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource));
+//			}
+//			// implementing nested formula
+//			if (sourceAttr.getRef().getType() == MetaType.formula) {
+//				builder.append(" ");
+//				Formula innerFormula = (Formula) daoRegister
+//						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				
+//				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams) + ") ");
+//			}
+//
+//			if (sourceAttr.getRef().getType() == MetaType.datapod) {
+//				builder.append(" ");
+//				Datapod datapod = (Datapod) daoRegister
+//						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				
+//				if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.percentage)) {
+//
+//					if (!pctFormula) {
+//						builder.append(" SUM(" + datapod.sql(sourceAttr.getAttributeId()) + ") ");
+//						builder.append(datapod.sql(sourceAttr.getAttributeId()));
+//						builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ") ");
+//					} else
+//						builder.append(datapod.sql(sourceAttr.getAttributeId()));
+//					pctFormula = true;
+//
+//				}else {
+//					builder.append(datapod.sql(sourceAttr.getAttributeId()));
+//				}
+//			}
+//			
+//			if (sourceAttr.getRef().getType() == MetaType.dataset) {
+//				builder.append(" ");
+//				DataSet dataset = (DataSet) daoRegister
+//						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
+//			}
+//			
+//			if (sourceAttr.getRef().getType() == MetaType.rule) {
+//				builder.append(" ");
+//				Rule rule = (Rule) daoRegister
+//						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				builder.append(ruleServiceImpl.getAttributeSql(daoRegister, rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
+//			}
+//		}
+//		if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.sum_aggr)) {
+//			builder.insert(0, " SUM(");
+//			builder.append(") ");
+//
+//		} 
+//
+//		if (pctFormula)
+//			builder.append(" OVER () ");
+//		else if (!pctFormula && otherParams != null && otherParams.get("pctFormula") != null && otherParams.get("pctFormula").equals("true")) {
+//			builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ") ");
+//		}
+//
+//		LOGGER.info(String.format("Generalize formula %s", builder.toString()));
+//		return builder.toString();
+//	}
 	
 	public boolean isGroupBy (Formula formula, 
 								java.util.Map<String, MetaIdentifier> refKeyMap, 

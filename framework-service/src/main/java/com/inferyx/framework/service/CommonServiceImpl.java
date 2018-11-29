@@ -161,6 +161,7 @@ import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
@@ -170,6 +171,7 @@ import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
@@ -189,6 +191,7 @@ import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.StageExec;
@@ -198,6 +201,7 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -4275,6 +4279,25 @@ public class CommonServiceImpl <T> {
 			Formula formula = (Formula) object;
 			MetaIdentifier formulaDependsOn = formula.getDependsOn().getRef();
 			Object dependsOnObj = getOneByUuidAndVersion(formulaDependsOn.getUuid(), formulaDependsOn.getVersion(), formulaDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Ingest) {
+			Ingest ingest = (Ingest) object;
+			MetaIdentifier ingestSourceMI = ingest.getSourceDatasource().getRef();
+			return (Datasource) getOneByUuidAndVersion(ingestSourceMI.getUuid(), ingestSourceMI.getVersion(), ingestSourceMI.getType().toString());	
+		} else if(object instanceof Report) {
+			Report report = (Report) object;
+			MetaIdentifier reportDependsOn = report.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(reportDependsOn.getUuid(), reportDependsOn.getVersion(), reportDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof Vizpod) {
+			Vizpod vizpod = (Vizpod) object;
+			MetaIdentifier vizpodDependsOn = vizpod.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(vizpodDependsOn.getUuid(), vizpodDependsOn.getVersion(), vizpodDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);	
+		} else if(object instanceof DataStore) {
+			DataStore dataStore = (DataStore) object;
+			MetaIdentifier dataStoreDependsOn = dataStore.getMetaId().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(dataStoreDependsOn.getUuid(), dataStoreDependsOn.getVersion(), dataStoreDependsOn.getType().toString());
 			return getDatasourceByObject(dependsOnObj);	
 		}
 		

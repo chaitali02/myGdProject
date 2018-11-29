@@ -26,12 +26,10 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -39,7 +37,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -56,7 +53,7 @@ public class DQOperator implements IParsable {
 	private String THEN = " THEN 'Y' ELSE 'N' END as ";
 	private String SELECT = " SELECT ";
 	private String FROM = " FROM ";
-	private String JOIN = " JOIN ";
+//	private String JOIN = " JOIN ";
 	private String LEFT_OUTER_JOIN = " LEFT OUTER JOIN ";
 	private String BRACKET_OPEN = "( ";
 	private String BRACKET_CLOSE = " ) ";
@@ -74,7 +71,7 @@ public class DQOperator implements IParsable {
 	private String REFINT_CHECK_PASS = "refIntegrityCheck_pass";
 	private String DUP_CHECK_PASS = "dupCheck_pass";
 	private String CUSTOM_CHECK_PASS = "customCheck_pass";
-	private String UNDERSCORE = "_";
+//	private String UNDERSCORE = "_";
 	private String COMMA = ", ";
 	private String COUNT = " COUNT";
 	private String HAVING = " HAVING (1=1) ";
@@ -109,8 +106,6 @@ public class DQOperator implements IParsable {
 	@Autowired
 	DatasetServiceImpl datasetServiceImpl;
 	@Autowired
-	FilterOperator filterOperator;
-	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -122,7 +117,7 @@ public class DQOperator implements IParsable {
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
-		DataSet dataset = null;
+//		DataSet dataset = null;
 		if (dataQual == null) {
 			return null;
 		}
@@ -221,8 +216,8 @@ public class DQOperator implements IParsable {
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		String resp = null;
-		Relation relation = null;
-		DataSet dataSet = null;
+//		Relation relation = null;
+//		DataSet dataSet = null;
 		if (ref.getType() == MetaType.datapod) {
 			srcDP = (Datapod) daoRegister.getRefObject(ref);
 			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, otherParams, runMode)).concat("  ").concat(srcDP.getName());
@@ -428,7 +423,8 @@ public class DQOperator implements IParsable {
 		}
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, dq.getUuid(), dq.getVersion()));
 
-		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null,filterSource, null, usedRefKeySet, null, false, false, runMode);
+		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dq);
+		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null, filterSource, null, usedRefKeySet, null, false, false, runMode, mapSourceDS);
 
 		return filterStr; //filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 

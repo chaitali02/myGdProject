@@ -1443,7 +1443,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			} else{
 				attrRefHolder = attributeMap.getTargetAttr();
 			}
-			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder);
+			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder, ingest);
 			if(resolvedAttr != null) {
 				mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
 			}
