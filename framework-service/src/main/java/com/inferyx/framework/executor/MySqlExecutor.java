@@ -845,7 +845,8 @@ public class MySqlExecutor implements IExecutor {
 					if(rsmd.getColumnName(i).contains("."))
 						object.put(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1), rsSorted.getObject(i));
 					else
-						object.put(rsmd.getColumnName(i), rsSorted.getObject(i));
+						System.out.println(rsmd.getColumnLabel(i));
+						object.put(rsmd.getColumnLabel(i), rsSorted.getObject(i));
 				}
 				data.add(object);
 			}
