@@ -614,6 +614,13 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         var data = $filter('filter')($scope.originalData, searchtext, undefined);
         $scope.featureImportanceArr = data;
     };
+    $scope.close = function () {
+        $state.go('resultmodelmodel');
+    }
+    $scope.refreshMoldeResult = function () {
+        $scope.modelresult=null;
+        $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
+    }
     $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -627,7 +634,7 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
             $scope.isTrainResultProgess=false;
             $scope.featureImportanceArr = $.map($scope.modelresult.featureImportance,function(el,e) { 
                 var obj={};
-                var val=parseFloat(el.toFixed(2));
+                var val=parseFloat(el.toFixed(2))
                 obj.value= val;
                 obj.label= e;
                 return obj  ; 
