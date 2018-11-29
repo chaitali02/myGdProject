@@ -193,7 +193,6 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
@@ -4262,19 +4261,19 @@ public class CommonServiceImpl <T> {
 			return getDatasourceByObject(dependsOnObj);		
 		} else if(object instanceof com.inferyx.framework.domain.Map) {
 			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) object;
-			MetaIdentifier mapDependsOn = map.getSource().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(mapDependsOn.getUuid(), mapDependsOn.getVersion(), mapDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
+			MetaIdentifier mapSource = map.getSource().getRef();
+			Object sourceObj = getOneByUuidAndVersion(mapSource.getUuid(), mapSource.getVersion(), mapSource.getType().toString());
+			return getDatasourceByObject(sourceObj);	
 		} else if(object instanceof Train) {
 			Train train = (Train) object;
-			MetaIdentifier trainDependsOn = train.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(trainDependsOn.getUuid(), trainDependsOn.getVersion(), trainDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
+			MetaIdentifier trainSource = train.getSource().getRef();
+			Object sourceObj = getOneByUuidAndVersion(trainSource.getUuid(), trainSource.getVersion(), trainSource.getType().toString());
+			return getDatasourceByObject(sourceObj);	
 		} else if(object instanceof Predict) {
 			Predict predict = (Predict) object;
-			MetaIdentifier predictDependsOn = predict.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(predictDependsOn.getUuid(), predictDependsOn.getVersion(), predictDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
+			MetaIdentifier predictSource = predict.getSource().getRef();
+			Object sourceObj = getOneByUuidAndVersion(predictSource.getUuid(), predictSource.getVersion(), predictSource.getType().toString());
+			return getDatasourceByObject(sourceObj);	
 		} else if(object instanceof Formula) {
 			Formula formula = (Formula) object;
 			MetaIdentifier formulaDependsOn = formula.getDependsOn().getRef();
@@ -4291,9 +4290,9 @@ public class CommonServiceImpl <T> {
 			return getDatasourceByObject(dependsOnObj);	
 		} else if(object instanceof Vizpod) {
 			Vizpod vizpod = (Vizpod) object;
-			MetaIdentifier vizpodDependsOn = vizpod.getSource().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(vizpodDependsOn.getUuid(), vizpodDependsOn.getVersion(), vizpodDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
+			MetaIdentifier vizpodSource = vizpod.getSource().getRef();
+			Object sourceObj = getOneByUuidAndVersion(vizpodSource.getUuid(), vizpodSource.getVersion(), vizpodSource.getType().toString());
+			return getDatasourceByObject(sourceObj);	
 		} else if(object instanceof DataStore) {
 			DataStore dataStore = (DataStore) object;
 			MetaIdentifier dataStoreDependsOn = dataStore.getMetaId().getRef();
