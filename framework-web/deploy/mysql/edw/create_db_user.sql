@@ -1,6 +1,6 @@
-CREATE USER 'root'@'%' IDENTIFIED BY 'root';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-CREATE DATABASE IF NOT EXISTS `edw_small`;
-CREATE USER 'inferyx'@'localhost' identified by 'inferyx';
-GRANT ALL PRIVILEGES ON edw_small.* TO 'inferyx'@'localhost';
-FLUSH PRIVILEGES;
+create user 'root'@'%' identified by 'root';
+grant all privileges on *.* to 'root'@'%' with grant option;
+create database if not exists `edw_small`;
+create user 'inferyx'@'localhost' identified by 'inferyx';
+grant all privileges on edw_small.* to 'inferyx'@'localhost';
+flush privileges;

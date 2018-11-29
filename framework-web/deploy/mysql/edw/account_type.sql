@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS ACCOUNT_TYPE;
-CREATE TABLE ACCOUNT_TYPE(	
-	ACCOUNT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ACCOUNT_TYPE_CODE VARCHAR(10),
-	ACCOUNT_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_TYPE_ID_PK  PRIMARY KEY(ACCOUNT_TYPE_ID));
+drop table if exists account_type;
+create table account_type(	
+	account_type_id varchar(50) default 0 not null,
+	account_type_code varchar(10),
+	account_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_type_id_pk  primary key(account_type_id));

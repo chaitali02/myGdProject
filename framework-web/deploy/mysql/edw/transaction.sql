@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS TRANSACTION;
-CREATE TABLE TRANSACTION(	
-	TRANSACTION_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	TRANSACTION_TYPE_ID VARCHAR(50),
-	ACCOUNT_ID VARCHAR(50),
-	TRANSACTION_DATE VARCHAR(10),
-	FROM_ACCOUNT VARCHAR(50),
-	TO_ACCOUNT VARCHAR(50),
-	AMOUNT_BASE_CURR DECIMAL(10,2),
-	AMOUNT_USD DECIMAL(10,2),
-	CURRENCY_CODE VARCHAR(10),
-	CURRENCY_RATE DECIMAL(10,2),
-	NOTES VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT TRANSACTION_ID_PK  PRIMARY KEY(TRANSACTION_ID));
+drop table if exists transaction;
+create table transaction(	
+	transaction_id varchar(50) default 0 not null,
+	transaction_type_id varchar(50),
+	account_id varchar(50),
+	transaction_date varchar(10),
+	from_account varchar(50),
+	to_account varchar(50),
+	amount_base_curr decimal(10,2),
+	amount_usd decimal(10,2),
+	currency_code varchar(10),
+	currency_rate decimal(10,2),
+	notes varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint transaction_id_pk  primary key(transaction_id));

@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION_TRANSPOSE; 
+drop table if exists industry_factor_correlation_transpose; 
 
-CREATE TABLE INDUSTRY_FACTOR_CORRELATION_TRANSPOSE 
+create table industry_factor_correlation_transpose 
   ( 
-     FACTOR_X       VARCHAR(50), 
-     REPORTING_DATE VARCHAR(50), 
-     FACTOR_Y       VARCHAR(50), 
-     FACTOR_VALUE   DECIMAL(10, 2), 
-     VERSION        INTEGER(50) 
+     factor_x       varchar(50), 
+     reporting_date varchar(50), 
+     factor_y       varchar(50), 
+     factor_value   decimal(10, 2), 
+     version        integer(50) 
   ); 

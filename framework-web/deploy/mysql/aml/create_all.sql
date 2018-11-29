@@ -21,7 +21,7 @@ create table customer_alert_summary
 );
 
 
-DROP TABLE IF EXISTS customer_summary; 
+drop table if exists customer_summary; 
 create table customer_summary (
     customer_id varchar(100),
     in_wire_transfers_trans_count integer(10),
@@ -75,7 +75,7 @@ create table customer_summary (
     in_wire_transfers_round_amount_sum decimal(10,2),
     in_cash_transfers_round_amount_sum decimal(10,2),
     suspicious_ind integer(1),
-    CONSTRAINT customer_summary_pk PRIMARY KEY(customer_id));
+    constraint customer_summary_pk primary key(customer_id));
 drop table if exists dim_country;
 create table dim_country(	
 	country_code varchar(10),

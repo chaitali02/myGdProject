@@ -1,13 +1,13 @@
-DROP TABLE IF EXISTS DIM_BRANCH;
-CREATE TABLE DIM_BRANCH(	
-	BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_BRANCH_ID VARCHAR(50),
-	BRANCH_TYPE_CODE VARCHAR(10),
-	BRANCH_NAME VARCHAR(100),
-	BRANCH_DESC VARCHAR(500),
-	BRANCH_CONTACT_NAME VARCHAR(100),
-	BRANCH_CONTACT_PHONE VARCHAR(100),
-	BRANCH_CONTACT_EMAIL VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID));
+drop table if exists dim_branch;
+create table dim_branch(	
+	branch_id varchar(50) default 0 not null,
+	src_branch_id varchar(50),
+	branch_type_code varchar(10),
+	branch_name varchar(100),
+	branch_desc varchar(500),
+	branch_contact_name varchar(100),
+	branch_contact_phone varchar(100),
+	branch_contact_email varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_id_pk  primary key(branch_id));

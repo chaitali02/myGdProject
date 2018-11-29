@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS PRODUCT_TYPE;
-CREATE TABLE PRODUCT_TYPE(	
-	PRODUCT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	PRODUCT_TYPE_CODE VARCHAR(10),
-	PRODUCT_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT PRODUCT_TYPE_ID_PK PRIMARY KEY(PRODUCT_TYPE_ID));
+drop table if exists product_type;
+create table product_type(	
+	product_type_id varchar(50) default 0 not null,
+	product_type_code varchar(10),
+	product_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint product_type_id_pk primary key(product_type_id));

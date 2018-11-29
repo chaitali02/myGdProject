@@ -1,14 +1,14 @@
-TRUNCATE TABLE fact_transaction_journal;
-LOAD DATA  INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/fact_transaction_journal.csv' IGNORE INTO TABLE fact_transaction_journal FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' ;
+truncate table fact_transaction_journal;
+load data  infile '/user/hive/warehouse/framework/app/aml/data/csv/noheader/fact_transaction_journal.csv' ignore into table fact_transaction_journal fields terminated by ',' enclosed by '"' escaped by '"' lines terminated by '\r' ;
 
-TRUNCATE TABLE customer_alert_summary;
-LOAD DATA  INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/customer_alert_summary.csv' IGNORE INTO TABLE customer_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' ;
+truncate table customer_alert_summary;
+load data  infile '/user/hive/warehouse/framework/app/aml/data/csv/noheader/customer_alert_summary.csv' ignore into table customer_alert_summary fields terminated by ',' enclosed by '"' escaped by '"' lines terminated by '\n' ;
 
-TRUNCATE TABLE rule_alert_summary;
-LOAD DATA  INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/rule_alert_summary.csv' IGNORE INTO TABLE rule_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' ;
+truncate table rule_alert_summary;
+load data  infile '/user/hive/warehouse/framework/app/aml/data/csv/noheader/rule_alert_summary.csv' ignore into table rule_alert_summary fields terminated by ',' enclosed by '"' escaped by '"' lines terminated by '\n' ;
 
-TRUNCATE TABLE country_alert_summary;
-LOAD DATA  INFILE '/user/hive/warehouse/framework/app/aml/data/csv/noheader/country_alert_summary.csv' IGNORE INTO TABLE country_alert_summary FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' ;
+truncate table country_alert_summary;
+load data  infile '/user/hive/warehouse/framework/app/aml/data/csv/noheader/country_alert_summary.csv' ignore into table country_alert_summary fields terminated by ',' enclosed by '"' escaped by '"' lines terminated by '\n' ;
 
-TRUNCATE TABLE dim_country;
-LOAD DATA  INFILE '/user/hive/warehouse/framework/app/edw/data/csv/header/dim_country.csv' IGNORE INTO TABLE dim_country FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+truncate table dim_country;
+load data  infile '/user/hive/warehouse/framework/app/edw/data/csv/header/dim_country.csv' ignore into table dim_country fields terminated by ',' enclosed by '"' escaped by '"' lines terminated by '\n' ignore 1 lines;
