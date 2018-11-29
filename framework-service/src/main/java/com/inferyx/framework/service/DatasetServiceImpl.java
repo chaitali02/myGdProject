@@ -104,7 +104,8 @@ public class DatasetServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+		data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
