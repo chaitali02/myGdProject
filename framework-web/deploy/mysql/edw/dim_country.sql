@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS DIM_COUNTRY;
-CREATE TABLE DIM_COUNTRY(	
-	COUNTRY_CODE VARCHAR(10),
-	COUNTRY_NAME VARCHAR(100),
-	COUNTRY_POPULATION INTEGER(10), 
-    COUNTRY_RISK_LEVEL INTEGER(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50));
+drop table if exists dim_country;
+create table dim_country(	
+	country_code varchar(10),
+	country_name varchar(100),
+	country_population integer(10), 
+        country_risk_level integer(50),
+	load_date varchar(10),
+	load_id integer(50));

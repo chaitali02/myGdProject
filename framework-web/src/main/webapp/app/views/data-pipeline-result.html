@@ -19,11 +19,13 @@
                 text-overflow:ellipsis;">
           <a ng-click="showResults || showGroupGraph ? closeSubTabs() : close()">{{dagExecName}}</a>
         </li>
-        <li ng-if="daggroupExecName">
+        <li ng-if="daggroupExecName" style="overflow: hidden;white-space:nowrap;max-width:150px;margin-bottom:-4px;
+                text-overflow:ellipsis;">
           <i class="fa fa-circle"></i>
           <a ng-click="showResults || showGroupGraph ? closeSubTabs() : close()">{{daggroupExecName}}</a>
         </li>
-        <li ng-if="resultExecName">
+        <li ng-if="resultExecName" style="overflow: hidden;white-space:nowrap;max-width:150px;margin-bottom:-4px;
+                text-overflow:ellipsis;">
           <i class="fa fa-circle"></i>
           <span>{{resultExecName}}</span>
         </li>
