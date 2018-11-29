@@ -20,15 +20,15 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
     },
     link: function($scope, element, attrs) {
       $scope.$watch('data', function(newValue, oldValue) {
-        $scope.chartcolor = ["#d98880", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"] //["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
+        $scope.chartcolor = ['#C28CC8']
         var title=[];
         var featureImportanceArr = $.map($scope.data.featureImportance,function(el,e) { 
           var obj={};
           var val=parseFloat(el.toFixed(2));
           obj.value= val;
           obj.label= e;
-          if(e.split('').length > 20) {
-            obj.title=e.substring(0, 20) + "..";
+          if(e.split('').length > 16) {
+            obj.title=e.substring(0, 16) + "..";
             title.push( obj.title)
           }
           else{
@@ -75,6 +75,9 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
               x: 'label',
               value: ['value']
             }
+          }, 
+          color: {
+            pattern: $scope.chartcolor
           },
           zoom: {
             enabled: false
@@ -86,7 +89,7 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
               tick: {
                 format: function (x) { return title[x]} ,
                 culling: {
-                    max: 4 // the number of tick texts will be adjusted to less than this value
+                    max: 10 // the number of tick texts will be adjusted to less than this value
                 }
               }
             },

@@ -358,7 +358,6 @@ public interface IExecutor {
 	
 	/**
 	 * 
-	 * @param paramList
 	 * @param fieldArray
 	 * @param label
 	 * @param trainName
@@ -368,6 +367,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param algoClass
 	 * @param trainOtherParam
+	 * @param paramList
 	 * @return
 	 * @throws IOException
 	 */

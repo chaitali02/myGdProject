@@ -935,7 +935,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingestview').then(function (response) { onSuccess(response.data) });
+		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingest').then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;

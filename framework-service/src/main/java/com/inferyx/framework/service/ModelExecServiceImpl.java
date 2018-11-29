@@ -633,11 +633,33 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					MetaType.datastore.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			
 			String targetTable = null;
-			if(targetDp != null)
+			Datasource targetDS = null;
+			if(targetDp != null) {
 				targetTable = datasource.getDbname()+"."+targetDp.getName();
-			List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
-	
+				targetDS = commonServiceImpl.getDatasourceByObject(targetDp);
+			} else {
+				targetDS = datasource;
+			}
+			
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			List<Map<String, Object>> strList = null;
+			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& targetDp != null) {
+				String tableName = null;
+				if(targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					tableName = targetDS.getSid().concat(".").concat(targetDp.getName());
+				} else {
+					tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
+				}
+				String sql = "SELECT * FROM "+tableName;
+				strList = exec.executeAndFetchByDatasource(sql, targetDS, appUuid);
+			} else {
+				strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, appUuid);
+			}
+				
 			return strList;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1381,13 +1381,13 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 //		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
 		Datasource datasource = null;
-		if(datapod != null) {
-			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
-		} else {
+//		if(datapod != null) {
+//			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+//		} else {
 			datasource = commonServiceImpl.getDatasourceByApp();
-		}
+//		}
 		
-		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
+		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = conn.getConnection();
 
 //		Object obj = conHolder.getStmtObject();
@@ -1893,8 +1893,17 @@ public class SparkExecutor<T> implements IExecutor {
 			connectionProperties.put("driver", datasource.getDriver());
 			connectionProperties.put("user", datasource.getUsername());
 			connectionProperties.put("password", datasource.getPassword());
+			
 			if(Arrays.asList(df.columns()).contains("features"))
 				df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
+			
+			Tuple2<String, String>[] tuple2 = df.dtypes();
+			for(Tuple2<String, String> tuple22 : tuple2) {
+				if(tuple22._2().toLowerCase().contains("vector")) {
+					df = df.withColumn(tuple22._1(), df.col(tuple22._1()).cast(DataTypes.StringType));
+				}
+			}
+			
 //			if(partitionColList.size() > 0) {
 //				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			} else {
@@ -2341,8 +2350,8 @@ public class SparkExecutor<T> implements IExecutor {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
 				
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+				validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
