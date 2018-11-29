@@ -802,10 +802,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
 	
-	@Override
-	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		MetaIdentifier datapodRef = ((Profile)baseRule).getDependsOn().getRef();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
-		return commonServiceImpl.getDatasourceByDatapod(datapod);
-	}
+//	@Override
+//	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		MetaIdentifier datapodRef = ((Profile)baseRule).getDependsOn().getRef();
+//		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
+//		return commonServiceImpl.getDatasourceByDatapod(datapod);
+//	}
 }

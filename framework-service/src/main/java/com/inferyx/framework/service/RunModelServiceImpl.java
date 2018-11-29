@@ -672,7 +672,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		return taskHolder;
 	}
 	
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unused"})
 	public void execute() throws Exception {
 		try {
 			TrainResult trainResult = new TrainResult();
@@ -681,7 +681,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			trainResult.setParamList(new MetaIdentifierHolder(execParams.getParamListInfo().get(0).getRef()));
 			trainResult.setBaseEntity();
 			
+			Datasource trainSrcDatasource = commonServiceImpl.getDatasourceByObject(train);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			
 			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Map<String,String> trainOtherParam = new HashMap<>();
@@ -716,7 +718,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
-				datasource = commonServiceImpl.getDatasourceByApp();
 				exec = execFactory.getExecutor(datasource.getType());
 
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
@@ -727,7 +728,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_data"));
-				ResultSetHolder sourceRsHolder = exec.executeAndRegister(featureMappedSQL, (tableName+"_train_data"), appUuid);
+				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_data"), trainSrcDatasource, appUuid);
 				long rowCount = sourceRsHolder.getCountRows();
 				
 //				trainResult.setTotalRecords(rowCount);
