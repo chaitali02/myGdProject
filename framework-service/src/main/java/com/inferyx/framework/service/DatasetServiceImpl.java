@@ -101,10 +101,11 @@ public class DatasetServiceImpl {
 		DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(datasetUUID, datasetVersion, MetaType.dataset.toString());
 		List<Map<String, Object>> data = new ArrayList<>();	
 		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode);
-		Datasource datasource = commonServiceImpl.getDatasourceByObject(dataset);
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetchByDatasource(sql, datasource, commonServiceImpl.getApp().getUuid());
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+		data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
