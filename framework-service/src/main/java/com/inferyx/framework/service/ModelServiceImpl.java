@@ -2000,9 +2000,15 @@ public class ModelServiceImpl {
 						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
 						if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 								&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+							if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+								tableName = targetDatasource.getSid().concat(".").concat(target.getName());
+							} else {
+								tableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
+							}
+							rsHolder.setTableName(tableName);
 							rsHolder2 = exec.persistDataframe(rsHolder, targetDatasource, target, SaveMode.APPEND.toString());
 						} else {
-							exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePathUrl, target, SaveMode.APPEND.toString(), false, appUuid);
+							rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePathUrl, target, SaveMode.APPEND.toString(), false, appUuid);
 						}
 
 						result = rsHolder2;
