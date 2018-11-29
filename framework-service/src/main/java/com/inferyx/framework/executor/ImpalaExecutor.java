@@ -709,8 +709,41 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			ResultSet rsSorted = rsHolder.getResultSet();
+			ResultSetMetaData rsmd = rsSorted.getMetaData();
+			int numOfCols = rsmd.getColumnCount();
+			while(rsSorted.next()) {
+				Map<String, Object> object = new LinkedHashMap<String, Object>(numOfCols);
+				for(int i = 1; i<= numOfCols; i++) {
+					//System.out.println(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1) +"  "+ rsSorted.getObject(i).toString());
+					if(rsmd.getColumnName(i).contains("."))
+						object.put(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1), rsSorted.getObject(i));
+					else
+						object.put(rsmd.getColumnName(i), rsSorted.getObject(i));
+				}
+				data.add(object);
+			}
+//			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//			if(requestAttributes != null) {
+//				HttpServletRequest request = requestAttributes.getRequest();
+//				if(request != null) {
+//					HttpSession session = request.getSession();
+//					if(session != null) {
+//						session.setAttribute("rsHolder", rsHolder);
+//					}else
+//						logger.info("HttpSession is \""+null+"\"");
+//				}else
+//					logger.info("HttpServletResponse is \""+null+"\"");
+//			}else
+//				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new IOException("Failed to execute SQL query.");
+		}
+		return data;
 	}
 	@Override
 	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
