@@ -1156,6 +1156,8 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
+			paramListHolder.setParamDispName(param.getParamDispName());
+			paramListHolder.setParamDesc(param.getParamDesc());
 //			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
 //					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) {
 				paramListHolder.setParamValue(param.getParamValue());	
@@ -1211,7 +1213,8 @@ public class MetadataServiceImpl {
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-//				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+			
+				//if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
 //						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 					paramListHolder.setParamValue(param.getParamValue());		
 //				else

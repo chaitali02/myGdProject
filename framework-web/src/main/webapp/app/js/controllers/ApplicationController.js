@@ -463,6 +463,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				paraminfo.paramId = $scope.paramtable[i].paramId;
 				paraminfo.paramName = $scope.paramtable[i].paramName;
 				paraminfo.paramType = $scope.paramtable[i].paramType;
+				paraminfo.paramDesc = $scope.paramtable[i].paramDesc;
+				paraminfo.paramDispName = $scope.paramtable[i].paramDispName;
 				var paramValue={}
 				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
 					var paramRef={}	 

@@ -1,19 +1,19 @@
-DROP TABLE IF EXISTS DP_RULE_RESULTS;
-CREATE TABLE DP_RULE_RESULTS(	
-	DATAPODUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	DATAPODVERSION VARCHAR(50),
-	DATAPODNAME VARCHAR(100),
-	ATTRIBUTEID VARCHAR(50),
-	ATTRIBUTENAME VARCHAR(100),
-	NUMROWS VARCHAR(50),
-	MINVAL DECIMAL(10,2),
-	MAXVAL DECIMAL(10,2),
-	AVGVAL DECIMAL(10,3),
-	MEDIANVAL DECIMAL(10,3),
-	STDDEV DECIMAL(10,4),
-	NUMDISTINCT INTEGER(10),
-	PERDISTINCT DECIMAL(10,2),
-	NUMNULL INTEGER(10),
-	PERNULL DECIMAL(10,2),
-	SIXSIGMA DECIMAL(10,2),
-	VERSION INTEGER(10));
+drop table if exists dp_rule_results;
+create table dp_rule_results(	
+	datapoduuid varchar(50) default 0 not null,
+	datapodversion varchar(50),
+	datapodname varchar(100),
+	attributeid varchar(50),
+	attributename varchar(100),
+	numrows varchar(50),
+	minval decimal(20,4),
+	maxval decimal(20,4),
+	avgval decimal(20,4),
+	medianval decimal(20,4),
+	stddev decimal(20,4),
+	numdistinct integer(10),
+	perdistinct decimal(20,4),
+	numnull integer(10),
+	pernull decimal(20,4),
+	sixsigma decimal(20,4),
+	version integer(10));

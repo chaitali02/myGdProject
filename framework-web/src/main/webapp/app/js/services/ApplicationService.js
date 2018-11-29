@@ -140,6 +140,9 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 					var paramInfo={}
 					paramInfo.paramId=response.paramList.params[i].paramId; 
 					paramInfo.paramName=response.paramList.params[i].paramName;
+					paramInfo.paramType =response.paramList.params[i].paramType;
+					paramInfo.paramDesc =response.paramList.params[i].paramDesc;
+					paramInfo.paramDispName =response.paramList.params[i].paramDispName;
 					paramInfo.paramType=response.paramList.params[i].paramType.toLowerCase();
 					if(response.paramList.params[i].paramValue !=null && response.paramList.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list"].indexOf(response.paramList.params[i].paramType) != -1){
 						paramInfo.paramValue=response.paramList.params[i].paramValue.value;

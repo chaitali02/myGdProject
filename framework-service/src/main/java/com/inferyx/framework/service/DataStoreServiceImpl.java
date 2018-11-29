@@ -1610,8 +1610,8 @@ public class DataStoreServiceImpl {
 			
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataStore);
 			MetaType metaType = dataStore.getMetaId().getRef().getType();
-			if(metaType.equals(MetaType.rule)
-					|| metaType.equals(MetaType.report)) {
+			if(runMode.equals(RunMode.ONLINE) && (metaType.equals(MetaType.rule)
+					||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report))) {
 				data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 			} else if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
 				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
@@ -1648,8 +1648,8 @@ public class DataStoreServiceImpl {
 						if (requestIdExistFlag) {
 							data = requestNewMap.get(requestId);
 						} else {
-							if(metaType.equals(MetaType.rule)
-									|| metaType.equals(MetaType.report)) {
+							if(runMode.equals(RunMode.ONLINE) && (metaType.equals(MetaType.rule)
+									||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report))) {
 								data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 							} else if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())

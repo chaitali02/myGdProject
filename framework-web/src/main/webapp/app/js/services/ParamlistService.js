@@ -118,6 +118,8 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
         var paramInfo={}
           paramInfo.paramId=response.params[i].paramId; 
           paramInfo.paramName=response.params[i].paramName;
+          paramInfo.paramDesc=response.params[i].paramDesc;
+          paramInfo.paramDispName=response.params[i].paramDispName;
           paramInfo.paramType=response.params[i].paramType.toLowerCase();
           if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list","decimal"].indexOf(response.params[i].paramType) != -1){
             paramInfo.paramValue=response.params[i].paramValue.value;
