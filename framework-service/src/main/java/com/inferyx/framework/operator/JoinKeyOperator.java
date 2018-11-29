@@ -28,6 +28,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
@@ -66,7 +67,7 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode) throws Exception {
+			, RunMode runMode, Datasource datasource) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
@@ -76,7 +77,7 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode);
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource);
 			if (StringUtils.isNotBlank(filter)) {
 				if (StringUtils.isNotBlank(filterBuilder)) {
 					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
@@ -103,7 +104,7 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode) throws Exception {
+			, RunMode runMode, Datasource datasource) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
@@ -166,13 +167,13 @@ public class JoinKeyOperator {
 				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
 					aggrCount += 1;
 				}
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
 			}	
 			 else if (sourceAttr.getRef().getType() == MetaType.function) {
 					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams));
+					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams, datasource));
 					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
 					usedRefKeySet.add(functionRef1);
 				}	

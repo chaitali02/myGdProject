@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.parser;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DagExec;
@@ -38,10 +35,8 @@ import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
-import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
@@ -51,8 +46,6 @@ public class MapTaskParser extends TaskParser {
 	protected MapOperator mapOperator;
 	@Autowired
 	protected MapIterOperator mapIterOperator;
-	@Autowired
-	protected FilterOperator filterOperator;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	

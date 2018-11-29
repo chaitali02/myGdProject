@@ -56,7 +56,6 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -69,6 +68,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -141,6 +141,8 @@ public class DataStoreServiceImpl {
 	Helper helper;
 	@Autowired
 	private MessageServiceImpl messageServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 	
@@ -1271,8 +1273,10 @@ public class DataStoreServiceImpl {
 		// DataFrame df = sqlContext.sql("select " + id + " AS id," +
 		// attributeName + " AS value from " + tableName);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(datapodDO);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, commonServiceImpl.getApp().getUuid());
+//		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, commonServiceImpl.getApp().getUuid());
+		data = exec.executeAndFetchByDatasource("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, datapodDS, commonServiceImpl.getApp().getUuid());
 //				.executeSql("select distinct " + id + " AS id," + attributeName + " AS value from " + tableName);
 		/*DataFrame df = rsHolder.getDataFrame();
 		Row[] rows = df.head(100);
@@ -1604,23 +1608,26 @@ public class DataStoreServiceImpl {
 			String tableName = getTableNameByDatastore(dataStore.getUuid(),
 					dataStore.getVersion(), runMode); 
 			
-			if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataStore);
+			MetaType metaType = dataStore.getMetaId().getRef().getType();
+			if(metaType.equals(MetaType.rule)
+					|| metaType.equals(MetaType.report)) {
+				data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+			} else if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
 				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-//					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
-//							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+					 data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 				} else {
-					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-						if (runMode.equals(RunMode.ONLINE))
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit,
-									appUuid);
-					else {
-						data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						if (runMode.equals(RunMode.ONLINE)) {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+						} else {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " WHERE rownum< " + limit, mapSourceDS, appUuid);
+						}
+					} else {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 					}
 				}
 			} else {
@@ -1641,7 +1648,10 @@ public class DataStoreServiceImpl {
 						if (requestIdExistFlag) {
 							data = requestNewMap.get(requestId);
 						} else {
-							if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+							if(metaType.equals(MetaType.rule)
+									|| metaType.equals(MetaType.report)) {
+								data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+							} else if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
@@ -1649,17 +1659,16 @@ public class DataStoreServiceImpl {
 //										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
 //												+ tableName +") AS tab) AS tab1",
 //												appUuid);
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS,appUuid);
 							} else {
 								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 									if (runMode.equals(RunMode.ONLINE))
-										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,appUuid);
+										data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 									else
-										data = exec.executeAndFetch(
-												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
+										data = exec.executeAndFetchByDatasource(
+												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, mapSourceDS, appUuid);
 								else {
-									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-											appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 								}
 							}
 
@@ -1671,19 +1680,17 @@ public class DataStoreServiceImpl {
 							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
-								+ " AND rownum <= " + limit, appUuid);
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
+								+ " AND rownum <= " + limit, mapSourceDS, appUuid);
 					} else {
 						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 							if (runMode.equals(RunMode.ONLINE))
-								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-										appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 							else
-								data = exec.executeAndFetch(
-										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
+								data = exec.executeAndFetchByDatasource(
+										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, mapSourceDS, appUuid);
 						else {
-							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
-									appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
 						}
 					}
 				}

@@ -104,7 +104,8 @@ public class DatasetServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+		data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
@@ -544,7 +545,9 @@ public class DatasetServiceImpl {
 		builder.append(" FROM ");
 		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(dataSet);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+//		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+		return exec.executeAndFetchByDatasource(builder.toString(), datapodDS, commonServiceImpl.getApp().getUuid());
 	}
 }

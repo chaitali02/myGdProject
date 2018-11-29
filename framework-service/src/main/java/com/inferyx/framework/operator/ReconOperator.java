@@ -56,8 +56,6 @@ public class ReconOperator {
 	@Autowired
 	protected FunctionOperator functionOperator;
 	@Autowired
-	FilterOperator filterOperator;
-	@Autowired
 	private DatasetOperator datasetOperator;
 	@Autowired
 	FilterOperator2 filterOperator2;
@@ -93,7 +91,7 @@ public class ReconOperator {
 	private String FROM = " FROM ";
 	private String BRACKET_OPEN = "( ";
 	private String BRACKET_CLOSE = " ) ";
-	private String GROUP_BY = " GROUP BY ";
+//	private String GROUP_BY = " GROUP BY ";
 	private String COMMA = ", ";
 	private String BLANK = " ";
 	private String SINGLE_QUOTE = "\'";
@@ -353,7 +351,7 @@ public class ReconOperator {
 		return datapod;
 	}*/
 
-	public String generateFilter(String tableName,Recon recon, Object object, List<FilterInfo> filterAttrRefHolder,
+	public String generateFilter(String tableName, Recon recon, Object object, List<FilterInfo> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode)
 			throws Exception {
@@ -368,8 +366,8 @@ public class ReconOperator {
 		}
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.recon, recon.getUuid(), recon.getVersion()));
-
-			String filter = filterOperator2.generateSql(filterAttrRefHolder, refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(recon);
+			String filter = filterOperator2.generateSql(filterAttrRefHolder, refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 			//String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 			if(filter.contains(objectName))

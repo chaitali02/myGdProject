@@ -19,7 +19,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -805,7 +804,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public String resolveAttribute(AttributeRefHolder attrRefHolder) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String resolveAttribute(AttributeRefHolder attrRefHolder, Ingest ingest) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			if(attrRefHolder.getRef().getType().equals(MetaType.attribute)) {
 				return attrRefHolder.getValue();
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
@@ -819,11 +818,13 @@ public class IngestServiceImpl extends RuleTemplate {
 			}  else if(attrRefHolder.getRef().getType().equals(MetaType.function)) {
 				MetaIdentifier functionMI = attrRefHolder.getRef();
 				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString());
-				return functionOperator.generateSql(function, null, null);
+				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
+				return functionOperator.generateSql(function, null, null, mapSourceDS);
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.formula)) {
 				MetaIdentifier formulaMI = attrRefHolder.getRef();
 				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMI.getUuid(), formulaMI.getVersion(), formulaMI.getType().toString());
-				return formulaOperator.generateSql(formula, null, null, null);
+				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
+				return formulaOperator.generateSql(formula, null, null, null, mapSourceDS);
 			}
 		
 		return null;
