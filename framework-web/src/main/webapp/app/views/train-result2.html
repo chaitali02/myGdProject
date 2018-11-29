@@ -125,7 +125,7 @@
                                 <hr>
                                 <table class="table table-bordered train-result" style="width:50%">
                                     <tr ng-repeat="data in modelresult.paramList ">
-                                        <td style="width:50%">{{data.paramName}}</td>
+                                        <td style="width:50%">{{data.paramDispName}}</td>
                                         <td style="width:50%">
                                             <b>{{data.paramValue.value}}</b>
                                         </td>
@@ -146,11 +146,51 @@
                                 <div bar-chart-horizontal id="chart{{modelresult.uuid}}" chartid="modelresult.uuid" data="modelresult"></div>
                             </div>
                         </div>
-                        <h4 ng-if="modelresult.featureImportance ==null">
+                        <h4 ng-if="modelresult.featureImportance ==null && !isTrainResultProgess">
                             <strong>Feature Importance Not Available</strong>
                         </h4>
-                        
+                        <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
+                            <br>
+                            <h4>Feature Details</h4>
+                            <hr>
+                            <div class="row" >
+                                <div class="col-md-6 col-sm-6">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                        <label>Search:</label>
+                                        <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                                        aria-controls="datastoredatatable">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
+                                <div class="col-md-12">
+                                    <div class="">
+                                        <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:center">Feature Name</th>
+                                                    <th style="text-align: center">Feature Value</th>
 
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-repeat="data in featureImportanceArr">
+                                                <tr>
+                                                    <td style="width:50%">
+                                                        {{data.label}}
+                                                    </td>
+                                                    <td style="width:50%">
+                                                        {{data.value}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
                     </uib-tab>
                     <uib-tab index="2" heading="Performance" select="go(2)">
                         <div class="spinner centercontent" ng-if="isTrainResultProgess">
@@ -164,27 +204,27 @@
                                     <td style="width:50%">Accuracy</b>
                                     </td>
                                     <td style="width:50%">
-                                        <b>{{ modelresult.accuracy}}%</b>
+                                        <b>{{ modelresult.accuracy | number : 2}}%</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:50%">Recall</b>
                                     </td>
                                     <td style="width:50%">
-                                        <b>{{ modelresult.recall}}%</b>
+                                        <b>{{ modelresult.recall | number : 2}}%</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:50%">Precision</td>
                                     <td style="width:50%">
-                                        <b>{{modelresult.precision}}%</b>
+                                        <b>{{modelresult.precision | number : 2}}%</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:50%">F1 Score</b>
                                     </td>
                                     <td style="width:50%">
-                                        <b>{{ modelresult.f1Score}}%</b>
+                                        <b>{{ modelresult.f1Score | number : 2}}%</b>
                                     </td>
                                 </tr>
                                 <tr>

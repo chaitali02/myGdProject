@@ -228,6 +228,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		  var paramInfo={}
 			paramInfo.paramId=$scope.selectedTemplate.params[i].paramId; 
 			paramInfo.paramName=$scope.selectedTemplate.params[i].paramName;
+			paramInfo.paramDesc=$scope.selectedTemplate.params[i].paramDesc;
+            paramInfo.paramDispName=$scope.selectedTemplate.params[i].paramDispName;
 			paramInfo.paramType=$scope.selectedTemplate.params[i].paramType.toLowerCase();
 			if($scope.selectedTemplate.params[i].paramValue !=null && $scope.selectedTemplate.params[i].paramValue.ref.type == "simple"){
 			  paramInfo.paramValue=$scope.selectedTemplate.params[i].paramValue.value;
@@ -465,6 +467,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				paraminfo.paramId = $scope.paramtable[i].paramId;
 				paraminfo.paramName = $scope.paramtable[i].paramName;
 				paraminfo.paramType = $scope.paramtable[i].paramType;
+				paraminfo.paramDesc = $scope.paramtable[i].paramDesc;
+				paraminfo.paramDispName = $scope.paramtable[i].paramDispName;
 				var paramValue={}
 				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
 				 var paramRef={}	 
