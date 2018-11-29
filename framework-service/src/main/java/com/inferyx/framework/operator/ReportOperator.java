@@ -31,14 +31,17 @@ import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
 /**
@@ -56,11 +59,13 @@ public class ReportOperator implements IOperator {
 	@Autowired
 	MapOperator mapOperator;
 	@Autowired
-	FilterOperator filterOperator;
+	FilterOperator2 filterOperator2;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	DatasetOperator datasetOperator;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ReportOperator.class);
 	
@@ -163,7 +168,8 @@ public class ReportOperator implements IOperator {
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
-			String filter = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
+			String filter = filterOperator2.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -171,7 +177,8 @@ public class ReportOperator implements IOperator {
 
 	private String generateGroupBy(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(report.getAttributeInfo()), refKeyMap, otherParams, execParams);
+		MetaIdentifierHolder reportSource = new MetaIdentifierHolder(report.getRef(MetaType.report));
+		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(report.getAttributeInfo()), refKeyMap, otherParams, execParams, reportSource);
 	}
 	
 	private String generateHaving (Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
@@ -181,7 +188,8 @@ public class ReportOperator implements IOperator {
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}*/
 		if (execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
-			String filterStr = filterOperator.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
+			String filterStr = filterOperator2.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode,mapSourceDS);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 	    }
 		return ConstantsUtil.BLANK;

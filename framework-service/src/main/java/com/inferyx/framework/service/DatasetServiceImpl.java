@@ -545,7 +545,9 @@ public class DatasetServiceImpl {
 		builder.append(" FROM ");
 		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(dataSet);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+//		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+		return exec.executeAndFetchByDatasource(builder.toString(), datapodDS, commonServiceImpl.getApp().getUuid());
 	}
 }

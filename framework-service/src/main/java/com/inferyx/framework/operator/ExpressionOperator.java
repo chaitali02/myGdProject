@@ -20,7 +20,6 @@ import java.util.Set;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +27,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Expression;
@@ -123,7 +123,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	 * @return
 	 * @throws Exception 
 	 */
-	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Datasource mapSourceDS) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -135,7 +135,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				OrderKey expressionKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(expressionKey.getUUID(), expressionKey.getVersion(), MetaType.expression.toString());
 				builder.append(" (")
-						.append(generateSql(expression.getExpressionInfo(), expression.getDependsOn(), null, null, execParams))
+						.append(generateSql(expression.getExpressionInfo(), expression.getDependsOn(), null, null, execParams, mapSourceDS))
 						.append(")");
 				builder.append(" as ").append(expression.getName()).append(COMMA);
 				MetaIdentifier expressionRef = new MetaIdentifier(MetaType.filter, expression.getUuid(), expression.getVersion());
@@ -145,7 +145,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				builder.append(" (")
-						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode))
+						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode, mapSourceDS))
 						.append(")");
 				builder.append(" as ").append(filter.getName()).append(COMMA);
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
@@ -190,7 +190,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 
 	public String generateSql(List<FilterInfo> expression, MetaIdentifierHolder expressionSource,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		builder.append("(").append(" ");
 
@@ -200,7 +200,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 
 		for (FilterInfo expressionInfo : expression) {
 			builder.append(" ").append(expressionInfo.getLogicalOperator()).append(" ");
-			builder.append(generateSql(expressionInfo, expressionSource, refKeyMap, otherParams, execParams)).append(" ");
+			builder.append(generateSql(expressionInfo, expressionSource, refKeyMap, otherParams, execParams, mapSourceDS)).append(" ");
 		}
 		builder.append(")");
 
@@ -210,7 +210,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 
 	private String generateSql(FilterInfo expressionInfo, MetaIdentifierHolder filterSource,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<String> operandValue = new ArrayList<>(2);
 		for (SourceAttr sourceAttr : expressionInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
@@ -255,7 +255,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
 				Formula formulaRef = (Formula) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS));
 			}
 
 		}
@@ -263,7 +263,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	}
 
 	public String generateMetCondition(AttributeRefHolder metInfo, AttributeRefHolder filterSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (metInfo.getRef().getType() == MetaType.simple) {
 			String value = metInfo.getValue();
@@ -287,13 +287,13 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 		} else if (metInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister
 					.getRefObject(TaskParser.populateRefVersion(metInfo.getRef(), refKeyMap));
-			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams);
+			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
 		}
 		return operandValue;
 	}
 
 	public String generateNotMetCondition(AttributeRefHolder notMetInfo, AttributeRefHolder filterSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (notMetInfo.getRef().getType() == MetaType.simple) {
 			String value = notMetInfo.getValue();
@@ -317,7 +317,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 		} else if (notMetInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister
 					.getRefObject(TaskParser.populateRefVersion(notMetInfo.getRef(), refKeyMap));
-			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams);
+			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
 		}
 		return operandValue;
 	}

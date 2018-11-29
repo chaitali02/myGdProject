@@ -34,6 +34,7 @@ import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -60,8 +61,6 @@ public class RuleOperator implements IParsable, IReferenceable {
 	MetadataUtil daoRegister;
 	@Autowired
 	DatasetOperator datasetOperator;
-	@Autowired
-	FilterOperator filterOperator;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
@@ -145,7 +144,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 	}
 	
 	public String selectGroupBy (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams);
+		MetaIdentifierHolder ruleSource = new MetaIdentifierHolder(rule.getRef(MetaType.rule));
+		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource);
 	}
 	
 	public String generateFilter (Rule rule, 
@@ -155,7 +155,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 									ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
-			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
+			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -164,7 +165,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
-			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
+			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
 			return StringUtils.isBlank(filterStr) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;

@@ -412,6 +412,25 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 	
+	public List<Map<String, Object>> executeAndFetchFromTempTable(String sql, String clientContext) throws IOException {
+		logger.info(" Inside executeAndFetchFromTempTable  for SQL : " + sql);
+		List<Map<String, Object>> data = new ArrayList<>();
+		ResultSetHolder rsHolder = readTempTable(sql, clientContext);
+		Dataset<Row> dfSorted = rsHolder.getDataFrame();
+		dfSorted.printSchema();
+		Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
+		String[] columns = dfSorted.columns();
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+		return data;
+	}
+	
 	@Override
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
 		ResultSetHolder resHolder = executeSql(sql, clientContext);
@@ -494,6 +513,19 @@ public class SparkExecutor<T> implements IExecutor {
 		return true;
 	}
 
+	public ResultSetHolder readTempTable(String sql, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		Dataset<Row> df = sparkSession.sql(sql);
+		
+		rsHolder.setDataFrame(df);
+		rsHolder.setCountRows(df.count());
+		rsHolder.setType(ResultType.dataframe);
+		return rsHolder;
+	}
+	
 	/**
 	 * Get all table names
 	 * 

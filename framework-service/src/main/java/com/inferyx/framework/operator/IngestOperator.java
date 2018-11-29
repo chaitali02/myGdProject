@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Ingest;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -66,7 +67,8 @@ public class IngestOperator {
 
 	public String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams);
+		MetaIdentifierHolder ingestSource = new MetaIdentifierHolder(ingest.getRef(MetaType.ingest));
+		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams, ingestSource);
 		logger.info(query);
 		return query;
 	}
@@ -76,7 +78,8 @@ public class IngestOperator {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
 
-		    return filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
+		    return filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 			//return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 		}
@@ -87,7 +90,8 @@ public class IngestOperator {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
 
-			String filterStr = filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
+			String filterStr = filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
 
 			//String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
