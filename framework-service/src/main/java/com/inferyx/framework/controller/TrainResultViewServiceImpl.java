@@ -29,9 +29,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainResult;
@@ -116,13 +118,16 @@ public class TrainResultViewServiceImpl {
 		MetaIdentifier trainResultDependsOnMI = trainResult.getDependsOn().getRef();
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainResultDependsOnMI.getUuid(), trainResultDependsOnMI.getVersion(), trainResultDependsOnMI.getType().toString(), "N");
 		MetaIdentifier trainExecDependsOnMI = trainExec.getDependsOn().getRef();
-		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExecDependsOnMI.getUuid(), trainExecDependsOnMI.getVersion(), trainExecDependsOnMI.getType().toString(), "Y");
-		List<FeatureAttrMap> featureAttrMapList = train.getFeatureAttrMap();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExecDependsOnMI.getUuid(), trainExecDependsOnMI.getVersion(), trainExecDependsOnMI.getType().toString(), "N");
+		MetaIdentifier modelMI = train.getDependsOn().getRef();
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelMI.getUuid(), modelMI.getVersion(), modelMI.getType().toString(), "N");
+		
+		List<Feature> featureAttrMapList = model.getFeatures();
 		List<Double> featureImportanceList = trainResult.getFeatureImportance();
 		if(featureImportanceList != null && !featureImportanceList.isEmpty()) {
 			Map<String, Double> featureImportance = new LinkedHashMap<>();
 			for(int i=0; i < featureAttrMapList.size(); i++) {
-				featureImportance.put(featureAttrMapList.get(i).getFeature().getFeatureName(), featureImportanceList.get(i));
+				featureImportance.put(featureAttrMapList.get(i).getName(), featureImportanceList.get(i));
 			}
 			
 			if(!featureImportance.isEmpty()) {

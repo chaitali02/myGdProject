@@ -2857,7 +2857,6 @@ public class ModelServiceImpl {
 		boolean isReadingScore = false;
 		boolean isReadingConfuMat = false;
 		List<String> confusionMatrx = new ArrayList<>();
-		String key = null;		
 		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
 			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
 				summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
