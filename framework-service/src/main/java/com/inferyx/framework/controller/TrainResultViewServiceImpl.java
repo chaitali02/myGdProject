@@ -114,9 +114,9 @@ public class TrainResultViewServiceImpl {
 		trainResultView.setParamList(metadataServiceImpl.getParamByParamList(trainResult.getParamList().getRef().getUuid()));
 		
 		MetaIdentifier trainResultDependsOnMI = trainResult.getDependsOn().getRef();
-		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainResultDependsOnMI.getUuid(), trainResultDependsOnMI.getVersion(), trainResultDependsOnMI.getType().toString());
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainResultDependsOnMI.getUuid(), trainResultDependsOnMI.getVersion(), trainResultDependsOnMI.getType().toString(), "N");
 		MetaIdentifier trainExecDependsOnMI = trainExec.getDependsOn().getRef();
-		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExecDependsOnMI.getUuid(), trainExecDependsOnMI.getVersion(), trainExecDependsOnMI.getType().toString());
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExecDependsOnMI.getUuid(), trainExecDependsOnMI.getVersion(), trainExecDependsOnMI.getType().toString(), "N");
 		List<FeatureAttrMap> featureAttrMapList = train.getFeatureAttrMap();
 		List<Double> featureImportanceList = trainResult.getFeatureImportance();
 		if(featureImportanceList != null && !featureImportanceList.isEmpty()) {

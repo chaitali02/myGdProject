@@ -1863,7 +1863,7 @@ public class CommonServiceImpl <T> {
 					for(ParamListHolder holder : paramListInfo) {
 						MetaIdentifier ref = holder.getRef();
 						if(ref != null) {
-							ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 							for(Param param : paramList.getParams())
 								if(param.getParamId().equalsIgnoreCase(holder.getParamId())) {
 									holder.setParamName(param.getParamName());
@@ -1875,7 +1875,7 @@ public class CommonServiceImpl <T> {
 							for(AttributeRefHolder attributeRefHolder : attributeInfo) {
 								MetaIdentifier attrRef = attributeRefHolder.getRef();
 								if(attrRef != null) {
-									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
+									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString(), "N");
 									if(attrRefObj instanceof Datapod) {
 										Datapod datapod = (Datapod) attrRefObj;
 										
@@ -1913,7 +1913,7 @@ public class CommonServiceImpl <T> {
 					for(ParamSetHolder holder : paramSetHolder) {
 						MetaIdentifier ref = holder.getRef();
 						if(ref != null) {
-							ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 							ref.setName(paramSet.getName());
 							holder.setRef(ref);
 						}
@@ -2358,6 +2358,45 @@ public class CommonServiceImpl <T> {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings({ "unchecked", "unused" })
+	public T getOneByUuidAndVersion(String uuid, String version, String type, String resloveFlag) throws JsonProcessingException {
+		String appUuid = null;
+		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+		}*/
+		Object iDao = null;
+		MetaType metaType = Helper.getMetaType(type);
+		try{
+			T object = null;
+			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null){
+				if(StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao,appUuid, uuid,new Sort(Sort.Direction.DESC, "version"));
+				else
+					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid,version);
+			}else{
+				if(StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,Sort.class).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version"));	
+				else
+					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
+			}
+			//return (T) object;
+			if (resloveFlag.equalsIgnoreCase("Y")) {
+				return (T) resolveName(object, Helper.getMetaType(type));
+			} else {
+				return (T) object;
+			}
+		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
+			
+			e.printStackTrace();
+		}
+		return null;
+	}
+		
 		
 		@SuppressWarnings("unchecked")
 		public T getiDAO(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
@@ -3610,8 +3649,8 @@ public class CommonServiceImpl <T> {
 					
 					MetaIdentifier featureIdentifier = featureHolder.getRef();
 					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
-					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
-					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString(), "N");
+					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString(), "N");
 					
 					for(Feature feature : model.getFeatures()) {
 						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
