@@ -1,12 +1,12 @@
-<div class="row">
+<!-- <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter">
-            <!-- <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre> -->
+            <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
             <json-formatter open="1" key="'Result'" json='execjson'></json-formatter>
         </div>
 
-    </div>
-    <br>
-    <!-- <div class="row">
+    </div> -->
+<!-- <br> -->
+<!-- <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="execjson != null">
             <div class="portlet light bordered">
                 <div class="portlet-title">
@@ -23,3 +23,180 @@
 
         </div>
     </div> -->
+
+<div class="row trainResult">
+    <div class="col-md-12">
+        <uib-tabset active="activeTabIndex">
+            <uib-tab index="0" heading="Summary" select="go(0)">
+                <div class="spinner centercontent" ng-if="isTrainResultProgess">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <div class="row" ng-if="!isTrainResultProgess">
+                    <div class="col-md-12">
+                        <h4>Training Details</h4>
+                        <hr>
+                        <table class="table table-bordered train-result" style="width:50%">
+                            <tr>
+                                <td style="width:50%">Algorithm</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.algorithm}}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Type</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.algoType}}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Num Features</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.numFeatures}}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Total Records</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.totalRecords}} rows</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Training Set
+                                </td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.trainingSet}} rows</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Validation Set</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.validationSet}} rows</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%">Time Taken</td>
+                                <td style="width:50%">
+                                    <b>{{modelresult.timeTaken}}</b>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-if="!isTrainResultProgess">
+                    <div class="col-md-12">
+                        <h4>Parameter Details</h4>
+                        <hr>
+                        <table class="table table-bordered train-result" style="width:50%">
+                            <tr ng-repeat="data in modelresult.paramList ">
+                                <td style="width:50%">{{data.paramDispName}}</td>
+                                <td style="width:50%">
+                                    <b>{{data.paramValue.value}}</b>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab index="1" heading="Feature Importance" select="go(1)">
+                <div class="spinner centercontent" ng-if="isTrainResultProgess">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <div class="row" ng-if="showChart && modelresult.featureImportance !=null && !isTrainResultProgess">
+                    <div class="col-md-12">
+                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="modelresult"></div>
+                    </div>
+                </div>
+                <h3  ng-if="modelresult.featureImportance !=null && isTrainResultProgess !=false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
+
+                <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
+                    <br>
+                    <h4>Feature Details</h4>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                                    aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    
+                    <div class="row" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
+                        <div class="col-md-12">
+                            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+                                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab index="2" heading="Performance" select="go(2)">
+                <div class="spinner centercontent" ng-if="isTrainResultProgess">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <div ng-if="!isTrainResultProgess">
+                    <table class="table table-bordered train-result" style="width:50%">
+                        <tr>
+                            <td style="width:50%">Accuracy
+                            </td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.accuracy | number : 2}}%</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">Recall
+                            </td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.recall | number : 2}}%</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">Precision</td>
+                            <td style="width:50%">
+                                <b>{{modelresult.precision | number : 2}}%</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">F1 Score
+                            </td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.f1Score | number : 2}}%</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">Log Loss</td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.logLoss}}</b>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width:50%">Lift</td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.lift}}</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">ROC AUC</td>
+                            <td style="width:50%">
+                                <b>{{ modelresult.rocAUC}}</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

@@ -2303,6 +2303,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/DataPipelineController.js',
                             'js/services/DagService.js',
+                            'js/services/ModelService.js'
                         ]
                     });
                 }]

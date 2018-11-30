@@ -62,8 +62,11 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        var data = $filter('filter')($scope.orignalData, s, undefined);
        $scope.getResults(data)
      }
-
+     $scope.modelDetail=null;
      $scope.$on('generateResults',function (e,params) {
+      $scope.modelDetail={};
+      $scope.modelDetail.uuid=params.id;
+      $scope.modelDetail.version=params.version;
        $rootScope.showGrid=true;
        $rootScope.showGroupDowne=false;
        $('#errorMsg').hide();
@@ -344,15 +347,13 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      },
      template: `
        <div class="row" ng-show="type =='train'">
-       <!--<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelresult != null">
-          <train-result execjson='modelresult' ></train-result>
-        </div>-->
-         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
-        
-          <!--<pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>-->
-
-           <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
-         </div>        
+          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelDetail !=null">
+            <train-result data="modelDetail"></train-result>
+          </div>
+          <!--<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
+            <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
+            <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
+        </div>-->        
        </div>
        <div class="row" ng-show="type !='train'">
          <div class="col-md-6 col-sm-6">
