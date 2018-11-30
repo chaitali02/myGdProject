@@ -37,47 +37,47 @@
                     <div class="col-md-12">
                         <h4>Training Details</h4>
                         <hr>
-                        <table class="table table-bordered train-result" style="width:50%">
+                        <table class="table table-bordered train-result" style="width:50%;table-layout:fixed;">
                             <tr>
-                                <td style="width:50%">Algorithm</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Algorithm</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.algorithm}}</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Type</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Type</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.algoType}}</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Num Features</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Num Features</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.numFeatures}}</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Total Records</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Total Records</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.totalRecords}} rows</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Training Set
+                                <td style="width:40%">Training Set
                                 </td>
-                                <td style="width:50%">
+                                <td style="width:60%">
                                     <b>{{modelresult.trainingSet}} rows</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Validation Set</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Validation Set</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.validationSet}} rows</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%">Time Taken</td>
-                                <td style="width:50%">
+                                <td style="width:40%">Time Taken</td>
+                                <td style="width:60%">
                                     <b>{{modelresult.timeTaken}}</b>
                                 </td>
                             </tr>
@@ -91,8 +91,8 @@
                         <hr>
                         <table class="table table-bordered train-result" style="width:50%">
                             <tr ng-repeat="data in modelresult.paramList ">
-                                <td style="width:50%">{{data.paramDispName}}</td>
-                                <td style="width:50%">
+                                <td style="width:40%">{{data.paramDispName}}</td>
+                                <td style="width:60%">
                                     <b>{{data.paramValue.value}}</b>
                                 </td>
                             </tr>
@@ -112,7 +112,7 @@
                         <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="modelresult"></div>
                     </div>
                 </div>
-                <h3  ng-if="modelresult.featureImportance !=null && isTrainResultProgess !=false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
+                <h3  ng-if="modelresult.featureImportance ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
 
                 <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                     <br>
@@ -149,48 +149,48 @@
                 <div ng-if="!isTrainResultProgess">
                     <table class="table table-bordered train-result" style="width:50%">
                         <tr>
-                            <td style="width:50%">Accuracy
+                            <td style="width:40%">Accuracy
                             </td>
-                            <td style="width:50%">
+                            <td style="width:60%">
                                 <b>{{ modelresult.accuracy | number : 2}}%</b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:50%">Recall
+                            <td style="width:40%">Recall
                             </td>
-                            <td style="width:50%">
+                            <td style="width:60%">
                                 <b>{{ modelresult.recall | number : 2}}%</b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:50%">Precision</td>
-                            <td style="width:50%">
+                            <td style="width:40%">Precision</td>
+                            <td style="width:60%">
                                 <b>{{modelresult.precision | number : 2}}%</b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:50%">F1 Score
+                            <td style="width:40%">F1 Score
                             </td>
-                            <td style="width:50%">
+                            <td style="width:60%">
                                 <b>{{ modelresult.f1Score | number : 2}}%</b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:50%">Log Loss</td>
-                            <td style="width:50%">
+                            <td style="width:40%">Log Loss</td>
+                            <td style="width:60%">
                                 <b>{{ modelresult.logLoss}}</b>
                             </td>
 
                         </tr>
                         <tr>
-                            <td style="width:50%">Lift</td>
-                            <td style="width:50%">
+                            <td style="width:40%">Lift</td>
+                            <td style="width:60%">
                                 <b>{{ modelresult.lift}}</b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:50%">ROC AUC</td>
-                            <td style="width:50%">
+                            <td style="width:40%">ROC AUC</td>
+                            <td style="width:60%">
                                 <b>{{ modelresult.rocAUC}}</b>
                             </td>
                         </tr>
