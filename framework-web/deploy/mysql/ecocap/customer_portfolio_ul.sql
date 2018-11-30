@@ -1,17 +1,17 @@
-DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL; 
+drop table if exists customer_portfolio_ul; 
 
-CREATE TABLE CUSTOMER_PORTFOLIO_UL 
+create table customer_portfolio_ul 
   ( 
-     CUST_ID          VARCHAR(50), 
-     INDUSTRY         VARCHAR(50), 
-     PD               DECIMAL(10, 2), 
-     EXPOSURE         INTEGER(50), 
-     LGD              DECIMAL(10, 2), 
-     LGD_VAR          INTEGER(50), 
-     CORRELATION      DECIMAL(10, 2), 
-     SQRT_CORRELATION DECIMAL(10, 2), 
-     DEF_POINT        DECIMAL(10, 2), 
-     UNEXPECTED_LOSS  DECIMAL(10, 2), 
-     REPORTING_DATE   VARCHAR(50), 
-     VERSION          INTEGER(50) 
+     cust_id          varchar(50), 
+     industry         varchar(50), 
+     pd               decimal(10, 2), 
+     exposure         integer(50), 
+     lgd              decimal(10, 2), 
+     lgd_var          integer(50), 
+     correlation      decimal(10, 2), 
+     sqrt_correlation decimal(10, 2), 
+     def_point        decimal(10, 2), 
+     unexpected_loss  decimal(10, 2), 
+     reporting_date   varchar(50), 
+     version          integer(50) 
   ); 

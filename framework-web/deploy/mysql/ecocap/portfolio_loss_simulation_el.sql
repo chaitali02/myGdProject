@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_EL; 
+drop table if exists portfolio_loss_simulation_el; 
 
-CREATE TABLE PORTFOLIO_LOSS_SIMULATION_EL 
+create table portfolio_loss_simulation_el 
   ( 
-     ITERATIONID      INTEGER(50), 
-     PORTFOLIO_LOSS   DECIMAL(10, 2), 
-     EXPECTED_LOSS    DECIMAL(10, 2), 
-     VALUE_AT_RISK    DECIMAL(10, 2), 
-     ECONOMIC_CAPITAL DECIMAL(10, 2), 
-     REPORTING_DATE   VARCHAR(50), 
-     VERSION          INTEGER(50) 
+     iterationid      integer(50), 
+     portfolio_loss   decimal(10, 2), 
+     expected_loss    decimal(10, 2), 
+     value_at_risk    decimal(10, 2), 
+     economic_capital decimal(10, 2), 
+     reporting_date   varchar(50), 
+     version          integer(50) 
   ); 

@@ -1,453 +1,453 @@
 
 
-DROP TABLE IF EXISTS ACCOUNT;
-CREATE TABLE ACCOUNT(	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ACCOUNT_TYPE_ID VARCHAR(50),
-	ACCOUNT_STATUS_ID VARCHAR(50),
-	PRODUCT_TYPE_ID VARCHAR(50),
-	CUSTOMER_ID VARCHAR(50),
-	PIN_NUMBER INTEGER(10),
-	NATIONALITY VARCHAR(50),
-	PRIMARY_IDEN_DOC VARCHAR(50),
-	PRIMARY_IDEN_DOC_ID VARCHAR(50),
-	SECONDARY_IDEN_DOC VARCHAR(50),
-	SECONDARY_IDEN_DOC_ID VARCHAR(50),
-	ACCOUNT_OPEN_DATE VARCHAR(10),
-	ACCOUNT_NUMBER VARCHAR(50),
-	OPENING_BALANCE INTEGER(20),
-	CURRENT_BALANCE INTEGER(20),
-	OVERDUE_BALANCE INTEGER(20),
-	OVERDUE_DATE VARCHAR(10),
-	CURRENCY_CODE VARCHAR(10),
-	INTEREST_TYPE VARCHAR(10),
-	INTEREST_RATE DECIMAL(10,2),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID));
+drop table if exists account;
+create table account(	account_id varchar(50) default 0 not null,
+	account_type_id varchar(50),
+	account_status_id varchar(50),
+	product_type_id varchar(50),
+	customer_id varchar(50),
+	pin_number integer(10),
+	nationality varchar(50),
+	primary_iden_doc varchar(50),
+	primary_iden_doc_id varchar(50),
+	secondary_iden_doc varchar(50),
+	secondary_iden_doc_id varchar(50),
+	account_open_date varchar(10),
+	account_number varchar(50),
+	opening_balance integer(20),
+	current_balance integer(20),
+	overdue_balance integer(20),
+	overdue_date varchar(10),
+	currency_code varchar(10),
+	interest_type varchar(10),
+	interest_rate decimal(10,2),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_id_pk  primary key(account_id));
 
-DROP TABLE IF EXISTS ACCOUNT_STATUS_TYPE;
-CREATE TABLE ACCOUNT_STATUS_TYPE(	
-	ACCOUNT_STATUS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ACCOUNT_STATUS_CODE VARCHAR(10),
-	ACCOUNT_STATUS_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_STATUS_ID_PK  PRIMARY KEY(ACCOUNT_STATUS_ID));
-DROP TABLE IF EXISTS ACCOUNT_TYPE;
-CREATE TABLE ACCOUNT_TYPE(	
-	ACCOUNT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ACCOUNT_TYPE_CODE VARCHAR(10),
-	ACCOUNT_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_TYPE_ID_PK  PRIMARY KEY(ACCOUNT_TYPE_ID));
-DROP TABLE IF EXISTS ADDRESS;
-CREATE TABLE ADDRESS(	
-	ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ADDRESS_LINE1 VARCHAR(50),
-	ADDRESS_LINE2 VARCHAR(50),
-	ADDRESS_LINE3 VARCHAR(50),
-	CITY VARCHAR(100),
-	COUNTY VARCHAR(100),
-	STATE VARCHAR(100),
-	ZIPCODE INTEGER(10),
-	COUNTRY VARCHAR(100),
-	LATITUDE VARCHAR(50),
-	LONGITUDE VARCHAR(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID));
-DROP TABLE IF EXISTS BANK;
-CREATE TABLE BANK(	
-	BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	BANK_CODE VARCHAR(10),
-	BANK_NAME VARCHAR(100),
-	BANK_ACCOUNT_NUMBER VARCHAR(50),
-	BANK_CURRENCY_CODE VARCHAR(10),
-	BANK_CHECK_DIGITS INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID));
-DROP TABLE IF EXISTS BRANCH;
-CREATE TABLE BRANCH(	
-	BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	BRANCH_TYPE_ID VARCHAR(50),
-	BANK_ID VARCHAR(50),
-	ADDRESS_ID VARCHAR(50),
-	BRANCH_NAME VARCHAR(100),
-	BRANCH_DESC VARCHAR(500),
-	BRANCH_CONTACT_NAME VARCHAR(100),
-	BRANCH_CONTACT_PHONE VARCHAR(100),
-	BRANCH_CONTACT_EMAIL VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID));
-DROP TABLE IF EXISTS BRANCH_TYPE;
-CREATE TABLE BRANCH_TYPE(	
-	BRANCH_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	BRANCH_TYPE_CODE VARCHAR(10),
-	BRANCH_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_TYPE_ID_PK  PRIMARY KEY(BRANCH_TYPE_ID));
-DROP TABLE IF EXISTS CUSTOMER;
-CREATE TABLE CUSTOMER(	
-	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ADDRESS_ID VARCHAR(50),
-	BRANCH_ID VARCHAR(50),
-	TITLE VARCHAR(100),
-	FIRST_NAME VARCHAR(100),
-	MIDDLE_NAME VARCHAR(100),
-	LAST_NAME VARCHAR(100),
-	SSN VARCHAR(100),
-	PHONE VARCHAR(100),
-	DATE_FIRST_PURCHASE VARCHAR(10),
-	COMMUTE_DISTANCE_MILES INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID));
-DROP TABLE IF EXISTS DIM_ACCOUNT;
-CREATE TABLE DIM_ACCOUNT(	
-	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_ACCOUNT_ID VARCHAR(50),
-	ACCOUNT_TYPE_CODE VARCHAR(10),
-	ACCOUNT_STATUS_CODE VARCHAR(10),
-	PRODUCT_TYPE_CODE VARCHAR(10),
-	PIN_NUMBER INTEGER(10),
-	NATIONALITY VARCHAR(100),
-	PRIMARY_IDEN_DOC VARCHAR(100),
-	PRIMARY_IDEN_DOC_ID VARCHAR(50),
-	SECONDARY_IDEN_DOC VARCHAR(100),
-	SECONDARY_IDEN_DOC_ID VARCHAR(50),
-	ACCOUNT_OPEN_DATE VARCHAR(10),
-	ACCOUNT_NUMBER VARCHAR(50),
-	OPENING_BALANCE INTEGER(20),
-	CURRENT_BALANCE INTEGER(20),
-	OVERDUE_BALANCE INTEGER(20),
-	OVERDUE_DATE VARCHAR(10),
-	CURRENCY_CODE VARCHAR(10),
-	INTEREST_TYPE VARCHAR(50),
-	INTEREST_RATE DECIMAL(10,2),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_ID_PK PRIMARY KEY(ACCOUNT_ID));
-DROP TABLE IF EXISTS DIM_ADDRESS;
-CREATE TABLE DIM_ADDRESS(	
-	ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_ADDRESS_ID VARCHAR(50),
-	ADDRESS_LINE1 VARCHAR(50),
-	ADDRESS_LINE2 VARCHAR(50),
-	ADDRESS_LINE3 VARCHAR(50),
-	CITY VARCHAR(100),
-	COUNTY VARCHAR(100),
-	STATE VARCHAR(100),
-	ZIPCODE INTEGER(10),
-	COUNTRY VARCHAR(100),
-	LATITUDE VARCHAR(50),
-	LONGTITUDE VARCHAR(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID));
-DROP TABLE IF EXISTS DIM_BANK;
-CREATE TABLE DIM_BANK(	
-	BANK_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_BANK_ID VARCHAR(50),
-	BANK_CODE VARCHAR(10),
-	BANK_NAME VARCHAR(100),
-	BANK_ACCOUNT_NUMBER VARCHAR(50),
-	BANK_CURRENCY_CODE VARCHAR(50),
-	BANK_CHECK_DIGITS INTEGER(20),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BANK_ID_PK  PRIMARY KEY(BANK_ID));
-DROP TABLE IF EXISTS DIM_BRANCH;
-CREATE TABLE DIM_BRANCH(	
-	BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_BRANCH_ID VARCHAR(50),
-	BRANCH_TYPE_CODE VARCHAR(10),
-	BRANCH_NAME VARCHAR(100),
-	BRANCH_DESC VARCHAR(500),
-	BRANCH_CONTACT_NAME VARCHAR(100),
-	BRANCH_CONTACT_PHONE VARCHAR(100),
-	BRANCH_CONTACT_EMAIL VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID));
-DROP TABLE IF EXISTS DIM_COUNTRY;
-CREATE TABLE DIM_COUNTRY(	
-	COUNTRY_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	COUNTRY_CODE VARCHAR(10),
-	COUNTRY_NAME VARCHAR(100),
-	COUNTRY_POPULATION INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT COUNTRY_ID_PK  PRIMARY KEY(COUNTRY_ID));
-DROP TABLE IF EXISTS DIM_CUSTOMER;
-CREATE TABLE DIM_CUSTOMER(	
-	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_CUSTOMER_ID VARCHAR(50),
-	TITLE VARCHAR(100),
-	FIRST_NAME VARCHAR(100),
-	MIDDLE_NAME VARCHAR(100),
-	LAST_NAME VARCHAR(100),
-	ADDRESS_LINE1 VARCHAR(50),
-	ADDRESS_LINE2 VARCHAR(50),
-	PHONE VARCHAR(50),
-	DATE_FIRST_PURCHASE VARCHAR(10),
-	COMMUTE_DISTANCE INTEGER(10),
-	CITY VARCHAR(100),
-	STATE VARCHAR(100),
-	POSTAL_CODE VARCHAR(10),
-	COUNTRY VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID));
-DROP TABLE IF EXISTS DIM_DATE;
-CREATE TABLE DIM_DATE(	
-	DATE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	DATE_TYPE VARCHAR(45),
-	DATE_VAL VARCHAR(45),
-	DAY_NUM_OF_WEEK INTEGER(10),
-	DAY_NUM_OF_MONTH INTEGER(10),
-	DAY_NUM_OF_QUARTER INTEGER(10),
-	DAY_NUM_OF_YEAR INTEGER(10),
-	DAY_NUM_ABSOLUTE INTEGER(10),
-	DAY_OF_WEEK_NAME VARCHAR(100),
-	DAY_OF_WEEK_ABBREVIATION VARCHAR(45),
-	JULIAN_DAY_NUM_OF_YEAR INTEGER(10),
-	JULIAN_DAY_NUM_ABSOLUTE INTEGER(10),
-	IS_WEEKDAY VARCHAR(50),
-	IS_USA_CIVIL_HOLIDAY VARCHAR(50),
-	IS_LAST_DAY_OF_WEEK VARCHAR(50),
-	IS_LAST_DAY_OF_MONTH VARCHAR(50),
-	IS_LAST_DAY_OF_QUARTER VARCHAR(50),
-	IS_LAST_DAY_OF_YEAR VARCHAR(50),
-	IS_LAST_DAY_OF_FISCAL_MONTH VARCHAR(50),
-	IS_LAST_DAY_OF_FISCAL_QUARTER VARCHAR(50),
-	IS_LAST_DAY_OF_FISCAL_YEAR VARCHAR(50),
-	WEEK_OF_YEAR_BEGIN_DATE VARCHAR(10),
-	WEEK_OF_YEAR_BEGIN_DATE_KEY INTEGER(10),
-	WEEK_OF_YEAR_END_DATE VARCHAR(10),
-	WEEK_OF_YEAR_END_DATE_KEY INTEGER(10),
-	WEEK_OF_MONTH_BEGIN_DATE VARCHAR(10),
-	WEEK_OF_MONTH_BEGIN_DATE_KEY INTEGER(10),
-	WEEK_OF_MONTH_END_DATE VARCHAR(10),
-	WEEK_OF_MONTH_END_DATE_KEY INTEGER(10),
-	WEEK_OF_QUARTER_BEGIN_DATE VARCHAR(10),
-	WEEK_OF_QUARTER_BEGIN_DATE_KEY INTEGER(10),
-	WEEK_OF_QUARTER_END_DATE VARCHAR(10),
-	WEEK_OF_QUARTER_END_DATE_KEY INTEGER(10),
-	WEEK_NUM_OF_MONTH INTEGER(10),
-	WEEK_NUM_OF_QUARTER INTEGER(10),
-	WEEK_NUM_OF_YEAR INTEGER(10),
-	MONTH_NUM_OF_YEAR INTEGER(10),
-	MONTH_NUM_OVERALL VARCHAR(50),
-	MONTH_NAME VARCHAR(100),
-	MONTH_NAME_ABBREVIATION VARCHAR(100),
-	MONTH_BEGIN_DATE VARCHAR(10),
-	MONTH_BEGIN_DATE_KEY INTEGER(10),
-	MONTH_END_DATE VARCHAR(10),
-	MONTH_END_DATE_KEY INTEGER(10),
-	QUARTER_NUM_OF_YEAR INTEGER(10),
-	QUARTER_NUM_OVERALL INTEGER(10),
-	QUARTER_BEGIN_DATE VARCHAR(10),
-	QUARTER_BEGIN_DATE_KEY INTEGER(10),
-	QUARTER_END_DATE VARCHAR(10),
-	QUARTER_END_DATE_KEY INTEGER(10),
-	YEAR_NUM INTEGER(10),
-	YEAR_BEGIN_DATE VARCHAR(10),
-	YEAR_BEGIN_DATE_KEY INTEGER(10),
-	YEAR_END_DATE VARCHAR(10),
-	YEAR_END_DATE_KEY INTEGER(10),
-	YYYY_MM VARCHAR(50),
-	YYYY_MM_DD VARCHAR(50),
-	DD_MON_YYYY VARCHAR(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT DATE_ID_PK  PRIMARY KEY(DATE_ID));
-DROP TABLE IF EXISTS DIM_STATE;
-CREATE TABLE DIM_STATE(	
-	STATE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	STATE_CODE VARCHAR(10),
-	STATE_NAME VARCHAR(100),
-	COUNTRY_CODE VARCHAR(10),
-	STATE_POPULATION INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT STATE_ID_PK  PRIMARY KEY(STATE_ID));
-DROP TABLE IF EXISTS DIM_TRANSACTION_TYPE;
-CREATE TABLE DIM_TRANSACTION_TYPE(	
-	TRANSACTION_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_TRANSACTION_TYPE_ID VARCHAR(50),
-	TRANSACTION_TYPE_CODE VARCHAR(10),
-	TRANSACTION_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT LOAD_ID_PK  PRIMARY KEY(TRANSACTION_TYPE_ID));
+drop table if exists account_status_type;
+create table account_status_type(	
+	account_status_id varchar(50) default 0 not null,
+	account_status_code varchar(10),
+	account_status_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_status_id_pk  primary key(account_status_id));
+drop table if exists account_type;
+create table account_type(	
+	account_type_id varchar(50) default 0 not null,
+	account_type_code varchar(10),
+	account_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_type_id_pk  primary key(account_type_id));
+drop table if exists address;
+create table address(	
+	address_id varchar(50) default 0 not null,
+	address_line1 varchar(50),
+	address_line2 varchar(50),
+	address_line3 varchar(50),
+	city varchar(100),
+	county varchar(100),
+	state varchar(100),
+	zipcode integer(10),
+	country varchar(100),
+	latitude varchar(50),
+	longitude varchar(50),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint address_id_pk  primary key(address_id));
+drop table if exists bank;
+create table bank(	
+	bank_id varchar(50) default 0 not null,
+	bank_code varchar(10),
+	bank_name varchar(100),
+	bank_account_number varchar(50),
+	bank_currency_code varchar(10),
+	bank_check_digits integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint bank_id_pk  primary key(bank_id));
+drop table if exists branch;
+create table branch(	
+	branch_id varchar(50) default 0 not null,
+	branch_type_id varchar(50),
+	bank_id varchar(50),
+	address_id varchar(50),
+	branch_name varchar(100),
+	branch_desc varchar(500),
+	branch_contact_name varchar(100),
+	branch_contact_phone varchar(100),
+	branch_contact_email varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_id_pk  primary key(branch_id));
+drop table if exists branch_type;
+create table branch_type(	
+	branch_type_id varchar(50) default 0 not null,
+	branch_type_code varchar(10),
+	branch_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_type_id_pk  primary key(branch_type_id));
+drop table if exists customer;
+create table customer(	
+	customer_id varchar(50) default 0 not null,
+	address_id varchar(50),
+	branch_id varchar(50),
+	title varchar(100),
+	first_name varchar(100),
+	middle_name varchar(100),
+	last_name varchar(100),
+	ssn varchar(100),
+	phone varchar(100),
+	date_first_purchase varchar(10),
+	commute_distance_miles integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id));
+drop table if exists dim_account;
+create table dim_account(	
+	account_id varchar(50) default 0 not null,
+	src_account_id varchar(50),
+	account_type_code varchar(10),
+	account_status_code varchar(10),
+	product_type_code varchar(10),
+	pin_number integer(10),
+	nationality varchar(100),
+	primary_iden_doc varchar(100),
+	primary_iden_doc_id varchar(50),
+	secondary_iden_doc varchar(100),
+	secondary_iden_doc_id varchar(50),
+	account_open_date varchar(10),
+	account_number varchar(50),
+	opening_balance integer(20),
+	current_balance integer(20),
+	overdue_balance integer(20),
+	overdue_date varchar(10),
+	currency_code varchar(10),
+	interest_type varchar(50),
+	interest_rate decimal(10,2),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_id_pk primary key(account_id));
+drop table if exists dim_address;
+create table dim_address(	
+	address_id varchar(50) default 0 not null,
+	src_address_id varchar(50),
+	address_line1 varchar(50),
+	address_line2 varchar(50),
+	address_line3 varchar(50),
+	city varchar(100),
+	county varchar(100),
+	state varchar(100),
+	zipcode integer(10),
+	country varchar(100),
+	latitude varchar(50),
+	longtitude varchar(50),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint address_id_pk  primary key(address_id));
+drop table if exists dim_bank;
+create table dim_bank(	
+	bank_id varchar(50) default 0 not null,
+	src_bank_id varchar(50),
+	bank_code varchar(10),
+	bank_name varchar(100),
+	bank_account_number varchar(50),
+	bank_currency_code varchar(50),
+	bank_check_digits integer(20),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint bank_id_pk  primary key(bank_id));
+drop table if exists dim_branch;
+create table dim_branch(	
+	branch_id varchar(50) default 0 not null,
+	src_branch_id varchar(50),
+	branch_type_code varchar(10),
+	branch_name varchar(100),
+	branch_desc varchar(500),
+	branch_contact_name varchar(100),
+	branch_contact_phone varchar(100),
+	branch_contact_email varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_id_pk  primary key(branch_id));
+drop table if exists dim_country;
+create table dim_country(	
+	country_id varchar(50) default 0 not null,
+	country_code varchar(10),
+	country_name varchar(100),
+	country_population integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint country_id_pk  primary key(country_id));
+drop table if exists dim_customer;
+create table dim_customer(	
+	customer_id varchar(50) default 0 not null,
+	src_customer_id varchar(50),
+	title varchar(100),
+	first_name varchar(100),
+	middle_name varchar(100),
+	last_name varchar(100),
+	address_line1 varchar(50),
+	address_line2 varchar(50),
+	phone varchar(50),
+	date_first_purchase varchar(10),
+	commute_distance integer(10),
+	city varchar(100),
+	state varchar(100),
+	postal_code varchar(10),
+	country varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id));
+drop table if exists dim_date;
+create table dim_date(	
+	date_id varchar(50) default 0 not null,
+	date_type varchar(45),
+	date_val varchar(45),
+	day_num_of_week integer(10),
+	day_num_of_month integer(10),
+	day_num_of_quarter integer(10),
+	day_num_of_year integer(10),
+	day_num_absolute integer(10),
+	day_of_week_name varchar(100),
+	day_of_week_abbreviation varchar(45),
+	julian_day_num_of_year integer(10),
+	julian_day_num_absolute integer(10),
+	is_weekday varchar(50),
+	is_usa_civil_holiday varchar(50),
+	is_last_day_of_week varchar(50),
+	is_last_day_of_month varchar(50),
+	is_last_day_of_quarter varchar(50),
+	is_last_day_of_year varchar(50),
+	is_last_day_of_fiscal_month varchar(50),
+	is_last_day_of_fiscal_quarter varchar(50),
+	is_last_day_of_fiscal_year varchar(50),
+	week_of_year_begin_date varchar(10),
+	week_of_year_begin_date_key integer(10),
+	week_of_year_end_date varchar(10),
+	week_of_year_end_date_key integer(10),
+	week_of_month_begin_date varchar(10),
+	week_of_month_begin_date_key integer(10),
+	week_of_month_end_date varchar(10),
+	week_of_month_end_date_key integer(10),
+	week_of_quarter_begin_date varchar(10),
+	week_of_quarter_begin_date_key integer(10),
+	week_of_quarter_end_date varchar(10),
+	week_of_quarter_end_date_key integer(10),
+	week_num_of_month integer(10),
+	week_num_of_quarter integer(10),
+	week_num_of_year integer(10),
+	month_num_of_year integer(10),
+	month_num_overall varchar(50),
+	month_name varchar(100),
+	month_name_abbreviation varchar(100),
+	month_begin_date varchar(10),
+	month_begin_date_key integer(10),
+	month_end_date varchar(10),
+	month_end_date_key integer(10),
+	quarter_num_of_year integer(10),
+	quarter_num_overall integer(10),
+	quarter_begin_date varchar(10),
+	quarter_begin_date_key integer(10),
+	quarter_end_date varchar(10),
+	quarter_end_date_key integer(10),
+	year_num integer(10),
+	year_begin_date varchar(10),
+	year_begin_date_key integer(10),
+	year_end_date varchar(10),
+	year_end_date_key integer(10),
+	yyyy_mm varchar(50),
+	yyyy_mm_dd varchar(50),
+	dd_mon_yyyy varchar(50),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint date_id_pk  primary key(date_id));
+drop table if exists dim_state;
+create table dim_state(	
+	state_id varchar(50) default 0 not null,
+	state_code varchar(10),
+	state_name varchar(100),
+	country_code varchar(10),
+	state_population integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint state_id_pk  primary key(state_id));
+drop table if exists dim_transaction_type;
+create table dim_transaction_type(	
+	transaction_type_id varchar(50) default 0 not null,
+	src_transaction_type_id varchar(50),
+	transaction_type_code varchar(10),
+	transaction_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint load_id_pk  primary key(transaction_type_id));
 
-DROP TABLE IF EXISTS DP_RULE_RESULTS;
-CREATE TABLE DP_RULE_RESULTS(	
-	DATAPODUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	DATAPODVERSION VARCHAR(50),
-	DATAPODNAME VARCHAR(100),
-	ATTRIBUTEID VARCHAR(50),
-	ATTRIBUTENAME VARCHAR(100),
-	NUMROWS VARCHAR(50),
-	MINVAL DECIMAL(10,2),
-	MAXVAL DECIMAL(10,2),
-	AVGVAL DECIMAL(10,3),
-	MEDIANVAL DECIMAL(10,3),
-	STDDEV DECIMAL(10,4),
-	NUMDISTINCT INTEGER(10),
-	PERDISTINCT DECIMAL(10,2),
-	NUMNULL INTEGER(10),
-	PERNULL DECIMAL(10,2),
-	SIXSIGMA DECIMAL(10,2),
-	VERSION INTEGER(10));
-DROP TABLE IF EXISTS DQ_RULE_RESULTS;
-CREATE TABLE DQ_RULE_RESULTS(	
-	ROWKEY VARCHAR(50),
-	DATAPODUUID VARCHAR(50),
-	DATAPODVERSION VARCHAR(50),
-	DATAPODNAME VARCHAR(100),
-	ATTRIBUTEID VARCHAR(50),
-	ATTRIBUTENAME VARCHAR(100),
-	ATTRIBUTEVALUE VARCHAR(50),
-	NULLCHECK_PASS VARCHAR(50),
-	VALUECHECK_PASS VARCHAR(50),
-	RANGECHECK_PASS VARCHAR(50),
-	DATATYPECHECK_PASS VARCHAR(50),
-	DATAFORMATCHECK_PASS VARCHAR(50),
-	LENGTHCHECK_PASS VARCHAR(50),
-	REFINTEGRITYCHECK_PASS VARCHAR(50),
-	DUPCHECK_PASS VARCHAR(50),
-	CUSTOMCHECK_PASS VARCHAR(50),
-	VERSION INTEGER(10));
+drop table if exists dp_rule_results;
+create table dp_rule_results(	
+	datapoduuid varchar(50) default 0 not null,
+	datapodversion varchar(50),
+	datapodname varchar(100),
+	attributeid varchar(50),
+	attributename varchar(100),
+	numrows varchar(50),
+	minval decimal(10,2),
+	maxval decimal(10,2),
+	avgval decimal(10,3),
+	medianval decimal(10,3),
+	stddev decimal(10,4),
+	numdistinct integer(10),
+	perdistinct decimal(10,2),
+	numnull integer(10),
+	pernull decimal(10,2),
+	sixsigma decimal(10,2),
+	version integer(10));
+drop table if exists dq_rule_results;
+create table dq_rule_results(	
+	rowkey varchar(50),
+	datapoduuid varchar(50),
+	datapodversion varchar(50),
+	datapodname varchar(100),
+	attributeid varchar(50),
+	attributename varchar(100),
+	attributevalue varchar(50),
+	nullcheck_pass varchar(50),
+	valuecheck_pass varchar(50),
+	rangecheck_pass varchar(50),
+	datatypecheck_pass varchar(50),
+	dataformatcheck_pass varchar(50),
+	lengthcheck_pass varchar(50),
+	refintegritycheck_pass varchar(50),
+	dupcheck_pass varchar(50),
+	customcheck_pass varchar(50),
+	version integer(10));
 
-DROP TABLE IF EXISTS FACT_ACCOUNT_SUMMARY_MONTHLY;
-CREATE TABLE FACT_ACCOUNT_SUMMARY_MONTHLY(	
-	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
-	TOTAL_TRANS_COUNT INTEGER(10),
-	TOTAL_TRANS_AMOUNT_USD INTEGER(10),
-	AVG_TRANS_AMOUNT INTEGER(10),
-	MIN_AMOUNT DECIMAL(10,2),
-	MAX_AMOUNT INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,YYYY_MM));
-DROP TABLE IF EXISTS FACT_CUSTOMER_SUMMARY_MONTHLY;
-CREATE TABLE FACT_CUSTOMER_SUMMARY_MONTHLY(	
-	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
-	TOTAL_TRANS_COUNT VARCHAR(50),
-	TOTAL_TRANS_AMOUNT_USD INTEGER(10),
-	AVG_TRANS_AMOUNT INTEGER(10),
-	MIN_AMOUNT DECIMAL(10,2),
-	MAX_AMOUNT DECIMAL(10,2),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,YYYY_MM));
-DROP TABLE IF EXISTS FACT_TRANSACTION;
-CREATE TABLE FACT_TRANSACTION(	
-	TRANSACTION_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SRC_TRANSACTION_ID VARCHAR(50),
-	TRANSACTION_TYPE_ID INTEGER(50),
-	TRANS_DATE_ID INTEGER(50),
-	BANK_ID INTEGER(50),
-	BRANCH_ID INTEGER(50),
-	CUSTOMER_ID VARCHAR(50),
-	ADDRESS_ID VARCHAR(50),
-	ACCOUNT_ID VARCHAR(50),
-	FROM_ACCOUNT VARCHAR(50),
-	TO_ACCOUNT VARCHAR(50),
-	AMOUNT_BASE_CURR INTEGER(10),
-	AMOUNT_USD INTEGER(10),
-	CURRENCY_CODE VARCHAR(10),
-	CURRENCY_RATE INTEGER(10),
-	NOTES VARCHAR(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT TRANSACTION_ID_PK  PRIMARY KEY(TRANSACTION_ID));
-DROP TABLE IF EXISTS model_training_set;
-CREATE TABLE model_training_set
+drop table if exists fact_account_summary_monthly;
+create table fact_account_summary_monthly(	
+	account_id varchar(50) default 0 not null,
+	yyyy_mm varchar(50) default 0 not null,
+	total_trans_count integer(10),
+	total_trans_amount_usd integer(10),
+	avg_trans_amount integer(10),
+	min_amount decimal(10,2),
+	max_amount integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_id_pk  primary key(account_id,yyyy_mm));
+drop table if exists fact_customer_summary_monthly;
+create table fact_customer_summary_monthly(	
+	customer_id varchar(50) default 0 not null,
+	yyyy_mm varchar(50) default 0 not null,
+	total_trans_count varchar(50),
+	total_trans_amount_usd integer(10),
+	avg_trans_amount integer(10),
+	min_amount decimal(10,2),
+	max_amount decimal(10,2),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id,yyyy_mm));
+drop table if exists fact_transaction;
+create table fact_transaction(	
+	transaction_id varchar(50) default 0 not null,
+	src_transaction_id varchar(50),
+	transaction_type_id integer(50),
+	trans_date_id integer(50),
+	bank_id integer(50),
+	branch_id integer(50),
+	customer_id varchar(50),
+	address_id varchar(50),
+	account_id varchar(50),
+	from_account varchar(50),
+	to_account varchar(50),
+	amount_base_curr integer(10),
+	amount_usd integer(10),
+	currency_code varchar(10),
+	currency_rate integer(10),
+	notes varchar(50),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint transaction_id_pk  primary key(transaction_id));
+drop table if exists model_training_set;
+create table model_training_set
 (
-  customer_id int(11) DEFAULT NULL,
-  address_id int(11) DEFAULT NULL,
-  branch_id int(11) DEFAULT NULL,
-  commute_distance_miles int(11) DEFAULT NULL,
-  label int(11) DEFAULT NULL,
-  censor int(11) DEFAULT NULL,
-  version int(11) DEFAULT NULL
+  customer_id int(11) default null,
+  address_id int(11) default null,
+  branch_id int(11) default null,
+  commute_distance_miles int(11) default null,
+  label int(11) default null,
+  censor int(11) default null,
+  version int(11) default null
 );
-DROP TABLE IF EXISTS PRODUCT_TYPE;
-CREATE TABLE PRODUCT_TYPE(	
-	PRODUCT_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	PRODUCT_TYPE_CODE VARCHAR(10),
-	PRODUCT_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT PRODUCT_TYPE_PK PRIMARY KEY(PRODUCT_TYPE_ID));
-DROP TABLE IF EXISTS RC_RULE_RESULTS;
-CREATE TABLE RC_RULE_RESULTS(	
-	SOURCEUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SOURCEVERSION VARCHAR(50),
-	SOURCENAME VARCHAR(100),
-	SOURCEATTRIBUTEID VARCHAR(50),
-	SOURCEATTRIBUTENAME VARCHAR(100),
-	SOURCEVALUE DECIMAL(10,2),
-	TARGETUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	TARGETVERSION VARCHAR(50),
-	TARGETNAME VARCHAR(100),
-	TARGETATTRIBUTEID VARCHAR(50),
-	TARGETATTRIBUTENAME VARCHAR(100),
-	TARGETVALUE DECIMAL(10,2),
-	STATUS VARCHAR(50),
-	VERSION INTEGER(10));
+drop table if exists product_type;
+create table product_type(	
+	product_type_id varchar(50) default 0 not null,
+	product_type_code varchar(10),
+	product_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint product_type_pk primary key(product_type_id));
+drop table if exists rc_rule_results;
+create table rc_rule_results(	
+	sourceuuid varchar(50) default 0 not null,
+	sourceversion varchar(50),
+	sourcename varchar(100),
+	sourceattributeid varchar(50),
+	sourceattributename varchar(100),
+	sourcevalue decimal(10,2),
+	targetuuid varchar(50) default 0 not null,
+	targetversion varchar(50),
+	targetname varchar(100),
+	targetattributeid varchar(50),
+	targetattributename varchar(100),
+	targetvalue decimal(10,2),
+	status varchar(50),
+	version integer(10));
 
-DROP TABLE IF EXISTS target_gen_data_uniform_dist;
-CREATE TABLE target_gen_data_uniform_dist (
-  id int(11) DEFAULT NULL,
+drop table if exists target_gen_data_uniform_dist;
+create table target_gen_data_uniform_dist (
+  id int(11) default null,
   col1 double precision,
-  version int(11) DEFAULT NULL
+  version int(11) default null
 );
-DROP TABLE IF EXISTS target_sim_linear_regression;
-CREATE TABLE target_sim_linear_regression (
-  id int(11) DEFAULT NULL,
-  version int(11) DEFAULT NULL,
+drop table if exists target_sim_linear_regression;
+create table target_sim_linear_regression (
+  id int(11) default null,
+  version int(11) default null,
   interest_rate double precision,
   account_type_id double precision,
   account_status_id double precision
 );
-DROP TABLE IF EXISTS target_sim_multivarient_normal_dis;
-CREATE TABLE target_sim_multivarient_normal_dis (
-  id int(11) DEFAULT NULL,
-  interestRate double precision,
+drop table if exists target_sim_multivarient_normal_dis;
+create table target_sim_multivarient_normal_dis (
+  id int(11) default null,
+  interestrate double precision,
   col2 double precision,
   col3 double precision,
-  version int(11) DEFAULT NULL
+  version int(11) default null
 );
-DROP TABLE IF EXISTS TRANSACTION;
-CREATE TABLE TRANSACTION(	
-	TRANSACTION_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	TRANSACTION_TYPE_ID VARCHAR(50),
-	ACCOUNT_ID VARCHAR(50),
-	TRANSACTION_DATE VARCHAR(10),
-	FROM_ACCOUNT VARCHAR(50),
-	TO_ACCOUNT VARCHAR(50),
-	AMOUNT_BASE_CURR DECIMAL(10,2),
-	AMOUNT_USD DECIMAL(10,2),
-	CURRENCY_CODE VARCHAR(10),
-	CURRENCY_RATE DECIMAL(10,2),
-	NOTES VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT TRANSACTION_ID_PK  PRIMARY KEY(TRANSACTION_ID));
-DROP TABLE IF EXISTS TRANSACTION_TYPE;
-CREATE TABLE TRANSACTION_TYPE(	
-	TRANSACTION_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	TRANSACTION_TYPE_CODE VARCHAR(10),
-	TRANSACTION_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT TRANSACTION_TYPE_ID_PK  PRIMARY KEY(TRANSACTION_TYPE_ID));
+drop table if exists transaction;
+create table transaction(	
+	transaction_id varchar(50) default 0 not null,
+	transaction_type_id varchar(50),
+	account_id varchar(50),
+	transaction_date varchar(10),
+	from_account varchar(50),
+	to_account varchar(50),
+	amount_base_curr decimal(10,2),
+	amount_usd decimal(10,2),
+	currency_code varchar(10),
+	currency_rate decimal(10,2),
+	notes varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint transaction_id_pk  primary key(transaction_id));
+drop table if exists transaction_type;
+create table transaction_type(	
+	transaction_type_id varchar(50) default 0 not null,
+	transaction_type_code varchar(10),
+	transaction_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint transaction_type_id_pk  primary key(transaction_type_id));

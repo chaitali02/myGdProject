@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS CUSTOMER;
-CREATE TABLE CUSTOMER(	
-	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ADDRESS_ID VARCHAR(50),
-	BRANCH_ID VARCHAR(50),
-	TITLE VARCHAR(100),
-	FIRST_NAME VARCHAR(100),
-	MIDDLE_NAME VARCHAR(100),
-	LAST_NAME VARCHAR(100),
-	SSN VARCHAR(100),
-	PHONE VARCHAR(100),
-	DATE_FIRST_PURCHASE VARCHAR(10),
-	COMMUTE_DISTANCE_MILES INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID));
+drop table if exists customer;
+create table customer(	
+	customer_id varchar(50) default 0 not null,
+	address_id varchar(50),
+	branch_id varchar(50),
+	title varchar(100),
+	first_name varchar(100),
+	middle_name varchar(100),
+	last_name varchar(100),
+	ssn varchar(100),
+	phone varchar(100),
+	date_first_purchase varchar(10),
+	commute_distance_miles integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id));

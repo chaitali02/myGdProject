@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_CORRELATION; 
+drop table if exists industry_factor_correlation; 
 
-CREATE TABLE INDUSTRY_FACTOR_CORRELATION 
+create table industry_factor_correlation 
   ( 
-     FACTOR         VARCHAR(50), 
-     FACTOR1        DECIMAL(10, 2), 
-     FACTOR2        DECIMAL(10, 2), 
-     FACTOR3        DECIMAL(10, 2), 
-     FACTOR4        DECIMAL(10, 2), 
-     REPORTING_DATE VARCHAR(50), 
-     VERSION        INTEGER(50) 
+     factor         varchar(50), 
+     factor1        decimal(10, 2), 
+     factor2        decimal(10, 2), 
+     factor3        decimal(10, 2), 
+     factor4        decimal(10, 2), 
+     reporting_date varchar(50), 
+     version        integer(50) 
   ); 

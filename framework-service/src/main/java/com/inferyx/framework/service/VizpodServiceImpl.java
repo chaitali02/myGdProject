@@ -841,7 +841,7 @@ public class VizpodServiceImpl {
 			/**** Get sql and update in vizpodexec - END ****/
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(vizpod);
+			Datasource vizpodSourceDS =  commonServiceImpl.getDatasourceByObject(vizpod);
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -864,39 +864,39 @@ public class VizpodServiceImpl {
 						tabName = requestMap.get(requestId);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, mapSourceDS, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, appUuid);
 						else
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, mapSourceDS, appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
 							else
-								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, mapSourceDS, appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, vizpodSourceDS, appUuid);
 					} else {
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
 							data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM ("
-										+ vizExec.getSql() + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", mapSourceDS, appUuid);
+										+ vizExec.getSql() + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", vizpodSourceDS, appUuid);
 						tabName = requestId.replace("-", "_");
 						requestMap.put(requestId, tabName);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, mapSourceDS, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, appUuid);
 							else
 								if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, mapSourceDS, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
 								else
-									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, mapSourceDS, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, vizpodSourceDS, appUuid);
 					}
 				}
 			} else {
-				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+				if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| vizpodSourceDS.getType().toUpperCase().contains(ExecContext.FILE.toString()))
 						data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + vizExec.getSql()
-					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, mapSourceDS, null);
+					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, null);
 				else
-					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod WHERE rownum <= " + limit, mapSourceDS, appUuid);
+					if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
 					else
-						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, mapSourceDS, appUuid);
+						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, vizpodSourceDS, appUuid);
 			}
 			/**** Get sql and update in vizpodexec - START ****/
 			MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();

@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_MEAN; 
+drop table if exists industry_factor_mean; 
 
-CREATE TABLE INDUSTRY_FACTOR_MEAN 
+create table industry_factor_mean 
   ( 
-     ID             VARCHAR(50), 
-     MEAN           DECIMAL(10, 2), 
-     REPORTING_DATE VARCHAR(50), 
-     VERSION        INTEGER(50) 
+     id             varchar(50), 
+     mean           decimal(10, 2), 
+     reporting_date varchar(50), 
+     version        integer(50) 
   ); 

@@ -173,6 +173,8 @@ public class DQOperator implements IParsable {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource dataSource = commonServiceImpl.getDatasourceByApp();
+		Datasource dqDataSource = commonServiceImpl.getDatasourceByObject(dq);
+
 
 		if (StringUtils.isBlank(tableName)) {
 			return "";
@@ -198,9 +200,9 @@ public class DQOperator implements IParsable {
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(" CAST(").concat(datapod.getName()).concat(DOT).concat(attributeName)
-					.concat((dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
-							|| dataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
-							: (dataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+					.concat((dqDataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
+							|| dqDataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
+							: (dqDataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 									? " AS VARCHAR2(70)) "
 									: " AS STRING)"));
 		} else {
