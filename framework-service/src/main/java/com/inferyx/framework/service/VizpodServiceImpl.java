@@ -918,6 +918,11 @@ public class VizpodServiceImpl {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
+			if(message.contains("sparkDriver") )
+				message="Communication link failure";
+			else
+				message="Some error occurred";
+
 			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
 		} finally {
