@@ -112,7 +112,7 @@
                         <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="modelresult"></div>
                     </div>
                 </div>
-                <h3 ng-if="!isTrainResultProgess" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
+                <h3  ng-if="modelresult.featureImportance !=null && isTrainResultProgess !=false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
 
                 <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                     <br>
@@ -130,6 +130,7 @@
                         </div>
                     </div>
                     <br>
+                    
                     <div class="row" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                         <div class="col-md-12">
                             <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">

@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('trainResult', function ($timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService) {
+InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService) {
   return {
     scope: {
 
@@ -51,7 +51,7 @@ InferyxApp.directive('trainResult', function ($timeout, $rootScope, CommonServic
         $scope.gridApi = gridApi;
         $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
       };
-      
+     
       $rootScope.refreshMoldeResult = function () {
         $scope.modelresult = null;
         $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version });
@@ -64,9 +64,7 @@ InferyxApp.directive('trainResult', function ($timeout, $rootScope, CommonServic
       $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
-
         $scope.isTrainResultProgess = true;
-
         ModelService.getTrainResultByTrainExec(uuid, version, 'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
         var onSuccessGetTrainResultByTrainExec = function (response) {
           $scope.modelresult = response;
@@ -117,8 +115,8 @@ InferyxApp.directive('barChartHorizontal', function ($compile, $rootScope, sortF
         var title = [];
         var featureImportanceArr = $.map($scope.data.featureImportance, function (el, e) {
           var obj = {};
-          var val = parseFloat(el.toFixed(2));
-          obj.Importance = val * 100;
+          var val = parseFloat(el.toFixed(2)*100);
+          obj.Importance =parseFloat(val.toFixed(2));
           obj.label = e;
           if (e.split('').length > 16) {
             obj.title = e.substring(0, 16) + "..";

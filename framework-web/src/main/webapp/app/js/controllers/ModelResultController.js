@@ -380,8 +380,6 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
     };
 
     $scope.downloadMoldeResult = function () {
-        debugger
-
         if ($scope.modelData.customFlag == "N") {
             $scope.downloadTrainData();
             return;
