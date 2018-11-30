@@ -1327,3 +1327,34 @@ box-sizing:border-box;
   border-right:1px solid white !important;
 
 }
+
+.trainResult .tab-pane {
+  margin: 20px 20px;
+}
+
+.nav>li>a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+
+.trainResult .tab-content {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.trainResult .nav-tabs,
+.trainResult .nav-pills {
+  margin-bottom: 0px !important;
+}
+
+/*   
+.trainResult .nav-tabs>li.active>a, .adminPage .nav-tabs>li.active>a:focus, .trainResult .nav-tabs>li.active>a:hover {
+    color: #555;
+    background-color: #fff;
+    border:none;
+    border-bottom: 4px solid  #9fe4ea;
+    cursor: default;
+  } */

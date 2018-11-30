@@ -426,9 +426,11 @@ def train():
     classifier.fit(X_train, y_train, batch_size = 10, nb_epoch = nEpochs)
     
     score = classifier.evaluate(X_test, y_test, batch_size=10)
+
+    print("   ")
     print("model score:")
     print(score)
-    print(" ")
+    print("  ")
     
     # serialize model to JSON
     model_json = classifier.to_json()
@@ -472,11 +474,43 @@ def train():
     print(y_pred)
     
     # Making the Confusion Matrix
-    from sklearn.metrics import confusion_matrix
+    from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, roc_auc_score, f1_score
     cm = confusion_matrix(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    roc_auc = roc_auc_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    
+    print("   ")
+    print("accuracy")
+    print(accuracy)
+    print("  ")
+    
+    print("   ")
+    print("precision")
+    print(precision)
+    print("  ")
+    
+    print("   ")
+    print("recall")
+    print(recall)
+    print("  ")
+    
+    print("   ")
+    print("roc_auc")
+    print(roc_auc)
+    print("  ")
+    
+    print("   ")
+    print("f1")
+    print(f1)
+    print("  ")
+    
+    print("   ")
     print("confusion mattrix:")
     print(cm)
-    print(" ")
+    print("  ")
     return isSuccessful
 
 #prediction operation
