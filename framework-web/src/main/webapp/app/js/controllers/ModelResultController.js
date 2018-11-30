@@ -316,6 +316,8 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
         fastWatch: true,
         columnDefs: [],
     };
+   
+
     $scope.gridOptions.onRegisterApi = function (gridApi) {
         $scope.gridApi = gridApi;
         $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
@@ -607,20 +609,85 @@ DatascienceModule.controller('ResultTrainController', function ($filter, $state,
 
 DatascienceModule.controller('ResultTrainController2', function ($filter, $state, $location, $http, $stateParams, dagMetaDataService, $rootScope, $scope, ModelService, CF_DOWNLOAD, $window,  $timeout) {
     $scope.isTrainResultProgess=false;
+    $scope.filteredRows;
+    
+    $scope.getGridStyle = function () {
+        var style = {
+            'margin-top': '10px',
+            'margin-bottom': '10px',
+        }
+        if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+            style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+        } else {
+            style['height'] = "100px"
+        }
+        return style;
+    }
+
+    $scope.gridOptions = {
+        rowHeight: 40,
+        useExternalPagination: true,
+        exporterMenuPdf: false,
+        enableSorting: true,
+        useExternalSorting: true,
+        enableFiltering: false,
+        enableRowSelection: true,
+        enableSelectAll: true,
+        enableGridMenu: true,
+        fastWatch: true,
+        columnDefs: [],
+    };
+
+    $scope.gridOptions.columnDefs=[{
+        displayName: 'Feature Name',
+        name: 'label',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+      }, 
+    {
+        displayName:'Feature Importance',
+        name: 'value',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+    }];
+
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi = gridApi;
+        $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+    };
+
     $window.addEventListener('resize', function (e) {
         $scope.showmap = false
     });
+
     $scope.refreshData = function (searchtext) {
         var data = $filter('filter')($scope.originalData, searchtext, undefined);
         $scope.featureImportanceArr = data;
+        $scope.gridOptions.data =data;
     };
+
     $scope.close = function () {
         $state.go('resultmodelmodel');
     }
+
     $scope.refreshMoldeResult = function () {
         $scope.modelresult=null;
         $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
     }
+    $scope.getAlgorithumByTrainExec = function () {
+        ModelService.getAlgorithmByTrainExec($scope.modelDetail.uuid, $scope.modelDetail.version, 'algorithm').then(function (response) { onSuccessGetModelResult(response.data) });
+        var onSuccessGetModelResult = function (response) {
+            $scope.isPMMLDownload = response.savePmml == "Y" ? false : true;
+        }
+    }
+
+    $scope.getModelByTrainExec = function () {
+        ModelService.getModelByTrainExec($scope.modelDetail.uuid, $scope.modelDetail.version, 'model').then(function (response) { onSuccessGetMdoelByTrainExec(response.data) });
+        var onSuccessGetMdoelByTrainExec = function (response) {
+            $scope.modelData = response;
+        }
+    }
+
     $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -628,32 +695,155 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         $scope.modelDetail.uuid = uuid;
         $scope.modelDetail.version = version;
         $scope.isTrainResultProgess=true;
+        $scope.getAlgorithumByTrainExec();
+        $scope.getModelByTrainExec();
         ModelService.getTrainResultByTrainExec(uuid, version,'trainresult').then(function (response) { onSuccessGetTrainResultByTrainExec(response.data) });
         var onSuccessGetTrainResultByTrainExec = function (response) {
             $scope.modelresult = response;
             $scope.isTrainResultProgess=false;
             $scope.featureImportanceArr = $.map($scope.modelresult.featureImportance,function(el,e) { 
                 var obj={};
-                var val=parseFloat(el.toFixed(2))
-                obj.value= val;
+                var val=parseFloat(el.toFixed(2)*100)
+                if(val == 0){
+                    obj.value=parseFloat(val.toFixed(2));
+                }else{
+                    obj.value=parseFloat(val.toFixed(2))+ " %";
+                }
+                
                 obj.label= e;
                 return obj  ; 
             });
             $scope.originalData=$scope.featureImportanceArr;
-          
+            $scope.gridOptions.data = $scope.featureImportanceArr;
        } //End onSuccessGetModelResult
     }
+
     $scope.getTrainResult({ uuid: $stateParams.id, version: $stateParams.version });
     $scope.go = function (index) {
-    $scope.activeTabIndex=index;
-    if(index ==1){
-         $timeout(function () {
-          $scope.showChart = true;
-        }, 100);
-    }else{
-        $scope.showChart = false;
+        $scope.activeTabIndex=index;
+        if(index ==1){
+            $timeout(function () {
+            $scope.showChart = true;
+            }, 100);
+        }else{
+            $scope.showChart = false;
+        }
     }
+
+    $scope.showPMMLResult = function () {
+        if ($scope.isPMMLDownload) {
+            return false;
+        }
+        var url = $location.absUrl().split("app")[0]
+        $http({
+            method: 'GET',
+            url: url + "model/download?modelExecUUID=" + $scope.modelDetail.uuid + "&modelExecVersion=" + $scope.modelDetail.version,
+            responseType: 'arraybuffer'
+        }).success(
+            function (data, status, headers) {
+                $scope.isShowPMML = true;
+                headers = headers();
+                var filename = headers['filename'];
+                var contentType = headers['content-type'];
+                var linkElement = document.createElement('a');
+                try {
+                    var blob = new Blob([data], {
+                        type: contentType
+                    });
+
+                    var url = window.URL.createObjectURL(blob);
+                    var c = LoadXML("showPMML", url);
+                } catch (ex) {
+                    console.log(ex);
+                }
+                var burl = $location.absUrl().split("app")[0]
+                $http({
+                    method: 'GET',
+                    url: burl + "model/download?modelExecUUID=" + $scope.modelDetail.uuid + "&modelExecVersion=" + $scope.modelDetail.version,
+                    // responseType : 'arraybuffer'
+                }).success(function (data, status, headers) {
+                    $scope.pMMLResult = data
+                })
+            }).error(function (data) {
+                console.log();
+            });
     }
+    $scope.downloadPMMLResult = function () {
+        var url = $location.absUrl().split("app")[0]
+        $http({
+            method: 'GET',
+            url: url + "model/download?modelExecUUID=" + $scope.modelDetail.uuid + "&modelExecVersion=" + $scope.modelDetail.version,
+            responseType: 'arraybuffer'
+        }).success(
+            function (data, status, headers) {
+                headers = headers();
+
+                console.log(typeof (data))
+
+                var filename = headers['filename'];
+                var contentType = headers['content-type'];
+                var linkElement = document.createElement('a');
+                try {
+                    var blob = new Blob([data], {
+                        type: contentType
+                    });
+                    var url = window.URL.createObjectURL(blob);
+                    linkElement.setAttribute('href', url);
+                    linkElement.setAttribute("download", filename);
+                    //LoadXML("showPMML",url);
+                    var clickEvent = new MouseEvent(
+                        "click", {
+                            "view": window,
+                            "bubbles": true,
+                            "cancelable": false
+                        });
+                    linkElement.dispatchEvent(clickEvent);
+                } catch (ex) {
+                    console.log(ex);
+                }
+            }).error(function (data) {
+                console.log();
+            });
+    };
+
+    $scope.downloadMoldeResult = function () {
+        debugger
+      
+            if ($scope.modelData.customFlag == "N") {
+                $scope.downloadTrainData();
+                return;
+            }
+        
+    }
+   
+    $scope.downloadTrainData = function () {
+      
+        ModelService.getModelResult( $scope.modelDetail.uuid,  $scope.modelDetail.version).then(function (response) { onSuccessGetModelResult(response.data) });
+        var onSuccessGetModelResult = function (response) {
+            var linkElement = document.createElement('a');
+            try {
+                var jsonobj = angular.toJson(response, true);
+                var blob = new Blob([jsonobj], {
+                    type: "text/xml"
+                });
+                var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", $scope.modelDetail.uuid + ".json");
+                var clickEvent = new MouseEvent(
+                    "click", {
+                        "view": window,
+                        "bubbles": true,
+                        "cancelable": false
+                    });
+                linkElement.dispatchEvent(clickEvent);
+    
+            } catch (ex) {
+                console.log(ex);
+            }
+        } 
+        
+    }
+    
 
 });
 

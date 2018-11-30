@@ -34,7 +34,6 @@
 <div class="row trainResult" ng-controller="ResultTrainController2">
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
     <div class="col-md-12">
-
         <div class="page-bar">
             <ul class="page-breadcrumb">
                 <li>
@@ -65,7 +64,7 @@
                         <i class="fa fa-cogs"></i>{{caption}} Result
                     </div>
                     <div class="tools">
-                        <!-- <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
+                        <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
                             style="pointer-events: auto;">
                             <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
@@ -73,9 +72,9 @@
                             <span class="glyphicon glyphicon-file" style="color: white;" ng-disabled="true"></span>
                         </a>
                         <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
-                            style="pointer-events: auto;" ng-show="type=='train'" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+                            style="pointer-events: auto;" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
                             <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                        </a> -->
+                        </a>
 
                         <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
@@ -85,7 +84,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="portlet-body" style="min-heigth:100px;">
+                <div class="portlet-body" style="min-heigth:100px;z-index:10">
                     <form class="form-horizontal" name="myform" ng-submit="submitSettings()">
                         <uib-tabset active="activeTabIndex">
                             <uib-tab index="0" heading="Summary" select="go(0)">
@@ -170,12 +169,11 @@
                                 </div>
                                 <div class="row" ng-if="showChart && modelresult.featureImportance !=null && !isTrainResultProgess">
                                     <div class="col-md-12">
-                                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" chartid="modelresult.uuid" data="modelresult"></div>
+                                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="modelresult"></div>
                                     </div>
                                 </div>
-                                <h4 ng-if="modelresult.featureImportance ==null && !isTrainResultProgess">
-                                    <strong>Feature Importance Not Available</strong>
-                                </h4>
+                                <h3 ng-if="modelresult.featureImportance !=null &&  isTrainResultProgess" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
+
                                 <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                                     <br>
                                     <h4>Feature Details</h4>
@@ -184,7 +182,7 @@
                                         <div class="col-md-6 col-sm-6">
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                            <div class="form-group" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                                                 <label>Search:</label>
                                                 <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
                                                     aria-controls="datastoredatatable">
@@ -192,9 +190,10 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
+                                    <!-- style="overflow-y: auto;overflow-x: hidden;max-height: 330px;" -->
+                                    <div class="row" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                                         <div class="col-md-12">
-                                            <div class="">
+                                            <!-- <div class="">
                                                 <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                                     <thead>
                                                         <tr>
@@ -214,6 +213,9 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                            </div> -->
+                                            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+                                                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
                                             </div>
                                         </div>
                                     </div>
@@ -228,14 +230,14 @@
                                 <div ng-if="!isTrainResultProgess">
                                     <table class="table table-bordered train-result" style="width:50%">
                                         <tr>
-                                            <td style="width:50%">Accuracy</b>
+                                            <td style="width:50%">Accuracy
                                             </td>
                                             <td style="width:50%">
                                                 <b>{{ modelresult.accuracy | number : 2}}%</b>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="width:50%">Recall</b>
+                                            <td style="width:50%">Recall
                                             </td>
                                             <td style="width:50%">
                                                 <b>{{ modelresult.recall | number : 2}}%</b>
@@ -248,7 +250,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="width:50%">F1 Score</b>
+                                            <td style="width:50%">F1 Score
                                             </td>
                                             <td style="width:50%">
                                                 <b>{{ modelresult.f1Score | number : 2}}%</b>
@@ -275,11 +277,54 @@
                                         </tr>
                                     </table>
                                 </div>
+
                             </uib-tab>
+
                         </uib-tabset>
                     </form>
                 </div>
             </div>
         </div>
+        <div class="portlet box green" ng-show="isShowPMML">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>PMML Result
+                </div>
+                <div class="tools">
+                    <a title="Download" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
+                        <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Show Result" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;" ng-click="isShowPMML=false">
+                        <span class="glyphicon glyphicon-file" style="color: white;"></span>
+                    </a>
+                    <a title="Show PMML" ng-click="showPMMLResult()" class="currentpage" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="true"
+                        style="pointer-events: auto;">
+                        <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                    </a>
+                    <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
+                </div>
+            </div>
+            <div class="portlet-body" style="min-heigth:100px;">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <div>
+                            <div class="showClips">
+                                <div id="" style="height:500px;overflow: auto;">
+                                    <div class="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
+                                    <div id="showPMML" style="height:500px;overflow: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
 </div>

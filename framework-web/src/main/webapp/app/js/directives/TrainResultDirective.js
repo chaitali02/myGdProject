@@ -25,7 +25,7 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
         var featureImportanceArr = $.map($scope.data.featureImportance,function(el,e) { 
           var obj={};
           var val=parseFloat(el.toFixed(2));
-          obj.value= val;
+          obj.Importance= val*100;
           obj.label= e;
           if(e.split('').length > 16) {
             obj.title=e.substring(0, 16) + "..";
@@ -42,7 +42,7 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
         var count = 0; 
         if(featureImportanceArr && featureImportanceArr.length >0){
           for(var i= 0;i<featureImportanceArr.length;i++){
-            if(featureImportanceArr[i].value >=.01){
+            if(featureImportanceArr[i].Importance >=1){
               featureImportanceChartArr[count]=featureImportanceArr[i]
               count = count+1;
             }
@@ -53,27 +53,30 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
         if (featureImportanceArr.length > 1){
 
           min = d3.min(featureImportanceArr, function(d) {
-            return d['value'];
+            return d['Importance'];
           });
 
           max = d3.max(featureImportanceArr, function(d) {
-            return  d['value'];
+            return  d['Importance'];
           });
         } 
         else {
           min = 0
           max = d3.max(featureImportanceArr, function(d) {
-            return  d['value'];
+            return  d['Importance'];
           });
         }
         var chart = c3.generate({
           bindto: "#chart"+$scope.chartid,
+          size: {
+            height: 500
+          },
           data: {
             json: featureImportanceChartArr,
             type: 'bar',
             keys: {
               x: 'label',
-              value: ['value']
+              value: ['Importance']
             }
           }, 
           color: {
@@ -88,14 +91,15 @@ InferyxApp.directive('barChartHorizontal', function($compile, $rootScope, sortFa
               type: 'category',
               tick: {
                 format: function (x) { return title[x]} ,
-                culling: {
-                    max: 10 // the number of tick texts will be adjusted to less than this value
-                }
+                // culling: {
+                //     max: 10 // the number of tick texts will be adjusted to less than this value
+                // }
               }
             },
             y:{
               tick:{
-                format: d3.format(",%")         
+               // format: d3.format(" ,% ")   
+                format: function (d) { return d + " %"}      
               }
             }  
           },
