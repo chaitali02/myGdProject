@@ -2689,11 +2689,11 @@ public class ModelServiceImpl {
 						exec = execFactory.getExecutor(datasource.getType());
 						exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
 						
-						exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+						exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
 						
 						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
 
-						trainInput.setSourceFilePath(saveFileName);
+						trainInput.setSourceFilePath("file://"+saveFileName);
 					} else {
 						trainInput.setQuery(sql);
 						
@@ -2768,6 +2768,21 @@ public class ModelServiceImpl {
 						Object recall = summary.get("recall");
 						if(recall != null) {
 							trainResult.setRecall(Double.parseDouble(recall.toString()));
+						}
+						
+						Object total_size = summary.get("total_size");
+						if(total_size != null) {
+							trainResult.setTotalRecords(Long.parseLong(total_size.toString()));
+						}
+						
+						Object train_size = summary.get("train_size");
+						if(train_size != null) {
+							trainResult.setTrainingSet(Long.parseLong(train_size.toString()));
+						}
+						
+						Object test_size = summary.get("test_size");
+						if(test_size != null) {
+							trainResult.setValidationSet(Long.parseLong(test_size.toString()));
 						}
 						
 						String fileName = "model.result";

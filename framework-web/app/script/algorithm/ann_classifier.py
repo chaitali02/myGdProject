@@ -363,6 +363,12 @@ def getData(dsType, hostName, dbName, port, userName, password):
 def train():
     # Encoding categorical data
     dataset = getData(sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword)
+    
+    print("   ")
+    print("total_size")
+    print(dataset.size)
+    print("  ")
+    
     # if dataset != None:
     #     print("data obtained:")
     #     print(dataset)
@@ -394,6 +400,16 @@ def train():
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
+    
+    print("   ")
+    print("train_size")
+    print(X_train.size)
+    print("  ")
+    print("   ")
+    print("test_size")
+    print(X_test.size)
+    print("  ")
+    
     
     #print("printing X_train:")
     print(X_train)
