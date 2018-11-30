@@ -862,12 +862,12 @@ public class ModelServiceImpl {
 	
 	public String readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if(filePath == null) {
-			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
+			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type, "N");
 			MetaIdentifierHolder execDependsOn = trainExec.getDependsOn();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(execDependsOn.getRef().getUuid(),
-					execDependsOn.getRef().getVersion(), MetaType.train.toString());
+					execDependsOn.getRef().getVersion(), MetaType.train.toString(), "N");
 			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString());
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString(),"N");
 			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
 				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + train.getUuid().replaceAll("-", "_") + "_" + train.getVersion() + "_" + trainExec.getVersion() + ".result";
 			} else {
