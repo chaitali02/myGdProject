@@ -57,6 +57,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -107,6 +108,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainInput;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -2625,10 +2627,20 @@ public class ModelServiceImpl {
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
+				
+				TrainResult trainResult = new TrainResult();
+				trainResult.setName(train.getName());
+				trainResult.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion())));
+				trainResult.setParamList(new MetaIdentifierHolder(execParams.getParamListInfo().get(0).getRef()));
+				trainResult.setBaseEntity();
+				
 				List<String> argList = null;
 				if (StringUtils.isNotBlank(model.getCustomFlag()) && model.getCustomFlag().equalsIgnoreCase("N")) {
 					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 
+					trainResult.setAlgorithm(algorithm.getName());
+					trainResult.setAlgoType(model.getType());
+					
 					String scriptName = algorithm.getScriptName();
 					// Save the data as csv
 					String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
@@ -2713,8 +2725,15 @@ public class ModelServiceImpl {
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
 					
+					trainResult.setNumFeatures(fieldArray.length);
+					
 					logger.info("Object TrainInput: "+trainInput.toString());
+					StopWatch stopWatch = new StopWatch();
+					stopWatch.start();
 					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
+					stopWatch.stop();
+					trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+					
 					if(!scriptPrintedMsgs.isEmpty()) {
 						result = true;
 					} else {
@@ -2723,10 +2742,41 @@ public class ModelServiceImpl {
 					
 					if(result) {
 						Map<String, Object> summary = summary(modelFileName, scriptPrintedMsgs);
+						Object accuracy = summary.get("accuracy");
+						if(accuracy != null) {
+							trainResult.setAccuracy(Double.parseDouble(accuracy.toString()));
+						}
+//						trainResult.setConfusionMatrix(confusionMatrix);
+						
+						Object f1Score = summary.get("f1");
+						if(f1Score != null) {
+							trainResult.setF1Score(Double.parseDouble(f1Score.toString()));
+						}
+												
+						Object precision = summary.get("precision");
+						if(precision != null) {
+							trainResult.setPrecision(Double.parseDouble(precision.toString()));
+						}
+												
+						Object roc_auc = summary.get("roc_auc");
+						if(roc_auc != null) {
+							List<Double> rocAuc = new ArrayList<>();
+							rocAuc.add(Double.parseDouble(roc_auc.toString()));
+							trainResult.setRocAUC(rocAuc);
+						}
+												
+						Object recall = summary.get("recall");
+						if(recall != null) {
+							trainResult.setRecall(Double.parseDouble(recall.toString()));
+						}
+						
 						String fileName = "model.result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					}
 					
+					commonServiceImpl.save(MetaType.trainresult.toString(), trainResult);
+					
+					//dropping temp table
 					List<String> tempTableList = new ArrayList<>();
 					tempTableList.add(tableName);
 					sparkExecutor.dropTempTable(tempTableList);
@@ -2792,7 +2842,11 @@ public class ModelServiceImpl {
 		boolean isReadingScore = false;
 		boolean isReadingConfuMat = false;
 		List<String> confusionMatrx = new ArrayList<>();
+		String key = null;		
 		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
+			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
+				summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
+			}
 			//reading confusion mattrix
 			if(scriptPrintedMsgs.get(line).contains("confusion mattrix")) {
 				isReadingConfuMat = true;
