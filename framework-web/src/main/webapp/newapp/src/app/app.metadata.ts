@@ -1652,7 +1652,39 @@ export class AppMetadata {
         resultState: '',
         childMenu: [],
         allowInChildMenu: false,
-      }
+      },
+      'graphpod':{
+        name : 'graphpod',
+        caption :'Graph',
+        execType:'graphExec',
+        metaType:'graphpod',
+        color : '#00E5FF',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : 'listgraphpod',
+        detailState:'creaetgraphpod',
+        childMenu:[],
+        moduleState: 'graphpod',
+        moduleCaption: 'Graph Analysis',
+        allowInChildMenu : false,
+      },
+      'graphexec':{
+        name : 'graphexec',
+        caption : 'Graph Exec',
+        execType:'graphexec',
+        metaType:'graphexec',
+        color : '#EB54C3',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : 'graphpodresultlist',
+        joblistState:'jobmonitoringlist',
+        detailState :'jobexecutorlistgraphexec',
+        resultState:'graphpodresult',
+        moduleState: 'graphpod',
+        moduleCaption: 'Graph Analysis',
+        childMenu:[],
+        allowInChildMenu : false,
+      },
     }
 
     this.obj.statusDefs = {
@@ -1729,6 +1761,7 @@ export class AppMetadata {
         color: '#ed6b75',//'#d80029',
         iconPath: '',
       },
+      
     }
     this.defaultLink = {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }

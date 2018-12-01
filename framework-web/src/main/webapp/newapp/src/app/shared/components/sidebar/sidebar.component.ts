@@ -48,6 +48,10 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  GraphAnalysis: {
+    id:any;
+    subMenu: any[];
+  }
   DataVisualizationMenu: {
     id:any;
     subMenu: any[];
@@ -137,6 +141,23 @@ export class SidebarComponent {
       {
         name: "Results",
         type: "dagexec"
+      }
+      ]
+    };
+    this.GraphAnalysis = {
+      id:12,
+      subMenu: [
+      //   {
+      //   name: "Create",
+      //   type: "dag"
+      // },
+      {
+        name: "List",
+        type: "graphpod"
+      },
+      {
+        name: "Results",
+        type: "graphexec"
       }
       ]
     };

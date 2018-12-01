@@ -71,6 +71,7 @@ const routes: Routes = [
                 { path: 'list/:type/recongroup',redirectTo :'recongroup'},
                 { path: 'list/:type/reconexec',redirectTo :'reconexec'},
                 { path: 'reconexec', loadChildren: 'app/data-recon/data-recon.module#DataReconModule'},
+                { path: 'graphAnalysis', loadChildren: 'app/graph-analysis/graph-analysis.module#graphAnalysisModule'},
               // { path: 'reconexec/viewdrresultspage/:type/:id/:version/:mode/reconexec',redirectTo :'reconexec'},
   
             ]

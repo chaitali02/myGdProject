@@ -1,0 +1,126 @@
+<style>
+
+/* .sh-context--container{
+    font-family: sans-serif;
+    position: fixed;
+    background: black !important;
+    opacity: 0.8;
+    min-width: 150px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 3px;
+    box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
+    z-index: 9999;
+    color: white;}
+    .body{
+        width: 1px !important;
+    height: 1px;
+   
+    } */
+    .ui-multiselect-label{ height:37px !important; }
+    .ui-datatable-emptymessage{
+      text-align:left;
+    } </style>
+<div style="overflow:auto;max-height:450px" [hidden]="!IsGraphShow">
+    <div id="paper" (onBeforeMenuOpen)="onBefore($event)" [sh-context]="items" [sh-data-context]="dataObject"></div> 
+</div>
+
+<div  *ngIf="IsTableShow" >
+    <div class="row" *ngIf="cols">
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
+                <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
+                <input #gb type="text" style="float:right;" pInputText  placeholder="Search">
+            </div>                    
+        </div>
+    </div>
+    <div class="row" *ngIf="cols;else falsyTemplate">
+        <div class="col-md-12">       
+            <div style="float:right;">
+                <p-multiSelect [options]="columnOptions" [(ngModel)]="cols"   [style]="{'width':'23px','height':'40px'}"></p-multiSelect>
+            </div>
+            <p-dataTable [value]="colsdata" reorderableColumns="true" [tableStyle]="{width: '100%','text-align':'center'}"   [globalFilter]="gb"  [responsive]="true" selectionMode="multiple" [metaKeySelection]="false" scrollable="true" scrollHeight="440px"  sortMode="multiple"  resizableColumns="true" columnResizeMode="expand">
+            
+                <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+            </p-dataTable>
+        </div>
+    </div>
+    <ng-template #falsyTemplate>
+        <div class="spinner text-center">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </ng-template>
+    
+</div>
+
+
+<div class="row">
+        <div class="col-md-12"> 
+<div *ngIf="IsGroupGraphShow">
+        <app-jointjs-group [graphParms]="params"></app-jointjs-group>
+    </div>
+</div> 
+</div>
+<div class="tooltipcustom" id="divtoshow" style="display:none;position: fixed;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+    <div style="margin-top: 5px;margin-right: 15px"></div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="one" id="dagcolorID" style="margin-left:5px;margin-bottom: 10px"></div>
+        </div>
+        <div class="col-md-5" id="elementTypeText"></div>   
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px;">Id</span><span id="task_Id" style="margin-left:60px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px">Name</span><span id="task_Name" style="margin-left:36px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span id="task_Version_label" style="margin-left:20px">Version</span> <span id="task_Version" style="margin-left:23px"></span>
+    </div>
+    <!-- <div class="row" style="margin-top: 5px" *ngIf="popoverData.startTime">
+        <span style="margin-left:20px">Start Time</span> <span id="startTime" style="margin-left:4px">{{popoverData.startTime}}</span>
+    </div>
+    <div class="row" style="margin-top: 5px" *ngIf="popoverData.endTime">
+        <span style="margin-left:20px">End Time</span> <span id="endTime" style="margin-left:8px">{{popoverData.endTime}}</span>
+    </div> -->
+</div>
+
+
+<div class="tooltipcustom" id="right-side-test" style="pointer-events: auto;position: fixed;z-index:999; width: 400px;color: white;opacity: 0.8;display: none;font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+    <div class="row">
+        <div class="col-md-1">
+            <div style="margin-left: 8px;width:16px;height:16px" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
+        </div>
+        <div class="col-md-5" style="padding-left:15px">
+            <!-- {{popupModel.headers.title || ''}} -->
+        </div>
+        <div class="col-md-6">
+            <a class="btn btn-circle btn-icon-only btn-default" title="" data-toggle="tooltip" data-placement="top" tooltip="" data-original-title="Close" id="savePop" style="margin-bottom: 15px;background:transparent; border-color:white;float: right;height: 20px !important;width: 20px !important;"
+              (click)="savePop(popupModel)">
+                <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;margin-top:-4px;"></i></a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="example-text-input" class="col-md-3" style="    padding-left: 22px; padding-top: 7px;">Name</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" value="" id="namepop"  name ="namepop" [(ngModel)]="popupModel.modelData.name">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3" id="typeOprator" style="padding-left: 22px; padding-top: 7px;">{{popupModel.operatorTypeText || 'Type'}}</label>
+        <div class="col-md-9">
+            <!--<select select2 class="form-control" id="droppop" ng-model="popupModel.selectedType" ng-options="option.uuid+'|'+option.name as option.name for option in operatorinfoMapInfo"></select> -->
+            <p-dropdown [options]="allOperatorInfo"          
+            [(ngModel)]="popupModel.selectedType"
+            name="dependsOnName"
+            [disabled]="mode == 'true'"
+            [style]="{'width':'100%','padding':'3px'}"
+            [filter]="true"
+            (onChange)="changeType()"
+            >
+            </p-dropdown>  
+        </div>
+        </div>
+    </div>
