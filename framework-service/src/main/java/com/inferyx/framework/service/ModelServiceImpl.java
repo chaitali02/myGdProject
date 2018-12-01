@@ -2859,17 +2859,19 @@ public class ModelServiceImpl {
 		List<String> confusionMatrx = new ArrayList<>();
 		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
 			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
-				summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
+				if(!scriptPrintedMsgs.get(line+1).toLowerCase().contains("confusion_matrix")) {
+					summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
+				}
 			}
 			//reading confusion mattrix
-			if(scriptPrintedMsgs.get(line).contains("confusion mattrix")) {
+			if(scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
 				isReadingConfuMat = true;
 			}
 			if(isReadingConfuMat) {
 				if(scriptPrintedMsgs.get(line).equalsIgnoreCase(" ")) {
 					isReadingConfuMat = false;
 				} else {
-					if(!scriptPrintedMsgs.get(line).contains("confusion mattrix")) {
+					if(!scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
 						confusionMatrx.add(scriptPrintedMsgs.get(line));
 					}
 				}
