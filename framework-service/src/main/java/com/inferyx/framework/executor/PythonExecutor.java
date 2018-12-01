@@ -236,8 +236,8 @@ public class PythonExecutor implements IExecutor {
 		logger.info("Before executing tf script ");
 		try {
 			String pythonExec = Helper.getPropertyValue("framework.python.exec");	
-			pythonExec = pythonExec.endsWith("/") ? pythonExec : pythonExec.concat("/");
-			String command = pythonExec+"python3".concat(" ").concat(scriptPath);
+//			pythonExec = pythonExec.endsWith("/") ? pythonExec : pythonExec.concat("/");
+			String command = pythonExec.concat(" ").concat(scriptPath);
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}
