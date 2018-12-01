@@ -351,9 +351,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
   $scope.getOneByUuidandVersion = function (uuid, version) {
     
-    TrainService.getOneByUuidandVersion(uuid, version, "train").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+    TrainService.getOneByUuidandVersion(uuid, version, "train").then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.trainData = response;
+      $scope.isEditInprogess=false;
       var selectModel = {}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -421,12 +422,17 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       if($scope.selectModel)
       $scope.onChangeModel(false);
     }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    }
   }
   if (typeof $stateParams.id != "undefined") {
     $scope.showactive = "true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
-
+    $scope.isEditVeiwError=false;
+    $scope.isEditInprogess=true;
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id, $stateParams.version);
   }

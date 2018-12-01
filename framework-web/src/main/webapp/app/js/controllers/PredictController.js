@@ -329,9 +329,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
   }
   $scope.getOneByUuidandVersion=function(uuid,version){
-    PredictService.getOneByUuidandVersion(uuid,version,"predict").then(function(response){ onSuccessGetLatestByUuid(response.data)});
+    PredictService.getOneByUuidandVersion(uuid,version,"predict").then(function(response){ onSuccessGetLatestByUuid(response.data)} ,function(response){ onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
       $scope.predictData = response;
+      $scope.isEditInprogess=false;
       var selectModel={}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -408,12 +409,17 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       $scope.originalFeatureMapTableArray=featureMapTableArray;
       $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
     }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    }
   }
   if(typeof $stateParams.id != "undefined") {
     $scope.showactive="true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
-    
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id,$stateParams.version);
   } else{

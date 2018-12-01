@@ -421,10 +421,13 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.showactive="true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
-    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model").then(function(response) {onSuccessGetLatestByUuid(response.data)});
+    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model").then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
-      $scope.modeldata = response
+      $scope.modeldata = response;
+      $scope.isEditInprogess=false;
       $scope.scriptType=response.type
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -496,7 +499,11 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.checkboxCustom=true;
         $scope.getModelScript(response.uuid,response.version)
       }
-    }//End 
+    }//End
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   } //End If onSuccessGetLatestByUuid
   else {
     $scope.modeldata={};

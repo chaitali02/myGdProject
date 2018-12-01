@@ -281,9 +281,10 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   //   }
   // }
   $scope.getOneByUuidandVersion = function (uuid, version) {
-    SimulateService.getOneByUuidandVersion(uuid, version, "simulate").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+    SimulateService.getOneByUuidandVersion(uuid, version, "simulate").then(function (response) { onSuccessGetLatestByUuid(response.data) } , function (response) { onError(response.data)});
     var onSuccessGetLatestByUuid = function (response) {
       $scope.simulateData = response;
+      $scope.isEditInprogess=false;
       var selectModel = {}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -337,12 +338,18 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
       }
       $scope.onChangeModel();
     }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    }
   }
 
   if (typeof $stateParams.id != "undefined") {
     $scope.showactive = "true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id, $stateParams.version);
   }else{
@@ -354,6 +361,8 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   $scope.selectVersion = function (uuid, version) {
     $scope.selectDistributionType = {};
     $scope.allDistribution = null;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.getAllLetestDistribution();
     $scope.getOneByUuidandVersion(uuid, version);
   }
