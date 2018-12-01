@@ -251,7 +251,7 @@ export class DataQualityDetailComponent {
     this.getAllAttributeBySource();
     if (this.mode != undefined && this.IsSelectSoureceAttr) {
       this.allRefIntegrity = this.allNames;
-      this.changeRefIntegrity();
+     // this.changeRefIntegrity();
 
     }
   }
@@ -299,8 +299,9 @@ export class DataQualityDetailComponent {
     this.breadcrumbDataFrom[2].caption = response.dqdata.name
     this.dqdata = response.dqdata;
     this.dataqualitycompare = response.dqdata;
+    debugger
     console.log(response.filterInfo)
-    this.filterTableArray = response.filterInfo
+    this.filterTableArray = response.dqdata["filterInfo"]
     this.createdBy = response.dqdata.createdBy.ref.name
     this.dqdata.published = response.dqdata["published"] == 'Y' ? true : false
     this.dqdata.active = response.dqdata["active"] == 'Y' ? true : false
