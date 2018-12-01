@@ -13,6 +13,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
    },
    link: function ($scope, element, attrs) {
     $scope.download={};
+    $scope.isTrainResultLoad=false;
     $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
     $scope.download.formates=CF_DOWNLOAD.formate;
     $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
@@ -64,6 +65,8 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      }
      $scope.modelDetail=null;
      $scope.$on('generateResults',function (e,params) {
+      $scope.type=params.type
+      $scope.isTrainResultLoad =params.type=='train'?true:false;
       $scope.modelDetail={};
       $scope.modelDetail.uuid=params.id;
       $scope.modelDetail.version=params.version;
@@ -91,19 +94,20 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        var baseurl=$location.absUrl().split("app")[0];
        $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
          var mode=res.data.runMode;
-        
+         
          var url;
          if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
          }else{
            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
          }
+         
          $scope.type=params.type
          $http({
                method: 'GET',
                url:url,
                  }).then(function (response,status,headers) {
-                   
+                   debugger
                   $('#resultsloader').hide();
                   if(params.type == "train"){
                     $scope.trainData=response.data;
@@ -346,7 +350,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
        };
      },
      template: `
-       <div class="row" ng-show="type =='train'">
+       <div class="row" ng-if="type =='train' && isTrainResultLoad ==true">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelDetail !=null">
             <train-result data="modelDetail"></train-result>
           </div>
