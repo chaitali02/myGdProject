@@ -137,17 +137,20 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		$scope.getAllVersion($stateParams.id)
 		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "operator").then(function (response) { onSuccessGetLatestByUuid(response.data) });
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.OperatorData = response
+			$scope.OperatorData = response;
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
 			$scope.selectedOperatorType=response.operatorType;
 			if($scope.OperatorData.paramList !=null){
-				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				OperatorService.getAllLatest("paramlist").then(function (response){onSuccessGetAllLatestParamlist(response.data)}, function (response){onError(response.data)});
 				var onSuccessGetAllLatestParamlist = function (response) {
 					$scope.allParamlist = response;
 					var paramlist = {};
@@ -165,6 +168,10 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 					$scope.tags = tags;
 				}
 			}
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End If
 	else {

@@ -124,6 +124,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
+
 			$state.go($rootScope.previousState.name, $rootScope.previousState.params);
 		}
 		else {

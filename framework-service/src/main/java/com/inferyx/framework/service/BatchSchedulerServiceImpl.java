@@ -330,7 +330,7 @@ public class BatchSchedulerServiceImpl {
 			}
 		}		
 		
-		if(nextRunTime.compareTo(endDate) <= 0) {
+		if( nextRunTime !=null && nextRunTime.compareTo(endDate) <= 0) {
 			return nextRunTime;
 		} else {
 			return null; 

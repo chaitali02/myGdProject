@@ -1,6 +1,6 @@
 <div data-ng-controller="CreateTrainController">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12">      
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
@@ -28,6 +28,10 @@
             </div>
             <!-- END PAGE HEADER-->
             <br>
+           
+            <!-- <div class="comment-panel-parent" style="top:7.3%;left:15%;" >
+                
+            </div> -->
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
             <div options="dirOptions" type="'train'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="trainData"
                 comment-panel-directive></div>
@@ -91,7 +95,17 @@
                     </div>
 
                     <div class="form-wizard" ng-show="showForm">
-                        <div class="form-body" style="padding-top: 20px;">
+                        <div  class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                        </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </div>
+                        <div class="form-body" style="padding-top: 20px;" ng-if="!isEditInprogess && !isEditVeiwError">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
                                     <a href="" class="step" aria-expanded="true">
