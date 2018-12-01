@@ -76,30 +76,30 @@ getOneByUuidAndVersion(uuid,version,type):Observable<any> {
   return this._commonService.getOneByUuidAndVersion(uuid,version,type)
   .map((response: Response) => {
     let dqJson={};
-    dqJson["dqdata"]=response
-    var filterInfoArray=[];
-    if(response["filter"] !=null){
-      for(var i=0;i<response["filter"].filterInfo.length;i++){
-        let filterInfo={};
-        //let lhsFilter={}
-        filterInfo["logicalOperator"]=response["filter"].filterInfo[i].logicalOperator
-        filterInfo["operator"]=response["filter"].filterInfo[i].operator;
-        // lhsFilter["uuid"]=response["filter"].filterInfo[i].operand[0].ref.uuid;
-        // lhsFilter["datapodname"]=response["filter"].filterInfo[i].operand[0].ref.name;
-        // lhsFilter["name"]=response["filter"].filterInfo[i].operand[0].attributeName;
-        // lhsFilter["attributeId"]=response["filter"].filterInfo[i].operand[0].attributeId;
+    dqJson["dqdata"]=response;
+    // var filterInfoArray=[];
+    // if(response["filter"] !=null){
+    //   for(var i=0;i<response["filter"].filterInfo.length;i++){
+    //     let filterInfo={};
+    //     //let lhsFilter={}
+    //     filterInfo["logicalOperator"]=response["filter"].filterInfo[i].logicalOperator
+    //     filterInfo["operator"]=response["filter"].filterInfo[i].operator;
+    //     // lhsFilter["uuid"]=response["filter"].filterInfo[i].operand[0].ref.uuid;
+    //     // lhsFilter["datapodname"]=response["filter"].filterInfo[i].operand[0].ref.name;
+    //     // lhsFilter["name"]=response["filter"].filterInfo[i].operand[0].attributeName;
+    //     // lhsFilter["attributeId"]=response["filter"].filterInfo[i].operand[0].attributeId;
         
-        let  lhsFilter : AttributeHolder = new AttributeHolder();
-        lhsFilter.label =response["filter"].filterInfo[i].operand[0].ref["name"]+"."+response["filter"].filterInfo[i].operand[0].attributeName;;
-        lhsFilter.u_Id=response["filter"].filterInfo[i].operand[0].ref.uuid+"_"+response["filter"].filterInfo[i].operand[0].attributeId
-        lhsFilter.uuid=response["filter"].filterInfo[i].operand[0].ref.uuid;
-        lhsFilter.attrId=response["filter"].filterInfo[i].operand[0].attributeId;
-        filterInfo["lhsFilter"]=lhsFilter;
-        filterInfo["filtervalue"]=response["filter"].filterInfo[i].operand[1].value;
-        filterInfoArray[i]=filterInfo
-      }
-    }
-    dqJson["filterInfo"]=filterInfoArray;
+    //     let  lhsFilter : AttributeHolder = new AttributeHolder();
+    //     lhsFilter.label =response["filter"].filterInfo[i].operand[0].ref["name"]+"."+response["filter"].filterInfo[i].operand[0].attributeName;;
+    //     lhsFilter.u_Id=response["filter"].filterInfo[i].operand[0].ref.uuid+"_"+response["filter"].filterInfo[i].operand[0].attributeId
+    //     lhsFilter.uuid=response["filter"].filterInfo[i].operand[0].ref.uuid;
+    //     lhsFilter.attrId=response["filter"].filterInfo[i].operand[0].attributeId;
+    //     filterInfo["lhsFilter"]=lhsFilter;
+    //     filterInfo["filtervalue"]=response["filter"].filterInfo[i].operand[1].value;
+    //     filterInfoArray[i]=filterInfo
+    //   }
+    // }
+    dqJson["filterInfo"]=response["filterInfoArray"];
     console.log(response)
     return  <any>dqJson;
   })

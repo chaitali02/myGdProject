@@ -98,9 +98,9 @@
                     [filter]="true" (onChange)="onVersionChange()" [disabled]="mode == 'true'" placeholder="Select" >
                   </p-dropdown>{{VersionList | json}} -->
 
-                <p-dropdown [options]="VersionList" [(ngModel)]="dataset.version" name="version" [style]="{'width':'100%','padding':'3px'}"
-                  [disabled]="mode == 'true'" (onChange)="onVersionChange()" [filter]="true" placeholder="--Select--">
-                </p-dropdown> 
+                  <p-dropdown [options]="VersionList" [(ngModel)]="dataset.version" name="version" [style]="{'width':'100%','padding':'3px'}"
+                    [disabled]="mode == 'true'" (onChange)="onVersionChange()" [filter]="true" placeholder="--Select--">
+                  </p-dropdown>
 
                 </div>
               </div>
@@ -144,7 +144,7 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                  <p-dropdown [options]="allNames"  [(ngModel)]="dataset.sourcedata" name="sourcedata" dataKey="uuid" [disabled]="mode == 'true'"
+                  <p-dropdown [options]="allNames" [(ngModel)]="dataset.sourcedata" name="sourcedata" dataKey="uuid" [disabled]="mode == 'true'"
                     [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType()">
                   </p-dropdown>
                 </div>
@@ -218,11 +218,12 @@
                         <tr *ngFor="let data of dataset.filterTableArray ;let i=index">
 
                           <td style="text-align:center;Vertical-align:middle;">
-                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"/>
+                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"
+                            />
                           </td>
                           <td>
                             <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="i === 0 || mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeFilterData()">
+                              [disabled]="i === 0 || mode == 'true'" [filter]="true" placeholder="--Select--">
                             </p-dropdown>
                           </td>
                           <td>
@@ -234,18 +235,18 @@
                           <td>
                             <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter only integer"
                               tooltipPosition="top" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                              *ngIf="data.lhsType == 'integer'" placeholder="--Select--" (click)="onChangeFilterData()">
+                              *ngIf="data.lhsType == 'integer'" placeholder="--Select--">
                             <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter values into single quotes"
                               tooltipPosition="top" tooltipEvent="focus" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                              *ngIf="data.lhsType == 'string'" placeholder="--Select--" (click)="onChangeFilterData()">
+                              *ngIf="data.lhsType == 'string'" placeholder="--Select--">
                             <div *ngIf="data.lhsType == 'formula'">
                               <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeFilterData()">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                               </p-dropdown>
                             </div>
                             <div *ngIf="data.lhsType == 'datapod'">
                               <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeFilterData()">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                               </p-dropdown>
                             </div>
                           </td>
@@ -255,8 +256,8 @@
                             </p-dropdown>
                           </td>
                           <td>
-                            <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style= "width:100%" (change)="onChangeRhsType()" 
-                                [disabled]="mode == 'true'" placeholder="--Select--">
+                            <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsType(i)"
+                              [disabled]="mode == 'true'" placeholder="--Select--">
                               <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
                                 <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
                                 <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
@@ -264,7 +265,7 @@
                                 <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
                                 <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
                               </ng-container>
-                                  
+
                               <ng-container *ngIf="data.operator == 'BETWEEN'">
                                 <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
                                 <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
@@ -284,25 +285,62 @@
                           </td>
                           <td>
                             <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                              *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'" placeholder="--Select--" (click)="onChangeFilterData()">
+                              *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'" placeholder="--Select--">
                             <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                              *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'" placeholder="--Select--" (click)="onChangeFilterData()">
+                              *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'" placeholder="--Select--">
                             <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                               <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:30%;display: inline-block"
-                                [disabled]="mode == 'true'" placeholder="--Select--" (click)="onChangeFilterData()" > {{"-"}}
+                                [disabled]="mode == 'true'" placeholder="--Select--"> {{"-"}}
                               <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}" style="width:30%;display: inline-block"
-                                [disabled]="mode == 'true'" placeholder="--Select--" (click)="onChangeFilterData()">
+                                [disabled]="mode == 'true'" placeholder="--Select--">
                             </div>
                             <div *ngIf="data.rhsType == 'formula'">
                               <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeFilterData()">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                               </p-dropdown>
                             </div>
                             <div *ngIf="data.rhsType == 'datapod'">
                               <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeFilterData()">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                               </p-dropdown>
                             </div>
+                            <div *ngIf="data.rhsType == 'dataset'">
+                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
+                              <i class="fa fa-search" (click)="searchOption()" style="width:10%;display:inline-block" pTooltip="Search"></i>
+                            </div>
+
+                            <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
+                              [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
+
+                              <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                  <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute()">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div class="form-group">
+                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName" name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                    </p-dropdown>
+                                  </div>
+                                </div>
+                              </div>
+                              <p-footer>
+                                <div style="padding-top: 10px;">
+                                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                                    <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+                                    <input type="submit" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
+                                  </div>
+                                </div>
+                              </p-footer>
+                            </p-dialog>
+
                           </td>
                         </tr>
                       </tbody>
@@ -341,7 +379,8 @@
                         <tbody>
                           <tr *ngFor="let data of dataset.attributeTableArray ;let i=index">
                             <td style="text-align:center;Vertical-align:middle;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"/>
+                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"
+                              />
                             </td>
                             <td style="width:10%;">
                               <input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">
@@ -360,14 +399,15 @@
                                 *ngIf="dataset.attributeTableArray[i].isSourceAtributeSimple" [disabled]="mode == 'true'">
                               <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeDatapod">
                                 <p-dropdown [options]="allMapSourceAttribute" [(ngModel)]="dataset.attributeTableArray[i].sourceattribute" name="sourceattribute+{{i}}"
-                                  dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="--Select--"
-                                  (onChange)="onChangeAttributeDatapod(dataset.attributeTableArray[i].sourceattribute,i)">
+                                  dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                  placeholder="--Select--" (onChange)="onChangeAttributeDatapod(dataset.attributeTableArray[i].sourceattribute,i)">
                                 </p-dropdown>
                               </div>
 
                               <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeFormula">
                                 <p-dropdown [options]="allMapFormula" [(ngModel)]="dataset.attributeTableArray[i].sourceformula" name="sourceformula+{{i}}"
-                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="--Select--">
+                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                  placeholder="--Select--">
                                 </p-dropdown>
                               </div>
 
@@ -380,7 +420,8 @@
 
                               <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeFunction">
                                 <p-dropdown [options]="ruleLoadFunction" [(ngModel)]="dataset.attributeTableArray[i].sourcefunction" name="sourcefunction+{{i}}"
-                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="--Select--"> 
+                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                  placeholder="--Select--">
                                 </p-dropdown>
                               </div>
                             </td>

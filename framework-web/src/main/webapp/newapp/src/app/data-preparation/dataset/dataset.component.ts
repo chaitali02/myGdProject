@@ -1,7 +1,7 @@
 import { CommonService } from './../../metadata/services/common.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
-import { Component, OnInit, ViewEncapsulation,Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { DatasetService } from '../../metadata/services/dataset.service';
 import { NgOption } from '@ng-select/ng-select';
@@ -9,7 +9,7 @@ import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
 import { AppMetadata } from '../../app.metadata';
-import { SESSION_STORAGE, WebStorageService} from 'angular-webstorage-service'
+import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.template.html',
@@ -17,12 +17,16 @@ import { SESSION_STORAGE, WebStorageService} from 'angular-webstorage-service'
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
-  sessionStarts: boolean;
+  dialogAttriNameArray: any[];
+  dialogSelectName: any;
+  dialogAttributeName : any;
+  dialogAttriArray: any[];
+  displayDialogBox : boolean;
   sessionData: any[];
   lhsFormulaArray: any;
   rhsFormulaArray: any[];
   attributesArray: any[];
-  rhsTypeArray: { value: string; label: string}[];
+  rhsTypeArray: { value: string; label: string }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
   columnOptions: any[];
   cols: any[];
@@ -50,7 +54,7 @@ export class DatasetComponent implements OnInit {
   filterTableArray: any[];
   sources: { 'value': string; 'label': string; }[];
   allNames: SelectItem[] = [];
-  sourcedata: DependsOn
+  sourcedata: any;
   source: any;
   versions: any[];
   dataset: any;
@@ -78,19 +82,18 @@ export class DatasetComponent implements OnInit {
   //version: Version
   isSubmitEnable1: any;
   baseUrl: any;
-  abc : any;
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute,@Inject(SESSION_STORAGE) private storage: WebStorageService) {
-    this.abc = {
-      disabled : true
-    }
-    this.sessionStarts = false;
+
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
     this.showdatapod = true;
     this.dataset = {};
     this.dataset["active"] = true
     this.isSubmitEnable1 = true;
+    this.displayDialogBox = false;
+    this.dialogAttributeName = {};
     this.dataset.filterTableArray = []
-    this.sourcedata = { 'uuid': "", "label": "" }
+    this.sourcedata = {}
+    this.dialogSelectName = {}
     this.operators = [
       { 'value': '<', 'label': 'LESS THAN' },
       { 'value': '>', 'label': 'GREATER THAN' },
@@ -109,7 +112,7 @@ export class DatasetComponent implements OnInit {
       { 'value': 'AND', 'label': 'AND' },
       { 'value': 'OR', 'label': 'OR' }]
 
-   // this.dataset.uuid = '';
+    // this.dataset.uuid = '';
 
     this.breadcrumbDataFrom = [{
       "caption": "Data Preparation ",
@@ -143,10 +146,10 @@ export class DatasetComponent implements OnInit {
       { 'value': 'formula', 'label': 'formula' }
     ];
     this.rhsTypeArray = [
-      { value: 'string', label: 'string'},
-      { value: 'integer', label: 'integer'},
-      { value: 'datapod', label: 'attribute'},
-      { value: 'formula', label: 'formula'},
+      { value: 'string', label: 'string' },
+      { value: 'integer', label: 'integer' },
+      { value: 'datapod', label: 'attribute' },
+      { value: 'formula', label: 'formula' },
       { value: 'dataset', label: 'dataset' }
     ]
   }
@@ -184,7 +187,7 @@ export class DatasetComponent implements OnInit {
     }
   }
   getOneByUuidAndVersion(id, version) {
-    this._commonService.getOneByUuidAndVersion(id, version, 'datasetview')
+    this._commonService.getOneByUuidAndVersion(id, version, 'dataset')
       .subscribe(
       response => {
         this.onSuccessgetOneByUuidAndVersion(response)
@@ -209,7 +212,7 @@ export class DatasetComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
-  
+
   onSuccessgetOneByUuidAndVersion(response) {
     this.dataset = response;
     this.datasetCompare = response;
@@ -253,41 +256,42 @@ export class DatasetComponent implements OnInit {
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
-    let filterInfoArray = [];
-    if (response.filter.filterInfo.length > 0) {
-      for (let k = 0; k < response.filter.filterInfo.length; k++) {
+
+    if (response.filterInfo != null) {
+      let filterInfoArray = [];
+      for (let k = 0; k < response.filterInfo.length; k++) {
         let filterInfo = {};
         let lhsFilter = {};
-        filterInfo["logicalOperator"] = response.filter.filterInfo[k].logicalOperator
-        filterInfo["lhsType"] = response.filter.filterInfo[k].operand[0].ref.type;
-        filterInfo["operator"] = response.filter.filterInfo[k].operator;
-        filterInfo["rhsType"] = response.filter.filterInfo[k].operand[1].ref.type;
+        filterInfo["logicalOperator"] = response.filterInfo[k].logicalOperator
+        filterInfo["lhsType"] = response.filterInfo[k].operand[0].ref.type;
+        filterInfo["operator"] = response.filterInfo[k].operator;
+        filterInfo["rhsType"] = response.filterInfo[k].operand[1].ref.type;
 
-        if (response.filter.filterInfo[k].operand[0].ref.type == 'formula') {
+        if (response.filterInfo[k].operand[0].ref.type == 'formula') {
           this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
             error => console.log("Error ::", error))
 
           let lhsAttri1 = {}
-          lhsAttri1["uuid"] = response.filter.filterInfo[k].operand[0].ref.uuid;
-          lhsAttri1["label"] = response.filter.filterInfo[k].operand[0].ref.name;
+          lhsAttri1["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
+          lhsAttri1["label"] = response.filterInfo[k].operand[0].ref.name;
           filterInfo["lhsAttribute"] = lhsAttri1;
         }
 
-        else if (response.filter.filterInfo[k].operand[0].ref.type == 'datapod') {
+        else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
 
           this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
             error => console.log("Error ::", error))
           let lhsAttri = {}
-          lhsAttri["uuid"] = response.filter.filterInfo[k].operand[0].ref.uuid;
-          lhsAttri["label"] = response.filter.filterInfo[k].operand[0].ref.name + "." + response.filter.filterInfo[k].operand[0].attributeName;
-          lhsAttri["attributeId"] = response.filter.filterInfo[k].operand[0].attributeId;
+          lhsAttri["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
+          lhsAttri["label"] = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
+          lhsAttri["attributeId"] = response.filterInfo[k].operand[0].attributeId;
           filterInfo["lhsAttribute"] = lhsAttri;
         }
 
-        else if (response.filter.filterInfo[k].operand[0].ref.type == 'simple') {
-          let stringValue = response.filter.filterInfo[k].operand[0].value;
+        else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
+          let stringValue = response.filterInfo[k].operand[0].value;
           let onlyNumbers = /^[0-9]+$/;
           let result = onlyNumbers.test(stringValue);
           if (result == true) {
@@ -295,34 +299,34 @@ export class DatasetComponent implements OnInit {
           } else {
             filterInfo["lhsType"] = 'string';
           }
-          filterInfo["lhsAttribute"] = response.filter.filterInfo[k].operand[0].value;
+          filterInfo["lhsAttribute"] = response.filterInfo[k].operand[0].value;
         }
 
-        if (response.filter.filterInfo[k].operand[1].ref.type == 'formula') {
+        if (response.filterInfo[k].operand[1].ref.type == 'formula') {
           this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
             error => console.log("Error ::", error))
           //filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
           let rhsAttri = {}
-          rhsAttri["uuid"] = response.filter.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["label"] = response.filter.filterInfo[k].operand[1].ref.name;
+          rhsAttri["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["label"] = response.filterInfo[k].operand[1].ref.name;
           filterInfo["rhsAttribute"] = rhsAttri;
         }
 
-        else if (response.filter.filterInfo[k].operand[1].ref.type == 'datapod') {
+        else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
           this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
             error => console.log("Error ::", error))
 
           let rhsAttri1 = {}
-          rhsAttri1["uuid"] = response.filter.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri1["label"] = response.filter.filterInfo[k].operand[1].ref.name + "." + response.filter.filterInfo[k].operand[1].attributeName;
-          rhsAttri1["attributeId"] = response.filter.filterInfo[k].operand[1].attributeId;
+          rhsAttri1["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri1["label"] = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+          rhsAttri1["attributeId"] = response.filterInfo[k].operand[1].attributeId;
           filterInfo["rhsAttribute"] = rhsAttri1;
         }
 
-        else if (response.filter.filterInfo[k].operand[1].ref.type == 'simple') {
-          let stringValue = response.filter.filterInfo[k].operand[1].value;
+        else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
+          let stringValue = response.filterInfo[k].operand[1].value;
           let onlyNumbers = /^[0-9]+$/;
           let result = onlyNumbers.test(stringValue);
           if (result == true) {
@@ -330,7 +334,7 @@ export class DatasetComponent implements OnInit {
           } else {
             filterInfo["rhsType"] = 'string';
           }
-          filterInfo["rhsAttribute"] = response.filter.filterInfo[k].operand[1].value;
+          filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].value;
 
           let result2 = stringValue.includes("and")
           if (result2 == true) {
@@ -343,100 +347,105 @@ export class DatasetComponent implements OnInit {
           }
         }
         filterInfoArray.push(filterInfo);
+        filterjson["filterInfo"] = filterInfoArray
+        this.dataset.filterTableArray = filterInfoArray
       }
     }
-    filterjson["filterInfo"] = filterInfoArray
-    this.dataset.filterTableArray = filterInfoArray
+
 
 
     let attributeJson = {};
     attributeJson["attributeData"] = response;
-    let attributearray = [];
-    for (let i = 0; i < response.attributeInfo.length; i++) {
-      let attributeinfojson = {};
-      attributeinfojson["name"] = response.attributeInfo[i].attrSourceName
-      if (response.attributeInfo[i].sourceAttr.ref.type == "datapod" || response.attributeInfo[i].sourceAttr.ref.type == "dataset" || response.attributeInfo[i].sourceAttr.ref.type == "rule") {
-        var sourceattribute = {}
-        sourceattribute["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceattribute["label"] = response.attributeInfo[i].sourceAttr.ref.name;
-        sourceattribute["dname"] = response.attributeInfo[i].sourceAttr.ref.name + '.' + response.attributeInfo[i].sourceAttr.attrName;
-        sourceattribute["type"] = response.attributeInfo[i].sourceAttr.ref.type;
-        sourceattribute["attributeId"] = response.attributeInfo[i].sourceAttr.attrId;
-        sourceattribute["id"] = sourceattribute["uuid"] + "_" + sourceattribute["attributeId"]
-        let obj = {}
-        obj["value"] = "datapod"
-        obj["label"] = "attribute"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = true;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-      }
-      else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
-        let obj = {}
-        obj["value"] = "string"
-        obj["label"] = "string"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["isSourceAtributeSimple"] = true;
-        attributeinfojson["sourcesimple"] = response.attributeInfo[i].sourceAttr.value
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = false;
 
+    if (response.attributeInfo != null) {
+      let attributearray = [];
+      for (let i = 0; i < response.attributeInfo.length; i++) {
+        let attributeinfojson = {};
+        attributeinfojson["name"] = response.attributeInfo[i].attrSourceName
+        if (response.attributeInfo[i].sourceAttr.ref.type == "datapod" || response.attributeInfo[i].sourceAttr.ref.type == "dataset" || response.attributeInfo[i].sourceAttr.ref.type == "rule") {
+          var sourceattribute = {}
+          sourceattribute["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceattribute["label"] = response.attributeInfo[i].sourceAttr.ref.name;
+          sourceattribute["dname"] = response.attributeInfo[i].sourceAttr.ref.name + '.' + response.attributeInfo[i].sourceAttr.attrName;
+          sourceattribute["type"] = response.attributeInfo[i].sourceAttr.ref.type;
+          sourceattribute["attributeId"] = response.attributeInfo[i].sourceAttr.attrId;
+          sourceattribute["id"] = sourceattribute["uuid"] + "_" + sourceattribute["attributeId"]
+          let obj = {}
+          obj["value"] = "datapod"
+          obj["label"] = "attribute"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = true;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+        }
+        else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
+          let obj = {}
+          obj["value"] = "string"
+          obj["label"] = "string"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["isSourceAtributeSimple"] = true;
+          attributeinfojson["sourcesimple"] = response.attributeInfo[i].sourceAttr.value
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "expression") {
+          let sourceexpression = {};
+          sourceexpression["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceexpression["label"] = response.attributeInfo[i].sourceAttr.ref.name
+          let obj = {}
+          obj["value"] = "expression"
+          obj["label"] = "expression"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourceexpression"] = sourceexpression;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = true;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+          this.getAllExpression(false, 0)
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "formula") {
+          let sourceformula = {};
+          sourceformula["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourceformula["label"] = response.attributeInfo[i].sourceAttr.ref.name;
+          let obj = {}
+          obj["value"] = "formula"
+          obj["label"] = "formula"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourceformula"] = sourceformula;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = true;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = false;
+          this.getAllFormula(false, 0);
+        }
+        if (response.attributeInfo[i].sourceAttr.ref.type == "function") {
+          let sourcefunction = {};
+          sourcefunction["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+          sourcefunction["label"] = response.attributeInfo[i].sourceAttr.ref.name
+          let obj = {}
+          obj["value"] = "function"
+          obj["label"] = "function"
+          attributeinfojson["sourceAttributeType"] = obj;
+          attributeinfojson["sourcefunction"] = sourcefunction;
+          attributeinfojson["isSourceAtributeSimple"] = false;
+          attributeinfojson["isSourceAtributeDatapod"] = false;
+          attributeinfojson["isSourceAtributeFormula"] = false;
+          attributeinfojson["isSourceAtributeExpression"] = false;
+          attributeinfojson["isSourceAtributeFunction"] = true;
+          this.getAllFunctions(false, 0);
+        }
+        attributeinfojson["sourceattribute"] = sourceattribute;
+        attributearray[i] = attributeinfojson
       }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "expression") {
-        let sourceexpression = {};
-        sourceexpression["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceexpression["label"] = response.attributeInfo[i].sourceAttr.ref.name
-        let obj = {}
-        obj["value"] = "expression"
-        obj["label"] = "expression"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourceexpression"] = sourceexpression;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = true;
-        attributeinfojson["isSourceAtributeFunction"] = false;
-        this.getAllExpression(false, 0)
-      }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "formula") {
-        let sourceformula = {};
-        sourceformula["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourceformula["label"] = response.attributeInfo[i].sourceAttr.ref.name;
-        let obj = {}
-        obj["value"] = "formula"
-        obj["label"] = "formula"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourceformula"] = sourceformula;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = true;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = false;
-        this.getAllFormula(false, 0);
-      }
-      if (response.attributeInfo[i].sourceAttr.ref.type == "function") {
-        let sourcefunction = {};
-        sourcefunction["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
-        sourcefunction["label"] = response.attributeInfo[i].sourceAttr.ref.name
-        let obj = {}
-        obj["value"] = "function"
-        obj["label"] = "function"
-        attributeinfojson["sourceAttributeType"] = obj;
-        attributeinfojson["sourcefunction"] = sourcefunction;
-        attributeinfojson["isSourceAtributeSimple"] = false;
-        attributeinfojson["isSourceAtributeDatapod"] = false;
-        attributeinfojson["isSourceAtributeFormula"] = false;
-        attributeinfojson["isSourceAtributeExpression"] = false;
-        attributeinfojson["isSourceAtributeFunction"] = true;
-        this.getAllFunctions(false, 0);
-      }
-      attributeinfojson["sourceattribute"] = sourceattribute;
-      attributearray[i] = attributeinfojson
+      this.dataset.attributeTableArray = attributearray
     }
-    this.dataset.attributeTableArray = attributearray
+
   }
 
   OnSuccesgetAllVersionByUuid(response) {
@@ -604,85 +613,85 @@ export class DatasetComponent implements OnInit {
     this.allMapExpression = temp;
     this.allMapExpression.splice(0, 0, {
       "label": "---CreateNew---",
-      "value": { "label": "---CreateNew---", "uuid": "01" } 
+      "value": { "label": "---CreateNew---", "uuid": "01" }
     });
     if (defaulfMode == true) {
-    //   let sourceexpression = {};
-    //   sourceexpression["uuid"] = this.allMapExpression[0]["value"].uuid;
-    //   sourceexpression["label"] = this.allMapExpression[0].label;
-    //   this.dataset.attributeTableArray[index].sourceexpression = sourceexpression;
-     }
+      //   let sourceexpression = {};
+      //   sourceexpression["uuid"] = this.allMapExpression[0]["value"].uuid;
+      //   sourceexpression["label"] = this.allMapExpression[0].label;
+      //   this.dataset.attributeTableArray[index].sourceexpression = sourceexpression;
+    }
   }
 
   saveInLocal(key, val): void {
     this.sessionData = [];
     console.log('recieved= key:' + key + 'value:' + val);
     this.storage.set(key, val);
-    console.log("data before sesion::"+JSON.stringify(this.storage));
+    console.log("data before sesion::" + JSON.stringify(this.storage));
     let a = this.storage.get(key);
     // let abc= this.storage.get(key);
     // this.sessionData[key]= this.storage.get(key);
   }
 
-  onSelectExpression(event){
-    if(event.label == '---CreateNew---'){
+  onSelectExpression(event) {
+    if (event.label == '---CreateNew---') {
       this.saveInLocal(0, this.dataset);
-      this.router.navigate(['../../../../expressionDataset',this.dataset.source,this.dataset.sourcedata.label,this.dataset.sourcedata.uuid],{ relativeTo: this.activatedRoute });
+      this.router.navigate(['../../../../expressionDataset', this.dataset.source, this.dataset.sourcedata.label, this.dataset.sourcedata.uuid], { relativeTo: this.activatedRoute });
     }
   }
 
   getFromLocal(key): void {
     let data = this.storage.get(key);
-  
+
     this.sessionData = [];
-    if( data !== null ){
-    this.sessionData[key] = this.storage.get(key);
-    
-    this.dataset = this.sessionData[key];
-    this.datasetCompare = this.dataset;
-    console.log(JSON.stringify(this.dataset.version));
+    if (data !== null) {
+      this.sessionData[key] = this.storage.get(key);
 
-    console.log("data get from session:: "+JSON.stringify(this.dataset));
+      this.dataset = this.sessionData[key];
+      this.datasetCompare = this.dataset;
+      console.log(JSON.stringify(this.dataset.version));
 
-    this.sessionData[key]=this.storage.remove(key);
-    console.log(JSON.stringify(this.storage));
-    console.log(JSON.stringify(this.sessionData[key]));
+      console.log("data get from session:: " + JSON.stringify(this.dataset));
 
-    this.getAllVersionByUuid2();
+      this.sessionData[key] = this.storage.remove(key);
+      console.log(JSON.stringify(this.storage));
+      console.log(JSON.stringify(this.sessionData[key]));
 
-    let version: DependsOn = new DependsOn();
-    version.label = this.dataset.version.label;
-    version.uuid = this.dataset.version.uuid;
-    this.dataset.version = version
+      this.getAllVersionByUuid2();
 
-    this._commonService.getAllLatest(this.dataset.source)
-    .subscribe(response => { this.OnSuccesgetAllLatest(response)},
-    error => console.log('Error :: ' + error))
+      let version: DependsOn = new DependsOn();
+      version.label = this.dataset.version.label;
+      version.uuid = this.dataset.version.uuid;
+      this.dataset.version = version
 
-    this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
-    .subscribe(response => { this.onSuccessgetFormulaByLhsType(response)},
-    error => console.log("Error ::", error))
+      this._commonService.getAllLatest(this.dataset.source)
+        .subscribe(response => { this.OnSuccesgetAllLatest(response) },
+        error => console.log('Error :: ' + error))
 
-    this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
-    .subscribe(response => { this.onSuccessgetFormulaByRhsType(response)},
-    error => console.log("Error ::", error))
+      this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
+        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+        error => console.log("Error ::", error))
+
+      this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
+        .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+        error => console.log("Error ::", error))
 
 
-    this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
-    .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response)},
-    error => console.log("Error ::", error))
+      this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+        error => console.log("Error ::", error))
 
-    this.getAllAttributeBySource();
-    this.getAllFormula(false, 0);
-    this.getAllFunctions(false, 0);
-    this.getAllExpression(false, 0)
+      this.getAllAttributeBySource();
+      this.getAllFormula(false, 0);
+      this.getAllFunctions(false, 0);
+      this.getAllExpression(false, 0)
     }
 
     else {
       if (this.mode !== undefined) {
-          this.getOneByUuidAndVersion(this.id, this.version);
-          this.getAllVersionByUuid();
-        }
+        this.getOneByUuidAndVersion(this.id, this.version);
+        this.getAllVersionByUuid();
+      }
     }
   }
 
@@ -831,7 +840,6 @@ export class DatasetComponent implements OnInit {
     for (let i = 0; i < this.cols.length; i++) {
       this.columnOptions.push({ label: this.cols[i].header, value: this.cols[i] });
     }
-
   }
 
   onSuccessgetFormulaByLhsType(response) {
@@ -863,7 +871,7 @@ export class DatasetComponent implements OnInit {
 
   onChangeLhsType(index) {
     this.dataset.filterTableArray[index]["lhsAttribute"] == null;
-    this.datasetCompare["filterChg"] = "y";
+ 
     if (this.dataset.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
@@ -883,7 +891,7 @@ export class DatasetComponent implements OnInit {
 
   onChangeRhsType(index) {
     this.dataset.filterTableArray[index]["rhsAttribute"] == null;
-    this.datasetCompare["filterChg"] = "y";
+  
     if (this.dataset.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
@@ -895,6 +903,7 @@ export class DatasetComponent implements OnInit {
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
         error => console.log("Error ::", error))
     }
+
     else {
       this.dataset.filterTableArray[index]["rhsAttribute"] = null;
     }
@@ -928,13 +937,9 @@ export class DatasetComponent implements OnInit {
       this.attributesArray = temp1;
     }
   }
-  onChangeOperators(index){
-    this.datasetCompare["filterChg"] = "y";
-    this.dataset.filterTableArray[index]["rhsType"] = null;
-  }
 
-  onChangeFilterData(){
-    this.datasetCompare["filterChg"] = "y";
+  onChangeOperators(index) {
+    this.dataset.filterTableArray[index]["rhsType"] = null;
   }
 
   enableEdit(uuid, version) {
@@ -955,26 +960,66 @@ export class DatasetComponent implements OnInit {
     this.showgraphdiv = false
   }
 
+  searchOption(index){
+    this.displayDialogBox = true;
+    this._commonService.getAllLatest("dataset")
+    .subscribe(response => {this.onSuccessgetAllLatest(response)},
+    error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAllLatest(response){
+    this.dialogAttriArray =  [];
+    let temp = [];
+    for(const i in response){
+      let dialogAttriObj = {};
+      
+      dialogAttriObj["label"] = response[i].name;
+      dialogAttriObj["value"] = {};
+      dialogAttriObj["value"]["label"] = response[i].name;
+      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      temp[i] = dialogAttriObj;
+    }
+    this.dialogAttriArray = temp
+    console.log(JSON.stringify(this.dialogAttriArray));
+  }
+
+  onChangeDialogAttribute(){
+    this._commonService.getAttributesByDataset("dataset",this.dialogSelectName.uuid)
+    .subscribe(response => {this.onSuccessgetAttributesByDataset(response)},
+    error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAttributesByDataset(response){
+    this.dialogAttriNameArray =  [];
+    for(const i in response){
+      let dialogAttriNameObj = {};
+      dialogAttriNameObj["label"] = response[i].attrName;
+      dialogAttriNameObj["value"] = {};
+      dialogAttriNameObj["value"]["label"] = response[i].attrName;
+      dialogAttriNameObj["value"]["uuid"] = response[i].attrId;
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+
+  submitDialogBox(index){
+    this.displayDialogBox = false;
+    this.dataset.filterTableArray[index].rhsAttribute = this.dialogAttributeName.label; 
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
+  }
+
   submitDataset() {
     this.isSubmitEnable1 = true;
     let datasetJson = {};
     datasetJson["uuid"] = this.dataset.uuid
     datasetJson["name"] = this.dataset.name
-    //datasetJson["version"] = this.dataset.version
-    datasetJson["srcChg"] = "y";
-    if (this.datasetCompare == null) {
-      datasetJson["srcChg"] = "y";
-      datasetJson["sourceChg"] = "y";
-      datasetJson["filterChg"] = "y";
-    } else {
-      datasetJson["mapInfo"] = this.datasetCompare.mapInfo
-    }
 
     var tagArray = [];
     if (this.dataset.tags != null) {
       for (var counttag = 0; counttag < this.dataset.tags.length; counttag++) {
         tagArray[counttag] = this.dataset.tags[counttag].value;
-
       }
     }
     datasetJson['tags'] = tagArray;
@@ -988,44 +1033,11 @@ export class DatasetComponent implements OnInit {
     datasetJson["dependsOn"] = dependsOn;
     datasetJson["active"] = this.dataset.active == true ? 'Y' : "N"
     datasetJson["published"] = this.dataset.published == true ? 'Y' : "N"
-    if (this.datasetCompare != null && this.datasetCompare.dependsOn.ref.uuid != this.dataset.sourcedata.uuid) {
-      datasetJson["sourceChg"] = "y";
-    }
-    else {
-      datasetJson["sourceChg"] = "n";
-    }
-    let filterInfoArray = []; 
-    var filter = {}
 
-    if (this.datasetCompare != null && this.datasetCompare.filter != null) {
-      filter["uuid"] = this.datasetCompare.filter.uuid;
-      filter["name"] = this.datasetCompare.filter.name;
-      filter["version"] = this.datasetCompare.filter.version;
-      filter["createdBy"] = this.datasetCompare.filter.createdBy;
-      filter["createdOn"] = this.datasetCompare.filter.createdOn;
-      filter["active"] = this.datasetCompare.filter.active;
-      filter["tags"] = this.datasetCompare.filter.tags;
-      filter["desc"] = this.datasetCompare.filter.desc;
-      filter["dependsOn"] = this.datasetCompare.filter.dependsOn;
-    }
-    if (this.dataset.filterTableArray.length > 0) {
+    let filterInfoArray = [];
+
+    if (this.dataset.filterTableArray != null ) {
       for (let i = 0; i < this.dataset.filterTableArray.length; i++) {
-
-        if (this.datasetCompare != null && this.datasetCompare.filter != null && this.datasetCompare.filter.filterInfo.length == this.dataset.filterTableArray.length) {
-          // if (this.datasetCompare.filter.filterInfo[i].operand[0].attributeId != this.filterTableArray[i].lhsFilter.attributeId
-          //   || this.filterTableArray[i].logicalOperator != this.datasetCompare.filter.filterInfo[i].logicalOperator
-          //   || this.filterTableArray[i].filtervalue != this.datasetCompare.filter.filterInfo[i].operand[1].value
-          //   || this.filterTableArray[i].operator != this.datasetCompare.filter.filterInfo[i].operator) {
-          if (this.datasetCompare.filterChg == "y") {
-            datasetJson["filterChg"] = "y";
-          }
-          else {
-            datasetJson["filterChg"] = "n";
-          }
-        }
-        else {
-          datasetJson["filterChg"] = "y";
-        }
 
         let filterInfo = {};
         filterInfo["logicalOperator"] = this.dataset.filterTableArray[i].logicalOperator;
@@ -1038,6 +1050,7 @@ export class DatasetComponent implements OnInit {
           ref["type"] = "simple";
           operatorObj["ref"] = ref;
           operatorObj["value"] = this.dataset.filterTableArray[i].lhsAttribute;
+          operatorObj["attributeType"] = "string"
           filterInfo["operand"][0] = operatorObj;
         }
         else if (this.dataset.filterTableArray[i].lhsType == 'formula') {
@@ -1046,7 +1059,7 @@ export class DatasetComponent implements OnInit {
           ref["type"] = "formula";
           ref["uuid"] = this.dataset.filterTableArray[i].lhsAttribute.uuid;
           operatorObj["ref"] = ref;
-           // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
+          // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
           filterInfo["operand"][0] = operatorObj;
         }
         else if (this.dataset.filterTableArray[i].lhsType == 'datapod') {
@@ -1064,6 +1077,7 @@ export class DatasetComponent implements OnInit {
           ref["type"] = "simple";
           operatorObj["ref"] = ref;
           operatorObj["value"] = this.dataset.filterTableArray[i].rhsAttribute;
+          operatorObj["attributeType"] = "string"
           filterInfo["operand"][1] = operatorObj;
 
           if (this.dataset.filterTableArray[i].rhsType == 'integer' && this.dataset.filterTableArray[i].operator == 'BETWEEN') {
@@ -1095,15 +1109,10 @@ export class DatasetComponent implements OnInit {
         }
         filterInfoArray[i] = filterInfo;
       }
-      filter["filterInfo"] = filterInfoArray;
-      datasetJson["filter"] = filter;
-    }
-    else {
-      datasetJson["filter"] = null;
-      datasetJson["filterChg"] = "y";
-    }
 
-    //--------------------------------------------------------
+      datasetJson["filterInfo"] = filterInfoArray;
+      console.log(JSON.stringify(filterInfoArray));
+    }
     var sourceAttributesArray = [];
     for (var i = 0; i < this.dataset.attributeTableArray.length; i++) {
       var attributemap = {};
@@ -1162,8 +1171,8 @@ export class DatasetComponent implements OnInit {
     }
     datasetJson["attributeInfo"] = sourceAttributesArray;
     console.log(JSON.stringify(datasetJson))
-    
-    this._commonService.submit("datasetview", datasetJson).subscribe(
+
+    this._commonService.submit("dataset", datasetJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -1174,7 +1183,7 @@ export class DatasetComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Dataset Submitted Successfully' });
     setTimeout(() => {
-      this.goBack()
+      this.goBack();
     }, 1000);
   }
   //   enableEdit(uuid, version) {
