@@ -14,7 +14,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         useExternalPagination: true,
         exporterMenuPdf: false,
         enableSorting: true,
-        useExternalSorting: true,
+        useExternalSorting: false,
         enableFiltering: false,
         enableRowSelection: true,
         enableSelectAll: true,
@@ -25,14 +25,16 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
       $scope.gridOptions.columnDefs = [{
         displayName: 'Feature Name',
         name: 'label',
+        width:'30%',
         cellClass: 'text-center',
-        headerCellClass: 'text-center',
+    //    headerCellClass: 'text-center',
       },
       {
         displayName: 'Feature Importance',
         name: 'value',
+        width:'30%',
         cellClass: 'text-center',
-        headerCellClass: 'text-center',
+      //  headerCellClass: 'text-center',
       }];
 
       $scope.getGridStyle = function () {
@@ -160,7 +162,7 @@ InferyxApp.directive('barChartHorizontal', function ($compile, $rootScope, sortF
         var chart = c3.generate({
           bindto: "#chart" + $scope.chartid,
           size: {
-            height: 500
+            height: 400
           },
           data: {
             json: featureImportanceChartArr,

@@ -675,6 +675,7 @@ vertical-align: middle;
   }
   .ui-grid-cell-contents.ui-grid-header-cell-primary-focus {
     padding-top: 10px;
+    padding-left: 10px;
     height: 40px;
     background-color: #fff;
   }
