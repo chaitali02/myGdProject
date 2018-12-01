@@ -134,6 +134,7 @@ import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.helper.SparkExecHelper;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -185,6 +186,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
+	@Autowired
+	private SparkExecHelper sparkExecHelper;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -1894,15 +1897,33 @@ public class SparkExecutor<T> implements IExecutor {
 			connectionProperties.put("user", datasource.getUsername());
 			connectionProperties.put("password", datasource.getPassword());
 			
-			if(Arrays.asList(df.columns()).contains("features"))
-				df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
-			
-			Tuple2<String, String>[] tuple2 = df.dtypes();
+			df.printSchema();
+			if(Arrays.asList(df.columns()).contains("features")) {
+				/*df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));*/
+				String []fieldNames = df.schema().fieldNames();
+				StructField []fields = df.schema().fields();
+				StructField []newFields = new StructField[fields.length];
+				
+				for (int i = 0; i < fieldNames.length; i++) {
+					if (fieldNames[i].equals("features")) {
+						newFields[i] = new StructField(fieldNames[i],
+								DataTypes.StringType, true,
+								Metadata.empty());
+					} else {
+						newFields[i] = fields[i];
+					}
+				}
+				
+				df = sparkExecHelper.parseFeatures(df, newFields);
+				df.printSchema();
+				df.show();
+			}
+			/*Tuple2<String, String>[] tuple2 = df.dtypes();
 			for(Tuple2<String, String> tuple22 : tuple2) {
 				if(tuple22._2().toLowerCase().contains("vector")) {
 					df = df.withColumn(tuple22._1(), df.col(tuple22._1()).cast(DataTypes.StringType));
 				}
-			}
+			}*/
 			
 //			if(partitionColList.size() > 0) {
 //				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
