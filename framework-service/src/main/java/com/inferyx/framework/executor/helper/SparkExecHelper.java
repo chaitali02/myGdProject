@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -34,16 +35,28 @@ public class SparkExecHelper implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Dataset<Row> parseFeatures(Dataset<Row> df, StructField []newFields) {
+	public Dataset<Row> parseFeatures(Dataset<Row> df, StructField []newFields, List<String> vectorFields) {
+		List<Integer> vectorFieldPos = new ArrayList<>();
+		// Get respective field indices
+		JavaRDD<Row> rowRdd = df.javaRDD();
+		Row row = rowRdd.first();
+		if (row == null || row.length() <= 0) {
+			return df;
+		}
+		for (String vectorField : vectorFields) {
+			vectorFieldPos.add(row.fieldIndex(vectorField));
+		}
+		// All positions of vector collected. Let's proceed
+		
 		return df.sparkSession().createDataFrame(df.javaRDD().map(new Function<Row, Row>() {
 
 			@Override
 			public Row call(Row v1) throws Exception {
 				logger.info("Inside call : feature index : v1 length " + v1.fieldIndex("features") + " : " +v1.length());
-				int featuresPos = v1.fieldIndex("features");
+//				int featuresPos = v1.fieldIndex("features");
 				List<Object> values = new ArrayList<>();
 				for (int i = 0; i < v1.length(); i++) {
-					if (i == featuresPos && v1.get(i) != null) {
+					if (vectorFieldPos.contains(i) && v1.get(i) != null) {
 						logger.info(v1.get(i) + ":" + v1.get(i).toString());
 						values.add(v1.get(i).toString());
 					} else {

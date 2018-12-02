@@ -1896,16 +1896,27 @@ public class SparkExecutor<T> implements IExecutor {
 			connectionProperties.put("driver", datasource.getDriver());
 			connectionProperties.put("user", datasource.getUsername());
 			connectionProperties.put("password", datasource.getPassword());
+			List<String> vectorFields = new ArrayList<>(); 
+			
+			// Find out vector type columns
+			Tuple2<String, String>[] tuple2 = df.dtypes();
+			for(Tuple2<String, String> tuple22 : tuple2) {
+				if(tuple22._2().toLowerCase().contains("vector")) {
+//					df = df.withColumn(tuple22._1(), df.col(tuple22._1()).cast(DataTypes.StringType));
+					vectorFields.add(tuple22._1());
+				}
+			}
 			
 			df.printSchema();
-			if(Arrays.asList(df.columns()).contains("features")) {
+//			if(Arrays.asList(df.columns()).contains("features")) {
 				/*df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));*/
 				String []fieldNames = df.schema().fieldNames();
 				StructField []fields = df.schema().fields();
 				StructField []newFields = new StructField[fields.length];
-				
+			
+			
 				for (int i = 0; i < fieldNames.length; i++) {
-					if (fieldNames[i].equals("features")) {
+					if (vectorFields.contains(fieldNames[i])) {
 						newFields[i] = new StructField(fieldNames[i],
 								DataTypes.StringType, true,
 								Metadata.empty());
@@ -1914,10 +1925,10 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 				
-				df = sparkExecHelper.parseFeatures(df, newFields);
+				df = sparkExecHelper.parseFeatures(df, newFields, vectorFields);
 				df.printSchema();
 				df.show();
-			}
+//			}
 			/*Tuple2<String, String>[] tuple2 = df.dtypes();
 			for(Tuple2<String, String> tuple22 : tuple2) {
 				if(tuple22._2().toLowerCase().contains("vector")) {
