@@ -15,5 +15,5 @@ create table fact_transaction_journal
   load_date varchar(50), 
   load_id integer(50), 
 check_num integer(50), 
-constraint transaction_id_pk primary key(transaction_id));
+constraint transaction_id_pk primary key(transaction_id,direction));
 

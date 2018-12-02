@@ -53,7 +53,7 @@ create table predict_suspicious_activity_gbt
      out_wire_transfers_round_amount_sum    decimal(10, 3), 
      in_wire_transfers_round_amount_sum     decimal(10, 3), 
      in_cash_transfers_round_amount_sum     decimal(10, 3), 
-     features                               varchar(50), 
+     features                               varchar(500), 
      rawprediction                          varchar(50), 
      probability                            varchar(50), 
      prediction                             decimal(10, 3) 
