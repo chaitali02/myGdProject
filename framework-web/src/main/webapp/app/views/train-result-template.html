@@ -70,7 +70,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:40%">Validation Set</td>
+                                <td style="width:40%">Test Set</td>
                                 <td style="width:60%">
                                     <b>{{modelresult.validationSet}} rows</b>
                                 </td>
@@ -192,14 +192,53 @@
                         <tr>
                             <td style="width:40%">ROC AUC</td>
                             <td style="width:60%" ng-if="modelresult.rocAUC !=null">
-                                <b>{{ modelresult.rocAUC}}</b>
+                                <b>{{ modelresult.rocAUC | number : 2}}</b>
                             </td>
 
                             <td style="width:60%" ng-if="modelresult.rocAUC ==null">
-                                <b>{{ modelresult.accuracy}} %</b>
+                                 <b>{{ modelresult.accuracy | number : 2}} %</b>
                             </td>
                         </tr>
                     </table>
+                </div>
+            </uib-tab>
+            <uib-tab index="3" heading="Test Set" select="go(3)">
+                <div class="spinner centercontent" ng-if="isProgessTrainSet">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <h3  ng-if="!isProgessTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
+                <div ng-if="!isProgessTrainSet">
+                    <div class="row" ng-if="!isProgessTrainSet && !isErrorTrainTestSet">
+                        <div class="col-md-6 col-sm-6">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataTestSet(searchtext)" ng-model="searchtext"
+                                    aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-12">
+                            <div ui-grid="gridOptionsTestSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTestSet()">
+                                <div class="nodatawatermark_results" ng-show="!gridOptionsTestSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet" style="top:52%;">No data available</div>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top:17px">
+                            Showing {{paginationTestSet.to}} to {{paginationTestSet.from}} of {{paginationTestSet.totalItems}} records
+                        </div>
+                        <div class="col-md-6">
+                            <ul uib-pagination items-per-page="paginationTestSet.pageSize" total-items="paginationTestSet.totalItems" ng-model="paginationTestSet.currentPage"
+                            ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTestSet.maxSize"
+                            class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                            last-text="&raquo;">
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </uib-tab>
         </uib-tabset>

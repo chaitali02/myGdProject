@@ -26,13 +26,13 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         displayName: 'Feature Name',
         name: 'label',
         width:'30%',
-        cellClass: 'text-center',
+        // cellClass: 'text-center',
     //    headerCellClass: 'text-center',
       },
       {
         displayName: 'Feature Importance',
         name: 'value',
-        width:'30%',
+        width:'20%',
         cellClass: 'text-center',
       //  headerCellClass: 'text-center',
       }];
@@ -53,6 +53,47 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.gridApi = gridApi;
         $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
       };
+
+      $scope.paginationTestSet = {
+        currentPage: 1,
+        pageSize: 10,
+        paginationPageSizes: [10, 25, 50, 75, 100],
+        maxSize: 5,
+      }
+
+      $scope.filteredRowsTestSet;
+      $scope.gridOptionsTestSet = {
+        rowHeight: 40,
+        useExternalPagination: true,
+        exporterMenuPdf: false,
+        enableSorting: true,
+        useExternalSorting: false,
+        enableFiltering: false,
+        enableRowSelection: true,
+        enableSelectAll: true,
+        enableGridMenu: true,
+        fastWatch: true,
+        columnDefs: [],
+        data:[],
+      };
+     
+   
+      $scope.getGridStyleTestSet = function () {
+        var style = {
+          'margin-top': '10px',
+          'margin-bottom': '10px',
+        }
+        if ($scope.filteredRowsTestSet && $scope.filteredRowsTestSet.length > 0) {
+          style['height'] = (($scope.filteredRowsTestSet.length < 10 ? $scope.filteredRowsTestSet.length * 40 : 400) + 40) + 'px';
+        } else {
+          style['height'] = "100px"
+        }
+        return style;
+      }
+      $scope.gridOptionsTestSet.onRegisterApi = function (gridApi) {
+        $scope.gridApiTestSet = gridApi;
+        $scope.filteredRowsTestSet = $scope.gridApiTestSet.core.getVisibleRows($scope.gridApiTestSet.grid);
+      };
      
       $rootScope.refreshMoldeResult = function () {
         $scope.modelresult = null;
@@ -63,6 +104,8 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.featureImportanceArr = data;
         $scope.gridOptions.data = data;
       };
+
+
       $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -87,17 +130,107 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           $scope.gridOptions.data = $scope.featureImportanceArr;
         } //End onSuccessGetModelResult
       }
-
-      $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version });
+    
+      $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
+      $scope.refreshDataTestSet = function (searchtext) {
+        var data = $filter('filter')($scope.originalDataTestSet, searchtext, undefined);
+        $scope.featureImportanceArr = data;
+        $scope.gridOptionsTestSet.data = data;
+      };
+      $scope.getTestSet = function (data) {
+        var uuid = data.uuid;
+        var version = data.version;
+        $scope.isProgessTrainSet = true;
+        $scope.isErrorTrainTestSet = false;
+        ModelService.getTestSet(uuid, version, 'trainexec').then(function (response) { onSuccessGetTestSet(response.data) },function (response) { onError(response.data) });
+        var onSuccessGetTestSet = function (response) {
+          $scope.isProgessTrainSet = false;
+          $scope.isErrorTrainTestSet = false;
+          $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet,response);
+          $scope.gridOptionsTestSet.columnDefs = $scope.getColumnData(response);
+          $scope.originalDataTestSet = response;
+        } //End onSuccessGetModelResult
+        var onError=function(){
+          $scope.isProgessTrainSet = false;
+          $scope.isErrorTrainTestSet = true;
+        }
+        
+      }
+     
       $scope.go = function (index) {
         $scope.activeTabIndex = index;
-        if (index == 1) {
+        
+        if(index == 1){
           $timeout(function () {
             $scope.showChart = true;
           }, 100);
-        } else {
+        } 
+        else{
           $scope.showChart = false;
         }
+
+        if(index == 3 && ($scope.gridOptionsTestSet.data.length ==0)){
+          $scope.getTestSet({ uuid: $scope.data.uuid, version: $scope.data.version});
+        }
+        if([0,1,2].indexOf(index) !=-1 && ($scope.modelresult ==null)){
+          $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
+        }
+      }
+
+      $scope.selectPage = function (pageNo) {
+        $scope.paginationTestSet.currentPage = pageNo;
+      };
+
+      $scope.onPerPageChange = function () {
+        $scope.$scope.paginationTestSet.currentPage = 1;
+        $scope.gridOptions.data = $scope.getResults($scope.paginationTestSet, $scope.originalDataTestSet)
+      }
+
+      $scope.onPageChanged = function () {
+        $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet, $scope.originalDataTestSet);
+        console.log($scope.gridOptionsTestSet.data);
+      };
+
+      $scope.getResults = function (pagination, params) {
+        pagination.totalItems = params.length;
+        if (pagination.totalItems > 0) {
+            pagination.to = (((pagination.currentPage - 1) * (pagination.pageSize)) + 1);
+        }
+        else {
+            pagination.to = 0;
+        }
+        if (pagination.totalItems < (pagination.pageSize * pagination.currentPage)) {
+            pagination.from = pagination.totalItems;
+        } else {
+            pagination.from = ((pagination.currentPage) * pagination.pageSize);
+        }
+        var limit = (pagination.pageSize * pagination.currentPage);
+        var offset = ((pagination.currentPage - 1) * pagination.pageSize)
+        return params.slice(offset, limit);
+      }
+      $scope.getColumnData = function (response) {
+        var columnDefs = [];
+        var count = 0;
+        angular.forEach(response[0], function (value, key) {
+            count = count + 1;
+        });
+        angular.forEach(response[0], function (value, key) {
+          var attribute = {};
+          if (key == "rownum") {
+              attribute.visible = false
+          } else {
+              attribute.visible = true
+          }
+          attribute.name = key
+          attribute.displayName = key
+          if (count > 3) {
+              attribute.width = key.split('').length + 12 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150]
+          } else {
+              attribute.width = (100 / count) + "%";
+          }
+          columnDefs.push(attribute)
+        });
+        return columnDefs;
       }
     },
     templateUrl: 'views/train-result-template.html',

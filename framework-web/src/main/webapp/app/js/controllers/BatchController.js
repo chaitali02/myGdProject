@@ -750,6 +750,17 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
     $scope.gridApi = gridApi;
     $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
+  $scope.execDetail={};
+  $scope.execDetail.uuid=$stateParams.id;
+  $scope.execDetail.version=$stateParams.version;
+  $scope.showGraph=function(){
+    $scope.isGraphShow=true;      
+  }
+
+  $scope.showResultPage=function(){
+    $scope.isGraphShow=false;   
+  }
+
   $scope.getExecListByBatchExec=function(){
     BatchService.getExecListByBatchExec($stateParams.id,$stateParams.version,CF_META_TYPES.batchexec).then(function (response) { onSuccessGetExecListByBatchExec(response.data) });
     var onSuccessGetExecListByBatchExec = function (response) {
