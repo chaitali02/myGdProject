@@ -929,7 +929,10 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			List<ParamMap> paramMapList = null;
 			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion(), paramMapList);
+				if(execParams == null) {
+					execParams = trainExec.getExecParams();
+				}
+				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {

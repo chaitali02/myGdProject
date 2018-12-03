@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -90,20 +91,47 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private Object algoclass;
 	private DL4JExecutor dl4jExecutor;
-	
-
 	private String name;
 	private MetaType execType;
+	private MetadataServiceImpl metadataServiceImpl;
+	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the algoclass
+	 */
 	public Object getAlgoclass() {
 		return this.algoclass;
 	}
 
+	/**
+	 * @Ganesh
+	 *
+	 * @param algoclass the algoclass to set
+	 */
 	public void setAlgoclass(Object algoclass) {
 		this.algoclass = algoclass;
 	}
-	MetadataServiceImpl metadataServiceImpl;
 
+	/**
+	 * @Ganesh
+	 *
+	 * @return the trainResultViewServiceImpl
+	 */
+	public TrainResultViewServiceImpl getTrainResultViewServiceImpl() {
+		return this.trainResultViewServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param trainResultViewServiceImpl the trainResultViewServiceImpl to set
+	 */
+	public void setTrainResultViewServiceImpl(TrainResultViewServiceImpl trainResultViewServiceImpl) {
+		this.trainResultViewServiceImpl = trainResultViewServiceImpl;
+	}
 
 	/**
 	 * @Ganesh
@@ -675,7 +703,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	@SuppressWarnings({ "unused"})
 	public void execute() throws Exception {
 		try {
-			TrainResult trainResult = new TrainResult();
+			
+			TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			if(trainResult == null) {
+				trainResult = new TrainResult();
+			}
 			trainResult.setName(train.getName());
 			trainResult.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion())));
 			trainResult.setParamList(new MetaIdentifierHolder(execParams.getParamListInfo().get(0).getRef()));
