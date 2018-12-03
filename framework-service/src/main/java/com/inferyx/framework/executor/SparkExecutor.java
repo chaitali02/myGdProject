@@ -1874,6 +1874,7 @@ public class SparkExecutor<T> implements IExecutor {
 		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
 		df.show(false);
+		df.printSchema();
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
@@ -1907,9 +1908,9 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}
 			
-			df.printSchema();
 //			if(Arrays.asList(df.columns()).contains("features")) {
 				/*df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));*/
+			if(!vectorFields.isEmpty()) {
 				String []fieldNames = df.schema().fieldNames();
 				StructField []fields = df.schema().fields();
 				StructField []newFields = new StructField[fields.length];
@@ -1926,8 +1927,10 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 				
 				df = sparkExecHelper.parseFeatures(df, newFields, vectorFields);
-				df.printSchema();
-				df.show();
+			}
+
+			df.printSchema();
+			df.show();
 //			}
 			/*Tuple2<String, String>[] tuple2 = df.dtypes();
 			for(Tuple2<String, String> tuple22 : tuple2) {
