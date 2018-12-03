@@ -11,6 +11,8 @@
 package com.inferyx.framework.controller;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
@@ -20,17 +22,20 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Feature;
-import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -65,15 +70,17 @@ public class TrainResultViewServiceImpl {
 		} else {
 			filter = match(new Criteria("dependsOn.ref.uuid").is(trainExecUuid));
 		}
-		 
+		
+		SortOperation sortByVersion = sort(new Sort(Direction.ASC, "version"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
-		Aggregation scheduleAggr = newAggregation(filter, groupByUuid);
+		Aggregation scheduleAggr = newAggregation(filter, sortByVersion, limitToOnlyFirstDoc, groupByUuid);
 		AggregationResults<TrainResult> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.trainresult.toString().toLowerCase(), TrainResult.class);
 		TrainResult trainResult = (TrainResult) scheduleAggrResults.getUniqueMappedResult();	
 		if(trainResult != null) {
 			return (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResult.getId(), trainResult.getVersion(), MetaType.trainresult.toString());
 		} else {
-			throw new RuntimeException("No train result found.");
+			return null;//throw new RuntimeException("No train result found.");
 		}		
 	}
 

@@ -68,6 +68,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
@@ -203,6 +204,8 @@ public class ModelServiceImpl {
 	private PythonExecutor pythonExecutor;
 	@Autowired
 	private DL4JExecutor dl4jExecutor;
+	@Autowired
+	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 	
 	//private ParamMap paramMap;
 
@@ -1527,6 +1530,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setMetadataServiceImpl(metadataServiceImpl);
 		runModelServiceImpl.setAlgoclass(algoClass);
 		runModelServiceImpl.setDl4jExecutor(dl4jExecutor);
+		runModelServiceImpl.setTrainResultViewServiceImpl(trainResultViewServiceImpl);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);
@@ -1607,7 +1611,8 @@ public class ModelServiceImpl {
 				m1.invoke(obj, path);
 				return true;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
+				logger.info("Model already exists on path '"+path+"', overriding the olde model...");
 				String expMessage = e.getCause().getMessage();
 				if (expMessage.contains("use write().overwrite().save(path) for Java")) {
 					try {
