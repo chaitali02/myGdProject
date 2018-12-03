@@ -1156,3 +1156,32 @@ cursor: not-allowed !important;
       -webkit-transform: rotate(360deg);
     }
 }
+
+
+
+/*--Week selector start--*/
+.weekDays-selector input {
+  display: none!important;
+}
+
+.weekDays-selector input[type=checkbox] + label {
+  display: inline-block;
+  border-radius: 50%;
+  background: #dddddd;
+  height: 35px;
+  width: 35px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekDays-selector input[type=checkbox]:checked + label {
+  background: #4285f4;
+  color: #ffffff;
+}
+/*--Week selector end--*/
+
+/* .ui-dialog.ui-widget .ui-dialog-titlebar {
+  display: none !important;
+} */

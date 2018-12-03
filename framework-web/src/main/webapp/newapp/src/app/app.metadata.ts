@@ -1652,7 +1652,50 @@ export class AppMetadata {
         resultState: '',
         childMenu: [],
         allowInChildMenu: false,
-      }
+      },
+      'batch': {
+        name: 'batch',
+        caption: 'batch',
+        color: '#00A8F0',
+        icon: 'batch.svg',
+        execType: 'batchExec',
+        metaType: 'batch',
+        iconPath: 'assets/img/batch.svg',
+        allowInMenu: true,
+        //state: 'createbatch',
+        detailState: 'batch',
+        moduleState: 'batchScheduler',
+        moduleCaption: 'Batch Scheduler',
+        class: 'fa fa-users'
+      },
+      'batchexec': {
+        name: 'batchexec',
+        caption: 'BatchScheduler Exec',
+        execType: 'batchexec',
+        metaType: 'batchexec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'jobexecutorlistbatchexec',
+        resultState: 'batchexec',
+        moduleState: 'batchScheduler',
+        moduleCaption: 'BatchScheduler',
+        class: 'fa fa-users'
+      },
+      // 'batchExec': {
+      //   name: 'batchExec',
+      //   caption: 'BatchScheduler Exec',
+      //   execType: 'batchExec',
+      //   metaType: 'batchExec',
+      //   color: '#EB54C3',
+      //   allowInMenu: false,
+      //   listState: 'jobmonitoringlist',
+      //   detailState: 'batchExec',
+      //   resultState: 'batchExec',
+      //   moduleState: 'JobMonitoring',
+      //   moduleCaption: 'BatchScheduler Exec',
+      //   class: 'fa fa-users'
+      //}
     }
 
     this.obj.statusDefs = {

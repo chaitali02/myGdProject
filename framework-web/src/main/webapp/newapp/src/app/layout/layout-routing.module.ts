@@ -10,7 +10,6 @@ import { jobMonitoringComponent} from '../job-monitoring/jobMonitoring.component
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
 
 
-
 const routes: Routes = [
     {
         path: '', component: LayoutComponent,
@@ -72,7 +71,11 @@ const routes: Routes = [
                 { path: 'list/:type/reconexec',redirectTo :'reconexec'},
                 { path: 'reconexec', loadChildren: 'app/data-recon/data-recon.module#DataReconModule'},
               // { path: 'reconexec/viewdrresultspage/:type/:id/:version/:mode/reconexec',redirectTo :'reconexec'},
-  
+                
+                { path: 'batchScheduler', loadChildren: 'app/batch-scheduler/batch-scheduler.module#BatchSchedulerModule'},
+              //  { path: 'batchScheduler/rulegroupexec/:type/:id/:version/:mode/batchScheduler',redirectTo :'batchScheduler'},
+                { path: 'list/:type/batchScheduler',redirectTo :'batchScheduler'},
+
             ]
        },
 ];

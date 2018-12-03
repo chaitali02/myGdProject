@@ -1,0 +1,311 @@
+<div>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+  <br>
+  <p-growl [(value)]="msgs"></p-growl>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <!-- BEGIN MAIN CONTENT -->
+  <div class="row">
+    <div class="col-md-12">
+      <!-- BEGIN: ACCORDION DEMO -->
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>{{batch.name}}
+          </div>
+          <div class="tools">
+            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
+              *ngIf="mode">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
+              *ngIf="mode">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top"
+              tooltip style="height:14px;" *ngIf="mode">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="portlet-body form">
+          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
+            *ngIf="showgraphdiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <!--<div class="spinner" id="graphloader">-->
+            <!--<div class="bounce1"></div>-->
+            <!--<div class="bounce2"></div>-->
+            <!--<div class="bounce3"></div>-->
+            <!--</div>-->
+            <div class="form-body show-graph-body" id="graphWrapper">
+              <app-d3></app-d3>
+            </div>
+          </div>
+
+          <div class="form-body" style="padding-top:50px;" *ngIf="privResponse != null">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitbatch()" #myNewForm="ngForm">
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="batch.uuid" name="uuid" placeholder=""
+                    [disabled]="true">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="batch.name" name="name" placeholder=""
+                    [disabled]="mode == 'true'">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">Version </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="batch.createdOn" name="createdOn">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tag-input [(ngModel)]="batch.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="batch.desc" name="desc" class="form-control noresize "
+                    rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="batch.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="batch.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangeParallel($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="batch.inParallel" name="inParallel" [checked]="inParallel" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">PipelineInfo</label>
+                <div class="col-md-6">
+                  <angular2-multiselect [data]="pipelineInfoArray" [(ngModel)]="pipelineInfoTags" name="pipelineInfoTags"
+                    [settings]="dropdownSettingsPipeline" (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)"
+                    (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
+                  </angular2-multiselect>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
+               <div class="col-md-6 col-sm-6 col-xs-12" >
+                   <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+               </div>
+             </div>
+             
+              <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                </div>
+              </div>
+
+
+              <div class="x_title">
+                <button type="Button" [disabled]="mode == 'true'" (click)="removeRow()" class=" btn btn-danger fa fa-minus pull-right"></button>
+                <button type="button" [disabled]="mode == 'true'" (click)="addRow()" class=" btn btn-success fa fa-plus pull-right"></button>
+                <h4>
+                  <strong>Scheduler Details</strong>
+                </h4>
+                <hr>
+              </div>
+              <br />
+              <table class=" row-border hover table  table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th style="text-align: center; Vertical-align: middle;width:5%;">
+                      <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute"
+                        (click)="checkAllAttributeRow()" name="selectAll" />
+                    </th>
+                    <th class="text-center" style="width:14%;">Name</th>
+                    <th class="text-center">Start Time</th>
+                    <th class="text-center">End Time</th>
+                    <th class="text-center" style="width:14%;">Frequency Type</th>
+                    <th class="text-center" style="width:17%;">Frequency Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tabledata of attributes;let i =index">
+                    <td style="text-align: center; Vertical-align: middle;width:5%;">
+                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}"
+                        [disabled]="mode" />
+                    </td>
+                    <td>
+                      <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
+                        class="form-control" name="name+{{i}}">
+                    </td>
+                    <td>
+                      <!-- {{tabledata.startDate}} -->
+                      <!-- {{tabledata.startDate|date :'MMM d HH:mm:00 yyyy IST'}} -->
+                      <p-calendar [inputStyle]="{'width':'85%','margin':'0px 0px 0px -3px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" [utc]="true" [showIcon]="true"
+                        [disabled]="mode == 'true'" [minDate]="minimumDate"></p-calendar>
+
+                    </td>
+                    <td>
+                      <!-- {{tabledata.endDate}} -->
+                      <p-calendar [inputStyle]="{'width':'85%','margin':'0px 0px 0px -3px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" [utc]="true" [showIcon]="true"
+                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate"></p-calendar>
+                    </td>
+                    <td>
+                      <!-- <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="d{{i}}">
+                        <option *ngFor="let d of attrtypes;" [value]="d">{{d}}</option>
+                      </select> -->
+                      <!-- <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="type{{i}}" id="type">
+                          <option *ngFor="let ftype of frequencyTypes;" [value]="ftype.id" [selected]="tabledata.type">{{ftype.name}}</option>
+                        </select> -->
+                      <!-- [disabled]="mode == 'true'" 
+                              [selected]="tabledata.type===ftype.name"
+                               -->
+                      <select class="form-control" [(ngModel)]="tabledata.attrtype" name="attrtype+{{i}}" [disabled]="mode == 'true'">
+                        <option *ngFor="let app of attrtypes" [ngValue]="app">{{app}} </option>
+                      </select>
+                    </td>
+
+
+                    <td>
+                      <!-- <input type="text" [(ngModel)]="tabledata.detail" title="{{tabledata.detail}}" [disabled]="mode" class="form-control" name="detail+{{i}}"> -->
+                      <ng-container *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
+                        <!-- <div *ngIf="(type=='Weekly' || tabledata.type=='Bi-Weekly' || tabledata.type=='Quarterly' || tabledata.type=='Monthly')"> -->
+
+                        <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
+                          name="frequencyDetail+{{i}}+{{optionChoose}}" class="form-control" (click)="showDialog(i, tabledata.attrtype)"
+                          [disabled]="mode == 'true'" />
+
+                        <!-- </div> -->
+                        <!-- <div *ngIf="(tabledata.type=='Monthly')" >
+                          <p-calendar dateFormat="dd" 
+                            value="tabledata.frequencyDetail"
+                            selectionMode="multiple" 
+                            [readonlyInput]="true"
+                            [(ngModel)]="tabledata.frequencyDetail" 
+                            name="tabledata.frequencyDetail"
+                            [inline]="true">
+                          </p-calendar>
+                        </div> -->
+                      </ng-container>
+
+
+                      <ng-template #notAllow>
+                        <div style="text-align: center">
+                          -NA-
+                        </div>
+                      </ng-template>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+              <p-dialog [closable]="false" [(visible)]="displayDialog" [responsive]="true" [contentStyle]="{'overflow':'visible'}">
+                <div class="weekDays-selector" *ngFor="let week of weekName.weekAlias;let i=index" style="float: left">
+                  <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
+                    type="checkbox" id="{{week.name}}" [checked]="week.checked">
+                  <label class="form-check-label" for="{{week.name}}">
+                    {{week.alias}}
+                  </label>
+                </div>
+                <br>
+                <div style="height: 50px; padding: 6px 15px 0px 6px; float: right;">
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDone()" class="btn green">Done</button>
+                </div>
+              </p-dialog>
+
+              <p-dialog [(visible)]="displayDialog1" [responsive]="true" [contentStyle]="{'overflow':'visible'}">
+                <div class="weekDays-selector" *ngFor="let week of weekName.quarters;let i=index" style="float: left">
+                  <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
+                    type="checkbox" id="{{week.name}}" [checked]="week.checked">
+                  <label class="form-check-label" for="{{week.name}}">
+                    {{week.quarter}}
+                  </label>
+                </div>
+                <br>
+                <div style="height: 50px; padding: 6px 15px 0px 6px; float: right;">
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDone()" class="btn green">Done</button>
+                </div>
+              </p-dialog>
+              <p-dialog [(visible)]="displayDialog2" [responsive]="true" [contentStyle]="{'overflow':'visible'}">
+                <p-calendar dateFormat="dd" value="frequencyDetailCal" selectionMode="multiple" [readonlyInput]="true"
+                  [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal" [inline]="true" [minDate]="minimumDate">
+                </p-calendar>
+                <br>
+                <div style="height: 50px; padding: 6px 15px 0px 6px; float: right;">
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDone1(frequencyDetailCal)" class="btn green">Done</button>
+                </div>
+              </p-dialog>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

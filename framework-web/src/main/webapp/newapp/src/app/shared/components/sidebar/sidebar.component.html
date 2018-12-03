@@ -199,6 +199,28 @@
       </ul>
     </li>
 
+    <!--Batch Scheduler Menu-->
+    <li class="nav-item" (click)="check(BatchSchedulerMenu.id,true)" [ngClass]="{'open': selectedItemId === BatchSchedulerMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-cogs"></i>
+        <span class="title">Batch Scheduler</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === BatchSchedulerMenu.id && toggle ==true ? 'block' : none">
+        <li class="nav-item">
+            <a [routerLink]="['batchScheduler/batch']">
+              <span class="title">Create</span>
+            </a>
+          </li>
+        <li *ngFor="let batchschedulersubmenu of BatchSchedulerMenu.subMenu" class="nav-item">        
+          <a [routerLink]="['list', batchschedulersubmenu.type]" class="nav-link">
+              <!-- <a [routerLink]="['list', batchschedule.type]" class="nav-link"> -->
+            <span class="title">{{batchschedulersubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && batchschedulersubmenu.type!=''" [innerHTML]="_MetaStats[batchschedulersubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>   
 
     <!--Admin Menu-->
     <li class="nav-item" (click)="check(adminMenu.id,true)" [ngClass]="{'open': selectedItemId === adminMenu.id}">

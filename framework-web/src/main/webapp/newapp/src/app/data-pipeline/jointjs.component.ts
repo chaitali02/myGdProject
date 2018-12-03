@@ -130,7 +130,7 @@ export class JointjsComponent{
             var cell = d_graph.getCell(s);
              elementModel = cell.attributes['model-data'];
             try {
-                elementType = elementModel.operators[0].operatorInfo.ref.type;
+                elementType = elementModel.operators[0].operatorInfo[0].ref.type;
                 if(elementType.slice(-4) == 'Exec'){
                     elementType = elementType.slice(0,-4);
                 }
@@ -176,9 +176,9 @@ export class JointjsComponent{
             }
             else {
               var directRef = ['dag','stage'];
-              txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.operators[0].operatorInfo.ref.uuid || '';
+              txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.operators[0].operatorInfo[0].ref.uuid || '';
               txt2 = directRef.indexOf(elementType) > -1 ? elementModel.name : elementModel.name || '';
-              txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.operators[0].operatorInfo.ref.version || '';
+              txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.operators[0].operatorInfo[0].ref.version || '';
             }
             
             $("#elementTypeText").html(dagtypetext);
@@ -314,12 +314,12 @@ export class JointjsComponent{
             "model-data": {
               name : 'new '+operator,
               operators : [ {
-                operatorInfo : {
+                operatorInfo : [{
                   ref : {
                     name : '',
                     type : operator,
                   }
-                }
+                }]
               }]
             },
             position: { x: localPoint.x, y : localPoint.y }, size: { width: 50, height: 50 },
@@ -352,12 +352,12 @@ export class JointjsComponent{
                 "model-data": {
                   name : 'new '+operator,
                   operators : [ {
-                    operatorInfo : {
+                    operatorInfo : [{
                       ref : {
                         name : '',
                         type : operator,
                       }
-                    }
+                    }]
                   }]
                 },
                 '.body': {
@@ -435,8 +435,8 @@ export class JointjsComponent{
         headers : {color:color,title:text}
         };
         
-        if(thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid){
-            this.popupModel["selectedType"] = thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo.ref.name;
+        if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
+            this.popupModel["selectedType"] = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
         }
         this.getAllLatest(elementType,is_newCell);
         
@@ -502,8 +502,8 @@ export class JointjsComponent{
             return;
         }
         var temp = popupModel.selectedType.split('|');
-        popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-        popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
        //  cell.attr('model-data',popupModel.modelData); // commented since model is already binded
         cell.attr('text', { text:popupModel.modelData.name});
          $("#right-side-test").animate({
@@ -769,7 +769,7 @@ export class JointjsComponent{
     navigateTo(data){
         console.log(data) 
         let d_this=this;
-        let modeldata=data.cell.attributes["model-data"].operators[0].operatorInfo.ref;
+        let modeldata=data.cell.attributes["model-data"].operators[0].operatorInfo[0].ref;
         let type=data.cell.attributes.elementType
         let uuid=modeldata.uuid;
         let version=modeldata.version;
@@ -801,7 +801,7 @@ export class JointjsComponent{
         console.log(data)
         this.colsdata=null;
         this.cols=null;
-        let modeldata=data.cell.attributes["model-data"].operators[0].operatorInfo.ref;
+        let modeldata=data.cell.attributes["model-data"].operators[0].operatorInfo[0].ref;
         let type=this.appMetadata.getMetadataDefs(data.cell.attributes.elementType.toLowerCase())['metaType']
         let uuid=modeldata.uuid;
         this.uuid=modeldata.uuid;
@@ -828,12 +828,12 @@ export class JointjsComponent{
         this.params["url"]=apis[type].url;
         this.params["type"]=apis[type].name;
         this.params["id"]=uuid;
-        this.params["name"]=data.cell.attributes["model-data"].operators[0].operatorInfo.ref.name;
+        this.params["name"]=data.cell.attributes["model-data"].operators[0].operatorInfo[0].ref.name;
         this.params["elementType"]=apis[type].name;;
         this.params["uuid"]=uuid;
         this.params["version"]=version;
         this.params.ref["id"]=uuid;
-        this.params.ref["name"] =data.cell.attributes["model-data"].operators[0].operatorInfo.ref.name;
+        this.params.ref["name"] =data.cell.attributes["model-data"].operators[0].operatorInfo[0].ref.name;
         this.params.ref["type"]=apis[type].name;;
         this.params.ref["version"]=version;
         console.log( this.params);
