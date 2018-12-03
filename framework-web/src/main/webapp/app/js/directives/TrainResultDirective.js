@@ -128,9 +128,61 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           });
           $scope.originalData = $scope.featureImportanceArr;
           $scope.gridOptions.data = $scope.featureImportanceArr;
+          var conMatrix=[];
+          var y=[];
+          //$scope.modelresult.confusionMatrix;
+          if(  $scope.modelresult.confusionMatrix !=null && $scope.modelresult.confusionMatrix.length ==2){
+            for(var i=0;i<$scope.modelresult.confusionMatrix.length;i++){
+              var x = new Array();
+              for(var j=0;j<$scope.modelresult.confusionMatrix[i].length;j++){
+                var total;
+                if(j==0){
+                  total=$scope.modelresult.confusionMatrix[i][j]
+                }else{
+                  total=total+$scope.modelresult.confusionMatrix[i][j];
+                }
+                x.push($scope.modelresult.confusionMatrix[i][j]);
+                if(j==$scope.modelresult.confusionMatrix[i].length-1){
+                  x.push(total);
+                }
+              }
+              $scope.modelresult.confusionMatrix[i]=x;
+             
+            }
+          }
+          console.log($scope.modelresult.confusionMatrix)
+          var sum = function(arr) {
+            console.log(arr)
+            return arr.reduce(function(a, b){ return a + b; }, 0);
+          };
+
+          // vertical sums      
+          $scope.modelresult.confusionMatrix.map(function(row, i1) {
+            y.push((sum($scope.modelresult.confusionMatrix.map(function(row) { return row[i1]; }))));
+          });
+          function getSum(total, num) {
+            return total + num;
+          } 
+          y.push(y.reduce(getSum));
+          $scope.modelresult.confusionMatrix.push(y)
         } //End onSuccessGetModelResult
       }
-    
+      $scope.getClassAcutalTrue=function(data,matrixArr,index){
+        if(index ==0){
+          return'actual-true';
+        }
+        if(index !=matrixArr.length-1 && data >0){
+          return'actual-false';
+        }
+      }
+      $scope.getClassAcutalFalse=function(data,matrixArr,index){
+        if(index ==0 &&  data >0){
+          return'actual-false';
+        }
+        if(index !=matrixArr.length-1){
+          return'actual-true';
+        }
+      }
       $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
       $scope.refreshDataTestSet = function (searchtext) {
         var data = $filter('filter')($scope.originalDataTestSet, searchtext, undefined);

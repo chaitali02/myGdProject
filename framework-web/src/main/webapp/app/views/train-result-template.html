@@ -201,8 +201,43 @@
                         </tr>
                     </table>
                 </div>
+                <br>
+                
+                <h4>Confusion Matrix </h4>
+                <hr>
+                
+                <div ng-if="modelresult.confusionMatrix.length ==3">
+                    <table class="table table-bordered" style="table-layout:fixed;width:50%">
+                        <thead>
+                            <!-- <tr><th></th><th colspan="3">Predict</th></tr> -->
+                            <tr>
+                                <th style="width:16%"></th>
+                                <th style="width:20%;text-align:center">Predicted True</th>
+                                <th style="width:20%;text-align:center">Predicted False</th>
+                                <th style="width:15%;text-align:center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- <td rowspan="3" class="rotaion-td"><b>Acutall</b></td> -->
+                                <td style="width:15%"><b>Actual True</b></td>
+                                <td  style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[0] track by $index" ng-class="getClassAcutalTrue(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:15%"><b>Actual False</b></td>
+                                <td style="text-align:center"  ng-repeat="data in modelresult.confusionMatrix[1] track by $index" ng-class="getClassAcutalFalse(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="width:8%"><b>Total</b></td>
+                                <td style="text-align:center"  ng-repeat="data in modelresult.confusionMatrix[2] track by $index ">{{data}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3   ng-if="modelresult.confusionMatrix.length !=3" style="font-size:14px;color:blue;">Confusion Matrix Not Available</h3>
             </uib-tab>
-            <uib-tab index="3" heading="Test Set" select="go(3)">
+            <uib-tab index="3" heading="Test Result" select="go(3)">
                 <div class="spinner centercontent" ng-if="isProgessTrainSet">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
