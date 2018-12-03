@@ -207,6 +207,17 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         }
     }
     $scope.setStatus = function (row, status) {
+        $scope.execDetail=row;
+        $scope.execDetail.setStatus=status;
+        $scope.msg =status;
+        $('#confModal').modal({
+          backdrop: 'static',
+          keyboard: false
+        });  
+     
+    }
+    
+    $scope.okSetStatus=function(){
         var api = false;
         var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
         var api = false;
@@ -226,18 +237,27 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
             return
         }
         notify.type = 'success',
-            notify.title = 'Success',
-            notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
         $scope.$emit('notify', notify);
-
+        $('#confModal').modal('hide');
         var url = $location.absUrl().split("app")[0];
-        //        $http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
-        $http.put(url + 'model/setStatus?uuid=' + row.uuid + '&version=' + row.version + '&type=' + type + '&status=' + status).then(function (response) {
+        //$http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
+        $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
 
             console.log(response);
         });
     }
+
     $scope.restartExec = function (row, status) {
+        $scope.execDetail=row;
+        $scope.msg ="Restart";
+        $('#confModal').modal({
+          backdrop: 'static',
+          keyboard: false
+        });  
+    }
+    $scope.okRestart=function(){
         var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
         var api = false;
         switch (type) {
@@ -256,17 +276,25 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
             return
         }
         notify.type = 'success',
-            notify.title = 'Success',
-            notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
         $scope.$emit('notify', notify);
-
+        $('#confModal').modal('hide');
         var url = $location.absUrl().split("app")[0];
-        $http.get(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + type + '&action=execute').then(function (response) {
+        $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
             //console.log(response);
+
         });
     }
 
-
+    $scope.submitOk = function (action) {
+        if (action == "Restart") {
+          $scope.okRestart();
+        }
+        if(action == "Killed"){
+            $scope.okSetStatus()
+        }
+    }
 });
 
 
@@ -280,10 +308,20 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
     $scope.modelDetail = {};
     $scope.modelDetail.uuid = $stateParams.id;
     $scope.modelDetail.version = $stateParams.version;
-
+    $scope.isGraphShow=false;   
 
     $scope.close = function () {
         $state.go('resultmodelmodel');
+    }
+
+    
+    $scope.showResultPage=function(){
+        $scope.isShowPMML=false;
+        $scope.isGraphShow=false;
+    }
+    $scope.showGraph=function(){
+        $scope.isShowPMML=false;
+        $scope.isGraphShow=true;      
     }
 
 
@@ -309,6 +347,7 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         if ($scope.isPMMLDownload) {
             return false;
         }
+        $scope.isGraphShow=false;
         var url = $location.absUrl().split("app")[0]
         $http({
             method: 'GET',
@@ -432,6 +471,13 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
         pageSize: 10,
         paginationPageSizes: [10, 25, 50, 75, 100],
         maxSize: 5,
+    }
+
+    $scope.showGraph=function(){
+        $scope.isGraphShow=true;      
+    }
+    $scope.showResultPage=function(){
+        $scope.isGraphShow=false;   
     }
 
     $scope.getGridStyle = function () {
