@@ -70,66 +70,70 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
       $scope.modelDetail={};
       $scope.modelDetail.uuid=params.id;
       $scope.modelDetail.version=params.version;
-       $rootScope.showGrid=true;
-       $rootScope.showGroupDowne=false;
-       $('#errorMsg').hide();
-       $scope.searchtext = '';
-       if(initialised){
-         $scope.gridOptions.columnDefs = [];
-         $scope.gridOptions.data = [];
+      if($scope.type =='train'){
+        $('#resultsloader').hide();
        }
-       $('#resultsloader').show();
-       $('#resultswrapper').hide();
-       var typeexec;
-       if(params.type=="dataqual"){
-         typeexec="dqexec";
-       }else{
-         typeexec=params.type+"exec";
-       }
+       else{
+        $rootScope.showGrid=true;
+        $rootScope.showGroupDowne=false;
+        $('#errorMsg').hide();
+        $scope.searchtext = '';
+        if(initialised){
+          $scope.gridOptions.columnDefs = [];
+          $scope.gridOptions.data = [];
+        }
+        $('#resultsloader').show();
+        $('#resultswrapper').hide();
+        var typeexec;
+        if(params.type=="dataqual"){
+          typeexec="dqexec";
+        }else{
+          typeexec=params.type+"exec";
+        }
 
-       $scope.downloadDetail={};
-       $scope.downloadDetail.uuid=params.id;
-       $scope.downloadDetail.version=params.version;
-       $scope.downloadDetail.type=params.type; 
-       var baseurl=$location.absUrl().split("app")[0];
-       $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
-         var mode=res.data.runMode;
-         
-         var url;
-         if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
-           url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
-         }else{
-           url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
-         }
-         
-         $scope.type=params.type
-         $http({
-               method: 'GET',
-               url:url,
-                 }).then(function (response,status,headers) {
-                   debugger
-                  $('#resultsloader').hide();
-                  if(params.type == "train"){
-                    $scope.trainData=response.data;
-                    $('#resultswrapper').show();
-                    renderTable(response.data);
-                  }
-                  else{
-                   if(response.data.length >0){
-                       $('#resultswrapper').show();
-                      renderTable(response.data);}
-                   else{  
-                      $('#resultswrapper').hide();
-                      $('#errorMsg').show();
-                      $('#errorMsg').html('No data available.');
-                   }
-                  }
-                 },function onError(err) {
-                   $('#resultsloader').hide();
-                   $('#errorMsg').show();
-                   $('#errorMsg').html('Some Error Occured');
-                 })
-         });
+        $scope.downloadDetail={};
+        $scope.downloadDetail.uuid=params.id;
+        $scope.downloadDetail.version=params.version;
+        $scope.downloadDetail.type=params.type; 
+        var baseurl=$location.absUrl().split("app")[0];
+        $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
+          var mode=res.data.runMode;
+          
+          var url;
+          if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
+            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
+          }else{
+            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
+          }
+          
+          $scope.type=params.type
+          $http({
+                method: 'GET',
+                url:url,
+                  }).then(function (response,status,headers) {
+                    $('#resultsloader').hide();
+                    if(params.type == "train"){
+                      $scope.trainData=response.data;
+                      $('#resultswrapper').show();
+                      renderTable(response.data);
+                    }
+                    else{
+                    if(response.data.length >0){
+                        $('#resultswrapper').show();
+                        renderTable(response.data);}
+                    else{  
+                        $('#resultswrapper').hide();
+                        $('#errorMsg').show();
+                        $('#errorMsg').html('No data available.');
+                    }
+                    }
+                  },function onError(err) {
+                    $('#resultsloader').hide();
+                    $('#errorMsg').show();
+                    $('#errorMsg').html('Some Error Occured');
+                  })
+          });
+        }
        });
           
        function renderTable(data) {

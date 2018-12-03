@@ -104,6 +104,8 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.featureImportanceArr = data;
         $scope.gridOptions.data = data;
       };
+
+
       $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -130,6 +132,11 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
       }
     
       $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
+      $scope.refreshDataTestSet = function (searchtext) {
+        var data = $filter('filter')($scope.originalDataTestSet, searchtext, undefined);
+        $scope.featureImportanceArr = data;
+        $scope.gridOptionsTestSet.data = data;
+      };
       $scope.getTestSet = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -140,7 +147,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           $scope.modelresult = response;
           $scope.isProgessTrainSet = false;
           $scope.isErrorTrainTestSet = false;
-          $scope.gridOptionsTestSet.data = $scope.getResults($scope.pagination,response);
+          $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet,response);
           $scope.gridOptionsTestSet.columnDefs = $scope.getColumnData(response);
           $scope.originalDataTestSet = response;
         } //End onSuccessGetModelResult
@@ -166,20 +173,23 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         if(index == 3 && ($scope.gridOptionsTestSet.data.length ==0)){
           $scope.getTestSet({ uuid: $scope.data.uuid, version: $scope.data.version});
         }
+        if([0,1,2].indexOf(index) !=-1 && ($scope.modelresult ==null)){
+          $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
+        }
       }
 
       $scope.selectPage = function (pageNo) {
-        $scope.pagination.currentPage = pageNo;
+        $scope.paginationTestSet.currentPage = pageNo;
       };
 
       $scope.onPerPageChange = function () {
-        $scope.pagination.currentPage = 1;
-        $scope.gridOptions.data = $scope.getResults($scope.pagination, $scope.originalData)
+        $scope.$scope.paginationTestSet.currentPage = 1;
+        $scope.gridOptions.data = $scope.getResults($scope.paginationTestSet, $scope.originalDataTestSet)
       }
 
       $scope.onPageChanged = function () {
-        $scope.gridOptions.data = $scope.getResults($scope.pagination, $scope.originalData);
-        console.log($scope.gridOptions.data);
+        $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet, $scope.originalDataTestSet);
+        console.log($scope.gridOptionsTestSet.data);
       };
 
       $scope.getResults = function (pagination, params) {

@@ -211,10 +211,32 @@
                 <h3  ng-if="!isProgessTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
                 <div ng-if="!isProgessTrainSet">
                     <div class="row" ng-if="!isProgessTrainSet && !isErrorTrainTestSet">
+                        <div class="col-md-6 col-sm-6">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataTestSet(searchtext)" ng-model="searchtext"
+                                    aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                        <br>
                         <div class="col-md-12">
-                            <div ui-grid="gridOptionsTestSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+                            <div ui-grid="gridOptionsTestSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTestSet()">
                                 <div class="nodatawatermark_results" ng-show="!gridOptionsTestSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet" style="top:52%;">No data available</div>
                             </div>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top:17px">
+                            Showing {{paginationTestSet.to}} to {{paginationTestSet.from}} of {{paginationTestSet.totalItems}} records
+                        </div>
+                        <div class="col-md-6">
+                            <ul uib-pagination items-per-page="paginationTestSet.pageSize" total-items="paginationTestSet.totalItems" ng-model="paginationTestSet.currentPage"
+                            ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTestSet.maxSize"
+                            class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                            last-text="&raquo;">
+                            </ul>
                         </div>
                     </div>
                 </div>
