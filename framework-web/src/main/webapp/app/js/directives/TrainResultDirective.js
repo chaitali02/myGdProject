@@ -144,7 +144,6 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.isErrorTrainTestSet = false;
         ModelService.getTestSet(uuid, version, 'trainexec').then(function (response) { onSuccessGetTestSet(response.data) },function (response) { onError(response.data) });
         var onSuccessGetTestSet = function (response) {
-          $scope.modelresult = response;
           $scope.isProgessTrainSet = false;
           $scope.isErrorTrainTestSet = false;
           $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet,response);
