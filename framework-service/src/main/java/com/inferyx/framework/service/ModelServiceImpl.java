@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+/******************************** ***********************************************
+ * Copyright (C) Inferyx Inc, 2018Custom log path  All rights reserved. 
  *
  * This unpublished material is proprietary to Inferyx Inc.
  * The methods and techniques described herein are considered  trade 
@@ -1400,6 +1400,7 @@ public class ModelServiceImpl {
 				 */
 				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+					logger.info(" Custom log path : " + logPath);
 				}
 				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 					customLogger.writeLog(this.getClass(),
@@ -1419,6 +1420,8 @@ public class ModelServiceImpl {
 			trainExec.setAppInfo(train.getAppInfo());	
 			//iModelExecDao.save(modelExec);
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+				logger.info(" Custom log path : " + logPath);                                                                                                         
 				customLogger.writeLog(this.getClass(), 
 						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
 						logPath, 
@@ -1451,6 +1454,7 @@ public class ModelServiceImpl {
 						Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e);
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
