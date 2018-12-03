@@ -192,7 +192,7 @@
                         <tr>
                             <td style="width:40%">ROC AUC</td>
                             <td style="width:60%" ng-if="modelresult.rocAUC !=null">
-                                <b>{{ modelresult.rocAUC | number : 2}}</b>
+                                <b>{{ modelresult.rocAUC[0] | number : 2}}</b>
                             </td>
 
                             <td style="width:60%" ng-if="modelresult.rocAUC ==null">

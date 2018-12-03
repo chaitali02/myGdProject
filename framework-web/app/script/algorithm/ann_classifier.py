@@ -72,11 +72,12 @@ sourceDsDetails=None
 targetDsDetails=None
 targetTableName=""
 targetDriver=""
+testSetPath=""
 
 
 # Iteration over all arguments:
 
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath"]
 
 i = 0
 for eachArg in sys.argv:
@@ -193,6 +194,9 @@ for value in input_config:
     if value == "targetTableName":
         targetTableName = input_config[value]
 
+    if value == "testSetPath":
+        testSetPath = input_config[value]
+
 if otherParams != None:
     for value in otherParams:
         if value == "nEpochs":
@@ -277,6 +281,7 @@ print(query)
 print(port)
 print(otherParams)
 print(targetTableName)
+print(testSetPath)
 
 print(sourceHostName)
 print(sourceDbName)
@@ -484,7 +489,26 @@ def train():
     
     # Predicting the Test set results
     y_pred = loaded_model.predict(X_test)
+    print("test set prediction")
     print(y_pred)
+    
+    pred_pd_df = pd.DataFrame(y_pred)
+    print("pred_pd_df")
+    print(pred_pd_df)
+    
+    
+    #saving converted dataframe
+    from pyspark.sql.types import DoubleType
+    from pyspark.sql.types import StructType
+    from pyspark.sql.types import StructField
+    
+    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    pred_pd_df = sparkSession.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
+    print("prediction result:")	
+    pred_pd_df.show(20, False)
+    
+    print("saving prediction result into path "+testSetPath+"...")
+    pred_pd_df.write.save(testSetPath, format="parquet")
     
     y_pred = (y_pred > 0.5)
     #if y_pred.all() == "true":

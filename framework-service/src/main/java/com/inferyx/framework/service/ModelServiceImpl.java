@@ -2678,7 +2678,10 @@ public class ModelServiceImpl {
 					
 					trainInput.setOtherParams(otherParams);
 					
+					
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
+					String testSetPath = defaultDir.concat("test_set");
+					trainInput.setTestSetPath(testSetPath);
 					String modelFileName = defaultDir.concat("model");
 
 					logger.info("Default dir name : " + defaultDir);
@@ -3003,7 +3006,8 @@ public class ModelServiceImpl {
 		predictList = mongoTemplate.find(query, Predict.class);
 		return predictList;
 	}
-	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	
+	@SuppressWarnings({ "unchecked", "rawtypes"})
 	public List<Map<String, Object>> getPrediction(String trainExecUuid, Object feature) throws Exception {
 
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, null,
@@ -3018,17 +3022,17 @@ public class ModelServiceImpl {
 		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
 				model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 				MetaType.algorithm.toString());
-		List<Predict> predictList = (List<Predict>) getPredictByModel(model.getUuid(), model.getVersion());
+//		List<Predict> predictList = (List<Predict>) getPredictByModel(model.getUuid(), model.getVersion());
 
 		
-		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictList.get(0).getUuid(),
-				predictList.get(0).getVersion(), MetaType.predict.toString());
+//		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictList.get(0).getUuid(),
+//				predictList.get(0).getVersion(), MetaType.predict.toString());
 		
 		List<StructField> fields = new ArrayList<StructField>();
 		String tableName = String.format("%s", trainExecUuid.replace("-", "_"));
 		String appUuid = commonServiceImpl.getApp().getUuid();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource appDS = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDS.getType());
 
 		Map<String, Object> feature1 = (Map<String, Object>) feature;
 		Map<String, List<Map<String, Object>>> list = null;
@@ -3060,6 +3064,7 @@ public class ModelServiceImpl {
 		for (Map<String, Object> map : list2) {
 			fields.add(DataTypes.createStructField(map.get("key").toString(), DataTypes.DoubleType, true));
 		}
+		
 		data.add(RowFactory.create(value.toArray(new Double[value.size()])));
 
 		data.forEach(t -> System.out.println(t.get(0)));
@@ -3074,10 +3079,10 @@ public class ModelServiceImpl {
 		//exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), predict.getLabelInfo().toString(), appUuid);
 		
 	
-		ResultSetHolder rsHolder1 = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
-		rsHolder1.getDataFrame().show();
+		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		String query = "SELECT * FROM " + rsHolder.getTableName();
 
-		return null;
+		return exec.executeAndFetchByDatasource(query, appDS, query);
 	}
 
 	public List<Map<String, Object>> getTestSet(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
