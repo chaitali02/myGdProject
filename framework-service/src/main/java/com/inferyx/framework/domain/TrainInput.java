@@ -43,21 +43,47 @@ public class TrainInput {
 	String sourceDsType;
 	String targetDsType;
 	String targetTableName;
+	String testSetPath;
 	
 	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the testSetPath
+	 */
+	public String getTestSetPath() {
+		return this.testSetPath;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param testSetPath the testSetPath to set
+	 */
+	public void setTestSetPath(String testSetPath) {
+		this.testSetPath = testSetPath;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
 	 * @return the targetTableName
 	 */
 	public String getTargetTableName() {
 		return this.targetTableName;
 	}
 	/**
+	 * 
+	 * @ Ganesh
+	 * 
 	 * @param targetTableName the targetTableName to set
 	 */
 	public void setTargetTableName(String targetTableName) {
 		this.targetTableName = targetTableName;
-	}
-	
+	}	
 	/**
+	 * 
+	 * @ Ganesh
 	 * 
 	 * @return the sourceDsType
 	 */
@@ -73,12 +99,17 @@ public class TrainInput {
 	}
 	/**
 	 * 
+	 * @ Ganesh
+	 *  
 	 * @return the targetDsType
 	 */
 	public String getTargetDsType() {
 		return this.targetDsType;
 	}
 	/**
+	 * 
+	 * @ Ganesh
+	 * 
 	 * 
 	 * @param targetDsType the targetDsType to set
 	 */

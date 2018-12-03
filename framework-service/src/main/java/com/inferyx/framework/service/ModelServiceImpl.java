@@ -2678,7 +2678,10 @@ public class ModelServiceImpl {
 					
 					trainInput.setOtherParams(otherParams);
 					
+					
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
+					String testSetPath = defaultDir.concat("test_set");
+					trainInput.setTestSetPath(testSetPath);
 					String modelFileName = defaultDir.concat("model");
 
 					logger.info("Default dir name : " + defaultDir);
