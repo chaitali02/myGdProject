@@ -185,7 +185,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.okKill = function () {
-    debugger
     var api = false;
     switch ($scope.newType.toLowerCase()) {
       case 'dqexec':

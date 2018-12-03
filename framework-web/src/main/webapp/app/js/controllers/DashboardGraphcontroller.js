@@ -297,8 +297,8 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
         if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
           $scope.gridOptions.data[$scope.obj.index].active = "Y"
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = "Dashboard Restored Successfully"
+        notify.title = 'Success',
+        otify.content = "Dashboard Restored Successfully"
         $scope.$emit('notify', notify);
       }
     }
