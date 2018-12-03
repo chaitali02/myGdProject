@@ -450,6 +450,7 @@ public class ModelController {
 	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST)
 	public List<Map<String, Object>> getPredict(@RequestParam("uuid") String trainExecUUID,
 			@RequestBody(required = false) Object feature,
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return modelServiceImpl.getPrediction(trainExecUUID, feature);
 	}
@@ -461,5 +462,13 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action) throws JsonGenerationException, JsonMappingException, IOException {
 		TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExecUuid, trainExecVersion);
 		return new ObjectMapper().writeValueAsString(trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion()));
+	}
+	
+	@RequestMapping(value = "/train/getTestSet", method = RequestMethod.GET)
+	public List<Map<String, Object>> getTestSet(@RequestParam("uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return modelServiceImpl.getTestSet(trainExecUuid, trainExecVersion);
 	}
 }

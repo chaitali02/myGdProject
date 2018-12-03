@@ -1982,7 +1982,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath ) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -2050,6 +2050,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
+				saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2074,9 +2075,12 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
+	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> validateDf, String defaultPath) {
+		trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
+	}
+
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
-		
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
@@ -2352,7 +2356,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
-			, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException {
+			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2438,7 +2442,7 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-//			trainedDataSet.show(false);
+			saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
@@ -3485,5 +3489,30 @@ public class SparkExecutor<T> implements IExecutor {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+		List<Map<String, Object>> data = new ArrayList<>();
+		
+		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = conn.getConnection();
+
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		DataFrameReader reader = sparkSession.read();
+		Dataset<Row> df = reader.load(location);
+
+		String[] columns = df.columns();
+		Row [] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+
+		return data;
 	}
 }
