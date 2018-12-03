@@ -352,9 +352,10 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
+	 * @param defaultPath TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException;
 	
 	/**
 	 * 
@@ -567,11 +568,12 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
+	 * @param defaultPath TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath)
 			throws IOException;
 	
 	/**
@@ -737,4 +739,13 @@ public interface IExecutor {
 	ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
 			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param location
+	 * @return data
+	 * @throws IOException
+	 */
+	List<Map<String, Object>> fetchTestSet(String location) throws IOException;
 }

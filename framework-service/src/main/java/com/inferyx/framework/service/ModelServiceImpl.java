@@ -3079,4 +3079,17 @@ public class ModelServiceImpl {
 
 		return null;
 	}
+
+	public List<Map<String, Object>> getTestSet(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
+		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
+		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
+		String modelLocation = dataStore.getLocation();
+		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
+		String testSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
+		return exec.fetchTestSet(testSetPath);		
+	}
 }
