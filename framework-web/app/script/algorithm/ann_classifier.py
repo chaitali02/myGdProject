@@ -460,7 +460,7 @@ def train():
     score = classifier.evaluate(X_test, y_test, batch_size=10)
 
     print("   ")
-    print("model score:")
+    print("model_score:")
     print(score)
     print("  ")
     
@@ -504,7 +504,7 @@ def train():
     
     sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
     pred_pd_df = sparkSession.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
-    print("prediction result:")	
+    print("test set prediction result:")	
     pred_pd_df.show(20, False)
     
     print("saving prediction result into path "+testSetPath+"...")
@@ -559,7 +559,7 @@ def train():
     print("  ")
     
     print("   ")
-    print("confusion mattrix:")
+    print("confusion_matrix")
     print(cm)
     print("  ")
     return isSuccessful
