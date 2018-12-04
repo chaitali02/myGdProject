@@ -17,7 +17,7 @@ import { DataQualityGroupDetailComponent} from './data-qualitygroupdetail.compon
 import { CommonService}from '../metadata/services/common.service';
 import { DataQualityService}from '../metadata/services/dataQuality.services';
 
-import {JointjsService} from '../data-pipeline/jointjsservice'
+import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-quality-routing.module'
 
 

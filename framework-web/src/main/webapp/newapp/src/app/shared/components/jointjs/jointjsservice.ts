@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
-import {AppMetadata} from '../app.metadata';
+import {AppMetadata} from '../../../app.metadata';
 declare var require: any;
-const joint = require('../../../node_modules/jointjs/dist/joint.js');
+const joint = require('../../../../../node_modules/jointjs/dist/joint.js');
 
 @Injectable()
 export class JointjsService {

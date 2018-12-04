@@ -47,7 +47,7 @@ export class BatchSchedulerResultComponent {
       "caption": "",
       "routeurl": null
     }
-    ] 
+    ]
   }
 
   ngOnInit() {
@@ -87,7 +87,8 @@ export class BatchSchedulerResultComponent {
         },
         error => console.log("Error :: " + error));
   }
-  onSuccessgetExecListByBatchExec(response: any[]): any {debugger
+  onSuccessgetExecListByBatchExec(response: any[]): any {
+    debugger
     this.breadcrumbDataFrom[2].caption = response[0]["name"];
     console.log('getExecListByBatchExec is start');
     this.batchexecData = response;
@@ -144,35 +145,28 @@ export class BatchSchedulerResultComponent {
   }
 
 
-  viewPage(uuid, version) {debugger
-    // if (this.moduleType == "session") {
-    //   this.router.navigate(["../../admin/session/", uuid, version, 'true'], { relativeTo: this.activeroute });
-    // }
-    // else if(this.moduleType=="jobs"){
-    //   this.getActiveJobs();
-    // }
-    // else {
+  viewPage(uuid, version) {
+    debugger
 
-    // let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
-    // this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
-    // this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
-
-debugger
     let _moduleUrl = this.metaconfig.getMetadataDefs("dagexec")['moduleState']
     let _routerUrl = this.metaconfig.getMetadataDefs("dagexec")['resultState']
     //this.router.navigate(["../../" + _moduleUrl + '/' + _routerUrl, uuid, version, 'true']);
-    
-    this.router.navigate(["../../../../../../" +_moduleUrl + '/' + _routerUrl, uuid, version, 'true' ], { relativeTo: this.activeroute });
+
+    //ORIGINAL 2: 
+    //this.router.navigate(["../../../../../../" +_moduleUrl + '/' + _routerUrl, uuid, version, 'true' ], { relativeTo: this.activeroute });
+
+    this.router.navigate(["../../../../../" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
+
     // }
     // let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
     // this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
     // this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
-  
+
 
   }
 
   onClickMenu(uuid, version, mtype) {
-  
+
     // alert(this.type)
     //console.log(data);
     this.rowUuid = uuid;

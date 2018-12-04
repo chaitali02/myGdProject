@@ -13,12 +13,38 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { ParamlistService } from '../../metadata/services/paramlist.service';
+//import { DataPiplineResultComponent } from '../components/data-pipelineresult/data-pipelineresult.component';
+//import { JointjsComponent } from './../../data-pipeline/jointjs.component';
+//import { ShContextMenuModule } from 'ng2-right-click-menu';
+import {MultiSelectModule, DataTableModule} from 'primeng/primeng';
+//import { JointjsGroupComponent } from '../components/jointjsgroup/jointjsgroup.component'
+//import { TableRenderComponent } from '../components/resulttable/resulttable.component';
+
 
 @NgModule({
-    imports: [CommonModule,RouterModule,FormsModule, UiSwitchModule,TagInputModule,DropdownModule],
-    exports: [CommonModule,ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent],
-    declarations: [ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent],
-    providers:[ParamlistService]
+    imports: [CommonModule,RouterModule,FormsModule, UiSwitchModule,TagInputModule,
+        DropdownModule,
+       // ShContextMenuModule,
+        MultiSelectModule
+        //DataTableModule
+    ],
+    exports: [CommonModule,ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,
+        //DataPiplineResultComponent,
+        MultiSelectModule
+    ],
+    declarations: [
+        ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,
+        //DataPiplineResultComponent,
+        //JointjsComponent,
+        //JointjsGroupComponent,
+        //TableRenderComponent
+    ],
+    providers:[ParamlistService,
+        //JointjsComponent
+    ],
+    entryComponents: [
+        //JointjsComponent
+    ]
 })
 export class ProjectSharedModule {
     static forRoot() : ModuleWithProviders {

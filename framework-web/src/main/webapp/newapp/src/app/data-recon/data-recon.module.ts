@@ -19,7 +19,7 @@ import{DataReconresultComponent} from './data-reconresult.component'
 import { CommonService}from '../metadata/services/common.service';
 import { DataReconService}from '../metadata/services/dataRecon.services';
 
-import {JointjsService} from '../data-pipeline/jointjsservice'
+import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-recon-routing.module'
 
 

@@ -22,10 +22,10 @@ import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 
-import { JointjsComponent } from './jointjs.component';
+import { JointjsComponent } from '../shared/components/jointjs/jointjs.component';
 
 import { CommonService } from '../metadata/services/common.service';
-import { JointjsService } from './jointjsservice'
+import { JointjsService } from '../shared/components/jointjs/jointjsservice'
 import { SharedDataService } from './shareddata.service'
 import { SelectItem } from 'primeng/primeng';
 import { Version } from './../metadata/domain/version'
