@@ -52,7 +52,7 @@ CREATE TABLE predict_suspicious_activity_gbt (
   out_wire_transfers_round_amount_sum decimal(15,3) DEFAULT NULL,
   in_wire_transfers_round_amount_sum decimal(15,3) DEFAULT NULL,
   in_cash_transfers_round_amount_sum decimal(15,3) DEFAULT NULL,
-  features varchar(5000) DEFAULT NULL,
+  features varchar(10000) DEFAULT NULL,
   rawprediction varchar(500) DEFAULT NULL,
   probability varchar(500) DEFAULT NULL,
   prediction decimal(10,3) DEFAULT NULL

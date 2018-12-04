@@ -638,4 +638,11 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
