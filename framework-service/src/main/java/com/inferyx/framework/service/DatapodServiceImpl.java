@@ -799,10 +799,12 @@ public class DatapodServiceImpl {
 		return baseEntityList;
 	}
 */
-	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {		
+	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {	
+		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;		
 		 Aggregation filterAggr = 
 					newAggregation(	
-					match(Criteria.where("datasource.ref.uuid").is(datasourceUuid).andOperator(Criteria.where("name").is(name))),
+					match(Criteria.where("appInfo.ref.uuid").is(appUuid).andOperator(Criteria.where("name").is(name))),
 					group("uuid").max("version").as("version"));
 
 				 AggregationResults<Datapod> groupResults 
