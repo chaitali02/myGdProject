@@ -763,6 +763,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_data"));
 				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_data"), trainSrcDatasource, appUuid);
+				sourceRsHolder = exec.replaceNullValByDoubleValFromDF(sourceRsHolder, null, trainSrcDatasource, (tableName+"_train_data"), true, appUuid);
 				long rowCount = sourceRsHolder.getCountRows();
 				
 //				trainResult.setTotalRecords(rowCount);
@@ -887,19 +888,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
-						
-//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
-//							try {
-//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
-//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
-//								if(!featureWeightList.isEmpty()) {
-//									summary.put("featureImportances", featureWeightList);
-//								}
-//							} catch (Exception e) {
-//								e.printStackTrace();
-//							}							
-//						}
-						
+												
 						String fileName = tableName+".result";
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						double[] featureimportancesArr = (double[])summary.get("featureimportances");	

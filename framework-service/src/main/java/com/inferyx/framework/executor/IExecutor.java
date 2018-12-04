@@ -748,4 +748,19 @@ public interface IExecutor {
 	 * @throws IOException
 	 */
 	List<Map<String, Object>> fetchTestSet(String location) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param sql
+	 * @param datasource
+	 * @param tableName
+	 * @param registerTempTable
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException
+	 */
+	ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException;
 }

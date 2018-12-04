@@ -449,15 +449,31 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource, String clientContext) throws IOException {
-		ResultSetHolder resHolder = executeSqlByDatasource(sql, datasource, clientContext);
-		Dataset<Row> df = resHolder.getDataFrame();
+		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+		Dataset<Row> df = rsHolder.getDataFrame();		
 		long countRows = df.count();
-		resHolder.setCountRows(countRows);
+
+		rsHolder.setCountRows(countRows);
+		rsHolder.setTableName(tableName);
 		df.createOrReplaceGlobalTempView(tableName);
 		registerTempTable(df, tableName);
 		logger.info("temp table registered: " + tableName);
-		df.show(false);
-		return resHolder;
+		return rsHolder;
+	}
+	
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		if(rsHolder == null || rsHolder.getDataFrame() == null) {
+			rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			rsHolder.setTableName(tableName);
+		} 
+		Dataset<Row> df = rsHolder.getDataFrame();
+		df = df.na().fill(0.0, df.columns());
+		rsHolder.setDataFrame(df);
+		if(registerTempTable) {
+			registerTempTable(df, tableName);
+		}
+		return rsHolder;
 	}
 	
 	@Override
@@ -1651,7 +1667,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		
+		df.show(false);
 		VectorAssembler va = new VectorAssembler();
 		Dataset<Row> transformedDf = null;
 
@@ -1811,11 +1827,14 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-//		df.show(true);
+//		df = df.na().fill(0.0, df.columns());
+//		df.show(false);
 		
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
 		
+//		predictionDf = predictionDf.na().fill(0.0, predictionDf.columns());
+//		predictionDf.show(false);
 //		predictionDf.show(true);
 //		Evaluator evaluator = getEvaluatorByTrainClass("LogisticRegressor");
 //		RegressionEvaluator regressionEvaluator = (RegressionEvaluator) evaluator;
@@ -1873,7 +1892,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod, String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
-		df.show(false);
+//		df.show(false);
 		df.printSchema();
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
@@ -2030,11 +2049,13 @@ public class SparkExecutor<T> implements IExecutor {
 			for(String col : trainingDf.columns()) {
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 			}
-			
+//			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
+			trainingDf.show(false);
 			for(String col : validateDf.columns()) {
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 			}
-			
+//			validateDf = validateDf.na().fill(0.0,validateDf.columns());
+			validateDf.show(false);
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
 				StopWatch stopWatch = new StopWatch();
@@ -2081,6 +2102,8 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> validateDf, String defaultPath) {
+		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
+		trainedDataSet.show(false);
 		trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
 	}
 
@@ -2091,7 +2114,7 @@ public class SparkExecutor<T> implements IExecutor {
 		trainedDataSet.printSchema();
 		PMML pmml = null;
 		if(trngModel instanceof CrossValidatorModel)
-			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)((CrossValidatorModel)trngModel).bestModel());
+		pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)((CrossValidatorModel)trngModel).bestModel());
 		else if(trngModel instanceof PipelineModel)
 			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
 		
@@ -3392,7 +3415,9 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
-	    
+		
+//		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
+		trainedDataSet.show(false);
 		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
 																		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
 																				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 

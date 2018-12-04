@@ -84,9 +84,9 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           'margin-bottom': '10px',
         }
         if ($scope.filteredRowsTestSet && $scope.filteredRowsTestSet.length > 0) {
-          style['height'] = (($scope.filteredRowsTestSet.length < 10 ? $scope.filteredRowsTestSet.length * 40 : 400) + 40) + 'px';
+          style['height'] = (($scope.filteredRowsTestSet.length < 10 ? $scope.filteredRowsTestSet.length * 40 : 400) + 60) + 'px';
         } else {
-          style['height'] = "100px"
+          style['height'] = "200px"
         }
         return style;
       }

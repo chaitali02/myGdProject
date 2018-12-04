@@ -1876,7 +1876,8 @@ public class ModelServiceImpl {
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
-						exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
+						ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
+						rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
 						exec = execFactory.getExecutor(appDatasource.getType());
 						exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 						
@@ -1957,10 +1958,10 @@ public class ModelServiceImpl {
 			} else {					
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 					String sql = generateSQLBySource(source, execParams);
-					exec.executeAndRegisterByDatasource(sql, (tableName+"_pred_data"), sourceDS, appUuid);
+					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sql, (tableName+"_pred_data"), sourceDS, appUuid);
+					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
 					String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-						ResultSetHolder rsHolder = null;
 						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
 						if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 								&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
@@ -1984,7 +1985,7 @@ public class ModelServiceImpl {
 								predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 					} else {
-						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, null, SaveMode.APPEND.toString(), false, appUuid);
+						rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, null, SaveMode.APPEND.toString(), false, appUuid);
 						result = rsHolder;					
 						count = rsHolder.getCountRows();
 					}
@@ -1999,11 +2000,12 @@ public class ModelServiceImpl {
 
 					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_pred_data"));
-					exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, (tableName+"_pred_data"), sourceDS, appUuid);
+					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, (tableName+"_pred_data"), sourceDS, appUuid);
+					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
 					fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
 					exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), label, appUuid);
 					Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
-					ResultSetHolder rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
+					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
 					String query = "SELECT * FROM " + rsHolder.getTableName();
 					
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
