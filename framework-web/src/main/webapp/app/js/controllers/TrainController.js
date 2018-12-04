@@ -195,11 +195,14 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.getAllLetestModel = function (defaultValue) {
+    debugger
 //    TrainService.getAllModelByType('N', "model").then(function (response) { onGetAllLatest(response.data) });
     TrainService.getAllLatest("model").then(function (response) { onGetAllLatest(response.data) });
     var onGetAllLatest = function (response) {
       $scope.allModel = response;
-      if (defaultValue == true) { }
+      if (defaultValue == true) {
+        $scope.selectModel =response[0];
+       }
 
     }
   }
@@ -246,11 +249,15 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
   }
 
-  $scope.getAllLetestModel();
+  $scope.getAllLetestModel(false);
   $scope.getAllLetestSource();
   // $scope.getAllLetestTarget();
 
-  $scope.onChangeModel = function (defaultValue) {
+  $scope.onChangeModel = function (defaultValue,data) {
+    
+    if(data){
+      $scope.selectModel=data;
+    }
     if(!$scope.selectModel){
       return false;
     }

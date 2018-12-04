@@ -30,9 +30,9 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
     //    headerCellClass: 'text-center',
       },
       {
-        displayName: 'Feature Importance',
+        displayName: 'Feature Importance  (%)',
         name: 'value',
-        width:'20%',
+        width:'22%',
         cellClass: 'text-center',
       //  headerCellClass: 'text-center',
       }];
@@ -120,7 +120,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
             if (val == 0) {
               obj.value = parseFloat(val.toFixed(2));
             } else {
-              obj.value = parseFloat(val.toFixed(2)) + " %";
+              obj.value = parseFloat(val.toFixed(2)) //+ "%";
             }
 
             obj.label = e;

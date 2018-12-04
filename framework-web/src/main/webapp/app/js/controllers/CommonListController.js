@@ -177,7 +177,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   $scope.setStatus = function (row, status) {
     $scope.selectDetail=row;
-    $scope.selectDetail.setStatus=status
+    $scope.selectDetail.setStatus=status;
+    var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
+    $scope.confMsg=tempCaption.split("Exec")[0]
     $('#killmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -241,6 +243,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.restartExec = function (row, status) {
     $scope.selectDetail=row;
+    var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
+    $scope.confMsg=tempCaption.split("Exec")[0]
+
     $('#restartmodal').modal({
       backdrop: 'static',
       keyboard: false

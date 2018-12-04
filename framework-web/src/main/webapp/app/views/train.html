@@ -255,8 +255,9 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                                <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    ng-change="onChangeModel(true)">
+                                              
+                                                <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel(true,selectModel)" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
+                                                    >
                                                 </select>
                                             </div>
                                         </div>
