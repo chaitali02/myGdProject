@@ -170,6 +170,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }     
   }
   $scope.changeScript= function(){
+    debugger
     if($scope.scriptType =="SPARK" || $scope.scriptType =="PYTHON"){
       $scope.checkboxCustom=false;
     }else{
@@ -274,7 +275,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     //     $scope.selectedDependsOn= $scope.allDependsOn[0];
     //   $scope.onChangeDependsOn();
     // }
-
+    debugger
     ModelService.getAlgorithmByLibrary($scope.scriptTypeMapping[$scope.scriptType],$scope.selectedDependsOnType).then(function(response) { onSuccessGetAlgorithmByLibrary(response.data)});
     var onSuccessGetAlgorithmByLibrary = function(response) {
       $scope.allDependsOn= response
@@ -322,6 +323,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   // }
 
   $scope.onChangeDependsOnType=function(defaultValue){
+  
     if($scope.selectedDependsOnType =='algorithm'){
       $scope.getAllLatest(defaultValue);
     }else{
