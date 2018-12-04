@@ -2027,11 +2027,13 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setValidationSet(validateDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 			
-			for(String col : trainingDf.columns())
+			for(String col : trainingDf.columns()) {
 				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+			}
 			
-			for(String col : validateDf.columns())
+			for(String col : validateDf.columns()) {
 				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+			}
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {

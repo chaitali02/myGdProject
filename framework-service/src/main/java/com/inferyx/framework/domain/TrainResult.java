@@ -35,7 +35,7 @@ public class TrainResult extends BaseEntity {
 	private double logLoss;
 	private List<Double> rocAUC;
 	private double lift;
-	private double[][] confusionMatrix;
+	private Object confusionMatrix;
 	private String algorithm;
 	private long numFeatures;
 	private String algoType;
@@ -100,7 +100,7 @@ public class TrainResult extends BaseEntity {
 	 *
 	 * @return the confusionMatrix
 	 */
-	public double[][] getConfusionMatrix() {
+	public Object getConfusionMatrix() {
 		return confusionMatrix;
 	}
 	/**
@@ -109,7 +109,7 @@ public class TrainResult extends BaseEntity {
 	 *
 	 * @param confusionMatrix the confusionMatrix to set
 	 */
-	public void setConfusionMatrix(double[][] confusionMatrix) {
+	public void setConfusionMatrix(Object confusionMatrix) {
 		this.confusionMatrix = confusionMatrix;
 	}
 	/**

@@ -911,7 +911,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						trainResult.setRecall((double) summary.get("recall"));
 						trainResult.setF1Score((double) summary.get("f1Score"));
 						trainResult.setPrecision((double) summary.get("precision"));
-						trainResult.setConfusionMatrix((double[][]) summary.get("confusionMatrix"));
+						trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
 //						trainResult.setRocAUC((List<Double>) summary.get("roc"));
 						
 						writeSummaryToFile(summary, defaultDir, fileName);

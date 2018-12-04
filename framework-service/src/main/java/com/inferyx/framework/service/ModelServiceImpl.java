@@ -2758,7 +2758,6 @@ public class ModelServiceImpl {
 						if(accuracy != null) {
 							trainResult.setAccuracy(Double.parseDouble(accuracy.toString()));
 						}
-//						trainResult.setConfusionMatrix(confusionMatrix);
 						
 						Object f1Score = summary.get("f1");
 						if(f1Score != null) {
@@ -2795,6 +2794,11 @@ public class ModelServiceImpl {
 						Object test_size = summary.get("test_size");
 						if(test_size != null) {
 							trainResult.setValidationSet(Long.parseLong(test_size.toString()));
+						}
+						
+						Object confusion_matrix = summary.get("confusion_matrix");
+						if(confusion_matrix != null) {
+							trainResult.setConfusionMatrix(confusion_matrix);
 						}
 						
 						String fileName = "model.result";
@@ -2868,6 +2872,7 @@ public class ModelServiceImpl {
 		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
 		boolean isReadingScore = false;
 		boolean isReadingConfuMat = false;
+		boolean constructConfusionMat = false;
 		List<String> confusionMatrx = new ArrayList<>();
 		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
 			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
@@ -2880,8 +2885,9 @@ public class ModelServiceImpl {
 				isReadingConfuMat = true;
 			}
 			if(isReadingConfuMat) {
-				if(scriptPrintedMsgs.get(line).equalsIgnoreCase(" ")) {
+				if(scriptPrintedMsgs.get(line).equalsIgnoreCase("  ")) {
 					isReadingConfuMat = false;
+					constructConfusionMat = true;
 				} else {
 					if(!scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
 						confusionMatrx.add(scriptPrintedMsgs.get(line));
@@ -2889,8 +2895,39 @@ public class ModelServiceImpl {
 				}
 			}			
 			
+			//cunstructing confusion matrix
+			if(constructConfusionMat) {
+				List<List<Double>> realConfusionMat = new ArrayList<>();
+				for(String matrixRow : confusionMatrx) {
+					if(matrixRow.startsWith("[[")) {
+						String[] rowSplit = matrixRow.trim().substring(2, matrixRow.length()-1).trim().split(" ");
+						List<Double> rowList = new ArrayList<>();
+						for(String col : rowSplit) {
+							rowList.add(Double.parseDouble(col));
+						}
+						realConfusionMat.add(rowList);
+					} else if(matrixRow.startsWith("[") && matrixRow.endsWith("]")) {
+						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-1).trim().split(" ");
+						List<Double> rowList = new ArrayList<>();
+						for(String col : rowSplit) {
+							rowList.add(Double.parseDouble(col));
+						}
+						realConfusionMat.add(rowList);
+					} else if(matrixRow.endsWith("]]")) {
+						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-3).trim().split(" ");
+						List<Double> rowList = new ArrayList<>();
+						for(String col : rowSplit) {
+							rowList.add(Double.parseDouble(col));
+						}
+						realConfusionMat.add(rowList);
+					}
+				}
+				summary.put("confusion_matrix", realConfusionMat);
+				constructConfusionMat = false;
+			}
+			
 			//reading confusion score
-			if(scriptPrintedMsgs.get(line).contains("model score")) {
+			if(scriptPrintedMsgs.get(line).contains("model_score")) {
 				isReadingScore = true;
 				summary.put("model score", scriptPrintedMsgs.get(line+1));
 			}
@@ -2898,7 +2935,6 @@ public class ModelServiceImpl {
 				isReadingScore = false;
 			}
 		}
-		summary.put("confusion matrix", confusionMatrx);
 		return summary;
 	}
 	
