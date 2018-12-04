@@ -7,6 +7,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
 
     },
     link: function ($scope, element, attrs) {
+      $scope.$watch('data', function (newValue, oldValue) {
       $scope.isTrainResultProgess = false;
       $scope.filteredRows;
       $scope.gridOptions = {
@@ -284,6 +285,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         });
         return columnDefs;
       }
+    }); //End Watch
     },
     templateUrl: 'views/train-result-template.html',
   };

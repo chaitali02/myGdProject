@@ -342,7 +342,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
   }
 
-  $scope.onChangeSource = function () {
+  $scope.onChangeSource = function (data) {
+    if(data){
+      $scope.selectSource=data;
+    }
     if ($scope.allSource != null && $scope.selectSource != null) {
       $scope.getAllAttribute();
       $scope.clearFeatureTable();
