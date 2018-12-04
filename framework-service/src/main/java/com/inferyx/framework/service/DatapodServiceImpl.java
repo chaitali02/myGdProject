@@ -408,6 +408,7 @@ public class DatapodServiceImpl {
 		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
 		// Check if datapod exists
 		String fileName = Helper.getFileName(csvFileName);
+		fileName=fileName.toLowerCase();
 		Datapod dp = null;
 		Datapod dp1 = findOneByName(fileName);
 		// Create datapod and relation if it does not exist
@@ -462,7 +463,7 @@ public class DatapodServiceImpl {
 				mHolder.setRef(datasourceRef);
 				dp.setDatasource(mHolder);
 				dp.setCache("Y");
-				dp.setName(fileName);
+				dp.setName(fileName.toLowerCase());
 				dp.setAttributes(attributes);
 				
 				try {

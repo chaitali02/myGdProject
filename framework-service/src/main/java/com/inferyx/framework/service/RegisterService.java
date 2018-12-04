@@ -3513,7 +3513,7 @@ public class RegisterService {
 				DatabaseMetaData dbMetaData = con.getMetaData();
 				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 				while(rs.next()) {
-					tablesWithPath.put(rs.getString(3), (datasource.getDbname()+"."+rs.getString(3)));
+					tablesWithPath.put(rs.getString(3).toLowerCase(), (datasource.getDbname()+"."+rs.getString(3).toLowerCase()));
 //					tables.add(rs.getString(3));
 				}
 				logger.info("Tables are :: " + tablesWithPath);				
@@ -3534,6 +3534,7 @@ public class RegisterService {
 				if (listOfFiles[i].isFile()) {
 					logger.info("File " + listOfFiles[i].getName());
 					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
+					fileName=fileName.toLowerCase();
 					logger.info(fileName);
 //					fileList.add(fileName);
 					String path = datasource.getPath() + listOfFiles[i].getName();
