@@ -918,31 +918,35 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
 			Algorithm algorithm= null;
-			if (model.getDependsOn().getRef().getVersion() != null)
+			if (model.getDependsOn().getRef().getVersion() != null) {
 				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-			else 
-				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-				
-			
-			String algoClassName = algorithm.getTrainClass();
-			Object algoClass = Class.forName(algoClassName).newInstance();
-			List<ParamMap> paramMapList = null;
-			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				if(execParams == null) {
-					execParams = trainExec.getExecParams();
-				}
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
-					trainExec = null;
-				}
 			} else {
-				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode,algoClass);
+				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 			}
+			
+			if(algorithm.getLibraryType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				modelServiceImpl.prepareTrain(train.getUuid(), train.getVersion(), trainExec, trainExec.getExecParams(), runMode);
+			} else {
+				String algoClassName = algorithm.getTrainClass();
+				Object algoClass = Class.forName(algoClassName).newInstance();
+				List<ParamMap> paramMapList = null;
+				if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
+						&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					if(execParams == null) {
+						execParams = trainExec.getExecParams();
+					}
+					paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
+				}
+				if (paramMapList.size() > 0) {
+					for (ParamMap paramMap : paramMapList) {
+						Thread.sleep(1000); // Should be parameterized in a class
+						modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+						trainExec = null;
+					}
+				} else {
+					modelServiceImpl.train(train, model, trainExec, execParams, null, runMode,algoClass);
+				}
+			}			
 		} catch (Exception e) {
 			synchronized (trainExec.getUuid()) {
 				try {

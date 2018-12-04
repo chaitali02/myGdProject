@@ -33,6 +33,7 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -1976,25 +1977,27 @@ public class SparkExecutor<T> implements IExecutor {
 		df.printSchema();
 		
 		try {
-			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
-			Dataset<Row> trngDf = splits[0];
-			Dataset<Row> valDf = splits[1];
-			Dataset<Row> trainingDf = null;
-			Dataset<Row> validateDf = null;
-			
-			VectorAssembler vectorAssembler = new VectorAssembler();
-			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-			
-			/*Class<?> dynamicClass = Class.forName(trainName);
-			Object obj = dynamicClass.newInstance();*/
-			trainingDf = trngDf;
-			validateDf = valDf;
-
-			for(String col : trainingDf.columns())
-				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-		
-			for(String col : validateDf.columns())
-				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+//			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+//			Dataset<Row> trngDf = splits[0];
+//			Dataset<Row> valDf = splits[1];
+//			Dataset<Row> trainingDf = null;
+//			Dataset<Row> validateDf = null;
+//			
+//			VectorAssembler vectorAssembler = new VectorAssembler();
+//			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+//			
+//			/*Class<?> dynamicClass = Class.forName(trainName);
+//			Object obj = dynamicClass.newInstance();*/
+//			trainingDf = trngDf;
+//			validateDf = valDf;
+//
+//			for(String col : trainingDf.columns()) {
+//				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+//			}
+//			
+//			for(String col : validateDf.columns()) {
+//				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+//			}
 			df.coalesce(1).write().option("header", "true").csv(saveFileName);
 		} catch(Exception e) {
 			e.printStackTrace();

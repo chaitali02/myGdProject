@@ -2635,8 +2635,9 @@ public class ModelServiceImpl {
 			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 				boolean result = false;
-				if(trainExec == null)
+				if(trainExec == null) {
 					trainExec = create(train, model, execParams, null, trainExec);
+				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 				
 				TrainResult trainResult = new TrainResult();
@@ -2686,6 +2687,8 @@ public class ModelServiceImpl {
 					trainInput.setTestSetPath(testSetPath);
 					String modelFileName = defaultDir.concat("model");
 
+					deleteFileOrDirIfExists(defaultDir);
+					
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 									
@@ -2697,15 +2700,18 @@ public class ModelServiceImpl {
 						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + saveFileName);
 						
-						sourceDsType = MetaType.file.toString().toLowerCase();
-						Datasource datasource = commonServiceImpl.getDatasourceByApp();
-						IExecutor exec = null;
-						exec = execFactory.getExecutor(datasource.getType());
-						exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
-						
-						exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
-						
-						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+						File saveFile = new File(saveFileName);
+						if(!saveFile.exists()) {
+							sourceDsType = MetaType.file.toString().toLowerCase();
+							Datasource datasource = commonServiceImpl.getDatasourceByApp();
+							IExecutor exec = null;
+							exec = execFactory.getExecutor(datasource.getType());
+							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
+							
+							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
+							
+							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+						}						
 
 						trainInput.setSourceFilePath("file://"+saveFileName);
 					} else {
@@ -2940,9 +2946,38 @@ public class ModelServiceImpl {
 		return summary;
 	}
 	
+	public boolean deleteFileOrDirIfExists(String path) {
+		try {
+			File file = new File(path);
+//			if(file.exists()) {
+//				File[] roots = file.listFiles();
+//				for(File dirElement : roots) {
+//					if(dirElement.getAbsolutePath().contains("input") && dirElement.isDirectory()) {
+//						continue;
+//					} else {
+//						FileUtils.forceDelete(dirElement);
+//					}
+//				}				
+//			}
+			if(file.exists()) {
+				FileUtils.forceDelete(file);
+			}
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
 		String filePath = directory +"/"+ fileName;		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);
+//		File file = new File(filePath);
+//		if(file.exists()) {
+//			FileUtils.forceDelete(file);
+//		}
+//		deleteFileOrDirIfExists(filePath);
 		PrintWriter printWriter = new PrintWriter(filePath);
 		printWriter.write(resultJson);
 		printWriter.close();
