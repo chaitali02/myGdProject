@@ -1359,3 +1359,23 @@ box-sizing:border-box;
     border-bottom: 4px solid  #9fe4ea;
     cursor: default;
   } */
+
+  .rotaion-td{
+    -moz-transform:rotate(-90deg); 
+    -moz-transform-origin: top left;
+    -webkit-transform: rotate(-90deg);
+    -webkit-transform-origin: top left;
+    -o-transform: rotate(-90deg);
+    -o-transform-origin:  top left;
+    position:relative;
+    top:82px;
+    left: -16px;
+  }
+
+  .actual-true{
+  color:green;
+  }
+
+  .actual-false{
+    color:red;
+  }
