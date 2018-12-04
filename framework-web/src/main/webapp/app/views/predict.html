@@ -97,7 +97,7 @@
                                 <div class="bounce3"></div>
                             </div>
                         </div>
-                        <div class="form-body" style="padding-top: 20px;" ng-if="!isEditInprogess && !isEditVeiwError">
+                        <div class="form-body" style="padding-top: 20px;" ng-show="!isEditInprogess && !isEditVeiwError">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
                                     <a href="" class="step" aria-expanded="true">
@@ -237,7 +237,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <select name="modelName" select2 class="form-control" ng-disabled="false" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    ng-change="onChangeModel()">
+                                                    ng-change="onChangeModel(selectModel)">
                                                     <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="modelName" type="hidden" ng-model="selectModel.uuid" required />
@@ -264,7 +264,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource(selectSource)" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
                                                     <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="sourceName" type="hidden" ng-model="selectSource.uuid" required />

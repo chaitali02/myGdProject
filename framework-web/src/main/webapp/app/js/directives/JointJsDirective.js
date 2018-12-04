@@ -90,7 +90,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
         }else{
           typeexec=params.type+"exec";
         }
-
+        debugger
         $scope.downloadDetail={};
         $scope.downloadDetail.uuid=params.id;
         $scope.downloadDetail.version=params.version;

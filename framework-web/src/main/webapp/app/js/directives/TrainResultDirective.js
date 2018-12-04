@@ -7,6 +7,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
 
     },
     link: function ($scope, element, attrs) {
+      $scope.$watch('data', function (newValue, oldValue) {
       $scope.isTrainResultProgess = false;
       $scope.filteredRows;
       $scope.gridOptions = {
@@ -30,9 +31,9 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
     //    headerCellClass: 'text-center',
       },
       {
-        displayName: 'Feature Importance',
+        displayName: 'Feature Importance  (%)',
         name: 'value',
-        width:'20%',
+        width:'22%',
         cellClass: 'text-center',
       //  headerCellClass: 'text-center',
       }];
@@ -120,7 +121,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
             if (val == 0) {
               obj.value = parseFloat(val.toFixed(2));
             } else {
-              obj.value = parseFloat(val.toFixed(2)) + " %";
+              obj.value = parseFloat(val.toFixed(2)) //+ "%";
             }
 
             obj.label = e;
@@ -284,6 +285,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         });
         return columnDefs;
       }
+    }); //End Watch
     },
     templateUrl: 'views/train-result-template.html',
   };

@@ -244,7 +244,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.getAllLetestSource();
   $scope.getAllLetestTarget();
   
-  $scope.onChangeModel=function(){
+  $scope.onChangeModel=function(data){
+    if(data){
+      $scope.selectModel=data;
+    }
     if(!$scope.selectModel){
       return false;
     }
@@ -323,7 +326,11 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
   }
 
-  $scope.onChangeSource = function() {
+  $scope.onChangeSource = function(data) {
+    debugger
+    if(data){
+      $scope.selectSource=data;
+    }
     if ($scope.allSource != null && $scope.selectSource != null) {
       $scope.getAllAttribute();
     }
