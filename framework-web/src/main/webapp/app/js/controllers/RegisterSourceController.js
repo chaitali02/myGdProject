@@ -259,7 +259,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       count = count + 1;
     }
     console.log(JSON.stringify(registerSourceArray))
-    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
+    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)},function (response) {onError(response.data)});
     var onSuccessGetcreateAndLoad = function (response) {
      // console.log(JSON.stringify(response))
       $scope.searchButtonText = "Register";
@@ -295,6 +295,31 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       notify.title = 'Success',
       notify.content = 'Datapod Registered Successfully'
       $scope.$emit('notify', notify);
+    }
+    var onError=function(response){
+    	 var selectRegisterSoucre=$scope.getSelectedRow();
+    	 $scope.dataLoading = false;
+         $scope.dataLoading = false;
+         $scope.selectedAllRow = false;
+         for (var i = 0; i < selectRegisterSoucre.length; i++) {
+           if(!$scope.searchtext){
+             var id = selectRegisterSoucre[i].id - 1
+             $scope.gridOptions.data[id].status = "Not Registered";
+             $scope.gridOptions.data[id].selected= false;
+             $scope.gridOptions.data[id].isDisabled=true;
+           }
+           else{
+             var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+             if(index!=-1){
+               $scope.gridOptions.data[index].status ="Not Registered";
+               $scope.gridOptions.data[index].selected= false;
+               $scope.gridOptions.data[index].isDisabled=true;
+           }
+           }
+           //$scope.gridOptions.data.splice(i,1);
+          // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+         }
+
     }
   }
   

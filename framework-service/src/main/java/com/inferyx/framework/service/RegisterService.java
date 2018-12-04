@@ -3696,7 +3696,8 @@ public class RegisterService {
 	}
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
-			throws Exception {
+			 {
+		try {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
@@ -3712,7 +3713,11 @@ public class RegisterService {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
+		}}
+		catch(Exception e) {
+			datapodServiceImpl.setResponseMsg(e.getMessage());	
 		}
+		return registryList;
 
 	}
 	
