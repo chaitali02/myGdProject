@@ -964,9 +964,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
-                   
+                    
                  if(isExec || isGroupExec){
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
+                
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
                      if(status && (status=='Completed') && isGroupExec!=true && type !='ingest' ){
@@ -1932,6 +1933,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var  execStates;
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
+            debugger
              if($scope.execMode){
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
                if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
@@ -1939,9 +1941,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                    iconMenuItems.push({title:'Show Results', type : 'results'});
                    iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
-                 if(isGroupExec){
+                 if(isGroupExec && (status=='Completed')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='NotStarted' || status=='Resume')){
@@ -1959,6 +1961,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
+              //  if(isGroupExec){
+              //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
+              //  }
              }
              iconMenu.resetItems(iconMenuItems);
              var apis = {
