@@ -108,13 +108,7 @@
             }
         }
     ],
-    "labelInfo" : {
-        "attrId" : "4",
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-        }
-    },
+   
     "trainInfo" : {
         "ref" : {
             "type" : "train",

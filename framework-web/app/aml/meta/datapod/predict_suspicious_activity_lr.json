@@ -39,22 +39,10 @@
   },
   "cache": "Y",
   "attributes": [
+  
     {
       "attributeId": 0,
       "displaySeq": 0,
-      "name": "label",
-      "type": "integer",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "label",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 1,
-      "displaySeq": 1,
       "name": "features",
       "type": "string",
       "desc": null,
@@ -66,8 +54,8 @@
       "length": null
     },
     {
-      "attributeId": 2,
-      "displaySeq": 2,
+      "attributeId": 1,
+      "displaySeq": 1,
       "name": "rawPrediction",
       "type": "string",
       "desc": null,
@@ -79,8 +67,8 @@
       "length": null
     },
     {
-      "attributeId": 3,
-      "displaySeq": 3,
+      "attributeId": 2,
+      "displaySeq": 2,
       "name": "probability",
       "type": "string",
       "desc": null,
@@ -92,8 +80,8 @@
       "length": null
     },
     {
-      "attributeId": 4,
-      "displaySeq": 4,
+      "attributeId": 3,
+      "displaySeq": 3,
       "name": "prediction",
       "type": "double",
       "desc": null,

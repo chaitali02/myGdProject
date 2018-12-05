@@ -1676,17 +1676,20 @@ public class SparkExecutor<T> implements IExecutor {
 				|| trainName.contains("LogisticRegression")) {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			Dataset<Row> trainingTmp = va.transform(df);
-			transformedDf = trainingTmp.withColumn("label", trainingTmp.col("label").cast("Double"))
-					.select("label", "features");
+			if(label != null) {
+				transformedDf = trainingTmp.withColumn("label", trainingTmp.col("label").cast("Double")).select("label", "features");				
+			} else {
+				transformedDf = trainingTmp.select("features");
+			}
 
 			logger.info("DataFrame count: " + transformedDf.count());
 
 		} else {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			transformedDf = va.transform(df);
+			transformedDf = va.transform(df).select("features");
 		}
 		
-//		transformedDf.show(false);
+		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
 	}
