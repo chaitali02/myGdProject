@@ -528,13 +528,7 @@
             }
         }
     ],
-    "labelInfo" : {
-        "attrId" : "28",
-        "ref" : {
-            "type" : "dataset",
-            "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
-        }
-    },
+   
     "uuid" : "32230ad8-775f-4eb7-a7ab-87bccfefd72d",
     "version" : "1528055075",
     "name" : "Predict Fraud Detection Model (Dataset)",

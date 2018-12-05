@@ -108,18 +108,7 @@
       }
     }
   ],
-  "labelInfo": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-      "version": null,
-      "name": "cc_transactions"
-    },
-    "value": null,
-    "attrId": "30",
-    "attrName": "class",
-    "attrType": null
-  },
+ 
   "trainInfo": {
     "ref": {
       "type": "train",

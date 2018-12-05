@@ -195,6 +195,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
             var attributedetail = {};
             attributedetail.uuid = response[j].uuid;
             attributedetail.datapodname = response[j].name;
+            attributedetail.type ="datapod"
+            attributedetail.attrType = response[j].type;
             attributedetail.name = response[j].attributes[i].name;
             attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
             attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -216,6 +218,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.attrType=response[j].attrType;
@@ -239,6 +243,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.attrType=response[j].attrType;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
@@ -258,6 +264,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
         for (var j = 0; j < response.length; j++) {
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;

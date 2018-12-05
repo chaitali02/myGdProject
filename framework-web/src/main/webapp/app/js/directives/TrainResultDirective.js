@@ -9,6 +9,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
       $scope.isTrainResultProgess = false;
+      $scope.activeTabIndex=0;
       $scope.filteredRows;
       $scope.gridOptions = {
         rowHeight: 40,

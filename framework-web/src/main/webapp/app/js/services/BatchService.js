@@ -204,7 +204,12 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.name=response.scheduleInfo[i].name;
 					scheduleInfo.uuid=response.scheduleInfo[i].uuid;
 					scheduleInfo.startDate=moment(response.scheduleInfo[i].startDate);
-					scheduleInfo.minDate=moment(response.scheduleInfo[i].startDate);
+					if(moment(response.scheduleInfo[i].startDate) >moment().subtract(new Date(), 'day')){
+						scheduleInfo.minDate=moment().subtract(new Date(), 'day');
+					}else{
+						scheduleInfo.minDate=moment(response.scheduleInfo[i].startDate);
+					}
+				//	scheduleInfo.minDate=moment().subtract(new Date(), 'day');//moment(response.scheduleInfo[i].startDate);
 					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
 					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;
 					scheduleInfo.frequencyDetail=[];
@@ -212,7 +217,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.isEndDateChange="N";
 					if(response.scheduleInfo[i].frequencyDetail){
 						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
-							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'){
+							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'&&  response.scheduleInfo[i].frequencyType !='HOURLY' ){
 								scheduleInfo.frequencyDetail[j]=weekNumToDays[response.scheduleInfo[i].frequencyDetail[j]];
 							}
 							else if(response.scheduleInfo[i].frequencyType =='QUARTERLY'){

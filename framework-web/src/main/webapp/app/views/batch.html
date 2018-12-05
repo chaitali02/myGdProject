@@ -398,6 +398,26 @@
                                 </div>
                               </script>
                             </div>
+                            <div ng-if="data.frequencyType =='HOURLY'" >
+                                <div uib-popover-template="'hourly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
+                                  popover-is-open="data.hourlyPopoverIsOpen" ng-click="doneFrequencyDetailHourly($index)">
+                                  <div class="col-md-11" style="padding: 0px;">
+                                    <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
+                                  </div>
+                                  <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                    <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
+                                  </div>
+                                </div>
+                                <script type="text/ng-template" id="hourly-popoverTemplate_data.html">
+                                  <div>
+                                    <hourly-selector model="myArrayOfHours"></hourly-selector>
+                                    <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
+                                      <button type="button"  class="btn dark btn-outline" ng-click="closeFrequencyDetailHourly($index)">Cancel</button>  
+                                      <button type="button"  class="btn green"  ng-click="doneFrequencyDetailHourly($index)"  ng-disabled="{{mode}}">Done</button>
+                                    </div>
+                                  </div>
+                                </script>
+                              </div>
                           <div ng-if="['ONCE','DAILY','YEARLY'].indexOf(data.frequencyType) !=-1" style="text-align:center" >-NA-</div>
                         </span>
                       </td>
@@ -411,6 +431,7 @@
       </div>
     </div>
   </div>
+ 
 </div>
 <br>
 <br>
