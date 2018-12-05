@@ -371,13 +371,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 
       $scope.getAllLetestSource();
       $scope.getAllAttribute();
-      var selectLabel = {};
-      $scope.selectLabel=null
-      if(response.labelInfo !=null){
-        selectLabel.uuid = response.labelInfo.ref.uuid;
-        selectLabel.attributeId = response.labelInfo.attrId;
-        $scope.selectLabel = selectLabel;
-      }
+      // var selectLabel = {};
+      // $scope.selectLabel=null
+      // if(response.labelInfo !=null){
+      //   selectLabel.uuid = response.labelInfo.ref.uuid;
+      //   selectLabel.attributeId = response.labelInfo.attrId;
+      //   $scope.selectLabel = selectLabel;
+      // }
 
       var selectTarget={};
       $scope.selectTarget=null;
@@ -531,13 +531,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     source.ref=sourceref;
     predictJson.source=source;
 
-    var labelInfo = {};
-    var ref = {};
-    ref.type = $scope.selectSourceType
-    ref.uuid = $scope.selectLabel.uuid
-    labelInfo.ref = ref;
-    labelInfo.attrId = $scope.selectLabel.attributeId
-    predictJson.labelInfo = labelInfo;
+    // var labelInfo = {};
+    // var ref = {};
+    // ref.type = $scope.selectSourceType
+    // ref.uuid = $scope.selectLabel.uuid
+    // labelInfo.ref = ref;
+    // labelInfo.attrId = $scope.selectLabel.attributeId
+    // predictJson.labelInfo = labelInfo;
 
     var target={};
     var targetref={};
