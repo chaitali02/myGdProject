@@ -188,10 +188,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		headerTemplate: 'views/header-template.html',
 		superColDefs: [{
 			name: 'sourceParant',
-			displayName: 'Source'
+			displayName:'Source'
 		}, {
 			name: 'targetParant',
-			displayName:'Target'
+			displayName:'Datapod'
 		},
 		 {
 			name: 'statusParant',
@@ -236,6 +236,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
+
 
 	$scope.filteredRowsCompareMetaData = [];
 	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
@@ -704,6 +705,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.isShowCompareMetaData){
 			return false
 		}
+		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
 		$scope.isShowCompareMetaData=true;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false
