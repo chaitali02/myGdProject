@@ -209,22 +209,25 @@
                 <div ng-if="modelresult.confusionMatrix.length ==3">
                     <table class="table table-bordered" style="table-layout:fixed;width:50%">
                         <thead>
-                            <!-- <tr><th></th><th colspan="3">Predict</th></tr> -->
+                            <tr><th style="width:8%;border:1px solid white !important;"></th><th  colspan="4" style="border: 1px solid white !important;text-align: center;border-bottom: 1px solid #e7ecf1 !important;">Predicted</th></tr>
                             <tr>
+                                <th style="width:16%;border:1px solid white !important; border-right: 1px solid #e7ecf1 !important;"></th>
                                 <th style="width:16%"></th>
-                                <th style="width:20%;text-align:center">Predicted True</th>
-                                <th style="width:20%;text-align:center">Predicted False</th>
+                                <!-- <th style="width:20%;text-align:center">Predicted True</th>
+                                <th style="width:20%;text-align:center">Predicted False</th> -->
+                                <th style="width:20%;text-align:center">True</th>
+                                <th style="width:20%;text-align:center">False</th>
                                 <th style="width:15%;text-align:center">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <!-- <td rowspan="3" class="rotaion-td"><b>Acutall</b></td> -->
-                                <td style="width:15%"><b>Actual True</b></td>
+                                <td rowspan="3" class="rotaion-td"><b>Actual</b></td>
+                                <td style="width:15%"><b>True</b></td>
                                 <td  style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[0] track by $index" ng-class="getClassAcutalTrue(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
                             </tr>
                             <tr>
-                                <td style="width:15%"><b>Actual False</b></td>
+                                <td style="width:15%"><b>False</b></td>
                                 <td style="text-align:center"  ng-repeat="data in modelresult.confusionMatrix[1] track by $index" ng-class="getClassAcutalFalse(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
                                 
                             </tr>
