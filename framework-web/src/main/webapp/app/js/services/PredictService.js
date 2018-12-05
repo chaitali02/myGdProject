@@ -231,6 +231,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
             var attributedetail = {};
             attributedetail.uuid = response[j].uuid;
             attributedetail.datapodname = response[j].name;
+            attributedetail.type ="datapod"
+            attributedetail.attrType = response[j].type;
             attributedetail.name = response[j].attributes[i].name;
             attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
             attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -252,6 +254,7 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
           attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
@@ -274,6 +277,7 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
           attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
@@ -295,6 +299,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;

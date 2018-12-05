@@ -316,8 +316,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
     } //End getAllVersionByUuid
   } //End GetAllVersion
- 
+  $scope.loadAttribute = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.allsourceLabel, query);
+		});
+	}
   $scope.onChangeSourceType = function() {
+    $scope.rowIdentifierTags=null;
     PredictService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
       $scope.allSource = response
@@ -327,11 +332,11 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
 
   $scope.onChangeSource = function(data) {
-    debugger
     if(data){
       $scope.selectSource=data;
     }
     if ($scope.allSource != null && $scope.selectSource != null) {
+      $scope.rowIdentifierTags=null;
       $scope.getAllAttribute();
     }
   }
@@ -390,7 +395,20 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 			  	tags[i]=tag
 			  	$scope.tags=tags;
 			  }
-			}
+      }
+      var rowIdentifierTags=[];
+      if(response.rowIdentifier !=null){
+        for(var i=0;i<response.rowIdentifier.length;i++){
+          var attrinfo={};
+          attrinfo.uuid=response.rowIdentifier[i].ref.uuid;
+          attrinfo.type=response.rowIdentifier[i].ref.type;
+          attrinfo.dname=response.rowIdentifier[i].ref.name+"."+response.rowIdentifier[i].attrName;
+          attrinfo.attributeId=response.rowIdentifier[i].attrId;
+          attrinfo.id=response.rowIdentifier[i].ref.uuid+"_"+response.rowIdentifier[i].attrId
+          rowIdentifierTags[i]=attrinfo;
+        }
+      }
+      $scope.rowIdentifierTags=rowIdentifierTags;
      // $scope.getAllAttribute();
       for(var i=0;i<response.featureAttrMap.length;i++){
         var featureMap={};
@@ -476,6 +494,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     predictJson.active = $scope.predictData.active;
     predictJson.locked = $scope.predictData.locked;
     predictJson.published=$scope.predictData.published; 
+    predictJson.includeFeatures=$scope.predictData.includeFeatures;
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -526,6 +546,22 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     targetref.uuid=$scope.selectTarget.uuid;
     target.ref=targetref;
     predictJson.target=target;
+
+    var rowIdentifierTags= [];
+		if($scope.rowIdentifierTags != null) {
+			for(var i = 0; i < $scope.rowIdentifierTags.length; i++) {
+				var rowIdentifierInfo = {}
+				var ref = {};
+				ref.type = $scope.rowIdentifierTags[i].type;
+				ref.uuid = $scope.rowIdentifierTags[i].uuid;
+				rowIdentifierInfo.ref = ref;
+				rowIdentifierInfo.attrId = $scope.rowIdentifierTags[i].attributeId
+				rowIdentifierTags[i] = rowIdentifierInfo;
+			}
+    }
+
+    predictJson.rowIdentifier=rowIdentifierTags;
+
     var featureMap=[];
     if($scope.featureMapTableArray.length >0){
       for(var i=0;i<$scope.featureMapTableArray.length;i++){
