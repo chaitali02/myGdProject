@@ -342,7 +342,9 @@ public class BatchSchedulerServiceImpl {
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
 		
 //		if(previousRunTime != null) {
-			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			//Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate,startDate.compareTo(currDate) >= 0 ? 0 : 1).toString());
+
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
