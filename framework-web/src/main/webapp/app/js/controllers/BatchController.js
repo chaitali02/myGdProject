@@ -1120,7 +1120,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
       template: '<div class="hourly-selector"><ul class="list-unstyled"><li class="col-md-3 odd" ng-repeat="hour in hours" tap="toggle(model, $index, tracker)" ng-class="{selected: tracker[$index]}"><span>{{hour}}</span></li></ul></div>',
   
       link: function(scope, element, attrs) {
-        scope.hours =["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"];
+        scope.hours =["00","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"];
        // console.log(scope.days);
         scope.toggle = function(m, d, t) {
           _toggle(m, d, t);
