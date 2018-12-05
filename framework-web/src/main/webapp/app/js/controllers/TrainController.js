@@ -236,6 +236,11 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   //     }
   //   }
   // }
+  $scope.loadAttribute = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.allsourceLabel, query);
+		});
+	}
   $scope.getAllAttribute = function () {
     TrainService.getAllAttributeBySource($scope.selectSource.uuid, $scope.selectSourceType).then(function (response) { onGetAllAttributeBySource(response.data) });
     var onGetAllAttributeBySource = function (response) {
@@ -388,6 +393,19 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectLabel.uuid = response.labelInfo.ref.uuid;
       selectLabel.attributeId = response.labelInfo.attrId;
       $scope.selectLabel = selectLabel;
+      var rowIdentifierTags=[];
+      if(response.rowIdentifier !=null){
+        for(var i=0;i<response.rowIdentifier.length;i++){
+          var attrinfo={};
+          attrinfo.uuid=response.rowIdentifier[i].ref.uuid;
+          attrinfo.type=response.rowIdentifier[i].ref.type;
+          attrinfo.dname=response.rowIdentifier[i].ref.name+"."+response.rowIdentifier[i].attrName;
+          attrinfo.attributeId=response.rowIdentifier[i].attrId;
+          attrinfo.id=response.rowIdentifier[i].ref.uuid+"_"+response.rowIdentifier[i].attrId
+          rowIdentifierTags[i]=attrinfo;
+        }
+      }
+      $scope.rowIdentifierTags=rowIdentifierTags;
       // var selectTarget={};
       // $scope.selectTarget=null;
       // selectTarget.uuid=response.target.ref.uuid;
@@ -484,6 +502,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     //TrainJson.featureImportance=$scope.trainData.featureImportance;
+    TrainJson.includeFeatures=$scope.trainData.includeFeatures;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -521,6 +540,22 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     // targetref.uuid=$scope.selectTarget.uuid;
     // target.ref=targetref;
     // TrainJson.target=target;
+
+    var rowIdentifierTags= [];
+		if ($scope.rowIdentifierTags != null) {
+			for (var i = 0; i < $scope.rowIdentifierTags.length; i++) {
+				var rowIdentifierInfo = {}
+				var ref = {};
+				ref.type = $scope.rowIdentifierTags[i].type;
+				ref.uuid = $scope.rowIdentifierTags[i].uuid;
+				rowIdentifierInfo.ref = ref;
+				rowIdentifierInfo.attrId = $scope.rowIdentifierTags[i].attributeId
+				rowIdentifierTags[i] = rowIdentifierInfo;
+			}
+    }
+
+    TrainJson.rowIdentifier=rowIdentifierTags;
+    
     var featureMap = [];
     if ( $scope.featureMapTableArray && $scope.featureMapTableArray.length > 0) {
       for (var i = 0; i < $scope.featureMapTableArray.length; i++) {

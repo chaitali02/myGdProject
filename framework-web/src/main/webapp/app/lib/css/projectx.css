@@ -1368,8 +1368,10 @@ box-sizing:border-box;
     -o-transform: rotate(-90deg);
     -o-transform-origin:  top left;
     position:relative;
-    top:82px;
-    left: -16px;
+    top:80px;
+    left: -40px;
+    border: 1px solid white !important;
+    border-right: 1px solid #e7ecf1 !important;
   }
 
   .actual-true{
