@@ -352,7 +352,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -428,7 +428,7 @@ public class ImpalaExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
 	 */
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -495,7 +495,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

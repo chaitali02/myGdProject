@@ -33,7 +33,6 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -2010,7 +2009,10 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName, String clientContext
+			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
+			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -2082,7 +2084,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
+				saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath, rowIdentifierCols, includeFeatures, trainSourceTableName);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2107,7 +2109,9 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
-	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> validateDf, String defaultPath) {
+	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> validateDf
+			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
+			, String trainSourceTableName) {
 		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
 		trainedDataSet.show(false);
 		trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
@@ -2203,9 +2207,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
-		
-		String sql = "SELECT * FROM " + tableName;
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
@@ -2390,7 +2392,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
-			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException {
+			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath
+			, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2476,7 +2479,7 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
+			saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath, rowIdentifierCols, includeFeatures, trainSourceTableName);
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 

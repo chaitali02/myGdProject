@@ -195,8 +195,6 @@ public class ModelServiceImpl {
 	@Autowired
 	Engine engine;
 	@Autowired
-	private Helper helper;
-	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
@@ -1775,6 +1773,51 @@ public class ModelServiceImpl {
 		return null;
 	}
 
+	public List<String> getRowIdentifierCols(List<AttributeRefHolder> rowIdentifier) throws JsonProcessingException {
+		if(rowIdentifier != null) {
+			List<String> rowIdentifierCols = new ArrayList<>();
+			
+			String oldSrcUuid = null;
+			Object source = null;
+			
+			for(AttributeRefHolder rowIDHolder : rowIdentifier) {
+				MetaIdentifier attrMI = rowIDHolder.getRef();
+				if(oldSrcUuid != null && oldSrcUuid.equalsIgnoreCase(attrMI.getUuid())) {
+					String attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+					
+					if(attrName != null) {
+						rowIdentifierCols.add(attrName);
+					}
+				} else {
+					oldSrcUuid = attrMI.getUuid();
+					source = commonServiceImpl.getOneByUuidAndVersion(attrMI.getUuid(), attrMI.getVersion(), attrMI.toString());
+					String attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+
+					if(attrName != null) {
+						rowIdentifierCols.add(attrName);
+					}
+				}
+			}
+			
+			return rowIdentifierCols;
+		}
+		return null;
+	}
+
+	public String getColNameBySource(Object source, String attrId) {
+		if (source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;			
+			return datapod.getAttributeName(Integer.parseInt(attrId));
+		} else if (source instanceof DataSet) {
+			DataSet dataset = (DataSet) source;			
+			return dataset.getAttributeName(Integer.parseInt(attrId));
+		} else if (source instanceof Rule) {
+			Rule rule = (Rule) source;
+			return rule.getAttributeName(Integer.parseInt(attrId));
+		}
+		return null;
+	}
+	
 	public Object getTrainedModelByTrainExec(String modelClassName, TrainExec trainExec) throws ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		Class<?> modelClass = Class.forName(modelClassName);
 

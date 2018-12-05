@@ -762,8 +762,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_data"));
-				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_data"), trainSrcDatasource, appUuid);
-				sourceRsHolder = exec.replaceNullValByDoubleValFromDF(sourceRsHolder, null, trainSrcDatasource, (tableName+"_train_data"), true, appUuid);
+				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
+				sourceRsHolder.setTableName((tableName+"_train_source_data"));
+				sourceRsHolder = exec.replaceNullValByDoubleValFromDF(sourceRsHolder, null, trainSrcDatasource, (tableName+"_train_source_data"), true, appUuid);
 				long rowCount = sourceRsHolder.getCountRows();
 				
 //				trainResult.setTotalRecords(rowCount);
@@ -774,14 +775,18 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
 				}
 
-				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
+				String sql = "SELECT * FROM " + (tableName+"_train_source_data");
+				exec.renameDfColumnName(sql, (tableName+"_train_mapped_data"), mappingList, appUuid);
 				
-				Object trndModel = null;
-			    
+				List<String> rowIdentifierCols = modelServiceImpl.getRowIdentifierCols(train.getRowIdentifier());
+				
+				Object trndModel = null;			    
 				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
-							, train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam, trainResult, testSetPath);
+							, train.getValPercent(), (tableName+"_train_mapped_data"), appUuid
+							, algoclass, trainOtherParam, trainResult, testSetPath
+							, rowIdentifierCols, train.getIncludeFeatures(), (tableName+"_train_source_data"));
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -793,8 +798,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 									MetaIdentifier hyperParamMI = paramListHolder.getRef();
 									ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
 									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
-											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data")
-											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath);
+											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_mapped_data")
+											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+											, rowIdentifierCols, train.getIncludeFeatures(), (tableName+"_train_source_data"));
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -804,8 +810,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 								MetaIdentifier hyperParamMI = paramListHolder.getRef();
 								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
 								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
-										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data")
-										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath);
+										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_mapped_data")
+										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+										, rowIdentifierCols, train.getIncludeFeatures(), (tableName+"_train_source_data"));
 							}
 						}
 					} else {
@@ -819,13 +826,14 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid()
 									, hyperParamMI.getVersion(), hyperParamMI.getType().toString());
 							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
-									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data")
-									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath);
+									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_mapped_data")
+									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+									, rowIdentifierCols, train.getIncludeFeatures(), (tableName+"_train_source_data"));
 						}
 					}
 				} else {
 					trndModel = dl4jExecutor.trainDL(execParams, fieldArray, label, algorithm.getTrainClass()
-							, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data")
+							, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_mapped_data")
 							, appUuid, algoclass, trainOtherParam);
 				}
 								
