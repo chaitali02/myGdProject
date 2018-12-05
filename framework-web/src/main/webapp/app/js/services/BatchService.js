@@ -217,7 +217,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.isEndDateChange="N";
 					if(response.scheduleInfo[i].frequencyDetail){
 						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
-							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'){
+							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'&&  response.scheduleInfo[i].frequencyType !='HOURLY' ){
 								scheduleInfo.frequencyDetail[j]=weekNumToDays[response.scheduleInfo[i].frequencyDetail[j]];
 							}
 							else if(response.scheduleInfo[i].frequencyType =='QUARTERLY'){
