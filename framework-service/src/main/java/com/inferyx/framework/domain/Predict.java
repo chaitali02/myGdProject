@@ -24,7 +24,7 @@ public class Predict extends BaseEntity {
 	private MetaIdentifierHolder source;
 	private MetaIdentifierHolder target;
 	private List<FeatureAttrMap> featureAttrMap;
-	private AttributeRefHolder labelInfo;
+//	private AttributeRefHolder labelInfo;
 	private MetaIdentifierHolder trainInfo;
 	private List<AttributeRefHolder> rowIdentifier;
 	private String includeFeatures = "N";
@@ -87,23 +87,23 @@ public class Predict extends BaseEntity {
 		this.trainInfo = trainInfo;
 	}
 
-	/**
-	 * @Ganesh
-	 *
-	 * @return the labelInfo
-	 */
-	public AttributeRefHolder getLabelInfo() {
-		return labelInfo;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param labelInfo the labelInfo to set
-	 */
-	public void setLabelInfo(AttributeRefHolder labelInfo) {
-		this.labelInfo = labelInfo;
-	}
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @return the labelInfo
+//	 */
+//	public AttributeRefHolder getLabelInfo() {
+//		return labelInfo;
+//	}
+//
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @param labelInfo the labelInfo to set
+//	 */
+//	public void setLabelInfo(AttributeRefHolder labelInfo) {
+//		this.labelInfo = labelInfo;
+//	}
 
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;

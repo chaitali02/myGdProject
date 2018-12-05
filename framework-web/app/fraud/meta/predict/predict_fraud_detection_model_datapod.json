@@ -529,13 +529,7 @@
             }
         }
     ],
-    "labelInfo" : {
-        "attrId" : "30",
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
-        }
-    },
+    
     "trainInfo" : {
         "ref" : {
             "type" : "train",

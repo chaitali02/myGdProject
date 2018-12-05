@@ -180,9 +180,9 @@ public class PredictMLOperator {
 				}
 			}
 			
-			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+//			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(predict);
-			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null, mapSourceDS)).append(" AS ").append(label);
+			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null, mapSourceDS)).append(" AS ").append("label");
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 

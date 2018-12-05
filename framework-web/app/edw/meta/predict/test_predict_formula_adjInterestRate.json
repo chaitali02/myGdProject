@@ -16,13 +16,7 @@
             "type" : "file"
         }
     },
-    "labelInfo" : {
-        "attrId" : "0",
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
-        }
-    },
+   
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
