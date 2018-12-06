@@ -1781,22 +1781,27 @@ public class ModelServiceImpl {
 			Object source = null;
 			
 			for(AttributeRefHolder rowIDHolder : rowIdentifier) {
-				MetaIdentifier attrMI = rowIDHolder.getRef();
-				if(oldSrcUuid != null && oldSrcUuid.equalsIgnoreCase(attrMI.getUuid())) {
-					String attrName = getColNameBySource(source, rowIDHolder.getAttrId());
-					
-					if(attrName != null) {
-						rowIdentifierCols.add(attrName);
-					}
+				String attrName = rowIDHolder.getAttrName();
+				if(attrName != null) {
+					rowIdentifierCols.add(attrName);
 				} else {
-					oldSrcUuid = attrMI.getUuid();
-					source = commonServiceImpl.getOneByUuidAndVersion(attrMI.getUuid(), attrMI.getVersion(), attrMI.toString());
-					String attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+					MetaIdentifier attrMI = rowIDHolder.getRef();
+					if(oldSrcUuid != null && oldSrcUuid.equalsIgnoreCase(attrMI.getUuid())) {
+						attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+						
+						if(attrName != null) {
+							rowIdentifierCols.add(attrName);
+						}
+					} else {
+						oldSrcUuid = attrMI.getUuid();
+						source = commonServiceImpl.getOneByUuidAndVersion(attrMI.getUuid(), attrMI.getVersion(), attrMI.getType().toString());
+						attrName = getColNameBySource(source, rowIDHolder.getAttrId());
 
-					if(attrName != null) {
-						rowIdentifierCols.add(attrName);
+						if(attrName != null) {
+							rowIdentifierCols.add(attrName);
+						}
 					}
-				}
+				}				
 			}
 			
 			return rowIdentifierCols;
@@ -2146,19 +2151,32 @@ public class ModelServiceImpl {
 			}
 			i++;
 		}
-		
-		/*if (fieldArray != null && fieldArray.length > 0) {
-			for (String field : fieldArray) {
-				sb.append(field).append(", ");
-			}
-		}*/
-//		sb.append("'' AS result")
-			sb.append(" FROM (")
-			.append(sql)
-			.append(") "+tableName);
+		sb.append(" FROM (")
+		.append(sql)
+		.append(") "+tableName);
 		return sb.toString();
 	}
 
+	public String generateFeatureSQLByTempTable(List<FeatureAttrMap> mappedFeatures, String tempTableName, String label,  String aliasName) throws Exception {
+		StringBuilder sb = new StringBuilder("SELECT ");
+		
+		if (label != null && StringUtils.isNotBlank(label)) {
+			sb.append(label).append(" AS label").append(", ");
+		}
+		
+		int i = 0;
+		for(FeatureAttrMap featureAttrMap : mappedFeatures) {
+			sb.append(featureAttrMap.getAttribute().getAttrName()).append(" AS ").append(featureAttrMap.getFeature().getFeatureName());
+			if(i < mappedFeatures.size()-1)
+			sb.append(", ");
+			i++;
+		}
+		sb.append(" FROM (")
+		.append(tempTableName)
+		.append(") "+aliasName);
+		return sb.toString();
+	}
+	
 	public void createDatastore(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, RunMode runMode) throws Exception{
 		dataStoreServiceImpl.setRunMode(runMode);

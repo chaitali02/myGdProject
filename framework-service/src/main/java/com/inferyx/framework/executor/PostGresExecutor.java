@@ -419,7 +419,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -576,7 +576,7 @@ public class PostGresExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainSourceTableName)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
