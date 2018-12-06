@@ -111,7 +111,7 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    ParamListFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    ParamListFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
     var onSuccess = function (response) {
       var paramArray=[];
       for(var i=0;i<response.params.length;i++){
@@ -150,6 +150,11 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

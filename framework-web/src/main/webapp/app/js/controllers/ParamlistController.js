@@ -303,10 +303,14 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist")
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -320,12 +324,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				$scope.selectedTemplate=selectedTemplate;
 				$scope.isUseTemlate=true;
 				$scope.isTemplageInfoRequired=true;
-			}else{
+			}
+			else{
 				$scope.isUseTemlate=false;
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.paramlistData.uuid,$scope.paramlistData.version)
 			}
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -336,6 +340,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				}
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End If
 	else{
 		$scope.paramlistData={};
@@ -345,9 +353,13 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -374,6 +386,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					$scope.tags = tags;
 				}
 			}
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 
 	}
