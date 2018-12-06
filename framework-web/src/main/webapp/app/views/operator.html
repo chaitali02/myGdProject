@@ -90,7 +90,7 @@
                 <div class="bounce3"></div>
               </div>
             </div>
-            <div ng-if="!isEditInprogess && !isEditVeiwError">
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
               <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submit()" prevent-enter-submit>
                 <div class="form-group" ng-show="OperatorData.uuid">
                   <label class="col-md-3 control-label">UUID</label>

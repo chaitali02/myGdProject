@@ -285,7 +285,10 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		MetadataMapSerivce.getAllVersionByUuid($stateParams.id, "map").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataMapSerivce.getAllVersionByUuid($stateParams.id, "map")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var mapversion = {};
@@ -293,8 +296,12 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.map.versions[i] = mapversion;
 			}
 		}
-		MetadataMapSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'map').then(function (response) { onSuccess(response.data) });
+
+		MetadataMapSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'map')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
+			$scope.algorithmData = response;
 			var defaultversion = {};
 			$scope.mapdata = response.mapdata
 			$scope.mapTableArray = response.maptabalearray
@@ -304,7 +311,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			$scope.sourcetype = response.mapdata.source.ref.type;
 			$scope.targetype = $scope.MapTargeTypes[0];
 			$scope.mapName = $scope.convertUppdercase($scope.mapdata.name)
-			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type).then(function (response) { onSuccessGetAllLatestBySource(response.data) });
+			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type)
+				.then(function (response) { onSuccessGetAllLatestBySource(response.data) });
 			var onSuccessGetAllLatestBySource = function (response) {
 				$scope.allMapSource = response
 				var defaultoption = {};
@@ -352,6 +360,10 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.tags = tags;
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End If
 	else {
 		$scope.mapdata={};
@@ -360,10 +372,14 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataMapSerivce.getOneByUuidAndVersion($scope.map.defaultVersion.uuid, $scope.map.defaultVersion.version, 'map').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataMapSerivce.getOneByUuidAndVersion($scope.map.defaultVersion.uuid, $scope.map.defaultVersion.version, 'map')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
-			$scope.mapdata = response.mapdata
+			$scope.mapdata = response.mapdata;
 			$scope.mapTableArray = response.maptabalearray
 			defaultversion.version = response.mapdata.version;
 			defaultversion.uuid = response.mapdata.uuid;
@@ -371,7 +387,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			$scope.sourcetype = response.mapdata.source.ref.type;
 			$scope.targetype = $scope.MapTargeTypes[0];
 			$scope.mapName = $scope.convertUppdercase($scope.mapdata.name)
-			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type).then(function (response) { onSuccessGetAllLatestBySource(response.data) });
+			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type)
+				.then(function (response) { onSuccessGetAllLatestBySource(response.data) });
 			var onSuccessGetAllLatestBySource = function (response) {
 				$scope.allMapSource = response
 				var defaultoption = {};
@@ -380,7 +397,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.allMapSource.defaultoption = defaultoption;
 			}
 
-			MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
+			MetadataMapSerivce.getAllLatest("datapod")
+				.then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
 			var onSuccessGetAllLatestByTarget = function (response) {
 				$scope.allMapTarget = response
 				var defaultoption = {};
@@ -388,26 +406,31 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				defaultoption.name = $scope.mapdata.target.ref.name;
 				$scope.allMapTarget.defaultoption = defaultoption;
 			}
-			MetadataMapSerivce.getAllAttributeBySource(response.mapdata.source.ref.uuid, response.mapdata.source.ref.type).then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
+			MetadataMapSerivce.getAllAttributeBySource(response.mapdata.source.ref.uuid, response.mapdata.source.ref.type)
+				.then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
 			var onSuccessGetAllAttributeBySourcet = function (response) {
 				$scope.allMapSourceAttribute = response
 
 			}
-			MetadataMapSerivce.getAttributesByDatapod(response.mapdata.target.ref.uuid, response.mapdata.target.ref.type, $scope.sourcetype).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			MetadataMapSerivce.getAttributesByDatapod(response.mapdata.target.ref.uuid, response.mapdata.target.ref.type, $scope.sourcetype)
+				.then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.allMapTargetAttribute = response
 			}
 
-			MetadataMapSerivce.getExpressionByType(response.mapdata.source.ref.uuid, $scope.sourcetype).then(function (response) { onSuccessExpression(response.data) });
+			MetadataMapSerivce.getExpressionByType(response.mapdata.source.ref.uuid, $scope.sourcetype)
+				.then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 
 				$scope.allMapLodeExpression = response
 			}
-			MetadataMapSerivce.getFormulaByType(response.mapdata.source.ref.uuid, $scope.sourcetype).then(function (response) { onSuccessFormula(response.data) });
+			MetadataMapSerivce.getFormulaByType(response.mapdata.source.ref.uuid, $scope.sourcetype)
+				.then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.allMapLodeFormula = response.data
 			}
-			MetadataMapSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFunction(response.data) });
+			MetadataMapSerivce.getAllLatestFunction("function", "N")
+				.then(function (response) { onSuccessFunction(response.data) });
 			var onSuccessFunction = function (response) {
 				$scope.ruleLodeFunction = response
 			}
@@ -419,6 +442,10 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.tags = tags;
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}
 
 	$scope.submitMap = function () {

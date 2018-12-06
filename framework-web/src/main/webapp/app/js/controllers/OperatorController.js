@@ -177,7 +177,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	else {
 		$scope.OperatorData={};
 		$scope.OperatorData.locked="N";
-		OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+		OperatorService.getAllLatest("paramlist")
+			.then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allParamlist = response;
 			$scope.selectedParamlist = $scope.allParamlist[0];
@@ -190,9 +191,13 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		$scope.allOperatorType = null;
 		$scope.selectedOperatorType = null;
 		$scope.selectedLibrary = null;
-		OperatorService.getOneByUuidandVersion(uuid, version, 'Operator').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		OperatorService.getOneByUuidandVersion(uuid, version, 'Operator')
+			.then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.OperatorData = response
+			$scope.isEditInprogess=false;
+			$scope.OperatorData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -200,7 +205,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			$scope.selecttype = response.type
 			$scope.selectedOperatorType=response.operatorType;
 			if($scope.OperatorData.paramList !=null){
-				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				OperatorService.getAllLatest("paramlist")
+					.then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 				var onSuccessGetAllLatestParamlist = function (response) {
 					$scope.allParamlist = response;
 					var paramlist = {};
@@ -210,7 +216,10 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 				}
 		    }
 		}
-
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}
 
 	$scope.submit = function () {

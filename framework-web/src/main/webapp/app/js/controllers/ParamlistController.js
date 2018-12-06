@@ -82,7 +82,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"distribution","caption":"distribution"},
 		{"name":"datapod","caption":"datapod"},
 		{"name":"function","caption":"function"},
-	    {"name":"list","caption":"list"}, ];
+		{"name":"list","caption":"list"},
+		{"name":"array","caption":"array"}];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
 	$scope.privileges = [];
@@ -302,10 +303,14 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist")
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -319,12 +324,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				$scope.selectedTemplate=selectedTemplate;
 				$scope.isUseTemlate=true;
 				$scope.isTemplageInfoRequired=true;
-			}else{
+			}
+			else{
 				$scope.isUseTemlate=false;
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.paramlistData.uuid,$scope.paramlistData.version)
 			}
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -335,6 +340,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				}
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End If
 	else{
 		$scope.paramlistData={};
@@ -344,9 +353,13 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -373,6 +386,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					$scope.tags = tags;
 				}
 			}
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 
 	}
@@ -495,6 +512,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 
+				}
+				else if($scope.paramtable[i].paramType =='array'){
+					var paramArrayTags=[];
+					if($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length >0){
+						for(var j=0;j<$scope.paramtable[i].paramArrayTags.length;j++){
+							paramArrayTags[j]=$scope.paramtable[i].paramArrayTags[j].text
+						}
+					}
+					
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value=paramArrayTags.toString();;
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
 				}
 				else {
 					paramValue=null;

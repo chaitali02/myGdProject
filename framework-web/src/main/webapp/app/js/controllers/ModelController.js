@@ -170,7 +170,6 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }     
   }
   $scope.changeScript= function(){
-    debugger
     if($scope.scriptType =="SPARK" || $scope.scriptType =="PYTHON"){
       $scope.checkboxCustom=false;
     }else{
@@ -275,7 +274,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     //     $scope.selectedDependsOn= $scope.allDependsOn[0];
     //   $scope.onChangeDependsOn();
     // }
-    debugger
+    
     ModelService.getAlgorithmByLibrary($scope.scriptTypeMapping[$scope.scriptType],$scope.selectedDependsOnType).then(function(response) { onSuccessGetAlgorithmByLibrary(response.data)});
     var onSuccessGetAlgorithmByLibrary = function(response) {
       $scope.allDependsOn= response
@@ -426,7 +425,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.isEditInprogess=true;
     $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
-    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model").then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
+    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model")
+      .then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
       $scope.modeldata = response;
       $scope.isEditInprogess=false;
@@ -526,7 +526,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.model.defaultVersion = defaultversion;
-      if($scope.modeldata.type=='SPARK'){
+      if($scope.modeldata.type=='SPARK' || ($scope.modeldata.type=='PYTHON' && $scope.modeldata.customFlag =="N")){
         //$scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
        //$scope.getAllLatest();
@@ -570,7 +570,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type =="string"?true:false;
           if($scope.selectedDependsOnType== "formula" &&  $scope.modeldata.features[i].paramListInfo){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;

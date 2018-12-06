@@ -149,18 +149,21 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var relationversion = {};
 				relationversion.version = response[i].version;
 				$scope.relation.versions[i] = relationversion;
-
 			}
 		}
-
-		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation').then(function (response) { onSuccess(response.data) });
+		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -179,7 +182,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			}
 
 			$scope.rhsAllAttribute = [];
-			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version)
+				.then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.rhsAllAttribute = [];
 				$scope.lhsAllAttribute = response.allattributes;
@@ -213,6 +217,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			// }
 		
 		} //End Onsuccess()
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}//End IF
 	else {
@@ -248,7 +256,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 	 
 	$scope.onChangeJoinMetaType=function(type,index){
-	
 		MetadataRelationSerivce.getAllLatest(type).then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			console.log(response)
@@ -401,8 +408,12 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.selectVersion = function () {
 		$scope.alldatapod = null;
 		$scope.myform.$dirty = false;
-		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -432,9 +443,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 					}
 
 				}
-
-
-
 			}
 			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 			var onSuccessrelation = function (response) {
@@ -446,6 +454,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 				$scope.allJoinDatapod();
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 

@@ -199,11 +199,14 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		ParamSetService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramset").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamSetService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramset")
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			//	console.log(JSON.stringify(response.paramSetValarray))
-			$scope.paramsetdata = response.paramsetdata
+			$scope.isEditInprogess=false;
+			$scope.paramsetdata = response.paramsetdata;
 			var defaultversion = {};
 			defaultversion.version = response.paramsetdata.version;
 			defaultversion.uuid = response.paramsetdata.uuid;
@@ -212,7 +215,8 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			$scope.paramtable = response.paramInfoArray;
 			$scope.isTabelShow = true;
 			$scope.tags = response.paramsetdata.tags
-			ParamSetService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+			ParamSetService.getAllLatest("paramlist")
+				.then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
 				var paramlis = {};
@@ -229,13 +233,17 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 					$scope.tags = tags;
 				}
 			}
-
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End If
 	else {
 		$scope.paramsetdata={};
 		$scope.paramsetdata.locked="N"
-		ParamSetService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+		ParamSetService.getAllLatest("paramlist").
+			then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allparamlist = response;
 			$scope.selectparamlist = $scope.allparamlist[0];
@@ -245,10 +253,13 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		ParamSetService.getOneByUuidandVersion(uuid, version, 'paramset').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamSetService.getOneByUuidandVersion(uuid, version, 'paramset')
+			.then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			//console.log(JSON.stringify(response.paramSetValarray))
-			$scope.paramsetdata = response.paramsetdata
+			$scope.isEditInprogess=false;
+			$scope.paramsetdata = response.paramsetdata;
 			var defaultversion = {};
 			defaultversion.version = response.paramsetdata.version;
 			defaultversion.uuid = response.paramsetdata.uuid;
@@ -257,7 +268,8 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			$scope.paramtable = response.paramInfoArray;
 			$scope.isTabelShow = true;
 			$scope.tags = response.paramsetdata.tags
-			ParamSetService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+			ParamSetService.getAllLatest("paramlist").
+				then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
 				var paramlis = {};
@@ -265,6 +277,10 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 				paramlis.name = "";
 				$scope.selectparamlist = paramlis;
 			}//End onSuccessGetAllLatestParamlist
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 
 	}

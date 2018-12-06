@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -74,7 +76,7 @@ public class BatchSchedulerServiceImpl {
 	public Date getNextRunTimeBySchedule(Schedule schedule) throws ParseException {
 		switch(schedule.getFrequencyType().toUpperCase()) {
     		case "ONCE" : return schedule.getNextRunTime() == null ? schedule.getStartDate() : null;
-    		case "HOURLY" : return getNextHourlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
+    		case "HOURLY" : return getNextHourlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "DAILY" : return getNextDailyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		case "WEEKLY" : return getNextWeelyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "BIWEEKLY" : return getNextBiWeeklyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
@@ -109,19 +111,23 @@ public class BatchSchedulerServiceImpl {
 //		}
 	}
 	
-	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail)
+			throws ParseException {
 		Date tempCurrDate = new Date();
-		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
-//		if(previousRunTime != null) {
-			Date nextRunTime = DateUtils.addHours(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1);
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return simpleDateFormat.parse(nextRunTime.toString());
-			} else {
-				return null; 
+		Date nextRunTime = new Date();
+		for (String hours : frequencyDetail) {
+			startDate.setHours(Integer.parseInt(hours));
+			Date date = startDate;
+			if (date.compareTo(tempCurrDate) >= 0) {
+				nextRunTime = date;
+				break;
 			}
-//		} else {
-//			return startDate;
-//		}
+		}
+		if (nextRunTime != null && nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -342,7 +348,9 @@ public class BatchSchedulerServiceImpl {
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
 		
 //		if(previousRunTime != null) {
-			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			//Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate,startDate.compareTo(currDate) >= 0 ? 0 : 1).toString());
+
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {

@@ -234,6 +234,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataFunctionSerivce.getAllVersionByUuid($stateParams.id, "function").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -243,8 +245,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 		}//End onGetAllVersionByUuid
 
-		MetadataFunctionSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, "function").then(function (response) { onGetLatestByUuid(response.data) });
+		MetadataFunctionSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, "function")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
 			$scope.selectCatogory = response.functiondata.category;
 			$scope.selectFunctionType = response.functiondata.funcType;
@@ -264,7 +268,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 			$scope.paramtable = response.paramInfo;
 		}//End onGetLatestByUuid
-
+        var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End If
 	else{
 		$scope.functiondata={};
@@ -276,8 +283,12 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataFunctionSerivce.getOneByUuidandVersion($scope.function.defaultVersion.uuid, $scope.function.defaultVersion.version, 'function').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFunctionSerivce.getOneByUuidandVersion($scope.function.defaultVersion.uuid, $scope.function.defaultVersion.version, 'function')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
 			$scope.selectCatogory = response.functiondata.category;
 			$scope.selectFunctionType = response.functiondata.funcType;
@@ -297,7 +308,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 			$scope.paramtable = response.paramInfo;
 		}//End getOneByUuidandVersion
-
+        var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 

@@ -500,7 +500,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 	}
 	this.getDatasetDataByOneUuidandVersion = function (id, version) {
 		var deferred = $q.defer();
-		MetadataDatasetFactory.findByUuidandVersion(id, version).then(function (response) { onSuccess(response.data) });
+		MetadataDatasetFactory.findByUuidandVersion(id, version).then(function (response) { onSuccess(response.data)},function (response) {onError(response.data) });
 		var onSuccess = function (response) {
 			var datasetviewjson = {};
 			datasetviewjson.dataset = response;
@@ -843,11 +843,16 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 			datasetviewjson.sourceAttributes = sourceAttributesArray
 			deferred.resolve({
 				data: datasetviewjson
-			})
-		}
-
+			});
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			});
+		};
 		return deferred.promise;
 	}
+	
 	this.getDatasetDataByUuid = function (id, type) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findByUuid(id, type).then(function (response) { onSuccess(response.data) });

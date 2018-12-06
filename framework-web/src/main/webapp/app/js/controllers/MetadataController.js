@@ -188,10 +188,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		headerTemplate: 'views/header-template.html',
 		superColDefs: [{
 			name: 'sourceParant',
-			displayName: 'Source'
+			displayName:'Source'
 		}, {
 			name: 'targetParant',
-			displayName:'Target'
+			displayName:'Datapod'
 		},
 		 {
 			name: 'statusParant',
@@ -236,6 +236,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
+
 
 	$scope.filteredRowsCompareMetaData = [];
 	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
@@ -704,6 +705,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.isShowCompareMetaData){
 			return false
 		}
+		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
 		$scope.isShowCompareMetaData=true;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false
@@ -785,6 +787,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDependencyShow = true;
 		$scope.isSimpleRecord = true;
 		$scope.mode = $stateParams.mode;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDatapodSerivce.getAllVersionByUuid($stateParams.id, 'datapod').then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -793,8 +797,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				$scope.datapod.versions[i] = datapodversion;
 			}
 		}
-		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod').then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod')
+			.then(function (response) { onSuccessGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.datapoddata = response.datapodata
 			var tags = [];
@@ -824,7 +830,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	} /*End If*/
 	else{
 		$scope.datapoddata={};
@@ -835,9 +845,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod')
+			.then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var defaultversion = {};
+			$scope.isEditInprogess=false;
 			$scope.datapoddata = response.datapodata
 			$scope.gridOptionsDatapod.data = $scope.datapoddata.attributes;
 			$scope.attributetable = response.attributes
@@ -866,7 +880,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.tags = tags;
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}/* End selectVersion*/
 
 	$scope.okdatapodsave = function () {
