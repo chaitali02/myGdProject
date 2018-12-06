@@ -27,7 +27,8 @@
   </div>
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'relation'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="relationdata" comment-panel-directive></div>
+  <div options="dirOptions" type="'relation'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="relationdata"
+    comment-panel-directive></div>
 
   <!-- END PAGE HEADER-->
 
@@ -39,13 +40,12 @@
             <i class="fa fa-gift"></i>{{relationdata.name }}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(relationdata.uuid,relationdata.version,mode)">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(relationdata.uuid,relationdata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || relationdata.locked == 'Y')? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(relationdata.uuid,relationdata.version)"
-              ng-hide="isAdd" style="height:16px;">
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || relationdata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              data-placement="top" tooltip ng-click="enableEdit(relationdata.uuid,relationdata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -84,263 +84,277 @@
             </div>
           </div>
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
-            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitRelation()" form-on-change="relationFormChange()" prevent-enter-submit>
-              <div class="form-group" ng-show="relationdata.uuid">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="relationdata.uuid">
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(relationdata.name)" ng-model="relationdata.name"
-                    required="">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="relationdata.uuid">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-change="selectVersion()" ng-disabled="isversionEnable" data-ng-model="relation.defaultVersion.version"
-                    ng-options="c.version as c.version for c in relation.versions">
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="relationdata.uuid">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="relationdata.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="relationdata.uuid">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="relationdata.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
-                    </auto-complete>
-                  </tags-input>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="relationdata.desc" rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-2 col-sm-2 col-xs-12">
-                  <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeType()" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
-                    required=""></select>
-                </div>
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-3 col-sm-3 col-xs-12">
-                  <select class="form-control" select2 name="dependson" ng-change="selectOption()" data-ng-model="alldatapod.defaultoption" ng-options="r as r.name for r in alldatapod.options track by r.uuid"
-                    ng-disabled="{{mode}}">
-                  </select>
-                  <input type="hidden" name="dependson" ng-model="alldatapod.defaultoption.uuid" required>
-                </div>
-                
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="relationdata.active='Y'">
-                    <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.active" uib-btn-radio="'Y'" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.active" uib-btn-radio="'N'" uncheckable>No</label>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitRelation()" form-on-change="relationFormChange()"
+                prevent-enter-submit>
+                <div class="form-group" ng-show="relationdata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="relationdata.uuid">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.locked" uib-btn-radio="'Y'" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.locked" uib-btn-radio="'N'" uncheckable>No</label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="relationdata.published='N'">
-                    <label class="btn btn-default" ng-model="relationdata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="relationdata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
-                  </div>
-                </div>
-              </div>
 
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a ui-sref="metadata({type:'relation'})" class="btn btn-primary">Cancel</a>
-                  <!-- relationHasChanged == false ||  -->
-                  <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
-                    name="submit">
-                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                  </span>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(relationdata.name)" ng-model="relationdata.name"
+                      required="">
+                  </div>
                 </div>
-              </div>
-              <div class="x_title">
-                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
-                <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addrow()" ng-disabled="{{mode}}"></button>
-                <h4>
-                  <strong>Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <div>
-                <table class=" row-border hover table  table-striped table-bordered">
-                  <thead class="">
-                    <tr>
-                      <th style="text-align: center; Vertical-align: middle;width:5%;">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin" ng-change="selectAllRow()"
-                          />
-                        </span>
-                      </th>
-                      <th style="text-align: center;width:20%;">Type</th>
-                      <th style="text-align: center;width:50%;">Join</th>
-                      <th style="text-align: center;">Join Type</th>
-                      <th style="width:5%;">
-                        <div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
-                          <i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat-start="data in  relationTableArray ">
-                      <td style="text-align: center; Vertical-align: middle;width:5%;">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
-                        </span>
-                      </td>
-                      <td style="text-align: center; Vertical-align: middle;width:5%;">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeJoinMetaType(data.joinMetaType,$index)" data-ng-model="data.joinMetaType" ng-options="r for r in SourceTypes"
-                          required=""></select>
-                        </span>
-                      </td>
-                      <td>
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <div ng-if="data.joinMetaType =='datapod'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
-                            <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
-                              class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)"  required disable-validation-message="">
-                            </select>
+
+                <div class="form-group" ng-show="relationdata.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version" ng-change="selectVersion()" ng-disabled="isversionEnable" data-ng-model="relation.defaultVersion.version"
+                      ng-options="c.version as c.version for c in relation.versions">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="relationdata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="relationdata.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="relationdata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="relationdata.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="relationdata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeType()" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
+                      required=""></select>
+                  </div>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <select class="form-control" select2 name="dependson" ng-change="selectOption()" data-ng-model="alldatapod.defaultoption"
+                      ng-options="r as r.name for r in alldatapod.options track by r.uuid" ng-disabled="{{mode}}">
+                    </select>
+                    <input type="hidden" name="dependson" ng-model="alldatapod.defaultoption.uuid" required>
+                  </div>
+
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="relationdata.active='Y'">
+                      <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.active" uib-btn-radio="'Y'" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.active" uib-btn-radio="'N'" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.locked" uib-btn-radio="'Y'" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-disabled="{{showactive}}" ng-model="relationdata.locked" uib-btn-radio="'N'" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="relationdata.published='N'">
+                      <label class="btn btn-default" ng-model="relationdata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="relationdata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a ui-sref="metadata({type:'relation'})" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+                      name="submit">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+                <div class="x_title">
+                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
+                  <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addrow()" ng-disabled="{{mode}}"></button>
+                  <h4>
+                    <strong>Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <div>
+                  <table class=" row-border hover table  table-striped table-bordered">
+                    <thead class="">
+                      <tr>
+                        <th style="text-align: center; Vertical-align: middle;width:5%;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin" ng-change="selectAllRow()"
+                            />
+                          </span>
+                        </th>
+                        <th style="text-align: center;width:20%;">Type</th>
+                        <th style="text-align: center;width:50%;">Join</th>
+                        <th style="text-align: center;">Join Type</th>
+                        <th style="width:5%;">
+                          <div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
+                            <i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
                           </div>
-                          <div ng-if="data.joinMetaType =='dataset'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
-                            <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindataset   track by x.uuid" ng-disabled="{{mode}}"
-                              class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)"  required disable-validation-message="">
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat-start="data in  relationTableArray ">
+                        <td style="text-align: center; Vertical-align: middle;width:5%;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+                          </span>
+                        </td>
+                        <td style="text-align: center; Vertical-align: middle;width:5%;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeJoinMetaType(data.joinMetaType,$index)" data-ng-model="data.joinMetaType"
+                              ng-options="r for r in SourceTypes" required=""></select>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <div ng-if="data.joinMetaType =='datapod'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
+                              <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
+                                class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)" required disable-validation-message="">
+                              </select>
+                            </div>
+                            <div ng-if="data.joinMetaType =='dataset'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
+                              <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindataset   track by x.uuid" ng-disabled="{{mode}}"
+                                class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)" required disable-validation-message="">
+                              </select>
+                            </div>
+                            <!-- <input type="hidden" name="join" ng-model="alldatapod.defaultoption.uuid" required> -->
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <select ng-model="data.relationJoinType" ng-options=" x  for x in joinType" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeJoinType(data.relationJoinType,$index)">
                             </select>
+                          </span>
+                        </td>
+                        <td>
+                          <div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
+                            <i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
                           </div>
-                          <!-- <input type="hidden" name="join" ng-model="alldatapod.defaultoption.uuid" required> -->
-                        </span>
-                      </td>
-                      <td>
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select ng-model="data.relationJoinType" ng-options=" x  for x in joinType" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeJoinType(data.relationJoinType,$index)">
-                          </select>
-                        </span>
-                      </td>
-                      <td>
-                        <div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
-                          <i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr ng-repeat-end ng-show="expanded">
-                      <td colspan="4" style="padding: 0px 17px;">
-                        <div class="x_title" style="padding:10px;">
-                          <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
-                          <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
-                        </div>
-                        <br>
-                        <br>
-                        <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
-                          <thead class="theadborder">
-                            <tr>
-                              <th style="text-align: center; Vertical-align: middle;width:5%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox"  ng-disabled="{{mode}} || data.isjoinDisable" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
-                                  />
-                                </span>
-                              </th>
-                              <th style="text-align: center;width:17%;">Logical Operator</th>
-                              <th style="text-align: center;width:30%;">LHS Attributes</th>
-                              <th style="text-align: center;width:15%;">Operator</th>
-                              <th style="text-align: center;width:25%;">RHS Attributes</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr ng-repeat="datajoinkye in data.joinKey track by $index ">
+                        </td>
+                      </tr>
+                      <tr ng-repeat-end ng-show="expanded">
+                        <td colspan="4" style="padding: 0px 17px;">
+                          <div class="x_title" style="padding:10px;">
+                            <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
+                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
+                          </div>
+                          <br>
+                          <br>
+                          <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
+                            <thead class="theadborder">
+                              <tr>
+                                <th style="text-align: center; Vertical-align: middle;width:5%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}} || data.isjoinDisable" ng-model="data.selectalljoinkey"
+                                      ng-change="selectAllSubRow($index)" />
+                                  </span>
+                                </th>
+                                <th style="text-align: center;width:17%;">Logical Operator</th>
+                                <th style="text-align: center;width:30%;">LHS Attributes</th>
+                                <th style="text-align: center;width:15%;">Operator</th>
+                                <th style="text-align: center;width:25%;">RHS Attributes</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="datajoinkye in data.joinKey track by $index ">
 
-                              <td style="text-align: center; Vertical-align: middle;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox" ng-model="datajoinkye.selected" ng-disabled="{{mode}} || data.isjoinDisable">
-                                </span>
-                              </td>
-                              <td>
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}} || data.isjoinDisable" class="form-control"></select>
-                                </span>
-                              </td>
-                              <td style="width:35%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <!-- <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
+                                <td style="text-align: center; Vertical-align: middle;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="datajoinkye.selected" ng-disabled="{{mode}} || data.isjoinDisable">
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}} || data.isjoinDisable"
+                                      class="form-control"></select>
+                                  </span>
+                                </td>
+                                <td style="width:35%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <!-- <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
                                   </select> -->
-                                  <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsAllAttribute track by  c.uuid + c.attributeId"   required disable-validation-message="" >
-                                  </select>
-                                </span>
-                              </td>
-                              <td style="width:15%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-disabled="{{mode}} || data.isjoinDisable" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" ng-disabled="{{mode}} || isjoinDisable"
-                                    class="form-control" required disable-validation-message=""></select>
-                                </span>
-                              </td>
-                              <td style="width:25%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId" required disable-validation-message="">
-                                  </select>
-                                </span>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
+                                    <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsAllAttribute track by  c.uuid + c.attributeId"
+                                      required disable-validation-message="">
+                                    </select>
+                                  </span>
+                                </td>
+                                <td style="width:15%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-disabled="{{mode}} || data.isjoinDisable" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators"
+                                      ng-disabled="{{mode}} || isjoinDisable" class="form-control" required disable-validation-message=""></select>
+                                  </span>
+                                </td>
+                                <td style="width:25%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId"
+                                      required disable-validation-message="">
+                                    </select>
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- BEGIN MAIN JS-->
+  </div><!-- BEGIN MAIN JS-->
 </div>

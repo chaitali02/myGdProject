@@ -787,6 +787,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDependencyShow = true;
 		$scope.isSimpleRecord = true;
 		$scope.mode = $stateParams.mode;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDatapodSerivce.getAllVersionByUuid($stateParams.id, 'datapod').then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -795,8 +797,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				$scope.datapod.versions[i] = datapodversion;
 			}
 		}
-		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod').then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod')
+			.then(function (response) { onSuccessGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.datapoddata = response.datapodata
 			var tags = [];
@@ -826,7 +830,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	} /*End If*/
 	else{
 		$scope.datapoddata={};
@@ -837,9 +845,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod')
+			.then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var defaultversion = {};
+			$scope.isEditInprogess=false;
 			$scope.datapoddata = response.datapodata
 			$scope.gridOptionsDatapod.data = $scope.datapoddata.attributes;
 			$scope.attributetable = response.attributes
@@ -868,7 +880,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.tags = tags;
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}/* End selectVersion*/
 
 	$scope.okdatapodsave = function () {

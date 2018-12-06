@@ -479,8 +479,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}
 		else {
-			MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($stateParams.id, $stateParams.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
+			$scope.isEditInprogess=true;
+   			$scope.isEditVeiwError=false;
+			MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($stateParams.id, $stateParams.version, 'dataset')
+				.then(function (response) { onSuccessResult(response.data) },function(response) {onError(response.data)});
 			var onSuccessResult = function (response) {
+				$scope.isEditInprogess=false;
 				$scope.dataset = response.dataset;
 				$scope.selectSourceType = response.dataset.dependsOn.ref.type
 				$scope.datasetCompare = response.dataset;
@@ -508,12 +512,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				var onSuccessExpression = function (response) {
 					$scope.datasetLodeExpression = response
 				}
-				// MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-				// var onSuccessFormula = function (response) {
-				// 	$scope.datasetLodeFormula = response
-				// 	$scope.allFormula = response;
-				// 	$scope.allFormula.splice(0, 1);
-				// }
+
 				$scope.getFormulaByType();
 				MetadataDatasetSerivce.getAllAttributeBySource($scope.dataset.dependsOn.ref.uuid, $scope.dataset.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 				var onSuccessGetDatapodByRelation = function (response) {
@@ -530,6 +529,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.filterTableArray = response.filterInfo;
 				$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
 			}//End onSuccessResult
+			var onError =function(){
+				$scope.isEditInprogess=false;
+				$scope.isEditVeiwError=true;
+			} 
 		}//End Inner Else
 	}//End If
 	else {
@@ -556,12 +559,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			var onSuccessExpression = function (response) {
 				$scope.datasetLodeExpression = response
 			}
-			// MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			// var onSuccessFormula = function (response) {
-			// 	$scope.datasetLodeFormula = response;
-			// 	$scope.allFormula = response;
-			// 	$scope.allFormula.splice(0, 1);
-			// }
+			
 			$scope.getFormulaByType();
 			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
@@ -600,10 +598,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.selectVersion = function () {
 		$scope.datasetRelation = null;
 		$scope.selectSourceType = null;
-		//$scope.myform3.$dirty = false;
 		$scope.datasetHasChanged = true;
-		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'dataset').then(function (response) { onSuccessResult(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'dataset')
+			.then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.dataset = response.dataset;
 			$scope.selectSourceType = response.dataset.dependsOn.ref.type
 			$scope.datasetCompare = response.dataset;
@@ -627,11 +628,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.datasetLodeExpression = response
 			}
 			MetadataDatasetSerivce.getFormulaByType($scope.dataset.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			// var onSuccessFormula = function (response) {
-			// 	$scope.datasetLodeFormula = response
-			// 	$scope.allFormula = response;
-			// 	$scope.allFormula.splice(0, 1);
-			// }
 			$scope.getFormulaByType();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.dataset.dependsOn.ref.uuid, $scope.dataset.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
@@ -648,6 +644,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
 
 		}//End onSuccessResult
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		} 
 	}/* End selectVersion*/
 
 	$scope.SearchAttribute = function (index, type, propertyType) {

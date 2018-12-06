@@ -317,7 +317,8 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 	};
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataDatapodFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var datapodjson = {};
 			datapodjson.datapodata = response;
@@ -332,7 +333,6 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
 				attribute.length = response.attributes[i].length;
-				//console.log(response.attributes[i].key);
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -343,11 +343,15 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attributearray[i] = attribute
 			}
 			datapodjson.attributes = attributearray
-			//console.log(JSON.stringify(attributearray));
 			deferred.resolve({
 				data: datapodjson
 			})
-		}
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
 		return deferred.promise;
 	}
 	this.submit = function (data, type,upd_tag) {

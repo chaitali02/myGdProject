@@ -425,7 +425,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.isEditInprogess=true;
     $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
-    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model").then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
+    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model")
+      .then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
       $scope.modeldata = response;
       $scope.isEditInprogess=false;

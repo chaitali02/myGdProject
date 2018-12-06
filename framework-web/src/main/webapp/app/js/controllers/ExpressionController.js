@@ -163,6 +163,8 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataExpressionSerivce.getAllVersionByUuid($stateParams.id, "expression").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -172,8 +174,10 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 
 			}
 		}
-		MetadataExpressionSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'expression').then(function (response) { onSuccess(response.data) });
+		MetadataExpressionSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'expression')
+		.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -209,7 +213,11 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}
 	else {
 		$scope.showactive = "false"
@@ -276,8 +284,12 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	$scope.selectVersion = function () {
 		$scope.expressionRelation = null;
 		$scope.myform.$dirty = false;
-		MetadataExpressionSerivce.getOneByUuidAndVersion($scope.expression.defaultVersion.uuid, $scope.expression.defaultVersion.version, 'expression', $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataExpressionSerivce.getOneByUuidAndVersion($scope.expression.defaultVersion.uuid, $scope.expression.defaultVersion.version, 'expression')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -313,7 +325,11 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 

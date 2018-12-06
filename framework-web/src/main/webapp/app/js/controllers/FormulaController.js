@@ -321,7 +321,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		MetadataFormulaSerivce.getAllVersionByUuid($stateParams.id, "formula").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFormulaSerivce.getAllVersionByUuid($stateParams.id, "formula")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var formulaversion = {};
@@ -329,8 +332,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				$scope.formula.versions[i] = formulaversion;
 			}
 		}
-		MetadataFormulaSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'formula').then(function (response) { onSuccess(response.data) });
+		MetadataFormulaSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'formula')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.formuladata = response.formuladata
 			$scope.formulainfoarray = response.formulainfoarray
@@ -367,7 +372,11 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				}
 			}
 
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	} //End if
 	else {
 		if ($sessionStorage.fromStateName  && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListformula") {
@@ -589,8 +598,12 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	$scope.selectVersion = function () {
 		$scope.allformuladepands = null;
 		$scope.myform.$dirty = false;
-		MetadataFormulaSerivce.getOneByUuidAndVersion($scope.formula.defaultVersion.uuid, $scope.formula.defaultVersion.version, 'formula').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFormulaSerivce.getOneByUuidAndVersion($scope.formula.defaultVersion.uuid, $scope.formula.defaultVersion.version, 'formula')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.formuladata = response.formuladata
 			$scope.formulainfoarray = response.formulainfoarray
@@ -599,7 +612,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			defaultversion.uuid = response.formuladata.uuid;
 			$scope.formula.defaultVersion = defaultversion;
 			$scope.selectedDependsOnType = response.formuladata.dependsOn.ref.type
-			MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type).then(function (response) { onSuccessGetAllLatest(response.data) });
+			MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type)
+				.then(function (response) { onSuccessGetAllLatest(response.data) });
 			var onSuccessGetAllLatest = function (response) {
 				$scope.allformuladepands = response
 				var defaultoption = {};
@@ -607,7 +621,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				defaultoption.name = $scope.formuladata.dependsOn.ref.name;
 				$scope.allformuladepands.defaultoption = defaultoption;
 			}
-			MetadataFormulaSerivce.getAllAttributeBySource($scope.formuladata.dependsOn.ref.uuid, $scope.formuladata.dependsOn.ref.type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+			MetadataFormulaSerivce.getAllAttributeBySource($scope.formuladata.dependsOn.ref.uuid, $scope.formuladata.dependsOn.ref.type)
+				.then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
 			var onSuccessGetAllAttributeBySource = function (resposne) {
 				$scope.allAttribute = resposne;
 			}
@@ -620,8 +635,11 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 					$scope.tags = tags;
 				}
 			}
-
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 

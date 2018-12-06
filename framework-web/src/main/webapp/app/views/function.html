@@ -88,69 +88,80 @@
 					</div>
 
 					<div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
-						<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFunction()" form-on-change="functionFormChange()"
-						 prevent-enter-submit>
-
-							<div class="form-group" ng-show="functiondata.uuid">
-								<label class="col-md-3 control-label">UUID</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control" data-ng-disabled="true" ng-model="functiondata.uuid">
-								</div>
+						<div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+							<h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+						</div>
+						<div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+							<div class="spinner">
+								<div class="bounce1"></div>
+								<div class="bounce2"></div>
+								<div class="bounce3"></div>
 							</div>
+						</div>
+						<div ng-show="!isEditInprogess && !isEditVeiwError">
+							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFunction()"
+							 prevent-enter-submit>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">Name
-									<span class="required" aria-required="true"> * </span>
-								</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="functiondata.name" required="">
+								<div class="form-group" ng-show="functiondata.uuid">
+									<label class="col-md-3 control-label">UUID</label>
+									<div class="col-md-6">
+										<input type="text" class="form-control" data-ng-disabled="true" ng-model="functiondata.uuid">
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group" ng-show="functiondata.uuid">
-								<label class="col-md-3 control-label">Version</label>
-								<div class="col-md-6">
-									<select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="function.defaultVersion.version"
-									 ng-options="c.version as c.version for c in function.versions">
-									</select>
+								<div class="form-group">
+									<label class="col-md-3 control-label">Name
+										<span class="required" aria-required="true"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="functiondata.name" required="">
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group" ng-show="functiondata.uuid">
-								<label class="col-md-3 control-label">CreatedBy</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control" ng-disabled="true" ng-model="functiondata.createdBy.ref.name">
+								<div class="form-group" ng-show="functiondata.uuid">
+									<label class="col-md-3 control-label">Version</label>
+									<div class="col-md-6">
+										<select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="function.defaultVersion.version"
+										 ng-options="c.version as c.version for c in function.versions">
+										</select>
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group" ng-show="functiondata.uuid">
-								<label class="col-md-3 control-label">CreatedOn</label>
-								<div class="col-md-6">
-									<input type="text" ng-model="functiondata.createdOn" ng-disabled="true" class="form-control">
+								<div class="form-group" ng-show="functiondata.uuid">
+									<label class="col-md-3 control-label">CreatedBy</label>
+									<div class="col-md-6">
+										<input type="text" class="form-control" ng-disabled="true" ng-model="functiondata.createdBy.ref.name">
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group taginput">
-								<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-									 add-on-enter="true" add-on-space="true">
-										<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
-										</auto-complete>
-									</tags-input>
+								<div class="form-group" ng-show="functiondata.uuid">
+									<label class="col-md-3 control-label">CreatedOn</label>
+									<div class="col-md-6">
+										<input type="text" ng-model="functiondata.createdOn" ng-disabled="true" class="form-control">
+									</div>
 								</div>
-							</div>
 
-
-							<div class="form-group">
-								<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-								<div class="col-md-6">
-
-									<textarea class="form-control" ng-disabled="{{mode}}" ng-model="functiondata.desc" rows="2" style="resize:none;"></textarea>
+								<div class="form-group taginput">
+									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+										 add-on-enter="true" add-on-space="true">
+											<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+											</auto-complete>
+										</tags-input>
+									</div>
 								</div>
-							</div>
 
-							<!-- <div class="form-group">
+
+								<div class="form-group">
+									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+									<div class="col-md-6">
+
+										<textarea class="form-control" ng-disabled="{{mode}}" ng-model="functiondata.desc" rows="2" style="resize:none;"></textarea>
+									</div>
+								</div>
+
+								<!-- <div class="form-group">
 								<label class="control-label col-md-3 col-sm-3 col-xs-12">FunctionType
 									<span class="required" aria-required="true"> * </span>
 								</label>
@@ -161,193 +172,195 @@
 								</div>
 							</div> -->
 
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12">Category
-									<span class="required" aria-required="true"> * </span>
-								</label>
-								<div class="col-md-2 col-sm-2 col-xs-12">
-									<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory" class="form-control" ng-disabled="{{mode}}"
-									 required="">
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12">InputFlag</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<div class="btn-group">
-										<label class="btn btn-default" ng-change="onChangeInputReq()" ng-model="functiondata.inputReq" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-										<label class="btn btn-default"  ng-change="onChangeInputReq()" ng-model="functiondata.inputReq" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Category
+										<span class="required" aria-required="true"> * </span>
+									</label>
+									<div class="col-md-2 col-sm-2 col-xs-12">
+										<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory" class="form-control" ng-disabled="{{mode}}"
+										 required="">
+										</select>
 									</div>
 								</div>
-							</div>
 
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<div class="btn-group" ng-init="functiondata.active='Y'">
-										<label class="btn btn-default" ng-model="functiondata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>Yes</label>
-										<label class="btn btn-default" ng-model="functiondata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>No</label>
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">InputFlag</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<div class="btn-group">
+											<label class="btn btn-default" ng-change="onChangeInputReq()" ng-model="functiondata.inputReq" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+											 uncheckable>Yes</label>
+											<label class="btn btn-default" ng-change="onChangeInputReq()" ng-model="functiondata.inputReq" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+											 uncheckable>No</label>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<div class="btn-group">
-										<label class="btn btn-default" ng-model="functiondata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>Yes</label>
-										<label class="btn btn-default" ng-model="functiondata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>No</label>
+
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<div class="btn-group" ng-init="functiondata.active='Y'">
+											<label class="btn btn-default" ng-model="functiondata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>Yes</label>
+											<label class="btn btn-default" ng-model="functiondata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>No</label>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<div class="btn-group" ng-init="functiondata.published='N'">
-										<label class="btn btn-default" ng-model="functiondata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>Yes</label>
-										<label class="btn btn-default" ng-model="functiondata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-										 uncheckable>No</label>
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<div class="btn-group">
+											<label class="btn btn-default" ng-model="functiondata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>Yes</label>
+											<label class="btn btn-default" ng-model="functiondata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>No</label>
+										</div>
 									</div>
 								</div>
-							</div>
-
-							<div class="form-group" style="padding-top: 10px;">
-								<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-									<a ui-sref="metadata({type:'function'})" class="btn btn-primary">Cancel</a>
-									<input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
-									<span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-										<div class="bounce1"></div>
-										<div class="bounce2"></div>
-										<div class="bounce3"></div>
-									</span>
+								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<div class="btn-group" ng-init="functiondata.published='N'">
+											<label class="btn btn-default" ng-model="functiondata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>Yes</label>
+											<label class="btn btn-default" ng-model="functiondata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+											 uncheckable>No</label>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="x_title">
-								<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
-								<button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addrow()" ng-disabled="{{mode}}"></button>
-								<h4>
-									<strong>Details</strong>
-								</h4>
-								<hr>
-							</div>
-							<div>
-								<table class=" row-border hover table  table-striped table-bordered">
-									<thead class="">
-										<tr>
-											<th style="text-align: center; Vertical-align: middle;width:5%;">
-												<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-													<input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin" ng-change="selectAllRow()"
-													/>
-												</span>
-											</th>
-											<th style="text-align: center;width:50%;">Type</th>
-											<th style="text-align: center;">Name</th>
-											<th style="width:5%;">
 
-												<div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
-													<i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat-start="data in  functionTableArray ">
-											<td style="text-align: center; Vertical-align: middle;width:5%;">
-												<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-													<input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
-												</span>
-											</td>
-											<td>
-												<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-													<select select2 ng-model="data.type" ng-options=" x for x in allTypes " ng-disabled="{{mode}}" class="form-control">
-													</select>
-												</span>
-											</td>
-											<td>
-												<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-													<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="data.name" required="">
-												</span>
-											</td>
-											<td>
-												<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-													<div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
-														<i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
+								<div class="form-group" style="padding-top: 10px;">
+									<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+										<a ui-sref="metadata({type:'function'})" class="btn btn-primary">Cancel</a>
+										<input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+										<span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+											<div class="bounce1"></div>
+											<div class="bounce2"></div>
+											<div class="bounce3"></div>
+										</span>
+									</div>
+								</div>
+								<div class="x_title">
+									<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
+									<button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addrow()" ng-disabled="{{mode}}"></button>
+									<h4>
+										<strong>Details</strong>
+									</h4>
+									<hr>
+								</div>
+								<div>
+									<table class=" row-border hover table  table-striped table-bordered">
+										<thead class="">
+											<tr>
+												<th style="text-align: center; Vertical-align: middle;width:5%;">
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin" ng-change="selectAllRow()"
+														/>
+													</span>
+												</th>
+												<th style="text-align: center;width:50%;">Type</th>
+												<th style="text-align: center;">Name</th>
+												<th style="width:5%;">
+
+													<div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
+														<i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
 													</div>
-												</span>
-											</td>
-										</tr>
-										<tr ng-repeat-end ng-show="expanded">
-											<td colspan="3" style="padding: 0px 17px;">
-												<div class="x_title" style="padding:10px;">
-													<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}}"></button>
-													<button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}}"></button>
-												</div>
-												<br>
-												<br>
-												<table class=" row-border hover table  table-striped table-bordered">
-													<thead class="theadborder">
-														<tr>
-															<th style="text-align: center; Vertical-align: middle;width:5%;">
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
-																	/>
-																</span>
-															</th>
-															<th style="text-align: center;width:12%;">Parameter Id</th>
-															<th style="text-align: center;width:16%;">Parameter Reqd</th>
-															<th style="text-align: center;width:37%;">Parameter Type</th>
-															<th style="text-align: center;width:37%;">Parameter Name</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-repeat="paramInfo in data.paramInfoHolder track by $index ">
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat-start="data in  functionTableArray ">
+												<td style="text-align: center; Vertical-align: middle;width:5%;">
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+													</span>
+												</td>
+												<td>
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<select select2 ng-model="data.type" ng-options=" x for x in allTypes " ng-disabled="{{mode}}" class="form-control">
+														</select>
+													</span>
+												</td>
+												<td>
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="data.name" required="">
+													</span>
+												</td>
+												<td>
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
+															<i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
+														</div>
+													</span>
+												</td>
+											</tr>
+											<tr ng-repeat-end ng-show="expanded">
+												<td colspan="3" style="padding: 0px 17px;">
+													<div class="x_title" style="padding:10px;">
+														<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}}"></button>
+														<button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}}"></button>
+													</div>
+													<br>
+													<br>
+													<table class=" row-border hover table  table-striped table-bordered">
+														<thead class="theadborder">
+															<tr>
+																<th style="text-align: center; Vertical-align: middle;width:5%;">
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
+																		/>
+																	</span>
+																</th>
+																<th style="text-align: center;width:12%;">Parameter Id</th>
+																<th style="text-align: center;width:16%;">Parameter Reqd</th>
+																<th style="text-align: center;width:37%;">Parameter Type</th>
+																<th style="text-align: center;width:37%;">Parameter Name</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="paramInfo in data.paramInfoHolder track by $index ">
 
-															<td style="text-align: center; Vertical-align: middle;">
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<input style="width: 16px;height:16px;" type="checkbox" ng-model="paramInfo.selected" ng-disabled="{{mode}}">
-																</span>
-															</td>
-															<td>
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramId" required="">
-																</span>
-															</td>
-															<td>
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<input type="checkbox" style="width: 13%; margin-left: 41%" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramReq"
-																	 value="paramReq" ng-checked="paramInfo.paramReq=='y'">
-																</span>
-															</td>
-															<td>
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<select select2 ng-model="paramInfo.paramType" ng-options=" x for x in allParamTypes " ng-disabled="{{mode}}" class="form-control">
-																	</select>
-																</span>
-															</td>
-															<td>
-																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																	<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramName">
-																</span>
-															</td>
-														</tr>
-														<tr ng-if="data.paramInfoHolder.length==0">
-															<td colspan="5" style="text-align:center;vertical-align:middle;color:blue">No Data Available
+																<td style="text-align: center; Vertical-align: middle;">
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<input style="width: 16px;height:16px;" type="checkbox" ng-model="paramInfo.selected" ng-disabled="{{mode}}">
+																	</span>
+																</td>
 																<td>
-														</tr>
-													</tbody>
-												</table>
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramId" required="">
+																	</span>
+																</td>
+																<td>
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<input type="checkbox" style="width: 13%; margin-left: 41%" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramReq"
+																		 value="paramReq" ng-checked="paramInfo.paramReq=='y'">
+																	</span>
+																</td>
+																<td>
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<select select2 ng-model="paramInfo.paramType" ng-options=" x for x in allParamTypes " ng-disabled="{{mode}}" class="form-control">
+																		</select>
+																	</span>
+																</td>
+																<td>
+																	<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																		<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramInfo.paramName">
+																	</span>
+																</td>
+															</tr>
+															<tr ng-if="data.paramInfoHolder.length==0">
+																<td colspan="5" style="text-align:center;vertical-align:middle;color:blue">No Data Available</td>
+															</tr>
+														</tbody>
+													</table>
 												</td>
 												<td></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</form>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
