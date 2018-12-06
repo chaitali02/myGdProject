@@ -195,8 +195,6 @@ public class ModelServiceImpl {
 	@Autowired
 	Engine engine;
 	@Autowired
-	private Helper helper;
-	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
@@ -1775,6 +1773,56 @@ public class ModelServiceImpl {
 		return null;
 	}
 
+	public List<String> getRowIdentifierCols(List<AttributeRefHolder> rowIdentifier) throws JsonProcessingException {
+		if(rowIdentifier != null) {
+			List<String> rowIdentifierCols = new ArrayList<>();
+			
+			String oldSrcUuid = null;
+			Object source = null;
+			
+			for(AttributeRefHolder rowIDHolder : rowIdentifier) {
+				String attrName = rowIDHolder.getAttrName();
+				if(attrName != null) {
+					rowIdentifierCols.add(attrName);
+				} else {
+					MetaIdentifier attrMI = rowIDHolder.getRef();
+					if(oldSrcUuid != null && oldSrcUuid.equalsIgnoreCase(attrMI.getUuid())) {
+						attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+						
+						if(attrName != null) {
+							rowIdentifierCols.add(attrName);
+						}
+					} else {
+						oldSrcUuid = attrMI.getUuid();
+						source = commonServiceImpl.getOneByUuidAndVersion(attrMI.getUuid(), attrMI.getVersion(), attrMI.getType().toString());
+						attrName = getColNameBySource(source, rowIDHolder.getAttrId());
+
+						if(attrName != null) {
+							rowIdentifierCols.add(attrName);
+						}
+					}
+				}				
+			}
+			
+			return rowIdentifierCols;
+		}
+		return null;
+	}
+
+	public String getColNameBySource(Object source, String attrId) {
+		if (source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;			
+			return datapod.getAttributeName(Integer.parseInt(attrId));
+		} else if (source instanceof DataSet) {
+			DataSet dataset = (DataSet) source;			
+			return dataset.getAttributeName(Integer.parseInt(attrId));
+		} else if (source instanceof Rule) {
+			Rule rule = (Rule) source;
+			return rule.getAttributeName(Integer.parseInt(attrId));
+		}
+		return null;
+	}
+	
 	public Object getTrainedModelByTrainExec(String modelClassName, TrainExec trainExec) throws ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		Class<?> modelClass = Class.forName(modelClassName);
 
@@ -2103,19 +2151,32 @@ public class ModelServiceImpl {
 			}
 			i++;
 		}
-		
-		/*if (fieldArray != null && fieldArray.length > 0) {
-			for (String field : fieldArray) {
-				sb.append(field).append(", ");
-			}
-		}*/
-//		sb.append("'' AS result")
-			sb.append(" FROM (")
-			.append(sql)
-			.append(") "+tableName);
+		sb.append(" FROM (")
+		.append(sql)
+		.append(") "+tableName);
 		return sb.toString();
 	}
 
+	public String generateFeatureSQLByTempTable(List<FeatureAttrMap> mappedFeatures, String tempTableName, String label,  String aliasName) throws Exception {
+		StringBuilder sb = new StringBuilder("SELECT ");
+		
+		if (label != null && StringUtils.isNotBlank(label)) {
+			sb.append(label).append(" AS label").append(", ");
+		}
+		
+		int i = 0;
+		for(FeatureAttrMap featureAttrMap : mappedFeatures) {
+			sb.append(featureAttrMap.getAttribute().getAttrName()).append(" AS ").append(featureAttrMap.getFeature().getFeatureName());
+			if(i < mappedFeatures.size()-1)
+			sb.append(", ");
+			i++;
+		}
+		sb.append(" FROM (")
+		.append(tempTableName)
+		.append(") "+aliasName);
+		return sb.toString();
+	}
+	
 	public void createDatastore(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, RunMode runMode) throws Exception{
 		dataStoreServiceImpl.setRunMode(runMode);

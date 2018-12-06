@@ -33,7 +33,8 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.spark.sql.functions;
+import org.apache.spark.sql.expressions.Window;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -43,6 +44,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -88,6 +90,7 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.catalyst.expressions.RowNumber;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
@@ -2010,7 +2013,11 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName, String clientContext
+			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
+			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
+			, String trainingDfSql, String validationDfSql) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -2021,8 +2028,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
+			Dataset<Row> valDf2 = splits[1];
 			Dataset<Row> trainingDf = null;
 			Dataset<Row> validateDf = null;
+			
+			registerTempTable(trngDf, "tempTrngDf");
+			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+			registerTempTable(valDf, "tempValDf");
+			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+			
+			//dropping temptables tempTrngDf and tempValDf
+			List<String> tempTableList = new ArrayList<>();
+			tempTableList.add("tempTrngDf");
+			tempTableList.add("tempValDf");
+			dropTempTable(tempTableList);
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
@@ -2082,7 +2101,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
+				saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2107,12 +2126,58 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
-	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> validateDf, String defaultPath) {
-		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
-		trainedDataSet.show(false);
-		trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
+	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
+			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
+			, String[] fieldArray, String trainName) throws IOException {
+		rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
+			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
+		}		
+		
+//		sourceDF = sourceDF.na().fill(0.0,sourceDF.columns());
+		trainedDataSet = trainedDataSet.withColumn("rowNum", functions.row_number().over(Window.orderBy(trainedDataSet.columns()[trainedDataSet.columns().length-1])));
+		
+		List<String> colNameList = new ArrayList<>();
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			for(String cloName : fieldArray) {
+				colNameList.add(cloName);
+			}
+		} 
+		colNameList.add("label");
+		colNameList.add("prediction");
+		if (trainName.contains("LogisticRegression")
+				|| trainName.contains("GBTClassifier")) {
+			colNameList.add("probability");
+		}
+
+		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
+		//creating column prediction_status
+		Dataset<Row> predictionStatusDF = sparkExecHelper.getPredictionCompareStatus(trainedDataSet);
+				
+		//joining dataframes
+		Dataset<Row> joinedDF = null;
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			joinedDF = valDf.join(trainedDataSet, "rowNum").join(predictionStatusDF, "rowNum");
+		} else {
+			joinedDF = trainedDataSet.join(predictionStatusDF, "rowNum");
+		}		
+		
+		joinedDF = joinedDF.drop("rowNum");
+		joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
 	}
 
+	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
+		List<String> colNameList = Arrays.asList(fieldArray);
+		List<String> uniqueRowIdentifierCols = new ArrayList<>();
+		for(String colName : rowIdentifierCols) {
+			if(!colNameList.contains(colName)) {
+				uniqueRowIdentifierCols.add(colName);
+			} 
+		}
+		return uniqueRowIdentifierCols;
+	}
+	
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
 		String sql = "SELECT * FROM " + trainedDSName;
@@ -2203,9 +2268,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
-		
-		String sql = "SELECT * FROM " + tableName;
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
@@ -2390,7 +2453,8 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
-			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException {
+			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath
+			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2401,8 +2465,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
+			Dataset<Row> valDf2 = splits[1];
 			Dataset<Row> trainingDf = null;
 			Dataset<Row> validateDf = null;
+			
+			registerTempTable(trngDf, "tempTrngDf");
+			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+			registerTempTable(valDf, "tempValDf");
+			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+			
+			//dropping temptables tempTrngDf and tempValDf
+			List<String> tempTableList = new ArrayList<>();
+			tempTableList.add("tempTrngDf");
+			tempTableList.add("tempValDf");
+			dropTempTable(tempTableList);
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
@@ -2476,7 +2552,7 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			saveTrainedTestDataset(trainedDataSet, validateDf, defaultPath);
+			saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 

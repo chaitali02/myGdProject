@@ -353,9 +353,13 @@ public interface IExecutor {
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
 	 * @param defaultPath TODO
+	 * @param rowIdentifierCols TODO
+	 * @param includeFeatures TODO
+	 * @param trainingDfSql TODO
+	 * @param validationDfSql TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException;
 	
 	/**
 	 * 
@@ -422,14 +426,15 @@ public interface IExecutor {
 
 	/**
 	 * @Ganesh
-	 *
+	 * @param sql TODO
 	 * @param tableName
 	 * @param mappingList
 	 * @param clientContext
+	 *
 	 * @return
 	 * @throws IOException
 	 */
-	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException;
 
 	/**
@@ -569,11 +574,15 @@ public interface IExecutor {
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
 	 * @param defaultPath TODO
+	 * @param rowIdentifierCols TODO
+	 * @param includeFeatures TODO
+	 * @param trainingDfSql TODO
+	 * @param validationDfSql TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
 			throws IOException;
 	
 	/**
