@@ -356,7 +356,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = true;
-
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
 		VizpodSerivce.getAllVersionByUuid($stateParams.id, "vizpod").then(function (response) { onGetAllVersionByUuid(response.data) });
@@ -368,8 +369,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			}
 		}//End onGetAllVersionByUuid
 
-		VizpodSerivce.getOneByUuidAndVersionView($stateParams.id, $stateParams.version, "vizpod").then(function (response) { onGetLatestByUuid(response.data) });
+		VizpodSerivce.getOneByUuidAndVersionView($stateParams.id, $stateParams.version, "vizpod")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.vizpoddata = response.vizpoddata;
 			var defaultversion = {};
 			defaultversion.version = response.vizpoddata.version;
@@ -407,6 +410,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				}//End onSuccessGetAllAttributeBySourcet
 			}//End onSuccessGetAllLatestBySource
 		}//End onGetLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End If
 
 	else {
@@ -426,8 +433,12 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
 		$scope.allSource = null;
-		VizpodSerivce.getOneByUuidAndVersionView($scope.vizpod.defaultVersion.uuid, $scope.vizpod.defaultVersion.version, 'vizpod').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		VizpodSerivce.getOneByUuidAndVersionView($scope.vizpod.defaultVersion.uuid, $scope.vizpod.defaultVersion.version, 'vizpod')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.vizpoddata = response.vizpoddata;
 			var defaultversion = {};
 			defaultversion.version = response.vizpoddata.version;
@@ -464,6 +475,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				}//End onSuccessGetAllAttributeBySourcet
 			}//End onSuccessGetAllLatestBySource
 		}//End getOneByUuidAndVersion
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 

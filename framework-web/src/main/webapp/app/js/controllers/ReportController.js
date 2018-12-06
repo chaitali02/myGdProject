@@ -820,6 +820,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		ReportSerivce.getAllVersionByUuid($stateParams.id, CF_META_TYPES.report).then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -830,8 +832,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 
 
-		ReportSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, CF_META_TYPES.report).then(function (response) { onSuccessResult(response.data) });
+		ReportSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, CF_META_TYPES.report)
+			.then(function (response) { onSuccessResult(response.data) },function (response) { onError(response.data)});
 		var onSuccessResult = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.report = response.report;
 			$scope.selectSourceType = response.report.dependsOn.ref.type
 			$scope.reposrtCompare = response.report;
@@ -881,6 +885,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			//$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
 
 		}//End onSuccessResult
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End If
     else{
 		$scope.report={};
@@ -892,8 +900,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.allSource = null;
 		$scope.selectSourceType = null;
 		$scope.myform.$dirty = false;
-		ReportSerivce.getOneByUuidAndVersion($scope.reportVersion.defaultVersion.uuid, $scope.reportVersion.defaultVersion.version, CF_META_TYPES.report).then(function (response) { onSuccessResult(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ReportSerivce.getOneByUuidAndVersion($scope.reportVersion.defaultVersion.uuid, $scope.reportVersion.defaultVersion.version, CF_META_TYPES.report)
+			.then(function (response) { onSuccessResult(response.data) },function (response) { onError(response.data)});
 		var onSuccessResult = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.report = response.report;
 			$scope.selectSourceType = response.report.dependsOn.ref.type
 			$scope.reposrtCompare = response.report;
@@ -936,6 +948,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			//	$scope.filterOrignal = $scope.original = angular.copy(response.filterInfo);
 
 		}//End onSuccessResult
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}/* End selectVersion*/
 
