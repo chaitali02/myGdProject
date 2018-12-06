@@ -100,49 +100,66 @@ public class ProfileOperator {
 		if (datasourceName.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 
 			sql = "Select \'" + profile.getDependsOn().getRef().getUuid() + "\' as datapodUUID, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, cast(" + attrId
-					+ " as string) as AttributeId, min(cast(" + attrName + " as int)) as minVal, max(cast(" + attrName
-					+ " as int)) as maxVal, avg(cast(" + attrName + " as int)) as avgVal,appx_median(cast(" + attrName
-					+ " as DOUBLE)) as mediaVal, " + "stddev(cast(" + attrName
-					+ " as int)) as stdDev, cast(count(distinct " + attrName
-					+ ") as INT) as numDistinct, count(distinct " + attrName + ")/count(" + attrName
-					+ ")*100 as perDistinct, cast(count(" + attrName + ") as INT) as numNull,count(" + attrName
-					+ ") / count(" + attrName + ")*100 as perNull, count(" + attrName + ") / count(" + attrName
-					+ ") as sixSigma, " + profileExec.getVersion() + " as version from " + profileTableName;
+					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, "
+					+ "cast(" + attrId + " as string) as AttributeId, "
+					+ "min(cast(" + attrName + " as int)) as minVal, "
+					+ "max(cast(" + attrName + " as int)) as maxVal,"
+					+ " avg(cast(" + attrName + " as int)) as avgVal,"
+					+ "appx_median(cast(" + attrName + " as DOUBLE)) as mediaVal, " 
+					+ "stddev(cast(" + attrName + " as int)) as stdDev, "
+					+ "cast(count(distinct " + attrName + ") as INT) as numDistinct, "
+					+ "count(distinct " + attrName + ")/count(1)*100 as perDistinct, "
+					+ "cast(count(" + attrName + ") as INT) as numNull,"
+					+ "count(" + attrName + ") / count(1)*100 as perNull, "
+					+ "null as sixSigma, "
+					+ profileExec.getVersion() + " as version from " + profileTableName;
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			sql = "Select \'" + profile.getDependsOn().getRef().getUuid() + "\' as datapodUUID, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, " + attrId
-					+ " as AttributeId, min(cast(" + attrName + " as SIGNED)) as minVal, max(cast(" + attrName
-					+ " as SIGNED)) as maxVal, avg(" + attrName + ") as avgVal,cast(" + getMedianVal(attrName)
-					+ " as decimal) as medianVal, stddev(" + attrName + ") as stdDev, count(distinct " + attrName
-					+ ") as numDistinct, count(distinct " + attrName + ")/count(" + attrName
-					+ ")*100 as perDistinct, count(if(" + attrName + " is null,1,0)) as numNull,count(if(" + attrName
-					+ "" + " is null,1,0)) / count(" + attrName + ")*100 as perNull, count(if(" + attrName
-					+ " is null,1,0)) / count(" + attrName + ") as sixSigma, '" + profileExec.getVersion()
-					+ "' as version from " + profileTableName;
+					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, " 
+					+ attrId + " as AttributeId, "
+					+ "min(cast(" + attrName + " as SIGNED)) as minVal, max(cast(" + attrName
+					+ " as SIGNED)) as maxVal, "
+					+ "avg(" + attrName + ") as avgVal,cast(" + getMedianVal(attrName)
+					+ " as decimal) as medianVal, "
+					+ "stddev(" + attrName + ") as stdDev, "
+					+ "count(distinct " + attrName + ") as numDistinct, "
+					+ "count(distinct " + attrName + ")/count(1)*100 as perDistinct, "
+					+ "sum(if(" + attrName + " is null,1,0)) as numNull,"
+					+ "sum(if(" + attrName + " is null,1,0)) / count(1)*100 as perNull, "
+					+ "null as sixSigma, '" 
+					+ profileExec.getVersion() + "' as version from " + profileTableName;
 
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			sql = "Select \'" + profile.getDependsOn().getRef().getUuid() + "\' as datapodUUID, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, cast(" + attrId
-					+ " as varchar2(70)) as AttributeId, min(cast(" + attrName + " as number)) as minVal, max(cast("
-					+ attrName + " as number)) as maxVal, avg(cast(" + attrName + " as number)) as avgVal,median(cast("
-					+ attrName + " as double precision)) as mediaVal, " + "stddev(cast(" + attrName
-					+ " as number)) as stdDev, cast(count(distinct " + attrName
-					+ ") as number) as numDistinct, count(distinct " + attrName + ")/count(" + attrName
-					+ ")*100 as perDistinct, cast(count(" + attrName + ") as number) as numNull,count(" + attrName
-					+ ") / count(" + attrName + ")*100 as perNull, count(" + attrName + ") / count(" + attrName
-					+ ") as sixSigma, " + profileExec.getVersion() + " as version from " + profileTableName;
+					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, "
+					+ "cast(" + attrId + " as varchar2(70)) as AttributeId, "
+					+ "min(cast(" + attrName + " as number)) as minVal, "
+					+ "max(cast(" + attrName + " as number)) as maxVal, "
+					+ "avg(cast(" + attrName + " as number)) as avgVal,"
+					+ "median(cast(" + attrName + " as double precision)) as mediaVal, " 
+					+ "stddev(cast(" + attrName + " as number)) as stdDev, "
+					+ "cast(count(distinct " + attrName + ") as number) as numDistinct, "
+					+ "count(distinct " + attrName + ")/count(1)*100 as perDistinct, "
+					+ "cast(count(" + attrName + ") as number) as numNull,"
+					+ "count(" + attrName + ") / count(1)*100 as perNull, "
+					+ "null as sixSigma, "
+					+ profileExec.getVersion() + " as version from " + profileTableName;
 		} else {
 			sql = "Select \'" + profile.getDependsOn().getRef().getUuid() + "\' as datapodUUID, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, " + attrId
-					+ " as AttributeId, min(" + attrName + ") as minVal, max(" + attrName + ") as maxVal, avg(cast("
-					+ attrName + " as int)) as avgVal, percentile(cast(" + attrName
-					+ " as BIGINT), 0.5) as medianVal, stddev(" + attrName + ") as stdDev, count(distinct " + attrName
-					+ ") as numDistinct, count(distinct " + attrName + ")/count(" + attrName
-					+ ")*100 as perDistinct, count(if(" + attrName + " is null,1,0)) as numNull,count(if(" + attrName
-					+ "" + " is null,1,0)) / count(" + attrName + ")*100 as perNull, count(if(" + attrName
-					+ " is null,1,0)) / count(" + attrName + ") as sixSigma, '" + profileExec.getVersion()
-					+ "' as version from " + profileTableName;
+					+ profile.getDependsOn().getRef().getVersion() + "\' as datapodVersion, " 
+					+ attrId + " as AttributeId, "
+					+ "min(" + attrName + ") as minVal, "
+					+ "max(" + attrName + ") as maxVal, avg(cast("
+					+ attrName + " as int)) as avgVal, "
+					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) as medianVal, "
+					+ "stddev(" + attrName + ") as stdDev, "
+					+ "count(distinct " + attrName
+					+ ") as numDistinct, "
+					+ "count(distinct " + attrName + ")/count(1)*100 as perDistinct, "
+					+ "sum(if(" + attrName + " is null,1,0)) as numNull,"
+					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 as perNull, "
+					+ "null as sixSigma, '" 
+					+ profileExec.getVersion() + "' as version from " + profileTableName;
 
 		}
 		logger.info("query is : " + sql);
