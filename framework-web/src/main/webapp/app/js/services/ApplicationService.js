@@ -153,6 +153,11 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 					paramInfo.paramValue=new Date(temp);
 					paramInfo.paramValueType="date"
 					}
+					else if(response.paramList.params[i].paramValue !=null && response.paramList.params[i].paramValue.ref.type == "simple" && ["array"].indexOf(response.paramList.params[i].paramType) !=-1){
+						var temp=response.paramList.params[i].paramValue.value.split(",");
+						paramInfo.paramArrayTags=temp;
+						paramInfo.paramValueType="array"
+					}
 					else if(response.paramList.params[i].paramValue !=null){
 					var paramValue={};
 					paramValue.uuid=response.paramList.params[i].paramValue.ref.uuid;

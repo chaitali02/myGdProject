@@ -244,19 +244,19 @@
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="{{mode}} || isTableDisable"
-                          class="form-control" required>
+                          class="form-control" required disable-validation-message="">
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <input type="text" ng-model="tabledata.paramDispName" title="{{tabledata.paramDispName}}" ng-disabled="{{mode}} || isTableDisable"
-                          class="form-control" required>
+                          class="form-control" required disable-validation-message="">
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-model="tabledata.paramType" ng-options="x.name as x.caption for x in type | orderBy:orderByValue" ng-disabled="{{mode}} || isTableDisable"
-                          class="form-control" ng-change="onChangeParamType(tabledata.paramType,$index)"></select>
+                          class="form-control" ng-change="onChangeParamType(tabledata.paramType,$index)" required disable-validation-message=""></select>
                         </span>
                       </td>
                       <td>
@@ -285,7 +285,7 @@
                           </span>
                         </div>
                         
-                        <div  ng-if="tabledata.paramValueType =='date'">
+                        <div ng-if="tabledata.paramValueType =='date'">
                           <div class="col-md-12" style="margin-top:0px;margin-bottom: -20px;">
                         
                             <p class="input-group">
@@ -296,8 +296,14 @@
                             </p>
                           </div>
                         </div>
-
-                        <div  class="text-center" ng-if="['simple','distribution','date','function'].indexOf(tabledata.paramValueType) == -1">
+                        <div ng-if="tabledata.paramValueType =='array'">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <tags-input  min-tags="1" class="tag-scroll-height" ng-model="tabledata.paramArrayTags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                              
+                            </tags-input>
+                          </span>
+                        </div>
+                        <div  class="text-center" ng-if="['simple','distribution','date','function','array'].indexOf(tabledata.paramValueType) == -1">
                             NA
                           </div>
                       </td>

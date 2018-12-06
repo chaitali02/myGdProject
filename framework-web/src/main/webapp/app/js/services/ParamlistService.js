@@ -130,6 +130,11 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
           paramInfo.paramValue=new Date(temp);
           paramInfo.paramValueType="date"
         }
+        else if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["array"].indexOf(response.params[i].paramType) !=-1){
+          var temp=response.params[i].paramValue.value.split(",");
+          paramInfo.paramArrayTags=temp;
+          paramInfo.paramValueType="array"
+        }
         else if(response.params[i].paramValue !=null){
           var paramValue={};
           paramValue.uuid=response.params[i].paramValue.ref.uuid;

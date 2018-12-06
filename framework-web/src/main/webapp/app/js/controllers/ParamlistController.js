@@ -82,7 +82,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"distribution","caption":"distribution"},
 		{"name":"datapod","caption":"datapod"},
 		{"name":"function","caption":"function"},
-	    {"name":"list","caption":"list"}, ];
+		{"name":"list","caption":"list"},
+		{"name":"array","caption":"array"}];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
 	$scope.privileges = [];
@@ -495,6 +496,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 
+				}
+				else if($scope.paramtable[i].paramType =='array'){
+					var paramArrayTags=[];
+					if($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length >0){
+						for(var j=0;j<$scope.paramtable[i].paramArrayTags.length;j++){
+							paramArrayTags[j]=$scope.paramtable[i].paramArrayTags[j].text
+						}
+					}
+					
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value=paramArrayTags.toString();;
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
 				}
 				else {
 					paramValue=null;
