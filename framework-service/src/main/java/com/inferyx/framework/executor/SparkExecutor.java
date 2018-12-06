@@ -2129,6 +2129,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
 			, String[] fieldArray, String trainName) throws IOException {
+		rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
 			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
 			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
@@ -2161,11 +2162,22 @@ public class SparkExecutor<T> implements IExecutor {
 		} else {
 			joinedDF = trainedDataSet.join(predictionStatusDF, "rowNum");
 		}		
-		joinedDF = joinedDF.drop("rowNum");
 		
+		joinedDF = joinedDF.drop("rowNum");
 		joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
 	}
 
+	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
+		List<String> colNameList = Arrays.asList(fieldArray);
+		List<String> uniqueRowIdentifierCols = new ArrayList<>();
+		for(String colName : rowIdentifierCols) {
+			if(!colNameList.contains(colName)) {
+				uniqueRowIdentifierCols.add(colName);
+			}
+		}
+		return uniqueRowIdentifierCols;
+	}
+	
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
 		String sql = "SELECT * FROM " + trainedDSName;
