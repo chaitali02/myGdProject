@@ -339,11 +339,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   } //End GetAllVersion
 
   $scope.onChangeSourceType = function () {
+    
     TrainService.getAllLatest($scope.selectSourceType).then(function (response) { onGetAllLatest(response.data) });
     var onGetAllLatest = function (response) {
-      $scope.allSource = response
+      $scope.allSource = response;
       $scope.selectSource = response[0];
       $scope.onChangeSource();
+
     }
   }
 
@@ -351,7 +353,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     if(data){
       $scope.selectSource=data;
     }
+
     if ($scope.allSource != null && $scope.selectSource != null) {
+      $scope.rowIdentifierTags=null;
       $scope.getAllAttribute();
       $scope.clearFeatureTable();
      //$scope.getAllAttributeBySource();
