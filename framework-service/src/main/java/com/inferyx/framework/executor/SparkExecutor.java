@@ -2173,7 +2173,7 @@ public class SparkExecutor<T> implements IExecutor {
 		for(String colName : rowIdentifierCols) {
 			if(!colNameList.contains(colName)) {
 				uniqueRowIdentifierCols.add(colName);
-			}
+			} 
 		}
 		return uniqueRowIdentifierCols;
 	}
