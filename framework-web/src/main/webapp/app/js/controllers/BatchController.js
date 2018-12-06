@@ -216,9 +216,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.doneFrequencyDetailHourly=function(index){
+	  debugger
     if($scope.scheduleTableArray[index].hourlyPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
+      $scope.myArrayOfHours=$scope.myArrayOfHours.sort(function(a, b){return a-b});
       for(var i=0;i<$scope.myArrayOfHours.length;i++){
         $scope.scheduleTableArray[index].frequencyDetail[i]=$scope.myArrayOfHours[i];
       }
