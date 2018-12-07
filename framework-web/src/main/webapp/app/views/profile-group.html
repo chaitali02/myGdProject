@@ -41,11 +41,12 @@
         </div>
         <div class="actions">
           <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-            tooltip  ng-hide="isAdd"  ng-class="(showProfileGroup==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(profileGroupDetail.uuid,profileGroupDetail.version,mode)">
+            tooltip ng-hide="isAdd" ng-class="(showProfileGroup==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(profileGroupDetail.uuid,profileGroupDetail.version,mode)">
             <i class="fa fa-home icon-circle home-icon-circle"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(isEdit==true || isPrivlage || profileGroupDetail.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
+            tooltip ng-class="(isEdit==true || isPrivlage || profileGroupDetail.locked == 'Y')? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
           <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
@@ -74,7 +75,6 @@
 
       <div class="portlet-body">
         <div class="form-body graph-body" ng-if="showgraphdiv">
-          <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
           <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
           <div class="spinner" id="graphloader">
             <div class="bounce1"></div>
@@ -85,9 +85,18 @@
         </div>
         <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"
           prevent-enter-submit ng-show="showProfileGroupForm">
-          <div class="form-wizard">
+          <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+          <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
+              <div class="spinner">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+              </div>
+          </div>
+          <div class="form-wizard" ng-show="!isEditInprogess && !isEditVeiwError">
             <div class="form-body">
-
               <div class="form-group" ng-show="profileGroupDetail.uuid">
                 <label class="control-label col-md-3">UUID</label>
                 <div class="col-md-6">
@@ -115,7 +124,6 @@
               </div>
               <div class="form-group" ng-show="profileGroupDetail.uuid">
                 <label class="control-label col-md-3">Created By
-                  <!--    <span class="required" aria-required="true"> * </span> -->
                 </label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" ng-model="profileGroupDetail.createdBy.ref.name" ng-disabled="true">
@@ -124,18 +132,14 @@
               </div>
               <div class="form-group" ng-show="profileGroupDetail.uuid">
                 <label class="control-label col-md-3">Created On
-                  <!-- <span class="required" aria-required="true" > * </span> -->
                 </label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" ng-model="profileGroupDetail.createdOn" ng-disabled="true">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3">Tag
-                  <!--   <span class="required" aria-required="true"> * </span> -->
-                </label>
+                <label class="control-label col-md-3">Tag</label>
                 <div class="col-md-6">
-                  <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
                     add-on-enter="true" add-on-space="true">
                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
@@ -147,7 +151,6 @@
                 <label class="control-label col-md-3">Desc
                 </label>
                 <div class="col-md-6">
-                  <!-- <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.desc" > -->
                   <textarea class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.desc" rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
@@ -165,7 +168,7 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                 <div class="col-md-6">
-                  <div class="btn-group" >
+                  <div class="btn-group">
                     <label class="btn btn-default" ng-model="profileGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                       uib-btn-radio="'Y'">Yes</label>
                     <label class="btn btn-default" ng-model="profileGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
@@ -209,7 +212,6 @@
                   </tags-input>
                 </div>
                 <div class="col-md-1">
-                  <!-- class="glyphicon glyphicon-trash" -->
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
@@ -248,8 +250,5 @@
       </div>
     </div>
   </div>
-
-
-
 </div>
 <!--End Row-->
