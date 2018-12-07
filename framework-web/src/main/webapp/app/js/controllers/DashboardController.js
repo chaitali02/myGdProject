@@ -353,9 +353,11 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}
 
 	if (typeof $stateParams.id != "undefined") {
-
+      
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDahsboardSerivce.getAllVersionByUuid($stateParams.id, "dashboard").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -365,9 +367,11 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			}
 		}//End onGetAllVersionByUuid
 
-		MetadataDahsboardSerivce.getLatestByUuidView($stateParams.id, "dashboard").then(function (response) { onGetLatestByUuid(response.data) });
+		MetadataDahsboardSerivce.getLatestByUuidView($stateParams.id, "dashboard")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
-			$scope.dashboarddata = response.dashboarddata
+			$scope.isEditInprogess=false;
+			$scope.dashboarddata = response.dashboarddata;
 			$scope.dashboardCompare = response.dashboarddata;
 			var defaultversion = {};
 			defaultversion.version = response.dashboarddata.version;
@@ -398,6 +402,10 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				$scope.getAllAttributeBySource()// Call Function
 			}//End onSuccessGetAllLatest
 		}//End
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}//End IF
 
@@ -410,9 +418,13 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
 		$scope.alldependsOn = null;
-		MetadataDahsboardSerivce.getOneByUuidAndVersionView($scope.dashboard.defaultVersion.uuid, $scope.dashboard.defaultVersion.version, 'dashboard').then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDahsboardSerivce.getOneByUuidAndVersionView($scope.dashboard.defaultVersion.uuid, $scope.dashboard.defaultVersion.version, 'dashboard')
+			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetOneByUuidAndVersion = function (response) {
-			$scope.dashboarddata = response.dashboarddata
+			$scope.isEditInprogess=false;
+			$scope.dashboarddata = response.dashboarddata;
 			$scope.dashboardCompare = response.dashboarddata;
 			var defaultversion = {};
 			defaultversion.version = response.dashboarddata.version;
@@ -442,6 +454,10 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				$scope.getAllAttributeBySource()// Call Function
 			}//End onSuccessGetAllLatest
 		}//End onSuccessGetOneByUuidAndVersion
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 	$scope.addRow = function () {
@@ -472,42 +488,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 		$scope.sectiontable = newDataList;
 	}
-
-    /*$scope.checkAllFilterRow = function(){
-		 if (!$scope.selectedAllFitlerRow){
-	            $scope.selectedAllFitlerRow = true;
-	     }
-		 else {
-	          $scope.selectedAllFitlerRow = false;
-	     }
-		 angular.forEach($scope.filterTableArray, function(filter) {
-			 filter.selected = $scope.selectedAllFitlerRow;
-	        });
-	 }
-    $scope.addRowFilter=function(){
-    	if($scope.filterTableArray ==null){
-    		$scope.filterTableArray=[];
-    	}
-    	var filertable={};
-    	filertable.logicalOperator=$scope.logicalOperator[0];
-    	filertable.lhsFilter=$scope.lhsdatapodattributefilter[0]
-    	filertable.operator=$scope.operator[0]
-      	$scope.filterTableArray.splice($scope.filterTableArray.length, 0,filertable);
-    }
-    $scope.removeRowFitler=function(){
-    	var newDataList=[];
-    	$scope.checkAll=false;
-    	angular.forEach($scope.filterTableArray, function(selected){
-             if(!selected.selected){
-                 newDataList.push(selected);
-             }
-         });
-
-    	if(newDataList.length >0){
-	    	newDataList[0].logicalOperator="";
-	    	}
-    	$scope.filterTableArray =newDataList;
-    }*/
 
 	/*Start SubmitDashboard*/
 	$scope.submitDashboard = function () {

@@ -44,7 +44,6 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -90,7 +89,6 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.catalyst.expressions.RowNumber;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
@@ -2168,14 +2166,17 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 
 	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
-		List<String> colNameList = Arrays.asList(fieldArray);
-		List<String> uniqueRowIdentifierCols = new ArrayList<>();
-		for(String colName : rowIdentifierCols) {
-			if(!colNameList.contains(colName)) {
-				uniqueRowIdentifierCols.add(colName);
-			} 
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			List<String> colNameList = Arrays.asList(fieldArray);
+			List<String> uniqueRowIdentifierCols = new ArrayList<>();
+			for(String colName : rowIdentifierCols) {
+				if(!colNameList.contains(colName)) {
+					uniqueRowIdentifierCols.add(colName);
+				} 
+			}
+			return uniqueRowIdentifierCols;
 		}
-		return uniqueRowIdentifierCols;
+		return null;
 	}
 	
 	@Override

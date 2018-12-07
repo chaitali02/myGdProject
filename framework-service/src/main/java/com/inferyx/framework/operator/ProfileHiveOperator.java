@@ -35,15 +35,26 @@ public class ProfileHiveOperator extends ProfileOperator {
 			String sql = "";
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"+ datapod.getName() + "' AS datapodName, " + attrId
-					+ " AS AttributeId, '" + attrName + "' AS attributeName, " + "COUNT(" + attrName + ") AS numRows, min(" + attrName + ") as minVal, max(" + attrName + ") AS maxVal, avg(cast("
-					+ attrName + " AS int)) AS avgVal, percentile(cast(" + attrName
-					+ " as BIGINT), 0.5) AS medianVal, stddev(" + attrName + ") AS stdDev, count(distinct " + attrName
-					+ ") AS numDistinct, count(distinct " + attrName + ")/count(" + attrName
-					+ ")*100 AS perDistinct, count(if(" + attrName + " is null,1,0)) AS numNull,count(if(" + attrName
-					+ "" + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, count(if(" + attrName
-					+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, '"
-//					+" current_date() AS load_date, "+" unix_timestamp() AS load_id, '" 
+					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
+					+ datapod.getName() + "' AS datapodName, " + attrId
+					+ " AS AttributeId, '" + attrName + "' AS attributeName, " 
+					+ "count(1) AS numRows, "
+					+ "min(" + attrName + ") AS minVal, "
+					+ "max(" + attrName + ") AS maxVal, "
+					+ "avg(cast(" + attrName + " AS int)) AS avgVal, "
+					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS medianVal, "
+					+ "stddev(" + attrName + ") AS stdDev, "
+					+ "count(distinct " + attrName + ") AS numDistinct, "
+					+ "count(distinct " + attrName + ")/count(1)*100 AS perDistinct, "
+					+ "sum(if(" + attrName + " is null,1,0)) AS numNull,"
+					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "
+					+ "min(length(cast(" + attrName + " as string))) as minLength, "
+					+ "max(length(cast(" + attrName + " as string))) as maxLength, "
+					+ "avg(length(cast(" + attrName + " as string))) as avgLength, "
+					+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
+					+ " FROM " + profileTableName  
+					+ " GROUP by " +  attrName 
+					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
 					+ profileExec.getVersion()+ "' AS version from " + profileTableName;
 			
 			logger.info("query is : " + sql);
