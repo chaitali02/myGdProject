@@ -3896,8 +3896,11 @@ public class CommonServiceImpl <T> {
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
 			String type, String uuid,String version, String action, String dataSourceUuid)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
+	     String directoryPathByDataSource = null;
+		if(dataSourceUuid != null) {
 		Datasource datasource=(Datasource) getOneByUuidAndVersion(dataSourceUuid, null, MetaType.datasource.toString());
-          String directoryPathByDataSource=datasource.getPath();
+           directoryPathByDataSource=datasource.getPath();
+		}
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
