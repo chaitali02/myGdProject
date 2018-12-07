@@ -15,5 +15,8 @@ create table dp_rule_results(
 	perdistinct decimal(20,4),
 	numnull integer(10),
 	pernull decimal(20,4),
-	sixsigma decimal(20,4),
+	minLength decimal(20,4),
+        maxLength decimal(20,4),
+        avgLength decimal(20,4),
+        numDuplicates decimal(20,4),
 	version integer(10));
