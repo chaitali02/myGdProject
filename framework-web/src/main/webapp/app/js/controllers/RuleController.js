@@ -287,6 +287,8 @@ var confirmDialog = function(newVal, yes, no) {
     $scope.mode = $stateParams.mode;
     $scope.ruleRelation;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     RuleService.getAllVersionByUuid($stateParams.id, "rule").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
@@ -297,19 +299,19 @@ var confirmDialog = function(newVal, yes, no) {
         $scope.rule.versions[i] = ruleversion;
       }
     }
-    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rule').then(function (response) { onSuccess(response.data)});
+    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rule')
+      .then(function (response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function (response) {
-      $scope.ruleData = response.ruledata
+      $scope.isEditInprogess=false;
+      $scope.ruleData = response.ruledata;
       $scope.tags = response.ruledata.tags
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
       defaultversion.uuid = response.ruledata.uuid;
       $scope.rule.defaultVersion = defaultversion;
-
       if (response.filterInfo.length > 0) {
         $scope.filterTableArray = response.filterInfo
       }
-
       $scope.attributeTableArray = response.sourceAttributes
       $scope.datapodAttributeTags = response.sourceAttributes
       $scope.rulsourcetype = response.ruledata.source.ref.type;
@@ -372,7 +374,11 @@ var confirmDialog = function(newVal, yes, no) {
         $scope.sourcedatapodattribute = response;
       }
 
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   else {
     $scope.showactive = "false"
@@ -399,10 +405,13 @@ var confirmDialog = function(newVal, yes, no) {
     $scope.myform1.$dirty = false;
     $scope.myform2.$dirty = false;
     $scope.myform3.$dirty = false;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     RuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid, $scope.rule.defaultVersion.version, 'rule')
-    .then(function (response) { onSuccess(response.data)});
+    .then(function (response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function (response) {
-      $scope.ruleData = response.ruledata
+      $scope.isEditInprogess=false;
+      $scope.ruleData = response.ruledata;
       $scope.tags = response.ruledata.tags
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
@@ -471,6 +480,10 @@ var confirmDialog = function(newVal, yes, no) {
       }
 
     } //End getOneByUuidAndVersion
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   } //End selectVersion
 
   $scope.hideInputbox = function (index) {
@@ -1749,8 +1762,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
-    RuleGroupService.getAllVersionByUuid($stateParams.id, "rulegroup").then(function (response) {
-      onGetAllVersionByUuid(response.data)
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    RuleGroupService.getAllVersionByUuid($stateParams.id, "rulegroup").then(function (response) {onGetAllVersionByUuid(response.data)
     });
     var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
@@ -1760,11 +1774,10 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       }
 
     }
-    RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rulegroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rulegroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       if(response.tag)
       $scope.tags = response.tags;
@@ -1778,12 +1791,16 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid 
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
     }
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }else{
     $scope.ruleGroupDetail={};
     $scope.ruleGroupDetail.locked="N";
@@ -1791,29 +1808,33 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 
   $scope.selectVersion = function () {
     $scope.myform.$dirty = false;
-    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'rulegroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'rulegroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags;
       var defaultversion = {};
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.rulegroup.defaultVersion = defaultversion;
-      // $scope.checkboxModelparallel=
       var ruleTagArray = [];
       for (var i = 0; i < response.ruleInfo.length; i++) {
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
   $scope.loadRules = function (query) {
