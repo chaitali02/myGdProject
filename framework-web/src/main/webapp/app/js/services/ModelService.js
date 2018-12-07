@@ -408,7 +408,7 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
           }
         }
 
-        console.log(JSON.stringify(attributes))
+       // console.log(JSON.stringify(attributes))
         deferred.resolve({
           data: attributes
         })

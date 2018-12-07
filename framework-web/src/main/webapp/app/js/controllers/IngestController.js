@@ -1268,7 +1268,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		RuleGroupService.getAllVersionByUuid($stateParams.id, "ingestgroup").then(function (response) { onGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
+		RuleGroupService.getAllVersionByUuid($stateParams.id, "ingestgroup")
+			.then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var rulegroupversion = {};
@@ -1276,8 +1279,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				$scope.rulegroup.versions[i] = rulegroupversion;
 			}
 		}
-		RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
+		RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestgroup')
+			.then(function (response) { onsuccess(response.data) },function(response) {onError(response.data)});
 		var onsuccess = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.ruleGroupDetail = response;
 			$scope.tags = response.tags
 			$scope.checkboxModelparallel = response.inParallel;
@@ -1295,6 +1300,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				ruleTagArray[i] = ruletag;
 			}
 			$scope.ruleTags = ruleTagArray
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}else{
 		$scope.ruleGroupDetail={};
@@ -1303,8 +1312,12 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
+		$scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
+		RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'ingestgroup')
+			.then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
 		var onsuccess = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.ruleGroupDetail = response;
 			$scope.tags = response.tags
 			var defaultversion = {};
@@ -1321,6 +1334,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				ruleTagArray[i] = ruletag;
 			}
 			$scope.ruleTags = ruleTagArray
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 

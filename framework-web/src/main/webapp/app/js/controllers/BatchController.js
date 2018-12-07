@@ -2,6 +2,7 @@ BatchModule = angular.module('BatchModule');
 
 BatchModule.controller('DetailBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES) {
   $scope.moment = moment();
+ // console.log( moment.tz.names() )
   $scope.moment.locale('fr-FR');
   $scope.select = 'batch';
   $scope.myArrayOfDates = [];

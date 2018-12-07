@@ -811,8 +811,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.showactive = "true"
-		IngestRuleService.getAllVersionByUuid($stateParams.id, "ingest").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.showactive = "true";
+		$scope.isEditInprogess=true;
+    	$scope.isEditVeiwError=false;
+		IngestRuleService.getAllVersionByUuid($stateParams.id, "ingest")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var ingetversion = {};
@@ -820,8 +823,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.ingest.versions[i] = ingetversion;
 			}
 		}
-		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest').then(function (response) { onSuccess(response.data) });
+		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest')
+			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;
 			$scope.ingestCompare = response.ingestData;
@@ -921,7 +926,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}; 
 	}//End If
     else{
 		
@@ -934,9 +943,15 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 
 
 	$scope.selectVersion = function () {
-		$scope.myform.$dirty = false;
-		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingest').then(function (response) { onSuccess(response.data) });
+		$scope.myform1.$dirty = false;
+		$scope.myform2.$dirty = false;
+		$scope.myform3.$dirty = false;
+		$scope.isEditInprogess=true;
+    	$scope.isEditVeiwError=false;
+		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingest')
+			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;
 			$scope.ingestCompare = response.ingestData;
@@ -1017,7 +1032,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		} 
 	}
 
 	$scope.SearchAttribute = function (index, type, propertyType) {
