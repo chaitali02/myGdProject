@@ -43,45 +43,6 @@
     {
       "attributeId": 0,
       "displaySeq": 0,
-      "name": "features",
-      "type": "string",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "features",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 1,
-      "displaySeq": 1,
-      "name": "rawPrediction",
-      "type": "string",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "rawPrediction",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 2,
-      "displaySeq": 2,
-      "name": "probability",
-      "type": "string",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "probability",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 3,
-      "displaySeq": 3,
       "name": "prediction",
       "type": "double",
       "desc": null,
@@ -89,6 +50,19 @@
       "key": "",
       "partition": "N",
       "dispName": "prediction",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 1,
+      "displaySeq": 1,
+      "name": "probability",
+      "type": "string",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "probability",
       "active": "Y",
       "length": null
     }

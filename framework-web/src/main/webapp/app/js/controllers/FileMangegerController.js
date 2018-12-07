@@ -262,15 +262,29 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
     $('#fileupload').modal('hide');
     $scope.searchButtonText = "Uploading"
    // FileManagerService.SaveFile(file.name, fd, "").then(function (response) { onSuccess(response.data) });
-   CommonService.uploadFileManager(file.name,fd,null,null,null,"csv",$scope.selectDataSource.uuid).then(function (response) { onSuccess(response.data) }); 
+   CommonService.uploadFileManager(file.name,fd,null,null,null,"csv",$scope.selectDataSource.uuid)
+    .then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) }); 
    var onSuccess = function (response) {
-      $scope.searchButtonText = "Upload"
-      $scope.msg = "File Uploaded Successfully"
-      notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = $scope.msg
-      $scope.$emit('notify', notify);
-      $scope.getBaseEntityStatusByCriteria(false);
+     debugger
+    $scope.searchButtonText = "Upload"
+     if (Array.isArray(response) ==false){
+      // $scope.msg = ""
+      // notify.type = 'info',
+      // notify.title = 'Info',
+      // notify.content = $scope.msg
+      // $scope.$emit('notify', notify);
+     }
+     else{
+        $scope.msg = "File Uploaded Successfully"
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.msg
+        $scope.$emit('notify', notify);
+        $scope.getBaseEntityStatusByCriteria(false);
+      }
+    }
+    var onError = function (response) {
+      $scope.searchButtonText = "Upload";
     }
   }
 

@@ -321,11 +321,16 @@
      this.uploadFileManager=function(filename,data,uuid,version,type,fileType,dataSourceUuid){
       var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType +"&dataSourceUuid="+dataSourceUuid
   		var deferred = $q.defer();
-  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
+  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)},function (response) { onError(response.data) });
     	    var onSuccess=function(response){
       	    deferred.resolve({
                 data:response
              });
+          }
+          var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
           }
          return deferred.promise;
     }
