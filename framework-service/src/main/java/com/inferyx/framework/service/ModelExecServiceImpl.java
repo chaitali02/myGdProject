@@ -362,7 +362,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		return listStr.toArray(new String[listStr.size()]);
 	}
 
-	public String[] getAttributeNames(Train train) throws JsonProcessingException {
+	public String[] getMappedFeatureNames(Train train) throws JsonProcessingException {
 		train = modelServiceImpl.resolveName(train);
 		List<FeatureAttrMap> listAttrSource = train.getFeatureAttrMap();
 		List<String> listStr = new ArrayList<String>();

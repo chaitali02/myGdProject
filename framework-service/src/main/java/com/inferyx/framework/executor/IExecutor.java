@@ -772,4 +772,19 @@ public interface IExecutor {
 	 */
 	ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
 			String tableName, boolean registerTempTable, String clientContext) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param fieldArray
+	 * @param rsHolder
+	 * @param tempTableName
+	 * @param datasource
+	 * @param registerTempTable
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException
+	 */
+	Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException;
 }

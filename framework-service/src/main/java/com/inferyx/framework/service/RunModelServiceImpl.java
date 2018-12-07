@@ -729,7 +729,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}
 			boolean isSuccess = false;
 			Object result = null;
-			String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
+			String[] fieldArray = modelExecServiceImpl.getMappedFeatureNames(train);
 			String trainName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
 			String filePath = String.format("/%s/%s/%s", train.getUuid(), train.getVersion(), trainExec.getVersion());
 			String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());

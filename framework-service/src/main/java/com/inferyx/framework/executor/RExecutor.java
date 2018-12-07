@@ -590,4 +590,11 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
