@@ -525,5 +525,22 @@
                 "version" : "1521430822"
             }
         }
-    ]
+    ],
+ "rowIdentifier" : [ 
+        {
+            "attrId" : "1",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+            }
+        }, 
+        {
+            "attrId" : "2",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+            }
+        }
+    ],
+    "includeFeatures" : "Y"
 }
