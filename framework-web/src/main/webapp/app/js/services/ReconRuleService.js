@@ -789,7 +789,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
             deferred.resolve({
                 data: ruleJSOn
             })
-        },
+        };
         var onError = function (response) {
             deferred.reject({
               data: response
