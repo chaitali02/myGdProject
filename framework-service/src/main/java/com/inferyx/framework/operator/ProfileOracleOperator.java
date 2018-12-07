@@ -61,7 +61,13 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ "cast(count(" + attrName + ") as decimal) AS numNull,"				
 				+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "				
 //				+ "count(" + attrName + ") / sum(REPLACE(nvl(" + attrName + ",'0'),0 , 1))*100 AS perNull, "
-				+ "null AS sixSigma, " 
+				+ "min(length(cast(" + attrName + " as CHAR))) as minLength, "
+				+ "max(length(cast(" + attrName + " as CHAR))) as maxLength, "
+				+ "avg(length(cast(" + attrName + " as CHAR))) as avgLength, "
+				+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
+				+ " FROM " + profileTableName  
+				+ " GROUP by " +  attrName 
+				+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, "  
 				+ profileExec.getVersion() + " AS version from " + profileTableName;
 		//}
 		logger.info("query is : " + sql);
