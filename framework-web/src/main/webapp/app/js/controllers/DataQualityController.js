@@ -200,9 +200,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.showactive = "true"
     $scope.isSelectSoureceAttr = false
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     DataqulityService.getAllVersionByUuid($stateParams.id, "dq").then(function (response) {
-      onGetAllVersionByUuid(response.data)
-    });
+      onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
         var dqversion = {};
@@ -211,10 +212,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     }
 
-    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id, $stateParams.version, "dq").then(function (response) {
-      onGetSuccess(response.data)
-    });
+    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id, $stateParams.version, "dq")
+    .then(function (response) {onGetSuccess(response.data)}),function(response) {onError(response.data)};
     var onGetSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.dataqualitydata = response.dqdata;
       $scope.tags = response.dqdata.tags;
       var defaultversion = {};
@@ -271,9 +272,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         onSuccessgetAllLatest(response.data)
       });
       var onSuccessgetAllLatest = function (response) {
-
         $scope.allDependsOn = response
-
         DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
@@ -290,7 +289,11 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           $scope.refIntegrityCheckoptions = response;
         }
       }
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   else {
     $scope.showactive = "false";
@@ -300,9 +303,12 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.selectVersion = function () {
     $scope.isSelectSoureceAttr = false
     $scope.myform1.$dirty = false;
-    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dq").then(function (response) {
-      onGetSuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dq")
+    .then(function (response) { onGetSuccess(response.data)},function(response) {onError(response.data)});
     var onGetSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.dataqualitydata = response.dqdata;
       if (response.dqdata.tags.length > 0) {
         $scope.tags = response.dqdata.tags;
@@ -352,7 +358,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         onSuccressGetFunction(response.data)
       });
       var onSuccressGetFunction = function (response) {
-        console.log(response)
         $scope.allFunction = response;
       }
       if (response.dqdata.attribute != null) {
@@ -385,27 +390,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           $scope.refIntegrityCheckoptions = response;
         }
       }
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
-  /*$scope.OnSourceTypeChange=function(){
-	    	$scope.dataqualityoptions=[];
-	    	DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function(response){onSuccess(response.data)});
-		    var onSuccess=function(response){
-		    	console.log(response[0].name)
-		    	$scope.allDependsOn=response
-		    	var selectDependsOn={};
-		    	selectDependsOn.uuid=response[0].uuid;
-		    	selectDependsOn.name=response[0].name;
-		    	selectDependsOn.version=response[0].version;
-		    	$scope.selectDependsOcustomFormatCheckn=selectDependsOn
-		    	DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid,$scope.dataqualitysourceType).then(function(response){onSuccess(response.data)});
-			    var onSuccess=function(response){
-			    	$scope.dataqualityoptions=response;
-			    	$scope.lhsdatapodattributefilter=response;
-			    }
-		    }
-	    }*/
+
   $scope.dependsOnDataQuality = function () {
     $scope.dataqualityoptions;
     if (!$scope.selectDependsOn) {
@@ -833,7 +825,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     dataqualityjosn.rangeCheck = rengeCheck;
     dataqualityjosn.dataTypeCheck = $scope.selectDataType
     dataqualityjosn.dateFormatCheck = $scope.selectdatefromate
-    debugger
     if (typeof $scope.dataqualitydata.customFormatCheck != "undefined") {
       dataqualityjosn.customFormatCheck = $scope.dataqualitydata.customFormatCheck
     }
@@ -1156,6 +1147,8 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     DataqulityService.getAllVersionByUuid($stateParams.id, "dqgroup").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
@@ -1167,21 +1160,18 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       }
 
     }
-    DataqulityService.getOneByUuidAndVersion1($stateParams.id, $stateParams.version, 'dqgroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    DataqulityService.getOneByUuidAndVersion1($stateParams.id, $stateParams.version, 'dqgroup')
+    .then(function (response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.dqruleGroupDetail = response;
       var defaultversion = {};
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.dqgroup.defaultVersion = defaultversion;
       $scope.checkboxModelparallel = response.inParallel;
-
       $scope.uuid = response.uuid;
       $scope.version = response.version;
-
       $scope.tags = response.tags
       var ruleTagArray = [];
       for (var i = 0; i < response.ruleInfo.length; i++) {
@@ -1190,23 +1180,27 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
         ruletag.name = response.ruleInfo[i].ref.name;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruletag.id = response.ruleInfo[i].ref.uuid
-
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }else{
     $scope.dqruleGroupDetail={};
     $scope.dqruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function () {
-    $scope.myform1.$dirty = false;
-    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    $scope.myform.$dirty = false;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.dqruleGroupDetail = response.data;
       var defaultversion = {};
       defaultversion.version = response.data.version;
@@ -1225,14 +1219,19 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       }
       $scope.ruleTags = ruleTagArray
     }
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
+
   $scope.loadRules = function (query) {
     return $timeout(function () {
       return $filter('filter')($scope.dqall, query);
     });
   };
-  $scope.clear = function () {
 
+  $scope.clear = function () {
     $scope.ruleTags = null;
   }
 
@@ -1280,7 +1279,6 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       var ref = {};
       ref.type = "dq";
       ref.uuid = $scope.ruleTags[i].uuid;
-      // ref.version=$scope.ruleTags[i].version;
       ruleInfo.ref = ref;
       ruleInfoArray[i] = ruleInfo;
     }

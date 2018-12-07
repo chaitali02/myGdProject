@@ -567,7 +567,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 
     this.getOneByUuidAndVersion = function (uuid, version, type) {
         var deferred = $q.defer();
-        IngestRuleFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+        IngestRuleFactory.findOneByUuidAndVersion(uuid, version, type)
+            .then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
         var onSuccess = function (response) {
             var ingestJSOn = {};
             ingestJSOn.ingestData = response;
@@ -908,9 +909,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 }
             }
             ingestJSOn.ingesttabalearray = attributeArray;
-            console.log(ingestJSOn.ingesttabalearray)
+          //  console.log(ingestJSOn.ingesttabalearray)
             deferred.resolve({
                 data: ingestJSOn
+            })
+        };
+        var onError = function (response) {
+            deferred.reject({
+              data: response
             })
         }
         return deferred.promise;

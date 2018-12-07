@@ -1413,5 +1413,23 @@
     "attrType": null
   },
   "useHyperParams": "N",
-  "featureImportance": null
+  "featureImportance": null,
+   "rowIdentifier" : [ 
+        {
+            "ref": {
+            "type": "dataset",
+            "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6"
+        },
+        "attrId": "49"
+        }, 
+        {
+           "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d2b6"
+         
+        },
+        "attrId": "50"
+        }
+    ],
+    "includeFeatures" : "Y"
 }

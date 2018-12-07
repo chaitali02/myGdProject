@@ -134,5 +134,22 @@
                 "version" : "1464977196"
             }
         }
-    ]
+    ],
+"rowIdentifier" : [ 
+        {
+           "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }, 
+        {
+            "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }
+    ],
+    "includeFeatures" : "Y"
 }

@@ -2,6 +2,7 @@ BatchModule = angular.module('BatchModule');
 
 BatchModule.controller('DetailBatchController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, BatchService,privilegeSvc,dagMetaDataService,CommonService,CF_META_TYPES) {
   $scope.moment = moment();
+ // console.log( moment.tz.names() )
   $scope.moment.locale('fr-FR');
   $scope.select = 'batch';
   $scope.myArrayOfDates = [];
@@ -44,7 +45,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
   
   var batchScope=$scope;
-  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"HOURLY","caption":"hourly"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"QUARTERLY","caption":"Quarterly"},{"text":"YEARLY","caption":"Yearly"}];
+  $scope.frequencyTypes=[{"text":"ONCE","caption":"Once"},{"text":"DAILY","caption":"Daily"},{"text":"HOURLY","caption":"Hourly"},{"text":"WEEKLY","caption":"Weekly"},{"text":"BIWEEKLY","caption":"Bi-Weekly"},{"text":"MONTHLY","caption":"Monthly"},{"text":"QUARTERLY","caption":"Quarterly"},{"text":"YEARLY","caption":"Yearly"}];
   $scope.weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
   $scope.weekDaysToNum={"SUN":"0","MON":"1","TUE":"2","WED":"3","THU":"4","FRI":"5","SAT":"6"};
   $scope.numToQuarterly={"0":"Q1","1":"Q2","2":"Q3","3":"Q4"};

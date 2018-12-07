@@ -209,17 +209,47 @@
         }, 
         {
             "attributeId" : 15,
-            "name" : "sixSigma",
-            "type" : "double",
-            "desc" : "Null Values to the total row count",
+            "name" : "minLength",
+            "type" : "Double",
+            "desc" : " ",
             "key" : null,
             "partition" : "N",
-            "dispName" : "sixSigma",
+            "dispName" : "minLength",
             "active" : "Y",
             "expr" : null
-        }, 
-        {
+        },   {
             "attributeId" : 16,
+            "name" : "maxLength",
+            "type" : "Double",
+            "desc" : " ",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "maxLength",
+            "active" : "Y",
+            "expr" : null
+        },  {
+            "attributeId" : 17,
+            "name" : "avgLength",
+            "type" : "Double",
+            "desc" : " ",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "avgLength",
+            "active" : "Y",
+            "expr" : null
+        },  {
+            "attributeId" : 18,
+            "name" : "numDuplicates",
+            "type" : "Double",
+            "desc" : " ",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "numDuplicates",
+            "active" : "Y",
+            "expr" : null
+        },       
+        {
+            "attributeId" : 19,
             "name" : "version",
             "type" : "Integer",
             "desc" : "version",

@@ -305,9 +305,21 @@
          return deferred.promise;
     }
 
-    //Genric for comment,filemanger,import,model
+    //Genric for comment,import,model
     this.upload=function(filename,data,uuid,version,type,fileType){
       var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType
+  		var deferred = $q.defer();
+  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
+    	    var onSuccess=function(response){
+      	    deferred.resolve({
+                data:response
+             });
+          }
+         return deferred.promise;
+    }
+     //filemanger
+     this.uploadFileManager=function(filename,data,uuid,version,type,fileType,dataSourceUuid){
+      var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType +"&dataSourceUuid="+dataSourceUuid
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){

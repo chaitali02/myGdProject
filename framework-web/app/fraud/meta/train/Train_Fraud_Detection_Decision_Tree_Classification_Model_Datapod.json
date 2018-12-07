@@ -523,5 +523,22 @@
     "attrId": "30",
     "attrName": "class"
   },
-  "useHyperParams": "Y"
+  "useHyperParams": "Y",
+  "rowIdentifier" : [ 
+        {
+            "attrId" : "1",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+            }
+        }, 
+        {
+            "attrId" : "2",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+            }
+        }
+    ],
+    "includeFeatures" : "Y"
 }
