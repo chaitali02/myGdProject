@@ -625,7 +625,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 	}
 
 	$scope.SubmitSearchAttr=function(){
-    console.log($scope.selectDatasetAttr);
     $scope.searchAttr.filterType =='source'?$scope.sourceFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr: $scope.targetFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;		
 		$('#searchAttr').modal('hide')
   }
@@ -634,7 +633,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     ReconRuleService.getAllLatest(selectType).then(function(response) { onSuccessGetAllLatest(response.data)});
     var onSuccessGetAllLatest = function(response) {
       if(type=="source"){
-        console.log(defaultoption)
         $scope.allSource=response;
         if(!defaultValue){
           $scope.allSource.defaultoption={}
@@ -673,7 +671,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         $scope.sourceFilterAttribute=response;
       }else{
         $scope.allTargetAtrribute=response;
-       // console.log(response[0]);
         if(defaultValue)
         $scope.selectTargetAtrribute=response[0];
         $scope.targetFilterAttribute=response;
@@ -721,6 +718,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.showactive = "true";
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     ReconRuleService.getAllVersionByUuid($stateParams.id, "recon").then(function(response) {onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function(response) {
       for (var i = 0; i < response.length; i++) {
@@ -729,8 +728,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         $scope.rule.versions[i] = ruleversion;
       }
     }
-    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recon').then(function(response) { onSuccess(response.data)});
+    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recon')
+      .then(function(response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function(response) {
+     $scope.isEditInprogess=false;
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
      var defaultversion = {};
@@ -766,16 +767,25 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
      $scope.getAllLatestFunction('source');
      $scope.getAllLatestFunction('target');
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }else{
     $scope.getAllLatest("source",$scope.selectSourceType,true,{});
     $scope.getAllLatest("target",$scope.selectTargetType,true,{});
     $scope.reconruledata={};
     $scope.reconruledata.locked="N";
   }
+  
   $scope.selectVersion=function(){
-    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon').then(function(response) { onSuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon')
+      .then(function(response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function(response) {
+     $scope.isEditInprogess=false;
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
      var defaultversion = {};
@@ -811,7 +821,11 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      $scope.getAllLatestFunction('source');
      $scope.getAllLatestFunction('target');
 
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   $scope.submit=function(){
     var upd_tag="N"
@@ -865,10 +879,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     refTargetFun.uuid=$scope.selectTargetFunction.uuid;
     targetFunc.ref=refTargetFun;
     jsonObj.targetFunc=targetFunc;
-
-    var sourcefilter = {}
     
-  
+    var sourcefilter = {}
     var sourceFilterInfo = [];
     if($scope.sourceFilterTable !=null){
       if($scope.sourceFilterTable.length >0){
@@ -1260,6 +1272,8 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false
     RuleGroupService.getAllVersionByUuid($stateParams.id, "recongroup").then(function(response) {onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function(response) {
       for (var i = 0; i < response.length; i++) {
@@ -1268,8 +1282,10 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         $scope.rulegroup.versions[i] = rulegroupversion;
       }
     }
-    RuleGroupService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recongroup').then(function(response) {onsuccess(response.data)});
+    RuleGroupService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recongroup')
+      .then(function(response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags
       $scope.checkboxModelparallel = response.inParallel;
@@ -1282,12 +1298,16 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid// + "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }else{
     $scope.ruleGroupDetail={};
     $scope.ruleGroupDetail.locked="N";
@@ -1295,8 +1315,12 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
   $scope.selectVersion = function() {
     $scope.myform.$dirty = false;
-    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'recongroup').then(function(response) {onsuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false
+    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'recongroup')
+      .then(function(response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags
       var defaultversion = {};
@@ -1313,7 +1337,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
   $scope.loadRules = function(query) {
