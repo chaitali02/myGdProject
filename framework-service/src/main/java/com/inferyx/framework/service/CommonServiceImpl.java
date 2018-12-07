@@ -3894,9 +3894,10 @@ public class CommonServiceImpl <T> {
 	}
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
-			String type, String uuid,String version, String action)
+			String type, String uuid,String version, String action, String dataSourceUuid)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
-
+		Datasource datasource=(Datasource) getOneByUuidAndVersion(dataSourceUuid, null, MetaType.datasource.toString());
+          String directoryPathByDataSource=datasource.getPath();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
@@ -3934,7 +3935,7 @@ public class CommonServiceImpl <T> {
 				if (fileType != null && fileType.equalsIgnoreCase("csv") && uuid == null) {
 					location = directoryPath + "/" + originalFileName;
 				} else {
-					location = directoryPath + "/" + fileName_Uuid;
+					location = directoryPathByDataSource + "/" + originalFileName;
 				}
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
