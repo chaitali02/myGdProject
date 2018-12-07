@@ -2166,14 +2166,17 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 
 	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
-		List<String> colNameList = Arrays.asList(fieldArray);
-		List<String> uniqueRowIdentifierCols = new ArrayList<>();
-		for(String colName : rowIdentifierCols) {
-			if(!colNameList.contains(colName)) {
-				uniqueRowIdentifierCols.add(colName);
-			} 
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			List<String> colNameList = Arrays.asList(fieldArray);
+			List<String> uniqueRowIdentifierCols = new ArrayList<>();
+			for(String colName : rowIdentifierCols) {
+				if(!colNameList.contains(colName)) {
+					uniqueRowIdentifierCols.add(colName);
+				} 
+			}
+			return uniqueRowIdentifierCols;
 		}
-		return uniqueRowIdentifierCols;
+		return null;
 	}
 	
 	@Override
