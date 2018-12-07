@@ -3895,7 +3895,7 @@ public class CommonServiceImpl <T> {
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
 			String type, String uuid,String version, String action, String dataSourceUuid)
-			throws FileNotFoundException, IOException, JSONException, ParseException {
+			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 	     String directoryPathByDataSource = null;
 		if(dataSourceUuid != null) {
 		Datasource datasource=(Datasource) getOneByUuidAndVersion(dataSourceUuid, null, MetaType.datasource.toString());
@@ -3908,6 +3908,9 @@ public class CommonServiceImpl <T> {
 				FileType type1 = Helper.getFileType(fileType);
 
 				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
+				File fl = new File(directoryPath);
+				File[] files = fl.listFiles();
+				
 				UploadExec uploadExec = new UploadExec();
 				uploadExec.setBaseEntity();
 				String originalFileName = multipartFile.getOriginalFilename();
@@ -3938,10 +3941,20 @@ public class CommonServiceImpl <T> {
 				if (fileType != null && fileType.equalsIgnoreCase("csv") && uuid == null) {
 					location = directoryPath + "/" + originalFileName;
 				} else {
+					
 					location = directoryPathByDataSource + "/" + originalFileName;
 				}
 				File dest = new File(location);
-				multipartFile.transferTo(dest);
+				if(dest.exists()) {
+					String message="file already exists!!";
+					logger.info(message);
+					sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
+					throw new IOException((message != null) ? message : "Requested " + originalFileName + " file not found!!");
+		     
+				}else {
+					multipartFile.transferTo(dest);
+
+				}
 
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
