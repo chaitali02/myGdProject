@@ -126,7 +126,13 @@ public class ProfileOperator {
 					+ "count(distinct " + attrName + ")/count(1)*100 as perDistinct, "
 					+ "sum(if(" + attrName + " is null,1,0)) as numNull,"
 					+ "sum(if(" + attrName + " is null,1,0)) / count(1)*100 as perNull, "
-					+ "null as sixSigma, '" 
+					+ "min(length(cast(" + attrName + " as CHAR))) as minLength, "
+					+ "max(length(cast(" + attrName + " as CHAR))) as maxLength, "
+					+ "avg(length(cast(" + attrName + " as CHAR))) as avgLength, "
+					+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
+					+ " FROM " + profileTableName  
+					+ " GROUP by " +  attrName 
+					+ " HAVING COUNT(" + attrName + ") > 1)) numDuplicates, "  
 					+ profileExec.getVersion() + "' as version from " + profileTableName;
 
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
