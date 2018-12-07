@@ -259,7 +259,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	$scope.clear = function () {
 		$scope.profileTags = null;
 	}
-
+	
+	$scope.addAll=function(){
+		$scope.profileTags=$scope.allattribute;
+	}
 	$scope.okProfileGroupSave = function () {
 		var hidemode = "yes";
 		if (hidemode == 'yes') {

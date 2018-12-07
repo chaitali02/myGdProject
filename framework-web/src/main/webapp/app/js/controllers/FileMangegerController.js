@@ -187,9 +187,17 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
       type == "user" ? $scope.allUSerName = response : $scope.allExecName = response;
     }
   }
+
+  $scope.getDatasourceByType = function (type) {
+    FileManagerService.getDatasourceByType(type).then(function (response) { onSuccessGetDatasourceByType(response.data) });
+    var onSuccessGetDatasourceByType = function (response) {
+      console.log(response)
+     $scope.allDatasource=response;
+    }
+  }
   $scope.getAllLatest("uploadexec");
   $scope.getAllLatest("user");
-
+  $scope.getDatasourceByType ('FILE');
 
   $scope.getBaseEntityStatusByCriteria = function () {
     var startdate = ""
@@ -224,6 +232,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
   $scope.refresh();
 
   $scope.upload = function () {
+    $scope.selectDataSource=null;
     $(":file").jfilestyle('clear')
     $("#csv_file").val("");
     $('#fileupload').modal({
@@ -253,7 +262,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
     $('#fileupload').modal('hide');
     $scope.searchButtonText = "Uploading"
    // FileManagerService.SaveFile(file.name, fd, "").then(function (response) { onSuccess(response.data) });
-   CommonService.upload(file.name,fd,null,null,null,"csv").then(function (response) { onSuccess(response.data) }); 
+   CommonService.uploadFileManager(file.name,fd,null,null,null,"csv",$scope.selectDataSource.uuid).then(function (response) { onSuccess(response.data) }); 
    var onSuccess = function (response) {
       $scope.searchButtonText = "Upload"
       $scope.msg = "File Uploaded Successfully"
