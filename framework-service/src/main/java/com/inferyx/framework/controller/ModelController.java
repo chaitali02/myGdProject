@@ -24,6 +24,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,8 +39,8 @@ import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
@@ -257,7 +258,7 @@ public class ModelController {
 		}
 	}
 	
-	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Model> getAllModelByType(@RequestParam("customFlag") String customFlag,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "modelType" ,required = false) String modelType) throws Exception {
