@@ -18,6 +18,27 @@ public class AttributeRefHolder extends MetaIdentifierHolder {
 	private String attrId;
 	private String attrName;
 	private String attrType;
+	private String attrUnitType;
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @return the attrUnitType
+	 */
+	public String getAttrUnitType() {
+		return attrUnitType;
+	}
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @param attrUnitType the attrUnitType to set
+	 */
+	public void setAttrUnitType(String attrUnitType) {
+		this.attrUnitType = attrUnitType;
+	}
 
 	public String getAttrType() {
 		return this.attrType;
@@ -43,10 +64,15 @@ public class AttributeRefHolder extends MetaIdentifierHolder {
 		this.attrName = attrName;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "AttributeRefHolder [attrId=" + this.attrId + ", attrName=" + this.attrName + ", attrType="
-				+ this.attrType + "]";
+		return "AttributeRefHolder [attrId=" + attrId + ", attrName=" + attrName + ", attrType=" + attrType
+				+ ", attrUnitType=" + attrUnitType + "]";
 	}
+
+	
 
 }

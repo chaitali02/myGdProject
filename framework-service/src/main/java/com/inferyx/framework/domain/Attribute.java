@@ -23,8 +23,29 @@ public class Attribute {
     private String dispName;
 	private String active = "Y";
 	private Integer length;
+	private String attrUnitType;
     
 	
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @return the attrUnitType
+	 */
+	public String getAttrUnitType() {
+		return attrUnitType;
+	}
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @param attrUnitType the attrUnitType to set
+	 */
+	public void setAttrUnitType(String attrUnitType) {
+		this.attrUnitType = attrUnitType;
+	}
 
 	/**
 	 * @Ganesh
