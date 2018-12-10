@@ -12,6 +12,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   var matches = $scope.tz.match(/\b(\w)/g);
   $scope.timezone = matches.join('')
   $scope.WeekArray = [1,2];
+  $scope.isDestoryState = false; 
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -76,10 +77,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
-	}
+  }
+  
 	$scope.loadTag = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
@@ -87,6 +88,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   };
   
   $scope.getLovByType();
+
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -467,7 +473,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 
   $scope.oksave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false){
       setTimeout(function() {
         $state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].listState);
       }, 2000);

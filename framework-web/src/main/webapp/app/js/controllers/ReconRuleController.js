@@ -14,7 +14,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.lshType  = CF_FILTER.lhsType;
   $scope.rhsType  = CF_FILTER.rhsType;
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
-
+  $scope.isDestoryState = false; 
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -72,6 +72,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   
   $scope.getLovByType();
   
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -1124,7 +1128,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrule');
       }, 2000);
@@ -1136,6 +1140,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService) {
   
   $scope.select = 'rules group';
+  $scope.isDestoryState = false; 
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -1201,7 +1206,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  $scope.getLovByType();
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -1352,7 +1361,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrulegroup');
       }, 2000);
