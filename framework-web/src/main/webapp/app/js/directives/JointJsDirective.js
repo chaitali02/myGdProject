@@ -4,356 +4,394 @@
 
 DataPipelineModule= angular.module('DataPipelineModule');
 
-DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http,$filter,CF_DOWNLOAD) {
- return {
-   scope : {
-     name: "=",
-     hcolumns:"=",
-     data: "="
-   },
-   link: function ($scope, element, attrs) {
-    $scope.download={};
-    $scope.isTrainResultLoad=false;
-    $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-    $scope.download.formates=CF_DOWNLOAD.formate;
-    $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
-    $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
-    $scope.download.limit_to=CF_DOWNLOAD.limit_to;   
-     var initialised = false;
-     $scope.filteredRows = [];
-     $scope.pagination={
-       currentPage:1,
-       pageSize:10,
-       paginationPageSizes:[10, 25, 50, 75, 100],
-       maxSize:5,
-     }
-     
-     $scope.gridOptions = {
-       rowHeight: 40,
-       useExternalPagination: true,
-       exporterMenuPdf: false,
-       exporterPdfOrientation: 'landscape',
-       exporterPdfPageSize: 'A4',
-       exporterPdfDefaultStyle: {fontSize: 9},
-       exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
-       enableGridMenu: true,
-       rowHeight: 40,
-       onRegisterApi:  function(gridApi){
-         $scope.gridApi = gridApi;
-         $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-       }
-     }
+DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $compile, $location, $http, $filter, CF_DOWNLOAD, CommonService) {
+  return {
+    scope: {
+      name: "=",
+      hcolumns: "=",
+      data: "="
+    },
+    link: function ($scope, element, attrs) {
+      $scope.download = {};
+      $scope.isTrainResultLoad = false;
+      $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+      $scope.download.formates = CF_DOWNLOAD.formate;
+      $scope.download.selectFormate = CF_DOWNLOAD.formate[0];
+      $scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
+      $scope.download.limit_to = CF_DOWNLOAD.limit_to;
+      var initialised = false;
+      $scope.filteredRows = [];
+      $scope.pagination = {
+        currentPage: 1,
+        pageSize: 10,
+        paginationPageSizes: [10, 25, 50, 75, 100],
+        maxSize: 5,
+      }
 
-         
-     $scope.getGridStyle = function() {
-       var style = {
-         'margin-top': '10px',
-         'margin-bottom': '10px',
-       }
-       if ($scope.filteredRows && $scope.filteredRows.length >0) {
-         style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 60) + 'px';
-       }
-       else{
-         style['height']="100px";
-       }
-       return style;
-     }
+      $scope.gridOptions = {
+        rowHeight: 40,
+        useExternalPagination: true,
+        exporterMenuPdf: false,
+        exporterPdfOrientation: 'landscape',
+        exporterPdfPageSize: 'A4',
+        exporterPdfDefaultStyle: { fontSize: 9 },
+        exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+        enableGridMenu: true,
+        rowHeight: 40,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+        }
+      }
 
-     $scope.filterSearch =function (s) {
-       var data = $filter('filter')($scope.orignalData, s, undefined);
-       $scope.getResults(data)
-     }
-     $scope.modelDetail=null;
-     $scope.$on('generateResults',function (e,params) {
-      $scope.type=params.type
-      $scope.isTrainResultLoad =params.type=='train'?true:false;
-      $scope.modelDetail={};
-      $scope.modelDetail.uuid=params.id;
-      $scope.modelDetail.version=params.version;
-      if($scope.type =='train'){
-        $('#resultsloader').hide();
-       }
-       else{
-        $rootScope.showGrid=true;
-        $rootScope.showGroupDowne=false;
-        $('#errorMsg').hide();
-        $scope.searchtext = '';
-        if(initialised){
-          $scope.gridOptions.columnDefs = [];
-          $scope.gridOptions.data = [];
+
+      $scope.getGridStyle = function () {
+        var style = {
+          'margin-top': '10px',
+          'margin-bottom': '10px',
         }
-        $('#resultsloader').show();
-        $('#resultswrapper').hide();
-        var typeexec;
-        if(params.type=="dataqual"){
-          typeexec="dqexec";
-        }else{
-          typeexec=params.type+"exec";
+        if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+          style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 60) + 'px';
         }
-        debugger
-        $scope.downloadDetail={};
-        $scope.downloadDetail.uuid=params.id;
-        $scope.downloadDetail.version=params.version;
-        $scope.downloadDetail.type=params.type; 
-        var baseurl=$location.absUrl().split("app")[0];
-        $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
-          var mode=res.data.runMode;
-          
-          var url;
-          if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
-            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
-          }else{
-            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
+        else {
+          style['height'] = "100px";
+        }
+        return style;
+      }
+
+      $scope.filterSearch = function (s) {
+        var data = $filter('filter')($scope.orignalData, s, undefined);
+        $scope.getResults(data)
+      }
+
+      $scope.modelDetail = null;
+
+
+      $scope.$on('generateResults', function (e, params) {
+        $scope.type = params.type
+        $scope.isTrainResultLoad = params.type == 'train' ? true : false;
+        $scope.modelDetail = {};
+        $scope.modelDetail.uuid = params.id;
+        $scope.modelDetail.version = params.version;
+        if ($scope.type == 'train') {
+          $('#resultsloader').hide();
+        }
+        else {
+          $rootScope.showGrid = true;
+          $rootScope.showGroupDowne = false;
+
+          $('#errorMsg').hide();
+          $scope.searchtext = '';
+
+          if (initialised) {
+            $scope.gridOptions.columnDefs = [];
+            $scope.gridOptions.data = [];
           }
-          
-          $scope.type=params.type
-          $http({
-                method: 'GET',
-                url:url,
-                  }).then(function (response,status,headers) {
-                    $('#resultsloader').hide();
-                    if(params.type == "train"){
-                      $scope.trainData=response.data;
-                      $('#resultswrapper').show();
-                      renderTable(response.data);
-                    }
-                    else{
-                    if(response.data.length >0){
-                        $('#resultswrapper').show();
-                        renderTable(response.data);}
-                    else{  
-                        $('#resultswrapper').hide();
-                        $('#errorMsg').show();
-                        $('#errorMsg').html('No data available.');
-                    }
-                    }
-                  },function onError(err) {
-                    $('#resultsloader').hide();
-                    $('#errorMsg').show();
-                    $('#errorMsg').html('Some Error Occured');
-                  })
+          $('#resultsloader').show();
+
+          $('#resultswrapper').hide();
+          var typeexec;
+
+          if (params.type == "dataqual") {
+            typeexec = "dqexec";
+          }
+          else {
+            typeexec = params.type + "exec";
+          }
+
+          $scope.downloadDetail = {};
+          $scope.downloadDetail.uuid = params.id;
+          $scope.downloadDetail.version = params.version;
+          $scope.downloadDetail.type = params.type;
+
+          var baseurl = $location.absUrl().split("app")[0];
+          $http.get(baseurl + 'metadata/getNumRowsbyExec?action=view&execUuid=' + params.id + '&execVersion=' + params.version + '&type=' + typeexec).then(function (res) {
+            var mode = res.data.runMode;
+
+            var url;
+            if (params.type == "train" || params.type == "predict" || params.type == "simulate") {
+              url = baseurl + "model/" + params.type + "/getResults?action=view&uuid=" + params.id + "&version=" + params.version + "&mode=" + mode + "&requestId=";
+            } else {
+              url = baseurl + params.type + "/getResults?action=view&uuid=" + params.id + "&version=" + params.version + "&mode=" + mode + "&requestId=";
+            }
+
+            $scope.type = params.type
+            $http({
+              method: 'GET',
+              url: url,
+            }).then(function (response, status, headers) {
+              $('#resultsloader').hide();
+
+              if (params.type == "train") {
+                $scope.trainData = response.data;
+                $('#resultswrapper').show();
+                renderTable(response.data, null);
+              }
+              else {
+                if (response.data.length > 0) {
+                  if (['profile', 'dq', 'recon'].indexOf($scope.type) != -1) {
+                    $('#resultsloader').show();
+                    $scope.getColumnDetail($scope.type, response.data);
+                  }
+                  else {
+                    $('#resultswrapper').show();
+                    renderTable(response.data, null);
+                  }
+                }
+                else {
+                  $('#resultswrapper').hide();
+                  $('#errorMsg').show();
+                  $('#errorMsg').html('No data available.');
+                }
+              }
+            }, function onError(err) {
+              $('#resultsloader').hide();
+              $('#errorMsg').show();
+              $('#errorMsg').html('Some Error Occured');
+            })
           });
         }
-       });
-          
-       function renderTable(data) {
-         console.log('results table data',data);
-         if($scope.type !="train"){
-           $scope.orignalData = data;
-           if($scope.orignalData.length >0){
-             $scope.getResults($scope.orignalData);
-           }
-           var columns = []; 
-           var count=0;
-           angular.forEach(data[0], function(value, key) {
-            count=count+1;
-           })
-           if(data.length && data.length > 0){
-             angular.forEach(data[0],function (val,key) {
-               var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
-               var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
-               if(hiveKey.indexOf(key) ==-1){
-                var width;
-                if(count >3){
-                  width = key.split('').length + 12 + "%"
-                 }
-                 else{
-                  width=(100/count)+"%";
-                 }
-                 columns.push({"name":key,"displayName":key.toLowerCase(),cellTemplate: templateWithTooltip, width:width,visible: true});
-               }
-               else if(hiveKey.indexOf(key) !=-1){
-                var width;
-                if(count >3){
-                  width = key.split('').length + 12 + "%"
-                 }
-                 else{
-                  width=(100/count)+"%";
-                 }
-              
-                 columns.push({"name":key,"displayName":key.toLowerCase(),cellTemplate: templateWithTooltip, width:width,visible: false});
-               }
-             });
-           }
-           $scope.gridOptions.columnDefs = columns;
-           console.log($scope.gridOptions.columnDefs)
-           initialised = true;
-         }else{
-           $scope.modelresult=data;
-         }
-       }
-           
-       $scope.onRowHover = function(row,e) {
-         $scope.mouseHowerRowValue=row;
-         $('#tabletoshow').css('display','block')
-         $('#tabletoshow').css('top',e.offsetY)
-         $('#tabletoshow').css('left',e.offsetX)
-       }
-           
-       $scope.leave = function(row){
-        $('#tabletoshow').css('display','none')
-       }
-       $scope.selectPage = function(pageNo) {
-         $scope.pagination.currentPage = pageNo;
-       };
+      });
 
-       $scope.onPerPageChange = function() {
-         $scope.pagination.currentPage = 1;
-         $scope.getResults($scope.orignalData)
-       }
 
-       $scope.pageChanged = function() {
-         $scope.getResults($scope.orignalData)
-       };
+      $scope.getColumnDetail = function (type, result) {
+        CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+        var onSuccess = function (respone) {
+          $('#resultsloader').hide();
+          $('#resultswrapper').show();
+          renderTable(result, respone);
+        }
+      }
 
-       $scope.getResults = function(params) {
-         $scope.pagination.totalItems=params.length;
-         if($scope.pagination.totalItems >0){
-           $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize))+1);
-         }
-         else{
-           $scope.pagination.to=0;
-         }
-         if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
-           $scope.pagination.from = $scope.pagination.totalItems;
-         } else {
-           $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-         }
-         var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
-         var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-         $scope.gridOptions.data=params.slice(offset,limit);
-       }
-       
-       $scope.downloadTrainData=function(uuid){
-         var linkElement = document.createElement('a');
-         try {
+
+      $scope.getColumnsByResult = function (data) {
+        var columns = [];
+        var count = 0;
+        if (data.length && data.length > 0) {
+          angular.forEach(data[0], function (value, key) {
+            count = count + 1;
+          });
+          angular.forEach(data[0], function (val, key) {
+            var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
+            var hiveKey = ["rownum", "AttributeId", "DatapodUUID", "DatapodVersion", "datapodUUID", "datapodVersion", 'sourceDatapodId', 'sourceDatapodVersion', 'sourceAttrId', 'targetDatapodId', 'targetDatapodVersion', 'targetAttrId', '']
+            var width;
+            if (count > 3)
+              width = key.split('').length + 12 + "%"
+            else
+              width = (100 / count) + "%";
+
+            if (hiveKey.indexOf(key) == -1) {
+              columns.push({ "name": key, "displayName": key.toLowerCase(), cellTemplate: templateWithTooltip, width: width, visible: true });
+            }
+
+            else if (hiveKey.indexOf(key) != -1) {
+              columns.push({ "name": key, "displayName": key.toLowerCase(), cellTemplate: templateWithTooltip, width: width, visible: false });
+            }
+
+          });
+        }
+        return columns;
+      }
+
+      function renderTable(data, ColumnDetails) {
+        if ($scope.type != "train") {
+          $scope.orignalData = data;
+          if ($scope.orignalData.length > 0) {
+            $scope.getResults($scope.orignalData);
+          }
+          if (ColumnDetails == null) {
+            $scope.gridOptions.columnDefs = $scope.getColumnsByResult(data);
+          } else {
+            $scope.gridOptions.columnDefs = ColumnDetails;
+          }
+          initialised = true;
+        }
+        else {
+          $scope.modelresult = data;
+        }
+      }
+
+      $scope.onRowHover = function (row, e) {
+        $scope.mouseHowerRowValue = row;
+        $('#tabletoshow').css('display', 'block')
+        $('#tabletoshow').css('top', e.offsetY)
+        $('#tabletoshow').css('left', e.offsetX)
+      }
+
+      $scope.leave = function (row) {
+        $('#tabletoshow').css('display', 'none')
+      }
+
+      $scope.selectPage = function (pageNo) {
+        $scope.pagination.currentPage = pageNo;
+      };
+
+      $scope.onPerPageChange = function () {
+        $scope.pagination.currentPage = 1;
+        $scope.getResults($scope.orignalData)
+      }
+
+      $scope.pageChanged = function () {
+        $scope.getResults($scope.orignalData)
+      };
+
+      $scope.getResults = function (params) {
+        $scope.pagination.totalItems = params.length;
+        if ($scope.pagination.totalItems > 0) {
+          $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
+        }
+        else {
+          $scope.pagination.to = 0;
+        }
+        if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
+          $scope.pagination.from = $scope.pagination.totalItems;
+        }
+        else {
+          $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
+        }
+
+        var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
+        var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
+        $scope.gridOptions.data = params.slice(offset, limit);
+      }
+
+      $scope.downloadTrainData = function (uuid) {
+        var linkElement = document.createElement('a');
+        try {
           var jsonobj = angular.toJson($scope.trainData, true);
-             var blob = new Blob([jsonobj], {
-                 type: "text/xml"
-             });
-             var url = window.URL.createObjectURL(blob);
-             linkElement.setAttribute('href', url);
-             linkElement.setAttribute("download", uuid+".json");
-             var clickEvent = new MouseEvent(
-                 "click", {
-                     "view" : window,
-                     "bubbles" : true,
-                     "cancelable" : false
-                 });
-             linkElement.dispatchEvent(clickEvent);
- 
-         } catch (ex) {
-             console.log(ex);
-         }
-       }
-       $scope.submitDownload=function(){
-    	  $('#downloadSampleCommon').modal("hide"); 
+          var blob = new Blob([jsonobj], {
+            type: "text/xml"
+          });
+          var url = window.URL.createObjectURL(blob);
+          linkElement.setAttribute('href', url);
+          linkElement.setAttribute("download", uuid + ".json");
+          var clickEvent = new MouseEvent(
+            "click", {
+              "view": window,
+              "bubbles": true,
+              "cancelable": false
+            }
+          );
+          linkElement.dispatchEvent(clickEvent);
+        }
+        catch (ex) {
+          console.log(ex);
+        }
+      }
+
+      $scope.submitDownload = function () {
+
+        $('#downloadSampleCommon').modal("hide");
         $http({
           method: 'GET',
-          url: $scope.download.url+"&rows="+$scope.download.rows,
+          url: $scope.download.url + "&rows=" + $scope.download.rows,
           responseType: 'arraybuffer'
-        }).success(function(data, status, headers) {
-          headers = headers(); 
-        
-          $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+        }).success(function (data, status, headers) {
+          headers = headers();
+          $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
           var filename = headers['filename'];
-          var contentType = headers['content-type']; 
+          var contentType = headers['content-type'];
           var linkElement = document.createElement('a');
           try {
             var blob = new Blob([data], {
-            type: contentType
-          });
-          var url = window.URL.createObjectURL(blob);
+              type: contentType
+            });
+            var url = window.URL.createObjectURL(blob);
             linkElement.setAttribute('href', url);
-            linkElement.setAttribute("download",filename);
+            linkElement.setAttribute("download", filename);
             var clickEvent = new MouseEvent("click", {
               "view": window,
               "bubbles": true,
               "cancelable": false
             });
+
             linkElement.dispatchEvent(clickEvent);
-          } catch (ex) {
+          }
+          catch (ex) {
             console.log(ex);
           }
-        }).error(function(data) {
+        }).error(function (data) {
           console.log(data);
-          $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-      }); 
-       }
-       $scope.downloaddata=function(url,uuid){
-        $scope.download.url=url
+          $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+        });
+      }
+
+      $scope.downloaddata = function (url, uuid) {
+        $scope.download.url = url
         $('#downloadSampleCommon').modal({
           backdrop: 'static',
           keyboard: false
         });
-        
-       }
+      }
 
-       window.downloadPiplineFile = function() {               
-         var uuid = $scope.downloadDetail.uuid;
-         var version=$scope.downloadDetail.version;
-         var baseurl=$location.absUrl().split("app")[0];
-         var typeexec;
-         if($scope.downloadDetail.type=="dataqual"){
-           typeexec="dqexec";
-         }else{
-           typeexec=$scope.downloadDetail.type+"exec";
-         }
-         $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+uuid+'&execVersion='+version+'&type='+typeexec).then(function (res) {
-           var mode=res.data.runMode;
-           var url;
-           if($scope.downloadDetail.type =="profile"){
-             url=baseurl+"profile/download?action=view&profileExecUUID="+uuid+"&profileExecVersion="+version+"&mode="+mode;
-             $scope.downloaddata(url,uuid)
-           }
-           else if($scope.downloadDetail.type =="dataqual"){
-             url=baseurl+"dataqual/download?action=view&dataQualExecUUID="+uuid+"&dataQualExecVersion="+version+"&mode="+mode;
-             $scope.downloaddata(url,uuid);
-           }
-           else if($scope.downloadDetail.type =="map"){
-             url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode
-             $scope.downloaddata(url,uuid)
-           }
-           else if($scope.downloadDetail.type =="recon"){
-             url=baseurl+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&mode="+mode;
-             $scope.downloaddata(url,uuid)
-           }
-           else if($scope.downloadDetail.type =="predict"){
-             url=baseurl+"/model/predict/download?action=view&predictExecUUID="+uuid+"&predictExecVersion="+version+"&mode="+mode;
-             $scope.downloaddata(url,uuid)
-           }
-           else if($scope.downloadDetail.type =="simulate"){
-             url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
-             $scope.downloaddata(url,uuid)
-           }
-           else if($scope.downloadDetail.type =="operator"){
-            url=baseurl+"/operator/download?action=view&uuid="+uuid+"&version="+version+"&mode="+mode;
-            $scope.downloaddata(url,uuid)
+      window.downloadPiplineFile = function () {
+        var uuid = $scope.downloadDetail.uuid;
+        var version = $scope.downloadDetail.version;
+        var baseurl = $location.absUrl().split("app")[0];
+        var typeexec;
+        if ($scope.downloadDetail.type == "dataqual") {
+          typeexec = "dqexec";
+        }
+        else {
+          typeexec = $scope.downloadDetail.type + "exec";
+        }
+        $http.get(baseurl + 'metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + '&execVersion=' + version + '&type=' + typeexec).then(function (res) {
+          var mode = res.data.runMode;
+          var url;
+          if ($scope.downloadDetail.type == "profile") {
+            url = baseurl + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid)
           }
-           else if($scope.downloadDetail.type =="train"){
-             url=baseurl+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version;
-             $http({
-               method: 'GET',
-               url:url,
-               
-             }).success(function(data, status, headers) {
-              
-               if(data.customFlag =="N" ){
-                 $scope.downloadTrainData(uuid);
-                 return false;
-               }
-               else{
-                 url=baseurl+"/model/train/download?action=view&trainExecUUID="+uuid+"&trainExecVersion="+version+"&mode="+mode;
-                 $scope.downloaddata(url,uuid)
-               }
-             });
-           
-           }
-                
+          else if ($scope.downloadDetail.type == "dataqual") {
+            url = baseurl + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid);
+          }
+
+          else if ($scope.downloadDetail.type == "map") {
+            url = baseurl + "map/download?action=view&mapExecUUID=" + uuid + "&mapExecVersion=" + version + "&mode=" + mode
+            $scope.downloaddata(url, uuid)
+          }
+
+          else if ($scope.downloadDetail.type == "recon") {
+            url = baseurl + "recon/download?action=view&reconExecUUID=" + uuid + "&reconExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid)
+          }
+
+          else if ($scope.downloadDetail.type == "predict") {
+            url = baseurl + "/model/predict/download?action=view&predictExecUUID=" + uuid + "&predictExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid)
+          }
+          else if ($scope.downloadDetail.type == "simulate") {
+            url = baseurl + "/model/simulate/download?action=view&simulateExecUUID=" + uuid + "&simulateExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid)
+          }
+
+          else if ($scope.downloadDetail.type == "operator") {
+            url = baseurl + "/operator/download?action=view&uuid=" + uuid + "&version=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid)
+          }
+
+          else if ($scope.downloadDetail.type == "train") {
+            url = baseurl + "model/getModelByTrainExec?action=view&uuid=" + uuid + "&version=" + version;
+            $http({
+              method: 'GET',
+              url: url,
+            })
+            .success(function (data, status, headers) {
+              if (data.customFlag == "N") {
+                $scope.downloadTrainData(uuid);
+                return false;
+              }
+              else {
+                url = baseurl + "/model/train/download?action=view&trainExecUUID=" + uuid + "&trainExecVersion=" + version + "&mode=" + mode;
+                $scope.downloaddata(url, uuid)
+              }
+            });
+          }
         });
-       };
-     },
-     template: `
+      };// End Download
+    },
+    template: `
        <div class="row" ng-if="type =='train' && isTrainResultLoad ==true">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelDetail !=null">
             <train-result data="modelDetail"></train-result>
@@ -458,8 +496,9 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
             </div>
           </div>
        `
-     };
- });
+  };
+});
+
 
 DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,$compile,$location,$http,dagMetaDataService,$rootScope) {
    function setGrid(paper, gridSize, color) {
@@ -1933,7 +1972,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var  execStates;
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
-            debugger
              if($scope.execMode){
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
                if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
