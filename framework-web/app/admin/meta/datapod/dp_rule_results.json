@@ -50,7 +50,7 @@
             "desc" : "DatapodUUID",
             "key" : "0",
             "partition" : "N",
-            "dispName" : "DatapodUUID",
+            "dispName" : "Datapod UUID",
             "active" : "Y",
               "expr" : null
         }, 
@@ -62,7 +62,7 @@
             "desc" : "DatapodVersion",
             "key" : null,
             "partition" : "N",
-            "dispName" : "DatapodVersion",
+            "dispName" : "Datapod Version",
             "active" : "Y",
               "expr" : null
         }, 
@@ -74,7 +74,7 @@
             "desc" : "DatapodName",
             "key" : null,
             "partition" : "N",
-            "dispName" : "DatapodName",
+            "dispName" : "Datapod Name",
             "active" : "Y",
             "expr" : null
         }, 
@@ -86,7 +86,7 @@
             "desc" : "AttributeId",
             "key" : null,
             "partition" : "N",
-            "dispName" : "AttributeId",
+            "dispName" : "Attribute Id",
             "active" : "Y",
             "expr" : null
         }, 
@@ -98,7 +98,7 @@
             "desc" : "AttributeName",
             "key" : null,
             "partition" : "N",
-            "dispName" : "AttributeName",
+            "dispName" : "Attribute Name",
             "active" : "Y",
             "expr" : null
         }, 
@@ -109,7 +109,7 @@
             "desc" : "Number of Rows",
             "key" : null,
             "partition" : "N",
-            "dispName" : "numRows",
+            "dispName" : "Num Rows",
             "active" : "Y",
             "expr" : null
         }, 
@@ -121,7 +121,7 @@
             "desc" : "Minimum value in data",
             "key" : null,
             "partition" : "N",
-            "dispName" : "minVal",
+            "dispName" : "Min Val",
             "active" : "Y",
             "expr" : null
         }, 
@@ -133,7 +133,7 @@
             "desc" : "Maximum value in data",
             "key" : null,
             "partition" : "N",
-            "dispName" : "maxVal",
+            "dispName" : "Max Val",
             "active" : "Y",
             "expr" : null
         }, 
@@ -145,7 +145,7 @@
             "desc" : "Average value in data",
             "key" : null,
             "partition" : "N",
-            "dispName" : "avgVal",
+            "dispName" : "Avg Val",
             "active" : "Y",
             "expr" : null
         }, 
@@ -157,7 +157,7 @@
             "desc" : "Median value in data",
             "key" : null,
             "partition" : "N",
-            "dispName" : "medianVal",
+            "dispName" : "Median Val",
             "active" : "Y",
             "expr" : null
         }, 
@@ -169,7 +169,7 @@
             "desc" : "Standard deviation in data",
             "key" : null,
             "partition" : "N",
-            "dispName" : "stdDev",
+            "dispName" : "Std Dev",
             "active" : "Y",
             "expr" : null
         }, 
@@ -181,7 +181,7 @@
             "desc" : "No of distinct values",
             "key" : null,
             "partition" : "N",
-            "dispName" : "numDistinct",
+            "dispName" : "Num Distinct",
             "active" : "Y",
             "expr" : null
         }, 
@@ -193,7 +193,7 @@
             "desc" : "Percentage distinct values",
             "key" : null,
             "partition" : "N",
-            "dispName" : "perDistinct",
+            "dispName" : "Per Distinct",
             "active" : "Y",
             "expr" : null
         }, 
@@ -205,7 +205,7 @@
             "desc" : "No of null values",
             "key" : null,
             "partition" : "N",
-            "dispName" : "numNull",
+            "dispName" : "Num Null",
             "active" : "Y",
             "expr" : null
         }, 
@@ -217,7 +217,7 @@
             "desc" : "Percentage null values",
             "key" : null,
             "partition" : "N",
-            "dispName" : "perNull",
+            "dispName" : "Per Null",
             "active" : "Y",
             "expr" : null
         }, 
@@ -229,7 +229,7 @@
             "desc" : " ",
             "key" : null,
             "partition" : "N",
-            "dispName" : "minLength",
+            "dispName" : "Min Length",
             "active" : "Y",
             "expr" : null
         },   {
@@ -240,7 +240,7 @@
             "desc" : " ",
             "key" : null,
             "partition" : "N",
-            "dispName" : "maxLength",
+            "dispName" : "Max Length",
             "active" : "Y",
             "expr" : null
         },  {
@@ -251,7 +251,7 @@
             "desc" : " ",
             "key" : null,
             "partition" : "N",
-            "dispName" : "avgLength",
+            "dispName" : "Avg Length",
             "active" : "Y",
             "expr" : null
         },  {
@@ -262,7 +262,7 @@
             "desc" : " ",
             "key" : null,
             "partition" : "N",
-            "dispName" : "numDuplicates",
+            "dispName" : "Num Duplicates",
             "active" : "Y",
             "expr" : null
         },       
@@ -274,7 +274,7 @@
             "desc" : "version",
             "key" : null,
             "partition" : "N",
-            "dispName" : "version",
+            "dispName" : "Version",
             "active" : "Y",
             "expr" : null
         }

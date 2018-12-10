@@ -50,7 +50,7 @@
       "desc" : "SourceUUID",
       "key" : "0",
       "partition" : "N",
-      "dispName" : "SourceUUID",
+      "dispName" : "Source UUID",
       "active" : "Y",
       "expr" : null
     },
@@ -62,7 +62,7 @@
       "desc" : "SourceVersion",
       "key" : null,
       "partition" : "N",
-      "dispName" : "SourceVersion",
+      "dispName" : "Source Version",
       "active" : "Y",
       "expr" : null
     },
@@ -74,7 +74,7 @@
       "desc" : "SourceName",
       "key" : null,
       "partition" : "N",
-      "dispName" : "SourceName",
+      "dispName" : "Source Name",
       "active" : "Y",
       "expr" : null
     },
@@ -86,7 +86,7 @@
       "desc" : "SourceAttributeId",
       "key" : null,
       "partition" : "N",
-      "dispName" : "SourceAttributeId",
+      "dispName" : "Source AttributeId",
       "active" : "Y",
       "expr" : null
     },
@@ -98,7 +98,7 @@
       "desc" : "SourceAttributeName",
       "key" : null,
       "partition" : "N",
-      "dispName" : "SourceAttributeName",
+      "dispName" : "Source AttributeName",
       "active" : "Y",
       "expr" : null
     },
@@ -110,7 +110,7 @@
       "desc" : "Computed value from source",
       "key" : null,
       "partition" : "N",
-      "dispName" : "SourceValue",
+      "dispName" : "Source Value",
       "active" : "Y",
       "expr" : null
     },    
@@ -122,7 +122,7 @@
       "desc" : "TargetUUID",
       "key" : "0",
       "partition" : "N",
-      "dispName" : "TargetUUID",
+      "dispName" : "Target UUID",
       "active" : "Y",
       "expr" : null
     },
@@ -134,7 +134,7 @@
       "desc" : "TargetVersion",
       "key" : null,
       "partition" : "N",
-      "dispName" : "TargetVersion",
+      "dispName" : "Target Version",
       "active" : "Y",
       "expr" : null
     },
@@ -146,7 +146,7 @@
       "desc" : "TargetName",
       "key" : null,
       "partition" : "N",
-      "dispName" : "TargetName",
+      "dispName" : "Target Name",
       "active" : "Y",
       "expr" : null
     },
@@ -158,7 +158,7 @@
       "desc" : "Id of target attribute",
       "key" : null,
       "partition" : "N",
-      "dispName" : "TargetAttributeId",
+      "dispName" : "Target AttributeId",
       "active" : "Y",
       "expr" : null
     },
@@ -170,7 +170,7 @@
       "desc" : "Name of target attribute",
       "key" : null,
       "partition" : "N",
-      "dispName" : "TargetAttributeName",
+      "dispName" : "Target AttributeName",
       "active" : "Y",
       "expr" : null
     },
@@ -182,7 +182,7 @@
       "desc" : "Computed value from target",
       "key" : null,
       "partition" : "N",
-      "dispName" : "TargetValue",
+      "dispName" : "Target Value",
       "active" : "Y",
       "expr" : null
     },
@@ -194,7 +194,7 @@
       "desc" : "Status of check",
       "key" : null,
       "partition" : "N",
-      "dispName" : "status",
+      "dispName" : "Status",
       "active" : "Y",
       "expr" : null
     },
@@ -206,7 +206,7 @@
       "desc" : "version",
       "key" : null,
       "partition" : "N",
-      "dispName" : "version",
+      "dispName" : "Version",
       "active" : "Y",
       "expr" : null
     }

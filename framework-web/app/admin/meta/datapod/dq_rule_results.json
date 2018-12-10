@@ -47,7 +47,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "rowkey",
-            "dispName" : "rowkey",
+            "dispName" : "Row Key",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -57,7 +57,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "datapoduuid",
-            "dispName" : "datapoduuid",
+            "dispName" : "Datapod Uuid",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -67,7 +67,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "datapodversion",
-            "dispName" : "datapodversion",
+            "dispName" : "Datapod Version",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -77,7 +77,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "datapodname",
-            "dispName" : "datapodname",
+            "dispName" : "Datapod Name",
             "partition" : "N",
             "active" : "Y"
         },
@@ -87,7 +87,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "attributeid",
-            "dispName" : "attributeid",
+            "dispName" : "Attribute Id",
             "partition" : "N",
             "active" : "Y"
         },
@@ -97,7 +97,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "attributename",
-            "dispName" : "attributename",
+            "dispName" : "Attribute Name",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -107,7 +107,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "attributevalue",
-            "dispName" : "attributevalue",
+            "dispName" : "Attribute Value",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -117,7 +117,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "nullcheck_pass",
-            "dispName" : "nullcheck_pass",
+            "dispName" : "Nullcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -127,7 +127,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "valuecheck_pass",
-            "dispName" : "valuecheck_pass",
+            "dispName" : "Valuecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -137,7 +137,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "rangecheck_pass",
-            "dispName" : "rangecheck_pass",
+            "dispName" : "Rangecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -147,7 +147,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "datatypecheck_pass",
-            "dispName" : "datatypecheck_pass",
+            "dispName" : "Datatypecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -157,7 +157,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "dataformatcheck_pass",
-            "dispName" : "dataformatcheck_pass",
+            "dispName" : "Dataformatcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -167,7 +167,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "lengthcheck_pass",
-            "dispName" : "lengthcheck_pass",
+            "dispName" : "Lengthcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -177,7 +177,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "refintegritycheck_pass",
-            "dispName" : "refintegritycheck_pass",
+            "dispName" : "RefIntegritycheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
@@ -187,7 +187,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "dupcheck_pass",
-            "dispName" : "dupcheck_pass",
+            "dispName" : "Dupcheck Pass",
             "partition" : "N",
             "active" : "Y"
         },
@@ -197,7 +197,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "customcheck_pass",
-            "dispName" : "customcheck_pass",
+            "dispName" : "Customcheck Pass",
             "partition" : "N",
             "active" : "Y"
         },
@@ -207,7 +207,7 @@
             "type" : "string",
             "attrUnitType": "#", 
             "desc" : "version",
-            "dispName" : "version",
+            "dispName" : "Version",
             "partition" : "N",
             "active" : "Y"
         }
