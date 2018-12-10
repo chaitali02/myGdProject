@@ -199,8 +199,10 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           if ($scope.orignalData.length > 0) {
             $scope.getResults($scope.orignalData);
           }
+          debugger
           if (ColumnDetails == null) {
             $scope.gridOptions.columnDefs = $scope.getColumnsByResult(data);
+            console.log($scope.gridOptions.columnDefs)
           } else {
             $scope.gridOptions.columnDefs = ColumnDetails;
           }

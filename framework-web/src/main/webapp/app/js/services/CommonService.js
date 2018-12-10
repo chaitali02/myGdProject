@@ -785,10 +785,11 @@
             columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: false});
           }
         }
-        
+        console.log(columnDetails)
         deferred.resolve({
           data: columnDetails
         });
+
       }
       var onError = function (response) {
         deferred.reject({
