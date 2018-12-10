@@ -15,6 +15,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -2243,4 +2245,27 @@ public class MetadataServiceImpl {
 		
 		return latestAlgoList;
 	}
+	
+	
+	public Datapod getDatapodByType(String type) throws FileNotFoundException, IOException {
+		
+		if(type.equalsIgnoreCase(MetaType.profile.toString()))
+			{
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+			}
+		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+		}
+		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+		}
+		return null;
+	}
+	
 }
