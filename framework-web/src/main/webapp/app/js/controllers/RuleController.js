@@ -11,6 +11,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.logicalOperator = ["AND","OR"];
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
   $scope.paramTypes=["paramlist","paramset"];
+  $scope.isDestoryState = false; 
   $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.lhsType = [
 		{ "text": "string", "caption": "string" },
@@ -137,7 +138,13 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
+
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });
+
   $scope.showPage = function () {
     $scope.showFrom = true
     $scope.showGraphDiv = false
@@ -746,6 +753,7 @@ var confirmDialog = function(newVal, yes, no) {
     } else {
       $scope.isShowExecutionparam = false;
       $scope.allparamset = null;
+      $scope.dataLoading=false;
     }
   }
   $scope.closeParalistPopup=function(){
@@ -1362,9 +1370,8 @@ var confirmDialog = function(newVal, yes, no) {
   }
 
   $scope.okrulesave = function () {
-    $('#rulesave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+  if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewrule');
       }, 2000);
@@ -1597,7 +1604,7 @@ var confirmDialog = function(newVal, yes, no) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      if(options.execution == "YES") {
+      if(options.execution == "YES" && $scope.allparamlist.defaultoption != null) {
         $scope.ruleId=response.data;
         $scope.showParamlistPopup();
         // RuleService.getOneById(response.data, "rule").then(function (response) {
@@ -1607,6 +1614,14 @@ var confirmDialog = function(newVal, yes, no) {
         //   $scope.modelExecute(result.data);
         // }
       } //End if
+      else if(options.execution == "YES" && $scope.allparamlist.defaultoption == null){
+          RuleService.getOneById(response.data, "rule").then(function (response) {
+          onSuccessGetOneById(response.data)
+        });
+        var onSuccessGetOneById = function (result) {
+          $scope.modelExecute(result.data);
+        }
+      }
       else {
         $scope.dataLoading = false;
         $scope.saveMessage = "Rule Saved Successfully"
@@ -1634,6 +1649,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    $scope.isDestoryState = false;
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -1698,6 +1714,10 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 		});
 	};
   $scope.getLovByType();
+
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });
 
   $scope.showPage = function () {
     $scope.showForm = true;
@@ -1845,7 +1865,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 
   $scope.okrulesave = function () {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+  if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('rulesgroup');
       }, 2000);
