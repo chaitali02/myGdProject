@@ -3944,10 +3944,10 @@ public class CommonServiceImpl <T> {
 				}
 				File dest = new File(location);
 				if(dest.exists()) {
-				    status = new Status(Status.Stage.Failed, new Date());
-					statusList.add(status);
-					uploadExec.setStatusList(statusList);
-					save(MetaType.uploadExec.toString(), uploadExec);
+				   // status = new Status(Status.Stage.Failed, new Date());
+					//statusList.add(status);
+					///uploadExec.setStatusList(statusList);
+					//save(MetaType.uploadExec.toString(), uploadExec);
 					String message="file already exists!!";
 					logger.info(message);
 					sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
