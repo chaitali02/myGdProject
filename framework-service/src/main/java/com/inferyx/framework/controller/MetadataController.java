@@ -1075,21 +1075,21 @@ public class MetadataController {
 		return metadataServiceImpl.getAlgorithmByLibrary(libraryType);
 	}
 	
-	@RequestMapping(value = "/getdpDatapod",method=RequestMethod.GET)
+	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getdpByDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
 		return metadataServiceImpl.getDatapodByType(type);
 	}
 	
-	@RequestMapping(value = "/getrcDatapod",method=RequestMethod.GET)
+	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getrcDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
 		return metadataServiceImpl.getDatapodByType(type);
 	}
 	
-	@RequestMapping(value = "/getdqDatapod",method=RequestMethod.GET)
+	@RequestMapping(value = "/getDqDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getdqDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
