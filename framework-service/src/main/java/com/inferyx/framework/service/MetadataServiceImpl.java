@@ -537,6 +537,11 @@ public class MetadataServiceImpl {
 				execObject = (IngestGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 			} 
+			else if(type.equalsIgnoreCase(MetaType.uploadExec.toString())){
+				UploadExec execObject = new UploadExec();
+				execObject = (UploadExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
