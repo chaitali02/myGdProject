@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -1005,8 +1006,13 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
-	public void upload(MultipartFile csvFile, String datapodUuid, String desc) {		
+	public void upload(MultipartFile csvFile, String datapodUuid, String desc) throws JsonProcessingException, JSONException, ParseException {		
 		String csvFileName = csvFile.getOriginalFilename();
+		UploadExec uploadExec=new UploadExec();	
+		Status status = new Status(Status.Stage.NotStarted, new Date());
+		List<Status> statusList = new ArrayList<>();
+		statusList.add(status);
+		uploadExec.setStatusList(statusList);
 		try {
 			//patern matching for csv filename
 			Pattern pattern = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
@@ -1016,14 +1022,21 @@ public class DatapodServiceImpl {
 				throw new Exception("CSV file name contains white space or special character");
 			String directory = Helper.getPropertyValue("framework.file.upload.path");
 			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
-			
+		
+		
+			uploadExec.setBaseEntity();
 			// Copy file to server location
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
 		 
 			uploadPath = hdfsInfo.getHdfsURL() + uploadPath;
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
+			uploadExec.setLocation(uploadPath);
+			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));
+			uploadExec.setFileName(csvFileName);
+			uploadExec.setName(Helper.getFileName(csvFileName));
 			
+		
 			//Check datapod and csv attributes name
 //			Boolean flag = true;
 			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -1035,7 +1048,8 @@ public class DatapodServiceImpl {
 			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
 			List<Attribute> dpAttrs = datapod.getAttributes();
-		
+			
+	
 			int count = 0;
 			for(int i=0; i<dpAttrs.size();i++) {
 				if(dpAttrs.get(i).getName().contentEquals("version")){	
@@ -1056,28 +1070,36 @@ public class DatapodServiceImpl {
 					if(attributeIterator.hasNext()) {
 						Attribute attribute  = attributeIterator.next();				
 						
-						if ( Character.isDigit(attribute.getName().charAt(0)) ) 
+						if (Character.isDigit(attribute.getName().charAt(0))) {
+							status = new Status(Status.Stage.Failed, new Date());
+							statusList.add(status);
+							uploadExec.setStatusList(statusList);
+							commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 							throw new Exception("CSV file column name contains <b>Numeric value</b>.");
-						
-						if(!attribute.getName().equalsIgnoreCase(dpAttr.getName())) {
-							logger.info("CSV Column not matched : "+attribute.getName());
-							throw new Exception("CSV Column not matched:<b>"+attribute.getName()+"</b> Position:<b>"+(attributeIterator.nextIndex()+"</b>")	);
+						}
+						if (!attribute.getName().equalsIgnoreCase(dpAttr.getName())) {
+							{
+								status = new Status(Status.Stage.Failed, new Date());
+								statusList.add(status);
+								uploadExec.setStatusList(statusList);
+								commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+								logger.info("CSV Column not matched : " + attribute.getName());
+								throw new Exception("CSV Column not matched:<b>" + attribute.getName()
+										+ "</b> Position:<b>" + (attributeIterator.nextIndex() + "</b>"));
+							}
 						}
 					}	
 				}
 			}
 			else {
+				status = new Status(Status.Stage.Failed, new Date());
+				statusList.add(status);
+				uploadExec.setStatusList(statusList);
+				commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 				throw new Exception("CSV and Datapod column not matched");
 			}
 				
-			/* Code for UploadExec*/		
-			UploadExec uploadExec=new UploadExec();			       
-			uploadExec.setBaseEntity();
-			uploadExec.setLocation(uploadPath);
-			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));
-			uploadExec.setFileName(csvFileName);
-			uploadExec.setName(Helper.getFileName(csvFileName));
-			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+			
 			   
 			// Load datapod using load object
 			String fileName = Helper.getFileName(csvFileName);
@@ -1108,15 +1130,30 @@ public class DatapodServiceImpl {
 			//Create Load exec and datastore
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH, desc);
-		
+			status = new Status(Status.Stage.InProgress, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()),
+					RunMode.BATCH, desc);
+			status = new Status(Status.Stage.Completed, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
 				| ParseException | IllegalStateException | IOException e) {
 			// TODO Auto-generated catch block
+			status = new Status(Status.Stage.Failed, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			e.printStackTrace();
 		} catch (Exception e) {
+			status = new Status(Status.Stage.Failed, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			setResponseMsg(e.getMessage());			
 		}	
 	}
