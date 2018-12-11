@@ -37,7 +37,7 @@ public class ProfileHiveOperator extends ProfileOperator {
 			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
 					+ datapod.getName() + "' AS datapodName, " + attrId
-					+ " AS AttributeId, '" + attrName + "' AS attributeName, " 
+					+ " AS attributeId, '" + attrName + "' AS attributeName, " 
 					+ "count(1) AS numRows, "
 					+ "min(" + attrName + ") AS minVal, "
 					+ "max(" + attrName + ") AS maxVal, "
