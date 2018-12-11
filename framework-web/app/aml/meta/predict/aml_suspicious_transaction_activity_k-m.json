@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+            "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
         }
     },
     "source" : {
@@ -25,7 +25,7 @@
                 "featureName" : "in_wire_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -44,7 +44,7 @@
                 "featureName" : "in_wire_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -63,7 +63,7 @@
                 "featureName" : "out_wire_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -82,7 +82,7 @@
                 "featureName" : "out_wire_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -101,7 +101,7 @@
                 "featureName" : "net_wire_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -120,7 +120,7 @@
                 "featureName" : "net_wire_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -139,7 +139,7 @@
                 "featureName" : "in_cash_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -158,7 +158,7 @@
                 "featureName" : "in_cash_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -177,7 +177,7 @@
                 "featureName" : "out_cash_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -196,7 +196,7 @@
                 "featureName" : "out_cash_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -215,7 +215,7 @@
                 "featureName" : "net_cash_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -234,7 +234,7 @@
                 "featureName" : "net_cash_transfers_trans_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -253,7 +253,7 @@
                 "featureName" : "all_wire_transfers_round_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -272,7 +272,7 @@
                 "featureName" : "all_cash_transfers_round_amount_usd",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -291,7 +291,7 @@
                 "featureName" : "all_cash_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -310,7 +310,7 @@
                 "featureName" : "all_wire_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -329,7 +329,7 @@
                 "featureName" : "all_cash_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -348,7 +348,7 @@
                 "featureName" : "all_wire_transfers_trans_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -367,11 +367,11 @@
                 "featureName" : "in_cash_transfers_trans_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "20",
+                "attrId" : "19",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -386,11 +386,11 @@
                 "featureName" : "out_wire_transfers_trans_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "21",
+                "attrId" : "20",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -405,11 +405,11 @@
                 "featureName" : "all_wire_transfers_round_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "22",
+                "attrId" : "21",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -424,11 +424,11 @@
                 "featureName" : "all_cash_transfers_round_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "23",
+                "attrId" : "22",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -443,11 +443,11 @@
                 "featureName" : "in_wire_transfers_trans_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "24",
+                "attrId" : "23",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -462,11 +462,11 @@
                 "featureName" : "out_cash_transfers_trans_amount_min",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
-                "attrId" : "25",
+                "attrId" : "24",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
@@ -481,7 +481,7 @@
                 "featureName" : "all_cash_transfers_round_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -500,7 +500,7 @@
                 "featureName" : "all_wire_transfers_round_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -519,7 +519,7 @@
                 "featureName" : "in_wire_transfers_trans_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -538,7 +538,7 @@
                 "featureName" : "in_cash_transfers_trans_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -557,7 +557,7 @@
                 "featureName" : "out_wire_transfers_trans_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -576,7 +576,7 @@
                 "featureName" : "out_cash_transfers_trans_amount_max",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -595,7 +595,7 @@
                 "featureName" : "all_wire_transfers_round_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -614,7 +614,7 @@
                 "featureName" : "all_cash_transfers_round_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -633,7 +633,7 @@
                 "featureName" : "in_wire_transfers_trans_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -652,7 +652,7 @@
                 "featureName" : "in_cash_transfers_trans_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -671,7 +671,7 @@
                 "featureName" : "out_wire_transfers_trans_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -690,7 +690,7 @@
                 "featureName" : "out_cash_transfers_trans_amount_avg",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -709,7 +709,7 @@
                 "featureName" : "all_cash_transfers_round_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -728,7 +728,7 @@
                 "featureName" : "in_cash_transfers_trans_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -747,7 +747,7 @@
                 "featureName" : "out_cash_transfers_trans_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -766,7 +766,7 @@
                 "featureName" : "all_wire_transfers_round_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -785,7 +785,7 @@
                 "featureName" : "in_wire_transfers_trans_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -804,7 +804,7 @@
                 "featureName" : "out_wire_transfers_trans_amount_stddev",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -823,7 +823,7 @@
                 "featureName" : "in_cash_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -842,7 +842,7 @@
                 "featureName" : "in_wire_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -861,7 +861,7 @@
                 "featureName" : "out_wire_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -880,7 +880,7 @@
                 "featureName" : "out_cash_transfers_round_amount_count",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -899,7 +899,7 @@
                 "featureName" : "out_cash_transfers_round_amount_sum",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -918,7 +918,7 @@
                 "featureName" : "out_wire_transfers_round_amount_sum",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -937,7 +937,7 @@
                 "featureName" : "in_wire_transfers_round_amount_sum",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -956,7 +956,7 @@
                 "featureName" : "in_cash_transfers_round_amount_sum",
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "0a3e59bf-bbe4-49c7-b36b-a0bf8bf45e80"
+                    "uuid" : "b90c7330-9cc1-4378-ac87-cd1963d6a81f"
                 }
             },
             "attribute" : {
@@ -971,7 +971,7 @@
     "trainInfo" : {
         "ref" : {
             "type" : "train",
-            "uuid" : "83ecfcc0-19f6-4a6d-a352-c2d61e3b0690"
+            "uuid" : "74a62c51-8da1-4a14-8e5b-4549a3a15af8"
         }
     },
     "rowIdentifier" : [ 
@@ -984,9 +984,9 @@
         }
     ],
     "includeFeatures" : "Y",
-    "uuid" : "6516ac65-3698-4a01-8f6e-7cad45675888",
-    "version" : "1544526633",
-    "name" : "AML - Suspicious Transaction Activity - LR",
+    "uuid" : "8b8ffc62-0990-43c2-9d86-9e4e5707a386",
+    "version" : "1544526576",
+    "name" : "AML - Suspicious Transaction Activity-K-Means",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -995,7 +995,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-12-11T11:10:33.000Z"),
+    "createdOn" : ISODate("2018-12-11T11:09:36.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",

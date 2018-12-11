@@ -2179,12 +2179,14 @@ public class SparkExecutor<T> implements IExecutor {
 				colNameList.add(cloName);
 			}
 		} 
-		colNameList.add("prediction");
+		
 		
 		if (trainName.contains("LogisticRegression")
 				|| trainName.contains("GBTClassifier")) {
 			colNameList.add("probability");
 		}
+		if(!trainName.contains("LDA"))
+		colNameList.add("prediction");
 
 		predictedDF = predictedDF.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
 		
