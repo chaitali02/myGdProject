@@ -3948,7 +3948,7 @@ public class CommonServiceImpl <T> {
 					//statusList.add(status);
 					///uploadExec.setStatusList(statusList);
 					//save(MetaType.uploadExec.toString(), uploadExec);
-					String message="file already exists!!";
+					String message="File already exists.";
 					logger.info(message);
 					sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
 					throw new IOException((message != null) ? message : "Requested " + originalFileName + " file not found!!");
