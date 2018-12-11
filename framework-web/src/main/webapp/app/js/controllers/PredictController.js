@@ -12,6 +12,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.isversionEnable=false;
     $scope.isAdd=false;
     $scope.isDragable="false";
+    $scope.isDestoryState = false;
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -81,16 +82,17 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
-	}
+  }
+  
 	$scope.loadTag = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
   
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -101,11 +103,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
   }
   
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-    //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
-
   });
    
   $scope.countContinue = function() {
@@ -618,9 +622,9 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
 
   $scope.okmodelsave = function() {
-    $('#modelsave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    debugger
+    if (hidemode == 'yes' && $scope.isDestoryState==false) { 
       setTimeout(function() {
         $state.go("predict");
       }, 2000);

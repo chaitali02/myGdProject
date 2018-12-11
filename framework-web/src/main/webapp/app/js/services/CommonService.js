@@ -751,6 +751,54 @@
       return deferred.promise;
     }
 
+    this.getColunmDetail = function(type) {
+      var deferred = $q.defer();
+      var url
+      if(type=='profile'){
+        url = "metadata/getDpDatapod?type=" + type+'&action=view';
+      }
+      else  if(type=='dq'){
+        url = "metadata/getDqDatapod?type=" + type+'&action=view';
+      }
+      else  if(type=='recon'){
+        url = "metadata/getRcDatapod?type=" + type+'&action=view';
+      } 
+      CommonFactory.httpGet(url).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
+      var onSuccess = function(response) {
+        var columnDetails=[];
+        for(var i=0;i<response.attributes.length;i++) {  
+          var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
+          var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
+          var width;
+          if(response.attributes.length >3)
+            width = response.attributes[i].dispName.split('').length + 12 + "%"
+          
+          else
+            width=(100/response.attributes.length)+"%";
+          
+
+          if(hiveKey.indexOf(response.attributes[i].dispName) ==-1){ 
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: true});
+          }
+   
+          else if(hiveKey.indexOf(response.attributes[i].dispName) !=-1){
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: false});
+          }
+        }
+        console.log(columnDetails)
+        deferred.resolve({
+          data: columnDetails
+        });
+
+      }
+      var onError = function (response) {
+        deferred.reject({
+          data: response
+        })
+      }
+      return deferred.promise;
+    }
+
     this.restartExec = function(type,uuid,version) {
       var deferred = $q.defer();
       var api = false;

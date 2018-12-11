@@ -90,8 +90,12 @@ public class SparkExecHelper implements Serializable {
 			int rowNum = 0;
 			@Override
 			public Row call(Row row) throws Exception {
-				Double lableVal = (Double)row.getAs("label");
-				Double predictionVal = (Double)row.getAs("prediction");
+				Object labelObj = row.getAs("label");
+				Double lableVal = Double.parseDouble(""+labelObj);
+				
+				Object predObj = row.getAs("prediction");
+				Double predictionVal = Double.parseDouble(""+predObj);
+				
 				logger.info("labelVal : predictionVal :::: "+lableVal+" : "+predictionVal);
 				if(lableVal.equals(predictionVal)) {
 					rowNum++;

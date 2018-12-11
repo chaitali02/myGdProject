@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService) {
+InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService,uiGridConstants) {
   return {
     scope: {
 
@@ -36,6 +36,10 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         name: 'value',
         width:'22%',
         cellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.DESC,
+         // priority: 0,
+        },
       //  headerCellClass: 'text-center',
       }];
 

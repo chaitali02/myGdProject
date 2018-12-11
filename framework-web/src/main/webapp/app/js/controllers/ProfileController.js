@@ -41,6 +41,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = " ";
+	$scope.isDestoryState = false;
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
 	$scope.showProfileGroup = true;
@@ -72,7 +73,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	};
 
 	$scope.getLovByType();
-
+    $scope.$on('$destroy', function () {
+		$scope.isDestoryState = true;
+	}); 
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
@@ -279,7 +282,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 	$scope.okProfileGroupSave = function () {
 		var hidemode = "yes";
-		if (hidemode == 'yes') {
+		if (hidemode == 'yes' && $scope.isDestoryState==false) {
 			setTimeout(function () { $state.go('viewprofile'); }, 2000);
 		}
 	}
@@ -407,6 +410,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = " ";
+	$scope.isDestoryState = false; 
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
 	$scope.showProfileGroup = true;
@@ -424,7 +428,6 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag = response[0].value
 		}
 	}
@@ -435,7 +438,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		});
 	};
 	$scope.getLovByType();
-
+    $scope.$on('$destroy', function () {
+		$scope.isDestoryState = true;
+	});  
 	$scope.showProfileGroupePage = function () {
 		$scope.showProfileGroup = true;
 		$scope.showgraphdiv = false;
@@ -604,7 +609,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.okProfileGroupSave = function () {
 		$('#profilegroupsave').css("dispaly", "none");
 		var hidemode = "yes";
-		if (hidemode == 'yes') {
+		if (hidemode == 'yes' && $scope.isDestoryState==false) {
 			setTimeout(function () { $state.go('viewprofilegroup'); }, 2000);
 
 		}

@@ -23,6 +23,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
+    $scope.isDestoryState = false; 
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -93,7 +94,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulePage = function () {
     $scope.showgraph = false;
     $scope.showRule = true;
@@ -753,9 +756,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
   }
   $scope.okDQRuleSave = function () {
-    $('#dataqualitysave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataquality');
       }, 2000);
@@ -996,6 +998,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
 DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService) {
   $scope.select = 'Rule Group';
+  $scope.isDestoryState = false; 
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
@@ -1015,6 +1018,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
+
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -1068,7 +1072,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulGroupePage = function () {
     $scope.showRuleGroup = true;
     $scope.showgraphdiv = false;
@@ -1238,7 +1244,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   $scope.okDqGroupSave = function () {
     $('#dqrulegroupsave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataqualitygroup');
       }, 2000);
