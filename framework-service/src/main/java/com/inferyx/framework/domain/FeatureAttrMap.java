@@ -20,6 +20,30 @@ public class FeatureAttrMap {
 	private String featureDisplaySeq;
 	private FeatureRefHolder feature; //source
 	private AttributeRefHolder attribute; //target
+	private FeatureRefHolder featureImpute;
+
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the featureImpute
+	 */
+	public FeatureRefHolder getFeatureImpute() {
+		return featureImpute;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param featureImpute the featureImpute to set
+	 */
 	/**
 	 * @Ganesh
 	 *

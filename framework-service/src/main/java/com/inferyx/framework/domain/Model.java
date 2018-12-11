@@ -24,7 +24,28 @@ public class Model extends BaseEntity {
 	private List<Feature> features = new ArrayList<Feature>();
 	private String scriptName;
 	private String customFlag;
+	private String defaultValue;
 
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @return the defaultValue
+	 */
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @param defaultValue the defaultValue to set
+	 */
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 
 	/**
 	 * @Ganesh
