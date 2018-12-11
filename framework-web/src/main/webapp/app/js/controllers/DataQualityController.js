@@ -1540,6 +1540,48 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.getResults(result);
   }
 
+  $scope.getColumnDetail = function (type, result) {
+    CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+    var onSuccess = function (respone) {
+      $scope.ColumnDetails=respone;
+      $scope.isDataError = false;
+      if($scope.ColumnDetails && $scope.ColumnDetails.length >0){
+        for(var i=0;i<$scope.ColumnDetails.length;i++){
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = $scope.ColumnDetails[i].name
+          attribute.displayName = $scope.ColumnDetails[i].displayName
+          attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        }
+      }
+      else{
+        angular.forEach(response.data[0], function (value, key) {
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf(key) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = key
+          attribute.displayName = key
+          attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        });
+      }
+
+      $scope.gridOptions.data = result;
+      $scope.originalData = result;
+      $scope.testgrid = true;
+      $scope.showprogress = false;
+    }
+  }
 
   $scope.getResults = function (params) {
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
@@ -1568,28 +1610,12 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       order = params.order;
 
     }
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order).then(function (response) {
-      getResult(response.data)
-    }, function (response) { OnError(response.data) });
+
+    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order)
+      .then(function (response) {getResult(response.data)}, function (response) { OnError(response.data) });
     var getResult = function (response) {
-      $scope.isDataError = false;
-      angular.forEach(response.data[0], function (value, key) {
-        var attribute = {};
-        var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-        if (hiveKey.indexOf(key) != -1) {
-          attribute.visible = false
-        } else {
-          attribute.visible = true
-        }
-        attribute.name = key
-        attribute.displayName = key
-        attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-        $scope.gridOptions.columnDefs.push(attribute)
-      });
-      $scope.gridOptions.data = response.data;
-      $scope.originalData = response.data;
-      $scope.testgrid = true;
-      $scope.showprogress = false;
+      $scope.getColumnDetail('dq',response.data);  
+    
     }
     var OnError = function (response) {
       $scope.showprogress = false;

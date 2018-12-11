@@ -3,7 +3,31 @@
  */
 
 DataPipelineModule= angular.module('DataPipelineModule');
-
+DataPipelineModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function ($filter, iso4217) {
+	return function (amount, fraction) {
+        return Math.abs(Number(amount)) >= 1.0e+18
+        ? (Math.abs(Number(amount)) / 1.0e+18).toFixed(fraction) + "Qui"
+       // fifteen Zeroes for Millions 
+       : Math.abs(Number(amount)) >= 1.0e+15
+        ? (Math.abs(Number(amount)) / 1.0e+15).toFixed(fraction) + "Qua"
+       // twelve Zeroes for Millions 
+       : Math.abs(Number(amount)) >= 1.0e+12
+        ? (Math.abs(Number(amount)) / 1.0e+12).toFixed(fraction) + "T"
+       // Nine Zeroes for Millions 
+       : Math.abs(Number(amount)) >= 1.0e+9
+       ? (Math.abs(Number(amount)) / 1.0e+9).toFixed(fraction) + "B"
+       // Six Zeroes for Millions 
+       : Math.abs(Number(amount)) >= 1.0e+6
+   
+       ?  ((Math.abs(Number(amount)) / 1.0e+6)) %1==0 ?(Math.abs(Number(amount)) / 1.0e+6) +"M" :(Math.abs(Number(amount)) / 1.0e+6).toFixed(fraction) + "M"
+       // Three Zeroes for Thousands
+       : Math.abs(Number(amount)) >= 1.0e+3
+   
+       ? ((Math.abs(Number(amount)) / 1.0e+3)) %1 ==0 ? (Math.abs(Number(amount)) / 1.0e+3)+ "K" :(Math.abs(Number(amount)) / 1.0e+3).toFixed(fraction) + "K"
+   
+       : Math.abs(Number(amount));
+    }
+}])
 DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $compile, $location, $http, $filter, CF_DOWNLOAD, CommonService) {
   return {
     scope: {
@@ -65,8 +89,6 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
       }
 
       $scope.modelDetail = null;
-
-
       $scope.$on('generateResults', function (e, params) {
         $scope.type = params.type
         $scope.isTrainResultLoad = params.type == 'train' ? true : false;
@@ -129,7 +151,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
               }
               else {
                 if (response.data.length > 0) {
-                  if (['profile', 'dq', 'recon'].indexOf($scope.type) != -1) {
+                  if (['profile', 'dataqual', 'recon'].indexOf($scope.type) != -1) {
                     $('#resultsloader').show();
                     $scope.getColumnDetail($scope.type, response.data);
                   }
@@ -159,6 +181,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         var onSuccess = function (respone) {
           $('#resultsloader').hide();
           $('#resultswrapper').show();
+          $scope.ColumnDetails=respone;
           renderTable(result, respone);
         }
       }
@@ -199,7 +222,6 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           if ($scope.orignalData.length > 0) {
             $scope.getResults($scope.orignalData);
           }
-          debugger
           if (ColumnDetails == null) {
             $scope.gridOptions.columnDefs = $scope.getColumnsByResult(data);
             console.log($scope.gridOptions.columnDefs)
@@ -212,14 +234,55 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           $scope.modelresult = data;
         }
       }
+       
+      $scope.convertNumberToUnit=function(number,attrType,unitType){
+        if(unitType == "%" && number >0){
+         var temp=number;
+         number= parseFloat(Number(temp).toFixed(2)/100);//(temp/100) +" "+unitType;
+         number=parseFloat(number.toFixed(2))+" "+unitType;
+        }
+        else if(unitType == "$" && number >0){
+          var temp=number;
+          if(Number.isInteger(temp) ==true)
+            number=$filter('number')(temp, 0,'') + " "+unitType;
+          else  
+          number=$filter('number')(temp, 2,'') + " "+unitType;
+        }
+        return number;
+      }
 
       $scope.onRowHover = function (row, e) {
+        $scope.mouseHowerRowValue=null;
         $scope.mouseHowerRowValue = row;
+        $scope.mouseHowerRowDetail={};
+        debugger
+        if($scope.ColumnDetails &&  $scope.ColumnDetails.length >0){
+          for(var i=0;i< $scope.ColumnDetails.length;i++){
+            $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]=row[$scope.ColumnDetails[i].name];
+          }
+        }
+        else{
+          $scope.mouseHowerRowDetail=row;
+        }
+       // console.log($scope.mouseHowerRowDetail);
+        if($scope.ColumnDetails &&  $scope.ColumnDetails.length >0){
+          for(var i=0;i< $scope.ColumnDetails.length;i++){
+            if(isNaN( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]) ==false && $scope.ColumnDetails[i].type.toLowerCase() !="string" ){
+              //console.log("number");
+              //console.log( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]);
+              $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]=$scope.convertNumberToUnit($scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name],$scope.ColumnDetails[i].type,$scope.ColumnDetails[i].attrUnitType)
+            }else{
+              //console.log("string");
+             // console.log( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]);
+            }
+          }
+        }
+       // console.log($scope.mouseHowerRowDetail);
         $('#tabletoshow').css('display', 'block')
         $('#tabletoshow').css('top', e.offsetY)
         $('#tabletoshow').css('left', e.offsetX)
       }
-
+ 
       $scope.leave = function (row) {
         $('#tabletoshow').css('display', 'none')
       }
@@ -393,111 +456,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         });
       };// End Download
     },
-    template: `
-       <div class="row" ng-if="type =='train' && isTrainResultLoad ==true">
-          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelDetail !=null">
-            <train-result data="modelDetail"></train-result>
-          </div>
-          <!--<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
-            <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
-            <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
-        </div>-->        
-       </div>
-       <div class="row" ng-show="type !='train'">
-         <div class="col-md-6 col-sm-6">
-           <div class="dataTables_length" id="sample_1_length">
-             <label>Show
-               <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
-               </select>
-             </label>
-           </div>
-         </div>
-           
-         <div class="col-md-6 col-sm-6">
-           <div style="float:right;">
-             <label>Search:</label>
-             <input type="search" class="form-control input-sm input-small input-inline" ng-change="filterSearch(searchtext)" ng-model="searchtext">
-           </div>
-         </div>
-           
-         <div class="col-md-12 col-sm-12">
-           <div ui-grid="gridOptions"  ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
-             <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
-               <div class="tooltipcustom" id="tabletoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.95
-                 font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">      
-                 <div style="margin-top: 5px;margin-right: 15px">
-                   <div class="row" style="padding-left:2%">
-                     <table ng-if="gridOptions.columnDefs">
-                       <tr ng-repeat="m in gridOptions.columnDefs  |  limitTo :20">
-                         <th ng-if="m.visible==true"><div style=" width:110px;
-                         white-space: nowrap;
-                         overflow: hidden;
-                         text-overflow: ellipsis;">{{m.displayName}}</div></th>
-                         <td style="padding-left:3%" ng-if="m.visible==true"><div  style="min-width:250px;max-width:600px;
-                         white-space: nowrap;
-                         overflow: hidden;
-                         text-overflow: ellipsis;">{{mouseHowerRowValue[m.name]}}</div></td>                       
-                       </tr>
-                       <tr ng-show="gridOptions.columnDefs.length >20" rowspan="2" >
-                         <td colspan="2" style="text-align:right">......</td>                       
-                       </tr>                     
-                     </table>
-                   </div>           
-                 </div>
-               </div>
-             </div>
-             <div class="row">
-               <div class="col-md-6" style="margin-top:17px">
-                 Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
-               </div>
-               <div class="col-md-6">
-                 <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize" class="pagination-md"  boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
-               </div>
-             </div>
-           </div>
-          </div> 
-          <div id="downloadSampleCommon" class="modal fade bs-modal-lg in" style="display: none;">
-            <div class="modal-dialog" style="width:40%">
-              <div class="modal-content" style="resize: both;overflow: auto;">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Download</h4>
-                </div>
-                <form class="form-horizontal" name="myform3"  ng-submit="submitDownload()" novalidate="novalidate">
-                  <div class="modal-body" style="padding-top:0px">
-                    <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                      <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                        data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              <label class="col-md-3 control-label">Rows</label>
-                              <div class="col-md-8">
-                              <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload" >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-                              </div>
-                            </div>
-                            <div class="form-group">
-                              <label class="col-md-3 control-label">Format</label>
-                              <div class="col-md-8">
-                                <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!--End Model Body-->
-                  <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                    <button type="submit" class="btn green">Submit</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-       `
+    templateUrl: 'views/grid-result-template.html',
   };
 });
 
@@ -1981,9 +1940,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                    iconMenuItems.push({title:'Show Results', type : 'results'});
                    iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
-                 if(isGroupExec && (status=='Completed')){
+                 if(isGroupExec){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                   if(status=='Completed')
+                    iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='NotStarted' || status=='Resume')){

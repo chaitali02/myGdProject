@@ -757,8 +757,8 @@
       if(type=='profile'){
         url = "metadata/getDpDatapod?type=" + type+'&action=view';
       }
-      else  if(type=='dq'){
-        url = "metadata/getDqDatapod?type=" + type+'&action=view';
+      else  if(type=='dataqual' || type=='dq'){
+        url = "metadata/getDqDatapod?type=dq&action=view";
       }
       else  if(type=='recon'){
         url = "metadata/getRcDatapod?type=" + type+'&action=view';
@@ -768,7 +768,7 @@
         var columnDetails=[];
         for(var i=0;i<response.attributes.length;i++) {  
           var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
-          var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
+          var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceUuid','sourceVersion','sourceAttributeId','targetUuid','targetVersion','targetAttributeId','']
           var width;
           if(response.attributes.length >3)
             width = response.attributes[i].dispName.split('').length + 12 + "%"
@@ -777,15 +777,16 @@
             width=(100/response.attributes.length)+"%";
           
 
-          if(hiveKey.indexOf(response.attributes[i].dispName) ==-1){ 
-            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: true});
+          if(hiveKey.indexOf(response.attributes[i].name) ==-1){ 
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: true,"attrUnitType":response.attributes[i].attrUnitType,"type":response.attributes[i].type});
           }
    
-          else if(hiveKey.indexOf(response.attributes[i].dispName) !=-1){
-            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: false});
+          else if(hiveKey.indexOf(response.attributes[i].name) !=-1){
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: false,
+            "attrUnitType":response.attributes[i].attrUnitType,"type":response.attributes[i].type});
           }
         }
-        console.log(columnDetails)
+       // console.log(columnDetails)
         deferred.resolve({
           data: columnDetails
         });
