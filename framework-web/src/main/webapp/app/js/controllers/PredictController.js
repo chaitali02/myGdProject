@@ -7,12 +7,12 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
+  $scope.isDestoryState = false;
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
     $scope.isDragable="false";
-    $scope.isDestoryState = false;
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -600,6 +600,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       $scope.iSSubmitEnable = true;
       $scope.changemodelvalue();
       if($scope.checkboxPredictexecution == "YES") {
+          $scope.dataLoading = true;
+
         PredictService.getOneById(response, "predict").then(function(response) { onSuccessGetOneById(response.data)});
         var onSuccessGetOneById = function(result) {
           $scope.predictExecute(result);
@@ -623,7 +625,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 
   $scope.okmodelsave = function() {
     var hidemode = "yes";
-    debugger
+    
     if (hidemode == 'yes' && $scope.isDestoryState==false) { 
       setTimeout(function() {
         $state.go("predict");
@@ -638,6 +640,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     var onSuccessGetOneById = function(result) {
       PredictService.getExecutePredict(response.uuid,response.version,null).then(function(response) { onSuccessGetExecutePredict(response.data)});
       var onSuccessGetExecutePredict = function(result) {
+    	  $scope.dataLoading = false;
         notify.type='success',
         notify.title= 'Success',
         notify.content='Configuration Submited and Saved Successfully'

@@ -1596,7 +1596,7 @@ public class ModelServiceImpl {
 	}
 
 	public boolean save(String className, Object obj, String path) {
-
+	
 		Class<?> dynamicClass = obj.getClass();
 
 		Class<?>[] paramSave = new Class[1];
