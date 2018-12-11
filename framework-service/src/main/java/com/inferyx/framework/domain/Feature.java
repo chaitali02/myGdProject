@@ -14,18 +14,16 @@ package com.inferyx.framework.domain;
 public class Feature {
 	private String featureId;
 	private String featureDisplaySeq;
-	public String getFeatureDisplaySeq() {
-		return featureDisplaySeq;
-	}
-	public void setFeatureDisplaySeq(String featureDisplaySeq) {
-		this.featureDisplaySeq = featureDisplaySeq;
-	}
 	private String name;
 	private String type;
 	private String desc;
 	private int minVal;
 	private int maxVal;
+	private double defaultValue;
 	private ParamListHolder paramListInfo;
+	
+	
+	
 	
 	/**
 	 * @Ganesh
@@ -140,4 +138,19 @@ public class Feature {
 		this.maxVal = maxVal;
 	}
 	
+	public String getFeatureDisplaySeq() {
+		return featureDisplaySeq;
+	}
+	
+	public void setFeatureDisplaySeq(String featureDisplaySeq) {
+		this.featureDisplaySeq = featureDisplaySeq;
+	}
+	
+	public double getDefaultValue() {
+		return defaultValue;
+	}
+	
+	public void setDefaultValue(double defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 }

@@ -360,11 +360,12 @@
                                   <tr>
                                     <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
                                     <th style="width:8%; text-align:center">ID</th>
-                                    <th style="width:18%; text-align:center">Name</th>
-                                    <th style="width:15%; text-align:center">Type</th>
-                                    <th style="width:20%; text-align:center">Desc</th>
+                                    <th style="width:15%; text-align:center">Name</th>
+                                    <th style="width:12%; text-align:center">Type</th>
+                                    <th style="width:18%; text-align:center">Desc</th>
                                     <th style="width:10%; text-align:center">Min Value</th>
                                     <th style="width:10%; text-align:center">Max Value</th>
+                                    <th style="width:15%; text-align:center">Default Value</th>
                                     <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
                                     <th style="width:10%;text-align: center">Move</th>
                                   </tr>
@@ -381,19 +382,20 @@
                                     <tr  >
                                     <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}" focus-me="true" required disable-validation-message=""></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}" focus-me="true" required disable-validation-message=""></span></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
                                           ng-change="onChangeFeatureType($index)">
                                         </select>
                                       </span>
                                     </td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.desc}}"ng-disabled="{{mode}}"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" name="defaultValue{{$index}}" ng-model="data.defaultValue" title="{{data.defaultValue}}" ng-disabled="{{mode}}" ng-pattern="/^[0-9\.]{1,20}$/"  disable-validation-message="" uib-tooltip="{{myform2['defaultValue'+$index].$valid ? '' : 'enter only numeric value'}}"></span> </td>
                                     <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       
-                                      <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
+                                      <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)" >
                                       </select>
                                     </td>
                                     <td>
