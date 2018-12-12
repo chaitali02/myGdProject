@@ -3655,6 +3655,7 @@ public class CommonServiceImpl <T> {
 					for(Feature feature : model.getFeatures()) {
 						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
 							featureHolder.setFeatureName(feature.getName());
+							featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
 							featureAttrMap.setFeature(featureHolder);
 						}
 					}
