@@ -1403,7 +1403,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 					var onSuccess = function (response) {
 						console.log(JSON.stringify(response))
 						$scope.isSubmitProgess = false;
-						$scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+						$scope.saveMessage = "Rule Groups Saved and Submitted Successfully"
 						notify.type = 'success',
 						notify.title = 'Success',
 						notify.content = $scope.saveMessage
@@ -1414,7 +1414,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 			} //End If
 			else {
 				$scope.isSubmitProgess = false;
-				$scope.saveMessage = "Rule Group Saved Successfully"
+				$scope.saveMessage = "Rule Groups Saved Successfully"
 				notify.title = 'Success',
 				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);

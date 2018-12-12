@@ -1,7 +1,7 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER,CF_SUCCESS_MSG) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -965,17 +965,17 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
             onSuccess(response.data)
           });
           var onSuccess = function (response) {
-            $scope.saveMessage = "DQ Rule Saved and Submitted Successfully";
+            $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute//"DQ Rule Saved and Submitted Successfully";
             notify.type = 'success',
-              notify.title = 'Success',
-              notify.content = $scope.saveMessage
+            notify.title = 'Success',
+            notify.content = $scope.saveMessage
             $scope.$emit('notify', notify);
             $scope.okDQRuleSave();
           }
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
-        $scope.saveMessage = "DQ Rule Saved Successfully";
+        $scope.saveMessage = CF_SUCCESS_MSG.dqSave;//"DQ Rule Saved Successfully";
         notify.type = 'success',
           notify.title = 'Success',
           notify.content = $scope.saveMessage
@@ -996,7 +996,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService,CF_SUCCESS_MSG) {
   $scope.select = 'Rule Group';
   $scope.isDestoryState = false; 
   if ($stateParams.mode == 'true') {
@@ -1307,7 +1307,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
           });
           var onSuccess = function (response) {
             $scope.dataLoading = false;
-            $scope.saveMessage = "DQ Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSaveExecute;//"DQ Rule Groups Saved and Submitted Successfully"
             // if ($scope.isshowmodel == "true") {
             //   $('#dqrulegroupsave').modal({
             //     backdrop: 'static',
@@ -1324,7 +1324,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "DQ Rule Group Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSave;//"DQ Rule Groups Saved Successfully"
         // if ($scope.isshowmodel == "true") {
         //   $('#dqrulegroupsave').modal({
         //     backdrop: 'static',

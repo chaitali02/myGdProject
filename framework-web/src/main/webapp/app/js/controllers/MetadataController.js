@@ -45,6 +45,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isAdd = true;
 		$scope.mode="false";
 	}
+	$scope.unitTypes=["*","#","$","%","₹"];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
 	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;

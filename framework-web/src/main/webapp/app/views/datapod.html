@@ -398,7 +398,7 @@
                         <th class="text-center">Name</th>
                         <th class="text-center" style="width:11%;">Type</th>
                         <th class="text-center">Length</th>
-                        <th class="text-center">Unit</th>
+                        <th class="text-center"  style="width:10%;">Unit</th>
                         <th class="text-center">Desc</th>
                         <th class="text-center;" style="width: 7%;">Move</th>
                       </tr>
@@ -456,7 +456,11 @@
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.attrUnitType" title="{{tabledata.attrUnitType}}" ng-disabled="{{mode}}" class="form-control">
+                              
+                            <select ng-model="tabledata.attrUnitType" ng-options="x for x in unitTypes" ng-disabled="{{mode}}" class="form-control">
+                              <option value="">-Select-</option>
+                            </select>
+                            <!-- <input type="text" ng-model="tabledata.attrUnitType" title="{{tabledata.attrUnitType}}" ng-disabled="{{mode}}" class="form-control"> -->
                           </span>
                         </td>
                         <td>

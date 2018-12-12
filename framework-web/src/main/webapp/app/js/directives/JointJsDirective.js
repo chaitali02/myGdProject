@@ -239,16 +239,23 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        
       $scope.convertNumberToUnit=function(number,attrType,unitType){
         if(unitType == "%" && number >0){
-         var temp=number;
-         number= parseFloat(Number(temp).toFixed(2)/100);//(temp/100) +" "+unitType;
-         number=parseFloat(number.toFixed(2))+" "+unitType;
+          var temp=number;
+          number= parseFloat(Number(temp).toFixed(2)/100);//(temp/100) +" "+unitType;
+          number=parseFloat(number.toFixed(2))+" "+unitType;
         }
-        else if(unitType == "$" && number >0){
+        else if(["$","₹"].indexOf(unitType) != -1 && number >0){
           var temp=number;
           if(Number.isInteger(temp) ==true)
-            number=$filter('number')(temp, 0,'') + " "+unitType;
+            number=$filter('currency')(temp,'',0) + " "+unitType;
           else  
-          number=$filter('number')(temp, 2,'') + " "+unitType;
+          number=$filter('currency')(temp,'',2) + " "+unitType;
+        }
+        else if(unitType == "#" && number >0){
+          var temp=number;
+          if(Number.isInteger(temp) ==true)
+            number=$filter('number')(temp, 0,'') //+ " "+unitType;
+          else  
+          number=$filter('number')(temp, 2,'') //+ " "+unitType;
         }
         return number;
       }
@@ -269,7 +276,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        // console.log($scope.mouseHowerRowDetail);
         if($scope.ColumnDetails &&  $scope.ColumnDetails.length >0){
           for(var i=0;i< $scope.ColumnDetails.length;i++){
-            if(isNaN( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]) ==false && $scope.ColumnDetails[i].type.toLowerCase() !="string" ){
+            if(isNaN( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]) ==false && $scope.ColumnDetails[i].name.toLowerCase() !="version" ){
               //console.log("number");
               //console.log( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]);
               $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]=$scope.convertNumberToUnit($scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name],$scope.ColumnDetails[i].type,$scope.ColumnDetails[i].attrUnitType)
