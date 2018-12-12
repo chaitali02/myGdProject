@@ -20,24 +20,11 @@ public class FeatureAttrMap {
 	private String featureDisplaySeq;
 	private FeatureRefHolder feature; //source
 	private AttributeRefHolder attribute; //target
-	private FeatureRefHolder featureImpute;
+	private FeatureRefHolder imputeMethod;
 
 	
+
 	
-	
-	
-	
-	
-	
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the featureImpute
-	 */
-	public FeatureRefHolder getFeatureImpute() {
-		return featureImpute;
-	}
 	/**
 	 *
 	 * @Ganesh
@@ -98,6 +85,14 @@ public class FeatureAttrMap {
 	}
 	public void setFeatureDisplaySeq(String featureDisplaySeq) {
 		this.featureDisplaySeq = featureDisplaySeq;
+	}
+	
+	public FeatureRefHolder getImputeMethod() {
+		return imputeMethod;
+	}
+	
+	public void setImputeMethod(FeatureRefHolder imputeMethod) {
+		this.imputeMethod = imputeMethod;
 	}
 		
 }

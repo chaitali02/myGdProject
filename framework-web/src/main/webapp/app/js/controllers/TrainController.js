@@ -63,6 +63,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   //$scope.targetTypes = ["datapod", "file"];
   //$scope.selectTargetType = $scope.targetTypes[0];
   $scope.paramTypes = ["paramlist", "paramset"];
+  $scope.imputeTypes=["default","string"];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -288,6 +289,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           var featureMap = {};
           var sourceFeature = {};
           var targetFeature = {};
+          var imputeMethod={};
           featureMap.featureMapId = i;
           featureMap.id = i;
           featureMap.index = i;
@@ -297,6 +299,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           sourceFeature.featureName = response.features[i].name;
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
+          // imputeMethod.type="model";
+          // imputeMethod.imputeType="default";
+          // imputeMethod.imputeValue=response.features[i].defaultValue;
+          // imputeMethod.featureId = response.features[i].featureId;
+          // imputeMethod.defaultValue = response.features[i].defaultValue;
+          // imputeMethod.sourceFeature = sourceFeature;
+          // featureMap.imputeMethod=imputeMethod;
           $scope.originalFeatureMapTableArray = featureMapTableArray;
           $scope.featureMapTableArray = featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);//featureMapTableArray;
         }
@@ -431,6 +440,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var featureAttrMap = {};
         var sourceFeature = {};
         var targetFeature = {};
+        var imputeMethod={};
         featureAttrMap.featureAttrMapId = response.featureAttrMap[i].featureMapId;
         featureAttrMap.id = response.featureAttrMap[i].featureMapId;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
@@ -446,6 +456,16 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.id = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
         targetFeature.dname = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
         featureAttrMap.targetFeature = targetFeature;
+       // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
+        // imputeMethod.imputeType=response.featureAttrMap[i].imputeMethod.ref.type =="model"?"default":"string";
+        // imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.defaultValue;
+        // imputeMethod.id = response.featureAttrMap[i].featureMapId;
+        // imputeMethod.uuid = response.featureAttrMap[i].feature.ref.uuid;
+        // imputeMethod.type = response.featureAttrMap[i].feature.ref.type;
+        // imputeMethod.featureId = response.featureAttrMap[i].feature.featureId;
+        // imputeMethod.featureName = response.featureAttrMap[i].feature.featureName;
+        // featureAttrMap.imputeMethod=imputeMethod;
+        featureAttrMap.featureAttrMap=featureAttrMap;
         featureMapTableArray[i] = featureAttrMap;
       }
       $scope.originalFeatureMapTableArray = featureMapTableArray;
@@ -560,6 +580,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var sourceFeatureRef = {};
         var targetFeature = {};
         var targetFeatureRef = {};
+        var imputeMethod={};
+        var imputeMethodRef={};
         sourceFeatureRef.uuid = $scope.featureMapTableArray[i].sourceFeature.uuid;
         sourceFeatureRef.type = $scope.featureMapTableArray[i].sourceFeature.type;
         sourceFeature.ref = sourceFeatureRef;
@@ -570,8 +592,18 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeatureRef.type = $scope.selectSourceType;
         targetFeature.ref = targetFeatureRef
         targetFeature.attrId = $scope.featureMapTableArray[i].targetFeature.attributeId;
-
         featureMapObj.attribute = targetFeature;
+        // if($scope.featureMapTableArray[i].imputeMethod.imputeType){
+        //   imputeMethodRef.type="model";
+        //   imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.uuid;
+        //   imputeMethod.ref = sourceFeatureRef;
+        //   imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
+        // }else{
+        //   imputeMethodRef.type="simple";
+        //   imputeMethod.ref = sourceFeatureRef;
+        //   imputeMethod.value = $scope.featureMapTableArray[i].imputeMethod.imputeValue;
+        // }
+        // featureMapObj.imputeMethod = imputeMethod;
         featureMap[i] = featureMapObj;
       }
     }
