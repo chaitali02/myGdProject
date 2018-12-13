@@ -199,7 +199,8 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 				resultjson.registeredOn=response[i].registeredOn;
 				resultjson.registeredBy=response[i].registeredBy;
 				resultjson.compareStatus=response[i].compareStatus;
-				
+				resultjson.isSuccessShow=false;
+                resultjson.isErrorShow=false;
 	  			if(response[i].status == "UnRegistered"){
 					resultjson.isDisabled=false;
 	  				resultjson.status="Not Registered"
