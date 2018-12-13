@@ -62,7 +62,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         name: 'status',
         cellClass: 'text-center',
         headerCellClass: 'text-center',
-        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status}}</span></div>'
+        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status  }}</span> <span><i  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow"style="color:{{row.entity.status==\'Not Registered\'?\'#DF0000\':\'#71F354\'}};font-size:14px;" class="{{row.entity.status!=\'Not Registered\' ? \'icon-check\' :  \'icon-close\'}}" aria-hidden="true"></i></span></div>'
       },
       {
         displayName: 'Compare Status',
@@ -273,6 +273,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
           $scope.gridOptions.data[id].status = response[i].status;
           $scope.gridOptions.data[id].selected= false;
           $scope.gridOptions.data[id].isDisabled=true;
+          $scope.gridOptions.data[id].isSuccessShow=true;
+          $scope.gridOptions.data[id].isErrorShow=false;
           $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
           $scope.gridOptions.data[id].compareStatus=response[i].compareStatus
         }
@@ -284,6 +286,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
             $scope.gridOptions.data[index].status = response[i].status;
             $scope.gridOptions.data[index].selected= false;
             $scope.gridOptions.data[index].isDisabled=true;
+            $scope.gridOptions.data[id].isSuccessShow=true;
+            $scope.gridOptions.data[id].isErrorShow=false;
             $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
             $scope.gridOptions.data[index].compareStatus=response[i].compareStatus
         }
@@ -308,6 +312,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
           $scope.gridOptions.data[id].status = "Not Registered";
           $scope.gridOptions.data[id].selected= false;
           $scope.gridOptions.data[id].isDisabled=false;
+          $scope.gridOptions.data[id].isSuccessShow=false;
+          $scope.gridOptions.data[id].isErrorShow=true;
         }
         else{
           var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
@@ -315,7 +321,9 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
             $scope.gridOptions.data[index].status ="Not Registered";
             $scope.gridOptions.data[index].selected= false;
             $scope.gridOptions.data[index].isDisabled=false;
-        }
+            $scope.gridOptions.data[id].isSuccessShow=false;
+            $scope.gridOptions.data[id].isErrorShow=true;
+          }
         }
       //$scope.gridOptions.data.splice(i,1);
       // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
