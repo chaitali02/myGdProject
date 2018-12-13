@@ -16,13 +16,14 @@
             "type" : "file"
         }
     },
-   
-    "featureAttrMap" : [ 
+  	"featureAttrMap" : [ 
         {
             "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
                 "featureName" : "interestRate",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "4f746686-019f-47da-a744-b77acf1b2a99"
@@ -33,6 +34,13 @@
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
                 }
             }
         }
