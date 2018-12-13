@@ -297,28 +297,29 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       $scope.$emit('notify', notify);
     }
     var onError=function(response){
-    	 var selectRegisterSoucre=$scope.getSelectedRow();
-    	 $scope.dataLoading = false;
-         $scope.dataLoading = false;
-         $scope.selectedAllRow = false;
-         for (var i = 0; i < selectRegisterSoucre.length; i++) {
-           if(!$scope.searchtext){
-             var id = selectRegisterSoucre[i].id - 1
-             $scope.gridOptions.data[id].status = "Not Registered";
-             $scope.gridOptions.data[id].selected= false;
-             $scope.gridOptions.data[id].isDisabled=true;
-           }
-           else{
-             var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
-             if(index!=-1){
-               $scope.gridOptions.data[index].status ="Not Registered";
-               $scope.gridOptions.data[index].selected= false;
-               $scope.gridOptions.data[index].isDisabled=true;
-           }
-           }
-           //$scope.gridOptions.data.splice(i,1);
-          // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
-         }
+      $scope.searchButtonText = "Register";
+    	var selectRegisterSoucre=$scope.getSelectedRow();
+    	$scope.dataLoading = false;
+      $scope.dataLoading = false;
+      $scope.selectedAllRow = false;
+      for (var i = 0; i < selectRegisterSoucre.length; i++) {
+        if(!$scope.searchtext){
+          var id = selectRegisterSoucre[i].id - 1
+          $scope.gridOptions.data[id].status = "Not Registered";
+          $scope.gridOptions.data[id].selected= false;
+          $scope.gridOptions.data[id].isDisabled=false;
+        }
+        else{
+          var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+          if(index!=-1){
+            $scope.gridOptions.data[index].status ="Not Registered";
+            $scope.gridOptions.data[index].selected= false;
+            $scope.gridOptions.data[index].isDisabled=false;
+        }
+        }
+      //$scope.gridOptions.data.splice(i,1);
+      // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+      }
 
     }
   }

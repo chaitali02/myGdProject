@@ -95,8 +95,14 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         $scope.modelDetail = {};
         $scope.modelDetail.uuid = params.id;
         $scope.modelDetail.version = params.version;
+        $scope.downloadDetail = {};
+        $scope.downloadDetail.uuid = params.id;
+        $scope.downloadDetail.version = params.version;
+        $scope.downloadDetail.type = params.type;
+
         if ($scope.type == 'train') {
           $('#resultsloader').hide();
+          $rootScope.showGrid = true;
         }
         else {
           $rootScope.showGrid = true;
@@ -121,11 +127,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
             typeexec = params.type + "exec";
           }
 
-          $scope.downloadDetail = {};
-          $scope.downloadDetail.uuid = params.id;
-          $scope.downloadDetail.version = params.version;
-          $scope.downloadDetail.type = params.type;
-
+          
           var baseurl = $location.absUrl().split("app")[0];
           $http.get(baseurl + 'metadata/getNumRowsbyExec?action=view&execUuid=' + params.id + '&execVersion=' + params.version + '&type=' + typeexec).then(function (res) {
             var mode = res.data.runMode;
@@ -237,16 +239,23 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        
       $scope.convertNumberToUnit=function(number,attrType,unitType){
         if(unitType == "%" && number >0){
-         var temp=number;
-         number= parseFloat(Number(temp).toFixed(2)/100);//(temp/100) +" "+unitType;
-         number=parseFloat(number.toFixed(2))+" "+unitType;
+          var temp=number;
+          number= parseFloat(Number(temp).toFixed(2)/100);//(temp/100) +" "+unitType;
+          number=parseFloat(number.toFixed(2))+" "+unitType;
         }
-        else if(unitType == "$" && number >0){
+        else if(["$","₹"].indexOf(unitType) != -1 && number >0){
           var temp=number;
           if(Number.isInteger(temp) ==true)
-            number=$filter('number')(temp, 0,'') + " "+unitType;
+            number=$filter('currency')(temp,'',0) + " "+unitType;
           else  
-          number=$filter('number')(temp, 2,'') + " "+unitType;
+          number=$filter('currency')(temp,'',2) + " "+unitType;
+        }
+        else if(unitType == "#" && number >0){
+          var temp=number;
+          if(Number.isInteger(temp) ==true)
+            number=$filter('number')(temp, 0,'') //+ " "+unitType;
+          else  
+          number=$filter('number')(temp, 2,'') //+ " "+unitType;
         }
         return number;
       }
@@ -255,7 +264,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         $scope.mouseHowerRowValue=null;
         $scope.mouseHowerRowValue = row;
         $scope.mouseHowerRowDetail={};
-        debugger
+        
         if($scope.ColumnDetails &&  $scope.ColumnDetails.length >0){
           for(var i=0;i< $scope.ColumnDetails.length;i++){
             $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]=row[$scope.ColumnDetails[i].name];
@@ -267,7 +276,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        // console.log($scope.mouseHowerRowDetail);
         if($scope.ColumnDetails &&  $scope.ColumnDetails.length >0){
           for(var i=0;i< $scope.ColumnDetails.length;i++){
-            if(isNaN( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]) ==false && $scope.ColumnDetails[i].type.toLowerCase() !="string" ){
+            if(isNaN( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]) ==false && $scope.ColumnDetails[i].name.toLowerCase() !="version" ){
               //console.log("number");
               //console.log( $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]);
               $scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name]=$scope.convertNumberToUnit($scope.mouseHowerRowDetail[$scope.ColumnDetails[i].name],$scope.ColumnDetails[i].type,$scope.ColumnDetails[i].attrUnitType)
@@ -390,6 +399,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
       }
 
       window.downloadPiplineFile = function () {
+        debugger
         var uuid = $scope.downloadDetail.uuid;
         var version = $scope.downloadDetail.version;
         var baseurl = $location.absUrl().split("app")[0];

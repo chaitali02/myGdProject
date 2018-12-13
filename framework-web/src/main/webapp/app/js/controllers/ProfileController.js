@@ -3,7 +3,7 @@
  */
 ProfileModule = angular.module('ProfileModule');
 
-ProfileModule.controller('DetailProfileController', function (CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService, privilegeSvc) {
+ProfileModule.controller('DetailProfileController', function (CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService, privilegeSvc,CF_SUCCESS_MSG) {
 	$scope.select = 'Rule';
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -339,7 +339,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 					ProfileService.executeProfile(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data) });
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
-						$scope.saveMessage = "Profile Rule Saved and Submitted Successfully"
+						$scope.saveMessage = CF_SUCCESS_MSG.profileSaveExecute//"Profile Rule Saved and Submitted Successfully"
 						notify.type = 'success',
 							notify.title = 'Success',
 							notify.content = $scope.saveMessage
@@ -350,10 +350,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			}//End If
 			else {
 				$scope.dataLoading = false;
-				$scope.saveMessage = "Profile Rule Saved Successfully"
+				$scope.saveMessage = CF_SUCCESS_MSG.profileSave;//"Profile Rule Saved Successfully"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.saveMessage
+				notify.title = 'Success',
+				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);
 				$scope.okProfileGroupSave();
 			}//End Else
@@ -372,7 +372,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 });
 
-ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc, CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService) {
+ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc, CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService,CF_SUCCESS_MSG) {
 	$scope.select = 'Rule Group';
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -662,10 +662,10 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 					ProfileService.executeProfileGroup(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data) });
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
-						$scope.saveMessage = "Profile Rule Group Saved and Submitted Successfully"
+						$scope.saveMessage = CF_SUCCESS_MSG.profileGroupSaveExecute//"Profile Rule Groups Saved and Submitted Successfully"
 						notify.type = 'success',
-							notify.title = 'Success',
-							notify.content = $scope.saveMessage
+						notify.title = 'Success',
+						notify.content = $scope.saveMessage
 						$scope.$emit('notify', notify);
 						$scope.okProfileGroupSave();
 					}
@@ -673,18 +673,18 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			}//End If
 			else {
 				$scope.dataLoading = false;
-				$scope.saveMessage = "Profile Rule Group Saved Successfully"
+				$scope.saveMessage = CF_SUCCESS_MSG.profileGroupSave//"Profile Rule Groups Saved Successfully"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.saveMessage
+				notify.title = 'Success',
+				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);
 				$scope.okProfileGroupSave();
 			}//End Else
 		}//End Submit Api Function
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}//End Submit Function

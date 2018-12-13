@@ -527,7 +527,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
     var onSuccessGetExecuteModel = function (response) {
      $scope.dataLoading = false;
-      $scope.saveMessage = "Rule Saved and Submited Successfully"
+      $scope.saveMessage = "Rule Saved and Submitted Successfully"
       notify.type = 'success',
       notify.title = 'Success',
       notify.content = $scope.saveMessage
@@ -1766,7 +1766,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
           var onSuccess = function (response) {
             console.log(JSON.stringify(response))
             $scope.dataLoading = false;
-            $scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = "Rule Groups Saved and Submitted Successfully"
             notify.type = 'success',
             notify.title = 'Success',
             notify.content = $scope.saveMessage
@@ -1781,7 +1781,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "Rule Group Saved Successfully"
+        $scope.saveMessage = "Rule Groups Saved Successfully"
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage

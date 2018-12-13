@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER,$location,$anchorScroll) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER,$location,$anchorScroll,CF_SUCCESS_MSG) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -597,7 +597,7 @@ var confirmDialog = function(newVal, yes, no) {
     });
     var onSuccessGetExecuteModel = function (response) {
      $scope.dataLoading = false;
-      $scope.saveMessage = "Rule Saved and Submited Successfully"
+      $scope.saveMessage = CF_SUCCESS_MSG.ruleSaveExecute//"Rule Saved and Submitted Successfully"
       notify.type = 'success',
       notify.title = 'Success',
       notify.content = $scope.saveMessage
@@ -1624,7 +1624,7 @@ var confirmDialog = function(newVal, yes, no) {
       }
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "Rule Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.ruleSave//"Rule Saved Successfully"
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage
@@ -1643,13 +1643,12 @@ var confirmDialog = function(newVal, yes, no) {
 });
 
 
-RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc,CommonService) {
+RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc,CommonService, CF_SUCCESS_MSG) {
   $scope.select = 'rules group';
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
-    $scope.isDestoryState = false;
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -1678,6 +1677,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   else {
     $scope.isAdd = true;
   }
+  $scope.isDestoryState = false;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;
@@ -1864,6 +1864,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   };
 
   $scope.okrulesave = function () {
+    debugger
     var hidemode = "yes";
   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
@@ -1926,7 +1927,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
           var onSuccess = function (response) {
             console.log(JSON.stringify(response))
             $scope.dataLoading = false;
-            $scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.ruleGroupSaveExecute//"Rule Groups Saved and Submitted Successfully"
             notify.type = 'success',
             notify.title = 'Success',
             notify.content = $scope.saveMessage
@@ -1941,7 +1942,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "Rule Group Saved Successfully"
+        $scope.saveMessage =  CF_SUCCESS_MSG.ruleGroupSave//"Rule Groups Saved Successfully"
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage
