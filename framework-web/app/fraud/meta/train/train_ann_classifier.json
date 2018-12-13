@@ -22,36 +22,9 @@
     {
       "ref": {
         "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-        "version": null,
-        "name": "Administration"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": null,
-        "name": "Data Warehouse"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
         "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
         "version": null,
         "name": "Fraud Analytics"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": null,
-        "name": "Risk Analytics"
       },
       "value": null
     }
@@ -74,62 +47,60 @@
     },
     "value": null
   },
-  "featureAttrMap": [
-    {
-      "featureMapId": "0",
-      "featureDisplaySeq": null,
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
-          "version": null,
-          "name": "model_ann_classifier"
-        },
-        "value": null,
-        "featureId": "0",
-        "featureName": "f1"
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "V1",
-        "attrType": null
-      }
-    },
-    {
-      "featureMapId": "1",
-      "featureDisplaySeq": null,
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
-          "version": null,
-          "name": "model_ann_classifier"
-        },
-        "value": null,
-        "featureId": "1",
-        "featureName": "f2"
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "V2",
-        "attrType": null
-      }
-    }
-  ],
+  "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }
+    ],
   "trainPercent": 75,
   "valPercent": 25,
   "labelInfo": {

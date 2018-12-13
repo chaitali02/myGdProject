@@ -3716,7 +3716,17 @@ public class RegisterService {
 			return null;
 		}}
 		catch(Exception e) {
+			if(e.getMessage().contains("Cannot resolve column name"))
+			try {
+				commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (e.getMessage() != null) ? "Cannot resolve column name" : "Cannot resolve column name", null);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | JSONException | ParseException
+					| IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}else {
 			datapodServiceImpl.setResponseMsg(e.getMessage());	
+			}
 		}
 		return registryList;
 
