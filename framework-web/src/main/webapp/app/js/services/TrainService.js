@@ -134,7 +134,7 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
         then(function (response, status, headers) {
             return response;
         })
-}
+  }
   return factory;
 })
 

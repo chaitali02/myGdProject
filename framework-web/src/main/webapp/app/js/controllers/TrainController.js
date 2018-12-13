@@ -311,6 +311,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           imputeMethod.imputeValue=response.features[i].defaultValue;
           imputeMethod.featureId = response.features[i].featureId;
           imputeMethod.defaultValue = response.features[i].defaultValue;
+          imputeMethod.isModelShow=true;
+          imputeMethod.isSimpleShow=false;
+          imputeMethod.isFunctionShow=false;
           imputeMethod.sourceFeature = sourceFeature;
           featureMap.imputeMethod=imputeMethod;
           $scope.originalFeatureMapTableArray = featureMapTableArray;

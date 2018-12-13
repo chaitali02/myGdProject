@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="form-wizard" ng-show="showFrom">
-                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
                             <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
                         </div>
                         <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
@@ -264,7 +264,8 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource(selectSource)" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource(selectSource)" data-ng-model="selectSource"
+                                                    ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
                                                     <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="sourceName" type="hidden" ng-model="selectSource.uuid" required />
@@ -286,7 +287,7 @@
                                         <div class="form-group">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Row Identifier</label>
                                             <div class="col-md-6">
-                                                
+
                                                 <tags-input class="tag-scroll" ng-model="rowIdentifierTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
                                                     add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                                                     <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
@@ -314,11 +315,12 @@
                                                         <span class="caption-subject  sbold ">Features</span>
                                                     </div>
                                                     <div class="actions">
-                                                        <!-- <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map">
-                                                            <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
-                                                        </a> -->
+                                                  
                                                         <div class="btn-group">
-                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown"
+                                                                tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown"
+                                                                data-close-others="true" aria-expanded="false">
+                                                                <span class="fa fa-map-signs" aria-hidden="true"></span>
                                                                 <i class="fa fa-angle-down"></i>
                                                             </a>
                                                             <ul class="dropdown-menu pull-right">
@@ -326,44 +328,16 @@
                                                                     <a href="javascript:;">By Name</a>
                                                                 </li>
                                                                 <li class="divider" style="margin: 0px;"> </li>
-                                                                <li  ng-click="autoMapFeature('By Order')">
+                                                                <li ng-click="autoMapFeature('By Order')">
                                                                     <a href="javascript:;">By Order</a>
                                                                 </li>
-                                                              
+
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="portlet-body">
-                                                    <!-- <div class="row">
-                                                    <div class="col-md-6 col-sm-6" style="padding-left:0px;">
-                                                        <label class="col-md-2 col-sm-2" style="margin-top:10px;" >Show</label>
-                                                        <div class=" form-group col-md-4 col-sm-4">
-                                                            <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
-                                                            </select>
-                                                        </div>
-                                                    </div> -->
-                                                    <!-- <div class="col-md-6 col-sm-6">
-                                                        <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                                                        <label>Search:</label>
-                                                        <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
-                                                        </div>
-                                                    </div> -->
-                                                    <!-- </div> -->
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-6 col-sm-6">
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <div class="form-group" style="float:right;padding-right: 11px">
-                                                                <label>Auto Map</label>
-                                                                <select class="form-control input-inline" data-ng-model="selectedAutoMode" ng-options="r  for r in allAutoMap" ng-disabled="{{mode}}"
-                                                                    ng-change="autoMapFeature()">
-                                                                    <option value="">-select-</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div> -->
-                                                    
+                                                   
                                                     <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                         <div class="col-md-12">
                                                             <div class="">
@@ -373,14 +347,13 @@
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:20%;text-align: center">Attributes</th>
-                                                                            <th style="width:3%;text-align: center">Move</th>
+                                                                            <th style="width:10%;text-align: center">Impute Method</th>
+                                                                            <th style="width:10%;text-align: center">Impute Value</th>
+                                                                            <th style="width:5%;text-align: center">Move</th>
 
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody ng-repeat="data in featureMapTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
-                                                                        <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="featureMapTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
-                                                                        data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-                                                                        data-direction="{{data.sourceFeature.featureName.jqyouiDirection}}"> -->
                                                                         <tr>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -403,14 +376,36 @@
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    <select ng-model="data.imputeMethod.imputeType" ng-options=" x for x in imputeTypes " ng-disabled="{{mode}}" class="form-control"
+                                                                                        ng-change="onChangeInputeType($index,data.imputeMethod.imputeType)"></select>
+                                                                                </span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    <div ng-if="data.imputeMethod.isModelShow">
+                                                                                        <input type="text" class="form-control" ng-model="data.imputeMethod.imputeValue" title="{{data.imputeMethod.imputeValue}}"
+                                                                                            ng-disabled="true">
+                                                                                    </div>
+                                                                                    <div ng-if="data.imputeMethod.isSimpleShow">
+                                                                                        <input type="text" class="form-control" ng-model="data.imputeMethod.imputeValue" title="{{data.imputeMethod.imputeValue}}"
+                                                                                            ng-disabled="{{mode}}">
+                                                                                    </div>
+
+                                                                                    <div ng-if="data.imputeMethod.isFunctionShow">
+
+                                                                                        <select select2 ng-model="data.imputeMethod.selectedFunction" ng-options=" x as x.name  for x in allFunction track by x.uuid"
+                                                                                            ng-disabled="{{mode}}" class="form-control"></select>
+                                                                                    </div>
+                                                                                </span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div style="text-align: center;">
-                                                                                        <a class="move-column"  ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
                                                                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
 
                                                                                         </a>
-                                                                                        <a class="move-column"  ng-disabled="($index == featureMapTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                                                                        <a class="move-column" ng-disabled="($index == featureMapTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
                                                                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
 
                                                                                         </a>
@@ -423,18 +418,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- <div class="row">
-                                                    <div class="col-md-6" style="margin-top:17px">
-                                                        Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
-                                                        ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
-                                                        max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
-                                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
-                                                        </ul>
-                                                    </div>
-                                                </div> -->
+                                                  
                                                 </div>
                                             </div>
                                         </div>
