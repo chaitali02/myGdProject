@@ -8,6 +8,8 @@ import { MetadataService } from '../metadata/services/metadata.service';
 import { SharedService } from '../shared/shared.service';
 import { MenuModule, MenuItem } from 'primeng/primeng';
 import * as moment from 'moment'
+import { CommonListService } from '../common-list/common-list.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-batch-schedulerresult-component',
@@ -30,11 +32,11 @@ export class BatchSchedulerResultComponent {
   mode: any;
   batchStatus: any;
   batchexecData1: any;
-  starttime: any;
-  endtime: any;
-  duration: any;
+  starttime: any = "- N/A -";
+  endtime: any = "- N/A -";
+  duration: any = "- N/A -";
 
-  constructor(private http: Http, public _sharedService: SharedService, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _metadataService: MetadataService, private activeroute: ActivatedRoute) {
+  constructor(private _commonListService: CommonListService, private http: Http, public _sharedService: SharedService, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _metadataService: MetadataService, private activeroute: ActivatedRoute,private datePipe: DatePipe) {
     this.breadcrumbDataFrom = [{
       "caption": "Batch Scheduler",
       "routeurl": "/app/list/batchexec"
@@ -88,65 +90,65 @@ export class BatchSchedulerResultComponent {
         error => console.log("Error :: " + error));
   }
   onSuccessgetExecListByBatchExec(response: any[]): any {
-    debugger
+
+
     this.breadcrumbDataFrom[2].caption = response[0]["name"];
     console.log('getExecListByBatchExec is start');
     this.batchexecData = response;
 
-    let result;
-    for (var i = 0; i < response.length; i++) {
-      this.starttime = response[i].status[1]["createdOn"];
-      this.endtime = response[i].status[2]["createdOn"];
-      result = moment.utc(moment(this.endtime).diff(moment(this.starttime))).format("HH:mm:ss");
-    }
-    this.duration = result;
-
-    this.batchStatus;
-    for (var i = 0; i < response.length; i++) {
-      this.batchStatus = response[i].status.slice(-1).pop();
-    }
-
-    // this.batch = response;
-    // this.uuid = response.uuid;
-    // const version: Version = new Version();
-    // version.label = response['version'];
-    // version.uuid = response['uuid'];
-    // this.selectedVersion = version
-    // this.createdBy = response.createdBy.ref.name;
-    // this.batch.published = response["published"] == 'Y' ? true : false
-    // this.batch.active = response["active"] == 'Y' ? true : false
-    // this.version = response['version'];
-    // var tags = [];
-    // if (response.tags != null) {
-    //   for (var i = 0; i < response.tags.length; i++) {
-    //     var tag = {};
-    //     tag['value'] = response.tags[i];
-    //     tag['display'] = response.tags[i];
-    //     tags[i] = tag
-
-    //   }//End For
-    //   this.batch.tags = tags;
-    // }//End If
-
-
-    // this.breadcrumbDataFrom[2].caption = this.batch.name;
-
-    // let pipelineInfoNew = [];
-
-    // for (const i in response.pipelineInfo) {
-    //   let pipelinetag = {};
-    //   pipelinetag["id"] = response.pipelineInfo[i].ref.uuid;
-    //   pipelinetag["itemName"] = response.pipelineInfo[i].ref.name;
-    //   pipelineInfoNew[i] = pipelinetag;
+    // let result;
+    // for (var i = 0; i < response.length; i++) {
+    //   this.starttime = response[i].status[1]["createdOn"];
+    //   this.endtime = response[i].status[2]["createdOn"];
+    //   result = moment.utc(moment(this.endtime).diff(moment(this.starttime))).format("HH:mm:ss");
     // }
-    // this.pipelineInfoTags = pipelineInfoNew;
-    // this.attributes = response.attributes;
-    // console.log(JSON.stringify(this.pipelineInfoTags));
+    // this.duration = result;
+    // ----------
+    
+    for (var i = 0; i < response.length; i++) {
+
+      for (var j = 0; j < response[i].status.length; j++) {
+        if (response[i].status[j]["stage"] == "InProgress") {
+          this.starttime = this.datePipe.transform(response[i].status[j]["createdOn"],"EEE MMM dd HH:mm:ss yyyy");
+          //obj["startDate"] = new Date(this.datePipe.transform(response['scheduleInfo'][i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
+      
+          this.batchexecData[i]["starttime"] = this.starttime;
+          break;
+        }
+        else {
+          this.starttime = "- N/A -";
+          this.batchexecData[i]["starttime"] = this.starttime;
+        }
+      }
+
+      for (var j = 0; j < response[i].status.length; j++) {
+        if (response[i].status[j]["stage"] == "Completed") {
+          this.endtime = this.datePipe.transform(response[i].status[j]["createdOn"],"EEE MMM dd HH:mm:ss yyyy");
+          this.batchexecData[i]["endtime"] = this.endtime;
+          this.duration = moment.utc(moment(this.endtime).diff(moment(this.starttime))).format("HH:mm:ss");
+          this.batchexecData[i]["duration"] = this.duration;
+        }
+        else {
+          this.endtime = "- N/A -";
+          this.duration = "- N/A -";
+          this.batchexecData[i]["endtime"] = this.endtime;
+          this.batchexecData[i]["duration"] = this.duration;
+        }
+      }
+      
+      for (var j = 0; j < response[i].status.length; j++) {
+        //if (response[i].status[j]["stage"] != null) {
+          this.batchexecData[i]['stage'] = response[i].status[j]["stage"];
+          this.batchexecData[i]['color'] = this.metaconfig.getStatusDefs(response[i].status[j]["stage"])['color'];
+        //}
+      }
+      
+    }
   }
 
 
   viewPage(uuid, version) {
-    debugger
+
 
     let _moduleUrl = this.metaconfig.getMetadataDefs("dagexec")['moduleState']
     let _routerUrl = this.metaconfig.getMetadataDefs("dagexec")['resultState']
@@ -179,6 +181,19 @@ export class BatchSchedulerResultComponent {
     this.router.navigate(['app/list/batchexec']);
 
   }
-
-
+  refershGrid() {
+    this.batchexecData.name = ''
+    this.starttime = ''
+    this.endtime = ''
+    this.duration = ''
+    this.batchStatus = ''
+    this.getExecListByBatchExec();
+  }
+  // getBaseEntityStatusByCriteria(): void {
+  //   this._commonListService.getBaseEntityByCriteria((("batchexec").toLowerCase()), "", "", "", "", "", "", "")
+  //       .subscribe(
+  //       response => { this.onSuccessgetExecListByBatchExec(response) },
+  //       error => console.log("Error :: " + error)
+  //       )
+  // }
 }

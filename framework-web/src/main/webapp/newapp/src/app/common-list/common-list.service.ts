@@ -177,6 +177,9 @@ export class CommonListService {
     if (type == "recongroup") {
       this.url = this.baseUrl + 'recon/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "batch") {
+      this.url = this.baseUrl + 'batch/execute?action=' + action + '&uuid=' + uuid + '&version=' + version;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -227,6 +230,9 @@ export class CommonListService {
     if (type == "simulateexec") {
       this.url = this.baseUrl + 'model/simulate/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "batchexec") {
+      this.url = this.baseUrl + 'batch/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -276,6 +282,10 @@ export class CommonListService {
     if (type == "simulateexec") {
       this.url = this.baseUrl + 'model/simulate/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "batchexec") {
+      this.url = this.baseUrl + 'batch/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    
     let body = {};
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });

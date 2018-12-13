@@ -1,3 +1,4 @@
+import { debug } from 'util';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http'
@@ -314,6 +315,9 @@ execute(uuid,version,type,action): Observable<any> {
     }
   if(type=="predict"){
     url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  }
+  if(type=="batch"){
+    url = '/batch/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
 }
 
   let body=null

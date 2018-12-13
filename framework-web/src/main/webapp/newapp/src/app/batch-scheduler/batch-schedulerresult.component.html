@@ -13,12 +13,11 @@
       </a>
     </div>
     <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top">
-        <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
-        </i>
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title="" title="">
+        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
       </a>
     </div>
-    
+
   </div>
   <div class="portlet-body">
     <form class="form-horizontal">
@@ -28,43 +27,43 @@
             <thead>
               <tr>
                 <th class="text-center" style="width:20%;">Name</th>
-                <th class="text-center">Start Time</th>
-                <th class="text-center">End Time</th>
+                <th class="text-center" style="width:18%;">Start Time</th>
+                <th class="text-center" style="width:18%;">End Time</th>
                 <th class="text-center" style="width:10%;">Duration</th>
-                <th class="text-center" style="width:13%;">Status</th>
-                <th class="text-center" style="width:13%;">Action</th>
+                <th class="text-center" style="width:10%;">Status</th>
+                <th class="text-center" style="width:10%;">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let tabledata of batchexecData;">
+              <tr *ngFor="let tabledata of batchexecData;" >
                 <td>
-                  <div class="text-center">
+                  <div>
                     {{tabledata.name}}
                   </div>
                   <!-- <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" name="name" class="form-control"> -->
                 </td>
                 <td>
                   <div class="text-center">
-                    {{starttime| date : 'medium'}}
+                    {{tabledata.starttime}}
                   </div>
                   <!-- <input type="text" [(ngModel)]="starttime" title="{{starttime}}" name="starttime" class="form-control"> -->
                 </td>
                 <td>
                   <div class="text-center">
-                    {{endtime | date : 'medium'}}
+                    {{tabledata.endtime}}
                   </div>
                   <!-- <input type="text" [(ngModel)]="endtime" title="{{endtime}}" name="{{endtime}}" class="form-control" > -->
                 </td>
                 <td>
                   <div class="text-center">
-                    {{duration}}
+                    {{tabledata.duration}}
                   </div>
                   <!-- <input type="text" [(ngModel)]="duration" title="{{duration}}" name="duration" class="form-control"> -->
                 </td>
                 <td>
-                  <div class="label-sm label-success text-center" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">{{batchStatus.stage}}</div>
-                  <!-- <div class="label-sm label-success" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div> -->
-                  <!-- <input type="text" [(ngModel)]="tabledata.status" title="{{tabledata.status}}" name="status" class="form-control"> -->
+                  <div class="label-sm label-success text-center" [ngStyle]="{'background-color':tabledata.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{tabledata.stage}}</div>
+                  <!-- <div class="label-sm label-success text-center" [ngStyle]="{'background-color':batchStatus.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{batchStatus.stage}}</div> -->
+                
                 </td>
                 <td>
                   <p-menu #menu popup="popup" appendTo="body" [model]="items"></p-menu>

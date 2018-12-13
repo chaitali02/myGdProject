@@ -120,7 +120,7 @@ export class CommonListComponent {
   msgs: Message[] = [];
   items: any
   typeSimple: string[];
-  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec'];
+  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec', 'batchexec'];
   // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','trainexec'];
   allStatus = [
     {
@@ -390,7 +390,7 @@ export class CommonListComponent {
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
-  view(uuid, version) {debugger
+  view(uuid, version) {
     if (this.parentType == "rule") {
       this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
@@ -837,7 +837,7 @@ export class CommonListComponent {
       },
       //{label: 'Upload', icon: 'fa-download'}
     ]
-    //this.onRowSelect(event)                                                 
+    //this.onRowSelect(event)                                 
     if (((this.type).toLowerCase()).indexOf("exec") != -1) {
       this.isExec = "true";
       this.columnDefs.splice(5, 1);
@@ -965,8 +965,14 @@ export class CommonListComponent {
         this.items[9].disabled = ['InProgress'].indexOf(data.status.stage) == -1
         this.items[10].disabled = ['Completed', 'NotStarted', 'Terminating', 'InProgress'].indexOf(data.status.stage) != -1
       }
+      if (data.status != null) {
+        this.items[0].disabled = this.type.indexOf('batchexec') != -1 ? ['Completed', 'NotStarted', 'Terminating', 'Failed', 'InProgress', 'Killed'].indexOf(data.status.stage) == -1 : this.type.indexOf('group') == -1 ? ['Completed'].indexOf(data.status.stage) == -1 : ['Completed', 'InProgress', 'Killed', 'Failed', 'Terminating'].indexOf(data.status.stage) == -1;
+        this.items[9].disabled = ['InProgress'].indexOf(data.status.stage) == -1
+        this.items[10].disabled = ['Completed', 'NotStarted', 'Terminating', 'InProgress'].indexOf(data.status.stage) != -1
+      }
 
     }
+    
     if (this.isJobExec == true) {
       this.items[0].disabled = false
     }

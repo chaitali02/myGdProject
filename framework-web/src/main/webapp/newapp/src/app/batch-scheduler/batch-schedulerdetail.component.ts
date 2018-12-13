@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { JointjsComponent } from '../shared/components/jointjs/jointjs.component';
 import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component';
-import {  Router, Event as RouterEvent, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
+import { Router, Event as RouterEvent, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { CommonService } from '../metadata/services/common.service';
 import { JointjsService } from '../shared/components/jointjs/jointjsservice';
 import { SharedDataService } from '../data-pipeline/shareddata.service';
@@ -11,189 +11,209 @@ import { ResponseContentType } from '@angular/http';
 import { AppConfig } from '../app.config';
 import { saveAs } from 'file-saver';
 import { Location } from '@angular/common';
+import { CommonListService } from '../common-list/common-list.service';
 
 @Component({
-  selector: 'app-batch-schedulerdetail',
-  templateUrl: './batch-schedulerdetail.component.html',
-  //styleUrls: ['./batch-schedulerdetail.component.css']
+    selector: 'app-batch-schedulerdetail',
+    templateUrl: './batch-schedulerdetail.component.html',
+    //styleUrls: ['./batch-schedulerdetail.component.css']
 })
 export class BatchSchedulerdetailComponent {
 
-  
-  runMode: any;
-  isTableShow1: any;
-  typeJointJs: any;
-  versionJointJs: any;
-  uuidJointJs: any;
-  baseUrl:any;
-  intervalId: any;
-  dagexecdata: any;
-  version: any;
-  id: any;
-  msgs: any[];
-  dagdata: any;
-  mode: any;
-  breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-  
-  @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
-  @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
-  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService,private http : Http, private _config : AppConfig) {       
-      this.baseUrl = _config.getBaseUrl();
-      this.dagdata = {};
-      // setTimeout(() => {
-      //     // this.d_JointjsComponent.params={};
-      //     // this.d_JointjsComponent.IsGroupGraphShow=false
-      // }, 1000);
 
-      this.router.events
-          .subscribe((event) => {
-              if (event instanceof NavigationEnd) {
-                  this.stopStatusUpdate();
-                  // console.log('NavigationEnd:', event);
-              }
-          });
-      console.log(this.activatedRoute)
-      this.activatedRoute.params.subscribe((params: Params) => {
-          this.id = params['id'];
-          this.version = params['version'];
-          this.mode = params['mode'];
-          if (this.mode !== undefined) {
-              this.getOneByUuidAndVersion(this.id, this.version);
-          }
-      });
-      this.breadcrumbDataFrom = [{
-          "caption": "Data Pipeline ",
-          "routeurl": "/app/list/dagexec"
-      },
-      {
-          "caption": "Result",
-          "routeurl": "/app/list/dagexec"
-      },
+    runMode: any;
+    isTableShow1: any;
+    typeJointJs: any;
+    versionJointJs: any;
+    uuidJointJs: any;
+    baseUrl: any;
+    intervalId: any;
+    dagexecdata: any;
+    version: any;
+    id: any;
+    msgs: any[];
+    dagdata: any;
+    mode: any;
+    breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
 
-      {
-          "caption": "",
-          "routeurl": null
-      }
-      ]              
-  }
+    @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
+    @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
+    constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService, private http: Http, private _config: AppConfig, private _commonListService: CommonListService) {
+        this.baseUrl = _config.getBaseUrl();
+        this.dagdata = {};
+        // setTimeout(() => {
+        //     // this.d_JointjsComponent.params={};
+        //     // this.d_JointjsComponent.IsGroupGraphShow=false
+        // }, 1000);
 
-  public goBack() {
-      if (this.d_JointjsComponent.IsGraphShow == true) {
-          this._location.back();
-      }
-      else if (this.d_JointjsComponent.IsGroupGraphShow == true) {
-          this.d_JointjsComponent.goBack();
-      }
-      else if (this.d_JointjsComponent.IsTableShow == true) {
-          this.d_JointjsComponent.IsTableShow = false
-          this.d_JointjsComponent.IsGraphShow = true;
-      }
-      else {
-          this.d_JointjsComponent.IsGraphShow = true;
-      }
-  }
+        this.router.events
+            .subscribe((event) => {
+                if (event instanceof NavigationEnd) {
+                    this.stopStatusUpdate();
+                    // console.log('NavigationEnd:', event);
+                }
+            });
+        console.log(this.activatedRoute)
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.id = params['id'];
+            this.version = params['version'];
+            this.mode = params['mode'];
+            if (this.mode !== undefined) {
+                this.getOneByUuidAndVersion(this.id, this.version);
+            }
+        });
+        this.breadcrumbDataFrom = [{
+            "caption": "Data Pipeline ",
+            "routeurl": "/app/list/dagexec"
+        },
+        {
+            "caption": "Result",
+            "routeurl": "/app/list/dagexec"
+        },
 
-  getOneByUuidAndVersion(id, version) {
-      this.stopStatusUpdate();
-      this._commonService.getOneByUuidAndVersion(id, version, 'dagexec')
-          .subscribe(
-          response => {
-              this.onSuccessgetOneByUuidAndVersion(response)
-          },
-          error => console.log("Error :: " + error)
-          );
-  }
+        {
+            "caption": "",
+            "routeurl": null
+        }
+        ]
+    }
 
-  onSuccessgetOneByUuidAndVersion(response) {
-      this.breadcrumbDataFrom[2].caption = response.name;
-      this.dagexecdata = response;
-      setTimeout(() => {
-          this.d_JointjsComponent.createGraph(this.dagexecdata);
-          this.startStatusUpdate(this.id);
-      }, 1000);
-      this.intervalId = setInterval(() => {
-          this.startStatusUpdate(this.id);
-      }, 5000);
-  }
+    public goBack() {
+        if (this.d_JointjsComponent.IsGraphShow == true) {
+            this._location.back();
+        }
+        else if (this.d_JointjsComponent.IsGroupGraphShow == true) {
+            this.d_JointjsComponent.goBack();
+        }
+        else if (this.d_JointjsComponent.IsTableShow == true) {
+            this.d_JointjsComponent.IsTableShow = false
+            this.d_JointjsComponent.IsGraphShow = true;
+        }
+        else {
+            this.d_JointjsComponent.IsGraphShow = true;
+        }
+    }
 
-  latestStatus(statuses) {
-      var latest;
-      statuses.forEach(function (status) {
-          if (latest) {
-              if (status.createdOn > latest.createdOn) {
-                  latest = status
-              }
-          }
-          else {
-              latest = status;
-          }
-      });
-      return latest;
-  }
+    getOneByUuidAndVersion(id, version) {
+        this.stopStatusUpdate();
+        this._commonService.getOneByUuidAndVersion(id, version, 'dagexec')
+            .subscribe(
+                response => {
+                    this.onSuccessgetOneByUuidAndVersion(response)
+                },
+                error => console.log("Error :: " + error)
+            );
+    }
 
-  startStatusUpdate(uuid) {
+    onSuccessgetOneByUuidAndVersion(response) {
+        this.breadcrumbDataFrom[2].caption = response.name;
+        this.dagexecdata = response;
+        setTimeout(() => {
+            this.d_JointjsComponent.createGraph(this.dagexecdata);
+            this.startStatusUpdate(this.id);
+        }, 1000);
+        this.intervalId = setInterval(() => {
+            this.startStatusUpdate(this.id);
+        }, 5000);
+    }
 
-      this._dataPipelineService.getStatusByDagExec(uuid)
-          .subscribe(
-          response => {
-              this.onSuccessGetStatusByDagExec(response)
-          },
-          error => console.log("Error :: " + error)
-          );
-  }
-  onSuccessGetStatusByDagExec = function (response) {
-      //     if(latestStatus(response.status).stage == 'Failed'){
-      //         $scope.allowReExecution = true;
-      //     }
-      if (['Completed', 'Failed', 'Killed'].indexOf(this.latestStatus(response["status"]).stage) > -1) {
-          this.stopStatusUpdate();
-      }
-      //else{
-      //     if(!angular.equals(statusCache, response)){
-      setTimeout(() => {
-          this.d_JointjsComponent.updateGraphStatus(response);
-      }, 1000);
+    latestStatus(statuses) {
+        var latest;
+        statuses.forEach(function (status) {
+            if (latest) {
+                if (status.createdOn > latest.createdOn) {
+                    latest = status
+                }
+            }
+            else {
+                latest = status;
+            }
+        });
+        return latest;
+    }
 
-      //statusCache = response;
-  }
-  stopStatusUpdate() {
-      //statusCache = undefined;
-      if (this.intervalId)
-          clearInterval(this.intervalId);
-  }
+    startStatusUpdate(uuid) {
 
-  downloadPipeline() {
-      this.uuidJointJs = this.d_JointjsComponent.uuid;
-      this.versionJointJs = this.d_JointjsComponent.version;
-      this.typeJointJs = this.d_JointjsComponent.type;
-      
-      this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'mapexec')
-      .subscribe(
-      response => {
-          this.onSuccessgetNumRowsbyExec(response);
-      },
-      error => console.log("Error :: " + error)
-      );
-  }
+        this._dataPipelineService.getStatusByDagExec(uuid)
+            .subscribe(
+                response => {
+                    this.onSuccessGetStatusByDagExec(response)
+                },
+                error => console.log("Error :: " + error)
+            );
+    }
+    onSuccessGetStatusByDagExec = function (response) {
+        //     if(latestStatus(response.status).stage == 'Failed'){
+        //         $scope.allowReExecution = true;
+        //     }
+        if (['Completed', 'Failed', 'Killed'].indexOf(this.latestStatus(response["status"]).stage) > -1) {
+            this.stopStatusUpdate();
+        }
+        //else{
+        //     if(!angular.equals(statusCache, response)){
+        setTimeout(() => {
+            this.d_JointjsComponent.updateGraphStatus(response);
+        }, 1000);
 
-  onSuccessgetNumRowsbyExec(response){
-      this.runMode = response.runMode;
-      this.downloadResult();
-  }
+        //statusCache = response;
+    }
+    stopStatusUpdate() {
+        //statusCache = undefined;
+        if (this.intervalId)
+            clearInterval(this.intervalId);
+    }
 
-  downloadResult(){
-      const headers = new Headers();
-      this.http.get(this.baseUrl+'/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode='+this.runMode,
-      { headers: headers, responseType: ResponseContentType.Blob })
-      .toPromise()
-      .then(response => this.saveToFileSystem(response));
-  } 
+    downloadPipeline() {
+        this.uuidJointJs = this.d_JointjsComponent.uuid;
+        this.versionJointJs = this.d_JointjsComponent.version;
+        this.typeJointJs = this.d_JointjsComponent.type;
 
-  saveToFileSystem(response){
-      const contentDispositionHeader: string = response.headers.get('Content-Type');
-      const parts: string[] = contentDispositionHeader.split(';');
-      const filename = parts[1];
-      const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
-      saveAs(blob, filename);
-  }
+        this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'mapexec')
+            .subscribe(
+                response => {
+                    this.onSuccessgetNumRowsbyExec(response);
+                },
+                error => console.log("Error :: " + error)
+            );
+    }
+
+    onSuccessgetNumRowsbyExec(response) {
+        this.runMode = response.runMode;
+        this.downloadResult();
+    }
+
+    downloadResult() {
+        const headers = new Headers();
+        this.http.get(this.baseUrl + '/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode=' + this.runMode,
+            { headers: headers, responseType: ResponseContentType.Blob })
+            .toPromise()
+            .then(response => this.saveToFileSystem(response));
+    }
+
+    saveToFileSystem(response) {
+        const contentDispositionHeader: string = response.headers.get('Content-Type');
+        const parts: string[] = contentDispositionHeader.split(';');
+        const filename = parts[1];
+        const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+        saveAs(blob, filename);
+    }
+    refershGrid() {
+        // this.active = "";
+        // this.status = "";
+        // this.rowData1 = null;
+        // this.execname = {};
+
+        // this.startDate = "";
+        // this.tags = "";
+        // this.endDate = "";
+        // this.username = ""
+        this.getBaseEntityByCriteria();
+    }
+    getBaseEntityByCriteria(): void {
+        this._commonListService.getParamListByRule((("batchexec").toLowerCase()), "", "", "", "", "", "", "")
+            // .subscribe(
+            //     response => { this.getGrid(response) },
+            //     error => console.log("Error :: " + error)
+            // )
+    }
 }
