@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -61,6 +62,8 @@ public class LoadServiceImpl {
 	GraphRegister<?> registerGraph;
 	@Autowired
 	ILoadDao iLoadDao;
+	@Autowired
+	IDatapodDao iDatapodDao;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -242,6 +245,7 @@ public class LoadServiceImpl {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
 		statusList.add(status);
+		Datapod datapod=null;
 		try {
 			loadExec.setBaseEntity();
 			status = new Status(Status.Stage.InProgress, new Date());
@@ -255,7 +259,7 @@ public class LoadServiceImpl {
 					StringUtils.isNotBlank(dagExecVer) ? dagExecVer : loadExec.getVersion());
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
-			Datapod datapod = (Datapod) daoRegister
+			 datapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
@@ -309,6 +313,7 @@ public class LoadServiceImpl {
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
+			iDatapodDao.delete(datapod);
 			throw new RuntimeException(e);
 		}
 	}
