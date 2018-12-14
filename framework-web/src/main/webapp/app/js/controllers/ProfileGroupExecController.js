@@ -5,6 +5,8 @@ JobMonitoringModule.controller('DetailProfileGroupExecController', function ($fi
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showExec = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle = dagMetaDataService.elementDefs['profilegroupexec'].caption;
     $rootScope.isCommentVeiwPrivlage = true;
     var privileges = privilegeSvc.privileges['comment'] || [];
@@ -58,8 +60,10 @@ JobMonitoringModule.controller('DetailProfileGroupExecController', function ($fi
     }
 
 
-    JobMonitoringService.getLatestByUuid($scope.uuid, "profilegroupexec").then(function (response) { onSuccess(response.data) });
+    JobMonitoringService.getLatestByUuid($scope.uuid, "profilegroupexec")
+        .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
     var onSuccess = function (response) {
+        $scope.isEditInprogess=false;
         $scope.execData = response;
         var statusList = [];
         for (i = 0; i < response.statusList.length; i++) {
@@ -79,6 +83,10 @@ JobMonitoringModule.controller('DetailProfileGroupExecController', function ($fi
         }
 
         $scope.execList = execList
+    };
+    var onError=function(){
+        $scope.isEditInprogess=false;
+        $scope.isEditVeiwError=true;
     }
 
     $scope.showGraph = function (uuid, version) {

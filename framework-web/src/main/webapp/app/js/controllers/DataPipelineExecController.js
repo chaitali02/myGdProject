@@ -17,6 +17,8 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
   $scope.userDetail.name = $rootScope.setUserName;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.showExec = true;
   $scope.selectTitle = dagMetaDataService.elementDefs['dagexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['dagexec'].listState + "({type:'" + dagMetaDataService.elementDefs['dagexec'].execType + "'})"
@@ -48,11 +50,10 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "dagexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "dagexec")
+  .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
-
+    $scope.isEditInprogess=false;
     $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
@@ -62,6 +63,10 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
     }
     $scope.statusList = statusList
 
+  }
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
   $scope.expandAll = function (expanded) {

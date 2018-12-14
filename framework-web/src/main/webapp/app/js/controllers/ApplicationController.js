@@ -35,6 +35,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.isEdit = true;
 	}
 	$scope.mode = "false";
 	$scope.userDetail = {}
@@ -86,13 +87,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	$scope.open2 = function() {
 		$scope.popup2.opened = true;
 	};
+
 	$scope.privileges = privilegeSvc.privileges['application'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['application'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+    
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
@@ -171,6 +173,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 
 		}
 	}
+	
 	$scope.showGraph = function (uuid, version) {
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
@@ -209,7 +212,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			stage.selected = $scope.selectallattribute;
 		});
 	}
-
+   
+	
 	$scope.removeRow = function () {
 		if ($scope.isTableDisable) {
 			return false;
@@ -356,7 +360,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}//End SelectVersion
 
-
+    
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;

@@ -5,6 +5,8 @@ JobMonitoringModule.controller('DetailReconExecController', function ($state, $f
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.selectTitle = dagMetaDataService.elementDefs['reconexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['reconexec'].listState + "({type:'" + dagMetaDataService.elementDefs['reconexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
@@ -32,8 +34,10 @@ JobMonitoringModule.controller('DetailReconExecController', function ($state, $f
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "reconexec").then(function (response) { onSuccess(response.data) });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "reconexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
+    $scope.isEditInprogess=false;
     $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
@@ -47,6 +51,10 @@ JobMonitoringModule.controller('DetailReconExecController', function ($state, $f
       refkeylist[i] = response.refKeyList[i].type + "-" + response.refKeyList[i].name;
     }
     $scope.refkeylist = refkeylist
+  }
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
   $scope.showGraph = function (uuid, version) {

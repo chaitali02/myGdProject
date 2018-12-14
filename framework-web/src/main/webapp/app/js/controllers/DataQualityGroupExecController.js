@@ -5,6 +5,8 @@ JobMonitoringModule.controller('DetailDqGroupExecController', function ($filter,
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showExec = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle = dagMetaDataService.elementDefs['dqgroupexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['dqgroupexec'].listState + "({type:'" + dagMetaDataService.elementDefs['dqgroupexec'].execType + "'})"
     var privileges = privilegeSvc.privileges['comment'] || [];
@@ -54,8 +56,10 @@ JobMonitoringModule.controller('DetailDqGroupExecController', function ($filter,
         //null,
 
     ];
-    JobMonitoringService.getLatestByUuid($scope.uuid, "dqgroupexec").then(function (response) { onSuccess(response.data) });
+    JobMonitoringService.getLatestByUuid($scope.uuid, "dqgroupexec")
+        .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
     var onSuccess = function (response) {
+        $scope.isEditInprogess=false;
         $scope.execData = response;
         var statusList = [];
         for (i = 0; i < response.statusList.length; i++) {
@@ -76,6 +80,10 @@ JobMonitoringModule.controller('DetailDqGroupExecController', function ($filter,
             execList[i] = pdataqualexec;
         }
         $scope.execList = execList
+    }
+    var onError=function(){
+        $scope.isEditInprogess=false;
+        $scope.isEditVeiwError=true;
     }
 
     $scope.showGraph = function (uuid, version) {

@@ -73,199 +73,210 @@
           </div>
 
           <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" ng-show="showExec" name="myform" ng-submit="submitLoad()">
-              <div class="form-group">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.uuid">
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.name">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="execData.version">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="execData.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="execData.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input ng-model="execData.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
-                </label>
-                <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.desc" rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Status</label>
-                <div class="col-md-6">
-                  <tags-input class="cross tag-scroll" ng-model="statusList" ng-disabled="{{mode}}" min-length="0"></tags-input>
-                </div>
-              </div>
-
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="loaddata.active='Y'">
-                    <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" ng-show="showExec" name="myform" ng-submit="submitLoad()">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.uuid">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="execData.published='N'">
-                    <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.name">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Depends On</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.dependsOn.name">
-                </div>
-              </div>
 
-              <div class="form-group" style="padding-top:10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a ui-sref="{{state}}" class="btn btn-primary">Cancel</a>
-                  <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
-                    value="Submit" name="submit">
-                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                  </span>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.version">
+                  </div>
                 </div>
-              </div>
-              <div class="x_title">
-                <h4>
-                  <strong>Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <br/>
 
-              <div>
-                <table class=" row-border hover table  table-striped table-bordered">
-                  <thead class="">
-                    <tr>
-                      <th style="text-align:center;width:35%;">Stage Id</th>
-                      <th style="text-align:center;width:20%;">Stage Name</th>
-                      <th style="text-align: center;width:35%;">Depends On</th>
-                      <th style="text-align: center;width:10%;">statusList</th>
-                      <th style="width:5%;">
-                        <div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
-                          <i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat-start="data in execData.stages">
-                      <td>
-                        <input class="form-control" type="text" ng-model="data.stageId" ng-disabled="true" />
-                      </td>
-                      <td>
-                        <input class="form-control" type="text" ng-model="data.naypalrechaypalrechame" ng-disabled="{{mode}}" />
-                      </td>
-                      <td>
-                        <input class="form-control" type="text" ng-model="data.dependsOn" ng-disabled="{{mode}}" />
-                      </td>
-                      <td ng-init="getStagestatusList($index,data.statusList[data.statusList.length-1].stage)" style="text-align: center">
-                        <img ng-src="{{data.imgPath}}" width="15px" />
-                      </td>
-                      <td>
-                        <div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
-                          <i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr ng-repeat-end ng-show="expanded">
-                      <td colspan="5" style="padding: 0px 17px;">
-                        <br>
-                        <br>
-                        <table class=" row-border hover table  table-striped table-bordered">
-                          <thead class="theadborder">
-                            <tr>
-                              <th style="text-align:center;width:10%">Task Id</th>
-                              <th style="text-align:center;width: 15%;">Task Name</th>
-                              <th style="text-align:center;width: 20%;">Depends On</th>
-                              <th style="text-align:center;width: 15%;">Operator Type</th>
-                              <th style="text-align:center;width: 20%;">Operator Name</th>
-                              <th style="text-align:center;width: 15%;">statusList</th>
-                              <th style="text-align:center;width: 5%;">Detail</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr ng-repeat="taskdata in data.tasks">
-                              <td>
-                                <input class="form-control" type="text" ng-model="$index" ng-disabled="true" />
-                              </td>
-                              <td>
-                                <input class="form-control" type="text" ng-model="taskdata.name" ng-disabled="{{mode}}" />
-                              </td>
-                              <td>
-                                <input class="form-control" type="text" ng-model="taskdata.dependsOn" ng-disabled="{{mode}}" />
-                              </td>
-                              <td>
-                                <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.type" ng-disabled="{{mode}}" />
-                              </td>
-                              <td>
-                                <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.name" ng-disabled="{{mode}}" />
-                              </td>
-                              <td ng-init="getTaskstatusList($parent.$index,$index,taskdata.statusList[taskdata.statusList.length-1].stage)" style="text-align: center">
-                                <img ng-src="{{taskdata.imgPathTask}}" width="15px" />
-                              </td>
-                              <!-- <td>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="execData.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input ng-model="execData.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
+                  </label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Status</label>
+                  <div class="col-md-6">
+                    <tags-input class="cross tag-scroll" ng-model="statusList" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="loaddata.active='Y'">
+                      <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="execData.published='N'">
+                      <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Depends On</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.dependsOn.name">
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top:10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a ui-sref="{{state}}" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+                      value="Submit" name="submit">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+                <div class="x_title">
+                  <h4>
+                    <strong>Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <br/>
+
+                <div>
+                  <table class=" row-border hover table  table-striped table-bordered">
+                    <thead class="">
+                      <tr>
+                        <th style="text-align:center;width:35%;">Stage Id</th>
+                        <th style="text-align:center;width:20%;">Stage Name</th>
+                        <th style="text-align: center;width:35%;">Depends On</th>
+                        <th style="text-align: center;width:10%;">statusList</th>
+                        <th style="width:5%;">
+                          <div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
+                            <i ng-class="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat-start="data in execData.stages">
+                        <td>
+                          <input class="form-control" type="text" ng-model="data.stageId" ng-disabled="true" />
+                        </td>
+                        <td>
+                          <input class="form-control" type="text" ng-model="data.naypalrechaypalrechame" ng-disabled="{{mode}}" />
+                        </td>
+                        <td>
+                          <input class="form-control" type="text" ng-model="data.dependsOn" ng-disabled="{{mode}}" />
+                        </td>
+                        <td ng-init="getStagestatusList($index,data.statusList[data.statusList.length-1].stage)" style="text-align: center">
+                          <img ng-src="{{data.imgPath}}" width="15px" />
+                        </td>
+                        <td>
+                          <div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
+                            <i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr ng-repeat-end ng-show="expanded">
+                        <td colspan="5" style="padding: 0px 17px;">
+                          <br>
+                          <br>
+                          <table class=" row-border hover table  table-striped table-bordered">
+                            <thead class="theadborder">
+                              <tr>
+                                <th style="text-align:center;width:10%">Task Id</th>
+                                <th style="text-align:center;width: 15%;">Task Name</th>
+                                <th style="text-align:center;width: 20%;">Depends On</th>
+                                <th style="text-align:center;width: 15%;">Operator Type</th>
+                                <th style="text-align:center;width: 20%;">Operator Name</th>
+                                <th style="text-align:center;width: 15%;">statusList</th>
+                                <th style="text-align:center;width: 5%;">Detail</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="taskdata in data.tasks">
+                                <td>
+                                  <input class="form-control" type="text" ng-model="$index" ng-disabled="true" />
+                                </td>
+                                <td>
+                                  <input class="form-control" type="text" ng-model="taskdata.name" ng-disabled="{{mode}}" />
+                                </td>
+                                <td>
+                                  <input class="form-control" type="text" ng-model="taskdata.dependsOn" ng-disabled="{{mode}}" />
+                                </td>
+                                <td>
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.type" ng-disabled="{{mode}}" />
+                                </td>
+                                <td>
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.name" ng-disabled="{{mode}}" />
+                                </td>
+                                <td ng-init="getTaskstatusList($parent.$index,$index,taskdata.statusList[taskdata.statusList.length-1].stage)" style="text-align: center">
+                                  <img ng-src="{{taskdata.imgPathTask}}" width="15px" />
+                                </td>
+                                <!-- <td>
                                   <input class="form-control"type="text" ng-model="data.statusList[taskdata.statusList.length-1].stage" ng-disabled="{{mode}}"/>
                                 </td> -->
-                              <td style="text-align: center; Vertical-align: middle;width:5%;">
-                                <input style="width:16px;height:16px;" name="taskshow" type="radio" ng-click="onTaskShowDetail(taskdata)" />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
+                                <td style="text-align: center; Vertical-align: middle;width:5%;">
+                                  <input style="width:16px;height:16px;" name="taskshow" type="radio" ng-click="onTaskShowDetail(taskdata)" />
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END MAIN CONTENT -->
+  </div><!-- END MAIN CONTENT -->
 </div>
