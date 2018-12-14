@@ -1,6 +1,6 @@
 AdminModule = angular.module('AdminModule');
 
-AdminModule.controller('MetadataDatastoreController', function (CommonService, $state,$rootScope, $scope, $stateParams, $timeout, MetadataDatastoreSerivce, privilegeSvc) {
+AdminModule.controller('MetadataDatastoreController', function (CommonService, $state, $rootScope, $scope, $stateParams, $timeout, MetadataDatastoreSerivce, privilegeSvc, $filter) {
 	$scope.mode = " ";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -8,36 +8,36 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-		});  
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.datastoreHasChanged = true;
 	$scope.isSubmitEnable = true;
 	$scope.datastoredata;
@@ -53,11 +53,11 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['datastore'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
-	$scope.getLovByType = function() {
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
-			$scope.lobTag=response[0].value
+		//	console.log(response)
+			$scope.lobTag = response[0].value
 		}
 	}
 	$scope.loadTag = function (query) {
@@ -65,7 +65,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
 
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datastore'] || [];
@@ -75,8 +75,8 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
-	
-	$scope.showHome=function(uuid, version,mode){
+
+	$scope.showHome = function (uuid, version, mode) {
 		$scope.showPage()
 		$state.go('adminListdatastore', {
 			id: uuid,
@@ -86,7 +86,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	}
 
 	$scope.enableEdit = function (uuid, version) {
-		if($scope.isPrivlage || $scope.datastoredata.locked =="Y"){
+		if ($scope.isPrivlage || $scope.datastoredata.locked == "Y") {
 			return false;
 		}
 		$scope.showPage()
@@ -97,14 +97,14 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('adminListdatastore', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-	    }
+		}
 	}
 	var notify = {
 		type: 'success',
@@ -159,9 +159,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	}//end onChangeDatastoreExec
 
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
-
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDatastoreSerivce.getAllVersionByUuid($stateParams.id, "datastore").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -171,8 +172,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 			}
 		}//End getAllVersionByUuid
 
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datastore').then(function (response) { onSuccess(response.data) });
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datastore')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.datastoredata = response
 			$scope.datastoremetatype = response.metaId.ref.type;
@@ -208,11 +211,15 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 					$scope.tags = tags;
 				}
 			}//End Innter if
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End If
-	else{
-		$scope.datastoredata={};
-		$scope.datastoredata.locked="N";
+	else {
+		$scope.datastoredata = {};
+		$scope.datastoredata.locked = "N";
 	}
 
 	$scope.selectVersion = function () {
@@ -224,9 +231,12 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		$timeout(function () {
 			$scope.myform.$dirty = false;
 		}, 0);
-
-		MetadataDatastoreSerivce.getOneByUuidAndVersion($scope.datastore.defaultVersion.uuid, $scope.datastore.defaultVersion.version, 'datastore').then(function (response) { onSuccess(response.data) });
+        $scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatastoreSerivce.getOneByUuidAndVersion($scope.datastore.defaultVersion.uuid, $scope.datastore.defaultVersion.version, 'datastore')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.datastoredata = response
 			$scope.datastoremetatype = response.metaId.ref.type;
@@ -260,6 +270,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 					$scope.tags = tags;
 				}
 			}//End Innter if
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 
 	}//End selectVersion
@@ -267,7 +281,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 
 	/*Start SubmitDatastore*/
 	$scope.submitDatastore = function () {
-		var upd_tag="N"
+		var upd_tag = "N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -288,8 +302,8 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 		datastroreJson.tags = tagArray;
@@ -309,7 +323,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		datastoreexec.ref = execref;
 		datastroreJson.execId = datastoreexec;
 		console.log(JSON.stringify(datastroreJson))
-		MetadataDatastoreSerivce.submit(datastroreJson, 'datastore',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatastoreSerivce.submit(datastroreJson, 'datastore', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
@@ -321,13 +335,13 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		}//End Submit Api
 		var onError = function (response) {
 			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
+				notify.title = 'Error',
+				notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}/*End SubmitDatastore*/
 
-	
+
 
 	$scope.okdatastoresave = function () {
 		$('#datastoresave').css("dispaly", "none");

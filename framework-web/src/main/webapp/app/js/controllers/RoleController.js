@@ -53,7 +53,6 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 	$scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -150,7 +149,10 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 			$scope.isversionEnable = true;
 		}
 		$scope.isDependencyShow = true;
-		AdminRoleService.getAllVersionByUuid($stateParams.id, "role").then(function (response) { onGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminRoleService.getAllVersionByUuid($stateParams.id, "role")
+			.then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var roleversion = {};
@@ -160,8 +162,10 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 
 		}//End getAllVersionByUuid
 
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "role").then(function (response) { onGetLatestByUuid(response.data) });
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "role")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.roledata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
@@ -187,6 +191,10 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}/*End If*/
     else{
@@ -202,8 +210,12 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		AdminRoleService.getOneByUuidAndVersion($scope.role.defaultVersion.uuid, $scope.role.defaultVersion.version, 'role').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminRoleService.getOneByUuidAndVersion($scope.role.defaultVersion.uuid, $scope.role.defaultVersion.version, 'role')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.roledata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
@@ -229,6 +241,10 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	} /* end selectVersion*/
 

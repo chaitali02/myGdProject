@@ -28,7 +28,8 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'group'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="groupdata" comment-panel-directive></div>
+  <div options="dirOptions" type="'group'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="groupdata"
+    comment-panel-directive></div>
 
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
@@ -41,11 +42,11 @@
           </div>
 
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(groupdata.uuid,groupdata.version,mode)">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(groupdata.uuid,groupdata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit"  ng-class="(isEdit==true || isPrivlage || groupdata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || groupdata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(groupdata.uuid,groupdata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
@@ -73,7 +74,7 @@
         </div>
 
         <div class="portlet-body">
-  
+
           <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
@@ -86,129 +87,133 @@
           </div>
 
           <div class="form-body" style="padding-top:50px;" ng-show="showFrom">
-            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitGroup()" form-on-change="groupFormChange()" prevent-enter-submit>
-              <div class="form-group" ng-show="groupdata.uuid">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="groupdata.uuid">
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="groupdata.name" required="">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="groupdata.uuid">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="group.defaultVersion.version"
-                    ng-options="c.version as c.version for c in group.versions" ng-disabled="{{isversionEnable}}">
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="groupdata.uuid">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="groupdata.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="groupdata.uuid">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="groupdata.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
-                    </auto-complete>
-                </tags-input>
-
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Desc</label>
-                <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="groupdata.desc" rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="groupdata.active='Y'">
-                    <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitGroup()" form-on-change="groupFormChange()"
+                prevent-enter-submit>
+                <div class="form-group" ng-show="groupdata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="groupdata.uuid">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" >
-                    <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="groupdata.published='N'">
-                    <label class="btn btn-default" ng-model="groupdata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="groupdata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-                  </div>
-                </div>
-              </div>
-              <!--  <div class="form-group">
-                <label class="col-md-3 control-label">RoleInfo</label>
-                <div class="col-md-6">
-             			<tags-input class="tag-scroll" ng-model="roleInfoTags"  ng-disabled="{{mode}}"  display-property="name"  key-property="id"  add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
-								    <auto-complete source="loadrole($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true"></auto-complete>
-							    </tags-input>
-         				</div>
-              </div> -->
-              <div class="form-group">
-                <label class="col-md-3 control-label">App Id</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="appId" data-ng-model="appId" ng-options="c as c.name for c in appall track by c.uuid">
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Role Id</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="roleId" data-ng-model="roleId" ng-options="c as c.name for c in roleall track by c.uuid">
-                  </select>
-                </div>
-              </div>
 
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a data-ui-sref="admin({type:'group'})" class="btn btn-primary">Cancel</a>
-                  <!-- groupHasChanged == false ||  -->
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
-                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                  </span>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="groupdata.name" required="">
+                  </div>
                 </div>
-              </div>
-            </form>
+
+                <div class="form-group" ng-show="groupdata.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="group.defaultVersion.version"
+                      ng-options="c.version as c.version for c in group.versions" ng-disabled="{{isversionEnable}}">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="groupdata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="groupdata.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="groupdata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="groupdata.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
+
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="groupdata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="groupdata.active='Y'">
+                      <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="groupdata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="groupdata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="groupdata.published='N'">
+                      <label class="btn btn-default" ng-model="groupdata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="groupdata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">App Id</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="appId" data-ng-model="appId" ng-options="c as c.name for c in appall track by c.uuid">
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Role Id</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="roleId" data-ng-model="roleId" ng-options="c as c.name for c in roleall track by c.uuid">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a data-ui-sref="admin({type:'group'})" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -310,8 +310,12 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$timeout(function () {
 			$scope.myform.$dirty = false;
 		}, 0)
-		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'applicationview').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'applicationview')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.applicationdata = response.application;
 			var defaultversion = {};
 			defaultversion.version = response.application;
@@ -345,6 +349,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End SelectVersion
 
@@ -356,8 +364,12 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		var id;
 		id = $stateParams.id;
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
-		MetadataApplicationSerivce.getOneByUuidAndVersion(id,$stateParams.version || "", "applicationview").then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataApplicationSerivce.getOneByUuidAndVersion(id,$stateParams.version || "", "applicationview")
+			.then(function (response) { onGetByOneUuidandVersion(response.data) },function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.applicationdata = response.application;
 			$scope.applicationCompare=$scope.applicationdata; 
 			var defaultversion = {};
@@ -392,6 +404,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End IF
 	else{

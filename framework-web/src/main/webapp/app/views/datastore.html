@@ -27,7 +27,8 @@
   </div>
   <!-- END PAGE HEADER-->
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'datastore'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datastoredata" comment-panel-directive></div>
+  <div options="dirOptions" type="'datastore'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datastoredata"
+    comment-panel-directive></div>
 
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
@@ -38,13 +39,13 @@
             <i class="fa fa-gift"></i>{{datastoredata.name}}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(datastoredata.uuid,datastoredata.version,mode)">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(datastoredata.uuid,datastoredata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datastoredata.locked == 'Y')? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(datastoredata.uuid,datastoredata.version)"
-              ng-hide="isAdd" style="height:16px;">
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datastoredata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              data-placement="top" tooltip ng-click="enableEdit(datastoredata.uuid,datastoredata.version)" ng-hide="isAdd"
+              style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -84,170 +85,181 @@
           </div>
 
           <div class="form-body" ng-show="showForm" style="padding-top:50px;">
-            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitDatastore()" name="myform" form-on-change="datastoreFormChange()" prevent-enter-submit>
-
-              <div class="form-body">
-                <div class="form-group" ng-show="datastoredata.uuid">
-                  <label class="col-md-3 control-label">UUID</label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true" ng-model="datastoredata.uuid" disabled="disabled">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-md-3 control-label">Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="datastoredata.name" required="">
-                  </div>
-                </div>
-
-                <div class="form-group" ng-show="datastoredata.uuid">
-                  <label class="col-md-3 control-label">Version</label>
-                  <div class="col-md-6">
-                    <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="datastore.defaultVersion.version"
-                      ng-options="c.version as c.version for c in datastore.versions" ng-disabled="isversionEnable">
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group" ng-show="datastoredata.uuid">
-                  <label class="col-md-3 control-label">CreatedBy</label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true" ng-model="datastoredata.createdBy.ref.name">
-                  </div>
-                </div>
-
-                <div class="form-group" ng-show="datastoredata.uuid">
-                  <label class="col-md-3 control-label">CreatedOn</label>
-                  <div class="col-md-6">
-                    <input type="text" ng-model="datastoredata.createdOn" ng-disabled="true" class="form-control">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                  <div class="col-md-6">
-                 
-                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                          max-results-to-show="10">
-                      </auto-complete>
-                    </tags-input>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
-                  </label>
-                  <div class="col-md-6">
-                    
-                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="datastoredata.desc" rows="2" style="resize:none;"></textarea>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Meta Id
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-2 col-sm-2 col-xs-12">
-                    <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDatastoreMeta()" ng-model="datastoremetatype"
-                      ng-options="x for x in datastoremetaTypes" required="">
-                    </select>
-                  </div>
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
-                  <div class="col-md-3 col-sm-3 col-xs-12">
-                    <select class="form-control" select2 name="" ng-change="selectDatapod()" data-ng-model="datastoreAllMata.defaultoption" ng-options="r as r.name for r in datastoreAllMata.options track by r.uuid"
-                      ng-disabled="{{mode}}">
-                    </select>
-
-                  </div>
-
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Exec Id
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-2 col-sm-2 col-xs-12">
-                    <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDatastoreExec()" ng-model="datastoreexectype"
-                      ng-options="x for x in datastoreexecTypes" required="">
-                    </select>
-                  </div>
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
-                  <div class="col-md-3 col-sm-3 col-xs-12">
-                    <select class="form-control" select2 name="" ng-change="selectDatapod()" data-ng-model="datastoreAllExec.defaultoption" ng-options="r as r.name for r in datastoreAllExec.options track by r.uuid"
-                      ng-disabled="{{mode}}">
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Location
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <textarea id="datastorelocation" rows="4" class="form-control col-md-7 col-xs-12" cols="100" name="location" type="text"
-                      ng-model="datastoredata.location" ng-disabled="{{mode}}" required="">
-                    </textarea>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="datastoredata.active='Y'">
-                      <label class="btn btn-default" ng-model="datastoredata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes
-                      </label>
-                      <label class="btn btn-default" ng-model="datastoredata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group">
-                      <label class="btn btn-default" ng-model="datastoredata.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes
-                      </label>
-                      <label class="btn btn-default" ng-model="datastoredata.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="datastoredata.active='N'">
-                      <label class="btn btn-default" ng-model="datastoredata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
-                        uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="datastoredata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
-                        uncheckable>No</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group" style="padding-top: 10px;">
-                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <a ui-sref="admin({type:'datastore'})" class="btn btn-primary">Cancel
-                      <!-- datastoreHasChanged == false ||  -->
-                    </a>
-                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false || mode == false || myform.$dirty == true)?false:true"
-                      value="Submit" name="submit">
-                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                      <div class="bounce1"></div>
-                      <div class="bounce2"></div>
-                      <div class="bounce3"></div>
-                    </span>
-                  </div>
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-            </form>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" ng-submit="submitDatastore()" name="myform" form-on-change="datastoreFormChange()"
+                prevent-enter-submit>
+
+                <div class="form-body">
+                  <div class="form-group" ng-show="datastoredata.uuid">
+                    <label class="col-md-3 control-label">UUID</label>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" ng-disabled="true" ng-model="datastoredata.uuid" disabled="disabled">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-3 control-label">Name
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="datastoredata.name" required="">
+                    </div>
+                  </div>
+
+                  <div class="form-group" ng-show="datastoredata.uuid">
+                    <label class="col-md-3 control-label">Version</label>
+                    <div class="col-md-6">
+                      <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="datastore.defaultVersion.version"
+                        ng-options="c.version as c.version for c in datastore.versions" ng-disabled="isversionEnable">
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" ng-show="datastoredata.uuid">
+                    <label class="col-md-3 control-label">CreatedBy</label>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" ng-disabled="true" ng-model="datastoredata.createdBy.ref.name">
+                    </div>
+                  </div>
+
+                  <div class="form-group" ng-show="datastoredata.uuid">
+                    <label class="col-md-3 control-label">CreatedOn</label>
+                    <div class="col-md-6">
+                      <input type="text" ng-model="datastoredata.createdOn" ng-disabled="true" class="form-control">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                    <div class="col-md-6">
+
+                      <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                        add-on-enter="true" add-on-space="true">
+                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                        </auto-complete>
+                      </tags-input>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
+                    </label>
+                    <div class="col-md-6">
+
+                      <textarea class="form-control" ng-disabled="{{mode}}" ng-model="datastoredata.desc" rows="2" style="resize:none;"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Meta Id
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                      <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDatastoreMeta()" ng-model="datastoremetatype"
+                        ng-options="x for x in datastoremetaTypes" required="">
+                      </select>
+                    </div>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                      <select class="form-control" select2 name="" ng-change="selectDatapod()" data-ng-model="datastoreAllMata.defaultoption" ng-options="r as r.name for r in datastoreAllMata.options track by r.uuid"
+                        ng-disabled="{{mode}}">
+                      </select>
+
+                    </div>
+
+                  </div>
+
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Exec Id
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                      <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDatastoreExec()" ng-model="datastoreexectype"
+                        ng-options="x for x in datastoreexecTypes" required="">
+                      </select>
+                    </div>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                      <select class="form-control" select2 name="" ng-change="selectDatapod()" data-ng-model="datastoreAllExec.defaultoption" ng-options="r as r.name for r in datastoreAllExec.options track by r.uuid"
+                        ng-disabled="{{mode}}">
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Location
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <textarea id="datastorelocation" rows="4" class="form-control col-md-7 col-xs-12" cols="100" name="location" type="text"
+                        ng-model="datastoredata.location" ng-disabled="{{mode}}" required="">
+                    </textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="btn-group" ng-init="datastoredata.active='Y'">
+                        <label class="btn btn-default" ng-model="datastoredata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes
+                        </label>
+                        <label class="btn btn-default" ng-model="datastoredata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="btn-group">
+                        <label class="btn btn-default" ng-model="datastoredata.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes
+                        </label>
+                        <label class="btn btn-default" ng-model="datastoredata.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="btn-group" ng-init="datastoredata.active='N'">
+                        <label class="btn btn-default" ng-model="datastoredata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                          uncheckable>Yes</label>
+                        <label class="btn btn-default" ng-model="datastoredata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                          uncheckable>No</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="padding-top: 10px;">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                      <a ui-sref="admin({type:'datastore'})" class="btn btn-primary">Cancel
+                      </a>
+                      <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false || mode == false || myform.$dirty == true)?false:true"
+                        value="Submit" name="submit">
+                      <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END MAIN CONTENT -->
+  </div><!-- END MAIN CONTENT -->
 </div>
