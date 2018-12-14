@@ -35,6 +35,7 @@
 				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
    <context:component-scan base-package="com.inferyx" />
+   <mvc:annotation-driven />
 	
 	<!-- Enable AspectJ style of Spring AOP -->
 	<!-- <aop:aspectj-autoproxy /> -->
