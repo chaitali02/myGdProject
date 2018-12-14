@@ -4358,4 +4358,49 @@ public class CommonServiceImpl <T> {
 		
 		return null;
 	}
+	
+	public List<String> getColListByObject(Object object) throws JsonProcessingException {
+		if(object instanceof Datapod) {
+			return getColListByDatapod((Datapod)object);
+		} else if(object instanceof DataSet) {
+			DataSet dataSet = (DataSet) object;
+			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString());
+			return getColListByObject(dependsOnObj);
+		} else if(object instanceof Rule) {
+			Rule rule = (Rule) object;
+			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString());
+			return getColListByObject(dependsOnObj);
+		} 
+		
+		return null;
+	}
+	
+	public List<String> getColListByDatapod(Datapod datapod) {
+		List<String> datapodCloList = new ArrayList<>();
+		List<Attribute> attributeList = datapod.getAttributes();
+		for(Attribute attribute : attributeList) {
+			datapodCloList.add(attribute.getName());
+		}
+		return datapodCloList;
+	}
+	
+	public Datapod getDatapodByObject(Object object) throws JsonProcessingException {
+		if(object instanceof Datapod) {
+			return (Datapod)object;
+		} else if(object instanceof DataSet) {
+			DataSet dataSet = (DataSet) object;
+			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString(), "N");
+			return getDatapodByObject(dependsOnObj);
+		} else if(object instanceof Rule) {
+			Rule rule = (Rule) object;
+			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString(), "N");
+			return getDatapodByObject(dependsOnObj);
+		} 
+		
+		return null;
+	}
 }
