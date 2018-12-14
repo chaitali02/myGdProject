@@ -51,6 +51,7 @@ export class BatchSchedulerComponent implements OnInit {
   displayDialog: boolean;
   displayDialog1: boolean;
   displayDialog2: boolean;
+  displayDialog3: boolean;
   frequencyDetail: any = {}
   time: any;
   position: any;
@@ -93,7 +94,33 @@ export class BatchSchedulerComponent implements OnInit {
       { quarter: "Q1", name: "Q1", checked: false, position: "0" },
       { quarter: "Q2", name: "Q2", checked: false, position: "1" },
       { quarter: "Q3", name: "Q3", checked: false, position: "2" },
-      { quarter: "Q4", name: "Q4", checked: false, position: "3" }]
+      { quarter: "Q4", name: "Q4", checked: false, position: "3" }],
+    hour: [
+      { hour: "0", name: "0", checked: false, position: 0 },
+      { hour: "1", name: "1", checked: false, position: 1 },
+      { hour: "2", name: "2", checked: false, position: 2 },
+      { hour: "3", name: "3", checked: false, position: 3 },
+      { hour: "4", name: "4", checked: false, position: 4 },
+      { hour: "5", name: "5", checked: false, position: 5 },
+      { hour: "6", name: "6", checked: false, position: 6 },
+      { hour: "7", name: "7", checked: false, position: 7 },
+      { hour: "8", name: "8", checked: false, position: 8 },
+      { hour: "9", name: "9", checked: false, position: 9 },
+      { hour: "10", name: "10", checked: false, position: 10 },
+      { hour: "11", name: "11", checked: false, position: 11 },
+      { hour: "12", name: "12", checked: false, position: 12 },
+      { hour: "13", name: "13", checked: false, position: 13 },
+      { hour: "14", name: "14", checked: false, position: 14 },
+      { hour: "15", name: "15", checked: false, position: 15 },
+      { hour: "16", name: "16", checked: false, position: 16 },
+      { hour: "17", name: "17", checked: false, position: 17 },
+      { hour: "18", name: "18", checked: false, position: 18 },
+      { hour: "19", name: "19", checked: false, position: 19 },
+      { hour: "20", name: "20", checked: false, position: 20 },
+      { hour: "21", name: "21", checked: false, position: 21 },
+      { hour: "22", name: "22", checked: false, position: 22 },
+      { hour: "23", name: "23", checked: false, position: 23 }
+    ]
   };
   //attributes: any[];
   optionChoose: any[];
@@ -130,11 +157,13 @@ export class BatchSchedulerComponent implements OnInit {
     this.displayDialog = false;
     this.displayDialog1 = false;
     this.displayDialog2 = false;
+    this.displayDialog3 = false;
     this.frequencyDetail.weekDetail = [];
     this.optionChoose = this.attributes;
   }
 
   ngOnInit() {
+    
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.version = params['version'];
@@ -146,7 +175,7 @@ export class BatchSchedulerComponent implements OnInit {
         this.dropdownSettingsPipeline.disabled = this.mode == "false" ? false : true
       } this.getAllLatestPipeline();
     })
-    this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Quarterly", "Monthly", "Yearly"];
+    this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Hourly", "Quarterly", "Monthly", "Yearly"];
     this.attrtype = this.attrtypes[0];
   }
 
@@ -212,12 +241,12 @@ export class BatchSchedulerComponent implements OnInit {
       obj["attrtype"] = this.toTitleCase(response['scheduleInfo'][i].frequencyType);
       obj["frequencyDetail"] = [];
 
-      if (obj["attrtype"] == "Weekly" || obj["attrtype"] == "Bi-Weekly") {  
+      if (obj["attrtype"] == "Weekly" || obj["attrtype"] == "Bi-Weekly") {
         let p = 0;
         for (let k = 0; k < this.weekName.weekAlias.length; k++) {
-          
-          var a = response['scheduleInfo'][i].frequencyDetail[p];
-          var b = this.weekName.weekAlias[k].position;
+
+          // var a = response['scheduleInfo'][i].frequencyDetail[p];
+          // var b = this.weekName.weekAlias[k].position;
           if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.weekAlias[k].position) {
             obj["frequencyDetail"][p] = this.weekName.weekAlias[k].name;
             p++;
@@ -228,11 +257,24 @@ export class BatchSchedulerComponent implements OnInit {
       if (obj["attrtype"] == "Quarterly") {
         let p = 0;
         for (let k = 0; k < this.weekName.quarters.length; k++) {
-          
-          var a = response['scheduleInfo'][i].frequencyDetail[p];
-          var b = this.weekName.quarters[k].position;
+
+          // var a = response['scheduleInfo'][i].frequencyDetail[p];
+          // var b = this.weekName.quarters[k].position;
           if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.quarters[k].position) {
             obj["frequencyDetail"][p] = this.weekName.quarters[k].name;
+            p++;
+            k = -1;
+          }
+        }
+      }
+      if (obj["attrtype"] == "Hourly") {
+        let p = 0;
+        for (let k = 0; k < this.weekName.hour.length; k++) {
+
+          // var a = response['scheduleInfo'][i].frequencyDetail[p];
+          // var b = this.weekName.hour[k].position;
+          if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.hour[k].position) {
+            obj["frequencyDetail"][p] = this.weekName.hour[k].name;
             p++;
             k = -1;
           }
@@ -356,7 +398,7 @@ export class BatchSchedulerComponent implements OnInit {
     this.IsProgerssShow = "true";
     let batchJson = {};
 
-    batchJson["uuid"] = this.batch.uuid;debugger
+    batchJson["uuid"] = this.batch.uuid; 
     batchJson["id"] = this.batch.id;
     if (batchJson["uuid"] == null) {
       this.batchChg = "Y"
@@ -390,7 +432,8 @@ export class BatchSchedulerComponent implements OnInit {
     batchJson["inParallel"] = this.batch.inParallel == true ? 'true' : "false"
 
     let attributesArray = [];
-    if (this.attributes != null) {debugger
+    if (this.attributes != null) {
+      
       if (this.attributes.length > 0) {
         for (let i = 0; i < this.attributes.length; i++) {
           let attribute = {};
@@ -400,10 +443,10 @@ export class BatchSchedulerComponent implements OnInit {
 
           if (this.attributes[i]["uuid"] == null) {
             this.attributes[i]["scheduleChg"] = "Y";
-          }else{
+          } else {
             this.attributes[i]["scheduleChg"] = "N";
           }
-          attribute["scheduleChg"] =  this.attributes[i]["scheduleChg"]
+          attribute["scheduleChg"] = this.attributes[i]["scheduleChg"]
           attribute["name"] = this.attributes[i]["name"];
           var a = this.attributes[i]["attrtype"];
           if (a != null)
@@ -442,6 +485,20 @@ export class BatchSchedulerComponent implements OnInit {
               var b = this.weekName.quarters[j].name;
               if (this.attributes[i].frequencyDetail[k] == this.weekName.quarters[j].name) {
                 let positions = this.weekName.quarters[j].position;
+                frequencyDetails.push(positions);
+                k++;
+                j = -1;
+              }
+            }
+          }
+          else if (this.attributes[i]["attrtype"] == "Hourly") {
+            //indexArr = this.attributes[i].frequencyDetail.split(",");
+            let k = 0;
+            for (let j = 0; j < this.weekName.hour.length; j++) {
+              var a = this.attributes[i].frequencyDetail[k];
+              var b = this.weekName.hour[j].name;
+              if (this.attributes[i].frequencyDetail[k] == this.weekName.hour[j].name) {
+                let positions = this.weekName.hour[j].position;
                 frequencyDetails.push(positions);
                 k++;
                 j = -1;
@@ -613,6 +670,27 @@ export class BatchSchedulerComponent implements OnInit {
       }
       this.displayDialog1 = true;
     }
+    else if (type == "Hourly") {
+
+      if (this.attributes[index].frequencyDetail) {
+        let o = this.attributes[index].frequencyDetail;
+
+        if (o != null) {
+          let wName = this.attributes[index].frequencyDetail;//.split(",");
+          for (let p = 0; p < wName.length; p++) {
+            o = wName[p];
+
+            for (let k = 0; k < this.weekName.hour.length; k++) {
+              if (this.weekName.hour[k].name == o) {
+                this.onChange(o, true, this.weekName.hour[k].position);
+                break;
+              }
+            }
+          }
+        }
+      }
+      this.displayDialog3 = true;
+    }
     else if (type == "Monthly") {
 
 
@@ -654,17 +732,26 @@ export class BatchSchedulerComponent implements OnInit {
     for (let i = 0; i < this.weekName.quarters.length; i++) {
       this.weekName.quarters[i].checked = false;
     }
+    for (let i = 0; i < this.weekName.hour.length; i++) {
+      this.weekName.hour[i].checked = false;
+    }
     //this.frequencyDetailCal = [];
 
     this.displayDialog = false;
     this.displayDialog1 = false;
     this.displayDialog2 = false;
+    this.displayDialog3 = false;
   }
   onChange(week: string, isChecked: boolean, index: any) {
     if (week == "Q1" || week == "Q2" || week == "Q3" || week == "Q4") {
       this.weekName.quarters[index].checked = isChecked;
     }
-    this.weekName.weekAlias[index].checked = isChecked;
+    else if(week == "SUN" || week == "MON" || week == "TUE" || week == "WED" || week == "THU" || week == "FRI" || week == "SAT"){
+      this.weekName.weekAlias[index].checked = isChecked;
+    }
+    else{      
+      this.weekName.hour[index].checked = isChecked;
+    }
     if (isChecked) {
       this.frequencyDetail.weekDetail.push(week);
     } else {
@@ -696,8 +783,8 @@ export class BatchSchedulerComponent implements OnInit {
 
   onChangeAttrtype(index) {
     this.scheduleChg = "Y";
-    this.attributes[index].frequencyDetail= [];
-    console.log(this.attributes["frequencyDetail"]+"OnChangeSchedule = Y");
+    this.attributes[index].frequencyDetail = [];
+    console.log(this.attributes["frequencyDetail"] + "OnChangeSchedule = Y");
   }
 
 }

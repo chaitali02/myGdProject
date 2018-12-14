@@ -1160,8 +1160,14 @@ cursor: not-allowed !important;
 
 
 /*--Week selector start--*/
+.weekDays-selector{
+  float: left; 
+  overflow: auto;
+  margin-top: 4px;
+}
 .weekDays-selector input {
   display: none!important;
+  margin-right: 4px;
 }
 
 .weekDays-selector input[type=checkbox] + label {
@@ -1174,7 +1180,8 @@ cursor: not-allowed !important;
   line-height: 36px;
   text-align: center;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
+  color: #313131;
 }
 
 .weekDays-selector input[type=checkbox]:checked + label {
@@ -1185,4 +1192,10 @@ cursor: not-allowed !important;
 /*--Dialog titlebar disable--*/
 .dialogBox .ui-dialog-titlebar{
   display: none !important;
-};
+}
+
+.dialogBox3 .ui-dialog{
+  position: fixed;
+  padding: 0;
+  width: 21% !important;
+}

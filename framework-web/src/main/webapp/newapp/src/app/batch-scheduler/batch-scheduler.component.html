@@ -243,7 +243,7 @@
 
                     <td>
                       <!-- <input type="text" [(ngModel)]="tabledata.detail" title="{{tabledata.detail}}" [disabled]="mode" class="form-control" name="detail+{{i}}"> -->
-                      <ng-container *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
+                      <ng-container *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
                         <!-- <div *ngIf="(type=='Weekly' || tabledata.type=='Bi-Weekly' || tabledata.type=='Quarterly' || tabledata.type=='Monthly')"> -->
 
                         <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
@@ -272,6 +272,22 @@
                     type="checkbox" id="{{week.name}}" [checked]="week.checked">
                   <label class="form-check-label" for="{{week.name}}">
                     {{week.alias}}
+                  </label>
+                </div>
+                <br>
+                <div style="height: 50px; padding: 6px 0px 0px 0px; float: right;">
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDone()" class="btn green">Done</button>
+                </div>
+              </p-dialog>
+
+              <p-dialog class="dialogBox dialogBox3" [modal]="true" [closable]="false" [(visible)]="displayDialog3" [responsive]="true" 
+                  [contentStyle]="{'overflow':'visible'}">
+                <div class="weekDays-selector" *ngFor="let week of weekName.hour;let i=index">
+                  <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
+                    type="checkbox" id="{{week.name}}" [checked]="week.checked">
+                  <label class="form-check-label" for="{{week.name}}">
+                    {{week.hour}}
                   </label>
                 </div>
                 <br>
