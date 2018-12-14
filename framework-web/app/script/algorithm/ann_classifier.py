@@ -433,9 +433,6 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     return joined_df
 
 def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
-    print("printing schema of spark df to be created: ", schema) 
-    print("printing df to be converted into dpark df:")
-    print(pd_df) 
     sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
@@ -494,7 +491,7 @@ def prepareStatus(label_val, prediction_val):
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
-   
+    
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
     
@@ -608,20 +605,20 @@ def train():
         joined_df = joinSparkDfByIndex(spark_X_test_df, test_result_spark_df)
     else:
         joined_df = test_result_spark_df
-            
-    if(rowIdentifier != None):
-        sourceDataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName
+          
+    if(rowIdentifier != None and (inputSourceFileName != None and inputSourceFileName != "")):
+        sourceDataset = getData(inputSourceFileName, sourceDsType, sourceHostName, sourceDbName
                                 , sourcePort, sourceUserName, sourcePassword, sourceQuery)
-        
+       
         src_train, src_test = train_test_split(sourceDataset.iloc[:, :].values, test_size = testPercent, random_state = 0)
         
         source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)        
         pd_scr_test = pd.DataFrame(src_test)
         spark_src_test_df = createSparkDfByPandasDfAndSparkSchema(pd_scr_test, source_schema)
         spark_src_test_df = addIndexToSparkDf(spark_src_test_df)
-                
-        joined_df = joinSparkDfByIndex(spark_src_test_df, joined_df)
         
+        joined_df = joinSparkDfByIndex(spark_src_test_df, joined_df)
+
     #removing index column
     joined_df = joined_df.drop("rowNum")
         
@@ -668,7 +665,6 @@ def predict():
     dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
     print("predict dataset size: ", len(dataset2))
-    print(dataset2)
     
     # Feature Scaling
     from sklearn.preprocessing import StandardScaler
@@ -691,9 +687,7 @@ def predict():
     print("Loaded model from disk")
     
     # Predicting the results
-    print("sample data size: ", len(feature_dataset))
     result_pred = loaded_model.predict(feature_dataset)
-    print("predicted data size: ", len(result_pred))
     
     #converting predicted dataframe to panda dataframe
     pred_pd_df = pd.DataFrame(result_pred)
@@ -719,8 +713,8 @@ def predict():
     else:
         joined_df = spark_pred_df       
     
-    if(rowIdentifier != None):
-        sourceDataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName
+    if(rowIdentifier != None and (inputSourceFileName != None and inputSourceFileName != "")):
+        sourceDataset = getData(inputSourceFileName, sourceDsType, sourceHostName, sourceDbName
                                 , sourcePort, sourceUserName, sourcePassword, sourceQuery)
                 
         source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)        

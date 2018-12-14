@@ -463,6 +463,23 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
+	public ResultSetHolder castDFCloumnsToDoubleType(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		if(rsHolder == null || rsHolder.getDataFrame() == null) {
+			rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			rsHolder.setTableName(tableName);
+		} 
+		Dataset<Row> df = rsHolder.getDataFrame();
+		
+		for(String colName : df.columns()) {
+			df = df.withColumn(colName, df.col(colName).cast(DataTypes.DoubleType));
+		}
+		
+		if(registerTempTable) {
+			registerTempTable(df, tableName);
+		}
+		return rsHolder;
+	}
+	
 	@Override
 	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
 		if(rsHolder == null || rsHolder.getDataFrame() == null) {

@@ -1970,6 +1970,8 @@ public class ModelServiceImpl {
 						File saveFile = new File(saveFileName);
 						if(!saveFile.exists()) {
 							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
+							String doubleCastSql = "SELECT * FROM " + tableName;
+							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 							saveFileName = URI+saveFileName;
@@ -1981,7 +1983,7 @@ public class ModelServiceImpl {
 								&& !predict.getRowIdentifier().isEmpty()
 								&& rowIdentifierCols != null 
 								&& !rowIdentifierCols.isEmpty()) {
-							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
+							inputSourceFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input_source";
 							logger.info("Saved source file name : " + inputSourceFileName);
 							
 							File inputSourceFile = new File(inputSourceFileName);
@@ -2923,7 +2925,9 @@ public class ModelServiceImpl {
 						IExecutor exec = null;
 						exec = execFactory.getExecutor(datasource.getType());
 						if(!saveFile.exists()) {							
-							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);							
+							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);	
+							String doubleCastSql = "SELECT * FROM " + tableName;
+							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);													
 							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 						}		
