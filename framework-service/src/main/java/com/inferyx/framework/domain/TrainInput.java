@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 /** 
  * @author Ganesh
  *
@@ -44,7 +46,83 @@ public class TrainInput {
 	String targetDsType;
 	String targetTableName;
 	String testSetPath;
+	List<String> rowIdentifier;
+	String includeFeatures;
+	double trainPercent;
+	double testPercent;
 	
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the trainPercent
+	 */
+	public double getTrainPercent() {
+		return this.trainPercent;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param trainPercent the trainPercent to set
+	 */
+	public void setTrainPercent(double trainPercent) {
+		this.trainPercent = trainPercent;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * *
+	 * @return the testPercent
+	 */
+	public double getTestPercent() {
+		return this.testPercent;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param testPercent the testPercent to set
+	 */
+	public void setTestPercent(double testPercent) {
+		this.testPercent = testPercent;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the rowIdentifier
+	 */
+	public List<String> getRowIdentifier() {
+		return this.rowIdentifier;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param rowIdentifier the rowIdentifier to set
+	 */
+	public void setRowIdentifier(List<String> rowIdentifier) {
+		this.rowIdentifier = rowIdentifier;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the includeFeatures
+	 */
+	public String getIncludeFeatures() {
+		return this.includeFeatures;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param includeFeatures the includeFeatures to set
+	 */
+	public void setIncludeFeatures(String includeFeatures) {
+		this.includeFeatures = includeFeatures;
+	}
 	/**
 	 * 
 	 * @ Ganesh

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 /** 
  * @author Ganesh
  *
@@ -44,7 +46,45 @@ public class PredictInput {
 	String sourceDsType;
 	String targetDsType;
 	String targetTableName;
+	List<String> rowIdentifier;
+	String includeFeatures;
 	
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the rowIdentifier
+	 */
+	public List<String> getRowIdentifier() {
+		return this.rowIdentifier;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param rowIdentifier the rowIdentifier to set
+	 */
+	public void setRowIdentifier(List<String> rowIdentifier) {
+		this.rowIdentifier = rowIdentifier;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @return the includeFeatures
+	 */
+	public String getIncludeFeatures() {
+		return this.includeFeatures;
+	}
+	/**
+	 * 
+	 * @ Ganesh
+	 * 
+	 * @param includeFeatures the includeFeatures to set
+	 */
+	public void setIncludeFeatures(String includeFeatures) {
+		this.includeFeatures = includeFeatures;
+	}
 	/**
 	 * @return the targetTableName
 	 */

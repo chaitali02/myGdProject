@@ -27,10 +27,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1898,14 +1900,12 @@ public class ModelServiceImpl {
 					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
 					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
 
-//					filePath = String.format("/%s/%s/%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-	
 					List<String> argList = new ArrayList<>();
 					PredictInput predictInput = new PredictInput();
+					Map<String, Object> otherParams = new HashMap<>();
 					
-//					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+					predictInput.setIncludeFeatures(predict.getIncludeFeatures());
+					
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, null, tableName);	
 
 					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
@@ -1914,9 +1914,56 @@ public class ModelServiceImpl {
 					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 
+					deleteFileOrDirIfExists(defaultDir);
+					
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
+					
+					
+//########################################################################################################################################
+					
+					String sourceQuery = generateSQLBySource(source, execParams);
+					String sourceCustomQuery = null;
+					List<String> rowIdentifierCols = null;
+					if(predict.getRowIdentifier() != null && !predict.getRowIdentifier().isEmpty()) {
+						rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
+						if(predict.getIncludeFeatures().equalsIgnoreCase("Y")
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+						}
+						
+						if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {				
+							StringBuilder builder = new StringBuilder();
+							builder.append("SELECT ");
+							int i=0;
+							for(String colName : rowIdentifierCols) {
+								builder.append(colName);
+								if(i<rowIdentifierCols.size()-1) {
+									builder.append(", ");
+								}
+								i++;
+							}
+							
+							builder.append(" FROM ");
+							builder.append(" (");
+							builder.append(sourceQuery);
+							builder.append(") ");
+							builder.append(" sourceUniqueData");
+							sourceCustomQuery = builder.toString();
+						} else {
+							rowIdentifierCols = null;
+						}
+						
+						
+						predictInput.setRowIdentifier(rowIdentifierCols);
+						Datapod sourceDp = commonServiceImpl.getDatapodByObject(source);
+						Map<String, String> colDetails = getColumnNameAndDatatypeByAttrList(sourceDp.getAttributes());
+						otherParams.put("sourceAttrDetails", colDetails);
+					}
+					
+//########################################################################################################################################
 					
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					predictInput.setSourceDsType(sourceDsType);
@@ -1924,15 +1971,32 @@ public class ModelServiceImpl {
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
-						ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
-						rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
-						exec = execFactory.getExecutor(appDatasource.getType());
-						exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 						
-						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
+						File saveFile = new File(saveFileName);
+						if(!saveFile.exists()) {
+							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
+							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+							saveFileName = URI+saveFileName;
+							logger.info("Saved file name : " + saveFileName);
+						}						
 						
-						saveFileName = URI+saveFileName;
-						logger.info("Saved file name : " + saveFileName);
+						String inputSourceFileName = null;
+						if(predict.getRowIdentifier() != null 
+								&& !predict.getRowIdentifier().isEmpty()
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
+							logger.info("Saved source file name : " + inputSourceFileName);
+							
+							File inputSourceFile = new File(inputSourceFileName);
+							if(!inputSourceFile.exists()) {
+								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
+								exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
+								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
+							}		
+						}
 
 						predictInput.setSourceFilePath(saveFileName);
 					} else {
@@ -1951,8 +2015,15 @@ public class ModelServiceImpl {
 						sourceDsDetails.put("sourcePassword", sourceDS.getPassword());
 						
 						predictInput.setSourceDsDetails(sourceDsDetails);
+						
+						if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
+							otherParams.put("sourceQuery", sourceCustomQuery);
+						}
 						//creating default directory to allow script/python-code to store file in this location
-						new File(defaultDir).mkdirs();
+						File defaultDirFile = new File(defaultDir);
+						if(!defaultDirFile.exists()) {
+							defaultDirFile.mkdirs();
+						}
 					}
 					
 					String scriptName = algorithm.getScriptName();
@@ -2757,7 +2828,57 @@ public class ModelServiceImpl {
 					String appUuid = commonServiceImpl.getApp().getUuid();
 
 					TrainInput trainInput = new TrainInput();
-
+					Map<String, Object> otherParams = new HashMap<>();
+					
+					trainInput.setTrainPercent(train.getTrainPercent()/100);
+					trainInput.setTestPercent(train.getValPercent()/100);
+					trainInput.setIncludeFeatures(train.getIncludeFeatures());
+					
+					String sourceQuery = generateSQLBySource(source, execParams);
+					String sourceCustomQuery = null;
+					List<String> rowIdentifierCols = null;
+					if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
+						rowIdentifierCols = getRowIdentifierCols(train.getRowIdentifier());
+						if(train.getIncludeFeatures().equalsIgnoreCase("Y")
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+						}
+						
+						if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {				
+							StringBuilder builder = new StringBuilder();
+							builder.append("SELECT ");
+							int i=0;
+							for(String colName : rowIdentifierCols) {
+								builder.append(colName);
+								if(i<rowIdentifierCols.size()-1) {
+									builder.append(", ");
+								}
+								i++;
+							}
+							
+							builder.append(" FROM ");
+							builder.append(" (");
+							builder.append(sourceQuery);
+							builder.append(") ");
+							builder.append(" sourceUniqueData");
+							sourceCustomQuery = builder.toString();
+						} else {
+							rowIdentifierCols = null;
+						}
+						
+						
+						trainInput.setRowIdentifier(rowIdentifierCols);
+						Datapod sourceDp = commonServiceImpl.getDatapodByObject(source);
+						Map<String, String> colDetails = getColumnNameAndDatatypeByAttrList(sourceDp.getAttributes());
+						otherParams.put("sourceAttrDetails", colDetails);
+					}
+					
+					if(train.getIncludeFeatures() != null && !train.getIncludeFeatures().isEmpty()) {
+//						Map<String, String> colDetails = getColumnNameAndDatatypeByFeatureAttrMap(train.getFeatureAttrMap());
+						otherParams.put("featureAttrDetails", fieldArray);
+					}					
+					
 					List<ParamListHolder> resolvedParamInfoList = getParamByParamList(execParams.getParamListInfo().get(0).getRef().getUuid());
 					// Get paramList
 //					String []args = resolvedParamInfoList.stream().map(p -> p.getParamName() + "~" + p.getParamValue().getValue() + "")
@@ -2765,12 +2886,10 @@ public class ModelServiceImpl {
 //					argList = new ArrayList<String>(Arrays.asList(args));
 
 					argList = new ArrayList<>();
-					Map<String, Object> otherParams = new HashMap<>();
 					for(ParamListHolder paramListHolder : resolvedParamInfoList) {
 						otherParams.put(paramListHolder.getParamName(), paramListHolder.getParamValue().getValue());
 					}
 					
-					trainInput.setOtherParams(otherParams);
 					
 					
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
@@ -2778,7 +2897,15 @@ public class ModelServiceImpl {
 					trainInput.setTestSetPath(testSetPath);
 					String modelFileName = defaultDir.concat("model");
 
+					String outputResultPath = defaultDir.concat("train_op_result").concat("/").concat("train_op_result");
+					otherParams.put("outputResultPath", outputResultPath);
+					
 					deleteFileOrDirIfExists(defaultDir);
+					
+					File outputResultDir = new File(defaultDir.concat("train_op_result"));
+					if(!outputResultDir.exists()) {
+						outputResultDir.mkdirs();
+					}
 					
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
@@ -2787,22 +2914,38 @@ public class ModelServiceImpl {
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					trainInput.setSourceDsType(sourceDsType);
 					
+					String inputSourceFileName = null;
+					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+						sourceDsType = MetaType.file.toString().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + saveFileName);
 						
 						File saveFile = new File(saveFileName);
-						if(!saveFile.exists()) {
-							sourceDsType = MetaType.file.toString().toLowerCase();
-							Datasource datasource = commonServiceImpl.getDatasourceByApp();
-							IExecutor exec = null;
-							exec = execFactory.getExecutor(datasource.getType());
-							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
-							
+						Datasource datasource = commonServiceImpl.getDatasourceByApp();
+						IExecutor exec = null;
+						exec = execFactory.getExecutor(datasource.getType());
+						if(!saveFile.exists()) {							
+							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);							
 							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
+							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+						}		
+						
+						if(train.getRowIdentifier() != null 
+								&& !train.getRowIdentifier().isEmpty()
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
+							logger.info("Saved source file name : " + inputSourceFileName);
 							
-							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, FileType.CSV.toString().toLowerCase());
-						}						
+							File inputSourceFile = new File(inputSourceFileName);
+							if(!inputSourceFile.exists()) {
+								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
+								exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
+								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
+							}		
+						}
 
 						trainInput.setSourceFilePath("file://"+saveFileName);
 					} else {
@@ -2821,13 +2964,23 @@ public class ModelServiceImpl {
 						sourceDsDetails.put("sourcePassword", sourceDS.getPassword());
 						
 						trainInput.setSourceDsDetails(sourceDsDetails);
+						
+						if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
+							otherParams.put("sourceQuery", sourceCustomQuery);
+						}
+						
 						//creating default directory to allow script/python-code to store file in this location
-						new File(defaultDir).mkdirs();
+						File defaultDirFile = new File(defaultDir);
+						if(!defaultDirFile.exists()) {
+							defaultDirFile.mkdirs();
+						}
 					}
 					
 					trainInput.setNumInput(fieldArray.length);
 					trainInput.setModelFilePath(modelFileName);
 					trainInput.setOperation(MetaType.train.toString().toLowerCase());
+					
+					trainInput.setOtherParams(otherParams);
 		
 					String inputConfigFilePath = defaultDir.concat("input_config.json");
 					ObjectMapper mapper = new ObjectMapper();
@@ -2845,6 +2998,16 @@ public class ModelServiceImpl {
 					stopWatch.stop();
 					trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
 					
+					if(inputSourceFileName != null && !inputSourceFileName.isEmpty()) {
+						deleteFileOrDirIfExists(inputSourceFileName);
+					}
+
+//					Map<String, Object> opResult = new ObjectMapper().readValue(new File(outputResultPath.concat(".json")), Map.class);
+					
+					String opResult = new ObjectMapper().readValue(new File(outputResultPath.concat(".json")), String.class);
+					@SuppressWarnings("unchecked")
+					Map<String, Object> summary = new ObjectMapper().readValue(opResult.replaceAll("\'", "\""), Map.class);			        
+					
 					if(!scriptPrintedMsgs.isEmpty()) {
 						result = true;
 					} else {
@@ -2852,7 +3015,7 @@ public class ModelServiceImpl {
 					}
 					
 					if(result) {
-						Map<String, Object> summary = summary(modelFileName, scriptPrintedMsgs);
+//						Map<String, Object> summary = summary(modelFileName, scriptPrintedMsgs);
 						Object accuracy = summary.get("accuracy");
 						if(accuracy != null) {
 							trainResult.setAccuracy(Double.parseDouble(accuracy.toString()));
@@ -2965,78 +3128,144 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public Map<String, Object> summary(Object trndModel, List<String> scriptPrintedMsgs) throws IOException {
-		Map<String, Object> summary = new HashMap<>();
-		String modelPath = (String) trndModel;
-		modelPath = modelPath  + ".spec";
-		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
-		boolean isReadingScore = false;
-		boolean isReadingConfuMat = false;
-		boolean constructConfusionMat = false;
-		List<String> confusionMatrx = new ArrayList<>();
-		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
-			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
-				if(!scriptPrintedMsgs.get(line+1).toLowerCase().contains("confusion_matrix")) {
-					summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
+	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			List<String> colNameList = Arrays.asList(fieldArray);
+			List<String> uniqueRowIdentifierCols = new ArrayList<>();
+
+			System.out.println("duplicate column(s): ");
+			for(String colName : rowIdentifierCols) {
+				if(!colNameList.contains(colName)) {
+					uniqueRowIdentifierCols.add(colName);
+				} 
+				
+				if(colNameList.contains(colName)) {
+					System.out.println(colName);
 				}
 			}
-			//reading confusion mattrix
-			if(scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
-				isReadingConfuMat = true;
-			}
-			if(isReadingConfuMat) {
-				if(scriptPrintedMsgs.get(line).equalsIgnoreCase("  ")) {
-					isReadingConfuMat = false;
-					constructConfusionMat = true;
-				} else {
-					if(!scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
-						confusionMatrx.add(scriptPrintedMsgs.get(line));
-					}
-				}
-			}			
-			
-			//cunstructing confusion matrix
-			if(constructConfusionMat) {
-				List<List<Double>> realConfusionMat = new ArrayList<>();
-				for(String matrixRow : confusionMatrx) {
-					if(matrixRow.startsWith("[[")) {
-						String[] rowSplit = matrixRow.trim().substring(2, matrixRow.length()-1).trim().split(" ");
-						List<Double> rowList = new ArrayList<>();
-						for(String col : rowSplit) {
-							rowList.add(Double.parseDouble(col));
-						}
-						realConfusionMat.add(rowList);
-					} else if(matrixRow.startsWith("[") && matrixRow.endsWith("]")) {
-						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-1).trim().split(" ");
-						List<Double> rowList = new ArrayList<>();
-						for(String col : rowSplit) {
-							rowList.add(Double.parseDouble(col));
-						}
-						realConfusionMat.add(rowList);
-					} else if(matrixRow.endsWith("]]")) {
-						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-3).trim().split(" ");
-						List<Double> rowList = new ArrayList<>();
-						for(String col : rowSplit) {
-							rowList.add(Double.parseDouble(col));
-						}
-						realConfusionMat.add(rowList);
-					}
-				}
-				summary.put("confusion_matrix", realConfusionMat);
-				constructConfusionMat = false;
-			}
-			
-			//reading confusion score
-			if(scriptPrintedMsgs.get(line).contains("model_score")) {
-				isReadingScore = true;
-				summary.put("model score", scriptPrintedMsgs.get(line+1));
-			}
-			if(isReadingScore) {
-				isReadingScore = false;
-			}
+			return uniqueRowIdentifierCols;
 		}
-		return summary;
+		return null;
 	}
+	
+	public Map<String, String> getColumnNameAndDatatypeByAttrList(List<Attribute> attributeList) {
+		Map<String, String> colDetails = new LinkedHashMap<>();
+		
+		for(Attribute attribute : attributeList) {
+			colDetails.put(attribute.getName(), attribute.getType());
+		}
+		
+		return colDetails;
+	}
+
+	/********************** UNUSED **********************/
+//	public Map<String, String> getColumnNameAndDatatypeByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) throws JsonProcessingException {
+//		Map<String, String> colDetails = new LinkedHashMap<>();		
+//		
+//		Datapod attrDp = null;		
+//		String attrSourceUuid = null;
+//		int i=0;
+//		for(FeatureAttrMap mappedAttr : featureAttrMap) {
+//			System.out.println("i : atrname >>>> "+i+" : "+mappedAttr.getAttribute().getAttrName());
+//			if("all_wire_transfers_round_amount_usd".equalsIgnoreCase(mappedAttr.getAttribute().getAttrName())) {
+//				System.out.println();
+//			}
+//			if(attrSourceUuid == null || (attrSourceUuid != null && !attrSourceUuid.equalsIgnoreCase(mappedAttr.getAttribute().getRef().getUuid()))) {
+//				attrSourceUuid = mappedAttr.getAttribute().getRef().getUuid();
+//				Object object = commonServiceImpl.getLatestByUuid(mappedAttr.getAttribute().getRef().getUuid(), mappedAttr.getAttribute().getRef().getType().toString(), "N");
+//				attrDp = commonServiceImpl.getDatapodByObject(object);
+//			} 
+//			System.out.println(mappedAttr.getFeature().getFeatureName());
+//			System.out.println(mappedAttr.getAttribute().getAttrId());
+//			System.out.println(attrDp.getAttribute(Integer.parseInt(mappedAttr.getAttribute().getAttrId())).getType());
+//			System.out.println();
+//			colDetails.put(mappedAttr.getFeature().getFeatureName(), attrDp.getAttribute(Integer.parseInt(mappedAttr.getAttribute().getAttrId())).getType());
+//			i++;
+//		}
+//		
+//		return colDetails;
+//	}
+
+	/********************** UNUSED **********************/
+//	public Map<String, Object> summary(Object trndModel, List<String> scriptPrintedMsgs) throws IOException {
+//		Map<String, Object> summary = new HashMap<>();
+//		String modelPath = (String) trndModel;
+//		modelPath = modelPath  + ".spec";
+//		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
+//		boolean isReadingScore = false;
+//		boolean isReadingConfuMat = false;
+//		boolean constructConfusionMat = false;
+//		List<String> confusionMatrx = new ArrayList<>();
+//		for(int line=0; line < scriptPrintedMsgs.size(); line++) {
+//			if(scriptPrintedMsgs.get(line).equalsIgnoreCase("   ")) {
+//				if(!scriptPrintedMsgs.get(line+1).toLowerCase().contains("confusion_matrix")) {
+//					summary.put(scriptPrintedMsgs.get(line+1), scriptPrintedMsgs.get(line+2));
+//				}
+//			}
+//			//reading confusion mattrix
+//			if(scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
+//				isReadingConfuMat = true;
+//			}
+//			if(isReadingConfuMat) {
+//				if(scriptPrintedMsgs.get(line).equalsIgnoreCase("  ")) {
+//					isReadingConfuMat = false;
+//					constructConfusionMat = true;
+//				} else {
+//					if(!scriptPrintedMsgs.get(line).contains("confusion_matrix")) {
+//						confusionMatrx.add(scriptPrintedMsgs.get(line));
+//					}
+//				}
+//			}			
+//			
+//			//cunstructing confusion matrix
+//			if(constructConfusionMat) {
+//				List<List<Double>> realConfusionMat = new ArrayList<>();
+//				for(String matrixRow : confusionMatrx) {
+//					if(matrixRow.startsWith("[[ ")) {
+//						String[] rowSplit = matrixRow.trim().substring(3, matrixRow.length()-1).trim().split(" ");
+//						List<Double> rowList = new ArrayList<>();
+//						for(String col : rowSplit) {
+//							rowList.add(Double.parseDouble(col));
+//						}
+//						realConfusionMat.add(rowList);
+//					} else if(matrixRow.startsWith("[[")) {
+//						String[] rowSplit = matrixRow.trim().substring(2, matrixRow.length()-1).trim().split(" ");
+//						List<Double> rowList = new ArrayList<>();
+//						for(String col : rowSplit) {
+//							rowList.add(Double.parseDouble(col));
+//						}
+//						realConfusionMat.add(rowList);
+//					} else if(matrixRow.startsWith("[") && matrixRow.endsWith("]")) {
+//						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-1).trim().split(" ");
+//						List<Double> rowList = new ArrayList<>();
+//						for(String col : rowSplit) {
+//							rowList.add(Double.parseDouble(col));
+//						}
+//						realConfusionMat.add(rowList);
+//					} else if(matrixRow.endsWith("]]")) {
+//						String[] rowSplit = matrixRow.trim().substring(1, matrixRow.length()-3).trim().split(" ");
+//						List<Double> rowList = new ArrayList<>();
+//						for(String col : rowSplit) {
+//							rowList.add(Double.parseDouble(col));
+//						}
+//						realConfusionMat.add(rowList);
+//					}
+//				}
+//				summary.put("confusion_matrix", realConfusionMat);
+//				constructConfusionMat = false;
+//			}
+//			
+//			//reading confusion score
+//			if(scriptPrintedMsgs.get(line).contains("model_score")) {
+//				isReadingScore = true;
+//				summary.put("model score", scriptPrintedMsgs.get(line+1));
+//			}
+//			if(isReadingScore) {
+//				isReadingScore = false;
+//			}
+//		}
+//		return summary;
+//	}
 	
 	public boolean deleteFileOrDirIfExists(String path) {
 		try {
@@ -3076,7 +3305,7 @@ public class ModelServiceImpl {
 		return null;
 	}
 	
-	public String renameFileAndGetFilePathFromDir(String directory, String fileExt) throws IOException {
+	public String renameFileAndGetFilePathFromDir(String directory, String fileName, String fileExt) throws IOException {
 		File folder = new File(directory);
 		for (File file : folder.listFiles()) {
 			String dirFileName = file.getName();
@@ -3085,7 +3314,7 @@ public class ModelServiceImpl {
 			} 
 			
 			if (file.isFile() && dirFileName.toLowerCase().endsWith(fileExt)) {
-				String pathName = directory.endsWith("/") ? directory.concat("input_data").concat(fileExt) : directory.concat("/").concat("input_data").concat(fileExt);
+				String pathName = directory.endsWith("/") ? directory.concat(fileName).concat(fileExt) : directory.concat("/").concat(fileName).concat(fileExt);
 				FileUtils.moveFile(file, new File(pathName));
 				return pathName;
 			}
