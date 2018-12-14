@@ -228,6 +228,12 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.group.defaultVersion = defaultversion;
+			$scope.appId = response.appId.ref
+			$scope.roleId=null;
+			setTimeout(() => {
+				$scope.roleId = response.roleId.ref	
+			},100);
+			
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {

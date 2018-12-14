@@ -4,6 +4,8 @@ JobMonitoringModule.controller('DetailUploadExecController', function ($filter, 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.selectTitle = dagMetaDataService.elementDefs['uploadexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['uploadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['uploadexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
@@ -30,14 +32,17 @@ JobMonitoringModule.controller('DetailUploadExecController', function ($filter, 
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
-  JobMonitoringService.getLatestByUuid($scope.uuid, "uploadexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "uploadexec")
+  .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
+    $scope.isEditInprogess=false;
     $scope.execData = response;
   }
 
-
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
+  }
   $scope.showGraph = function (uuid, version) {
     $scope.showExec = false;
     $scope.showgraph = false;

@@ -4,7 +4,8 @@
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showExec = true;
-   
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle = dagMetaDataService.elementDefs['downloadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['downloadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['downloadexec'].execType + "'})"
     $rootScope.isCommentVeiwPrivlage=true;
@@ -33,11 +34,15 @@
         $state.go($scope.statedetail.name, $scope.statedetail.params)
       }
     }
-    JobMonitoringService.getLatestByUuid($scope.uuid, "downloadexec").then(function(response) {
-      onSuccess(response.data)
-    });
-    var onSuccess = function(response) {
+    JobMonitoringService.getLatestByUuid($scope.uuid, "downloadexec")
+      .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+    var onSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.execData = response;
+    }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
     }
 
     
