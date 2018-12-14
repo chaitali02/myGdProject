@@ -223,7 +223,6 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.doneFrequencyDetailHourly=function(index){
-	  debugger
     if($scope.scheduleTableArray[index].hourlyPopoverIsOpen ==true){
       $scope.scheduleTableArray[index].frequencyDetail=[];
       $scope.myform.$dirty=true;
@@ -397,6 +396,8 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
     BatchService.getAllVersionByUuid($stateParams.id, CF_META_TYPES.batch).then(function(response) {onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function(response) {
       for (var i = 0; i < response.length; i++) {
@@ -405,10 +406,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
         $scope.batch.versions[i] = BatchVersion;
       }
     }
-    BatchService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"batchview").then(function(response) {onsuccess(response.data)});
+    BatchService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"batchview")
+      .then(function(response) {onsuccess(response.data)},function (response) { onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.batchDetail = response.batch;
-      
       if( $scope.batchDetail.tags)
         $scope.tags =  $scope.batchDetail.tags
       $scope.checkboxModelparallel =  $scope.batchDetail.inParallel;
@@ -430,7 +432,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       }
       $scope.metaTags = metaTagArray
       $scope.scheduleTableArray=response.scheduleInfoArray;
-    }
+    };
+    var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
   }else{
     $scope.batchDetail={};
     $scope.batchDetail.locked="N";
@@ -438,8 +444,12 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 
   $scope.selectVersion = function() {
     $scope.myform.$dirty = false;
-    BatchService.getOneByUuidAndVersion($scope.batch.defaultVersion.uuid, $scope.batch.defaultVersion.version, "batchview").then(function(response) {onsuccess(response.data)});
+    $scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+    BatchService.getOneByUuidAndVersion($scope.batch.defaultVersion.uuid, $scope.batch.defaultVersion.version, "batchview")
+      .then(function(response) {onsuccess(response.data)},function (response) { onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.batchDetail = response.batch;
       if(response.batch.tags)
         $scope.tags = response.batch.tags
@@ -462,7 +472,11 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       }
       $scope.metaTags = metaTagArray
       $scope.scheduleTableArray=response.batch.scheduleInfoArray;
-    }
+    };
+    var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
   }
 
   $scope.loadMeta = function(query) {

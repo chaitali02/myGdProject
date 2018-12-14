@@ -191,7 +191,8 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		BatchFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		BatchFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var batchResult={};
 			var weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
@@ -247,6 +248,11 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			batchResult.scheduleInfoArray=scheduleInfoArray;
 			deferred.resolve({
 				data: batchResult
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;

@@ -44,11 +44,12 @@
 
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                        tooltip  ng-hide="isAdd"  ng-class="(showdag==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dagdata.uuid,dagdata.version,mode)">
-                        <i class="fa fa-home icon-circle home-icon-circle"></i>
+                            tooltip ng-hide="isAdd" ng-class="(showdag==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dagdata.uuid,dagdata.version,mode)">
+                            <i class="fa fa-home icon-circle home-icon-circle"></i>
                         </a>
-                        <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"  data-ng-click="enableEdit(dagdata.uuid,dagdata.version)" ng-class="(isEdit==true || isPrivlage || dagdata.locked == 'Y')? 'currentpage':'notcurrentpage'">
-                                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                            data-ng-click="enableEdit(dagdata.uuid,dagdata.version)" ng-class="(isEdit==true || isPrivlage || dagdata.locked == 'Y')? 'currentpage':'notcurrentpage'">
+                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
                         <!-- <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
                            ng-hide="isAdd" data-ng-click="enableEdit(dagdata.uuid,dagdata.version)">
@@ -60,7 +61,6 @@
                         </a> -->
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
                             tooltip ng-show="isDependencyShow" ng-class="showdag==false? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)">
-                            <!-- showRuleGraph(dataqualitydata.uuid,dataqualitydata.version) -->
                             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title=""
@@ -84,7 +84,17 @@
                         <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="uuid" version="version"></div>
                     </div>
                     <div ng-hide="showgraphdiv">
-                        <div class="form-wizard">
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                        </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </div>
+                        <div class="form-wizard" ng-show="!isEditInprogess && !isEditVeiwError">
                             <div class="form-body" style="padding-top: 20px;">
                                 <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                     <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
@@ -162,7 +172,6 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Tag</label>
                                                 <div class="col-md-5">
-                                                    <!-- <tags-input ng-model="tags"  min-length="0"  ng-disabled="{{mode}}"></tags-input> -->
                                                     <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
                                                         add-on-enter="true" add-on-space="true">
                                                         <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
@@ -316,25 +325,13 @@
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
-                                    <!-- End Tab3 -->
-                                </div>
-                                <!--End tab-content-->
-                            </div>
-                            <!--End form-body-->
-                            <!-- <div class="form-actions">
-                            </div> -->
-                        </div>
-                        <!--End form-wizard-->
-                        <!-- </form> -->
-                    </div>
-                    <!--End showgraphdiv-->
-                </div>
-                <!--End portlet-body-->
-            </div>
-            <!--portlet light bordered-->
-        </div>
-        <!--End Col-12-->
-    </div>
-    <!--End Row-->
+                                    </div> <!-- End Tab3 -->
+                                </div><!--End tab-content-->
+                            </div><!--End form-body-->
+                        </div><!--End form-wizard-->
+                    </div><!--End showgraphdiv-->
+                </div><!--End portlet-body-->
+            </div><!--portlet light bordered-->
+        </div><!--End Col-12-->
+    </div><!--End Row-->
 </div>

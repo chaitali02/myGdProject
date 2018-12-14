@@ -199,8 +199,9 @@ angular.module('InferyxApp')
       }
       if (typeof $stateParams.id != "undefined") {
         $scope.mode = $stateParams.mode;
-        //  $scope.isversionEnable=false;
         $scope.isDependencyShow = true;
+        $scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
         MetadataDagSerivce.getAllVersionByUuid($stateParams.id, 'dag').then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
         var onSuccessGetAllVersionByUuid = function (response) {
           for (var i = 0; i < response.length; i++) {
@@ -210,8 +211,10 @@ angular.module('InferyxApp')
           }
         }//End getAllVersionByUuid
 
-        MetadataDagSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "dag").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+        MetadataDagSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "dag")
+          .then(function (response) { onSuccessGetLatestByUuid(response.data)},function(response) {onError(response.data)});
         var onSuccessGetLatestByUuid = function (response) {
+          $scope.isEditInprogess=false;
           var defaultversion = {};
           $scope.dagdata = response.dagdata;
           $scope.pipelineName = response.dagdata.name;
@@ -252,25 +255,29 @@ angular.module('InferyxApp')
             }
           }, 500);
 
-          MetadataDagSerivce.getAllLatest("map").then(function (response) { onSuccessGetAllLatesMap(response.data) });
-          var onSuccessGetAllLatesMap = function (resposne) {
-            $scope.allMap = resposne;
-          }
+          // MetadataDagSerivce.getAllLatest("map").then(function (response) { onSuccessGetAllLatesMap(response.data) });
+          // var onSuccessGetAllLatesMap = function (resposne) {
+          //   $scope.allMap = resposne;
+          // }
 
-          MetadataDagSerivce.getAllLatest("dq").then(function (response) { onSuccessGetAllLatesDq(response.data) });
-          var onSuccessGetAllLatesDq = function (resposne) {
-            $scope.allDq = resposne;
-          }
-          MetadataDagSerivce.getAllLatest("dqgroup").then(function (response) { onSuccessGetAllLatesDqGroup(response.data) });
-          var onSuccessGetAllLatesDqGroup = function (resposne) {
-            $scope.allDqGroup = resposne;
-          }
+          // MetadataDagSerivce.getAllLatest("dq").then(function (response) { onSuccessGetAllLatesDq(response.data) });
+          // var onSuccessGetAllLatesDq = function (resposne) {
+          //   $scope.allDq = resposne;
+          // }
+          // MetadataDagSerivce.getAllLatest("dqgroup").then(function (response) { onSuccessGetAllLatesDqGroup(response.data) });
+          // var onSuccessGetAllLatesDqGroup = function (resposne) {
+          //   $scope.allDqGroup = resposne;
+          // }
 
-          MetadataDagSerivce.getAllLatest("load").then(function (response) { onSuccessGetAllLatesLode(response.data) });
-          var onSuccessGetAllLatesLode = function (resposne) {
-            $scope.allLoad = resposne;
-          }
+          // MetadataDagSerivce.getAllLatest("load").then(function (response) { onSuccessGetAllLatesLode(response.data) });
+          // var onSuccessGetAllLatesLode = function (resposne) {
+          //   $scope.allLoad = resposne;
+          // }
         } //End getLatestByUuid
+        var onError =function(){
+          $scope.isEditInprogess=false;
+          $scope.isEditVeiwError=true;
+        } 
       }//End If
       else {
         //$scope.mode="false";
@@ -292,10 +299,16 @@ angular.module('InferyxApp')
           }
         }//End getDagTemplates
       }
+
+
       /* Start selectVersion*/
       $scope.selectVersion = function (uuid, version) {
-        MetadataDagSerivce.getOneByUuidAndVersion(uuid, version, "dag").then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
+        $scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
+        MetadataDagSerivce.getOneByUuidAndVersion(uuid, version, "dag")
+          .then(function (response) { onSuccessGetOneByUuidAndVersion(response.data)},function(response) {onError(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
+          $scope.isEditInprogess=false;
           $scope.isGraphRenderEdit = false;
           var defaultversion = {};
           $scope.dagdata = response.dagdata;
@@ -309,6 +322,10 @@ angular.module('InferyxApp')
           $scope.allparamlist=null;
           $scope.getAllLatestParamListByTemplate();
         } //End getLatestByUuid
+        var onError =function(){
+          $scope.isEditInprogess=false;
+          $scope.isEditVeiwError=true;
+        } 
       }//End SelectVersin
 
 

@@ -322,17 +322,14 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   // }
 
   $scope.onChangeDependsOnType=function(defaultValue){
-  
     if($scope.selectedDependsOnType =='algorithm'){
       $scope.getAllLatest(defaultValue);
     }else{
       $scope.getFormulaByType(defaultValue);
     }
-    
   }
 
   $scope.onChangeDependsOn = function() {
-    
       if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOnType == "formula") {
        $scope.isParamListShow=true;
        $scope.getParamListByFormula();
