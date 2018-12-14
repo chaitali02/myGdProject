@@ -1919,10 +1919,7 @@ public class ModelServiceImpl {
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
-					
-					
-//########################################################################################################################################
-					
+										
 					String sourceQuery = generateSQLBySource(source, execParams);
 					String sourceCustomQuery = null;
 					List<String> rowIdentifierCols = null;
@@ -1962,9 +1959,7 @@ public class ModelServiceImpl {
 						Map<String, String> colDetails = getColumnNameAndDatatypeByAttrList(sourceDp.getAttributes());
 						otherParams.put("sourceAttrDetails", colDetails);
 					}
-					
-//########################################################################################################################################
-					
+										
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					predictInput.setSourceDsType(sourceDsType);
 					
