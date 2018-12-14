@@ -56,6 +56,26 @@ InferyxApp.constant('CF_META_TYPES',{
 	GenDataAttr : "GEN_DATA_ATTR",GenDataValList: 
 });*/
 
+
+InferyxApp.constant('CF_SUCCESS_MSG',{
+ ruleSave:"Rule Saved Successfully",
+ ruleGroupSave:"Rule Groups Saved Successfully",
+ ruleSaveExecute:"Rule Saved and Submitted Successfully",
+ ruleGroupSaveExecute:"Rule Groups Saved and Submitted Successfully",
+ dqSave:"DQ Rule Saved Successfully",
+ dqGroupSave:"DQ Rule Groups Saved Successfully",
+ dqSaveExecute:"DQ Rule Saved and Submitted Successfully",
+ dqGroupSaveExecute:"DQ Rule Groups Saved and Submitted Successfully",
+ profileSave:"Profile Rule Saved Successfully",
+ profileGroupSave:"Profile Rule Groups Saved Successfully",
+ profileSaveExecute:"Profile Rule Saved and Submitted Successfully",
+ profileGroupSaveExecute:"Profile Rule Groups Saved and Submitted Successfully",
+ rcSave:"RC Rule Saved Successfully",
+ rcGroupSave:"RC Rule Groups Saved Successfully",
+ rcSaveExecute:"RC Rule Saved and Submitted Successfully",
+ rcGroupSaveExecute:"RC Rule Groups Saved and Submitted Successfully"
+ 
+});
 InferyxApp.constant('CF_ACTION_TYPES',{
 view:"View",edit:"Edit",add:"Add",delete:"Delete",clone:"Clone",execute:"Execute",export:"Export",publish:"Publish",
 unpublish:"Unpublish",restore:"Restore",export:"Export"

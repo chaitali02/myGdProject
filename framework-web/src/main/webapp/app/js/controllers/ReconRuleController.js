@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER,CF_SUCCESS_MSG) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -14,7 +14,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.lshType  = CF_FILTER.lhsType;
   $scope.rhsType  = CF_FILTER.rhsType;
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
-
+  $scope.isDestoryState = false; 
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -72,6 +72,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   
   $scope.getLovByType();
   
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -1089,7 +1093,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         var onSuccessGetOneById = function(result) {
           ReconRuleService.execute(result.data.uuid,result.data.version).then(function(response){onSuccess(response.data)});
           var onSuccess=function(response){
-            $scope.saveMessage="Rule Saved and Submitted Successfully."
+            $scope.saveMessage=CF_SUCCESS_MSG.rcSaveExecute;//"Rule Saved and Submitted Successfully."
             console.log(JSON.stringify(response))
             $scope.isSubmitProgess=false;
             $scope.isSubmitDisable=true;
@@ -1104,7 +1108,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       else{
         $scope.isSubmitProgess=false;
         $scope.isSubmitDisable=true;
-        $scope.saveMessage = "Rule Saved Successfully" 
+        $scope.saveMessage =CF_SUCCESS_MSG.rcSave; //"Rule Saved Successfully" 
         notify.type='success',
         notify.title= 'Success',
         notify.content=$scope.saveMessage
@@ -1124,7 +1128,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrule');
       }, 2000);
@@ -1133,9 +1137,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
 });
 
-ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService) {
+ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService,CF_SUCCESS_MSG) {
   
   $scope.select = 'rules group';
+  $scope.isDestoryState = false; 
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -1201,7 +1206,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  $scope.getLovByType();
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -1352,7 +1361,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrulegroup');
       }, 2000);
@@ -1406,7 +1415,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
           var onSuccess = function(response) {
             console.log(JSON.stringify(response))
             $scope.isSubmitProgess = false;
-            $scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.rcGroupSaveExecute;//"Rule Groups Saved and Submitted Successfully"
             notify.type='success',
             notify.title= 'Success',
             notify.content=$scope.saveMessage
@@ -1417,7 +1426,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
       } //End If
       else {
         $scope.isSubmitProgess = false;
-        $scope.saveMessage = "Rule Group Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.rcGroupSave//"Rule Groups Saved Successfully"
         notify.title= 'Success',
         notify.content=$scope.saveMessage
         $scope.$emit('notify', notify);

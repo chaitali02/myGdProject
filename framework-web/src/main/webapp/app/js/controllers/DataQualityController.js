@@ -1,7 +1,7 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER,CF_SUCCESS_MSG) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -23,6 +23,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
+    $scope.isDestoryState = false; 
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -93,7 +94,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulePage = function () {
     $scope.showgraph = false;
     $scope.showRule = true;
@@ -753,9 +756,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
   }
   $scope.okDQRuleSave = function () {
-    $('#dataqualitysave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataquality');
       }, 2000);
@@ -963,17 +965,17 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
             onSuccess(response.data)
           });
           var onSuccess = function (response) {
-            $scope.saveMessage = "DQ Rule Saved and Submitted Successfully";
+            $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute//"DQ Rule Saved and Submitted Successfully";
             notify.type = 'success',
-              notify.title = 'Success',
-              notify.content = $scope.saveMessage
+            notify.title = 'Success',
+            notify.content = $scope.saveMessage
             $scope.$emit('notify', notify);
             $scope.okDQRuleSave();
           }
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
-        $scope.saveMessage = "DQ Rule Saved Successfully";
+        $scope.saveMessage = CF_SUCCESS_MSG.dqSave;//"DQ Rule Saved Successfully";
         notify.type = 'success',
           notify.title = 'Success',
           notify.content = $scope.saveMessage
@@ -994,8 +996,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService,CF_SUCCESS_MSG) {
   $scope.select = 'Rule Group';
+  $scope.isDestoryState = false; 
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
@@ -1015,6 +1018,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
+
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -1068,7 +1072,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulGroupePage = function () {
     $scope.showRuleGroup = true;
     $scope.showgraphdiv = false;
@@ -1238,7 +1244,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   $scope.okDqGroupSave = function () {
     $('#dqrulegroupsave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataqualitygroup');
       }, 2000);
@@ -1301,7 +1307,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
           });
           var onSuccess = function (response) {
             $scope.dataLoading = false;
-            $scope.saveMessage = "DQ Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSaveExecute;//"DQ Rule Groups Saved and Submitted Successfully"
             // if ($scope.isshowmodel == "true") {
             //   $('#dqrulegroupsave').modal({
             //     backdrop: 'static',
@@ -1318,7 +1324,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "DQ Rule Group Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSave;//"DQ Rule Groups Saved Successfully"
         // if ($scope.isshowmodel == "true") {
         //   $('#dqrulegroupsave').modal({
         //     backdrop: 'static',
@@ -1534,6 +1540,48 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.getResults(result);
   }
 
+  $scope.getColumnDetail = function (type, result) {
+    CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+    var onSuccess = function (respone) {
+      $scope.ColumnDetails=respone;
+      $scope.isDataError = false;
+      if($scope.ColumnDetails && $scope.ColumnDetails.length >0){
+        for(var i=0;i<$scope.ColumnDetails.length;i++){
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = $scope.ColumnDetails[i].name
+          attribute.displayName = $scope.ColumnDetails[i].displayName
+          attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        }
+      }
+      else{
+        angular.forEach(response.data[0], function (value, key) {
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf(key) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = key
+          attribute.displayName = key
+          attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        });
+      }
+
+      $scope.gridOptions.data = result;
+      $scope.originalData = result;
+      $scope.testgrid = true;
+      $scope.showprogress = false;
+    }
+  }
 
   $scope.getResults = function (params) {
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
@@ -1562,28 +1610,12 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       order = params.order;
 
     }
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order).then(function (response) {
-      getResult(response.data)
-    }, function (response) { OnError(response.data) });
+
+    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order)
+      .then(function (response) {getResult(response.data)}, function (response) { OnError(response.data) });
     var getResult = function (response) {
-      $scope.isDataError = false;
-      angular.forEach(response.data[0], function (value, key) {
-        var attribute = {};
-        var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-        if (hiveKey.indexOf(key) != -1) {
-          attribute.visible = false
-        } else {
-          attribute.visible = true
-        }
-        attribute.name = key
-        attribute.displayName = key
-        attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-        $scope.gridOptions.columnDefs.push(attribute)
-      });
-      $scope.gridOptions.data = response.data;
-      $scope.originalData = response.data;
-      $scope.testgrid = true;
-      $scope.showprogress = false;
+      $scope.getColumnDetail('dq',response.data);  
+    
     }
     var OnError = function (response) {
       $scope.showprogress = false;

@@ -54,7 +54,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	$scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -191,14 +190,17 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	$scope.selectVersion = function (uuid, version) {
 		$scope.tags = null;
 		$scope.myform.$dirty = false;
-		AdminUserService.getOneByUuidAndVersion(uuid, version, 'user').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminUserService.getOneByUuidAndVersion(uuid, version, 'user')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.userdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.user.defaultVersion = defaultversion;
-			//  $scope.roleInfoTags=response.roleInfo;
 			$scope.groupInfoTags = response.groupInfo;
 
 			var groupInfo = [];
@@ -211,18 +213,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				groupInfo[j] = grouptag
 			}
 			$scope.groupInfoTags = groupInfo;
-
-			var roleInfo = [];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//      	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-			//$scope.roleInfoTags=roleInfo;
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -233,26 +223,33 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				}
 			}//End Innter If
 
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	} /* end selectVersion*/
 
 	/*start If*/
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		$scope.getAllVersion($stateParams.id)//Call SelectAllVersion Function
 		if (!$stateParams.version) {
-			AdminUserService.getLatestByUuid($stateParams.id, "user").then(function (response) { onGetLatestByUuid(response.data) });
+			AdminUserService.getLatestByUuid($stateParams.id, "user").then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		} else {
-			CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "user").then(function (response) { onGetLatestByUuid(response.data) });
+			CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "user")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		}
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.userdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.user.defaultVersion = defaultversion;
-			//   $scope.roleInfoTags=response.roleInfo;
 			$scope.groupInfoTags = response.groupInfo;
 
 			var groupInfo = [];
@@ -274,7 +271,11 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
-		}//End getLatestByUuid
+		};//End getLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 		//}//End Inner Else
 	}/*End If*/
 	else{

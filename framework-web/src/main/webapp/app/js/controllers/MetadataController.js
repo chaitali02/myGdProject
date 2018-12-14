@@ -45,6 +45,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isAdd = true;
 		$scope.mode="false";
 	}
+	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
 	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
@@ -66,7 +67,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar',"long"];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -964,6 +965,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			attributes.dispName = $scope.attributetable[datapodattr].dispName;
 			attributes.active = $scope.attributetable[datapodattr].active;
 			attributes.length = $scope.attributetable[datapodattr].length;
+			attributes.attrUnitType = $scope.attributetable[datapodattr].attrUnitType;
 			if ($scope.attributetable[datapodattr].key == "Y") {
 				attributes.key = count;
 				count = count + 1;

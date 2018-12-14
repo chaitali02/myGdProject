@@ -322,17 +322,14 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   // }
 
   $scope.onChangeDependsOnType=function(defaultValue){
-  
     if($scope.selectedDependsOnType =='algorithm'){
       $scope.getAllLatest(defaultValue);
     }else{
       $scope.getFormulaByType(defaultValue);
     }
-    
   }
 
   $scope.onChangeDependsOn = function() {
-    
       if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOnType == "formula") {
        $scope.isParamListShow=true;
        $scope.getParamListByFormula();
@@ -485,6 +482,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
+          featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
@@ -570,6 +568,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
+          featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type =="string"?true:false;
           if($scope.selectedDependsOnType== "formula" &&  $scope.modeldata.features[i].paramListInfo){
             var paramListInfo={};
@@ -672,6 +671,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         featureObj.desc=$scope.featureTableArray[i].desc
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
+        featureObj.defaultValue=$scope.featureTableArray[i].defaultValue;
         if($scope.selectedDependsOnType =="formula" && $scope.allParamlist.length >0){
           var paramListInfo={};
           var ref={};

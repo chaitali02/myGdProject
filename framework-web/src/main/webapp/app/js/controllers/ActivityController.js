@@ -91,8 +91,10 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 
 	$scope.mode = " "
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		AdminActivityService.getAllVersionByUuid($stateParams.id, "activity").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -102,26 +104,40 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 			}
 		}
 
-		AdminActivityService.getLatestByUuid($stateParams.id, "activity").then(function (response) { onGetLatestByUuid(response.data) });
+		AdminActivityService.getLatestByUuid($stateParams.id, "activity")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.activitydata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.activity.defaultVersion = defaultversion;
 			$scope.selectactivityType = response.type
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 
 	$scope.selectVersion = function () {
-		AdminActivityService.getByOneUuidandVersion($scope.activity.defaultVersion.uuid, $scope.activity.defaultVersion.version, 'activity').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminActivityService.getByOneUuidandVersion($scope.activity.defaultVersion.uuid, $scope.activity.defaultVersion.version, 'activity')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.activitydata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.activity.defaultVersion = defaultversion;
 			$scope.selectactivityType = response.type
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 

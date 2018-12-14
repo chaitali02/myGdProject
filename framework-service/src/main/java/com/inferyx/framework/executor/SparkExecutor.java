@@ -2111,6 +2111,9 @@ public class SparkExecutor<T> implements IExecutor {
 			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
 			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
 		}		
+		trainedDataSet.printSchema();
+		
+		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
 		
 //		sourceDF = sourceDF.na().fill(0.0,sourceDF.columns());
 		trainedDataSet = trainedDataSet.withColumn("rowNum", functions.row_number().over(Window.orderBy(trainedDataSet.columns()[trainedDataSet.columns().length-1])));
@@ -2122,7 +2125,9 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 		} 
 		colNameList.add("label");
-		colNameList.add("prediction");
+		if(predDFCols.contains("prediction")) {
+			colNameList.add("prediction");
+		}
 		if (trainName.contains("LogisticRegression")
 				|| trainName.contains("GBTClassifier")) {
 			colNameList.add("probability");
@@ -2130,17 +2135,24 @@ public class SparkExecutor<T> implements IExecutor {
 
 		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
 		//creating column prediction_status
-		Dataset<Row> predictionStatusDF = sparkExecHelper.getPredictionCompareStatus(trainedDataSet);
-				
+		Dataset<Row> predictionStatusDF = null;
+		if(predDFCols.contains("prediction")) {
+			predictionStatusDF = sparkExecHelper.getPredictionCompareStatus(trainedDataSet);
+		}
 		//joining dataframes
 		Dataset<Row> joinedDF = null;
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
-			joinedDF = valDf.join(trainedDataSet, "rowNum").join(predictionStatusDF, "rowNum");
+			if(predictionStatusDF != null) {
+				joinedDF = valDf.join(trainedDataSet, "rowNum").join(predictionStatusDF, "rowNum");
+			} else {
+				joinedDF = valDf.join(trainedDataSet, "rowNum");
+			}
 		} else {
 			joinedDF = trainedDataSet.join(predictionStatusDF, "rowNum");
 		}		
 		
 		joinedDF = joinedDF.drop("rowNum");
+		joinedDF.printSchema();
 		joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
 	}
 
@@ -2167,12 +2179,14 @@ public class SparkExecutor<T> implements IExecutor {
 				colNameList.add(cloName);
 			}
 		} 
-		colNameList.add("prediction");
+		
 		
 		if (trainName.contains("LogisticRegression")
 				|| trainName.contains("GBTClassifier")) {
 			colNameList.add("probability");
 		}
+		if(!trainName.contains("LDA"))
+		colNameList.add("prediction");
 
 		predictedDF = predictedDF.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
 		
@@ -3555,52 +3569,55 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext) throws IOException{
 		String assembledDFSQL = "SELECT * FROM " + tableName;
-		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		Dataset<Row> trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
 		
 //		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
 		trainedDataSet.show(false);
-		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
-																		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
-																				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
-																				Encoders.kryo(Row.class)));
-		
-		Matrix confusion = metrics.confusionMatrix();	
-		
-		int size = metrics.confusionMatrix().numCols();
-	    double[] matrixArray = metrics.confusionMatrix().toArray();
-	    double[][] matrix = new double[size][size];
-	    // set values of matrix into a 2D array
-	    for (int i = 0; i < size; i++) {
-	        for (int j = 0; j < size; j++) {
-	              matrix[i][j] = matrixArray[(j * size) + i];
-	            }
-	        }
-	    System.out.println("Confusion matrix: \n" + confusion);
-	    summary.put("confusionMatrix", matrix);
-	    summary.put("accuracy",metrics.accuracy());
-	    
-	    // Stats by labels
-	    for (int i = 0; i < metrics.labels().length; i++) {
-	    	summary.put("precision",metrics.precision(metrics.labels()[i]));
-	      System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
-	        metrics.labels()[i]));
-	      summary.put("accuracy",metrics.recall(metrics.labels()[i]));
-	      System.out.format("Class %f recall = %f\n", metrics.labels()[i], metrics.recall(
-	        metrics.labels()[i]));
-	      summary.put("recall",metrics.accuracy());
-	      System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
-	        metrics.labels()[i]));
-	      summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
-	      
-	    }
+		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
+		if(predDFCols.contains("prediction")) {
+			MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+			RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
+					Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+					Encoders.kryo(Row.class)));
 
-	    //Weighted stats
-	    System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
-	    System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
-	    System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
-	    System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
-	    
+			Matrix confusion = metrics.confusionMatrix();	
+			
+			int size = metrics.confusionMatrix().numCols();
+			double[] matrixArray = metrics.confusionMatrix().toArray();
+			double[][] matrix = new double[size][size];
+			// set values of matrix into a 2D array
+			for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+			matrix[i][j] = matrixArray[(j * size) + i];
+			}
+			}
+			System.out.println("Confusion matrix: \n" + confusion);
+			summary.put("confusionMatrix", matrix);
+			summary.put("accuracy",metrics.accuracy());
+			
+			// Stats by labels
+			for (int i = 0; i < metrics.labels().length; i++) {
+			summary.put("precision",metrics.precision(metrics.labels()[i]));
+			System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
+			metrics.labels()[i]));
+			summary.put("accuracy",metrics.recall(metrics.labels()[i]));
+			System.out.format("Class %f recall = %f\n", metrics.labels()[i], metrics.recall(
+			metrics.labels()[i]));
+			summary.put("recall",metrics.accuracy());
+			System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
+			metrics.labels()[i]));
+			summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
+			
+			}
+			
+			//Weighted stats
+			System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
+			System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
+			System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
+			System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
+		} 
+		
 	    //For Roc
 	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
 		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());

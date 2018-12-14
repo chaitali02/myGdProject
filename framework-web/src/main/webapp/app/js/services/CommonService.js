@@ -751,6 +751,55 @@
       return deferred.promise;
     }
 
+    this.getColunmDetail = function(type) {
+      var deferred = $q.defer();
+      var url
+      if(type=='profile'){
+        url = "metadata/getDpDatapod?type=" + type+'&action=view';
+      }
+      else  if(type=='dataqual' || type=='dq'){
+        url = "metadata/getDqDatapod?type=dq&action=view";
+      }
+      else  if(type=='recon'){
+        url = "metadata/getRcDatapod?type=" + type+'&action=view';
+      } 
+      CommonFactory.httpGet(url).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
+      var onSuccess = function(response) {
+        var columnDetails=[];
+        for(var i=0;i<response.attributes.length;i++) {  
+          var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
+          var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'sourceUuid','sourceVersion','sourceAttributeId','targetUuid','targetVersion','targetAttributeId','']
+          var width;
+          if(response.attributes.length >3)
+            width = response.attributes[i].dispName.split('').length + 12 + "%"
+          
+          else
+            width=(100/response.attributes.length)+"%";
+          
+
+          if(hiveKey.indexOf(response.attributes[i].name) ==-1){ 
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: true,"attrUnitType":response.attributes[i].attrUnitType,"type":response.attributes[i].type});
+          }
+   
+          else if(hiveKey.indexOf(response.attributes[i].name) !=-1){
+            columnDetails.push({"name":response.attributes[i].name,"displayName":response.attributes[i].dispName,cellTemplate: templateWithTooltip, width:width,visible: false,
+            "attrUnitType":response.attributes[i].attrUnitType,"type":response.attributes[i].type});
+          }
+        }
+       // console.log(columnDetails)
+        deferred.resolve({
+          data: columnDetails
+        });
+
+      }
+      var onError = function (response) {
+        deferred.reject({
+          data: response
+        })
+      }
+      return deferred.promise;
+    }
+
     this.restartExec = function(type,uuid,version) {
       var deferred = $q.defer();
       var api = false;

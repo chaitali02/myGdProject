@@ -917,12 +917,22 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						if(featureimportancesArr != null) {
 							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
 							trainResult.setFeatureImportance(featureImportance);
-						}						
-						trainResult.setAccuracy((double) summary.get("accuracy"));
-						trainResult.setRecall((double) summary.get("recall"));
-						trainResult.setF1Score((double) summary.get("f1Score"));
-						trainResult.setPrecision((double) summary.get("precision"));
-						trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
+						}	
+						if(summary.get("accuracy") != null) {
+							trainResult.setAccuracy((double) summary.get("accuracy"));
+						}
+						if(summary.get("recall") != null) {
+							trainResult.setRecall((double) summary.get("recall"));
+						}
+						if(summary.get("f1Score") != null) {
+							trainResult.setF1Score((double) summary.get("f1Score"));
+						}
+						if(summary.get("precision") != null) {
+							trainResult.setPrecision((double) summary.get("precision"));
+						}
+						if(summary.get("confusionMatrix") != null) {
+							trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
+						}
 //						trainResult.setRocAUC((List<Double>) summary.get("roc"));
 						
 						writeSummaryToFile(summary, defaultDir, fileName);

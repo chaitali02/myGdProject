@@ -10,6 +10,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
   $scope.autoRefreshResult = false;
   $scope.searchButtonText = "Upload"
   $scope.isFileValid=true;
+  $scope.path = dagMetaDataService.statusDefs
   var notify = {
     type: 'success',
     title: 'Success',
@@ -79,20 +80,22 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
         headerCellClass: 'text-center',
 
       },
-      {
-        displayName: 'Status',
-        name: 'active',
-        minWidth: 100,
-        cellClass: 'text-center',
-        headerCellClass: 'text-center',
-        cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.active == "Y" ? "Active" : "Inactive"}}</div>'
-      },
+      
       {
         displayName: 'Published',
         name: 'published',
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.published == "Y" ? "Yes" : "No"}}</div>'
+      },
+      {
+        displayName: 'Status',
+        name: 'active',
+        minWidth: 100,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+       // cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.active == "Y" ? "Active" : "Inactive"}}</div>'
+       cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
       },
       {
         displayName: 'Action',
@@ -136,15 +139,36 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
     $scope.searchForm.status = "";
     $scope.searchForm.startdate = null;
     $scope.searchForm.enddate = null;
+    // $scope.allStatus = [{
+    //   "caption": "Active",
+    //   "name": "Y"
+    // },
+    // {
+    //   "caption": "Inactive",
+    //   "name": "N"
+    // },
+
+    // ];
     $scope.allStatus = [{
-      "caption": "Active",
-      "name": "Y"
+      "caption": "Not Started",
+      "name": "NotStarted"
     },
     {
-      "caption": "Inactive",
-      "name": "N"
+      "caption": "In Progress",
+      "name": "InProgress"
     },
-
+    {
+      "caption": "Completed",
+      "name": "Completed"
+    },
+    {
+      "caption": "Killed",
+      "name": "Killed"
+    },
+    {
+      "caption": "Failed",
+      "name": "Failed"
+    }
     ];
     //$scope.getAllLatest();
     // $scope.getBaseEntityStatusByCriteria(true);
@@ -218,7 +242,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
       }
     }
     tags = tags.toString();
-    CommonService.getBaseEntityByCriteria("uploadexec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '').then(function (response) { onSuccess(response.data) }, function error() {
+    CommonService.getBaseEntityStatusByCriteria("uploadexec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, '', $scope.searchForm.published || '',$scope.searchForm.active || '').then(function (response) { onSuccess(response.data) }, function error() {
       $scope.loading = false;
     });
     var onSuccess = function (response) {

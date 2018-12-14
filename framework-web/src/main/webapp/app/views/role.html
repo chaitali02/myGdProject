@@ -29,22 +29,22 @@
     <br>
     <!-- END PAGE HEADER-->
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div  options="dirOptions" type="'role'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="roledata" comment-panel-directive></div>
+    <div options="dirOptions" type="'role'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="roledata"
+        comment-panel-directive></div>
 
     <div class="row">
         <div class="col-md-12">
-
             <div class="portlet box green">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-gift"></i>{{roledata.name}}
                     </div>
                     <div class="tools">
-                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                            tooltip  ng-hide="isAdd"  ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(roledata.uuid,roledata.version,mode)">
+                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+                            style="height:16px;font-size:16px;" data-ng-click="showHome(roledata.uuid,roledata.version,mode)">
                             <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="Edit"ng-class="(isEdit==true || isPrivlage || roledata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                        <a title="Edit" ng-class="(isEdit==true || isPrivlage || roledata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                             data-placement="top" tooltip ng-click="enableEdit(roledata.uuid,roledata.version)" ng-hide="isAdd"
                             style="height:16px;">
                             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -83,127 +83,136 @@
                         <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="roledata.uuid" version="role.defaultVersion.version">
                         </div>
                     </div>
-
-
                     <div class="form-body" style="padding-top:50px;" ng-show="showFrom">
-                        <form class="form-horizontal" novalidate="novalidate" ng-submit="submitRole()" name="myform" form-on-change="roleFormChange()" prevent-enter-submit>
-
-                            <div class="form-group" ng-show="roledata.uuid">
-                                <label class="col-md-3 control-label">UUID</label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="roledata.uuid">
-                                </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+                            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                        </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
                             </div>
+                        </div>
+                        <div ng-show="!isEditInprogess && !isEditVeiwError">
+                            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitRole()" name="myform" form-on-change="roleFormChange()"
+                                prevent-enter-submit>
 
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Name
-                                    <span class="required" aria-required="true"> * </span>
-                                </label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="roledata.name" required="">
-                                </div>
-                            </div>
-
-                            <div class="form-group" ng-show="roledata.uuid">
-                                <label class="col-md-3 control-label">Version</label>
-                                <div class="col-md-6">
-                                    <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="role.defaultVersion.version"
-                                        ng-options="c.version as c.version for c in role.versions" ng-disabled="{{isversionEnable}}">
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group" ng-show="roledata.uuid">
-                                <label class="col-md-3 control-label">CreatedBy</label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" ng-disabled="true" ng-model="roledata.createdBy.ref.name">
-                                </div>
-                            </div>
-
-                            <div class="form-group" ng-show="roledata.uuid">
-                                <label class="col-md-3 control-label">CreatedOn</label>
-                                <div class="col-md-6">
-                                    <input type="text" ng-model="roledata.createdOn" ng-disabled="true" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group taginput">
-                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                                            max-results-to-show="10">
-                                        </auto-complete>
-                                    </tags-input>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Desc</label>
-                                <div class="col-md-6">
-                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="roledata.desc" rows="2" style="resize:none;"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="btn-group" ng-init="roledata.active='Y'">
-                                        <label class="btn btn-default" ng-model="roledata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="roledata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>No</label>
+                                <div class="form-group" ng-show="roledata.uuid">
+                                    <label class="col-md-3 control-label">UUID</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" data-ng-disabled="true" ng-model="roledata.uuid">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="btn-group">
-                                        <label class="btn btn-default" ng-model="roledata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="roledata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>No</label>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Name
+                                        <span class="required" aria-required="true"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="roledata.name" required="">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="btn-group" ng-init="roledata.published='N'">
-                                        <label class="btn btn-default" ng-model="roledata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="roledata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                                            uncheckable>No</label>
+
+                                <div class="form-group" ng-show="roledata.uuid">
+                                    <label class="col-md-3 control-label">Version</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="role.defaultVersion.version"
+                                            ng-options="c.version as c.version for c in role.versions" ng-disabled="{{isversionEnable}}">
+
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">PrivilegeInfo</label>
-                                <div class="col-md-6">
-                                    <tags-input class="tag-scroll" ng-model="privilegeInfoTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                                        add-from-autocomplete-only="true" ng-focus="onTagFocuse()" min-length="0" required="">
-                                        <auto-complete source="loadprivilege($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-                                            load-on-empty="true"></auto-complete>
-                                    </tags-input>
+
+                                <div class="form-group" ng-show="roledata.uuid">
+                                    <label class="col-md-3 control-label">CreatedBy</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" ng-disabled="true" ng-model="roledata.createdBy.ref.name">
+                                    </div>
                                 </div>
-                            </div>
+
+                                <div class="form-group" ng-show="roledata.uuid">
+                                    <label class="col-md-3 control-label">CreatedOn</label>
+                                    <div class="col-md-6">
+                                        <input type="text" ng-model="roledata.createdOn" ng-disabled="true" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group taginput">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                                            add-on-enter="true" add-on-space="true">
+                                            <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                                            </auto-complete>
+                                        </tags-input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Desc</label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="roledata.desc" rows="2" style="resize:none;"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="btn-group" ng-init="roledata.active='Y'">
+                                            <label class="btn btn-default" ng-model="roledata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="roledata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="btn-group">
+                                            <label class="btn btn-default" ng-model="roledata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="roledata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="btn-group" ng-init="roledata.published='N'">
+                                            <label class="btn btn-default" ng-model="roledata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="roledata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                uncheckable>No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">PrivilegeInfo</label>
+                                    <div class="col-md-6">
+                                        <tags-input class="tag-scroll" ng-model="privilegeInfoTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
+                                            add-from-autocomplete-only="true" ng-focus="onTagFocuse()" min-length="0" required="">
+                                            <auto-complete source="loadprivilege($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                                                load-on-empty="true"></auto-complete>
+                                        </tags-input>
+                                    </div>
+                                </div>
 
 
-                            <div class="form-group" style="padding-top: 10px;">
-                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a data-ui-sref="admin({type:'role'})" class="btn btn-primary">Cancel</a>
-                                    <!-- roleHasChanged == false ||  -->
-                                    <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
-                                    <!-- ng-disabled="(myform.$invalid == false && isSubmitEnable == false)? false : true" -->
-                                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                                        <div class="bounce1"></div>
-                                        <div class="bounce2"></div>
-                                        <div class="bounce3"></div>
-                                    </span>
+                                <div class="form-group" style="padding-top: 10px;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <a data-ui-sref="admin({type:'role'})" class="btn btn-primary">Cancel</a>
+                                        <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+                                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

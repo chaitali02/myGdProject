@@ -29,6 +29,10 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
     return $http({
       url: url + "model/getAllModelByType?action=view&customFlag=" + flag + "&type=" + type,
       method: "GET",
+      data: '',
+      headers: {
+          "Content-Type": "application/json"
+      }
     }).then(function (response) { return response })
 
 
@@ -155,11 +159,30 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
         return response;
       })
   }
+  factory.findFunctionByCategory = function (type, category) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+        method: 'GET',
+        url: url + "metadata/getFunctionByCategory?action=view&type="+type+"category="+category,
+    }).
+        then(function (response, status, headers) {
+            return response;
+        })
+  }
   return factory;
 })
 
 DatascienceModule.service("PredictService", function ($http, PredictFactory, $q, sortFactory) {
-
+  this.getFunctionByCategory = function (type, category) {
+    var deferred = $q.defer();
+    PredictFactory.findFunctionByCategory(type,category).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     PredictFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });

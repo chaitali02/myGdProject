@@ -3,7 +3,7 @@
  */
 ProfileModule = angular.module('ProfileModule');
 
-ProfileModule.controller('DetailProfileController', function (CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService, privilegeSvc) {
+ProfileModule.controller('DetailProfileController', function (CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService, privilegeSvc,CF_SUCCESS_MSG) {
 	$scope.select = 'Rule';
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -41,6 +41,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = " ";
+	$scope.isDestoryState = false;
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
 	$scope.showProfileGroup = true;
@@ -72,7 +73,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	};
 
 	$scope.getLovByType();
-
+    $scope.$on('$destroy', function () {
+		$scope.isDestoryState = true;
+	}); 
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
@@ -279,7 +282,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 	$scope.okProfileGroupSave = function () {
 		var hidemode = "yes";
-		if (hidemode == 'yes') {
+		if (hidemode == 'yes' && $scope.isDestoryState==false) {
 			setTimeout(function () { $state.go('viewprofile'); }, 2000);
 		}
 	}
@@ -336,7 +339,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 					ProfileService.executeProfile(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data) });
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
-						$scope.saveMessage = "Profile Rule Saved and Submitted Successfully"
+						$scope.saveMessage = CF_SUCCESS_MSG.profileSaveExecute//"Profile Rule Saved and Submitted Successfully"
 						notify.type = 'success',
 							notify.title = 'Success',
 							notify.content = $scope.saveMessage
@@ -347,10 +350,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			}//End If
 			else {
 				$scope.dataLoading = false;
-				$scope.saveMessage = "Profile Rule Saved Successfully"
+				$scope.saveMessage = CF_SUCCESS_MSG.profileSave;//"Profile Rule Saved Successfully"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.saveMessage
+				notify.title = 'Success',
+				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);
 				$scope.okProfileGroupSave();
 			}//End Else
@@ -369,7 +372,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 });
 
-ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc, CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService) {
+ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc, CommonService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, ProfileService,CF_SUCCESS_MSG) {
 	$scope.select = 'Rule Group';
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -407,6 +410,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = " ";
+	$scope.isDestoryState = false; 
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
 	$scope.showProfileGroup = true;
@@ -424,7 +428,6 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag = response[0].value
 		}
 	}
@@ -435,7 +438,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		});
 	};
 	$scope.getLovByType();
-
+    $scope.$on('$destroy', function () {
+		$scope.isDestoryState = true;
+	});  
 	$scope.showProfileGroupePage = function () {
 		$scope.showProfileGroup = true;
 		$scope.showgraphdiv = false;
@@ -604,7 +609,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.okProfileGroupSave = function () {
 		$('#profilegroupsave').css("dispaly", "none");
 		var hidemode = "yes";
-		if (hidemode == 'yes') {
+		if (hidemode == 'yes' && $scope.isDestoryState==false) {
 			setTimeout(function () { $state.go('viewprofilegroup'); }, 2000);
 
 		}
@@ -657,10 +662,10 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 					ProfileService.executeProfileGroup(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data) });
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
-						$scope.saveMessage = "Profile Rule Group Saved and Submitted Successfully"
+						$scope.saveMessage = CF_SUCCESS_MSG.profileGroupSaveExecute//"Profile Rule Groups Saved and Submitted Successfully"
 						notify.type = 'success',
-							notify.title = 'Success',
-							notify.content = $scope.saveMessage
+						notify.title = 'Success',
+						notify.content = $scope.saveMessage
 						$scope.$emit('notify', notify);
 						$scope.okProfileGroupSave();
 					}
@@ -668,18 +673,18 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			}//End If
 			else {
 				$scope.dataLoading = false;
-				$scope.saveMessage = "Profile Rule Group Saved Successfully"
+				$scope.saveMessage = CF_SUCCESS_MSG.profileGroupSave//"Profile Rule Groups Saved Successfully"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.saveMessage
+				notify.title = 'Success',
+				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);
 				$scope.okProfileGroupSave();
 			}//End Else
 		}//End Submit Api Function
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}//End Submit Function

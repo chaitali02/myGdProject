@@ -7,7 +7,7 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 
 	$scope.privilege = {};
 	$scope.privilege.versions = [];
-	$scope.privilegeTypes = ["Add", "View", "Edit", "Delete", "Execute", "Clone", "Export", "Restore", "Publish", "Unpublish"];
+	$scope.privilegeTypes = ["Add", "View", "Edit", "Delete", "Execute", "Clone", "Export", "Restore", "Publish", "Unpublish","Lock","Unlock"];
 	$scope.selectprivilegeType = $scope.privilegeTypes[0]
 	$scope.showFrom = true;
 	$scope.showGraphDiv = false;
@@ -58,7 +58,6 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 	$scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -142,9 +141,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 
 
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
-
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		AdminPrivilegeService.getAllVersionByUuid($stateParams.id, "privilege").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -154,8 +154,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 			}
 		}//End getAllVersionByUuid
 
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "privilege").then(function (response) { onGetLatestByUuid(response.data) });
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "privilege")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.privilegedata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
@@ -181,6 +183,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 	//end of if
@@ -197,8 +203,12 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		$scope.allmeta = null;
 		$scope.tags = null;
 		$scope.myform.$dirty = false;
-		AdminPrivilegeService.getByOneUuidandVersion($scope.privilege.defaultVersion.uuid, $scope.privilege.defaultVersion.version, 'privilege').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminPrivilegeService.getByOneUuidandVersion($scope.privilege.defaultVersion.uuid, $scope.privilege.defaultVersion.version, 'privilege')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.privilegedata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
@@ -222,6 +232,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 

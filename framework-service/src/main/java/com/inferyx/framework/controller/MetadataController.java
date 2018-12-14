@@ -11,6 +11,7 @@
 package com.inferyx.framework.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -44,6 +45,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
@@ -1071,5 +1073,26 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return metadataServiceImpl.getAlgorithmByLibrary(libraryType);
+	}
+	
+	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdpByDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString());
+	}
+	
+	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getrcDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString());
+	}
+	
+	@RequestMapping(value = "/getDqDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdqDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
 	}
 }

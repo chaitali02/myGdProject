@@ -3655,6 +3655,7 @@ public class CommonServiceImpl <T> {
 					for(Feature feature : model.getFeatures()) {
 						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
 							featureHolder.setFeatureName(feature.getName());
+							featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
 							featureAttrMap.setFeature(featureHolder);
 						}
 					}
@@ -3904,19 +3905,17 @@ public class CommonServiceImpl <T> {
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
-
-				FileType type1 = Helper.getFileType(fileType);
-
-				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
-				File fl = new File(directoryPath);
-				File[] files = fl.listFiles();
-				
 				UploadExec uploadExec = new UploadExec();
 				uploadExec.setBaseEntity();
+				Status status = new Status(Status.Stage.NotStarted, new Date());
+				List<Status> statusList = new ArrayList<>();
+				statusList.add(status);
+				uploadExec.setStatusList(statusList);
+				FileType type1 = Helper.getFileType(fileType);
+				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
 				String originalFileName = multipartFile.getOriginalFilename();
 				String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 				String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
-
 				String fileName_Uuid = Helper.getFileCustomNameByFileType(type1, fileExtention, type);
 				String splits[] = fileName_Uuid.split("_");
 				String metaUuid = splits[0];
@@ -3946,12 +3945,19 @@ public class CommonServiceImpl <T> {
 				}
 				File dest = new File(location);
 				if(dest.exists()) {
-					String message="file already exists!!";
+				   // status = new Status(Status.Stage.Failed, new Date());
+					//statusList.add(status);
+					///uploadExec.setStatusList(statusList);
+					//save(MetaType.uploadExec.toString(), uploadExec);
+					String message="File already exists.";
 					logger.info(message);
 					sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
 					throw new IOException((message != null) ? message : "Requested " + originalFileName + " file not found!!");
 		     
 				}else {
+					status = new Status(Status.Stage.InProgress, new Date());
+					statusList.add(status);
+					uploadExec.setStatusList(statusList);
 					multipartFile.transferTo(dest);
 
 				}
@@ -3959,6 +3965,9 @@ public class CommonServiceImpl <T> {
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
 				uploadExec.setFileName(originalFileName);
+				status = new Status(Status.Stage.Completed, new Date());
+				statusList.add(status);
+				uploadExec.setStatusList(statusList);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
 //					ObjectMapper mapper = new ObjectMapper();
