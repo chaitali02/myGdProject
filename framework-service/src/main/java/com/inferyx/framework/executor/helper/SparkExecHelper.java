@@ -58,6 +58,11 @@ public class SparkExecHelper implements Serializable {
 		
 		return df.sparkSession().createDataFrame(df.javaRDD().map(new Function<Row, Row>() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Row call(Row v1) throws Exception {
 				logger.info("Inside call : feature index : v1 length " + v1.fieldIndex("features") + " : " +v1.length());
