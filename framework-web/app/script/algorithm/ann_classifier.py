@@ -16,7 +16,9 @@ import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
 import os
-import json
+import json, codecs
+from pyspark.sql.dataframe import DataFrame
+from pyspark.sql.catalog import Function
 os.environ["PYSPARK_PYTHON"]="/usr/bin/python3"
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 from pyspark.sql import SparkSession
@@ -73,28 +75,34 @@ targetDsDetails=None
 targetTableName=""
 targetDriver=""
 testSetPath=""
-
+rowIdentifier=None
+includeFeatures=""
+sourceAttrDetails=None
+featureAttrDetails=None
+sourceQuery=None
+inputSourceFileName=None
+trainPercent=0.0
+testPercent=0.0
+output_result = dict() 
+outputResultPath=""
 
 # Iteration over all arguments:
-
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier",
+         "sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent", "outputResultPath", "rowIdentifier"]
 
 i = 0
 for eachArg in sys.argv:
     print(eachArg)
     if eachArg == "inputConfigFilePath":
-    	inputConfigFilePath = sys.argv[i+1]
+        inputConfigFilePath = sys.argv[i+1]
     i = i+1
 
-print("Input Configuration File Path:")
-print(inputConfigFilePath)
+print("Input Configuration File Path: ", inputConfigFilePath)
 
 with open(inputConfigFilePath, 'r') as json_file:
     input_config = json.load(json_file)
 
 for value in input_config:
-    print(value)
-    
     if value == "nEpochs":
         nEpochs = int(input_config[value])
     
@@ -196,6 +204,18 @@ for value in input_config:
 
     if value == "testSetPath":
         testSetPath = input_config[value]
+        
+    if value == "includeFeatures":
+        includeFeatures = input_config[value]
+        
+    if value == "rowIdentifier":
+        rowIdentifier = input_config[value]
+        
+    if value == "trainPercent":
+        trainPercent = input_config[value]
+        
+    if value == "testPercent":
+        testPercent = input_config[value]
 
 if otherParams != None:
     for value in otherParams:
@@ -210,6 +230,21 @@ if otherParams != None:
         
         if value == "learningRate":
             learningRate = otherParams[value]
+        
+        if value == "sourceAttrDetails":
+            sourceAttrDetails = otherParams[value]
+        
+        if value == "featureAttrDetails":
+            featureAttrDetails = otherParams[value]
+        
+        if value == "sourceQuery":
+            sourceQuery = otherParams[value]
+        
+        if value == "inputSourceFileName":
+            inputSourceFileName = otherParams[value]
+        
+        if value == "outputResultPath":
+            outputResultPath = otherParams[value]
 
 if sourceDsDetails != None:
     for value in sourceDsDetails:
@@ -251,73 +286,83 @@ if targetDsDetails != None:
 
 print()
 print("printing params:")
-print(nEpochs)
-print(seed)
-print(iterations)
-print(learningRate)
-print(optimizationAlgo)
-print(weightInit)
-print(updater)
-print(numInput)
-print(numOutputs)
-print(numHidden)
-print(numLayers)
-print(activation)
-print(lossFunction)
-print(layerNames)
-print(sourceFilePath)
-print(modelFilePath)
-print(targetPath)
-print(sourceDsType)
-print(targetDsType)
-print(tableName)
-print(operation)
-print(url)
-print(hostName)
-print(dbName)
-print(userName)
-print(password)
-print(query)
-print(port)
-print(otherParams)
-print(targetTableName)
-print(testSetPath)
+print("nEpochs: ", nEpochs)
+print("seed: ", seed)
+print("iterations: ", iterations)
+print("learningRate: ", learningRate)
+print("optimizationAlgo: ", optimizationAlgo)
+print("weightInit: ", weightInit)
+print("updater: ", updater)
+print("numInput: ", numInput)
+print("numOutputs: ", numOutputs)
+print("numHidden: ", numHidden)
+print("numLayers: ", numLayers)
+print("activation: ", activation)
+print("lossFunction: ", lossFunction)
+print("layerNames: ", layerNames)
+print("sourceFilePath: ", sourceFilePath)
+print("modelFilePath: ", modelFilePath)
+print("targetPath: ", targetPath)
+print("sourceDsType: ", sourceDsType)
+print("targetDsType: ", targetDsType)
+print("tableName: ", tableName)
+print("operation: ", operation)
+print("url: ", url)
+print("hostName: ", hostName)
+print("dbName: ", dbName)
+print("userName: ", userName)
+print("password: ", password)
+print("query: ", query)
+print("port: ", port)
+print("otherParams: ", otherParams)
+print("targetTableName: ", targetTableName)
+print("testSetPath: ", testSetPath)
+print("includeFeatures: ", includeFeatures)
+print("rowIdentifier: ", rowIdentifier)
+print("sourceAttrDetails: ", sourceAttrDetails)
+print("featureAttrDetails: ", featureAttrDetails)
+print("sourceQuery: ", sourceQuery)
+print("inputSourceFileName: ", inputSourceFileName)
+print("trainPercent: ", trainPercent)
+print("testPercent: ", testPercent)
+print("outputResultPath: ", outputResultPath)
 
-print(sourceHostName)
-print(sourceDbName)
-print(sourcePort)
-print(sourceUserName)
-print(sourcePassword)
+print("sourceHostName: ", sourceHostName)
+print("sourceDbName: ", sourceDbName)
+print("sourcePort: ", sourcePort)
+print("sourceUserName: ", sourceUserName)
+print("sourcePassword: ", sourcePassword)
 
-print(targetHostName)
-print(targetDbName)
-print(targetPort)
-print(targetUserName)
-print(targetPassword)
+print("targetHostName: ", targetHostName)
+print("targetDbName: ", targetDbName)
+print("targetPort: ", targetPort)
+print("targetUserName: ", targetUserName)
+print("targetPassword: ", targetPassword)
+
 
 # Importing the dataset
 dataset = None
-def getData(dsType, hostName, dbName, port, userName, password):
-    print("getData method() :: dsType : hostName : dbName : port : userName : password :: "+dsType+" : "+hostName+" : "+dbName+" : "+port+" : "+userName+" : "+password)
+def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuery):
+    print("inside method getData() >>>>>>>>> dsType : hostName : dbName : port : userName : password :: "+dsType+" : "+hostName+" : "+dbName+" : "+port+" : "+userName+" : "+password)
     if dsType == "file":
-    	dataset = pd.read_csv(sourceFilePath)
-    	return dataset
+        dataset = pd.read_csv(csvPath)
+        return dataset
     
     elif dsType == "mysql":
         print("connecting to mysql...")
         import mysql.connector as sql
         db_connection = sql.connect(host=hostName, database=dbName, user=userName, password=password)
         print("connected to mysql...")
-        dataset = pd.read_sql(query, con=db_connection)
+        dataset = pd.read_sql(sqlQuery, con=db_connection)
         return dataset
     
     elif dsType == "postgres":
         from sqlalchemy import create_engine
-        #	engine = create_engine('postgresql://user@localhost:5432/mydb')
+        #    engine = create_engine('postgresql://user@localhost:5432/mydb')
         print("connecting to postgres...")
         engine = create_engine("postgresql://"+userName+"@"+hostName+":"+port+"/"+dbName)
         print("connected to postgres...")
-        dataset = pd.read_sql_query(query, con=engine)
+        dataset = pd.read_sql_query(sqlQuery, con=engine)
         return dataset
     
     elif dsType == "oracle":
@@ -327,7 +372,7 @@ def getData(dsType, hostName, dbName, port, userName, password):
         dsn_tns = cx_Oracle.makedsn(hostName, port, SID)
         connection = cx_Oracle.connect(userName, password, dsn_tns)
         print("connected to oracle...")
-        dataset = pd.read_sql(query, con=connection)
+        dataset = pd.read_sql(sqlQuery, con=connection)
         return dataset
     
     elif dsType == "hive":
@@ -335,7 +380,7 @@ def getData(dsType, hostName, dbName, port, userName, password):
         print("connecting to hive...")
         connection = hive.Connection(host=hostName, port=port, auth='NONE', username=userName, database=dbName)
         print("connected to hive...")
-        dataset = pd.read_sql(query, con=connection)
+        dataset = pd.read_sql(sqlQuery, con=connection)
         sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
         
         # import pyhs2
@@ -359,79 +404,129 @@ def getData(dsType, hostName, dbName, port, userName, password):
     
     elif dsType == "impala":
         import ibis
-        #	hdfs = ibis.hdfs_connect(host=os.environ['IP_HDFS'], port=50070)
-        #	client = ibis.impala.connect(host=os.environ['IP_IMPALA'], port=21050, hdfs_client=hdfs)
-        #	hdfs = ibis.hdfs_connect(host=hostName, port=50070)
+        #    hdfs = ibis.hdfs_connect(host=os.environ['IP_HDFS'], port=50070)
+        #    client = ibis.impala.connect(host=os.environ['IP_IMPALA'], port=21050, hdfs_client=hdfs)
+        #    hdfs = ibis.hdfs_connect(host=hostName, port=50070)
         print("connecting to impala...")
         client = ibis.impala.connect(host=hostName, port=port, auth_mechanism='PLAIN',user=userName, password=password)
         print("connected to impala...")
-        requete = client.sql(query)
+        requete = client.sql(sqlQuery)
         dataset = requete.execute(limit=None)
         return dataset
-        #	from impala.dbapi import connect
-        #	conn = connect( host=hostName, port=port, auth_mechanism='PLAIN', kerberos_service_name='impala')
-        #	cur = conn.cursor()
-        #	cur.execute('SHOW TABLES')
-        #	cur.fetchall()
+        #    from impala.dbapi import connect
+        #    conn = connect( host=hostName, port=port, auth_mechanism='PLAIN', kerberos_service_name='impala')
+        #    cur = conn.cursor()
+        #    cur.execute('SHOW TABLES')
+        #    cur.fetchall()
+        
+def addIndexToSparkDf(spark_df: DataFrame):
+    from pyspark.sql.window import Window
+    from pyspark.sql.functions import row_number
+#     
+    w = Window().orderBy(spark_df.columns[len(spark_df.columns)-1])
+    
+    indexed_spark_df =  spark_df.withColumn("rowNum", row_number().over(w))  
+    return indexed_spark_df
 
+def joinSparkDfByIndex(dfLHS, dfRHS):
+    joined_df = dfLHS.join(dfRHS,["rowNum"])
+    joined_df.show(20, False) 
+    return joined_df
+
+def createSparkDfSchemaFromPandasDf(pd_df, schema):    
+    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    spark_df = sparkSession.createDataFrame(pd_df, schema)
+    return spark_df
+
+def getSparkSchemaByDtypes(pd_dtypes):
+    from pyspark.sql.types import StructType
+    from pyspark.sql.types import StructField
+    
+    fields = [StructField(field_name, getSparkDataType(pd_dtypes.get_value(field_name).name), True) for field_name in pd_dtypes.keys()]
+    return StructType(fields)
+
+def getSparkDataType(other_datatype):
+    from pyspark.sql.types import DoubleType, IntegerType, StringType, FloatType
+    if(other_datatype.__contains__("int")):
+        return IntegerType()
+    elif(other_datatype.__contains__("double")):
+        return DoubleType()
+    elif(other_datatype.__contains__("float")):
+        return DoubleType()
+    elif(other_datatype.__contains__("string")):
+        return StringType()
+    elif(other_datatype.__contains__("object")):
+        return StringType()
+    
+
+#saving train test result
+def saveSparkDf(spark_df, testSetPath):
+    print("saving prediction result into path "+testSetPath+"...")
+    spark_df.write.save(testSetPath, format="parquet")
+    
+    
+def generatePredictStatus(spark_df: DataFrame):
+    from pyspark.sql import Row
+    from pyspark.sql.types import StructType, StructField, StringType
+    
+    schema = StructType([StructField("prediction_status", StringType(), True)])
+#     prediction_status_df = spark_df.sparkSession.createDataFrame(spark_df.rdd.map(lambda x: Row(prepareStatus(x[0], x[1]))), schema)
+    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
+    prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
+    
+    print("printing dataframe prediction status")
+    prediction_status_df.show(20, False)
+    return prediction_status_df
+
+def prepareStatus(label_val, prediction_val):
+    print("label_val: ", label_val)
+    print("prediction_val: ", prediction_val)
+    if prediction_val > 0.49500:
+        prediction_val = 1.0
+    else:
+        prediction_val = 0.0
+        
+    if label_val == prediction_val:
+        return "true"
+    else:
+        return "false"
+    
 
 #train operation
 def train():
     # Encoding categorical data
-    dataset = getData(sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword)
-    
-    print("   ")
-    print("total_size")
-    print(dataset.size)
-    print("  ")
-    
-    # if dataset != None:
-    #     print("data obtained:")
-    #     print(dataset)
-    # else:
-    # 	raise Exception('No data found.')
+    dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+   
+    print("total_size: ", len(dataset))    
+    output_result["total_size"]=len(dataset)
     
     from sklearn.preprocessing import LabelEncoder, OneHotEncoder
     labelencoder_X_1 = LabelEncoder()
     dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
-    #labelencoder_X_2 = LabelEncoder()
-    #dataset['pin_number'] = labelencoder_X_2.fit_transform(dataset['pin_number'])
     print('label encoding done')
-    #X = dataset.iloc[:, 1:-2].values
-    #y = dataset.iloc[:, -1].values
-    X = dataset.iloc[:, 1:(numInput+1)].values
+    X = dataset.iloc[:, 1:].values
     y = dataset.iloc[:, 0].values
     
-    #print("printing X:")
     print(X)
-    #print("printing y:")
     print(y)
     
     # Splitting the dataset into the Training set and Test set
     from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = testPercent, random_state = 0)
     
     # Feature Scaling
     from sklearn.preprocessing import StandardScaler
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
+        
+    print("train_size: ", len(X_train))
+    print("test_size: ", len(X_test))
     
-    print("   ")
-    print("train_size")
-    print(X_train.size)
-    print("  ")
-    print("   ")
-    print("test_size")
-    print(X_test.size)
-    print("  ")
-    
-    
-    #print("printing X_train:")
-    print(X_train)
-    #print("printing X_test:")
-    print(X_test)
-    
+    output_result["train_size"]=len(X_train)
+    output_result["test_size"]=len(X_test)
+        
     print("Importing the Keras libraries and packages")
     # Importing the Keras libraries and packages
     import keras
@@ -459,10 +554,8 @@ def train():
     
     score = classifier.evaluate(X_test, y_test, batch_size=10)
 
-    print("   ")
-    print("model_score:")
-    print(score)
-    print("  ")
+    print("model_score: ", score)    
+    output_result["score"]=score
     
     # serialize model to JSON
     model_json = classifier.to_json()
@@ -485,43 +578,67 @@ def train():
     loaded_model.load_weights(modelFilePath+".h5")
     print("Loaded model from disk")
     
+    
     # Part 3 - Making the predictions and evaluating the model
-    
-    # Predicting the Test set results
-    y_pred = loaded_model.predict(X_test)
-    print("test set prediction")
-    print(y_pred)
-    
+    y_pred = loaded_model.predict(X_test) 
     pred_pd_df = pd.DataFrame(y_pred)
-    print("pred_pd_df")
-    print(pred_pd_df)
+        
+    feature_schema = getSparkSchemaByDtypes(dataset.iloc[:, 1:].dtypes)
     
+    pd_X_test = pd.DataFrame(X_test)
+    spark_X_test_df = createSparkDfSchemaFromPandasDf(pd_X_test, feature_schema)
+    spark_X_test_df = addIndexToSparkDf(spark_X_test_df)
     
+    from pyspark.sql.types import StructType, StructField, DoubleType
+    spark_pred_df = createSparkDfSchemaFromPandasDf(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
+    spark_pred_df = addIndexToSparkDf(spark_pred_df)
+    
+    pd_label_df = pd.DataFrame(y_test)
+    spark_label_df = createSparkDfSchemaFromPandasDf(pd_label_df, StructType([StructField("label", DoubleType(), True)]))
+    spark_label_df = addIndexToSparkDf(spark_label_df)
+    
+    test_result_spark_df = joinSparkDfByIndex(spark_label_df, spark_pred_df)
+    
+    spark_pred_status_df = generatePredictStatus(test_result_spark_df)
+    spark_pred_status_df = addIndexToSparkDf(spark_pred_status_df)
+    
+    test_result_spark_df = joinSparkDfByIndex(test_result_spark_df, spark_pred_status_df)
+    
+    joined_df = None
+    if includeFeatures == "Y":
+        joined_df = joinSparkDfByIndex(spark_X_test_df, test_result_spark_df)
+    else:
+        joined_df = test_result_spark_df
+            
+    print("rowIdentifier: ", rowIdentifier)
+    if(rowIdentifier != None):
+        sourceDataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName
+                                , sourcePort, sourceUserName, sourcePassword, sourceQuery)
+        
+        src_train, src_test = train_test_split(sourceDataset.iloc[:, :].values, test_size = testPercent, random_state = 0)
+        print("src_test df:")
+        print(src_test)
+        source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)
+        print("source_schema: ", source_schema)
+        pd_scr_test = pd.DataFrame(src_test)
+        spark_src_test_df = createSparkDfSchemaFromPandasDf(pd_scr_test, source_schema)
+        spark_src_test_df = addIndexToSparkDf(spark_src_test_df)
+        
+        print("src_train: ", len(src_train))
+        print("src_test: ", len(src_test))
+        print("printing src_test indexed:")        
+        spark_src_test_df.show(20, False) 
+        
+        joined_df = joinSparkDfByIndex(spark_src_test_df, joined_df)
+        
+    #removing index column
+    joined_df = joined_df.drop("rowNum")
+        
     #saving converted dataframe
-    from pyspark.sql.types import DoubleType
-    from pyspark.sql.types import StructType
-    from pyspark.sql.types import StructField
+    if testSetPath != None:
+        saveSparkDf(joined_df, testSetPath)
     
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
-    pred_pd_df = sparkSession.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
-    print("test set prediction result:")	
-    pred_pd_df.show(20, False)
-    
-    print("saving prediction result into path "+testSetPath+"...")
-    pred_pd_df.write.save(testSetPath, format="parquet")
-    
-    y_pred = (y_pred > 0.5)
-    #if y_pred.all() == "true":
-    #    y_pred[:] = 1
-    #else:
-    #    y_pred[:] = 0
-    
-    #for col in y_pred.columns:
-    #   if (y_pred.all() == true):
-    #        y_pred[col].values[:] = 1
-    #    else:
-    #        y_pred[col].values[:] = 0
-    
+    y_pred = (y_pred > 0.5)    
     print(y_pred)
     
     # Making the Confusion Matrix
@@ -533,42 +650,33 @@ def train():
     roc_auc = roc_auc_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     
-    print("   ")
-    print("accuracy")
-    print(accuracy)
-    print("  ")
+    output_result["accuracy"]=accuracy
+    output_result["precision"]=precision
+    output_result["recall"]=recall
+    output_result["roc_auc"]=roc_auc
+    output_result["f1"]=f1
+    output_result["confusion_matrix"]=cm.tolist()
+            
+    print("saving train output into path '", outputResultPath+".json", "'")
+    with codecs.open(outputResultPath+".json", 'w', 'utf8') as f:
+         f.write(json.dumps(str(output_result), sort_keys = True, ensure_ascii=False))    
     
-    print("   ")
-    print("precision")
-    print(precision)
-    print("  ")
-    
-    print("   ")
-    print("recall")
-    print(recall)
-    print("  ")
-    
-    print("   ")
-    print("roc_auc")
-    print(roc_auc)
-    print("  ")
-    
-    print("   ")
-    print("f1")
-    print(f1)
-    print("  ")
-    
-    print("   ")
-    print("confusion_matrix")
-    print(cm)
-    print("  ")
+    print("accuracy: ", accuracy)
+    print("precision: ", precision)    
+    print("recall: ", recall)    
+    print("roc_auc: ", roc_auc)    
+    print("f1: ", f1)    
+    print("confusion_matrix: ", cm)
+       
     return isSuccessful
 
 #prediction operation
 def predict():
     # Importing the dataset
-    #	dataset = pd.read_csv(sourceFilePath)
-    dataset2 = getData(sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword).iloc[:, 1:(numInput+1)].values
+    #    dataset = pd.read_csv(sourceFilePath)
+    dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    
+    print("predict dataset size: ", len(dataset2))
     print(dataset2)
     
     # Feature Scaling
@@ -592,7 +700,9 @@ def predict():
     print("Loaded model from disk")
     
     # Predicting the results
+    print("sample data size: ", len(pred_dataset))
     result_pred = loaded_model.predict(pred_dataset)
+    print("predicted data size: ", len(result_pred))
     
     #converting predicted dataframe to panda dataframe
     pred_pd_df = pd.DataFrame(result_pred)
@@ -605,7 +715,7 @@ def predict():
     # sparkSession = SparkSession.builder.appName('pandasToSparkDF').config('spark.driver.extraClassPath','/home/rohini/Desktop/mysql_connector/mysql-connector-java_8.0.13-1ubuntu16.04_all.deb').config('spark.executor.extraClassPath','/home/rohini/Desktop/mysql_connector/mysql-connector-java_8.0.13-1ubuntu16.04_all.deb').getOrCreate()
     sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
     pred_pd_df = sparkSession.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
-    print("prediction result:")	
+    print("prediction result:")    
     pred_pd_df.show(20, False)
     
     print("saving prediction result into "+targetDsType+"...")
@@ -614,18 +724,8 @@ def predict():
     elif  targetDsType == 'hive' or targetDsType == 'impala':
         pred_pd_df.write.insertInto(targetDbName+"."+targetTableName)
     else:
-         pred_pd_df.repartition(10).write.mode('append').options().jdbc(url, targetTableName, properties={"user": targetUserName, "password": targetPassword, "driver": targetDriver})
-#        pred_pd_df.write.format('jdbc').options(url=url, driver=targetDriver, dbtable=targetTableName, user=targetUserName, password=targetPassword).mode('append').save()
-        # connectionProperties = {"user" : targetUserName, "password" : targetPassword, "driver" : targetDriver}
-        # val connectionProperties = new Properties()
-        # connectionProperties.put("user", targetUserName)
-        # connectionProperties.put("password", targetPassword)
-        # connectionProperties.put("driver", targetDriver)
-    
-    #saving converted dataframe
-    #engine can be of the type: auto/pyarrow/fastparquet
-    #	pred_pd_df.to_parquet(targetPath+".parquet", engine='auto')
-    #	print(pred_pd_df)
+        pred_pd_df.repartition(10).write.mode('append').options().jdbc(url, targetTableName, properties={"user": targetUserName, "password": targetPassword, "driver": targetDriver})
+#      
     return isSuccessful
 
 #calling method as per operation
