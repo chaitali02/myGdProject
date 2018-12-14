@@ -2055,6 +2055,8 @@ public class ModelServiceImpl {
 						predictInput.setTargetDsType(MetaType.file.toString().toLowerCase());
 					}					
 					
+					predictInput.setOtherParams(otherParams);
+					
 					predictInput.setNumInput(fieldArray.length);
 					predictInput.setModelFilePath(modelFileName);
 					predictInput.setOperation(MetaType.predict.toString().toLowerCase());

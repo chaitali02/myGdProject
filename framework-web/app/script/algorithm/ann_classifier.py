@@ -432,7 +432,7 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     joined_df = dfLHS.join(dfRHS,["rowNum"])
     return joined_df
 
-def createSparkDfSchemaFromPandasDf(pd_df, schema):  
+def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
     print("printing schema of spark df to be created: ", schema) 
     print("printing df to be converted into dpark df:")
     print(pd_df) 
@@ -576,36 +576,39 @@ def train():
     
     # Part 3 - Making the predictions and evaluating the model
     y_pred = loaded_model.predict(X_test) 
+    
+    #creating prediction dataframe
     pred_pd_df = pd.DataFrame(y_pred)
-        
-    feature_schema = getSparkSchemaByDtypes(dataset.iloc[:, 1:].dtypes)
-    
-    pd_X_test = pd.DataFrame(X_test)
-    spark_X_test_df = createSparkDfSchemaFromPandasDf(pd_X_test, feature_schema)
-    spark_X_test_df = addIndexToSparkDf(spark_X_test_df)
-    
     from pyspark.sql.types import StructType, StructField, DoubleType
-    spark_pred_df = createSparkDfSchemaFromPandasDf(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
+    spark_pred_df = createSparkDfByPandasDfAndSparkSchema(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
     spark_pred_df = addIndexToSparkDf(spark_pred_df)
     
+    #creating label dataframe
     pd_label_df = pd.DataFrame(y_test)
-    spark_label_df = createSparkDfSchemaFromPandasDf(pd_label_df, StructType([StructField("label", DoubleType(), True)]))
+    spark_label_df = createSparkDfByPandasDfAndSparkSchema(pd_label_df, StructType([StructField("label", DoubleType(), True)]))
     spark_label_df = addIndexToSparkDf(spark_label_df)
     
+    #joining prediction and label dataframes
     test_result_spark_df = joinSparkDfByIndex(spark_label_df, spark_pred_df)
     
+    #calculating prediction status and generating spark dataframe from it
     spark_pred_status_df = generatePredictStatus(test_result_spark_df)
     spark_pred_status_df = addIndexToSparkDf(spark_pred_status_df)
-    
+       
+    #joining prediction status dataframe with joined dataframe of label and test prediction result    
     test_result_spark_df = joinSparkDfByIndex(test_result_spark_df, spark_pred_status_df)
     
     joined_df = None
     if includeFeatures == "Y":
+        feature_schema = getSparkSchemaByDtypes(dataset.iloc[:, 1:].dtypes)
+    
+        pd_X_test = pd.DataFrame(X_test)
+        spark_X_test_df = createSparkDfByPandasDfAndSparkSchema(pd_X_test, feature_schema)
+        spark_X_test_df = addIndexToSparkDf(spark_X_test_df)
         joined_df = joinSparkDfByIndex(spark_X_test_df, test_result_spark_df)
     else:
         joined_df = test_result_spark_df
             
-    print("rowIdentifier: ", rowIdentifier)
     if(rowIdentifier != None):
         sourceDataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName
                                 , sourcePort, sourceUserName, sourcePassword, sourceQuery)
@@ -614,7 +617,7 @@ def train():
         
         source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)        
         pd_scr_test = pd.DataFrame(src_test)
-        spark_src_test_df = createSparkDfSchemaFromPandasDf(pd_scr_test, source_schema)
+        spark_src_test_df = createSparkDfByPandasDfAndSparkSchema(pd_scr_test, source_schema)
         spark_src_test_df = addIndexToSparkDf(spark_src_test_df)
                 
         joined_df = joinSparkDfByIndex(spark_src_test_df, joined_df)
@@ -672,10 +675,10 @@ def predict():
     from keras.models import model_from_json
     
     sc = StandardScaler()
-    pred_dataset = sc.fit_transform(dataset2)
+    feature_dataset = sc.fit_transform(dataset2)
     
     print("Data to be predicted:")
-    print(pred_dataset)
+    print(feature_dataset)
     
     # load json and create model
     print("Loading model from disk")
@@ -688,8 +691,8 @@ def predict():
     print("Loaded model from disk")
     
     # Predicting the results
-    print("sample data size: ", len(pred_dataset))
-    result_pred = loaded_model.predict(pred_dataset)
+    print("sample data size: ", len(feature_dataset))
+    result_pred = loaded_model.predict(feature_dataset)
     print("predicted data size: ", len(result_pred))
     
     #converting predicted dataframe to panda dataframe
@@ -699,20 +702,45 @@ def predict():
     from pyspark.sql.types import DoubleType
     from pyspark.sql.types import StructType
     from pyspark.sql.types import StructField
+   
+    print("prediction result:")  
+    spark_pred_df = createSparkDfByPandasDfAndSparkSchema(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))  
+    spark_pred_df = addIndexToSparkDf(spark_pred_df)
+    spark_pred_df.show(20, False)
     
-    # sparkSession = SparkSession.builder.appName('pandasToSparkDF').config('spark.driver.extraClassPath','/home/rohini/Desktop/mysql_connector/mysql-connector-java_8.0.13-1ubuntu16.04_all.deb').config('spark.executor.extraClassPath','/home/rohini/Desktop/mysql_connector/mysql-connector-java_8.0.13-1ubuntu16.04_all.deb').getOrCreate()
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
-    pred_pd_df = sparkSession.createDataFrame(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
-    print("prediction result:")    
-    pred_pd_df.show(20, False)
+    joined_df = None
+    if includeFeatures == "Y":
+        feature_schema = getSparkSchemaByDtypes(dataset2.iloc[:, :].dtypes)
     
-    print("saving prediction result into "+targetDsType+"...")
-    if targetDsType == 'file':
-        pred_pd_df.write.save(targetPath, format="parquet")
-    elif  targetDsType == 'hive' or targetDsType == 'impala':
-        pred_pd_df.write.insertInto(targetDbName+"."+targetTableName)
+        pd_feature_dataset = pd.DataFrame(feature_dataset)
+        spark_feature_dataset_df = createSparkDfByPandasDfAndSparkSchema(pd_feature_dataset, feature_schema)
+        spark_feature_dataset_df = addIndexToSparkDf(spark_feature_dataset_df)
+        joined_df = joinSparkDfByIndex(spark_feature_dataset_df, spark_pred_df)
     else:
-        pred_pd_df.repartition(10).write.mode('append').options().jdbc(url, targetTableName, properties={"user": targetUserName, "password": targetPassword, "driver": targetDriver})
+        joined_df = spark_pred_df       
+    
+    if(rowIdentifier != None):
+        sourceDataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName
+                                , sourcePort, sourceUserName, sourcePassword, sourceQuery)
+                
+        source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)        
+        pd_source_df = pd.DataFrame(sourceDataset)
+        spark_source_df = createSparkDfByPandasDfAndSparkSchema(pd_source_df, source_schema)
+        spark_source_df = addIndexToSparkDf(spark_source_df)
+                
+        joined_df = joinSparkDfByIndex(spark_source_df, joined_df)
+        
+    #removing index column
+    joined_df = joined_df.drop("rowNum")
+        
+    print("saving prediction result into "+targetDsType+"...")
+    #saving converted dataframe    
+    if targetDsType == 'file':
+        joined_df.write.save(targetPath, format="parquet")
+    elif  targetDsType == 'hive' or targetDsType == 'impala':
+        joined_df.write.insertInto(targetDbName+"."+targetTableName)
+    else:
+        joined_df.repartition(10).write.mode('append').options().jdbc(url, targetTableName, properties={"user": targetUserName, "password": targetPassword, "driver": targetDriver})
 #      
     return isSuccessful
 
