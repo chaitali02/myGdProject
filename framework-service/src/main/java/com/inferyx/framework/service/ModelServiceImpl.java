@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -52,8 +51,6 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.codehaus.jettison.json.JSONException;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -1903,14 +1900,12 @@ public class ModelServiceImpl {
 					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
 					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
 
-//					filePath = String.format("/%s/%s/%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//					tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//					String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-	
 					List<String> argList = new ArrayList<>();
 					PredictInput predictInput = new PredictInput();
+					Map<String, Object> otherParams = new HashMap<>();
 					
-//					String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+					predictInput.setIncludeFeatures(predict.getIncludeFeatures());
+					
 					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, null, tableName);	
 
 					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
@@ -1919,9 +1914,56 @@ public class ModelServiceImpl {
 					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 
+					deleteFileOrDirIfExists(defaultDir);
+					
 					logger.info("Default dir name : " + defaultDir);
 					logger.info("Model file name : " + modelFileName);
 					logger.info("Saved predict file name : " + savePredict);
+					
+					
+//########################################################################################################################################
+					
+					String sourceQuery = generateSQLBySource(source, execParams);
+					String sourceCustomQuery = null;
+					List<String> rowIdentifierCols = null;
+					if(predict.getRowIdentifier() != null && !predict.getRowIdentifier().isEmpty()) {
+						rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
+						if(predict.getIncludeFeatures().equalsIgnoreCase("Y")
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+						}
+						
+						if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {				
+							StringBuilder builder = new StringBuilder();
+							builder.append("SELECT ");
+							int i=0;
+							for(String colName : rowIdentifierCols) {
+								builder.append(colName);
+								if(i<rowIdentifierCols.size()-1) {
+									builder.append(", ");
+								}
+								i++;
+							}
+							
+							builder.append(" FROM ");
+							builder.append(" (");
+							builder.append(sourceQuery);
+							builder.append(") ");
+							builder.append(" sourceUniqueData");
+							sourceCustomQuery = builder.toString();
+						} else {
+							rowIdentifierCols = null;
+						}
+						
+						
+						predictInput.setRowIdentifier(rowIdentifierCols);
+						Datapod sourceDp = commonServiceImpl.getDatapodByObject(source);
+						Map<String, String> colDetails = getColumnNameAndDatatypeByAttrList(sourceDp.getAttributes());
+						otherParams.put("sourceAttrDetails", colDetails);
+					}
+					
+//########################################################################################################################################
 					
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					predictInput.setSourceDsType(sourceDsType);
@@ -1929,15 +1971,32 @@ public class ModelServiceImpl {
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
-						ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
-						rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
-						exec = execFactory.getExecutor(appDatasource.getType());
-						exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 						
-						saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+						File saveFile = new File(saveFileName);
+						if(!saveFile.exists()) {
+							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
+							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+							saveFileName = URI+saveFileName;
+							logger.info("Saved file name : " + saveFileName);
+						}						
 						
-						saveFileName = URI+saveFileName;
-						logger.info("Saved file name : " + saveFileName);
+						String inputSourceFileName = null;
+						if(predict.getRowIdentifier() != null 
+								&& !predict.getRowIdentifier().isEmpty()
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
+							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
+							logger.info("Saved source file name : " + inputSourceFileName);
+							
+							File inputSourceFile = new File(inputSourceFileName);
+							if(!inputSourceFile.exists()) {
+								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
+								exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
+								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
+							}		
+						}
 
 						predictInput.setSourceFilePath(saveFileName);
 					} else {
@@ -1956,8 +2015,15 @@ public class ModelServiceImpl {
 						sourceDsDetails.put("sourcePassword", sourceDS.getPassword());
 						
 						predictInput.setSourceDsDetails(sourceDsDetails);
+						
+						if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
+							otherParams.put("sourceQuery", sourceCustomQuery);
+						}
 						//creating default directory to allow script/python-code to store file in this location
-						new File(defaultDir).mkdirs();
+						File defaultDirFile = new File(defaultDir);
+						if(!defaultDirFile.exists()) {
+							defaultDirFile.mkdirs();
+						}
 					}
 					
 					String scriptName = algorithm.getScriptName();
@@ -2770,9 +2836,12 @@ public class ModelServiceImpl {
 					
 					String sourceQuery = generateSQLBySource(source, execParams);
 					String sourceCustomQuery = null;
+					List<String> rowIdentifierCols = null;
 					if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
-						List<String> rowIdentifierCols = getRowIdentifierCols(train.getRowIdentifier());
-						if(train.getIncludeFeatures().equalsIgnoreCase("Y")) {
+						rowIdentifierCols = getRowIdentifierCols(train.getRowIdentifier());
+						if(train.getIncludeFeatures().equalsIgnoreCase("Y")
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
 							rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
 						}
 						
@@ -2848,37 +2917,31 @@ public class ModelServiceImpl {
 					String inputSourceFileName = null;
 					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+						sourceDsType = MetaType.file.toString().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + saveFileName);
 						
 						File saveFile = new File(saveFileName);
-						if(!saveFile.exists()) {
-							sourceDsType = MetaType.file.toString().toLowerCase();
-							Datasource datasource = commonServiceImpl.getDatasourceByApp();
-							IExecutor exec = null;
-							exec = execFactory.getExecutor(datasource.getType());
-							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
-							
+						Datasource datasource = commonServiceImpl.getDatasourceByApp();
+						IExecutor exec = null;
+						exec = execFactory.getExecutor(datasource.getType());
+						if(!saveFile.exists()) {							
+							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);							
 							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
-							
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 						}		
 						
-						if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
+						if(train.getRowIdentifier() != null 
+								&& !train.getRowIdentifier().isEmpty()
+								&& rowIdentifierCols != null 
+								&& !rowIdentifierCols.isEmpty()) {
 							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
 							logger.info("Saved source file name : " + inputSourceFileName);
 							
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
-								sourceDsType = MetaType.file.toString().toLowerCase();
-								 
-								Datasource datasource = commonServiceImpl.getDatasourceByApp();
-								IExecutor exec = null;
-								exec = execFactory.getExecutor(datasource.getType());
 								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								
 								exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
-								
 								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		

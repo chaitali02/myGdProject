@@ -430,10 +430,12 @@ def addIndexToSparkDf(spark_df: DataFrame):
 
 def joinSparkDfByIndex(dfLHS, dfRHS):
     joined_df = dfLHS.join(dfRHS,["rowNum"])
-    joined_df.show(20, False) 
     return joined_df
 
-def createSparkDfSchemaFromPandasDf(pd_df, schema):    
+def createSparkDfSchemaFromPandasDf(pd_df, schema):  
+    print("printing schema of spark df to be created: ", schema) 
+    print("printing df to be converted into dpark df:")
+    print(pd_df) 
     sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
@@ -470,18 +472,13 @@ def generatePredictStatus(spark_df: DataFrame):
     from pyspark.sql.types import StructType, StructField, StringType
     
     schema = StructType([StructField("prediction_status", StringType(), True)])
-#     prediction_status_df = spark_df.sparkSession.createDataFrame(spark_df.rdd.map(lambda x: Row(prepareStatus(x[0], x[1]))), schema)
     sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
     mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
     prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
     
-    print("printing dataframe prediction status")
-    prediction_status_df.show(20, False)
     return prediction_status_df
 
 def prepareStatus(label_val, prediction_val):
-    print("label_val: ", label_val)
-    print("prediction_val: ", prediction_val)
     if prediction_val > 0.49500:
         prediction_val = 1.0
     else:
@@ -563,9 +560,7 @@ def train():
         json_file.write(model_json)
     # serialize weights to HDF5
     classifier.save_weights(modelFilePath+".h5")
-    print("Saved model to disk")
-    
-    
+    print("Saved model to disk")    
     
     # later...
      
@@ -616,19 +611,12 @@ def train():
                                 , sourcePort, sourceUserName, sourcePassword, sourceQuery)
         
         src_train, src_test = train_test_split(sourceDataset.iloc[:, :].values, test_size = testPercent, random_state = 0)
-        print("src_test df:")
-        print(src_test)
-        source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)
-        print("source_schema: ", source_schema)
+        
+        source_schema = getSparkSchemaByDtypes(sourceDataset.iloc[:, :].dtypes)        
         pd_scr_test = pd.DataFrame(src_test)
         spark_src_test_df = createSparkDfSchemaFromPandasDf(pd_scr_test, source_schema)
         spark_src_test_df = addIndexToSparkDf(spark_src_test_df)
-        
-        print("src_train: ", len(src_train))
-        print("src_test: ", len(src_test))
-        print("printing src_test indexed:")        
-        spark_src_test_df.show(20, False) 
-        
+                
         joined_df = joinSparkDfByIndex(spark_src_test_df, joined_df)
         
     #removing index column
