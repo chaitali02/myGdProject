@@ -19,7 +19,7 @@ import os
 import json, codecs
 from pyspark.sql.dataframe import DataFrame
 from pyspark.sql.catalog import Function
-os.environ["PYSPARK_PYTHON"]="/usr/bin/python3"
+os.environ["PYSPARK_PYTHON"]=sys.argv[1]
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 from pyspark.sql import SparkSession
 from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
@@ -28,8 +28,7 @@ from eli5.sklearn import PermutationImportance
 from keras.models import model_from_json
 
 
-
-print("Inside python script")
+print("Inside python script ")
 
 paramName = ""
 nEpochs=0
@@ -54,7 +53,6 @@ targetDsType=""
 tableName=""
 operation=""
 url=""
-isSuccessful = True
 hostName=""
 dbName=""
 userName=""
@@ -129,12 +127,6 @@ for value in input_config:
     if value == "optimizationAlgo":
         optimizationAlgo = input_config[value]
     
-    if value == "weightInit":
-        weightInit = input_config[value]
-    
-    if value == "updater":
-        updater = input_config[value]
-    
     if value == "momentum":
         momentum = input_config[value]
     
@@ -144,20 +136,8 @@ for value in input_config:
     if value == "numOutputs":
         numOutputs = input_config[value]
     
-    if value == "numHidden":
-        numHidden = input_config[value]
-    
-    if value == "numLayers":
-        numLayers = input_config[value]
-    
-    if value == "layerNames":
-        layerNames = input_config[value]
-    
     if value == "activation":
         activation = input_config[value]
-    
-    if value == "lossFunction":
-        lossFunction = input_config[value]
     
     if value == "targetPath":
         targetPath = input_config[value]
@@ -250,6 +230,24 @@ if otherParams != None:
         
         if value == "outputResultPath":
             outputResultPath = otherParams[value]
+    
+        if value == "weightInit":
+            weightInit = input_config[value]
+        
+        if value == "updater":
+            updater = input_config[value]
+    
+        if value == "numHidden":
+            numHidden = input_config[value]
+        
+        if value == "numLayers":
+            numLayers = input_config[value]
+    
+        if value == "layerNames":
+            layerNames = input_config[value]
+    
+        if value == "lossFunction":
+            lossFunction = input_config[value]
 
 if sourceDsDetails != None:
     for value in sourceDsDetails:
@@ -693,7 +691,7 @@ def train():
     print("f1: ", f1)    
     print("confusion_matrix: ", cm)
        
-    return isSuccessful
+    return True
 
 #prediction operation
 def predict():
@@ -773,7 +771,7 @@ def predict():
     else:
         joined_df.repartition(10).write.mode('append').options().jdbc(url, targetTableName, properties={"user": targetUserName, "password": targetPassword, "driver": targetDriver})
 #      
-    return isSuccessful
+    return True
 
 #calling method as per operation
 if operation == "train":
