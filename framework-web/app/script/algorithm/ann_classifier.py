@@ -22,6 +22,11 @@ from pyspark.sql.catalog import Function
 os.environ["PYSPARK_PYTHON"]="/usr/bin/python3"
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 from pyspark.sql import SparkSession
+from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+import eli5
+from eli5.sklearn import PermutationImportance
+from keras.models import model_from_json
+
 
 
 print("Inside python script")
@@ -486,7 +491,28 @@ def prepareStatus(label_val, prediction_val):
     else:
         return "false"
     
-
+def model():
+    import keras
+    from keras.models import Sequential
+    from keras.layers import Dense
+    
+    # Initialising the ANN
+    classifier = Sequential()
+    
+    # Adding the input layer and the first hidden layer
+    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
+    
+    # Adding the second hidden layer
+    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+    
+    # Adding the output layer
+    classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
+    
+    # Compiling the ANN
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+    
+    return classifier
+    
 #train operation
 def train():
     # Encoding categorical data
@@ -523,26 +549,36 @@ def train():
         
     print("Importing the Keras libraries and packages")
     # Importing the Keras libraries and packages
-    import keras
-    from keras.models import Sequential
-    from keras.layers import Dense
-    from keras.models import model_from_json
+#     import keras
+#     from keras.models import Sequential
+#     from keras.layers import Dense
+#     from keras.models import model_from_json
+#     
+#     # Initialising the ANN
+#     classifier = Sequential()
+#     
+#     # Adding the input layer and the first hidden layer
+#     classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
+#     
+#     # Adding the second hidden layer
+#     classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+#     
+#     # Adding the output layer
+#     classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
+#     
+#     # Compiling the ANN
+#     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     
-    # Initialising the ANN
-    classifier = Sequential()
     
-    # Adding the input layer and the first hidden layer
-    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
+    kerasClassifier = KerasClassifier(build_fn=model, batch_size = 10, nb_epoch = nEpochs, verbose=0)    
+    kerasClassifier.fit(X_train, y_train, batch_size = 10, nb_epoch = nEpochs)
+
+    permutationImportance = PermutationImportance(kerasClassifier, random_state=1).fit(X_train, y_train)
+    featureImportance = permutationImportance.feature_importances_
+    print("feature importance type: ", type(featureImportance))
+    print("feature importances: ", featureImportance)
     
-    # Adding the second hidden layer
-    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
-    
-    # Adding the output layer
-    classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
-    
-    # Compiling the ANN
-    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-    
+    classifier = model()
     # Fitting the ANN to the Training set
     classifier.fit(X_train, y_train, batch_size = 10, nb_epoch = nEpochs)
     
@@ -644,6 +680,7 @@ def train():
     output_result["roc_auc"]=roc_auc
     output_result["f1"]=f1
     output_result["confusion_matrix"]=cm.tolist()
+    output_result["featureImportance"]=featureImportance.tolist()
             
     print("saving train output into path '", outputResultPath+".json", "'")
     with codecs.open(outputResultPath+".json", 'w', 'utf8') as f:
