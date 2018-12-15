@@ -2123,7 +2123,9 @@ public class SparkExecutor<T> implements IExecutor {
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
 			, String[] fieldArray, String trainName) throws IOException {
-		rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		}
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
 			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
 			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
@@ -2178,7 +2180,9 @@ public class SparkExecutor<T> implements IExecutor {
 			, String includeFeatures, String[] fieldArray, String trainName
 			, Datapod targetDp, Datasource targetDS, String targetTableName
 			, String saveMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		}
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
 			sourceDF = sourceDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(sourceDF.columns()[sourceDF.columns().length-1])));
 			sourceDF = sourceDF.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));

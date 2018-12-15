@@ -23,7 +23,36 @@
 
         </div>
     </div> -->
-
+    <style>
+      /* body { 
+  font-size: 12px; 
+  font-family: 'Open Sans';
+} */
+      
+      path.curve { 
+          stroke-width: 3;
+          fill: none;
+          opacity: .7;
+      }
+      
+      .axis path,
+      .axis line {
+          fill: none;
+          stroke: grey;
+          stroke-width: 2;
+          shape-rendering: crispEdges;
+          opacity: 1;
+      }
+      
+      .d3-tip {
+          font-family: Verdana;
+          background: rgba(0, 0, 0, 0.8);
+          padding: 8px;
+          color: #fff; 
+          z-index: 5070;
+        }
+      
+      </style>    
 <div class="row trainResult">
     <div class="col-md-12">
         <uib-tabset active="activeTabIndex">
@@ -108,9 +137,10 @@
                     <div class="bounce3"></div>
                 </div>
                 <div class="row" ng-if="showChart && modelresult.featureImportance !=null && !isTrainResultProgess">
-                    <div class="col-md-12">
-                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="modelresult"></div>
+                    <div class="col-md-12" ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length >0">
+                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="featureImportanceNonZero" title="title"></div>
                     </div>
+                    <h3 ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length ==0" style="font-size:14px;color:blue;">all Feature Importance are zero</h3>
                 </div>
                 <h3  ng-if="modelresult.featureImportance ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
 
@@ -148,58 +178,72 @@
                     <div class="bounce3"></div>
                 </div>
                 <div ng-if="!isTrainResultProgess">
-                    <table class="table table-bordered train-result" style="width:50%">
-                        <tr>
-                            <td style="width:40%">Accuracy
-                            </td>
-                            <td style="width:60%">
-                                <b>{{ modelresult.accuracy | number : 2}} %</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%">Recall
-                            </td>
-                            <td style="width:60%">
-                                <b>{{ modelresult.recall | number : 2}} %</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%">Precision</td>
-                            <td style="width:60%">
-                                <b>{{modelresult.precision | number : 2}} %</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%">F1 Score
-                            </td>
-                            <td style="width:60%">
-                                <b>{{ modelresult.f1Score | number : 2}} %</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%">Log Loss</td>
-                            <td style="width:60%">
-                                <b>{{ modelresult.logLoss}}</b>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td style="width:40%">Lift</td>
-                            <td style="width:60%">
-                                <b>{{ modelresult.lift}}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%">ROC AUC</td>
-                            <td style="width:60%" ng-if="modelresult.rocAUC !=null">
-                                <b>{{ modelresult.rocAUC[0] | number : 2}}</b>
-                            </td>
-
-                            <td style="width:60%" ng-if="modelresult.rocAUC ==null">
-                                 <b>{{ modelresult.accuracy | number : 2}} %</b>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-6" style="margin-top:20px;">
+                                <table class="table table-bordered train-result">
+                                    <tr>
+                                        <td style="width:40%">Accuracy
+                                        </td>
+                                        <td style="width:60%">
+                                            <b>{{ modelresult.accuracy | number : 2}} %</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">Recall
+                                        </td>
+                                        <td style="width:60%">
+                                            <b>{{ modelresult.recall | number : 2}} %</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">Precision</td>
+                                        <td style="width:60%">
+                                            <b>{{modelresult.precision | number : 2}} %</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">F1 Score
+                                        </td>
+                                        <td style="width:60%">
+                                            <b>{{ modelresult.f1Score | number : 2}} %</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">Log Loss</td>
+                                        <td style="width:60%">
+                                            <b>{{ modelresult.logLoss}}</b>
+                                        </td>
+            
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">Lift</td>
+                                        <td style="width:60%">
+                                            <b>{{ modelresult.lift}}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:40%">ROC AUC</td>
+                                        <td style="width:60%" ng-if="modelresult.rocAUC !=null">
+                                            <b>{{ modelresult.rocAUC[0] | number : 2}}</b>
+                                        </td>
+            
+                                        <td style="width:60%" ng-if="modelresult.rocAUC ==null">
+                                             <b>{{ modelresult.accuracy | number : 2}} %</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6"  ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
+                                <roc-curve-chart id="roc" data="modelresult" ></roc-curve-chart>
+                            </div>
+                            <div class="centercontent" style="height:300px;" >
+                                <h3 ng-if="modelresult.rocCurve ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">ROC Curve Not Available</h3>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
                 </div>
                 <br>
                 
