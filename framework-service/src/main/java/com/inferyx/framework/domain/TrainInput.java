@@ -20,19 +20,12 @@ public class TrainInput {
 	String sourceFilePath;
 	String modelFilePath;	
 	String optimizationAlgo;
-	int weightInit;
-	String updater;
 	int numInput;
 	int numOutputs;
-	int numHidden;
-	int numLayers;
 	String activation;
-	String lossFunction;
-	String layerNames;
 	String tableName;
 	String operation;
 	String url;
-	String isSuccessful = "True";
 	String hostName;
 	String dbName;
 	String userName;
@@ -307,42 +300,6 @@ public class TrainInput {
 	 * 
 	 * @ Ganesh
 	 * 
-	 * @return the weightInit
-	 */
-	public int getWeightInit() {
-		return this.weightInit;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param weightInit the weightInit to set
-	 */
-	public void setWeightInit(int weightInit) {
-		this.weightInit = weightInit;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the updater
-	 */
-	public String getUpdater() {
-		return this.updater;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param updater the updater to set
-	 */
-	public void setUpdater(String updater) {
-		this.updater = updater;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
 	 * @return the numInput
 	 */
 	public int getNumInput() {
@@ -379,42 +336,6 @@ public class TrainInput {
 	 * 
 	 * @ Ganesh
 	 * 
-	 * @return the numHidden
-	 */
-	public int getNumHidden() {
-		return this.numHidden;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param numHidden the numHidden to set
-	 */
-	public void setNumHidden(int numHidden) {
-		this.numHidden = numHidden;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the numLayers
-	 */
-	public int getNumLayers() {
-		return this.numLayers;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param numLayers the numLayers to set
-	 */
-	public void setNumLayers(int numLayers) {
-		this.numLayers = numLayers;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
 	 * @return the activation
 	 */
 	public String getActivation() {
@@ -428,42 +349,6 @@ public class TrainInput {
 	 */
 	public void setActivation(String activation) {
 		this.activation = activation;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the lossFunction
-	 */
-	public String getLossFunction() {
-		return this.lossFunction;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param lossFunction the lossFunction to set
-	 */
-	public void setLossFunction(String lossFunction) {
-		this.lossFunction = lossFunction;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the layerNames
-	 */
-	public String getLayerNames() {
-		return this.layerNames;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param layerNames the layerNames to set
-	 */
-	public void setLayerNames(String layerNames) {
-		this.layerNames = layerNames;
 	}
 	/**
 	 * 
@@ -518,24 +403,6 @@ public class TrainInput {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the isSuccessful
-	 */
-	public String getIsSuccessful() {
-		return this.isSuccessful;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param isSuccessful the isSuccessful to set
-	 */
-	public void setIsSuccessful(String isSuccessful) {
-		this.isSuccessful = isSuccessful;
 	}
 	/**
 	 * 
@@ -654,16 +521,17 @@ public class TrainInput {
 	@Override
 	public String toString() {
 		return "TrainInput [sourceFilePath=" + this.sourceFilePath + ", modelFilePath=" + this.modelFilePath
-				+ ", optimizationAlgo=" + this.optimizationAlgo + ", weightInit=" + this.weightInit + ", updater="
-				+ this.updater + ", numInput=" + this.numInput + ", numOutputs=" + this.numOutputs + ", numHidden="
-				+ this.numHidden + ", numLayers=" + this.numLayers + ", activation=" + this.activation
-				+ ", lossFunction=" + this.lossFunction + ", layerNames=" + this.layerNames + ", tableName="
-				+ this.tableName + ", operation=" + this.operation + ", url=" + this.url + ", isSuccessful="
-				+ this.isSuccessful + ", hostName=" + this.hostName + ", dbName=" + this.dbName + ", userName="
-				+ this.userName + ", password=" + this.password + ", port=" + this.port + ", query=" + this.query
-				+ ", otherParams=" + this.otherParams + ", sourceDsDetails=" + this.sourceDsDetails
+				+ ", optimizationAlgo=" + this.optimizationAlgo + ", numInput=" + this.numInput + ", numOutputs="
+				+ this.numOutputs + ", activation=" + this.activation + ", tableName=" + this.tableName + ", operation="
+				+ this.operation + ", url=" + this.url + ", hostName=" + this.hostName + ", dbName=" + this.dbName
+				+ ", userName=" + this.userName + ", password=" + this.password + ", port=" + this.port + ", query="
+				+ this.query + ", otherParams=" + this.otherParams + ", sourceDsDetails=" + this.sourceDsDetails
 				+ ", targetDsDetails=" + this.targetDsDetails + ", sourceDsType=" + this.sourceDsType
-				+ ", targetDsType=" + this.targetDsType + ", targetTableName=" + this.targetTableName + "]";
+				+ ", targetDsType=" + this.targetDsType + ", targetTableName=" + this.targetTableName + ", testSetPath="
+				+ this.testSetPath + ", rowIdentifier=" + this.rowIdentifier + ", includeFeatures="
+				+ this.includeFeatures + ", trainPercent=" + this.trainPercent + ", testPercent=" + this.testPercent
+				+ "]";
 	}
+	
 	
 }
