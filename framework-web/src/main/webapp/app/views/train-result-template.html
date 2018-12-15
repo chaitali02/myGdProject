@@ -140,7 +140,7 @@
                     <div class="col-md-12" ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length >0">
                         <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="featureImportanceNonZero" title="title"></div>
                     </div>
-                    <h3 ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length ==0" style="font-size:14px;color:blue;">All Feature Importance Are Zero</h3>
+                    <h3 ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length ==0" style="font-size:14px;color:blue;">all Feature Importance are zero</h3>
                 </div>
                 <h3  ng-if="modelresult.featureImportance ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
 
