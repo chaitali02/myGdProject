@@ -11,6 +11,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -39,7 +40,7 @@ public class TrainResult extends BaseEntity {
 	private String algorithm;
 	private long numFeatures;
 	private String algoType;
-	
+	private List<Map<String, Object>> rocCurve;
 	/**
 	 *
 	 * @Ganesh
@@ -379,7 +380,14 @@ public class TrainResult extends BaseEntity {
 	 *
 	 * @param lift the lift to set
 	 */
+	
 	public void setLift(double lift) {
 		this.lift = lift;
+	}
+	public List<Map<String, Object>> getRocCurve() {
+		return rocCurve;
+	}
+	public void setRocCurve(List<Map<String, Object>> rocCurve) {
+		this.rocCurve = rocCurve;
 	}
 }

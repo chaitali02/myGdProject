@@ -11,6 +11,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ganesh
@@ -36,7 +37,8 @@ public class TrainResultView extends BaseEntity {
 	private String algorithm;
 	private long numFeatures;
 	private String algoType;
-	
+	private List<Map<String, Object>> rocCurve;
+
 	/**
 	 *
 	 * @Ganesh
@@ -378,5 +380,11 @@ public class TrainResultView extends BaseEntity {
 	 */
 	public void setConfusionMatrix(Object confusionMatrix) {
 		this.confusionMatrix = confusionMatrix;
+	}
+	public List<Map<String, Object>> getRocCurve() {
+		return rocCurve;
+	}
+	public void setRocCurve(List<Map<String, Object>> rocCurve) {
+		this.rocCurve = rocCurve;
 	}
 }

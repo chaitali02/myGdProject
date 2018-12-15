@@ -308,6 +308,7 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
     $scope.modelDetail = {};
     $scope.modelDetail.uuid = $stateParams.id;
     $scope.modelDetail.version = $stateParams.version;
+    $scope.modelDetail.name = $stateParams.name || "";
     $scope.isGraphShow=false;   
 
     $scope.close = function () {
