@@ -9,6 +9,7 @@ import {DataTableModule,SharedModule} from 'primeng/primeng';
 import { MessagesModule} from 'primeng/primeng';
 import { MessageModule} from 'primeng/primeng';
 import {GrowlModule} from 'primeng/primeng';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { ResultModule } from '../shared/module/result.module';
@@ -44,7 +45,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         DataTableModule,
         MultiSelectModule,
         ResultModule,
-        DialogModule
+        DialogModule,
+        AngularMultiSelectModule
        
     ],
     declarations: [

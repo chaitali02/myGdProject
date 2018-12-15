@@ -38,6 +38,17 @@ declare var jQuery: any;
 })
 
 export class GraphAnalysisComponent {
+  edgeTableArray: any;
+  heading: string;
+  dropdownSettingsPrivilege: { singleSelection: boolean; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; disabled: boolean; };
+  nodeIcon: { "label": string; "value": string; "class": string; }[];
+  nodeBackGroundColor: any;
+  selectedAllPropertyRow: boolean;
+  nodeHighlightType: any;
+  showBgModel: boolean;
+  propertyInfoTableArray: any[];
+  highlightInfo: any;
+  nodeColorInfo: ["#ef9a9a", "#B39DDB", "#80DEEA", "#BCAAA4", "#B0BEC5"] | ["#b71c1c", "#004D40", "#FF9800", "#BF360C", "#0D47A1", "#263238", "#000000"];
   allAttr: any;
   allType: {"label": string; "value": string; }[];
   showAttrModel: boolean;
@@ -65,11 +76,21 @@ export class GraphAnalysisComponent {
   isSubmit: any
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   
+  nodeIconMap:{"home":{"caption":"Home","value":"home","class":"fa fa-home","code":"\uf015","color":"#5C9BD1"},
+  "user":{"caption":"User","value":"user","class":"fa fa-user","code":"\uf007","color":"#8877a9"},
+  "bank":{"caption":"Bank","value":"bank","class":"fa fa-university","code":"\uf19c","color":"#2ab4c0"},
+  "office":{"caption":"Office","value":"office","class":"fa fa-building","code":"\uf1ad","color":"#f36a5a"},
+  "dollar":{"caption":"Dollar","value":"dollar","class":"fa fa-usd","code":"\f155","color":"#0db7ed"}}
+  
+  nodeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"]
+  
+  edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"]
   @ViewChild('searchAttrModel') searchAttrModel: ElementRef;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService) {
     this.graphData = {};
     this.nodeTableArray=[]
+    this.edgeTableArray=[]
     this.continueCount = 1;
     this.isSubmit = "false"
     this.progressbarWidth = 33.33 * this.continueCount + "%";
@@ -98,7 +119,28 @@ export class GraphAnalysisComponent {
       "routeurl": null
     }
     ]
-    
+    this.nodeHighlightType=[
+      {"label":"Category","value":"category"},
+      {"label":"Numerical","value":"numerical"}]
+      this.nodeBackGroundColor=[
+        {"label":"#ef9a9a","value":"#ef9a9a"},
+        {"label":"#B39DDB","value":"#B39DDB"},
+        {"label":"#80DEEA","value":"#80DEEA"},
+        {"label":"#BCAAA4","value":"#BCAAA4"},
+        {"label":"#B0BEC5","value":"#B0BEC5"}
+      ]
+      this.nodeIcon=[{"label":"Home","value":"home","class":"fa fa-home"},
+      {"label":"User","value":"user","class":"fa fa-user"},
+      {"label":"Bank","value":"bank","class":"fa fa-university"},
+      {"label":"Office","value":"office","class":"fa fa-building"},
+      {"label":"Dollar","value":"doller","class":"fa fa-usd"}]
+      this.dropdownSettingsPrivilege = { 
+        singleSelection: false, 
+        selectAllText:'Select All',
+        unSelectAllText:'UnSelect All',
+        enableSearchFilter: true,
+        disabled :false
+      }; 
   }
 
   public goBack() {
@@ -120,6 +162,20 @@ export class GraphAnalysisComponent {
     else {
       this.graphData.published = 'N';
     }
+  }
+  onItemSelect(item:any){
+    console.log(item);
+   // console.log(this.selectedItems);
+  }
+  OnItemDeSelect(item:any){
+    console.log(item);
+   // console.log(this.selectedItems);
+  }
+  onSelectAll(items: any){
+    console.log(items);
+  }
+  onDeSelectAll(items: any){
+    console.log(items);
   }
   getAllVersionByUuid(){
     this._commonService.getAllVersionByUuid('dag',this.id)
@@ -236,6 +292,24 @@ export class GraphAnalysisComponent {
     nodeTable["nodeBackgroundInfo"]={}
 		this.nodeTableArray.splice(this.nodeTableArray.length, 0, nodeTable);
   }
+  addEdgeRow(){
+    if (this.edgeTableArray == null) {
+      this.edgeTableArray = [];
+      //this.nodeTableArray["nodeSource"]={}
+		}
+		var nodeTable = {};
+		nodeTable["id"]=this.edgeTableArray.length;
+    nodeTable["edgeType"];
+    nodeTable["edgeName"];
+		nodeTable["edgeProperties"]=null;
+    nodeTable["allAttributeInto"]=[];
+    nodeTable["sourceNodeId"]=[];
+    nodeTable["targetNodeId"]=[];
+    nodeTable["edgeSource"]={}
+    nodeTable["highlightInfo"]={};
+
+		this.edgeTableArray.splice(this.edgeTableArray.length, 0, nodeTable);
+  }
   SearchAttribute(index,type,proprety){
     this.allType=[
       {
@@ -271,16 +345,17 @@ export class GraphAnalysisComponent {
 				this.onChangeType();
 
 		}
-		// else{
-		// 		this.selectAttr=this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety];
-		// 		if(this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety]){
-		// 			this.selectType=this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety].type;
-		// 		}else{
-		// 			this.selectType=selectType
-		// 		}
-		// 		this.onChangeType();
+		else{
+      this.selectType="datapod"
+				// this.selectAttr=this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety];
+				// if(this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety]){
+				// 	this.selectType=this.edgeTableArray[this.searchAttr.index][this.searchAttr.proprety].type;
+				// }else{
+				// 	this.selectType=selectType
+				// }
+				this.onChangeType();
 
-		// }
+		}
   }
   
   onChangeType() {
@@ -320,25 +395,111 @@ export class GraphAnalysisComponent {
       this.showAttrModel=true
      // jQuery(this.searchAttrModel.nativeElement).modal('hide'); 
   }
+  addHighlightInfo(index,type,propertyType){
+    this.heading=propertyType=='nodeBackgroundInfo'?'Node Details':'Highlight Details'
+        if(type =='node'){
+          this.nodeColorInfo=(propertyType=='nodeBackgroundInfo'?this.nodeBackGroundColor:this.nodeHighlightColor);
+          if(this.nodeTableArray[index][propertyType]){
+            this.highlightInfo=this.nodeTableArray[index][propertyType];
+            this.propertyInfoTableArray=this.highlightInfo.propertyInfoTableArray;
+            this.highlightInfo.type=type;
+            this.highlightInfo.caption=propertyType=='nodeBackgroundInfo'?'Node Background':'Node Highlight'
+            this.highlightInfo.propertyType=propertyType;
+    
+          
+          }else{
+            this.highlightInfo={};
+            this.highlightInfo.selectType="category";
+            this.highlightInfo.type=type;
+            this.highlightInfo.propertyType=propertyType;
+            this.highlightInfo.caption=propertyType=='nodeBackgroundInfo'?'Node Background':'Node Highlight'
+            this.propertyInfoTableArray=[];
+            this.addPropertyInfoRow();
+          }
+          
+          this.highlightInfo.index=index
+          this.allAttr=this.nodeTableArray[index].allAttributeInto;
+          console.log(this.nodeHighlightType)
+        }
+        if(type =='edge'){
+          this.nodeColorInfo=this.edgeHighlightColor;
+          if(this.edgeTableArray[index][propertyType]){
+            this.highlightInfo=this.edgeTableArray[index][propertyType];
+            this.propertyInfoTableArray=this.highlightInfo.propertyInfoTableArray;
+            this.highlightInfo.type=type;
+            this.highlightInfo.caption='Edge Highlight'
+            this.highlightInfo.propertyType=propertyType;
+          }else{
+            this.highlightInfo={};
+            this.highlightInfo.selectType="category";
+            this.highlightInfo.type=type;
+            this.highlightInfo.propertyType=propertyType;
+            this.highlightInfo.caption='Edge Highlight'
+            this.propertyInfoTableArray=[];
+            this.addPropertyInfoRow();
+          }
+          
+          this.highlightInfo.index=index
+          this.allAttr=this.edgeTableArray[index].allAttributeInto;
+    
+        }
+        // setTimeout(function(){$('#addHiglightInfo').modal({
+        //   backdrop: 'static',
+        //   keyboard: false
+        // }); }, 100);
+        this.showBgModel=true
+      }
+      close(){
+        this.showBgModel=false
+        this.showAttrModel=false
+      }
+      // removePropertyInfoRow(){
+      //   var newDataList = [];
+      //   this.selectedAllPropertyRow = false;
+      //   angular.forEach(this.propertyInfoTableArray, function (selected) {
+      //     if (!selected.selected) {
+      //       newDataList.push(selected);
+      //     }
+      //   });
+      //   this.propertyInfoTableArray = newDataList;
+      // }
+    
+      addPropertyInfoRow(){
+        if (this.propertyInfoTableArray == null) {
+          this.propertyInfoTableArray = [];
+        }
+        var propertyTable = {};
+        propertyTable["id"]=this.propertyInfoTableArray.length;
+      
+        propertyTable["name"];
+        propertyTable["propertyValue"]='#61595e';
+        this.propertyInfoTableArray.splice(this.propertyInfoTableArray.length, 0, propertyTable);
+        //setTimeout(function(){this.myHighlightForm['propertyName'+propertyTable.id].$invalid=false; }, 1);
+        
+      }
   SubmitSearchAttr(){
     this.showAttrModel=false
-		console.log(this.allDatapod["defaultoption"]);debugger
+		console.log(this.nodeTableArray);
 		if(this.searchAttr && this.searchAttr["type"]=='node'){
 			this.nodeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]]=this.allDatapod["defaultoption"]//this.selectAttr;
-			this.nodeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]].type=this.selectType;
+      this.nodeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]].type=this.selectType;
+      
 			this.nodeTableArray[this.searchAttr["index"]]["nodeProperties"]=null;
 			this.onChangeDatapod();
 		}else{
-			// this.edgeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]]=this.allDatapod["defaultoption"]//this.selectAttr;
-			// this.edgeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]].type=this.selectType;
-			// setTimeout(function () {
-			// 	this.edgeTableArray[this.searchAttr.index]["edgeProperties"]=[];
-			// });
+			this.edgeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]]=this.allDatapod["defaultoption"]//this.selectAttr;
+			this.edgeTableArray[this.searchAttr["index"]][this.searchAttr["proprety"]].type=this.selectType;
+		//	setTimeout(function () {
+				this.edgeTableArray[this.searchAttr["index"]]["edgeProperties"]=null;
+		//	});
 			
 			this.onChangeDatapod();
 		}
 		
-	}
+  }
+  // hideDropdown(test){
+  //   document.querySelector('ui-dropdown-label').style.Background=test
+  // }
   onChangeDatapod(){
     this._commonService.getAllAttributeBySource(this.allDatapod["defaultoption"]["uuid"],this.selectType)
     .subscribe(
@@ -348,7 +509,22 @@ export class GraphAnalysisComponent {
     error => console.log("Error :: " + error));
 
   }
-  onSuccessAttributeBySource(response){debugger
+  SubmitHighlightInfo(){
+    //$('#addHiglightInfo').modal('hide');
+    this.showBgModel=false
+		if(this.highlightInfo.type=='node'){
+			this.highlightInfo.value=this.highlightInfo.selectType+","+this.highlightInfo.propertyId.label;
+			this.highlightInfo.propertyInfoTableArray=this.propertyInfoTableArray;
+			this.nodeTableArray[this.highlightInfo.index][this.highlightInfo.propertyType]=this.highlightInfo;
+		}
+		if(this.highlightInfo.type=='edge'){
+			this.highlightInfo.value=this.highlightInfo.selectType+","+this.highlightInfo.propertyId.label;
+			this.highlightInfo.propertyInfoTableArray=this.propertyInfoTableArray;
+			this.edgeTableArray[this.highlightInfo.index][this.highlightInfo.propertyType]=this.highlightInfo;
+		}
+	
+	}
+  onSuccessAttributeBySource(response){
     let temp = []
     for (const n in response) {
       let allname = {};
@@ -362,18 +538,64 @@ export class GraphAnalysisComponent {
      
     if(this.searchAttr["type"] =='node'){
       let temp = []
+      let tempFilter=[]
+      let tempMultiselect=[]
       for (const n in response) {
         let allname = {};
+        let allnameFilter={}
+        let addMultiselect={}
         allname["label"] = response[n]['name'];
         allname["value"] = {};
         allname["value"]["label"] = response[n]['name'];
         allname["value"]["uuid"] = response[n]['uuid'];
         temp[n] = allname;
+        if (response[n]["attrType"] == 'integer' || response[n]["attrType"] == 'float' )
+        {
+          allnameFilter["label"] = response[n]['name'];
+          allnameFilter["value"] = {};
+          allnameFilter["value"]["label"] = response[n]['name'];
+          allnameFilter["value"]["uuid"] = response[n]['uuid'];
+          tempFilter[n] = allnameFilter;
+        }
+        addMultiselect["id"]=n
+        addMultiselect["itemName"]=response[n]['name']
+        addMultiselect["uuid"] = response[n]['uuid'];
+        tempMultiselect[n]=addMultiselect
       }
       this.nodeTableArray[this.searchAttr["index"]].allAttributeInto = temp
+      this.nodeTableArray[this.searchAttr["index"]].size = tempFilter
+      this.nodeTableArray[this.searchAttr["index"]].NodePropertiers = tempMultiselect
         //this.nodeTableArray[this.searchAttr["index"]].allAttributeInto=response;
     }
     else{
+      let temp = []
+      let tempFilter=[]
+      let tempMultiselect=[]
+      for (const n in response) {
+        let allname = {};
+        let allnameFilter={}
+        let addMultiselect={}
+        allname["label"] = response[n]['name'];
+        allname["value"] = {};
+        allname["value"]["label"] = response[n]['name'];
+        allname["value"]["uuid"] = response[n]['uuid'];
+        temp[n] = allname;
+        if (response[n]["attrType"] == 'integer' || response[n]["attrType"] == 'float' )
+        {
+          allnameFilter["label"] = response[n]['name'];
+          allnameFilter["value"] = {};
+          allnameFilter["value"]["label"] = response[n]['name'];
+          allnameFilter["value"]["uuid"] = response[n]['uuid'];
+          tempFilter[n] = allnameFilter;
+        }
+        addMultiselect["id"]=n
+        addMultiselect["itemName"]=response[n]['name']
+        addMultiselect["uuid"] = response[n]['uuid'];
+        tempMultiselect[n]=addMultiselect
+      }
+      this.edgeTableArray[this.searchAttr["index"]].allAttributeInto = temp
+      this.edgeTableArray[this.searchAttr["index"]].size = tempFilter
+      this.edgeTableArray[this.searchAttr["index"]].NodePropertiers = tempMultiselect
      // this.edgeTableArray[this.searchAttr.index].allAttributeInto=response;
     }
     console.log(response)
@@ -381,5 +603,16 @@ export class GraphAnalysisComponent {
       this.selectAttr=this.allAttr[0]
     }
   }
+  
+  // filterByAttrType = function () {
+	// 	return function (item) {
+			
+	// 		if (item.attrType == 'integer' || item.attrType == 'float' )
+	// 		{
+	// 			return true;
+	// 		}
+	// 		return false;
+	// 	};
+	// };
 }
 

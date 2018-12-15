@@ -187,7 +187,7 @@
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <div style="width:200px;">
                                         <div class="col-md-11" style="padding:0px;">
-                                          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="tabledata.nodeSource.name" name="nodeSource+{{i}}" 
+                                          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="tabledata.nodeSource.label" name="nodeSource+{{i}}" 
                                             >
                                         </div>
                                         <div class="col-md-1" style="padding:7px 0px 0px 4px;">
@@ -201,7 +201,7 @@
                                       <div style="width:150px;">
                                         <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control" required disable-validation-message=""></select> -->
-                                          <p-dropdown [options]="tabledata.allAttributeInto" [(ngModel)]="tabledata.nodeId" name="nodeId+{{i}}" [style]="{'width':'140px','padding':'3px'}"
+                                          <p-dropdown [options]="tabledata.allAttributeInto" [(ngModel)]="tabledata.nodeId" appendTo="body" name="nodeId+{{i}}" [style]="{'width':'140px','padding':'3px'}"
                                           [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                                         </p-dropdown>
                                       </div>
@@ -220,16 +220,36 @@
                                   <td>
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <div style="width:200px;">
-                                        <p-dropdown [options]="tabledata.allAttributeInto" [(ngModel)]="tabledata.nodeName" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                        <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.nodeName" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                                         [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
-                                      </p-dropdown>
+                                        </p-dropdown>
                                         <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeName" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control" required disable-validation-message=""></select> -->
                                       </div>
           
                                     </span>
                                   </td>
-                                  <td ><!--="getAllAttributeBySource(tabledata.nodeProperties[0],$index,'node')">
+                                  <td ><span *ngIf="tabledata.allAttributeInto.length >1">
+                                    <div style="width:200px;text-align:center;" >
+                                        <p-multiSelect [options]="tabledata.allAttributeInto" name="nodeProperties+{{i}}" [(ngModel)]="tabledata.nodeProperties" [style]="{'width':'200px','padding':'3px'}" appendTo="body"></p-multiSelect>
+                                        <!-- <angular2-multiselect 
+                                        [data]="tabledata.NodePropertiers"
+                                         [(ngModel)]="tabledata.nodeProperties"
+                                          name="nodeProperties+{{i}}"
+                                        [settings] ="dropdownSettingsPrivilege"  
+                                        (onSelect) ="onItemSelect($event)" 
+                                        (onDeSelect) ="OnItemDeSelect($event)"
+                                        (onSelectAll)="onSelectAll($event)"
+                                        (onDeSelectAll) ="onDeSelectAll($event)"
+                                        >               
+                                        </angular2-multiselect> -->
+                                    </div>
+                                  </span>
+                                    <div style="width:200px;text-align:center;" *ngIf="tabledata.allAttributeInto.length ==0">
+                                        NA
+                                      </div>
+                                     
+                                    <!--="getAllAttributeBySource(tabledata.nodeProperties[0],$index,'node')">
                                     <span ng-if="tabledata.allAttributeInto.length >1" class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <div style="width:200px">
                                         <multiselect class="" multiple="true" [(ngModel)]="tabledata.nodeProperties" options="r.name for r in tabledata.allAttributeInto"
@@ -242,6 +262,16 @@
                                   </td>
                                   <td>
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                        <p-dropdown [options]="nodeIcon" appendTo="body" [(ngModel)]="tabledata.nodeIcon" placeholder="--Select--" name="nodeIcon+{{i}}"[style]="{'width':'150px'}">
+                                            <ng-template let-item pTemplate="selectedItem">{{item|json}}
+                                                <!-- <span [ngClass]="item.class"></span>
+                                                <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span> -->
+                                            </ng-template>
+                                            <ng-template let-car pTemplate="item">
+                                                <span [ngClass]="car.class"></span>
+                                                <span style="vertical-align:middle; margin-left: .5em">{{car.label}}</span>
+                                            </ng-template>
+                                        </p-dropdown>
                                       <!-- <div class="custom-ui-select" style="min-width:150px;">
                                         <ui-select  name ="nodeIcon" [(ngModel)]="tabledata.nodeIcon"  theme="" [disabled]="mode == 'true'"  append-to-body="true">
                                             
@@ -270,7 +300,7 @@
                                              name="nodeBackgroundInfo+{{i}}" >
                                         </div>
                                         <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                          <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="addHighlightInfo($index,'node','nodeBackgroundInfo')"></span>
+                                          <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="addHighlightInfo(i,'node','nodeBackgroundInfo')"></span>
                                         </div>
                                       </div>
                                     </span>
@@ -285,7 +315,7 @@
                                              name="highlightinto+{{i}}" >
                                         </div>
                                         <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                          <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="addHighlightInfo($index,'node','highlightInfo')"></span>
+                                          <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="addHighlightInfo(i,'node','highlightInfo')"></span>
                                         </div>
                                       </div>
                                     </span>
@@ -293,7 +323,9 @@
                                   <td>
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <div style="width:200px;">
-                                       
+                                          <p-dropdown [options]="tabledata.size" appendTo="body" [(ngModel)]="tabledata.nodeSize" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                          </p-dropdown>
                                         <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeSize" ng-options="x as x.name for x in tabledata.allAttributeInto |filter:filterByAttrType() track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control">
                                          <option value="">-Select-</option>
@@ -319,7 +351,148 @@
                     </div>
                   </div>
                   <div class="portlet-body form">
+                      <div class="portlet-body form">
+                          <div class="form-body">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeEdgeeRow()" [disabled]="mode == 'true'"></button>
+                                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addEdgeRow()" [disabled]="mode == 'true'"></button>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class=" col-md-12 table-body" style="overflow-x:scroll;">
+                                  <br>
+                                  <br>
+                                  <table class="row-border hover table  table-striped table-bordered" style="width:1077px;">
+                                    <thead>
+                                      <tr>
+                                        <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectedAllNodeRow" name="selectedAllNodeRow+{{i}}" (click)="allNodeRow()"
+                                            />
+                                          </span>
+                                        </th>
+                                        <th style="text-align:center;">Source</th>                                       
+                                        <th style="text-align:center;">Type</th>
+                                        <th style="text-align:center;">Name</th>
+                                        <th style="text-align:center;">Properties</th>
+                                        <th style="text-align:center;">Source Node Id</th>
+                                        <th style="text-align:center;">Target Node Id</th>
+                                        <th style="text-align:center;">Highlight</th>                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let tabledata of edgeTableArray ;let i=index">
+                                     
+                                        <td style="text-align:center;Vertical-align:middle;">
+                                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectedAllEdgeRow" name="selectedAllEdgeRow+{{i}}"/>
+                                          </span>
+                                        </td>
+                                        <td>
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <div style="width:200px;">
+                                              <div class="col-md-11" style="padding:0px;">
+                                                <input type="text" [disabled]="true" class="form-control" [(ngModel)]="tabledata.edgeSource.label" name="edgeSource+{{i}}" 
+                                                  >
+                                              </div>
+                                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="SearchAttribute(i,'edge','edgeSource')"></span>
+                                              </div>
+                                            </div>
+                                          </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                              <div style="width:200px">
+                                                <input type="text" class="form-control" [disabled]="mode == 'true'" name="edgeType+{{i}}" [(ngModel)]="tabledata.edgeType" 
+                                                
+                                                >
+                                              </div>
+                                            </span>
+                                          </td>
+                                        <td>
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <div style="width:200px">
+                                              <input type="text" class="form-control" [disabled]="mode == 'true'" name="edgeName+{{i}}" [(ngModel)]="tabledata.edgeName" 
+                                              
+                                              >
+                                            </div>
+                                          </span>
+                                        </td>
+                                       
+                                        <!-- <td>
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <div style="width:200px;">
+                                              <p-dropdown [options]="tabledata.allAttributeInto" [(ngModel)]="tabledata.nodeName" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                              </p-dropdown>
+                                            </div>                
+                                          </span>
+                                        </td> -->
+                                        <td ><span *ngIf="tabledata.allAttributeInto.length >1">
+                                          <div style="width:200px;text-align:center;" >
+                                              <p-multiSelect [options]="tabledata.allAttributeInto" name="edgeProperties+{{i}}" [(ngModel)]="tabledata.edgeProperties" [style]="{'width':'200px','padding':'3px'}" appendTo="body"></p-multiSelect>
+                                              <!-- <angular2-multiselect 
+                                              [data]="tabledata.NodePropertiers"
+                                               [(ngModel)]="tabledata.edgeProperties"
+                                                name="edgeProperties+{{i}}"
+                                              [settings] ="dropdownSettingsPrivilege"  
+                                              (onSelect) ="onItemSelect($event)" 
+                                              (onDeSelect) ="OnItemDeSelect($event)"
+                                              (onSelectAll)="onSelectAll($event)"
+                                              (onDeSelectAll) ="onDeSelectAll($event)"
+                                              >               
+                                              </angular2-multiselect> -->
+                                          </div>
+                                        </span>
+                                          <div style="width:200px;text-align:center;" *ngIf="tabledata.allAttributeInto.length ==0">
+                                              NA
+                                            </div>                                          
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                              <div style="width:200px;">
+                                                  <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.sourceNodeId" name="sourceNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                                  [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                                  </p-dropdown>
+                                              </div>
+                  
+                                            </span>
+                                          </td>
+                                          <td>
+                                              <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                <div style="width:200px;">
+                                                    <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.targetNodeId" name="targetNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                                    </p-dropdown>                                                </div>
                     
+                                              </span>
+                                            </td>
+                                        
+                                        <td>
+                                          <span class="form-group" style="margin-left:0px;margin-right:0px;" >
+                                           
+                                            <div style="width:200px;">
+                                              <div class="col-md-11" style="padding:0px;">
+                                                
+                                                <input type="text" [disabled]="true" class="form-control" [(ngModel)]="tabledata.highlightInfo.value"
+                                                   name="highlightinfo+{{i}}" >
+                                              </div>
+                                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" (click)="addHighlightInfo(i,'edge','highlightInfo')"></span>
+                                              </div>
+                                            </div>
+                                          </span>
+                                        </td>
+                                        
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          
+                        </div>
                     
                   </div>
                 </div>
@@ -366,7 +539,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-              <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
+              <button type="button" class="btn green" (click)="SubmitSearchAttr()">Submit</button>
             </div>
           </div>
         </div>
@@ -383,7 +556,7 @@
                        <div class="form-group">
                         <label class="col-md-3 control-label">Type</label>
                         <div class="col-md-8">
-                              <p-dropdown [options]="allType" [(ngModel)]="selectType" name="selectType+{{i}}" (onChange)="onChangeType()" [style]="{'width':'200px','padding':'3px'}"
+                              <p-dropdown [options]="allType"  [(ngModel)]="selectType" name="selectType+{{i}}" (onChange)="onChangeType()" [style]="{'width':'200px','padding':'3px'}"
                               [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                             </p-dropdown>
                           
@@ -410,3 +583,109 @@
           
       </p-dialog>
     <!-- </div> -->
+    <p-dialog header="{{heading}}" [(visible)]="showBgModel" [modal]="true" [responsive]="true" [minWidth]="450"
+    [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'min-height':'250px'}">
+    
+         
+            
+            <div class="modal-body" *ngIf="showBgModel">
+             
+                  <form class="form-horizontal" novalidate="novalidate" name="myform2">
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Type</label>
+                      <div class="col-md-6">
+                          <p-dropdown [options]="nodeHighlightType"  [(ngModel)]="highlightInfo.selectType" name="selectType+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                        </p-dropdown>
+                        <!-- <select  class="form-control" data-ng-model="highlightInfo.selectType" 
+                          ng-options="r.value as r.caption for r in allNodeHighlightType" required disable-validation-message="" [disabled]="mode == 'true'">
+                        </select> -->
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Select</label>
+                      <div class="col-md-6">
+                          <p-dropdown [options]="allAttr"  [(ngModel)]="highlightInfo.propertyId" name="propertyId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                        </p-dropdown>
+                        <!-- <select select2 [disabled]="mode == 'true'" ng-model="highlightInfo.propertyId" ng-options="x as x.name for x in allAttr track by x.uuid+x.attributeId"
+                        [disabled]="mode == 'true'" class="form-control" required disable-validation-message=""></select> -->
+                      </div>
+                    </div>
+                    <div class="x_title">
+                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" (click)="removePropertyInfoRow()" [disabled]="mode == 'true'"></button>
+                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" (click)="addPropertyInfoRow()" [disabled]="mode == 'true'"></button>
+                        <h4>
+                          <strong>Property Info</strong>
+                        </h4>
+                      <hr>
+                    </div>
+                    <div>
+                      <table class=" row-border hover table  table-striped table-bordered">
+                        <thead class="">
+                          <tr>
+                            <th style="text-align: center; Vertical-align: middle;width:5%;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectedAllPropertyRow" name="selectedAllPropertyRow+{{i}}" ng-change="allPropertyRow()"/>
+                              </span>
+                            </th>
+                            <th style="text-align: center;width:50%;">Name</th>
+                            <th style="text-align: center;">Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let tabledata of propertyInfoTableArray ;let i=index">
+                            <td style="text-align: center; Vertical-align: middle;width:5%;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedbg+{{i}}" [disabled]="mode == 'true'" />
+                                </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right:0px;"  >
+                                 
+                                <div *ngIf="highlightInfo.selectType=='category'">
+                                  <input type="text" class="form-control" 
+                                  [disabled]="mode == 'true'" name="propertyName+{{i}}" [(ngModel)]="tabledata.propertyName" >
+                                </div>
+                                <div *ngIf="highlightInfo.selectType=='numerical'">
+                                    <input type="text" class="form-control" 
+                                     [disabled]="mode == 'true'"name="propertyName+{{i}}" [(ngModel)]="tabledata.propertyName" >
+                                  </div>
+                              </span>
+                            </td>
+                            <td>
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                    <div class="custom-ui-select" style="min-width:150px;">
+                                        <p-dropdown [options]="nodeBackGroundColor"  [(ngModel)]="tabledata.propertyValue" name="propertyValue+{{i}}" [style]="{'width':'150px'}" filter="true">
+                                            <ng-template let-item pTemplate="selectedItem">                                              
+                                                <div  [ngStyle]="{background:item.label}">{{item.label}}</div>
+                                            </ng-template>
+                                            <ng-template let-car pTemplate="item">
+                                                <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                    <div  [ngStyle]="{background:car.label}">{{car.label}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </p-dropdown>
+                                        <!-- <p-dropdown [options]="nodeBackGroundColor" onHide="hideDropdown(tabledata.propertyValue)" [style.backgroundColor]="red" [(ngModel)]="tabledata.propertyValue" name="propertyValue+{{i}}"[style]="{'width':'150px'}" filter="true">
+                                            <ng-template let-item pTemplate="selectedItem">                                              
+                                                <div  [ngStyle]="{background:item.label}">{{item.label}}</div>
+                                            </ng-template>
+                                        </p-dropdown> -->
+                                        <input type="hidden" name="nodeIcon" [(ngModel)]="tabledata.propertyValue" >
+                                    </div>
+                                  </span>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn dark btn-outline" (click)="close()">Close</button>
+              <button type="button" class="btn green" (click)="SubmitHighlightInfo()">Submit</button>
+            </div>
+          
+        
+    </p-dialog>
