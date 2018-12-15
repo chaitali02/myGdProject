@@ -2786,6 +2786,7 @@ public class ModelServiceImpl {
 //		return isSuccess;
 //	}
 		
+	@SuppressWarnings("unchecked")
 	public boolean prepareTrain(String trainUuid, String trainVersion, TrainExec trainExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Algorithm algorithm= null;
 		try {
@@ -3006,7 +3007,7 @@ public class ModelServiceImpl {
 //					Map<String, Object> opResult = new ObjectMapper().readValue(new File(outputResultPath.concat(".json")), Map.class);
 					
 					String opResult = new ObjectMapper().readValue(new File(outputResultPath.concat(".json")), String.class);
-					@SuppressWarnings("unchecked")
+					
 					Map<String, Object> summary = new ObjectMapper().readValue(opResult.replaceAll("\'", "\""), Map.class);			        
 					
 					if(!scriptPrintedMsgs.isEmpty()) {
@@ -3062,6 +3063,11 @@ public class ModelServiceImpl {
 						Object confusion_matrix = summary.get("confusion_matrix");
 						if(confusion_matrix != null) {
 							trainResult.setConfusionMatrix(confusion_matrix);
+						}
+						
+						Object featureImportance = summary.get("featureImportance");
+						if(featureImportance != null) {
+							trainResult.setFeatureImportance((List<Double>) featureImportance);
 						}
 						
 						String fileName = "model.result";
