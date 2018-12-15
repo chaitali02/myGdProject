@@ -110,7 +110,37 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.featureImportanceArr = data;
         $scope.gridOptions.data = data;
       };
-
+     
+      $scope.calculateFeatureImportanceNonZero=function(data){
+        $scope.title = [];
+        var featureImportanceArr = $.map(data.featureImportance, function (el, e) {
+          var obj = {};
+          var val = parseFloat(el.toFixed(2)*100);
+          obj.Importance =parseFloat(val.toFixed(2));
+          obj.label = e;
+          if (e.split('').length > 16) {
+            obj.title = e.substring(0, 16) + "..";
+            $scope.title.push(obj.title)
+          }
+          else {
+            obj.title = e;
+            $scope.title.push(obj.title)
+          }
+          return obj;
+        })
+        console.log(JSON.stringify(featureImportanceArr));
+        var featureImportanceChartArr = [];
+        var count = 0;
+        if (featureImportanceArr && featureImportanceArr.length > 0) {
+          for (var i = 0; i < featureImportanceArr.length; i++) {
+            if (featureImportanceArr[i].Importance >= 1) {
+              featureImportanceChartArr[count] = featureImportanceArr[i]
+              count = count + 1;
+            }
+          }
+        }
+        $scope.featureImportanceNonZero=featureImportanceChartArr;
+      }
 
       $scope.getTrainResult = function (data) {
         var uuid = data.uuid;
@@ -120,6 +150,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         var onSuccessGetTrainResultByTrainExec = function (response) {
           $scope.modelresult = response;
           $scope.isTrainResultProgess = false;
+          $scope.calculateFeatureImportanceNonZero(response);
           $scope.featureImportanceArr = $.map($scope.modelresult.featureImportance, function (el, e) {
             var obj = {};
             var val = parseFloat(el.toFixed(2) * 100)
@@ -132,6 +163,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
             obj.label = e;
             return obj;
           });
+
           $scope.originalData = $scope.featureImportanceArr;
           $scope.gridOptions.data = $scope.featureImportanceArr;
           var conMatrix=[];
@@ -302,52 +334,55 @@ InferyxApp.directive('barChartHorizontal', function ($compile, $rootScope, sortF
       data: "=",
       column: "=",
       chartid: "=",
+      title:"=",
     },
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ['#C28CC8']
-        var title = [];
-        var featureImportanceArr = $.map($scope.data.featureImportance, function (el, e) {
-          var obj = {};
-          var val = parseFloat(el.toFixed(2)*100);
-          obj.Importance =parseFloat(val.toFixed(2));
-          obj.label = e;
-          if (e.split('').length > 16) {
-            obj.title = e.substring(0, 16) + "..";
-            title.push(obj.title)
-          }
-          else {
-            obj.title = e;
-            title.push(obj.title)
-          }
-          return obj;
-        })
-        console.log(JSON.stringify(featureImportanceArr));
-        var featureImportanceChartArr = [];
-        var count = 0;
-        if (featureImportanceArr && featureImportanceArr.length > 0) {
-          for (var i = 0; i < featureImportanceArr.length; i++) {
-            if (featureImportanceArr[i].Importance >= 1) {
-              featureImportanceChartArr[count] = featureImportanceArr[i]
-              count = count + 1;
-            }
-          }
-        }
+        var title=$scope.title;
+        debugger
+        // var featureImportanceArr = $.map($scope.data.featureImportance, function (el, e) {
+        //   var obj = {};
+        //   var val = parseFloat(el.toFixed(2)*100);
+        //   obj.Importance =parseFloat(val.toFixed(2));
+        //   obj.label = e;
+        //   if (e.split('').length > 16) {
+        //     obj.title = e.substring(0, 16) + "..";
+        //     title.push(obj.title)
+        //   }
+        //   else {
+        //     obj.title = e;
+        //     title.push(obj.title)
+        //   }
+        //   return obj;
+        // })
+        // console.log(JSON.stringify(featureImportanceArr));
+        // var featureImportanceChartArr = [];
+        // var count = 0;
+        // if (featureImportanceArr && featureImportanceArr.length > 0) {
+        //   for (var i = 0; i < featureImportanceArr.length; i++) {
+        //     if (featureImportanceArr[i].Importance >= 1) {
+        //       featureImportanceChartArr[count] = featureImportanceArr[i]
+        //       count = count + 1;
+        //     }
+        //   }
+        // }
+        var featureImportanceChartArr=$scope.data;
         var min;
         var max;
-        if (featureImportanceArr.length > 1) {
+        if (featureImportanceChartArr.length > 1) {
 
-          min = d3.min(featureImportanceArr, function (d) {
+          min = d3.min(featureImportanceChartArr, function (d) {
             return d['Importance'];
           });
 
-          max = d3.max(featureImportanceArr, function (d) {
+          max = d3.max(featureImportanceChartArr, function (d) {
             return d['Importance'];
           });
         }
         else {
           min = 0
-          max = d3.max(featureImportanceArr, function (d) {
+          max = d3.max(featureImportanceChartArr, function (d) {
             return d['Importance'];
           });
         }
