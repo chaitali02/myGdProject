@@ -235,9 +235,17 @@ public class PythonExecutor implements IExecutor {
 	public List<String> executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
-			String pythonExec = Helper.getPropertyValue("framework.python.exec");	
-//			pythonExec = pythonExec.endsWith("/") ? pythonExec : pythonExec.concat("/");
-			String command = pythonExec.concat(" ").concat(scriptPath);
+			String pythonDirPath = Helper.getPropertyValue("framework.python.exec");	
+			String command = pythonDirPath.concat(" ").concat(scriptPath);
+			
+			/*
+			 * Note: do not change/add/concat before following command
+			 * The following argument/command in command is specifically placed at 1st location
+			 * after script path. This argument/command is the python directory location.
+			 * 
+			 */
+			command = command.concat(" ").concat(pythonDirPath);
+			
 			if (arguments != null && arguments.size() > 0) {
 				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
 			}
