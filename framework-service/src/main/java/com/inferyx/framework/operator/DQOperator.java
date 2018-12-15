@@ -85,15 +85,15 @@ public class DQOperator implements IParsable {
 	private String SINGLE_QUOTE = "'";
 	private String AS = " AS ";
 	private final String WHERE_1_1 = " WHERE (1=1) ";
-	private String DATAPODUUID = "DatapodUUID";
-	private String DATAPODVERSION = "DatapodVersion";
-	private String ATTRIBUTE_ID = "AttributeId";
-	private String ATTRIBUTE_VAL = "AttributeValue";
-	private String ROWKEY = "RowKey";
+	private String DATAPODUUID = "datapodUuid";
+	private String DATAPODVERSION = "datapodVersion";
+	private String ATTRIBUTE_ID = "attributeId";
+	private String ATTRIBUTE_VAL = "attributeValue";
+	private String ROWKEY = "rowKey";
 	private String EMPTY = "";
 	private String VERSION = " version ";
-	private String DATAPOD_NAME = " datapodname";
-	private String ATTRIBUTE_NAME = " attributename";
+	private String DATAPOD_NAME = " datapodName";
+	private String ATTRIBUTE_NAME = " attributeName";
 
 	@Autowired
 	MetadataUtil daoRegister;
