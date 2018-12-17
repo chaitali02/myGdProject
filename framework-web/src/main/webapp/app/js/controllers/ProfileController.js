@@ -1002,7 +1002,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.myform.$dirty = false;
 		$scope.isEditInprogess = true;
 		$scope.isEditVeiwError = false;
-		CommonService.getOneByUuidAndVersion($scope.profilegroup.defaultVersion.uuid, $scope.profilegroup.defaultVersion.version, 'profilegroup')
+		CommonService	.getOneByUuidAndVersion($scope.profilegroup.defaultVersion.uuid, $scope.profilegroup.defaultVersion.version, 'profilegroup')
 			.then(function (response) { onsuccess(response.data) }, function (response) { onError(response.data) });
 		var onsuccess = function (response) {
 			$scope.isEditInprogess = false;

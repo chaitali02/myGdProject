@@ -125,7 +125,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Name',
         name: 'name',
         minWidth: 220,
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>'
       },
       {
         displayName: 'Version',
@@ -181,7 +182,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Name',
         name: 'name',
         minWidth: 150,
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>'
       },
       {
         displayName: 'Version',
