@@ -29,7 +29,7 @@ public class ProfileOracleOperator extends ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, RunMode runMode)
+			String attrName, String attrType, RunMode runMode)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String sql = "";
