@@ -608,7 +608,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
 			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
 		}
-	}
+  }
+  
   $scope.selectlhsType = function (type, index) {
     if (type == "string") {
       $scope.filterTableArray[index].islhsSimple = true;
