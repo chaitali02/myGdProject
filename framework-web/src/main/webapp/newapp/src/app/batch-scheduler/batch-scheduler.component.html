@@ -72,14 +72,8 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown 
-                    [options]="VersionList" 
-                    [(ngModel)]="selectedVersion" 
-                    name="selectedVersion" 
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" 
-                    [disabled]="mode == 'false'" 
-                    (onChange)="onVersionChange()">
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
               </div>
@@ -158,20 +152,21 @@
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
-               <div class="col-md-6 col-sm-6 col-xs-12" >
-                   <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
-               </div>
-             </div>
-             
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
+                    binary="true"></p-checkbox>
+                </div>
+              </div>
+
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
                   <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-                  <span class="spinner"  style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
-                </span>
+                  </span>
                 </div>
               </div>
 
@@ -192,11 +187,11 @@
                       <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute"
                         (click)="checkAllAttributeRow()" name="selectAll" />
                     </th>
-                    <th class="text-center" style="width:14%;">Name</th>
+                    <th class="text-center" style="width:12%;">Name</th>
                     <th class="text-center">Start Time</th>
                     <th class="text-center">End Time</th>
-                    <th class="text-center" style="width:14%;">Frequency Type</th>
-                    <th class="text-center" style="width:17%;">Frequency Detail</th>
+                    <th class="text-center" style="width:13%;">Frequency Type</th>
+                    <th class="text-center" style="width:16%;">Frequency Detail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -208,65 +203,44 @@
                     <td>
                       <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
                         class="form-control" name="name+{{i}}">
-                        <!-- (change)="#" -->
                     </td>
                     <td>
-                      <!-- {{tabledata.startDate}} -->
-                      <!-- {{tabledata.startDate|date :'MMM d HH:mm:00 yyyy IST'}} -->
-                      <p-calendar [inputStyle]="{'width':'85%','margin':'0px 0px 0px -3px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12" [utc]="true" [showIcon]="true"
-                        [disabled]="mode == 'true'" [minDate]="today" [stepHour]="2"></p-calendar>
-                        <!-- (onFocus)="#" -->
-
+                      <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
+                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" [stepHour]="2"></p-calendar>
+                      <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
-                      <!-- {{tabledata.endDate}} -->
-                      <p-calendar [inputStyle]="{'width':'85%','margin':'0px 0px 0px -3px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" hourFormat="12" [showIcon]="true"
-                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate"></p-calendar>
+                      <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" hourFormat="12"
+                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                      <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
-                      <!-- <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="d{{i}}">
-                        <option *ngFor="let d of attrtypes;" [value]="d">{{d}}</option>
-                      </select> -->
-                      <!-- <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="type{{i}}" id="type">
-                          <option *ngFor="let ftype of frequencyTypes;" [value]="ftype.id" [selected]="tabledata.type">{{ftype.name}}</option>
-                        </select> -->
-                      <!-- [disabled]="mode == 'true'" 
-                              [selected]="tabledata.type===ftype.name"
-                               -->
-                      <select class="form-control" [(ngModel)]="tabledata.attrtype" name="attrtype+{{i}}" [disabled]="mode == 'true'" (change)="onChangeAttrtype(i)">
+                      <select class="form-control" [(ngModel)]="tabledata.attrtype" name="attrtype+{{i}}" [disabled]="mode == 'true'"
+                        (change)="onChangeAttrtype(i)">
                         <option *ngFor="let app of attrtypes" [ngValue]="app">{{app}} </option>
                       </select>
                     </td>
-
-
                     <td>
-                      <!-- <input type="text" [(ngModel)]="tabledata.detail" title="{{tabledata.detail}}" [disabled]="mode" class="form-control" name="detail+{{i}}"> -->
                       <ng-container *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
-                        <!-- <div *ngIf="(type=='Weekly' || tabledata.type=='Bi-Weekly' || tabledata.type=='Quarterly' || tabledata.type=='Monthly')"> -->
-
                         <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
                           name="frequencyDetail+{{i}}+{{optionChoose}}" class="form-control" (click)="showDialog(i, tabledata.attrtype)"
                           [disabled]="mode == 'true'" readonly={{isReadOnly}} />
-
                       </ng-container>
-
-
                       <ng-template #notAllow>
                         <div style="text-align: center">
                           -NA-
                         </div>
                       </ng-template>
-
                     </td>
                   </tr>
                 </tbody>
               </table>
 
 
-              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog" [responsive]="true" 
-                  [contentStyle]="{'overflow':'visible'}">
+              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog" [responsive]="true"
+                [contentStyle]="{'overflow':'visible'}">
                 <div class="weekDays-selector" *ngFor="let week of weekName.weekAlias;let i=index" style="float: left">
                   <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
                     type="checkbox" id="{{week.name}}" [checked]="week.checked">
@@ -281,8 +255,8 @@
                 </div>
               </p-dialog>
 
-              <p-dialog class="dialogBox dialogBox3" [modal]="true" [closable]="false" [(visible)]="displayDialog3" [responsive]="true" 
-                  [contentStyle]="{'overflow':'visible'}">
+              <p-dialog class="dialogBox dialogBox3" [modal]="true" [closable]="false" [(visible)]="displayDialog3"
+                [responsive]="true" [contentStyle]="{'overflow':'visible'}">
                 <div class="weekDays-selector" *ngFor="let week of weekName.hour;let i=index">
                   <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
                     type="checkbox" id="{{week.name}}" [checked]="week.checked">
@@ -297,7 +271,8 @@
                 </div>
               </p-dialog>
 
-              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog1" [responsive]="true" [contentStyle]="{'overflow':'visible'}">
+              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog1" [responsive]="true"
+                [contentStyle]="{'overflow':'visible'}">
                 <div class="weekDays-selector" *ngFor="let week of weekName.quarters;let i=index" style="float: left">
                   <input class="weekday" (change)="onChange(week.name, $event.target.checked,i)" name="{{ week.name }}"
                     type="checkbox" id="{{week.name}}" [checked]="week.checked">
@@ -312,20 +287,17 @@
                 </div>
               </p-dialog>
 
-              
-              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog2" [responsive]="true" [contentStyle]="{'overflow':'visible'}">
-                <p-calendar 
-                  selectionMode="multiple" 
-                  [readonlyInput]="true"
-                  [(ngModel)]="frequencyDetailCal" 
-                  name="frequencyDetailCal+{{frequencyDetail.index}}" 
-                  [inline]="true" 
-                  [minDate]="minimumDate">
+
+              <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog2" [responsive]="true"
+                [contentStyle]="{'overflow':'visible'}">
+                <p-calendar selectionMode="multiple" [readonlyInput]="true" [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal+{{frequencyDetail.index}}"
+                  [inline]="true" [minDate]="minimumDate">
                 </p-calendar>
                 <br>{{frequencyDetail.index|json}}
                 <div style="height: 50px; padding:  6px 0px 0px 0px; float: right;">
                   <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
-                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDoneMonth(frequencyDetailCal,this.frequencyDetail.index)" class="btn green">Done</button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="dialogDoneMonth(frequencyDetailCal,this.frequencyDetail.index)"
+                    class="btn green">Done</button>
                 </div>
               </p-dialog>
             </form>{{frequencyDetailCal}}
