@@ -88,10 +88,11 @@ trainPercent=0.0
 testPercent=0.0
 output_result = dict() 
 outputResultPath=""
+numHiddenLayers=0
 
 # Iteration over all arguments:
 plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier",
-         "sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent", "outputResultPath", "rowIdentifier"]
+         "sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent", "outputResultPath", "rowIdentifier", "numHiddenLayers"]
 
 i = 0
 for eachArg in sys.argv:
@@ -232,22 +233,25 @@ if otherParams != None:
             outputResultPath = otherParams[value]
     
         if value == "weightInit":
-            weightInit = input_config[value]
+            weightInit = otherParams[value]
         
         if value == "updater":
-            updater = input_config[value]
+            updater = otherParams[value]
     
         if value == "numHidden":
-            numHidden = input_config[value]
+            numHidden = otherParams[value]
         
         if value == "numLayers":
-            numLayers = input_config[value]
+            numLayers = otherParams[value]
     
         if value == "layerNames":
-            layerNames = input_config[value]
+            layerNames = otherParams[value]
     
         if value == "lossFunction":
-            lossFunction = input_config[value]
+            lossFunction = otherParams[value]
+    
+        if value == "numHiddenLayers":
+            numHiddenLayers = int(otherParams[value])
 
 if sourceDsDetails != None:
     for value in sourceDsDetails:
@@ -329,6 +333,7 @@ print("inputSourceFileName: ", inputSourceFileName)
 print("trainPercent: ", trainPercent)
 print("testPercent: ", testPercent)
 print("outputResultPath: ", outputResultPath)
+print("numHiddenLayers: ", numHiddenLayers)
 
 print("sourceHostName: ", sourceHostName)
 print("sourceDbName: ", sourceDbName)
@@ -341,7 +346,8 @@ print("targetDbName: ", targetDbName)
 print("targetPort: ", targetPort)
 print("targetUserName: ", targetUserName)
 print("targetPassword: ", targetPassword)
-
+print()
+print()
 
 # Importing the dataset
 dataset = None
@@ -479,6 +485,9 @@ def generatePredictStatus(spark_df: DataFrame):
     return prediction_status_df
 
 def prepareStatus(label_val, prediction_val):
+    label_val = float(label_val)
+    prediction_val = float(prediction_val)
+    
     if prediction_val > 0.49500:
         prediction_val = 1.0
     else:
@@ -494,14 +503,21 @@ def model():
     from keras.models import Sequential
     from keras.layers import Dense
     
+    print("preparing model...")
+    
     # Initialising the ANN
     classifier = Sequential()
     
     # Adding the input layer and the first hidden layer
     classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = numInput))
     
-    # Adding the second hidden layer
-    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+    if numHiddenLayers != 0:
+        for i in range(numHiddenLayers):    
+            print("Adding hidden layer no.: ", i)
+            classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+    else:
+        print("No hidden layers are set, hence adding one hidden layer bydefault ")
+        classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
     
     # Adding the output layer
     classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
@@ -567,13 +583,11 @@ def train():
 #     # Compiling the ANN
 #     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     
-    
     kerasClassifier = KerasClassifier(build_fn=model, batch_size = 10, nb_epoch = nEpochs, verbose=0)    
     kerasClassifier.fit(X_train, y_train, batch_size = 10, nb_epoch = nEpochs)
 
     permutationImportance = PermutationImportance(kerasClassifier, random_state=1).fit(X_train, y_train)
     featureImportance = permutationImportance.feature_importances_
-    print("feature importance type: ", type(featureImportance))
     print("feature importances: ", featureImportance)
     
     classifier = model()
