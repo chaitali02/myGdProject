@@ -34,6 +34,7 @@ public class ProfileMySQLOperator extends ProfileOperator {
 		String sql = "";
 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
+		String attrType = datapod.getAttribute(Integer.parseInt(attrId)).getType();
 		sql = "SELECT '" + profile.getDependsOn().getRef().getUuid() + "' AS datapodUUID, '"
 				+ profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
 				+ datapod.getName()+"' AS datapodName, " 

@@ -77,9 +77,12 @@ public class ProfileOperatorFactory /*extends CustomOperatorFactory*/ {
 				datasourceName=ExecContext.POSTGRES.toString();
 			} else if(datasourceName.equalsIgnoreCase(ExecContext.spark.toString())) {
 				datasourceName = ExecContext.spark.toString();
+			} else if (datasourceName.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				datasourceName = ExecContext.FILE.toString();
 			}
 		}
 
+		logger.info(" Datasource name : " + datasourceName);
 		if (datasourceName.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return profileImpalaOperator;
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.HIVE.toString()) || datasourceName.equalsIgnoreCase(ExecContext.spark.toString()) || datasourceName.equalsIgnoreCase(ExecContext.FILE.toString())) {

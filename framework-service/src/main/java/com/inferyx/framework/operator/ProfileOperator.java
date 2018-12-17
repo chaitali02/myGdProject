@@ -65,6 +65,7 @@ public class ProfileOperator {
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String attrId, List<String> datapodList,
 			DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode) throws NumberFormatException, Exception {
+		
 		if (profile == null) {
 			return null;
 		}
@@ -73,7 +74,7 @@ public class ProfileOperator {
 			String tableName = getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode);
 			logger.info("getProfileTableName(DP) : " + tableName);
 			return generateSql(profile, profileExec, tableName, attrId, 
-					dp.getAttribute(Integer.parseInt(attrId)).getName(), runMode);
+					dp.getAttribute(Integer.parseInt(attrId)).getName(), dp.getAttribute(Integer.parseInt(attrId)).getType(), runMode);
 		} else {
 			return generateSql(profile, profileExec, getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode), null,
 					dagExec, otherParams, runMode);
@@ -81,7 +82,7 @@ public class ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, RunMode runMode)
+			String attrName, String attrtype, RunMode runMode)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
