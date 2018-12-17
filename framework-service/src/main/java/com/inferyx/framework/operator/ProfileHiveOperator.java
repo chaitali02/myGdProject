@@ -30,7 +30,7 @@ public class ProfileHiveOperator extends ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			String attrName, String attrType, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			String sql = "";
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
@@ -57,7 +57,7 @@ public class ProfileHiveOperator extends ProfileOperator {
 					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
 					+ profileExec.getVersion()+ "' AS version from " + profileTableName;
 			
-			logger.info("query is : " + sql);
+			logger.info("Inside profile HIVE operator query is : " + sql);
 			return sql;
 		}
 	}

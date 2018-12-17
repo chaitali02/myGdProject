@@ -28,13 +28,13 @@ public class ProfilePostGresOperator extends ProfileOperator {
 	}
 	
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			String attrName, String attrType, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String sql = "";
 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		Attribute attribute = datapod.getAttribute(Integer.parseInt(attrId));
-		String attrType = attribute.getType();
+		attrType = attribute.getType();
 		String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";	
 		
 //		if(!attrType.equalsIgnoreCase("string"))			
@@ -53,8 +53,13 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "COUNT(distinct " + attrName1 + ")/COUNT(1)*100 AS perDistinct,"		
 					+ "COUNT(" + attrName1 + ") AS numNull,"				
 					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "
-//					+ "COUNT(" + attrName1 + ") / COUNT(1)*100 AS perNull,"
-					+ "null AS sixSigma," 
+					+ "min(length(cast(" + attrName + " as string))) as minLength, "
+					+ "max(length(cast(" + attrName + " as string))) as maxLength, "
+					+ "avg(length(cast(" + attrName + " as string))) as avgLength, "
+					+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
+					+ " FROM " + profileTableName  
+					+ " GROUP by " +  attrName 
+					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
 					+ profileExec.getVersion() + " AS version"
 					+ " FROM " + profileTableName;
 //		else 
