@@ -32,6 +32,7 @@ import { MapComponent } from './map/map.component';
 import { RelationComponent } from './relation/relation.component';
 import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 import { StorageServiceModule } from 'angular-webstorage-service'
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import { StorageServiceModule } from 'angular-webstorage-service'
         SharedModule,
         GrowlModule,
         TooltipModule,
-        StorageServiceModule        
+        StorageServiceModule,
+        DialogModule        
     ],
     declarations: [
         DataPreparationComponent,

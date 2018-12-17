@@ -49,6 +49,10 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  GraphAnalysis: {
+    id:any;
+    subMenu: any[];
+  }
   DataVisualizationMenu: {
     id:any;
     subMenu: any[];
@@ -146,6 +150,23 @@ export class SidebarComponent {
       }
       ]
     };
+    this.GraphAnalysis = {
+      id:12,
+      subMenu: [
+      //   {
+      //   name: "Create",
+      //   type: "dag"
+      // },
+      {
+        name: "List",
+        type: "graphpod"
+      },
+      {
+        name: "Results",
+        type: "graphexec"
+      }
+      ]
+    };
     this.DataScienceMenu = {
       id:10,
       subMenu: [{
@@ -204,7 +225,7 @@ export class SidebarComponent {
       ]
     };
     this.BatchSchedulerMenu={
-      id:12,
+      id:13,
       subMenu: [
         // {
         //   name: "Create New",

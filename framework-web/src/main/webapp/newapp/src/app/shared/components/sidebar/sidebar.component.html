@@ -176,6 +176,27 @@
         </li>
       </ul>
     </li>
+    <!--Graph Analysis -->
+    <li class="nav-item" (click)="check(GraphAnalysis.id,true)" [ngClass]="{'open': selectedItemId === GraphAnalysis.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-cogs"></i>
+        <span class="title">Graph Analysis</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === GraphAnalysis.id && toggle ==true ? 'block' : none">
+        <li class="nav-item">
+            <a [routerLink]="['graphAnalysis/graphpod']">
+              <span class="title">Create</span>
+            </a>
+          </li>
+        <li *ngFor="let graphanalysissubmenu of GraphAnalysis.subMenu" class="nav-item">        
+          <a [routerLink]="['list', graphanalysissubmenu.type]" class="nav-link">
+            <span class="title">{{graphanalysissubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>
 
     <!--Data Pipeline Menu-->
     <li class="nav-item" (click)="check(DataPipelineMenu.id,true)" [ngClass]="{'open': selectedItemId === DataPipelineMenu.id}">

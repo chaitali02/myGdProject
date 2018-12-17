@@ -199,6 +199,9 @@ export class CommonListComponent {
       if (params['type'].indexOf("dagexec") != -1) {
         this.DagExec = true;
       }
+      else if(params['type'].indexOf("graphexec") != -1){
+        this.DagExec = true;
+      }
       else {
         this.DagExec = false;
       }

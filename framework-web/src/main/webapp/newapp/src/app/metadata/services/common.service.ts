@@ -182,6 +182,8 @@ modifyResponse(response){
     attributedetail["attributeId"]=response[j].attrId;
     attributedetail["dname"]=response[j].ref.name+"."+response[j].attrName;
     attributedetail["id"]=response[j].ref.uuid+"_"+response[j].attrId;
+    attributedetail["attrType"]=response[j].attrType;
+    
     attributes.push(attributedetail)
     
   }
