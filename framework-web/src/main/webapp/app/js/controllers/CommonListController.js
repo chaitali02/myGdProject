@@ -24,7 +24,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     type: 'success',
     title: 'Success',
     content: '',
-    timeout: 3000 //time in ms
+    timeout: 3000000000000 //time in ms
   };
  
   $rootScope.isCommentDisabled=true;

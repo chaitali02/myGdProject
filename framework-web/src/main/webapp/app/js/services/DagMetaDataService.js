@@ -183,6 +183,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         name: 'name',
         minWidth: 150,
         headerCellClass: 'text-center',
+        // headerCellTemplate: '<div style="margin-top:10px;">Hello!</div>',
         cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>'
       },
       {
@@ -214,7 +215,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           direction: uiGridConstants.ASC,
          // priority: 0,
         },
-        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.startTime}}</div></div>'
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.startTime}}>{{row.entity.startTime}}</div></div>'
       },
       {
         displayName: 'End Time',
@@ -222,7 +223,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         maxWidth: 190,
-        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.endTime}}</div></div>'
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.endTime}}>{{row.entity.endTime}}</div></div>'
       },
       {
         displayName: 'Duration',
