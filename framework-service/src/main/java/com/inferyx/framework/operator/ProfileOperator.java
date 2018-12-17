@@ -84,7 +84,7 @@ public class ProfileOperator {
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
 			String attrName, String attrtype, RunMode runMode)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException, Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		String datasourceName = datasource.getType();
 		String sql = "";
@@ -133,7 +133,7 @@ public class ProfileOperator {
 					+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
 					+ " FROM " + profileTableName  
 					+ " GROUP by " +  attrName 
-					+ " HAVING COUNT(" + attrName + ") > 1)) numDuplicates, "  
+					+ " HAVING COUNT(" + attrName + ") > 1) numDuplicates_inner) numDuplicates, '"  
 					+ profileExec.getVersion() + "' as version from " + profileTableName;
 
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {

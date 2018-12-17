@@ -10,13 +10,15 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
+import java.util.HashSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
@@ -25,15 +27,18 @@ import com.inferyx.framework.enums.RunMode;
 @Component
 public class ProfileHiveOperator extends ProfileOperator {
 
+	@Autowired
+	FilterOperator2 filterOperator2;
 	public ProfileHiveOperator() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, String attrType, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			String attrName, String attrType, RunMode runMode) throws Exception {
 			String sql = "";
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
+			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
+			Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
 			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
 					+ datapod.getName() + "' AS datapodName, " + attrId
@@ -55,7 +60,10 @@ public class ProfileHiveOperator extends ProfileOperator {
 					+ " FROM " + profileTableName  
 					+ " GROUP by " +  attrName 
 					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
-					+ profileExec.getVersion()+ "' AS version from " + profileTableName;
+					+ profileExec.getVersion()+ "' AS version from " + profileTableName 
+					+ " " + datapod.getName()
+					+ " WHERE 1=1 "
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 			
 			logger.info("Inside profile HIVE operator query is : " + sql);
 			return sql;
