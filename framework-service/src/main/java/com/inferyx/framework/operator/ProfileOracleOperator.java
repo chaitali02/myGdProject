@@ -77,7 +77,8 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ profileExec.getVersion() + "' AS version from " + profileTableName
 				+ " " + datapod.getName()
 				+ " WHERE 1=1 "
-				+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+				+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS)
+				+ "GROUP BY "+attrName;
 		//}
 		logger.info("query is : " + sql);
 		return sql;
