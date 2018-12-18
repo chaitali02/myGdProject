@@ -311,12 +311,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> df = null;
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
 				}
 				df = sparkSession.sql(sql);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.driver.extraClassPath", datasource.getDriver())
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as impala_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
@@ -3491,12 +3499,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> df = null;
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
 				}
 				df = sparkSession.sql(sql);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.driver.extraClassPath", datasource.getDriver())
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as impala_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
