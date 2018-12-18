@@ -45,6 +45,16 @@
             }
         }
     ],
+     "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "ce0f9ed6-6f22-49d4-8b7e-7fd62f55eb42",
     "version" : "1523439599",
     "name" : "predict_formula_adjInterestRate",
@@ -59,7 +69,7 @@
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
-  "locked" : "N",
+  	"locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

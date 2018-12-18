@@ -1415,5 +1415,15 @@
       "name": "AML - Suspicious Transaction Activity - ANN"
     },
     "value": null
-  }
+  },
+   "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
+            }
+        }
+    ],
+    "includeFeatures" : "Y"
 }

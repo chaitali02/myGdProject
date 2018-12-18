@@ -106,6 +106,16 @@
             "uuid" : "ef4d437d-8eba-415f-aa46-bf8563bbde05"
         }
     },
+     "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "50451c93-059e-43b0-8819-e027bea180e3",
     "version" : "1535974604",
     "name" : "predict_linear_regression",
@@ -120,7 +130,7 @@
     "createdOn" : ISODate("2018-09-03T11:36:44.000Z"),
     "tags" : [],
     "active" : "Y",
-  "locked" : "N",
+   "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {
