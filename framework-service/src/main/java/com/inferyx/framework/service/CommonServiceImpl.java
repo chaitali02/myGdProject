@@ -4408,7 +4408,12 @@ public class CommonServiceImpl <T> {
 			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
 			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString(), "N");
 			return getDatapodByObject(dependsOnObj);
-		} 
+		} else if(object instanceof Profile) {
+			Profile profile = (Profile) object;
+			MetaIdentifier profileDependsOn = profile.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(), profileDependsOn.getType().toString());
+			return getDatapodByObject(dependsOnObj);	
+		}
 		
 		return null;
 	}

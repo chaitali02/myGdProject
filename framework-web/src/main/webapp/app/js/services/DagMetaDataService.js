@@ -125,7 +125,28 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Name',
         name: 'name',
         minWidth: 220,
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        enableColumnMenu: true,
+      //   headerCellTemplate: '<div ng-class="{ \'sortable\': sortable }">' +
+      // '<div class="ui-grid-vertical-bar">&nbsp;</div>' +
+      // '<div class="ui-grid-cell-contents" col-index="renderIndex">' +
+      // '<span class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + \'-header-text\'">{{ col.name CUSTOM_FILTERS }}</span>'+
+      // '<span ui-grid-visible="col.sort.direction" ng-class="{ \'ui-grid-icon-up-dir\': col.sort.direction == asc, \'ui-grid-icon-down-dir\': col.sort.direction == desc, \'ui-grid-icon-blank\': !col.sort.direction }">' +
+      // '&nbsp;' +
+      // '</span>' +
+      // '</div>' +
+      // '<div class="ui-grid-column-menu-button" ng-if="grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false" class="ui-grid-column-menu-button" ng-click="toggleMenu($event)">' +
+      // '<i class="ui-grid-icon-angle-down">&nbsp;</i>' +
+      // '</div>' +
+      // '<div ng-if="filterable" class="ui-grid-filter-container" ng-repeat="colFilter in col.filters">' +
+      // '<input type="text" class="ui-grid-filter-input" ng-model="colFilter.term" ng-attr-placeholder="{{col.displayName || \'\'}}" />' +
+      // '<div class="ui-grid-filter-button" ng-click="colFilter.term = null">' +
+      // '<i class="ui-grid-icon-cancel" ng-show="!!colFilter.term">&nbsp;</i>' +
+      // '</div>' +
+      // '</div>' +
+      // '</div>',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
+        enableSorting:true
       },
       {
         displayName: 'Version',
@@ -181,7 +202,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Name',
         name: 'name',
         minWidth: 150,
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>'
       },
       {
         displayName: 'Version',
@@ -212,7 +234,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           direction: uiGridConstants.ASC,
          // priority: 0,
         },
-        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.startTime}}</div></div>'
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.startTime}}>{{row.entity.startTime}}</div></div>'
       },
       {
         displayName: 'End Time',
@@ -220,7 +242,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         maxWidth: 190,
-        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.endTime}}</div></div>'
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.endTime}}>{{row.entity.endTime}}</div></div>'
       },
       {
         displayName: 'Duration',

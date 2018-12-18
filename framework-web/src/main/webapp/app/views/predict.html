@@ -288,7 +288,7 @@
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Row Identifier</label>
                                             <div class="col-md-6">
 
-                                                <tags-input class="tag-scroll" ng-model="rowIdentifierTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+                                                <tags-input class="tag-scroll" ng-model="rowIdentifierTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
                                                     add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                                                     <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                                                         load-on-empty="true">
@@ -368,7 +368,7 @@
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div style="width:100%;">
-                                                                                        <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname  for x in allTargetAttribute track by x.attributeId"
+                                                                                        <select select2 ng-model="data.targetFeature" ng-options=" x as x.name  for x in allTargetAttribute track by x.attributeId"
                                                                                             ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
                                                                                             ng-disabled="{{mode}}" class="form-control"></select>
                                                                                     </div>

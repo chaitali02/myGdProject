@@ -444,6 +444,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
           var attrinfo={};
           attrinfo.uuid=response.rowIdentifier[i].ref.uuid;
           attrinfo.type=response.rowIdentifier[i].ref.type;
+          attrinfo.name=response.rowIdentifier[i].attrName;
           attrinfo.dname=response.rowIdentifier[i].ref.name+"."+response.rowIdentifier[i].attrName;
           attrinfo.attributeId=response.rowIdentifier[i].attrId;
           attrinfo.id=response.rowIdentifier[i].ref.uuid+"_"+response.rowIdentifier[i].attrId

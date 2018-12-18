@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -79,6 +80,8 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.ProfileOperatorFactory;
+import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.operator.FilterOperator2;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
@@ -139,9 +142,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 	Engine engine;
 	@Autowired
 	private DatapodRegister datapodRegister;
-
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
+	@Autowired
+	private FilterOperator2 filterOperator2;
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -562,8 +566,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 				if(sql != null)
 					sbProfileSelect.append(sql).append(" UNION ALL ");
 			}
-
-			profileExec.setExec(sbProfileSelect.substring(0, sbProfileSelect.length() - 10).toString());
+			String unionSql = sbProfileSelect.substring(0, sbProfileSelect.length() - 10);
+//			if(profile.getFilterInfo() != null && !profile.getFilterInfo().isEmpty()) {
+//				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
+//				Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
+//				String filter = filterOperator2.generateSql(profile.getFilterInfo(), refKeyMap, filterSource, otherParams, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+//				Datapod datapod = commonServiceImpl.getDatapodByObject(profile);
+//				unionSql = "SELECT * FROM ("+unionSql+") ".concat(datapod.getName()).concat(" WHERE 1=1").concat(filter);
+//			}
+			profileExec.setExec(unionSql);
 			synchronized (profileExec.getUuid()) {
 				ProfileExec profileExec1 = (ProfileExec) daoRegister.getRefObject(
 						new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));

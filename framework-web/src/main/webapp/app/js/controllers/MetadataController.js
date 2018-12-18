@@ -611,6 +611,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isEnableDSRB(data);
 		}
 	}
+	$scope.text=function(row){
+		console.log(row);
+	}
+
 	$scope.showSampleTable = function (data) {
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
@@ -631,11 +635,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
+			console.log(data.attributes)
 			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
+				console.log(data.attributes[j].type);
 				attribute.name =data.attributes[j].name;
+				attribute.name1 =data.attributes[j].name;
+               // attribute.headerCellTemplate='views/headerTemplate.html'
 				attribute.displayName =data.attributes[j].dispName;
+				attribute.attrType =data.attributes[j].type;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				console.log(data.attributes[j].type);
+
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
