@@ -16,12 +16,10 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -43,7 +41,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -55,12 +52,8 @@ import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -71,7 +64,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -79,11 +71,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.factory.ProfileOperatorFactory;
-import com.inferyx.framework.operator.FilterOperator;
-import com.inferyx.framework.operator.FilterOperator2;
 import com.inferyx.framework.operator.ProfileOperator;
-import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -110,8 +98,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	ProfileOperatorFactory profileOperatorFactory;
 	@Autowired
 	MetadataUtil daoRegister;
 	@Autowired
@@ -141,11 +127,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Autowired
 	Engine engine;
 	@Autowired
-	private DatapodRegister datapodRegister;
+	ProfileOperator profileOperator; 
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
-	@Autowired
-	private FilterOperator2 filterOperator2;
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -552,15 +536,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 		ProfileExec profileExec =null;
 		try {
 			Profile profile = null;
-			ProfileOperator profileOperator = null;
+//			ProfileOperator profileOperator = null;
 			StringBuilder sbProfileSelect = new StringBuilder();
 			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 					MetaType.profileExec.toString());
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
-			Datasource datasource = commonServiceImpl.getDatasourceByObject(profile);
+//			Datasource datasource = commonServiceImpl.getDatasourceByObject(profile);
 			for (int i = 0; i < profile.getAttributeInfo().size(); i++) {
-				profileOperator = profileOperatorFactory.getOperator(runMode, datasource);
+//				profileOperator = profileOperatorFactory.getOperator(runMode, datasource);
 				String sql = profileOperator.generateSql(profile, profileExec,
 						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, otherParams, runMode);
 				if(sql != null)
@@ -583,6 +567,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			synchronized (profileExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
+			}
 			String message = null;
 			try {
 				message = e.getMessage();

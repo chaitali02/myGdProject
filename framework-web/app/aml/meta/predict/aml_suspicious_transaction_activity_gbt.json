@@ -1374,8 +1374,16 @@
             "uuid" : "2bd68a97-c1c2-47b6-bb41-b3ed00c582bc"
         }
     },
-    "rowIdentifier" : [],
-    "includeFeatures" : "N",
+    "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dc265559-bc3a-4b8b-9187-26478048d2b6"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "6516ac65-3698-4a01-8f6e-7cad456758af",
     "version" : "1544526441",
     "name" : "AML - Suspicious Transaction Activity - GBT",

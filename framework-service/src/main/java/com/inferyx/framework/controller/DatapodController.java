@@ -160,4 +160,15 @@ public class DatapodController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.synchronizeMetadata(datapodUuid, datapodVersion, runMode);
 	}
+	
+	@RequestMapping(value = "/getAttrHistogram", method = RequestMethod.GET)
+	public List<Map<String, Object>> getAttrHistogram(@RequestParam(value = "uuid") String datapodUuid,
+					@RequestParam(value = "version")String datapodVersion,
+					@RequestParam(value = "attributeId")String attributeId,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.getAttrHistogram(datapodUuid, datapodVersion, attributeId, 10, runMode);
+	}
 }

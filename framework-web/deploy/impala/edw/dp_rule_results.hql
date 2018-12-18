@@ -8,20 +8,23 @@ CREATE TABLE dp_rule_results
   `datapodname` string,
   `attributeid` string,
   `attributename` string,
-  `numrows` string,
-  `minval` BIGINT,
-  `maxval` BIGINT,
-  `avgval` BIGINT,
-  `medianval` BIGINT,
-  `stddev` BIGINT,
+  `numrows` BIGINT,
+  `minval` DOUBLE,
+  `maxval` DOUBLE,
+  `avgval` DOUBLE,
+  `medianval` DOUBLE,
+  `stddev` DOUBLE,
   `numdistinct` int,
-  `perdistinct` BIGINT,
+  `perdistinct` DOUBLE,
   `numnull` int,
-  `pernull` BIGINT,
-  `sixsigma` BIGINT,
-  `load_date` string,
-  `load_id` int,
-  `version` int
+  `pernull` DOUBLE,
+  `minlength` DOUBLE,
+  `maxlength` DOUBLE,
+  `avglength` DOUBLE,
+  `numduplicates` DOUBLE,
+  `version`        STRING 
 );
+
+
 
 
