@@ -10,13 +10,15 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
+import java.util.HashSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
@@ -25,13 +27,14 @@ import com.inferyx.framework.enums.RunMode;
 @Component
 public class ProfileOracleOperator extends ProfileOperator {
 
+	@Autowired
+	FilterOperator2 filterOperator2;
 	public ProfileOracleOperator() {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
 			String attrName, String attrType, RunMode runMode)
-			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			throws Exception {
 		String sql = "";
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		/*Datapod dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
@@ -46,10 +49,13 @@ public class ProfileOracleOperator extends ProfileOperator {
 					+ ",'0'),0 , 1))*100 as perNull, count(" + attrName + ") / count(REPLACE(nvl(" + attrName
 					+ ",'0'),0 , 1)) as sixSigma, " + profileExec.getVersion() + " as version from " + profileTableName;
 		} else {*/
+		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
+		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
 		sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
-				+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion,  " 
-				+datapod.getName()+" AS datapodName, "
-				+ attrId + "  AS AttributeId, "+attrName+" AS attributeName, " 
+				+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, "
+				+ " '" + datapod.getName()+"' AS datapodName, "
+				+ attrId + "  AS attributeId,"
+				+ " '"+attrName+"' AS attributeName, " 
 				+ "(SELECT COUNT(1) FROM "+ profileTableName + " tab) AS numRows, "
 				+ "min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS minVal, "
 				+ "max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", 1)AS int)) AS maxVal, "
@@ -59,7 +65,7 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ "cast(count(distinct " + attrName + ") AS decimal) AS numDistinct, "
 				+ "count(distinct " + attrName + ")/count(1)*100  AS perDistinct, "
 				+ "cast(count(" + attrName + ") as decimal) AS numNull,"				
-				+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "				
+				+ "sum(CASE WHEN " + attrName + " IS NULL THEN 0 ELSE 1 END) / count(1)*100 AS perNull, "				
 //				+ "count(" + attrName + ") / sum(REPLACE(nvl(" + attrName + ",'0'),0 , 1))*100 AS perNull, "
 				+ "min(length(cast(" + attrName + " as CHAR))) as minLength, "
 				+ "max(length(cast(" + attrName + " as CHAR))) as maxLength, "
@@ -67,8 +73,12 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ "(  select count(1) from (SELECT " + attrName + " ,COUNT(1) "  
 				+ " FROM " + profileTableName  
 				+ " GROUP by " +  attrName 
-				+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, "  
-				+ profileExec.getVersion() + " AS version from " + profileTableName;
+				+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '"  
+				+ profileExec.getVersion() + "' AS version from " + profileTableName
+				+ " " + datapod.getName()
+				+ " WHERE 1=1 "
+				+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS)
+				+ "GROUP BY "+attrName;
 		//}
 		logger.info("query is : " + sql);
 		return sql;
