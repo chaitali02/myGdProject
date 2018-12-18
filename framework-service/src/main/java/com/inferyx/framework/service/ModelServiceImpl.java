@@ -2893,16 +2893,16 @@ public class ModelServiceImpl {
 					
 					
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
-					String testSetPath = defaultDir.concat("test_set");
+					String testSetPath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "test_set" : "/test_set");
 					trainInput.setTestSetPath(testSetPath);
-					String modelFileName = defaultDir.concat("model");
+					String modelFileName = defaultDir.concat(defaultDir.endsWith("/") ? "model" : "/model");
 
-					String outputResultPath = defaultDir.concat("train_op_result").concat("/").concat("train_op_result");
+					String outputResultPath = defaultDir.concat(defaultDir.endsWith("/") ? "train_op_result" : "/train_op_result").concat("/").concat("train_op_result");
 					otherParams.put("outputResultPath", outputResultPath);
 					
 					deleteFileOrDirIfExists(defaultDir);
 					
-					File outputResultDir = new File(defaultDir.concat("train_op_result"));
+					File outputResultDir = new File(defaultDir.concat(defaultDir.endsWith("/") ? "train_op_result" : "/train_op_result"));
 					if(!outputResultDir.exists()) {
 						outputResultDir.mkdirs();
 					}
@@ -2918,19 +2918,19 @@ public class ModelServiceImpl {
 					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = MetaType.file.toString().toLowerCase();
-						String saveFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
-						logger.info("Saved file name : " + saveFileName);
+						String trainInputPath = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
+						logger.info("Saved file name : " + trainInputPath);
 						
-						File saveFile = new File(saveFileName);
+						File trainInPathFile = new File(trainInputPath);
 						Datasource datasource = commonServiceImpl.getDatasourceByApp();
 						IExecutor exec = null;
 						exec = execFactory.getExecutor(datasource.getType());
-						if(!saveFile.exists()) {							
+						if(!trainInPathFile.exists()) {							
 							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);	
 							String doubleCastSql = "SELECT * FROM " + tableName;
 							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);													
-							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+saveFileName);
-							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+trainInputPath);
+							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.CSV.toString().toLowerCase());
 						}		
 						
 						if(train.getRowIdentifier() != null 
@@ -2949,7 +2949,7 @@ public class ModelServiceImpl {
 							}		
 						}
 
-						trainInput.setSourceFilePath("file://"+saveFileName);
+						trainInput.setSourceFilePath("file://"+trainInputPath);
 					} else {
 						trainInput.setQuery(sql);
 						
@@ -2984,9 +2984,9 @@ public class ModelServiceImpl {
 					
 					trainInput.setOtherParams(otherParams);
 		
-					String inputConfigFilePath = defaultDir.concat("input_config.json");
+					String inputConfigFilePath = defaultDir.concat(defaultDir.endsWith("/") ? "input_config.json" : "/input_config.json");
 					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(new File(defaultDir.concat("input_config.json")), trainInput);
+					mapper.writeValue(new File(defaultDir.concat(defaultDir.endsWith("/") ? "input_config.json" : "/input_config.json")), trainInput);
 					
 					argList.add("inputConfigFilePath");
 					argList.add(inputConfigFilePath);
@@ -3299,7 +3299,7 @@ public class ModelServiceImpl {
 	}
 	
 	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
-		String filePath = directory +"/"+ fileName;		
+		String filePath = directory.concat(directory.endsWith("/") ? fileName : "/".concat(fileName));		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);
 //		File file = new File(filePath);
 //		if(file.exists()) {
@@ -3492,6 +3492,7 @@ public class ModelServiceImpl {
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
 		String modelLocation = dataStore.getLocation();
 		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
+		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
 		String testSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
 		
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
