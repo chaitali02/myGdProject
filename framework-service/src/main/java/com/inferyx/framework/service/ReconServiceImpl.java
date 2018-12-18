@@ -38,8 +38,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,22 +49,15 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
@@ -76,9 +67,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.factory.ProfileOperatorFactory;
 import com.inferyx.framework.operator.ReconOperator;
-import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -101,8 +90,6 @@ public class ReconServiceImpl extends RuleTemplate {
 	@Autowired
 	RegisterService registerService;
 	@Autowired
-	ProfileOperatorFactory profileOperatorFactory;
-	@Autowired
 	MetadataUtil daoRegister;
 	@Autowired
 	HDFSInfo hdfsInfo;
@@ -122,8 +109,6 @@ public class ReconServiceImpl extends RuleTemplate {
 	MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
-	@Autowired
-	private DatapodRegister datapodRegister;
 	@Autowired
 	private ReconOperator reconOperator;
 	@Autowired
