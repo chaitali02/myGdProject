@@ -583,6 +583,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			synchronized (profileExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
+			}
 			String message = null;
 			try {
 				message = e.getMessage();
