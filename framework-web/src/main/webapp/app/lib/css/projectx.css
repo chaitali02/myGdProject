@@ -1292,12 +1292,14 @@ transition: right 1m
   font-style: italic;
   /* opacity: .5; */
 
-  border-radius: 25px;
-  -webkit-border-radius:25px; 
-  -moz-border-radius:25px;
+  border-radius: 4px;
+  -webkit-border-radius:4px; 
+  -moz-border-radius:4px;
   /* background-color: #F1C40F; */
   background-color: #a0a0a0;
-  padding: 1px 6px 3px 6px;
+  /* padding: 1px 6px 3px 6px; */
+  padding: 0px 5px 1px 5px;
+
   color: white;
   content: 'a';
   -moz-box-sizing:border-box;
@@ -1312,7 +1314,8 @@ box-sizing:border-box;
   -moz-border-radius:4px;
   /* background-color: #36c6d3; */
   background-color:#a0a0a0;
-  padding: 1px 4px 0px 5px;
+  /* padding: 1px 4px 0px 5px; */
+  padding: 0px 5px 1px 5px;
   -moz-box-sizing:border-box;
 -webkit-box-sizing:border-box;
 box-sizing:border-box;
@@ -1324,14 +1327,14 @@ box-sizing:border-box;
 .fa-downcase-decimal:before {
   font-family: cursive; /* your font family here! */
   font-style: italic;
-  border-radius: 25px;
-  -webkit-border-radius:25px;
-  -moz-border-radius:25px; 
+  border-radius: 4px;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px; 
   /* background-color:#006df0; */
   background-color:#a0a0a0;
-  padding:5px 7px 3px 5px;;
+  /* padding:5px 7px 3px 5px; */
+  padding:0px 5px 1px 5px;
   color: white;
-  /* opacity: .5; */
   content: '.0';
   font-size: 10px;
   -moz-box-sizing:border-box;

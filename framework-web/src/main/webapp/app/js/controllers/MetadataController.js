@@ -611,8 +611,12 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isEnableDSRB(data);
 		}
 	}
-	$scope.text=function(row){
+	$scope.calculateHistrogram=function(row){
 		console.log(row);
+		$('#histogamModel').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
 	}
 
 	$scope.showSampleTable = function (data) {
@@ -638,15 +642,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			console.log(data.attributes)
 			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
-				console.log(data.attributes[j].type);
 				attribute.name =data.attributes[j].name;
-				attribute.name1 =data.attributes[j].name;
-               // attribute.headerCellTemplate='views/headerTemplate.html'
+				attribute.uuid=data.uuid;
+				attribute.attributeId=data.attributes[j].attributeId;
+               // attribute.headerCellTemplate='views/datapod-sample-header-template.html'
 				attribute.displayName =data.attributes[j].dispName;
 				attribute.attrType =data.attributes[j].type;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-				console.log(data.attributes[j].type);
-
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
