@@ -106,6 +106,16 @@
             }
         }
     ],
+     "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "8ff9342d-a48c-437b-b381-cddbbe2b90a9",
     "version" : "1521704987",
     "name" : "predict_algorithm_linear_regression",

@@ -132,6 +132,16 @@
             "uuid" : "d762b4ea-5adc-4d05-ab93-d78d00a48609"
         }
     },
+       "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "5de51a33-79ad-417d-98d5-11877c68c744",
     "version" : "1535967398",
     "name" : "predict_k-means",
@@ -146,7 +156,7 @@
     "createdOn" : ISODate("2018-09-03T09:36:38.000Z"),
     "tags" : [],
     "active" : "Y",
-  "locked" : "N",
+    "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

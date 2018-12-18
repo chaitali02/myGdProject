@@ -54,7 +54,7 @@ public class ParquetWriter implements IWriter {
 //				}
 				
 				if(rsHolder.getTableName() != null && !rsHolder.getTableName().isEmpty()) {
-					rsHolder = sparkExecutor.applySchema(rsHolder, datapod, null, rsHolder.getTableName(), true);
+					rsHolder = sparkExecutor.applySchema(rsHolder, datapod, null, rsHolder.getTableName(), false);
 					df = rsHolder.getDataFrame();
 				}
 			} 
