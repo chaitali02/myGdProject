@@ -3087,19 +3087,29 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException {
-		StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		StructType schema = new StructType(fieldArray);	
-		if(locationDatapod.getAttributes().size() > 4) {
-			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
-		} else {
-			int count = 0;
-			for(Attribute attribute : locationDatapod.getAttributes()) {
-				StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
-				fieldArray[count] = field;
-				count++;
+		
+		StructType schema = null;
+		if(locationDatapod != null) {
+			StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
+			schema = new StructType(fieldArray);	
+		
+			if(locationDatapod.getAttributes().size() > 4) {
+				throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
+			} else {
+				int count = 0;
+				for(Attribute attribute : locationDatapod.getAttributes()) {
+					StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+					fieldArray[count] = field;
+					count++;
+				}
 			}
+		} else {
+			StructField[] fields = new StructField[2];
+			fields[0] = new StructField("bucket", DataTypes.StringType, true, Metadata.empty());
+			fields[1] = new StructField("frequency", DataTypes.IntegerType, true, Metadata.empty());
+			schema = new StructType(fields);
 		}
 		
 
@@ -3116,7 +3126,11 @@ public class SparkExecutor<T> implements IExecutor {
 				String bucket = ds[i]+" - "+ds[i+1];
 				int frequency = (int) ls[i];
 				int version = Integer.parseInt(Helper.getVersion());
+				if(key != null) {
 				rowList.add(RowFactory.create(key, bucket, frequency, version));
+				} else {
+					rowList.add(RowFactory.create(bucket, frequency));
+				}
 			}
 		}
 		
