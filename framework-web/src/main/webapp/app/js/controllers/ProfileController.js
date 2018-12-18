@@ -8,6 +8,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		$scope.isDragable = "false";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -24,6 +25,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
 		$scope.isPanelActiveOpen = true;
+		$scope.isDragable = "true";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -37,12 +39,14 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 	else {
 		$scope.isAdd = true;
+		$scope.mode = "false";
+		$scope.isDragable = "true";
 	}
 
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
-	$scope.mode = " ";
+
 	$scope.isDestoryState = false;
 	$scope.profile = {};
 	$scope.profile.versions = []
@@ -165,10 +169,12 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 
 	$scope.selectOption = function () {
+		$scope.filterTableArray=null;
 		ProfileService.getAllAttributeBySource($scope.allDatapod.defaultoption.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
 		var onSuccessGetAllAttributeBySource = function (response) {
 			$scope.allattribute = response
 			$scope.profileTags = null;
+			$scope.lhsdatapodattributefilter=response;
 		}
 	}
 
@@ -560,16 +566,16 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.allDatapod = null;
 		$scope.isEditInprogess = true;
 		$scope.isEditVeiwError = false;
-		ProfileService.getOneByUuidAndVersion($scope.profilegroup.defaultVersion.uuid, $scope.profilegroup.defaultVersion.version, 'profile')
+		ProfileService.getOneByUuidAndVersion($scope.profile.defaultVersion.uuid, $scope.profile.defaultVersion.version, 'profile')
 			.then(function (response) { onsuccess(response.data) }, function (response) { onError(response.data) });
 		var onsuccess = function (response) {
 			$scope.isEditInprogess = false;
 			$scope.filterTableArray=response.filterInfo
 			$scope.profileDetail = response.profiledata;
-			var defaultversion = {};
-			defaultversion.version = response.profiledata.version;
-			defaultversion.uuid = response.profiledata.uuid;
-			$scope.profilegroup.defaultVersion = defaultversion;
+			var defaultVersion = {};
+			defaultVersion.version = response.profiledata.version;
+			defaultVersion.uuid = response.profiledata.uuid;
+			$scope.profile.defaultVersion = defaultVersion;
 			$scope.tags = response.profiledata.tags
 			$scope.getParamByApp();
 
@@ -774,7 +780,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			if (options.execution == "YES") {
 				ProfileService.getOneById(response.data, 'profile').then(function (response) { onSuccessGetOneById(response.data) });
 				var onSuccessGetOneById = function (response) {
-					ProfileService.executeProfile(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data) });
+					ProfileService.executeProfile(response.data.uuid, response.data.version).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
 						$scope.saveMessage = CF_SUCCESS_MSG.profileSaveExecute
@@ -782,6 +788,11 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 						notify.title = 'Success',
 						notify.content = $scope.saveMessage
 						$scope.$emit('notify', notify);
+						$scope.okProfileSave();
+					}
+					var onError =function(response){
+						debugger
+						$scope.dataLoading = false;
 						$scope.okProfileSave();
 					}
 				}//End onSuccessGetOneById
@@ -798,8 +809,8 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		}//End Submit Api Function
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}//End Submit Function

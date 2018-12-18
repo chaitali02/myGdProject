@@ -518,10 +518,14 @@ ProfileModule.service("ProfileService", function ($q, ProfileFactory, sortFactor
 	}
 	this.executeProfile = function (uuid, version) {
 		var deferred = $q.defer();
-		ProfileFactory.executeProfiles(uuid, version).then(function (response) { onSuccess(response) });
+		ProfileFactory.executeProfiles(uuid, version).then(function (response) { onSuccess(response)}, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-
 			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
 				data: response
 			})
 		}
@@ -530,10 +534,14 @@ ProfileModule.service("ProfileService", function ($q, ProfileFactory, sortFactor
 	}
 	this.executeProfileGroup = function (uuid, version) {
 		var deferred = $q.defer();
-		ProfileFactory.executeProfileGroup(uuid, version).then(function (response) { onSuccess(response) });
+		ProfileFactory.executeProfileGroup(uuid, version).then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-
 			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
 				data: response
 			})
 		}

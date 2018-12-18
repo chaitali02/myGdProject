@@ -693,8 +693,10 @@ public class DataStoreServiceImpl {
 			logger.error("Datastore is not available for this datapod");			
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, datapodUUID, datapodVersion));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod", dependsOn);
-			throw new RuntimeException("Datastore is not available for this datapod");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "No Data Found", dependsOn);
+			//throw new RuntimeException("Datastore is not available for this datapod");
+			throw new RuntimeException("No Data Found");
+			
 		}
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
