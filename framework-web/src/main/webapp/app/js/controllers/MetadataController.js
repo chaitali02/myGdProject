@@ -611,12 +611,52 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isEnableDSRB(data);
 		}
 	}
+	function ConvertTwoDisit(data, propName) {
+		// if(isNaN(data[0][propName])){
+		 if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
+		   for (var i = 0; i < data.length; i++) {
+			 a = data[i][propName].split(' - ')[0];
+			 b = data[i][propName].split('-')[1]
+			 data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+			 // console.log(data[i][propName])
+		   }
+		 }
+		// }
+		 console.log(data)
+		 return data;
+	}
 	$scope.calculateHistrogram=function(row){
 		console.log(row);
 		$('#histogamModel').modal({
 			backdrop: 'static',
 			keyboard: false
 		});
+		$scope.datacol=null;
+		$scope.isHistogramInprogess=true;
+		$scope.isHistogramError=false;
+		MetadataDatapodSerivce.getAttrHistogram(row.colDef.uuid,row.colDef.version,'datapod',row.colDef.attributeId).then(function (response) { onSuccessGetAttrHistogram(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetAttrHistogram = function (response) {
+			console.log(response);
+			ConvertTwoDisit(response, 'bucket');
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=false;
+			$scope.datacol={};
+			$scope.datacol.datapoints=response;
+			var dataColumn={}
+			dataColumn.id="frequency";
+			dataColumn.name="frequency"
+			dataColumn.type="bar"
+			dataColumn.color="#D8A2DE";
+			$scope.datacol.datacolumns=[];
+			$scope.datacol.datacolumns[0]=dataColumn;
+			var datax={};
+			datax.id ="bucket";
+			$scope.datacol.datax=datax;
+		}
+		var onError =function(){
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=true;
+		}
 	}
 
 	$scope.showSampleTable = function (data) {
@@ -644,11 +684,12 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				var attribute = {};
 				attribute.name =data.attributes[j].name;
 				attribute.uuid=data.uuid;
+				attribute.version=data.version;
 				attribute.attributeId=data.attributes[j].attributeId;
-               // attribute.headerCellTemplate='views/datapod-sample-header-template.html'
+                attribute.headerCellTemplate='views/datapod-sample-header-template.html'
 				attribute.displayName =data.attributes[j].dispName;
 				attribute.attrType =data.attributes[j].type;
-				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				attribute.width = attribute.displayName.split('').length + 5 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;

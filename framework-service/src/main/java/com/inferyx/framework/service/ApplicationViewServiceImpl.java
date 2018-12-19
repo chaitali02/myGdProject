@@ -64,6 +64,7 @@ public class ApplicationViewServiceImpl {
 		applicationView.setDesc(application.getDesc());
 		applicationView.setPublished(application.getPublished());
 		applicationView.setTags(application.getTags());
+		applicationView.setDeployPort(application.getDeployPort());
 		
 		//setting applicationView properties specific to application		
 		MetaIdentifierHolder paramListHolder = application.getParamList();
@@ -87,6 +88,8 @@ public class ApplicationViewServiceImpl {
 			application.setName(applicationView.getName());
 			application.setTags(applicationView.getTags());
 			application.setLocked(applicationView.getLocked());
+			application.setDeployPort(applicationView.getDeployPort());
+
 			application.setBaseEntity();
 			if(applicationView.getParamList() != null) {
 				paramListMIH = processParamList(applicationView, application.getUuid());
@@ -123,6 +126,7 @@ public class ApplicationViewServiceImpl {
 		application.setTags(applicationView.getTags());
 		application.setUuid(applicationView.getUuid());
 		application.setVersion(Helper.getVersion());
+		application.setDeployPort(applicationView.getDeployPort());
 		return application;
 	}
     
