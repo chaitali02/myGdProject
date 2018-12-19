@@ -56,6 +56,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -84,6 +86,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -110,6 +113,7 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainInput;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.UploadExec;
@@ -2294,10 +2298,7 @@ public class ModelServiceImpl {
 		
 		Application application = commonServiceImpl.getApp();
 		
-		if(modelVersion != null)
-			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
-		else
-			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
 		query.addCriteria(Criteria.where("active").is("Y"));
 		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(application.getUuid()));
 		query.with(new Sort(Sort.Direction.DESC, "version"));
@@ -3498,5 +3499,76 @@ public class ModelServiceImpl {
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 		return exec.fetchTestSet(testSetPath);		
+	}
+
+	public List<TrainExec> getTrainExecByModel(String modelUuid, String modelVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<TrainExec> trainExecList = new ArrayList<>();
+		List<Train> trainList = getTrainByModel(modelUuid, null);
+		
+		if(trainList != null && !trainList.isEmpty()) {
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			for(Train train : trainList) {
+				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(train.getUuid()));
+				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+				MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+				
+				GroupOperation groupBy = group("uuid").max("version").as("version");
+				
+				Aggregation aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				AggregationResults<TrainExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.trainExec.toString().toLowerCase(), TrainExec.class);
+				List<TrainExec> tempTrainExecList = aggregationResults.getMappedResults();
+				
+				if(tempTrainExecList != null && !tempTrainExecList.isEmpty()) {
+					for(TrainExec trainExec : tempTrainExecList) {
+						trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExec.getId()
+								, trainExec.getVersion()
+								, MetaType.trainExec.toString()
+								, "N");
+						trainExecList.add(trainExec);
+					}
+				}
+			}
+		} 
+		return trainExecList;
+	}
+	
+	public List<DeployExec> getDeployExecByModel(String modelUuid, String modelVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<DeployExec> deployExecList = new ArrayList<>();
+		List<TrainExec> deployExecDependsOn = getTrainExecByModel(modelUuid, null);
+		
+		if(deployExecDependsOn != null && !deployExecDependsOn.isEmpty()) {
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+			for(TrainExec trainExec : deployExecDependsOn) {
+				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExec.getUuid()));
+				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+				MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+				
+				GroupOperation groupBy = group("uuid").max("version").as("version");
+				
+				Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, groupBy);
+				AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
+				List<DeployExec> tempDeployExecList = aggregationResults.getMappedResults();
+				
+				if(tempDeployExecList != null && !tempDeployExecList.isEmpty()) {
+					for(DeployExec deployExec : tempDeployExecList) {
+						deployExec = (DeployExec) commonServiceImpl.getOneByUuidAndVersion(deployExec.getId()
+								, deployExec.getVersion()
+								, MetaType.deployExec.toString()
+								, "N");
+						deployExecList.add(deployExec);
+					}
+				}
+			}
+		}
+		
+		return deployExecList;
+	}
+
+	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid, String modelVersion,
+			List<String> trainExecUuidList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
