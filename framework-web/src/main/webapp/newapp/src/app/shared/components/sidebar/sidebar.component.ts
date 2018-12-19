@@ -1,3 +1,4 @@
+import { debug } from 'util';
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from './sidebar.service';
 import 'rxjs/add/operator/toPromise';
@@ -52,10 +53,19 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  GraphAnalysis: {
+    id:any;
+    subMenu: any[];
+  }
   DataVisualizationMenu: {
     id:any;
     subMenu: any[];
   }
+  BatchSchedulerMenu: {
+    id:any;
+    subMenu: any[];
+  }
+
   constructor(private http: Http, private _sidebarService: SidebarService) {
     this.adminMenu = {id:7,subMenu: [] };
     //this.DataScienceMenu = {  id:5, subMenu: [] };
@@ -145,6 +155,23 @@ export class SidebarComponent {
       }
       ]
     };
+    this.GraphAnalysis = {
+      id:12,
+      subMenu: [
+      //   {
+      //   name: "Create",
+      //   type: "dag"
+      // },
+      {
+        name: "List",
+        type: "graphpod"
+      },
+      {
+        name: "Results",
+        type: "graphexec"
+      }
+      ]
+    };
     this.DataScienceMenu = {
       id:10,
       subMenu: [{
@@ -200,6 +227,23 @@ export class SidebarComponent {
         name: "Rule Results",
         type: "reconexec"
       }
+      ]
+    };
+    this.BatchSchedulerMenu={
+      id:13,
+      subMenu: [
+        // {
+        //   name: "Create New",
+        //   type: "batchscheduler"
+        // },
+        {
+          name: "List",
+          type: "batch"
+        },
+        {
+          name: "Batch Result",
+          type: "batchexec"
+        }
       ]
     }
   

@@ -1,0 +1,82 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+<br>
+<p-growl [(value)]="msgs"></p-growl>
+
+<div class="portlet box green">
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-cogs"></i>Batch Details
+    </div>
+    <div class="tools">
+      <a title="Close" data-toggle="tooltip" data-placement="top" (click)="goBack()">
+        <i class="fa fa-times" aria-hidden="true" style="display:block;margin: 2px auto;color:white; padding-left: 5px;"></i>
+      </a>
+    </div>
+    <div class="tools">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title="" title="">
+        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+      </a>
+    </div>
+
+  </div>
+  <div class="portlet-body">
+    <form class="form-horizontal">
+      <div class="row">
+        <div class="col-md-12">
+          <table class=" row-border hover table  table-striped table-bordered">
+            <thead>
+              <tr>
+                <th class="text-center" style="width:20%;">Name</th>
+                <th class="text-center" style="width:18%;">Start Time</th>
+                <th class="text-center" style="width:18%;">End Time</th>
+                <th class="text-center" style="width:10%;">Duration</th>
+                <th class="text-center" style="width:10%;">Status</th>
+                <th class="text-center" style="width:10%;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tabledata of batchexecData;" >
+                <td>
+                  <div>
+                    {{tabledata.name}}
+                  </div>
+                  <!-- <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" name="name" class="form-control"> -->
+                </td>
+                <td>
+                  <div class="text-center">
+                    {{tabledata.starttime}}
+                  </div>
+                  <!-- <input type="text" [(ngModel)]="starttime" title="{{starttime}}" name="starttime" class="form-control"> -->
+                </td>
+                <td>
+                  <div class="text-center">
+                    {{tabledata.endtime}}
+                  </div>
+                  <!-- <input type="text" [(ngModel)]="endtime" title="{{endtime}}" name="{{endtime}}" class="form-control" > -->
+                </td>
+                <td>
+                  <div class="text-center">
+                    {{tabledata.duration}}
+                  </div>
+                  <!-- <input type="text" [(ngModel)]="duration" title="{{duration}}" name="duration" class="form-control"> -->
+                </td>
+                <td>
+                  <div class="label-sm label-success text-center" [ngStyle]="{'background-color':tabledata.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{tabledata.stage}}</div>
+                  <!-- <div class="label-sm label-success text-center" [ngStyle]="{'background-color':batchStatus.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{batchStatus.stage}}</div> -->
+                
+                </td>
+                <td>
+                  <p-menu #menu popup="popup" appendTo="body" [model]="items"></p-menu>
+                  <div style="text-align: center;">
+                    <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(tabledata.uuid, tabledata.version, tabledata.type);"></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+    <br>
+  </div>
+</div>

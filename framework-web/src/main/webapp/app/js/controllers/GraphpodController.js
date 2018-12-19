@@ -258,7 +258,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			keyboard: false
 		});	
 		if(type =='node'){
-			setTimeout(function () {
+			setTimeout(function () {debugger;
 				$scope.selectAttr=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety];
 				if($scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]){
 	            	$scope.selectType=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type;

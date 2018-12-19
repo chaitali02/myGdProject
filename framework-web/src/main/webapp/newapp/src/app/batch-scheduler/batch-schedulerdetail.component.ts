@@ -1,35 +1,32 @@
-
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Router, Event as RouterEvent, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
-import { Location } from '@angular/common';
-import { Message } from 'primeng/components/common/api';
-import { MessageService } from 'primeng/components/common/messageservice';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { JointjsComponent } from '../shared/components/jointjs/jointjs.component';
-import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component'
-
+import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component';
+import { Router, Event as RouterEvent, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { CommonService } from '../metadata/services/common.service';
+import { JointjsService } from '../shared/components/jointjs/jointjsservice';
+import { SharedDataService } from '../data-pipeline/shareddata.service';
 import { DataPipelineService } from '../metadata/services/dataPipeline.service';
-import { JointjsService } from '../shared/components/jointjs/jointjsservice'
-import { SharedDataService } from './shareddata.service'
-
 import { Http, Headers } from '@angular/http';
 import { ResponseContentType } from '@angular/http';
-import { saveAs } from 'file-saver';
 import { AppConfig } from '../app.config';
-@Component({
-    selector: 'app-data-pipeli',
-    templateUrl: './data-pipelineresult.template.html',
-})
+import { saveAs } from 'file-saver';
+import { Location } from '@angular/common';
+import { CommonListService } from '../common-list/common-list.service';
 
-export class DataPiplineResultComponent {
-   
+@Component({
+    selector: 'app-batch-schedulerdetail',
+    templateUrl: './batch-schedulerdetail.component.html',
+    //styleUrls: ['./batch-schedulerdetail.component.css']
+})
+export class BatchSchedulerdetailComponent {
+
+
     runMode: any;
     isTableShow1: any;
     typeJointJs: any;
     versionJointJs: any;
     uuidJointJs: any;
-    baseUrl:any;
+    baseUrl: any;
     intervalId: any;
     dagexecdata: any;
     version: any;
@@ -38,10 +35,10 @@ export class DataPiplineResultComponent {
     dagdata: any;
     mode: any;
     breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-    
+
     @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
-    constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService,private http : Http, private _config : AppConfig) {       
+    constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService, private http: Http, private _config: AppConfig, private _commonListService: CommonListService) {
         this.baseUrl = _config.getBaseUrl();
         this.dagdata = {};
         // setTimeout(() => {
@@ -78,7 +75,7 @@ export class DataPiplineResultComponent {
             "caption": "",
             "routeurl": null
         }
-        ]              
+        ]
     }
 
     public goBack() {
@@ -101,10 +98,10 @@ export class DataPiplineResultComponent {
         this.stopStatusUpdate();
         this._commonService.getOneByUuidAndVersion(id, version, 'dagexec')
             .subscribe(
-            response => {
-                this.onSuccessgetOneByUuidAndVersion(response)
-            },
-            error => console.log("Error :: " + error)
+                response => {
+                    this.onSuccessgetOneByUuidAndVersion(response)
+                },
+                error => console.log("Error :: " + error)
             );
     }
 
@@ -139,10 +136,10 @@ export class DataPiplineResultComponent {
 
         this._dataPipelineService.getStatusByDagExec(uuid)
             .subscribe(
-            response => {
-                this.onSuccessGetStatusByDagExec(response)
-            },
-            error => console.log("Error :: " + error)
+                response => {
+                    this.onSuccessGetStatusByDagExec(response)
+                },
+                error => console.log("Error :: " + error)
             );
     }
     onSuccessGetStatusByDagExec = function (response) {
@@ -170,34 +167,53 @@ export class DataPiplineResultComponent {
         this.uuidJointJs = this.d_JointjsComponent.uuid;
         this.versionJointJs = this.d_JointjsComponent.version;
         this.typeJointJs = this.d_JointjsComponent.type;
-        
+
         this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'mapexec')
-        .subscribe(
-        response => {
-            this.onSuccessgetNumRowsbyExec(response);
-        },
-        error => console.log("Error :: " + error)
-        );
+            .subscribe(
+                response => {
+                    this.onSuccessgetNumRowsbyExec(response);
+                },
+                error => console.log("Error :: " + error)
+            );
     }
 
-    onSuccessgetNumRowsbyExec(response){
+    onSuccessgetNumRowsbyExec(response) {
         this.runMode = response.runMode;
         this.downloadResult();
     }
 
-    downloadResult(){
+    downloadResult() {
         const headers = new Headers();
-        this.http.get(this.baseUrl+'/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode='+this.runMode,
-        { headers: headers, responseType: ResponseContentType.Blob })
-        .toPromise()
-        .then(response => this.saveToFileSystem(response));
-    } 
+        this.http.get(this.baseUrl + '/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode=' + this.runMode,
+            { headers: headers, responseType: ResponseContentType.Blob })
+            .toPromise()
+            .then(response => this.saveToFileSystem(response));
+    }
 
-    saveToFileSystem(response){
+    saveToFileSystem(response) {
         const contentDispositionHeader: string = response.headers.get('Content-Type');
         const parts: string[] = contentDispositionHeader.split(';');
         const filename = parts[1];
         const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
         saveAs(blob, filename);
+    }
+    refershGrid() {
+        // this.active = "";
+        // this.status = "";
+        // this.rowData1 = null;
+        // this.execname = {};
+
+        // this.startDate = "";
+        // this.tags = "";
+        // this.endDate = "";
+        // this.username = ""
+        this.getBaseEntityByCriteria();
+    }
+    getBaseEntityByCriteria(): void {
+        this._commonListService.getParamListByRule((("batchexec").toLowerCase()), "", "", "", "", "", "", "")
+            // .subscribe(
+            //     response => { this.getGrid(response) },
+            //     error => console.log("Error :: " + error)
+            // )
     }
 }

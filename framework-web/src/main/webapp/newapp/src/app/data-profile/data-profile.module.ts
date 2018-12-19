@@ -14,7 +14,7 @@ import{DataProfileresultComponent} from './data-profileresult.component'
 import{DataProfileDetailComponent} from './data-profiledetail.component'
 import{DataProfileGroupDetailComponent} from './data-profilegroupdetail.components'
 import{CommonService}from '../metadata/services/common.service';
-import {JointjsService} from '../data-pipeline/jointjsservice'//
+import {JointjsService} from '../shared/components/jointjs/jointjsservice'//
 // import {jointjsGroupService} from '../shared/components/jointjsgroup/joinjsgroup.service'
 import { routing1} from './data-profile-routing.module'
 //import { ProfileExecComponent } from '../job-monitoring/job-monitoring-details/profileExec/profileExec.component';

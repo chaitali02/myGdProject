@@ -821,4 +821,3 @@ export class DataQualityDetailComponent {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
   }
 }
-

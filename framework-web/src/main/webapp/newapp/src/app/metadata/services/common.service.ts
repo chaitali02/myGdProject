@@ -1,3 +1,4 @@
+import { debug } from 'util';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http'
@@ -180,6 +181,8 @@ modifyResponse(response){
     attributedetail["attributeId"]=response[j].attrId;
     attributedetail["dname"]=response[j].ref.name+"."+response[j].attrName;
     attributedetail["id"]=response[j].ref.uuid+"_"+response[j].attrId;
+    attributedetail["attrType"]=response[j].attrType;
+    
     attributes.push(attributedetail)
     
   }
@@ -320,6 +323,10 @@ execute(uuid,version,type,action): Observable<any> {
   if(type=="ingestgroup"){
     url = '/ingest/executeGroup?action='+ action +'&uuid=' + uuid + '&version=' + version ;
     }
+  if(type=="batch"){
+    url = '/batch/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
+}
+
   let body=null
   return this._sharedService.postCall(url,body)
   .map((response: Response) => {

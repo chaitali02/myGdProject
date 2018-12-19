@@ -167,6 +167,7 @@ export class DataProfileDetailComponent {
 
     this.dataprofile.published = response["published"] == 'Y' ? true : false
     this.dataprofile.active = response["active"] == 'Y' ? true : false
+    debugger
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
