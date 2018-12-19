@@ -25,7 +25,7 @@ export class DatasetComponent implements OnInit {
   sessionData: any[];
   lhsFormulaArray: any;
   rhsFormulaArray: any[];
-  attributesArray: any[];
+  attributesArray: any;
   rhsTypeArray: { value: string; label: string }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
   columnOptions: any[];
@@ -94,6 +94,7 @@ export class DatasetComponent implements OnInit {
     this.dataset.filterTableArray = []
     this.sourcedata = {}
     this.dialogSelectName = {}
+    this.attributesArray = [];
     this.operators = [
       { 'value': '<', 'label': 'LESS THAN' },
       { 'value': '>', 'label': 'GREATER THAN' },
@@ -256,7 +257,7 @@ export class DatasetComponent implements OnInit {
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
-
+debugger
     if (response.filterInfo != null) {
       let filterInfoArray = [];
       for (let k = 0; k < response.filterInfo.length; k++) {
@@ -313,9 +314,9 @@ export class DatasetComponent implements OnInit {
           filterInfo["rhsAttribute"] = rhsAttri;
         }
 
-        else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
+        else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {debugger
           this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
-            .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+            .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs1(response) },
             error => console.log("Error ::", error))
 
           let rhsAttri1 = {}
@@ -471,6 +472,7 @@ export class DatasetComponent implements OnInit {
     )
   }
   changeType() {
+    this.dataset.filterTableArray = [];
     this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source).subscribe(
       response => {
         this.OnSuccesgetAllAttributeBySource(response)
@@ -493,7 +495,7 @@ export class DatasetComponent implements OnInit {
       temp[n] = allname;
     }
     this.allNames = temp
-    this.getAllAttributeBySource()
+    //this.getAllAttributeBySource()
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source).subscribe(
@@ -855,7 +857,7 @@ export class DatasetComponent implements OnInit {
   }
 
   onSuccessgetAllAttributeBySourceLhs(response) {
-    this.attributesArray = []
+    
     let temp1 = [];
     for (const i in response) {
       let attributeObj = {};
@@ -900,7 +902,7 @@ export class DatasetComponent implements OnInit {
 
     else if (this.dataset.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs1(response) },
         error => console.log("Error ::", error))
     }
 
@@ -923,8 +925,8 @@ export class DatasetComponent implements OnInit {
     this.rhsFormulaArray = temp
   }
 
-  onSuccessgetAllAttributeBySourceRhs(response) {
-    this.attributesArray = []
+  onSuccessgetAllAttributeBySourceRhs1(response) {
+    
     let temp1 = [];
     for (const i in response) {
       let attributeObj = {};
