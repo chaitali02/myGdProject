@@ -29,6 +29,10 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  DataIngestionMenu: {
+    id:any;
+    subMenu: any[];
+  }
   DataPreparationMenu: {
     id:any;
     subMenu: any[];
@@ -112,6 +116,7 @@ export class SidebarComponent {
       }
       ]
     };
+
     this.BusinessRuleMenu = {
       id:4,
       subMenu: [{
@@ -241,7 +246,25 @@ export class SidebarComponent {
         }
       ]
     }
+  
+    this.DataIngestionMenu={
+      id:12,
+      subMenu: [{
+        name: "Rule",
+        type: "ingest"
+      },
+      {
+        name: "Rule Group",
+        type: "ingestgroup"
+      },
+      {
+        name: "Rule Results",
+        type: "ingestexec"
+      }
+      ]
+    }
   }
+  
   ngOnInit(): void {
     this.getAll();
 

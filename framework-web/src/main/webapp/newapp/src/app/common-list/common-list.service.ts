@@ -160,7 +160,7 @@ export class CommonListService {
       this.url = this.baseUrl + 'dataqual/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "dag") {
-      this.url = this.baseUrl + 'dag/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+      this.url = this.baseUrl + 'dag/execute?action=' + action + '&uuid=' + uuid + '&version=' + version;
     }
     if (type == "train") {
       this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
