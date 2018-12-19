@@ -502,4 +502,24 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuidList);
 	}
+	
+	@RequestMapping(value = "/deploy", method = RequestMethod.GET)
+	public boolean deploy(
+			@RequestParam(value = "uuid", required = false) String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		
+		return true;
+	}
+	
+	@RequestMapping(value = "/undeploy", method = RequestMethod.GET)
+	public boolean undeploy(
+			@RequestParam(value = "uuid", required = false) String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		
+		return true;
+	}
 }
