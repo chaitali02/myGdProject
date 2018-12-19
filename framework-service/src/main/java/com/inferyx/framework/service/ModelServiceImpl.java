@@ -116,6 +116,7 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainInput;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -3566,9 +3567,59 @@ public class ModelServiceImpl {
 		return deployExecList;
 	}
 
+	public DeployExec getDeployExecByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExecUuid));
+		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+		MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+		
+		GroupOperation groupBy = group("uuid").max("version").as("version");
+		
+		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, groupBy);
+		AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
+		DeployExec deployExec = aggregationResults.getUniqueMappedResult();
+		if(deployExec != null) {
+			return (DeployExec) commonServiceImpl.getOneByUuidAndVersion(deployExec.getId()
+					, deployExec.getVersion()
+					, MetaType.deployExec.toString()
+					, "N");
+		} else {
+			return null;
+		}
+	}
+	
 	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid, String modelVersion,
-			List<String> trainExecUuidList) {
-		// TODO Auto-generated method stub
-		return null;
+			List<String> trainExecUuidList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<TrainExecView> trainExecViewList = new ArrayList<>();
+		for(String trainExecUuid : trainExecUuidList) {
+			TrainExec trainExec = (TrainExec) commonServiceImpl.getLatestByUuid(trainExecUuid, MetaType.trainExec.toString());
+			if(trainExec != null) {
+				if(trainExec != null) {
+					TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+					TrainResultView trainResultView = trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion());
+					TrainExecView trainExecView = new TrainExecView();
+					
+					//setting base entity
+					trainExecView.setUuid(trainExec.getUuid());
+					trainExecView.setVersion(trainExec.getVersion());
+					trainExecView.setName(trainExec.getName());
+					trainExecView.setDesc(trainExec.getDesc());
+					trainExecView.setCreatedBy(trainExec.getCreatedBy());
+					trainExecView.setCreatedOn(trainExec.getCreatedOn());
+					trainExecView.setTags(trainExec.getTags());
+					trainExecView.setActive(trainExec.getActive());
+					trainExecView.setLocked(trainExec.getLocked());
+					trainExecView.setPublished(trainExec.getPublished());
+					trainExecView.setAppInfo(trainExec.getAppInfo());
+					
+					//setting view specific properties
+					trainExecView.setTrainResultView(trainResultView);
+					DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+					trainExecView.setDeployExec(deployExec);
+					trainExecViewList.add(trainExecView);
+				}
+			}			
+		}
+		return trainExecViewList;
 	}
 }

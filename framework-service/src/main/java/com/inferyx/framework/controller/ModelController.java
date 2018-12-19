@@ -494,9 +494,10 @@ public class ModelController {
 	
 
 	@RequestMapping(value = "/getTrainExecViewByCriteria", method = RequestMethod.GET)
-	public List<TrainExecView> getTrainExecViewByCriteria(@RequestParam("uuid") String modelUuid,
-			@RequestParam(value = "version", required = false) String modelVersion,
+	public List<TrainExecView> getTrainExecViewByCriteria(
 			@RequestParam("trainExecUuidList") List<String> trainExecUuidList,
+			@RequestParam(value = "uuid", required = false) String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuidList);
