@@ -37,11 +37,59 @@ DatascienceModule.factory('ModelDeployFactory', function ($http, $location) {
             method: "GET"
         }).then(function (response) { return response })
     }
+    factory.deploy = function (uuid, version, type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+            url: url + "model/deploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
+            method: "GET"
+        }).then(function (response) { return response })
+    }
+    factory.undeploy = function (uuid, version, type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+            url: url + "model/undeploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
+            method: "GET"
+        }).then(function (response) { return response })
+    }
+    
     
     return factory;
 })
 
 DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFactory, $q, sortFactory) {
+    
+    this.deploy = function (uuid, version, type) {
+        var deferred = $q.defer();
+        ModelDeployFactory.deploy(uuid, version, type).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
+        var onSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            });
+        }
+        var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
+        }
+        return deferred.promise;
+    }
+    
+    this.undeploy = function (uuid, version, type) {
+        var deferred = $q.defer();
+        ModelDeployFactory.undeploy(uuid, version, type).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
+        var onSuccess = function (response) {
+            deferred.resolve({
+                data: response
+            });
+        }
+        var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
+        }
+        return deferred.promise;
+    }
+    
     this.getTrainExecViewByCriteria = function (uuid, version, type, trainExecUuidList) {
         var deferred = $q.defer();
         ModelDeployFactory.findTrainExecViewByCriteria(uuid, version, type, trainExecUuidList).then(function (response) { onSuccess(response.data) });
