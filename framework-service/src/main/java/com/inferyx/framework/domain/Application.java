@@ -18,7 +18,6 @@ public class Application extends BaseEntity{
 	private MetaIdentifierHolder paramList;
 	private String deployPort;
 	
-	
 	/**
 	 * @Ganesh 
 	 *
