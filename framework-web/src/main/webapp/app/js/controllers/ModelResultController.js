@@ -358,8 +358,7 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
             responseType: 'arraybuffer'
         }).success(
             function (data, status, headers) {
-               
-               
+                $scope.isPmmlInprogess=false;
                 headers = headers();
                 var filename = headers['filename'];
                 var contentType = headers['content-type'];
@@ -375,14 +374,14 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
                     console.log(ex);
                 }
                 var burl = $location.absUrl().split("app")[0]
-                $http({
-                    method: 'GET',
-                    url: burl + "model/download?modelExecUUID=" + $scope.modelDetail.uuid + "&modelExecVersion=" + $scope.modelDetail.version,
-                    // responseType : 'arraybuffer'
-                }).success(function (data, status, headers) {
-                    $scope.pMMLResult = data;
-                    $scope.isPmmlInprogess=false;
-                })
+                // $http({
+                //     method: 'GET',
+                //     url: burl + "model/download?modelExecUUID=" + $scope.modelDetail.uuid + "&modelExecVersion=" + $scope.modelDetail.version,
+                //     // responseType : 'arraybuffer'
+                // }).success(function (data, status, headers) {
+                //     $scope.pMMLResult = data;
+                //     $scope.isPmmlInprogess=false;
+                // })
             }).error(function (data) {
                 console.log();
             });
