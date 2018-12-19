@@ -171,9 +171,11 @@ public class CommonController<T> {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
+	public String save(@RequestBody Object metaObject,
+			@RequestParam("type") String type,
 			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
-			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletRequest request)
 			throws Exception {
 		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.dqview.toString())

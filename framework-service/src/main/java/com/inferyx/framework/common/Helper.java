@@ -78,6 +78,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
@@ -327,6 +328,7 @@ public class Helper {
 				case ingestgroup : return "iIngestGroupDao";
 				case ingestgroupExec : return "iIngestGroupExecDao";
 				case trainresult : return "iTrainResultDao";
+				case deployExec : return "iDeployExecDao";
 				default:
 					return null;
 			}
@@ -362,6 +364,7 @@ public class Helper {
 		case predictExec : return "ModelExecServiceImpl";
 		case simulateExec : return "ModelExecServiceImpl";
 		case trainresult : return "TrainResultServiceImpl";
+		case deployExec : return "DeployServiceImpl";
 		default: return null;
 		}
 	}
@@ -454,6 +457,7 @@ public class Helper {
 		case ingestgroup : return IngestGroup.class;
 		case ingestgroupExec : return IngestGroupExec.class;
 		case trainresult : return TrainResult.class;
+		case deployExec : return DeployExec.class;
 		default:
 			return null;
 		}
@@ -549,7 +553,8 @@ public class Helper {
 				case "ingestexec" : return  MetaType.ingestExec; 
 				case "ingestgroup" : return MetaType.ingestgroup;
 				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
-				case "trainresult" : return MetaType.trainresult;
+				case "trainresult" : return MetaType.trainresult; 
+				case "deployexec" : return MetaType.deployExec;
 				default : return null;
 			}
 		}

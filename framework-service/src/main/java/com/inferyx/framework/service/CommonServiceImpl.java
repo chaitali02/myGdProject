@@ -85,6 +85,7 @@ import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.dao.IDeployExecDao;
 import com.inferyx.framework.dao.IDimensionDao;
 import com.inferyx.framework.dao.IDistributionDao;
 import com.inferyx.framework.dao.IDownloadDao;
@@ -482,7 +483,27 @@ public class CommonServiceImpl <T> {
 	IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
 	ITrainResultDao iTrainResultDao;
+	@Autowired
+	IDeployExecDao iDeployExecDao;
 	
+	/**
+	 * @Ganesh 
+	 *
+	 * @return the iDeployExecDao
+	 */
+	public IDeployExecDao getiDeployExecDao() {
+		return iDeployExecDao;
+	}
+
+	/**
+	 * @Ganesh 
+	 *
+	 * @param iDeployExecDao the iDeployExecDao to set
+	 */
+	public void setiDeployExecDao(IDeployExecDao iDeployExecDao) {
+		this.iDeployExecDao = iDeployExecDao;
+	}
+
 	/**
 	 *
 	 * @Ganesh
