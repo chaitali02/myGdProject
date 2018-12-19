@@ -99,7 +99,7 @@
                   </p-dropdown>{{VersionList | json}} -->
 
                   <p-dropdown [options]="VersionList" [(ngModel)]="dataset.version" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [disabled]="mode == 'true'" (onChange)="onVersionChange()" [filter]="true" placeholder="--Select--">
+                    [disabled]="mode == 'true'" (onChange)="onVersionChange()" dataKey="uuid" [filter]="true" placeholder="--Select--">
                   </p-dropdown>
 
                 </div>
@@ -145,7 +145,7 @@
                 </label>
                 <div class="col-md-3 col-sm-4 col-xs-12">
                   <p-dropdown [options]="allNames" [(ngModel)]="dataset.sourcedata" name="sourcedata" dataKey="uuid" [disabled]="mode == 'true'"
-                    [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType()">
+                    [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType()"  placeholder="--Select--">
                   </p-dropdown>
                 </div>
               </div>
@@ -241,18 +241,18 @@
                               *ngIf="data.lhsType == 'string'" placeholder="--Select--">
                             <div *ngIf="data.lhsType == 'formula'">
                               <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                               </p-dropdown>
                             </div>
                             <div *ngIf="data.lhsType == 'datapod'">
-                              <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                              <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" dataKey="uuid" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                               </p-dropdown>
                             </div>
                           </td>
                           <td>
                             <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeOperators(i)">
+                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeOperators(i)" >
                             </p-dropdown>
                           </td>
                           <td>
@@ -289,19 +289,19 @@
                             <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
                               *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'" placeholder="--Select--">
                             <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
-                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:30%;display: inline-block"
+                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
                                 [disabled]="mode == 'true'" placeholder="--Select--"> {{"-"}}
-                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}" style="width:30%;display: inline-block"
+                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}" style="width:40%;display: inline-block"
                                 [disabled]="mode == 'true'" placeholder="--Select--">
                             </div>
                             <div *ngIf="data.rhsType == 'formula'">
                               <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                               </p-dropdown>
                             </div>
                             <div *ngIf="data.rhsType == 'datapod'">
                               <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                               </p-dropdown>
                             </div>
                             <div *ngIf="data.rhsType == 'dataset'">
@@ -316,7 +316,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                   <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute()">
+                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() " dataKey="uuid">
                                   </p-dropdown>
                                 </div>
                               </div>
@@ -326,7 +326,7 @@
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
                                   <div class="col-md-6 col-sm-6 col-xs-12">
                                     <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName" name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                                     </p-dropdown>
                                   </div>
                                 </div>
@@ -335,7 +335,7 @@
                                 <div style="padding-top: 10px;">
                                   <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
                                     <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                                    <input type="submit" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
+                                    <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
                                   </div>
                                 </div>
                               </p-footer>
