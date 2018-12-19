@@ -1666,11 +1666,11 @@ export class AppMetadata {
         detailState: 'batch',
         moduleState: 'batchScheduler',
         moduleCaption: 'Batch Scheduler',
-        class: 'fa fa-users'
+        class: 'fa fa-tasks'
       },
       'batchexec': {
         name: 'batchexec',
-        caption: 'BatchScheduler Exec',
+        caption: 'Batch Exec',
         execType: 'batchexec',
         metaType: 'batchexec',
         color: '#EB54C3',
@@ -1680,22 +1680,22 @@ export class AppMetadata {
         resultState: 'batchexec',
         moduleState: 'batchScheduler',
         moduleCaption: 'BatchScheduler',
-        class: 'fa fa-users'
+        class: 'fa fa-tasks'
       },
-      // 'batchExec': {
-      //   name: 'batchExec',
-      //   caption: 'BatchScheduler Exec',
-      //   execType: 'batchExec',
-      //   metaType: 'batchExec',
-      //   color: '#EB54C3',
-      //   allowInMenu: false,
-      //   listState: 'jobmonitoringlist',
-      //   detailState: 'batchExec',
-      //   resultState: 'batchExec',
-      //   moduleState: 'JobMonitoring',
-      //   moduleCaption: 'BatchScheduler Exec',
-      //   class: 'fa fa-users'
-      //}
+      'batchExec': {
+        name: 'batch',
+        caption: 'Batch Exec',
+        execType: 'batchExec',
+        metaType: 'batchExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'batchExec',
+        resultState: 'batchExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-tasks'
+      },
       'graphpod':{
         name : 'graphpod',
         caption :'Graph',

@@ -34,6 +34,7 @@ import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component'
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
 import {UploadExecComponent } from './uploadExec/uploadExec.componet'
+import { BatchExecComponent } from './batchExec/batchExec.component';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import {UploadExecComponent } from './uploadExec/uploadExec.componet'
         PredictExecComponent,
         SimulateExecComponent,
         DownloadExecComponent,
-        UploadExecComponent
+        UploadExecComponent,
+        BatchExecComponent
 
     ],
     providers: [
