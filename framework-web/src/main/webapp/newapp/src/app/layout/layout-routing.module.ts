@@ -9,10 +9,6 @@ import { metadataNavigatorComponent } from '../metadata-navigator/metadataNaviga
 import { jobMonitoringComponent } from '../job-monitoring/jobMonitoring.component';
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3d7ccacf2e7e05692da7f4e38908c5448df105ea
 const routes: Routes = [
     {
         path: '', component: LayoutComponent,
