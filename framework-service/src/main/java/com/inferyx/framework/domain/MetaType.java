@@ -44,7 +44,7 @@ public enum MetaType {
 				/*MetaType.GenerateData, MetaType.Transpose, MetaType.CloneData, MetaType.GenDataAttr, MetaType.GenDataValList*/ ,
 				MetaType.graphpod, MetaType.report, MetaType.reportExec, MetaType.batch, MetaType.batchExec,
 				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec,
-				MetaType.trainresult, MetaType.deployExec, MetaType.trainexecview);
+				MetaType.trainresult, MetaType.deployExec);
 	}
 
 	public static List<MetaType> getMetaExecList() {

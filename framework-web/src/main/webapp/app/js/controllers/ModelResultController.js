@@ -51,7 +51,7 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         }
         return style;
     }
-
+    $scope.gridOptions = {};
     $scope.gridOptions = dagMetaDataService.gridOptionsResults;
     $scope.gridOptions.onRegisterApi = function (gridApi) {
         $scope.gridApi = gridApi;

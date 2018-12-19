@@ -1,0 +1,114 @@
+<div ng-controller="ModelDeployController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a ui-sref="home">Home</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>{{$state.current.data.pageTitle}}</span>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>Model Deploy</span>
+                    </li>
+                </ul>
+                <div class="page-toolbar">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                        <i class="icon-calendar"></i>&nbsp;
+                        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Search
+                    </div>
+                    <div class="tools">
+                        <!-- <a title="Main" data-toggle="tooltip" data-placement="top" class="currentpage" tooltip style="height:16px;font-size:16px;"
+                            ng-class="(!isGraphShow==true)? 'currentpage':'notcurrentpage'" ng-click="showResultPage()">
+                            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                        </a>
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showGraph()" ng-class="isGraphShow==true? 'currentpage':'notcurrentpage'">
+                            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                        </a> -->
+                        <a title="Refresh" ng-click="reset()" data-toggle="tooltip" data-placement="top"
+                            tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="min-height:100px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="form-horizontal" name="myform" ng-submit="search(true)" novalidate="novalidate">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 col-lg-2">Model</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4">
+                                        <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel()" data-ng-model="selectedModel" ng-options="r as r.name for r in allModel | orderBy :'name' track by r.uuid">
+                                            <option value="">-Select-</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="middle-name" class="control-label col-md-2 col-sm-2 col-xs-12">Train Info</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4">
+                                        <tags-input class="tag-scroll" style="height:60px;" ng-model="trainInfoTags" ng-disabled="{{mode}}" display-property="displayname"
+                                            key-property="uuid" add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                                            <auto-complete source="loadTrainInfo($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                                                load-on-empty="true">
+                                            </auto-complete>
+                                        </tags-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-2"></label>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn green" ng-disabled="iSSubmitEnable">Search</button>
+                                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isInprogess">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Deploy Detail
+                    </div>
+                    <div class="tools">
+                        <a title="Refresh" ng-click="refreshResult()" data-toggle="tooltip" data-placement="top"
+                            tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="min-height:100px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+                                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
