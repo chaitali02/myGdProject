@@ -640,7 +640,7 @@
     </div>
   </div>
   <div id="histogamModel" class="modal fade bs-modal-lg in" style="display: none;">
-      <div class="modal-dialog" style="width:40%">
+      <div class="modal-dialog" style="width:50%">
         <div class="modal-content" style="resize: both;overflow: auto;">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
@@ -650,16 +650,43 @@
             novalidate="novalidate">
             <div class="modal-body" style="padding:0px">
               <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                <div class="scroller" style="height:80px;overflow-y: auto !important; width: auto;margin-top:30px" data-always-visible="1"
+                <div class="scroller" style="height:340px;overflow-y: auto !important; width: auto;margin-top:30px" data-always-visible="1"
                   data-rail-visible1="1" data-initialized="1">
-                   
-                </div>
+                  <div class="centercontent"ng-if="isHistogramError">
+                      <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                  </div>
+                  <div class="centercontent" ng-if="isHistogramInprogess">
+                      <div class="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                      </div>
+                  </div>
+                  <div class="row" ng-if="datacol !=null && !isHistogramError && !isHistogramInprogess" style="width:97%;">
+                     <div class="col-md-12">
+                        <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints" chart-columns="datacol.datacolumns" chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
+                            <chart-bar ratio="0.5" />
+                              <chart-axes values-x="" >
+                            <chart-axis>
+                              <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{datacol.datax.id}}">
+                                <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5"  />
+                              </chart-axis-x>
+                              <chart-axis-Y>
+                                <chart-axis-y-tick tick-format-function="time_format"/>
+                              </chart-axis-Y>
+
+                            </chart-axis>
+                            <!-- <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/> -->
+                          </c3chart>
+                     </div>
+                   </div>
+                
+                  </div>
               </div>
             </div>
             <!--End Model Body-->
             <div class="modal-footer">
-              <!-- <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-              <button type="submit" class="btn green">Submit</button> -->
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
             </div>
           </form>
         </div>
