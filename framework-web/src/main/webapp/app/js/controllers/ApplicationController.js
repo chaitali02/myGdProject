@@ -448,6 +448,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
+		applicationJson.deployPort = $scope.applicationdata.deployPort;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

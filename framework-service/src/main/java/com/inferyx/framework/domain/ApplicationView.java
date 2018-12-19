@@ -19,7 +19,8 @@ public class ApplicationView extends BaseEntity {
 	private String paramlistChg;
 	private String applicationChg;
 	private MetaIdentifierHolder dataSource;
-	
+	private String deployPort;
+
 	/**
 	 *
 	 * @Ganesh
@@ -91,5 +92,22 @@ public class ApplicationView extends BaseEntity {
 	 */
 	public void setParamlistChg(String paramlistChg) {
 		this.paramlistChg = paramlistChg;
+	}
+	
+	/* @Ganesh 
+	 *
+	 * @return the deployPort
+	 */
+	public String getDeployPort() {
+		return deployPort;
+	}
+
+	/**
+	 * @Ganesh 
+	 *
+	 * @param deployPort the deployPort to set
+	 */
+	public void setDeployPort(String deployPort) {
+		this.deployPort = deployPort;
 	}
 }
