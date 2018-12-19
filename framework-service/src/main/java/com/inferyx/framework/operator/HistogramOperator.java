@@ -254,8 +254,9 @@ public class HistogramOperator implements IOperator {
 		return String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 	}
 
-	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, RunMode runMode) throws Exception {
+	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, RunMode runMode) throws Exception {
 		String sql = generateSql(attrRefHolderList, null, null, runMode);
+		sql = sql.concat(" ").concat(" limit "+limit);
 		Datasource datapodDS = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datapodDS.getType());	
 		
@@ -267,7 +268,7 @@ public class HistogramOperator implements IOperator {
 		
 		ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid);
 		exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
-		String dataSql = "SELECT * FROM "+"tempAttrHistogram";
+		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
 		return exec.executeAndFetchByDatasource(dataSql, attrDpDs, appUuid);
 	}
 }
