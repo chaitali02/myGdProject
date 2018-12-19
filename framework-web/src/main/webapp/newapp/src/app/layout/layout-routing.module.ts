@@ -9,8 +9,6 @@ import { metadataNavigatorComponent} from '../metadata-navigator/metadataNavigat
 import { jobMonitoringComponent} from '../job-monitoring/jobMonitoring.component';
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
 
-
-
 const routes: Routes = [
     {
         path: '', component: LayoutComponent,
@@ -72,7 +70,13 @@ const routes: Routes = [
                 { path: 'list/:type/reconexec',redirectTo :'reconexec'},
                 { path: 'reconexec', loadChildren: 'app/data-recon/data-recon.module#DataReconModule'},
               // { path: 'reconexec/viewdrresultspage/:type/:id/:version/:mode/reconexec',redirectTo :'reconexec'},
-  
+              
+
+              { path: 'dataIngestion', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule'},
+              { path: 'list/:type/dataIngestion',redirectTo :'dataIngestion'},
+             // { path: 'dataIngestion/ingestgroupexec/:type/:id/:version/:mode/dataIngestion',redirectTo :'dataIngestion'},
+             // { path: 'dataIngestion/ingestexec/:type/:id/:version/:mode/dataIngestion',redirectTo :'dataIngestion'},
+              { path: 'ingestexec', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule'},
             ]
        },
 ];

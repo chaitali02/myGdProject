@@ -47,6 +47,23 @@
       </a>
     </li>
     
+     <!--DataIngestion Menu-->
+     <li class="nav-item" (click)="check(DataIngestionMenu.id,true)" [ngClass]="{'open': selectedItemId === DataIngestionMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-random"></i>
+        <span class="title">Data Ingestion</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataIngestionMenu.id && toggle ==true ? 'block' : none" >
+        <li *ngFor="let dataingestsubmenu of DataIngestionMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dataingestsubmenu.type]" class="nav-link">
+            <span class="title">{{dataingestsubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
     <!--Datavisualization Menu-->
     <li class="nav-item" (click)="check(DataVisualizationMenu.id,true)" [ngClass]="{'open': selectedItemId === DataVisualizationMenu.id}">
       <a  class="nav-link nav-toggle" >
@@ -130,6 +147,7 @@
         </li>
       </ul>
     </li>
+   
     <!--BusinessRule Menu-->
     <li class="nav-item" (click)="check(BusinessRuleMenu.id,true)" [ngClass]="{'open': selectedItemId === BusinessRuleMenu.id}">
       <a class="nav-link nav-toggle">

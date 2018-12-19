@@ -66,7 +66,7 @@ export class CommonService{
   })
   .catch(this.handleError);
   }
-
+  
 submit(type:any,data:any,upd_tag?): Observable<any[]> {
   let url
   if(upd_tag){
@@ -74,14 +74,13 @@ submit(type:any,data:any,upd_tag?): Observable<any[]> {
   }
   else{
     url ='/common/submit?action=edit&type='+type;
-  }
-     
+  }     
     return this._sharedService.postCall(url,data)
     .map((response: Response) => {
       return <any>response.text();
-})
+  })
    .catch(this.handleError);
-}
+  }
 
 getAllLatest(type:String): Observable<any[]> {
     let url ='/common/getAllLatest?action=view&type='+type;
@@ -135,7 +134,7 @@ getAllAttributeBySource(uuid:any,type:String){
      url ='/metadata/getAttributesByDataset?action=view&uuid='+uuid+'&type='+type;
   }
   else if(type == "datapod"){
-     url ='/metadata/getAttributesByDatapod?action=view&uuid='+uuid+'&type='+type;
+     url ='metadata/getAttributesByDatapod?action=view&uuid='+uuid+'&type='+type;
   }
   else if(type == "relation"){
     url ='/metadata/getDatapodByRelation?action=view&relationUuid='+uuid+'&type=datapod';
@@ -314,8 +313,13 @@ execute(uuid,version,type,action): Observable<any> {
     }
   if(type=="predict"){
     url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
-}
-
+  }
+  if(type=="ingest"){
+  url = '/ingest/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  }
+  if(type=="ingestgroup"){
+    url = '/ingest/executeGroup?action='+ action +'&uuid=' + uuid + '&version=' + version ;
+    }
   let body=null
   return this._sharedService.postCall(url,body)
   .map((response: Response) => {
