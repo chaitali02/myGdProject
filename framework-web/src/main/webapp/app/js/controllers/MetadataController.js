@@ -622,10 +622,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		   }
 		 }
 		// }
-		 console.log(data)
+		// console.log(data)
 		 return data;
 	}
 	$scope.calculateHistrogram=function(row){
+		$scope.histogramDetail=row.colDef;
 		console.log(row);
 		$('#histogamModel').modal({
 			backdrop: 'static',
@@ -683,6 +684,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
 				attribute.name =data.attributes[j].name;
+				attribute.dname =data.name;
 				attribute.uuid=data.uuid;
 				attribute.version=data.version;
 				attribute.attributeId=data.attributes[j].attributeId;

@@ -21,6 +21,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
         timeout: 3000 //time in ms
     };
     $scope.gridOptions.columnDefs=[];
+    $scope.gridOptions.data=[];
     $scope.gridOptions.columnDefs=[
         {
             displayName: 'UUID',
