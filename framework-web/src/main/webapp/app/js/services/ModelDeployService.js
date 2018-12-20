@@ -30,10 +30,10 @@ DatascienceModule.factory('ModelDeployFactory', function ($http, $location) {
             method: "GET"
         }).then(function (response) { return response })
     }
-    factory.findTrainExecViewByCriteria = function (uuid, version, type, trainExecUuidList) {
+    factory.findTrainExecViewByCriteria = function (uuid, version, type, trainexecuuid,startDate, endDate, active, status) {
         var url = $location.absUrl().split("app")[0]
         return $http({
-            url: url + "model/getTrainExecViewByCriteria?action=view&uuid=" + uuid +"&version="+version +"&type=" + type+"&trainExecUuidList="+trainExecUuidList,
+            url: url + "model/getTrainExecViewByCriteria?action=view&uuid=" + uuid +"&version="+version +"&type=" + type+"&trainExecUuid="+trainexecuuid+"&startDate="+startDate+"&endDate="+endDate+"&active="+active+"&status="+status,
             method: "GET"
         }).then(function (response) { return response })
     }
@@ -90,9 +90,9 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
         return deferred.promise;
     }
     
-    this.getTrainExecViewByCriteria = function (uuid, version, type, trainExecUuidList) {
+    this.getTrainExecViewByCriteria = function (uuid, version, type, trainexecuuid,startdate, enddate,active, status) {
         var deferred = $q.defer();
-        ModelDeployFactory.findTrainExecViewByCriteria(uuid, version, type, trainExecUuidList).then(function (response) { onSuccess(response.data) });
+        ModelDeployFactory.findTrainExecViewByCriteria(uuid, version, type, trainexecuuid,startdate, enddate,active, status).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
             deferred.resolve({
                 data: response

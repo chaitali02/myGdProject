@@ -5,6 +5,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
 
     $scope.iSSubmitEnable=true;
     $scope.gridOptions={};
+    $scope.searchForm={};
     $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
     $scope.privileges = privilegeSvc.privileges['trainExec'] || [];
     $scope.isPrivlageDeploy = $scope.privileges.indexOf('Deploy') == -1;
@@ -20,7 +21,39 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
         content: '',
         timeout: 3000 //time in ms
     };
+    $scope.allStatus = [{
+        "caption": "Not Started",
+        "name": "NotStarted"
+    },
+    {
+        "caption": "In Progress",
+        "name": "InProgress"
+    },
+    {
+        "caption": "Completed",
+        "name": "Completed"
+    },
+    {
+        "caption": "Killed",
+        "name": "Killed"
+    },
+    {
+        "caption": "Failed",
+        "name": "Failed"
+    }
+    ];
+    $scope.allActive = [ {
+        "caption": "Active",
+        "name": "Y"
+      },
+      {
+        "caption": "Inactive",
+        "name": "N"
+      }
+   
+    ];
     $scope.gridOptions.columnDefs=[];
+    $scope.gridOptions.data=[];
     $scope.gridOptions.columnDefs=[
         {
             displayName: 'UUID',
@@ -120,12 +153,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
               '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
               '    <i class="fa fa-angle-down"></i></button>',
               '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-            //   '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-            //   '       <li><a  ng-show="grid.appScope.newType.indexOf(\'ingestExec\') != -1?true:false" ng-disabled="true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-            //   '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Execute\') == -1 || [\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
-            //   '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
-              '          <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
-              '          <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
               '    </ul>',
               '  </div>',
               '</div>'
@@ -188,7 +217,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
                  execInfo.uuid=response[i].uuid;
                  execInfo.version=response[i].version;
                  execInfo.name=response[i].name;
-                 execInfo.displayname=response[i].createdOn;
+                 execInfo.displayname=response[i].name+" [ "+response[i].createdOn+" ]";
                  trainExecInfo[i]=execInfo;                                 
                 }
             }
@@ -214,35 +243,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
           return $filter('filter')($scope.allTrainExecInfo, query);
         });
     }
-   
-    $scope.search=function(isShowProgess){
-        var trainInfoTags=[];
-        $scope.iSSubmitEnable=true;
-        if(isShowProgess){
-            $scope.isInprogess=true;
-        }
-        
-        if($scope.trainInfoTags && $scope.trainInfoTags.length >0){
-            for(var i=0;i<$scope.trainInfoTags.length;i++){
-                trainInfoTags[i]=$scope.trainInfoTags[i].uuid;
-            }
-            ModelDeployService.getTrainExecViewByCriteria($scope.selectedModel.uuid, $scope.selectedModel.version, "model",trainInfoTags.toString()).then(function (response) { onGetTrainExecByModel(response.data) });
-            var onGetTrainExecByModel = function (response) {
-             console.log(response);
-             $scope.isInprogess=false;
-             $scope.gridOptions.data=response;
-           }
-        }else{
-            $scope.isInprogess=false;
-            $scope.iSSubmitEnable=false;
-
-        }
-    };
-
-    $scope.refreshResult=function(){
-        $scope.search(false);
-    }
-
+    
     $scope.setState=function(row,type){
         notify.type = 'success',
         notify.title = 'Success',
@@ -270,4 +271,37 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
            }
         }
     }
+
+    $scope.getTrainExecViewByCriteria=function(isShowProgess){
+        debugger
+        $scope.iSSubmitEnable=true;
+        if(isShowProgess)
+            $scope.isInprogess=true;
+        
+        var startdate = ""
+        if ($scope.searchForm.startdate != null) {
+            startdate = $filter('date')($scope.searchForm.startdate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+            startdate = startdate + " UTC"
+        }
+        var enddate = "";
+        if ($scope.searchForm.enddate != null) {
+            enddate = $filter('date')($scope.searchForm.enddate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+            enddate = enddate + " UTC";
+        }
+        
+        ModelDeployService.getTrainExecViewByCriteria($scope.selectedModel.uuid, $scope.selectedModel.version, "model",$scope.searchForm.trainexecuuid || '' ,startdate, enddate,  $scope.searchForm.active || '', $scope.searchForm.status || '').then(function (response) { onGetTrainExecByModel(response.data) });
+        var onGetTrainExecByModel = function (response) {
+            console.log(response);
+            $scope.isInprogess=false;
+            $scope.gridOptions.data=response;
+           // $scope.isInprogess=false;
+           $scope.iSSubmitEnable=false;
+        }
+    };
+
+    $scope.refreshResult=function(){
+        $scope.search(false);
+    }
+
+   
 })
