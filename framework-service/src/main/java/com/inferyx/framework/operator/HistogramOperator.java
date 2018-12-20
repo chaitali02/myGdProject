@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
@@ -21,6 +22,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -36,6 +38,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
+
 
 /**
  * @author Ganesh
@@ -255,8 +258,6 @@ public class HistogramOperator implements IOperator {
 	}
 
 	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, RunMode runMode) throws Exception {
-		String sql = generateSql(attrRefHolderList, null, null, runMode);
-		sql = sql.concat(" ").concat(" limit "+limit);
 		Datasource datapodDS = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datapodDS.getType());	
 		
@@ -266,8 +267,26 @@ public class HistogramOperator implements IOperator {
 		Datapod attrDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpMI.getUuid(), attrDpMI.getVersion(), attrDpMI.getType().toString(), "N");
 		Datasource attrDpDs = commonServiceImpl.getDatasourceByObject(attrDp);
 		
-		ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid);
-		exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
+		Attribute attribute = attrDp.getAttribute(Integer.parseInt(attrRefHolderList.get(0).getAttrId()));
+		String attributeType = attribute.getType();
+		String sql = null;
+		if(attributeType.equalsIgnoreCase("String")) {
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			sql = "SELECT "
+					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
+					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
+					.concat(" FROM ").concat(tableName)
+					.concat(" GROUP BY ").concat(attribute.getName())
+					.concat(" LIMIT "+limit);
+			exec.executeAndRegisterByDatasource(sql, "tempAttrHistogram", attrDpDs, appUuid);
+		} else {
+			sql = generateSql(attrRefHolderList, null, null, runMode);
+			sql = sql.concat(" ").concat(" LIMIT "+limit);
+
+			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid);
+			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
+		}
+		
 		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
 		return exec.executeAndFetchByDatasource(dataSql, attrDpDs, appUuid);
 	}
