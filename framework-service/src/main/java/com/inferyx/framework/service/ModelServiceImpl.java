@@ -11,8 +11,10 @@
 package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.BufferedReader;
@@ -54,11 +56,14 @@ import org.apache.spark.sql.types.StructField;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -3522,7 +3527,7 @@ public class ModelServiceImpl {
 				if(active != null && !active.isEmpty()) {
 					activeFilter = match(new Criteria("active").is(active));
 				} else {
-					activeFilter = match(new Criteria("active").is("Y"));
+					activeFilter = match(new Criteria("active").in("Y", "N"));
 				}
 				
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
@@ -3584,7 +3589,7 @@ public class ModelServiceImpl {
 				if(active != null && !active.isEmpty()) {
 					activeFilter = match(new Criteria("active").is(active));
 				} else {
-					activeFilter = match(new Criteria("active").is("Y"));
+					activeFilter = match(new Criteria("active").in("Y", "N"));
 				}
 				
 				SimpleDateFormat simpleDateFormat = null;
@@ -3631,15 +3636,34 @@ public class ModelServiceImpl {
 		return deployExecList;
 	}
 
-	public DeployExec getDeployExecByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public DeployExec getDeployExecByTrainExec(String trainExecUuid
+			, String trainExecVersion
+			, String active
+			, String status) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String appUuid = commonServiceImpl.getApp().getUuid();
 		MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExecUuid));
 		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
-		MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+		MatchOperation activeFilter = null;
+		if(active != null && !active.isEmpty()) {
+			activeFilter = match(new Criteria("active").in(active));
+		} else {
+			activeFilter = match(new Criteria("active").in("Y", "N"));
+		}
+		
+		MatchOperation statusFilter = null;
+		if(status != null) {
+			statusFilter = match(new Criteria("statusList.stage").is(status));
+		} else {
+			statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
+					Status.Stage.Failed.toString(),
+					Status.Stage.InProgress.toString(),
+					Status.Stage.NotStarted.toString(),
+					Status.Stage.Killed.toString()));
+		}
 		
 		GroupOperation groupBy = group("uuid").max("version").as("version");
 		
-		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, groupBy);
+		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, statusFilter, groupBy);
 		AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
 		DeployExec deployExec = aggregationResults.getUniqueMappedResult();
 		if(deployExec != null) {
@@ -3652,20 +3676,27 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid, String modelVersion, String trainExecUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid
+			, String modelVersion
+			, String trainExecUuid
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<TrainExecView> trainExecViewList = new ArrayList<>();
 		if(trainExecUuid != null && !trainExecUuid.isEmpty()) {
-			TrainExec trainExec = (TrainExec) commonServiceImpl.getLatestByUuid(trainExecUuid, MetaType.trainExec.toString());
-			TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec);
-			
-			if(trainExecView != null) {
-				trainExecViewList.add(trainExecView);
-			}
+			TrainExec trainExec = getTrainExecByCriteria(trainExecUuid, null, active, startDate, endDate, status);
+			if(trainExec != null) {
+				TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec, active, status);				
+				if(trainExecView != null) {
+					trainExecViewList.add(trainExecView);
+				}
+			}			
 		} else {
-			List<TrainExec> trainExecByModel = getTrainExecByModel(modelUuid, modelVersion, null, null, null, null);
+			List<TrainExec> trainExecByModel = getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
 			if(trainExecByModel != null && !trainExecByModel.isEmpty()) {
 				for(TrainExec trainExec : trainExecByModel) {
-					TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec);
+					TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec, active, status);
 					if(trainExecView != null) {
 						trainExecViewList.add(trainExecView);
 					}
@@ -3675,7 +3706,68 @@ public class ModelServiceImpl {
 		return trainExecViewList;
 	}
 	
-	public TrainExecView getTrainExecViewByTrainExec(TrainExec trainExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public TrainExec getTrainExecByCriteria(String trainExecUuid
+			, String trainExecVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		String appUuid = commonServiceImpl.getApp().getUuid();		
+		MatchOperation uuidFilter = match(new Criteria("uuid").is(trainExecUuid));
+		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+		
+		MatchOperation activeFilter = null;
+		if(active != null && !active.isEmpty()) {
+			activeFilter = match(new Criteria("active").is(active));
+		} else {
+			activeFilter = match(new Criteria("active").in("Y", "N"));
+		}
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		MatchOperation dataRangeFilter = null;
+		if(startDate != null && !startDate.isEmpty() 
+				&& endDate != null && !endDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+		} else if(startDate != null && !startDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+		} else if(endDate != null && !endDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+		}
+		
+		MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//		if(status != null) {
+//			statusFilter = match(new Criteria("statusList.stage").is(status));
+//		} else {
+//			statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//		}
+		
+		GroupOperation groupBy = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.ASC, "version"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
+		
+		Aggregation aggregation = null;
+		if(dataRangeFilter != null) {
+			aggregation = newAggregation(uuidFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
+		} else {
+			aggregation = newAggregation(uuidFilter, statusFilter, activeFilter, appFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
+		}
+		
+		AggregationResults<TrainExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.trainExec.toString().toLowerCase(), TrainExec.class);
+		TrainExec trainExec = aggregationResults.getUniqueMappedResult();
+		
+		if(trainExec != null) {			
+			return (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExec.getId()
+						, trainExec.getVersion()
+						, MetaType.trainExec.toString()
+						, "N");
+		} else {
+			return null;
+		}
+	}
+	
+	public TrainExecView getTrainExecViewByTrainExec(TrainExec trainExec
+			, String active
+			, String status) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(trainExec != null) {
 			TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
 			TrainResultView trainResultView = trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion());
@@ -3696,7 +3788,7 @@ public class ModelServiceImpl {
 			
 			//setting view specific properties
 			trainExecView.setTrainResultView(trainResultView);
-			DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion(), active, status);
 			trainExecView.setDeployExec(deployExec);
 			
 			return trainExecView;

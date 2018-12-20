@@ -507,8 +507,12 @@ public class ModelController {
 			@RequestParam(value = "uuid", required = false) String modelUuid,
 			@RequestParam(value = "version", required = false) String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid, active, startDate, endDate, status);
 	}
 	
 	@RequestMapping(value = "/deploy", method = RequestMethod.GET)
