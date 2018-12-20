@@ -613,7 +613,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	function ConvertTwoDisit(data, propName) {
 		// if(isNaN(data[0][propName])){
-		 if (data.length > 0 &&  data[0][propName].indexOf("-") != -1) {
+		 if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
 		   for (var i = 0; i < data.length; i++) {
 			 a = data[i][propName].split(' - ')[0];
 			 b = data[i][propName].split('-')[1]

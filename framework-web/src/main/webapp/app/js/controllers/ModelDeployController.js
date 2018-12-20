@@ -309,7 +309,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
                 .then(function (response) { onGetDeploy(response.data)},function (response) { onError(response.data) });
             var onGetDeploy = function (response) {
              console.log(response);
-             row.deployExec={}
+            // row.response.deployExec.active="Y";
+            $scope.getTrainExecViewByCriteria(false);
            }
            var onError=function(response){
             console.log(response);
@@ -319,7 +320,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
                 .then(function (response) { onGetundeploy(response.data)},function (response) { onError(response.data)});
             var onGetundeploy = function (response) {
              console.log(response);
-             row.deployExec=null;
+            // row.deployExec=null;
+             $scope.getTrainExecViewByCriteria(false);
            }
            var onError=function(response){
             console.log(response);
