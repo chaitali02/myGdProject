@@ -161,7 +161,7 @@
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -202,17 +202,17 @@
                     </td>
                     <td>
                       <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
-                        class="form-control" name="name+{{i}}">
+                        class="form-control" name="name+{{i}}" (change)="onChangeName(i)">
                     </td>
                     <td>
                       <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
                         [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
-                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" [stepHour]="2"></p-calendar>
+                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" [stepHour]="2" (onSelect)=updateEndDate(i)></p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
                       <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" hourFormat="12"
+                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" hourFormat="12" (onSelect)=updateEndDate(i)
                         [disabled]="mode == 'true'" [minDate]="tabledata.startDate" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
@@ -223,11 +223,11 @@
                       </select>
                     </td>
                     <td>
-                      <ng-container *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
+                      <div *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
                         <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
                           name="frequencyDetail+{{i}}+{{optionChoose}}" class="form-control" (click)="showDialog(i, tabledata.attrtype)"
                           [disabled]="mode == 'true'" readonly={{isReadOnly}} />
-                      </ng-container>
+                      </div>
                       <ng-template #notAllow>
                         <div style="text-align: center">
                           -NA-
