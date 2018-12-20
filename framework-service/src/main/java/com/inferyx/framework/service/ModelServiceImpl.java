@@ -3530,7 +3530,7 @@ public class ModelServiceImpl {
 					activeFilter = match(new Criteria("active").in("Y", "N"));
 				}
 				
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 				MatchOperation dataRangeFilter = null;
 				if(startDate != null && !startDate.isEmpty() 
 						&& endDate != null && !endDate.isEmpty()) {
@@ -3661,7 +3661,7 @@ public class ModelServiceImpl {
 		}
 		
 		MatchOperation statusFilter = null;
-		if(status != null) {
+		if(status != null && !status.isEmpty()) {
 			statusFilter = match(new Criteria("statusList.stage").is(status));
 		} else {
 			statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
@@ -3672,8 +3672,10 @@ public class ModelServiceImpl {
 		}
 		
 		GroupOperation groupBy = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
 		
-		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, statusFilter, groupBy);
+		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, statusFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
 		AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
 		DeployExec deployExec = aggregationResults.getUniqueMappedResult();
 		if(deployExec != null) {
@@ -3745,14 +3747,14 @@ public class ModelServiceImpl {
 		}
 		
 		MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
-//		if(status != null) {
+//		if(status != null && !status.isEmpty()) {
 //			statusFilter = match(new Criteria("statusList.stage").is(status));
 //		} else {
 //			statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
 //		}
 		
 		GroupOperation groupBy = group("uuid").max("version").as("version");
-		SortOperation sortByVersion = sort(new Sort(Direction.ASC, "version"));
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		LimitOperation limitToOnlyFirstDoc = limit(1);
 		
 		Aggregation aggregation = null;
@@ -3795,6 +3797,7 @@ public class ModelServiceImpl {
 			trainExecView.setLocked(trainExec.getLocked());
 			trainExecView.setPublished(trainExec.getPublished());
 			trainExecView.setAppInfo(trainExec.getAppInfo());
+			trainExecView.setStatusList(trainExec.getStatusList());
 			
 			//setting view specific properties
 			trainExecView.setTrainResultView(trainResultView);

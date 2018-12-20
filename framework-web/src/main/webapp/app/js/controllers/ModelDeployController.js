@@ -6,6 +6,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     $scope.iSSubmitEnable=true;
     $scope.gridOptions={};
     $scope.searchForm={};
+    $scope.autoRefreshCounter = 05;
+    $scope.autoRefreshResult = false;
     $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
     $scope.privileges = privilegeSvc.privileges['trainExec'] || [];
     $scope.isPrivlageDeploy = $scope.privileges.indexOf('Deploy') == -1;
@@ -14,44 +16,49 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
 		$scope.privileges = privilegeSvc.privileges['trainExec'] || [];
         $scope.isPrivlageDeploy = $scope.privileges.indexOf('Deploy') == -1;
         $scope.isPrivlageUnDeploy = $scope.privileges.indexOf('Undeploy') == -1;
-	});
+    });
+    $scope.path = dagMetaDataService.statusDefs
+
     var notify = {
         type: 'success',
         title: 'Success',
         content: '',
         timeout: 3000 //time in ms
     };
-    $scope.allStatus = [{
-        "caption": "Not Started",
-        "name": "NotStarted"
-    },
-    {
-        "caption": "In Progress",
-        "name": "InProgress"
-    },
-    {
-        "caption": "Completed",
-        "name": "Completed"
-    },
-    {
-        "caption": "Killed",
-        "name": "Killed"
-    },
-    {
-        "caption": "Failed",
-        "name": "Failed"
+    $scope.addDataStatusAndActive=function(){
+        $scope.allStatus = [{
+            "caption": "Not Started",
+            "name": "NotStarted"
+        },
+        {
+            "caption": "In Progress",
+            "name": "InProgress"
+        },
+        {
+            "caption": "Completed",
+            "name": "Completed"
+        },
+        {
+            "caption": "Killed",
+            "name": "Killed"
+        },
+        {
+            "caption": "Failed",
+            "name": "Failed"
+        }
+        ];
+        $scope.allActive = [ {
+            "caption": "Active",
+            "name": "Y"
+          },
+          {
+            "caption": "Inactive",
+            "name": "N"
+          }
+       
+        ];    
     }
-    ];
-    $scope.allActive = [ {
-        "caption": "Active",
-        "name": "Y"
-      },
-      {
-        "caption": "Inactive",
-        "name": "N"
-      }
-   
-    ];
+    $scope.addDataStatusAndActive();
     $scope.gridOptions.columnDefs=[];
     $scope.gridOptions.data=[];
     $scope.gridOptions.columnDefs=[
@@ -83,17 +90,11 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
             // priority: 0,
             },
         },
-        {
-            displayName: 'Created By',
-            name: 'createdBy.ref.name',
-            cellClass: 'text-center',
-            maxWidth:100,
-            headerCellClass: 'text-center'
-        },
+
         {
             displayName: 'Created On',
             visible: false,
-            name: 'createdOn',
+            name: 'response.createdOn',
             minWidth: 220,
             cellClass: 'text-center',
             headerCellClass: 'text-center',
@@ -102,43 +103,74 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
         {
             displayName: 'Accuracy',
             visible: true,
-            name: 'trainResultView.accuracy',
+            name: 'accuracy',
             cellClass: 'text-center',
+            maxWidth: 90,
             headerCellClass: 'text-center',
   
         },
         {
             displayName: 'F1 Score',
             visible: true,
-            name: 'trainResultView.f1Score',
+            name: 'f1Score',
             cellClass: 'text-center',
+            maxWidth: 80,
             headerCellClass: 'text-center',
   
         },
         {
             displayName: 'Recall',
             visible: true,
-            name: 'trainResultView.recall',
+            name: 'recall',
+            maxWidth: 80,
             cellClass: 'text-center',
             headerCellClass: 'text-center',
   
         },
         {
+            displayName: 'Last Deployed By',
+            name: 'createdBy.ref.name',
+            cellClass: 'text-center',
+            minWidth:100,
+            headerCellClass: 'text-center',
+            
+        },
+        {
+            displayName: 'Last Deployed Date',
+            name: 'lastDeployedDate',
+            cellClass: 'text-center',
+            minWidth:100,
+            headerCellClass: 'text-center',
+            cellTemplate:'<div class="grid-tooltip" title="{{row.entity.lastDeployedDate}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
+
+        },
+        {
             displayName: 'State',
             visible: true,
             name: 'state',
-            minWidth: 100,
+            maxWidth: 110,
             cellClass: 'text-center',
             headerCellClass: 'text-center',
-            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.deployExec ==null?\'Not Deployed\':\'Deployed\'}}</div></div>'
+            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.deployExec == null ||  row.entity.deployExec.active == \'N\' ?\'Not Deployed\':\'Deployed\'}}</div></div>'
         },
+        
         {
             displayName: 'Status',
-            name: 'status',
+            name: 'dStatus',
             cellClass: 'text-center',
             headerCellClass: 'text-center',
             maxWidth: 100,
-            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.dStatus].color}} !important;color:{{row.entity.dStatus ==\'-NA-\'?\'black\':\'white\'}} !important ;" ng-style="">{{row.entity.dStatus}}</div></div>'
+      
+        },
+        {
+            displayName: 'Train Status',
+            name: 'tStatus',
+            visible:false,
+            cellClass: 'text-center',
+            headerCellClass: 'text-center',
+            maxWidth: 100,
+            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.tStatus].color}} !important" ng-style="">{{row.entity.tStatus}}</div></div>'
       
         },
         {
@@ -178,20 +210,43 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     $scope.reset=function(){
         $scope.selectedModel={};
         $scope.allModel=null;
+        $scope.allStatus=null;
+        $scope.allActive=null;
+        $scope.allTrainExecInfo=null;
         setTimeout(function(){
             $scope.selectedModel=null;
+            $scope.allTrainExecInfo=null;
             $scope.getAllLetestModel();
+            $scope.addDataStatusAndActive();
         },100)
         $scope.trainInfoTags=[];
         $scope.gridOptions.data=[];
         $scope.iSSubmitEnable=true;
+        $scope.searchForm={};
     }
-
+    
     $scope.gridOptions.onRegisterApi = function (gridApi) {
         $scope.gridApi = gridApi;
         $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
     };
+   
 
+    var myVar;
+    $scope.autoRefreshOnChange = function () {
+        if ($scope.autorefresh) {
+            myVar = setInterval(function () {
+                $scope.getTrainExecViewByCriteria(false);
+            }, $scope.autoRefreshCounter + "000");
+        }
+        else {
+            clearInterval(myVar);
+        }
+    }
+    
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        clearInterval(myVar);
+    });
     $scope.refreshData = function () {
         $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
 
@@ -273,7 +328,6 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     }
 
     $scope.getTrainExecViewByCriteria=function(isShowProgess){
-        debugger
         $scope.iSSubmitEnable=true;
         if(isShowProgess)
             $scope.isInprogess=true;
@@ -294,13 +348,14 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
             console.log(response);
             $scope.isInprogess=false;
             $scope.gridOptions.data=response;
+            $scope.originalData=response;
            // $scope.isInprogess=false;
            $scope.iSSubmitEnable=false;
         }
     };
 
     $scope.refreshResult=function(){
-        $scope.search(false);
+        $scope.getTrainExecViewByCriteria(false);
     }
 
    

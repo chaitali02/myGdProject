@@ -56,7 +56,7 @@ DatascienceModule.factory('ModelDeployFactory', function ($http, $location) {
     return factory;
 })
 
-DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFactory, $q, sortFactory) {
+DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFactory, $q, sortFactory,$filter) {
     
     this.deploy = function (uuid, version, type) {
         var deferred = $q.defer();
@@ -94,8 +94,62 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
         var deferred = $q.defer();
         ModelDeployFactory.findTrainExecViewByCriteria(uuid, version, type, trainexecuuid,startdate, enddate,active, status).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
+            var result=[];
+            if(response && response.length >0){
+                for(var i=0;i<response.length ;i++){
+                 var resultInfo={};
+                if (response[i].statusList != null) {
+                    response[i].statusList.sort(sortFactory.sortByProperty("createdOn"));
+                    var len = response[i].statusList.length - 1;
+                }
+                
+                if(response[i].statusList !=null && response[i].statusList.length > 0){
+                    if (response[i].statusList[len].stage == "NotStarted") {
+                        resultInfo.tStatus = "Not Started"
+                    } else if (response[i].statusList[len].stage == "InProgress") {
+                      result.tStatus = "In Progress"
+                    } else {
+                        resultInfo.tStatus = response[i].statusList[len].stage;
+                    }
+                  }
+                  else{
+                    resultInfo.tStatus="-NA-";
+                }
+                if (response[i].deployExec !=null && response[i].deployExec.statusList != null) {
+                    response[i].deployExec.statusList.sort(sortFactory.sortByProperty("createdOn"));
+                    var len = response[i].deployExec.statusList.length - 1;
+                }
+                
+                if(response[i].deployExec !=null && response[i].deployExec.statusList !=null && response[i].deployExec.statusList.length > 0){
+                    if (response[i].deployExec.statusList[len].stage == "NotStarted") {
+                        resultInfo.dStatus = "Not Started"
+                    } else if (response[i].deployExec.statusList[len].stage == "InProgress") {
+                      result.dStatus = "In Progress"
+                    } else {
+                        resultInfo.dStatus =response[i].deployExec.statusList[len].stage;
+                        resultInfo.lastDeployedDate=$filter('date')(response[i].deployExec.statusList[len].createdOn, "EEE MMM dd  hh:mm:ss yyyy");
+                    }
+                  }
+                  else{
+                    resultInfo.dStatus="-NA-";
+                    resultInfo.lastDeployedDate="-NA-";
+                }
+                 
+                resultInfo.response=response[i];
+                resultInfo.name=response[i].name;
+                resultInfo.createdBy=response[i].createdBy;
+                resultInfo.f1Score= parseFloat(response[i].trainResultView.f1Score.toFixed(2));
+                resultInfo.accuracy= parseFloat(response[i].trainResultView.accuracy.toFixed(2));
+                resultInfo.recall= parseFloat(response[i].trainResultView.recall.toFixed(2));
+                resultInfo.precision= parseFloat(response[i].trainResultView.precision.toFixed(2));
+                resultInfo.numFeatures=response[i].trainResultView.numFeatures;
+                resultInfo.deployExec=response[i].deployExec;
+                result[i]=resultInfo;
+                 
+                }
+            }
             deferred.resolve({
-                data: response
+                data: result
             });
         }
         return deferred.promise;

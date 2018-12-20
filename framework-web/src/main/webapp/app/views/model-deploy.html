@@ -39,14 +39,14 @@
                     </div>
                 </div>
                 <div class="portlet-body" style="min-height:100px;">
-                    <form class="form-horizontal" ng-submit="getTrainExecViewByCriteria(true)">
+                    <form class="form-horizontal" ng-submit="getTrainExecViewByCriteria(true)"  novalidate="novalidate">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-6">Model</label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
-                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel()" data-ng-model="selectedModel" ng-options="r as r.name for r in allModel | orderBy :'name' track by r.uuid">
+                                            <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel()" data-ng-model="selectedModel" ng-options="r as r.name for r in allModel | orderBy :'name' track by r.uuid" required  disable-validation-message="">
                                                 <option value="">-Select-</option>
                                             </select>
                                         </div>
@@ -206,6 +206,22 @@
                     </div>
                 </div>
                 <div class="portlet-body" style="min-height:100px;">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6" >
+                            <div id="datastoredatatable_filter" class="dataTables_filter">
+                                <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange()"/>
+                                <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
+                                <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autoRefreshCounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <div class="row">
                         <div class="col-md-12">
                             <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">

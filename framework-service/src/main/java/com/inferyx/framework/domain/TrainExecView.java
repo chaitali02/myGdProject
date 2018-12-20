@@ -14,7 +14,7 @@ package com.inferyx.framework.domain;
  * @author Ganesh
  *
  */
-public class TrainExecView extends BaseEntity {
+public class TrainExecView extends BaseExec {
 	DeployExec deployExec;
 	TrainResultView trainResultView;
 	
