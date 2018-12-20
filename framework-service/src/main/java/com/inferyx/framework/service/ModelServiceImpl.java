@@ -3606,7 +3606,17 @@ public class ModelServiceImpl {
 					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
 				}
 				
-				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+				MatchOperation statusFilter = null;
+				if(status != null) {
+					statusFilter = match(new Criteria("statusList.stage").is(status));
+				} else {
+					statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
+							Status.Stage.Failed.toString(),
+							Status.Stage.InProgress.toString(),
+							Status.Stage.NotStarted.toString(),
+							Status.Stage.Killed.toString()));
+				}
 				
 				GroupOperation groupBy = group("uuid").max("version").as("version");
 				
