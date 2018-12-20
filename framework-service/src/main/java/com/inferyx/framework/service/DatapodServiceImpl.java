@@ -1417,6 +1417,6 @@ public class DatapodServiceImpl {
 		attrRefHolderList.add(attrRefHolder);
 		String limitValue = Helper.getPropertyValue("framework.histogram.sample.size");
 		int limit = Integer.parseInt(limitValue);
-		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets , limit, runMode);
+		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, runMode);
 	}
 }
