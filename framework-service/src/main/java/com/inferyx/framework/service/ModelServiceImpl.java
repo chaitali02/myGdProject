@@ -3596,13 +3596,13 @@ public class ModelServiceImpl {
 				MatchOperation dataRangeFilter = null;
 				if(startDate != null && !startDate.isEmpty() 
 						&& endDate != null && !endDate.isEmpty()) {
-					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
 				} else if(startDate != null && !startDate.isEmpty()) {
-					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 					dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
 				} else if(endDate != null && !endDate.isEmpty()) {
-					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
 				}
 				
@@ -3735,7 +3735,7 @@ public class ModelServiceImpl {
 			activeFilter = match(new Criteria("active").in("Y", "N"));
 		}
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 		MatchOperation dataRangeFilter = null;
 		if(startDate != null && !startDate.isEmpty() 
 				&& endDate != null && !endDate.isEmpty()) {
