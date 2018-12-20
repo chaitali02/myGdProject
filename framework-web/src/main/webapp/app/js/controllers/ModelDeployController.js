@@ -18,7 +18,9 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
         $scope.isPrivlageUnDeploy = $scope.privileges.indexOf('Undeploy') == -1;
     });
     $scope.path = dagMetaDataService.statusDefs
-
+    $scope.tz = localStorage.serverTz;
+    var matches = $scope.tz.match(/\b(\w)/g);
+    $scope.timezone = matches.join('');
     var notify = {
         type: 'success',
         title: 'Success',
