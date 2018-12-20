@@ -371,7 +371,7 @@ public class MetadataServiceImpl {
 		query.fields().include("statusList");
 		
 		//Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");
 		
 		//to find 
 		if(!StringUtils.isBlank(role) && role.equalsIgnoreCase("admin")) {
@@ -395,9 +395,9 @@ public class MetadataServiceImpl {
 			query.addCriteria(Criteria.where("_id").ne("1").andOperator(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)),
 							  										  Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate))));
 			else if (startDate != null && !startDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").gte(startDate));
+			query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
 			else if (endDate != null && !endDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").lte(endDate));
+			query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList<?> tagList= new ArrayList<>(Arrays.asList(tags.split(",")));
 				query.addCriteria(Criteria.where("tags").all(tagList));
@@ -670,7 +670,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		// Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 		// to find
 		//String appUuid = null ;
 		String appUuid =commonServiceImpl.findAppId(type);
@@ -1375,7 +1375,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 
 		String appUuid = commonServiceImpl.findAppId(type);
 

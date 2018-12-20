@@ -341,7 +341,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		query.fields().include("published");
 		query.fields().include("appInfo");
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
 
 		try {
 			if ((startDate != null && !StringUtils.isEmpty(startDate))

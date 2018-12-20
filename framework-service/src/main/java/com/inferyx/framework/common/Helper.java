@@ -172,7 +172,7 @@ public class Helper {
 	}
 	
 	public static String getCurrentTimeStamp(){
-		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(new Date());
+		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new Date());
 		return timestamp;
 	}
 
