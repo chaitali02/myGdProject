@@ -704,25 +704,29 @@ public class MetadataServiceImpl {
 			if ((startDate != null && !startDate.isEmpty()) && (endDate != null && !endDate.isEmpty())) {
 				criteriaList.add(where("_id").ne("1").and("createdOn").lte(simpleDateFormat.parse(endDate))
 						.gte(simpleDateFormat.parse(startDate)));
-			}
-
-			else if (startDate != null && !startDate.isEmpty())
+			} else if (startDate != null && !startDate.isEmpty()) {
 				criteriaList.add(where("createdOn").gte(simpleDateFormat.parse(startDate)));
-			else if (endDate != null && !endDate.isEmpty())
+			} else if (endDate != null && !endDate.isEmpty()) {
 				criteriaList.add(where("createdOn").lte(simpleDateFormat.parse(endDate)));
+			}
+			
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList tagList = new ArrayList(Arrays.asList(tags.split(",")));
 				criteriaList.add(where("tags").all(tagList));
 			}
+			
 			if (active != null && !active.isEmpty()) {
 				criteriaList.add(where("active").is(active));
 			}
+			
 			if (StringUtils.isNotBlank(uuid)) {
 				criteriaList.add(where("uuid").is(uuid));
 			}
+			
 			if (StringUtils.isNotBlank(version)) {
 				criteriaList.add(where("version").is(version));
 			}
+			
 			if (StringUtils.isNotBlank(published)) {
 				criteriaList.add(where("published").is(published));
 			}
