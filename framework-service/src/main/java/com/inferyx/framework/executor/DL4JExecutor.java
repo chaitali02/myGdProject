@@ -917,4 +917,11 @@ public class DL4JExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -3,6 +3,14 @@
  */
 package com.inferyx.controller;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.domain.FeatureValuesDomain;
+import com.inferyx.domain.ModelTrainDomain;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.ExecParams;
@@ -41,6 +52,12 @@ public class PredictController {
 	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
+	@Resource(name="modelMap")
+	private ConcurrentHashMap<String, ModelTrainDomain> modelMap;
+	@Resource(name="trainToModelMap")
+	private ConcurrentHashMap<String, String> trainToModelMap;
+	
+	static final Logger logger = Logger.getLogger(PredictController.class);
 
 	/**
 	 * 
@@ -140,6 +157,40 @@ public class PredictController {
 			return false;
 		}
 		return true;
+	}
+	
+	
+	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void getPrediction(@RequestParam("model_uuid") String modeluuid,
+								@RequestParam("userId") String userUuid,
+								@RequestParam("appId") String appId, 
+								@RequestBody FeatureValuesDomain featureValues) throws Exception {
+		User user = (User) commonServiceImpl.getOneByUuidAndVersion(userUuid, null, MetaType.user.toString());
+		Application app = (Application) commonServiceImpl.getOneByUuidAndVersion(appId, null, MetaType.application.toString());
+		MetaIdentifier appRef = new MetaIdentifier(MetaType.application, appId, app.getVersion());
+		MetaIdentifierHolder appInfo = new MetaIdentifierHolder(appRef);
+		frameworkThreadServiceImpl.setSession(user.getName(), appInfo);
+		ModelTrainDomain modelTrainDomain = modelMap.get(modeluuid);
+		TrainExec trainExec = modelTrainDomain.getTrainExec();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), 
+						trainExec.getDependsOn().getRef().getVersion(),
+						MetaType.train.toString());
+		MetaIdentifier trainInfoRef = new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion(), train.getName());
+		MetaIdentifierHolder trainInfo = new MetaIdentifierHolder(trainInfoRef);
+		
+		Predict predict = new Predict();
+		predict.setBaseEntity();
+		predict.setTrainInfo(trainInfo);
+		predict.setFeatureAttrMap(train.getFeatureAttrMap());
+		predict.setIncludeFeatures(train.getIncludeFeatures());
+		predict.setDependsOn(train.getDependsOn());
+		predict.setAppInfo(train.getAppInfo());
+		predict.setCreatedBy(train.getCreatedBy());
+
+		PredictExec predictExec = null;
+		predictExec = modelServiceImpl.create(predict, null, null, predictExec);
+		modelServiceImpl.predict(predict, predictExec, null, modelTrainDomain.getModel(), RunMode.ONLINE, appId, featureValues.getFeatureList());
+		
 	}
 	
 

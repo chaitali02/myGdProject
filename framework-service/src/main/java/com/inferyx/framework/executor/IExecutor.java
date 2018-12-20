@@ -25,6 +25,7 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.StructType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
@@ -787,4 +788,16 @@ public interface IExecutor {
 	 */
 	Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
 			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @param data
+	 * @param structType
+	 * @param tableName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName, String clientContext)
+			throws IOException;
 }

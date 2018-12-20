@@ -45,6 +45,8 @@ public class ModelPredictController {
 	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
 	@Resource(name="modelMap")
 	private ConcurrentHashMap<String, ModelTrainDomain> modelMap;
+	@Resource(name="trainToModelMap")
+	private ConcurrentHashMap<String, String> trainToModelMap;
 	
 	static final Logger logger = Logger.getLogger(ModelPredictController.class);
 
@@ -55,8 +57,8 @@ public class ModelPredictController {
 		// TODO Auto-generated constructor stub
 	}
 
-	@RequestMapping(value = "/load", method = RequestMethod.POST)
-	public boolean load(@RequestParam("uuid") String trainExecUuid, 
+	@RequestMapping(value = "/deploy", method = RequestMethod.POST)
+	public boolean deploy(@RequestParam("trainExec_uuid") String trainExecUuid, 
 						@RequestParam("version") String trainExecVersion, 
 						@RequestParam("userId") String userUuid,
 						@RequestParam("appId") String appId) throws JSONException, ParseException, IOException {
@@ -77,9 +79,42 @@ public class ModelPredictController {
 																		MetaType.model.toString(), "N");
 		ModelTrainDomain modelTrainDomain = new ModelTrainDomain(model, trainExec); 
 		modelTrainKey = trainExecUuid+"_"+trainExecVersion+"_"+model.getUuid();
-		modelMap.put(modelTrainKey, modelTrainDomain);
-		logger.info("Loaded model - " + modelTrainKey);
+		modelMap.put(model.getUuid(), modelTrainDomain);
+		trainToModelMap.put(trainExecUuid, model.getUuid());
+		logger.info("Deployed model - " + model.getUuid());
 		return true;
+	}
+	
+	@RequestMapping(value = "/undeploy", method = RequestMethod.POST)
+	public String undeploy(@RequestParam("trainExec_uuid") String trainExecUuid, 
+						@RequestParam(name="version", required=false) String trainExecVersion, 
+						@RequestParam("userId") String userUuid,
+						@RequestParam("appId") String appId) throws JSONException, ParseException, IOException {
+		String modelUuid = null;
+		if (trainToModelMap.containsKey(trainExecUuid)) {
+			modelUuid = trainToModelMap.get(trainExecUuid);
+			trainToModelMap.remove(trainExecUuid);
+			modelMap.remove(modelUuid);
+		}
+		logger.info("Undeployed model - " + modelUuid);
+		return modelUuid;
+	}
+	
+	@RequestMapping(value = "/getDeployStatus", method = RequestMethod.GET)
+	public boolean getDeployStatus(@RequestParam("trainExec_uuid") String trainExecUuid, 
+						@RequestParam(name="version", required=false) String trainExecVersion, 
+						@RequestParam("userId") String userUuid,
+						@RequestParam("appId") String appId) throws JSONException, ParseException, IOException {
+		String modelUuid = null;
+		if (trainToModelMap.containsKey(trainExecUuid)) {
+			modelUuid = trainToModelMap.get(trainExecUuid);
+			if (modelMap.containsKey(modelUuid)) {
+				logger.info(" Model " + modelUuid + " for trainExec " + trainExecUuid + " is deployed ");
+				return true;
+			}
+		}
+		logger.info(" Model for trainExec " + trainExecUuid + " is not deployed ");
+		return false;
 	}
 	
 }

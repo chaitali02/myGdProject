@@ -43,6 +43,7 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -886,6 +887,13 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
 			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
+			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -24,7 +24,7 @@ public class MonitorController {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@RequestMapping(value = "/ping", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProcessStatus", method = RequestMethod.GET)
 	public String ping() {
 		return "ALIVE";
 	}
