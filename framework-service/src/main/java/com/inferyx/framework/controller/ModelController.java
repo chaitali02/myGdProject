@@ -480,27 +480,35 @@ public class ModelController {
 	public List<TrainExec> getTrainExecByModel(@RequestParam("uuid") String modelUuid,
 			@RequestParam(value = "version", required = false) String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getTrainExecByModel(modelUuid, modelVersion);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
 	}
 	
 	@RequestMapping(value = "/train/getDeployExecByModel", method = RequestMethod.GET)
 	public List<DeployExec> getDeployExecByModel(@RequestParam("uuid") String modelUuid,
 			@RequestParam(value = "version", required = false) String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getDeployExecByModel(modelUuid, modelVersion);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getDeployExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
 	}
 	
 
 	@RequestMapping(value = "/getTrainExecViewByCriteria", method = RequestMethod.GET)
 	public List<TrainExecView> getTrainExecViewByCriteria(
-			@RequestParam("trainExecUuidList") List<String> trainExecUuidList,
+			@RequestParam(value = "trainExecUuid", required = false) String trainExecUuid,
 			@RequestParam(value = "uuid", required = false) String modelUuid,
 			@RequestParam(value = "version", required = false) String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuidList);
+		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid);
 	}
 	
 	@RequestMapping(value = "/deploy", method = RequestMethod.GET)

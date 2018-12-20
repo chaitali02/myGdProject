@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -3502,7 +3503,12 @@ public class ModelServiceImpl {
 		return exec.fetchTestSet(testSetPath);		
 	}
 
-	public List<TrainExec> getTrainExecByModel(String modelUuid, String modelVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+	public List<TrainExec> getTrainExecByModel(String modelUuid
+			, String modelVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<TrainExec> trainExecList = new ArrayList<>();
 		List<Train> trainList = getTrainByModel(modelUuid, null);
 		
@@ -3511,12 +3517,36 @@ public class ModelServiceImpl {
 			for(Train train : trainList) {
 				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(train.getUuid()));
 				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
-				MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+				
+				MatchOperation activeFilter = null;
+				if(active != null && !active.isEmpty()) {
+					activeFilter = match(new Criteria("active").is(active));
+				} else {
+					activeFilter = match(new Criteria("active").is("Y"));
+				}
+				
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+				MatchOperation dataRangeFilter = null;
+				if(startDate != null && !startDate.isEmpty() 
+						&& endDate != null && !endDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+				} else if(startDate != null && !startDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+				} else if(endDate != null && !endDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+				}
+				
 				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
 				
 				GroupOperation groupBy = group("uuid").max("version").as("version");
 				
-				Aggregation aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				Aggregation aggregation = null;
+				if(dataRangeFilter != null) {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy);
+				} else {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				}
+				
 				AggregationResults<TrainExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.trainExec.toString().toLowerCase(), TrainExec.class);
 				List<TrainExec> tempTrainExecList = aggregationResults.getMappedResults();
 				
@@ -3534,9 +3564,14 @@ public class ModelServiceImpl {
 		return trainExecList;
 	}
 	
-	public List<DeployExec> getDeployExecByModel(String modelUuid, String modelVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+	public List<DeployExec> getDeployExecByModel(String modelUuid
+			, String modelVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<DeployExec> deployExecList = new ArrayList<>();
-		List<TrainExec> deployExecDependsOn = getTrainExecByModel(modelUuid, null);
+		List<TrainExec> deployExecDependsOn = getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
 		
 		if(deployExecDependsOn != null && !deployExecDependsOn.isEmpty()) {
 			String appUuid = commonServiceImpl.getApp().getUuid();
@@ -3544,11 +3579,40 @@ public class ModelServiceImpl {
 			for(TrainExec trainExec : deployExecDependsOn) {
 				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExec.getUuid()));
 				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
-				MatchOperation activeFilter = match(new Criteria("active").is("Y"));
+				
+				MatchOperation activeFilter = null;
+				if(active != null && !active.isEmpty()) {
+					activeFilter = match(new Criteria("active").is(active));
+				} else {
+					activeFilter = match(new Criteria("active").is("Y"));
+				}
+				
+				SimpleDateFormat simpleDateFormat = null;
+				MatchOperation dataRangeFilter = null;
+				if(startDate != null && !startDate.isEmpty() 
+						&& endDate != null && !endDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+				} else if(startDate != null && !startDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+				} else if(endDate != null && !endDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+				}
+				
+				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
 				
 				GroupOperation groupBy = group("uuid").max("version").as("version");
 				
-				Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, groupBy);
+				Aggregation aggregation = null;
+				if(dataRangeFilter != null) {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy);
+				} else {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				}
+				
+				
 				AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
 				List<DeployExec> tempDeployExecList = aggregationResults.getMappedResults();
 				
@@ -3588,38 +3652,56 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid, String modelVersion,
-			List<String> trainExecUuidList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid, String modelVersion, String trainExecUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<TrainExecView> trainExecViewList = new ArrayList<>();
-		for(String trainExecUuid : trainExecUuidList) {
+		if(trainExecUuid != null && !trainExecUuid.isEmpty()) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getLatestByUuid(trainExecUuid, MetaType.trainExec.toString());
-			if(trainExec != null) {
-				if(trainExec != null) {
-					TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
-					TrainResultView trainResultView = trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion());
-					TrainExecView trainExecView = new TrainExecView();
-					
-					//setting base entity
-					trainExecView.setUuid(trainExec.getUuid());
-					trainExecView.setVersion(trainExec.getVersion());
-					trainExecView.setName(trainExec.getName());
-					trainExecView.setDesc(trainExec.getDesc());
-					trainExecView.setCreatedBy(trainExec.getCreatedBy());
-					trainExecView.setCreatedOn(trainExec.getCreatedOn());
-					trainExecView.setTags(trainExec.getTags());
-					trainExecView.setActive(trainExec.getActive());
-					trainExecView.setLocked(trainExec.getLocked());
-					trainExecView.setPublished(trainExec.getPublished());
-					trainExecView.setAppInfo(trainExec.getAppInfo());
-					
-					//setting view specific properties
-					trainExecView.setTrainResultView(trainResultView);
-					DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion());
-					trainExecView.setDeployExec(deployExec);
-					trainExecViewList.add(trainExecView);
+			TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec);
+			
+			if(trainExecView != null) {
+				trainExecViewList.add(trainExecView);
+			}
+		} else {
+			List<TrainExec> trainExecByModel = getTrainExecByModel(modelUuid, modelVersion, null, null, null, null);
+			if(trainExecByModel != null && !trainExecByModel.isEmpty()) {
+				for(TrainExec trainExec : trainExecByModel) {
+					TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec);
+					if(trainExecView != null) {
+						trainExecViewList.add(trainExecView);
+					}
 				}
-			}			
+			}
 		}
 		return trainExecViewList;
+	}
+	
+	public TrainExecView getTrainExecViewByTrainExec(TrainExec trainExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(trainExec != null) {
+			TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			TrainResultView trainResultView = trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion());
+			TrainExecView trainExecView = new TrainExecView();
+			
+			//setting base entity
+			trainExecView.setUuid(trainExec.getUuid());
+			trainExecView.setVersion(trainExec.getVersion());
+			trainExecView.setName(trainExec.getName());
+			trainExecView.setDesc(trainExec.getDesc());
+			trainExecView.setCreatedBy(trainExec.getCreatedBy());
+			trainExecView.setCreatedOn(trainExec.getCreatedOn());
+			trainExecView.setTags(trainExec.getTags());
+			trainExecView.setActive(trainExec.getActive());
+			trainExecView.setLocked(trainExec.getLocked());
+			trainExecView.setPublished(trainExec.getPublished());
+			trainExecView.setAppInfo(trainExec.getAppInfo());
+			
+			//setting view specific properties
+			trainExecView.setTrainResultView(trainResultView);
+			DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			trainExecView.setDeployExec(deployExec);
+			
+			return trainExecView;
+		} else {
+			return null;
+		}
 	}
 }
