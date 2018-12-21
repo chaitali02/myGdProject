@@ -4,7 +4,7 @@
 ./install_application.sh localhost append ../app/ecocap/meta
 ./install_application.sh localhost append ../app/aml/meta
 ./install_application.sh localhost append ../app/dot/meta
-
+./install_application.sh localhost append ../app/predictivem/meta
 ./update_createdOn.sh localhost
 rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/data/
