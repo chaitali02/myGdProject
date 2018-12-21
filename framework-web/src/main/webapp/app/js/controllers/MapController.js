@@ -35,7 +35,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.userDetail={}
+	$scope.userDetail={};
+	$scope.allAutoMap = ["By Name", "By Order"];
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;	
 	$scope.tags = null;
@@ -267,7 +268,33 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 
 	}
-    
+	
+	$scope.autoMapFeature = function (type) {
+		debugger
+		$scope.selectedAutoMode = type
+		if ($scope.selectedAutoMode == "By Name") {
+		  var allMapSourceAttribute = {};
+		  angular.forEach($scope.allMapSourceAttribute, function (val, key) {
+			allMapSourceAttribute[val.name] = val;
+		  });
+	
+		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
+			for (var i = 0; i < $scope.mapTableArray.length; i++) {
+				var temp= $scope.allMapTargetAttribute[i].name;
+			  $scope.mapTableArray[i].sourceattribute = allMapSourceAttribute[temp]//$scope.allTargetAttribute[i];
+			}
+		  }
+		}
+		if ($scope.selectedAutoMode == "By Order") {
+		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
+			for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
+			  $scope.mapTableArray[i].sourceattribute = $scope.allMapSourceAttribute[i];
+			}
+		  }
+	
+		}
+	
+	  }
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		var resultjoint = [];
@@ -277,7 +304,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		return resultjoint.toString().replace(/,/g, " ");
 	}
 
-
+   
 
 
 
