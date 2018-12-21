@@ -43,7 +43,7 @@ export class BatchSchedulerComponent implements OnInit {
   privResponse: any;
   msgs: any;
   booleanPrivInfo: any;
-  isSubmitEnable: any;
+  isSubmitEnable: boolean;
   attributes: any[];
   selectallattribute: boolean;
   attrtypes: string[];
@@ -110,6 +110,8 @@ export class BatchSchedulerComponent implements OnInit {
   };
 
   optionChoose: any[];
+  sortArr: any;
+
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private datePipe: DatePipe) {
     this.privResponse = null;
     this.pipelineInfoTags = null;
@@ -146,6 +148,7 @@ export class BatchSchedulerComponent implements OnInit {
     this.displayDialog3 = false;
     this.frequencyDetail.weekDetail = [];
     this.optionChoose = this.attributes;
+    this.isSubmitEnable = false;
   }
 
   ngOnInit() {
@@ -420,8 +423,6 @@ export class BatchSchedulerComponent implements OnInit {
 
           if (this.attributes[i]["uuid"] == null) {
             this.attributes[i]["scheduleChg"] = "Y";
-          } else {
-            this.attributes[i]["scheduleChg"] = "N";
           }
 
           attribute["scheduleChg"] = this.attributes[i]["scheduleChg"]
@@ -530,7 +531,7 @@ export class BatchSchedulerComponent implements OnInit {
   public goBack() {
     this.router.navigate(['app/list/batch']);
   }
-  
+
   enableEdit(uuid, version) {
     this.router.navigate(['app/batchScheduler/batch', uuid, version, 'false']);
     this.dropdownSettingsPipeline = {
@@ -655,15 +656,35 @@ export class BatchSchedulerComponent implements OnInit {
       }
       this.displayDialog2 = true;
     }
-
+    this.isSubmitEnable = true; 
+    this.attributes[index].scheduleChg = "Y";
     this.frequencyDetail.index = index;
   }
 
   dialogDone() {
     let weekValues = [];
     for (const c in this.frequencyDetail.weekDetail) {
-      weekValues.push(this.frequencyDetail.weekDetail[c]);
+      for (let i = 0; i < this.weekName.weekAlias.length; i++) {
+        if (this.weekName.weekAlias[i].name == this.frequencyDetail.weekDetail[c]) {
+          weekValues[i] = this.frequencyDetail.weekDetail[c];
+          break;
+        }
+      }
+      for (let i = 0; i < this.weekName.quarters.length; i++) {
+        if (this.weekName.quarters[i].name == this.frequencyDetail.weekDetail[c]) {
+          weekValues[i] = this.frequencyDetail.weekDetail[c];
+          break;
+        }
+      }
+      for (let i = 0; i < this.weekName.hour.length; i++) {
+        if (this.weekName.hour[i].name == this.frequencyDetail.weekDetail[c]) {
+          weekValues[i] = this.frequencyDetail.weekDetail[c];
+          break;
+        }
+      }
     }
+    weekValues = weekValues.filter(i => i);
+    console.log("old element : " + weekValues);
     this.attributes[this.frequencyDetail.index].frequencyDetail = weekValues
     this.deselectFunction();
   }
@@ -725,14 +746,18 @@ export class BatchSchedulerComponent implements OnInit {
   }
   onChangeDesc() {
     this.batchChg = "Y"
-    console.log("OnChangeDesc = Y")
   }
 
   onChangeAttrtype(index) {
-    this.scheduleChg = "Y";
     this.attributes[index].frequencyDetail = [];
-    console.log(this.attributes["frequencyDetail"] + "OnChangeSchedule = Y");
+    this.attributes[index].scheduleChg = "Y";
+  }
+  onChangeName(index) {
+    this.attributes[index].scheduleChg = "Y";
   }
 
-
+  updateEndDate(index: any) {
+    this.attributes[index].endDate = "";
+    this.attributes[index].scheduleChg = "Y";
+  }
 }
