@@ -605,7 +605,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 						}
 						
-						else if(temp == "ISNULL"){
+						else if(temp == "ISNULL" || temp == "ISNOTNULL" ){
 							filterInfo.isRhsNA = true;
 						}
 						else {

@@ -380,7 +380,7 @@
                                 <td style="width:200px;">
                                   <div ng-if="tabledata.isrhsSimple">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                      <span ng-if="['IN','NOT IN','EXISTS','NOT EXISTS'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
                                         <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                                         <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required disable-validation-message="" uib-tooltip="{{myform2['rhsvalue_'+$index].$valid ? '' : 'enter values into single quotes and seprated by comma'}}"
@@ -388,7 +388,7 @@
                                         <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required disable-validation-message="" ng-change="onChangeSimple()">
                                       </span>
-                                      <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
+                                      <span ng-if="['IN','NOT IN','EXISTS','NOT EXISTS'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                                         <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                                         <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required ng-pattern="/^[0-9\,]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform2['rhsvalue_'+$index].$valid ? '' : 'enter only integer value seprated by comma '}}"
@@ -504,6 +504,7 @@
                                         ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
+                                  <div ng-if="tabledata.isRhsNA" style="text-align:center">-NA-</div>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
