@@ -11,8 +11,10 @@
 package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.BufferedReader;
@@ -26,6 +28,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,14 +51,22 @@ import org.apache.log4j.Logger;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -84,6 +95,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -110,8 +122,10 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainInput;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -2232,6 +2246,78 @@ public class ModelServiceImpl {
 		return mappedAttrs;
 	}
 	
+	public void customCreate(ExecParams execParams, String tableName, RunMode runMode, List<Map<String, String>> labelFeatures, List<FeatureAttrMap> featureAttrMap) throws Exception {
+		String featureName = null;
+		int count = 0;
+		StructType structType = null;
+//		List<StructField> structList = new ArrayList<>();
+		StructField []stuctFields = null;
+		int i = 0;
+		List<Row> rows = new ArrayList<>();
+		for (Map<String, String> labelFeature : labelFeatures) {
+			Object []values = new Object[featureAttrMap.size()];
+			DataType dataType = null;
+			if (count == 0) {
+				stuctFields = new StructField[featureAttrMap.size()];
+			}
+			for (FeatureAttrMap featureAttr : featureAttrMap) {
+				featureName = featureAttr.getFeature().getFeatureName();
+				if (count == 0) {
+					dataType = DataTypes.DoubleType;
+					/*if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("double")) {
+						dataType = DataTypes.DoubleType;
+					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("integer")) {
+						dataType = DataTypes.IntegerType;
+					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("string")) {
+						dataType = DataTypes.StringType;
+					}*/
+					stuctFields[i] = new StructField(featureName, dataType, true, Metadata.empty());
+				}
+				values[i] = Double.parseDouble(labelFeature.get(featureName));
+				i++;
+			}
+			Row row = RowFactory.create(values);
+			rows.add(row);
+		}
+//		stuctFields = new StructField[structList.size()];
+		structType = new StructType(stuctFields);
+		
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		exec.createAndRegister(rows, structType, tableName, commonServiceImpl.getApp().getUuid());
+		
+//		otherParams.put("datapodUuid_" + tableName + "_tableName", tableName);
+			
+//		return otherParams;
+	}
+	
+	public List<String> predict(Predict predict, PredictExec predictExec, ExecParams execParams, Model model, RunMode runMode, String appUuid, List<Map<String, String>> labelFeatures) throws Exception {
+		String tableName = predictExec.getUuid() + "_" + predictExec.getVersion() + "_" + model.getUuid();
+		tableName = tableName.replaceAll("-", "_");
+		//getting data having only feature columns
+		String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
+		customCreate(execParams, tableName+"_pred_data", runMode, labelFeatures, predict.getFeatureAttrMap());
+		ResultSetHolder rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
+		sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));
+		
+		
+		String []fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
+		
+		//assembling the data to for feature vector
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		Datasource sourceDS =  Get Spark datasource
+		exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), datasource, true, appUuid);
+//		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+		
+		//prediction operation
+		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid);
+
+		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
+		return rowIdentifierCols;
+	}
+
+	
 	public String generateFeatureSQLBySource(List<FeatureAttrMap> mappedFeatures, Object source, ExecParams execParams, String[] fieldArray, String label,  String tableName) throws Exception {
 		String sql = generateSQLBySource(source, execParams);
 		StringBuilder sb = new StringBuilder("SELECT ");
@@ -2294,10 +2380,7 @@ public class ModelServiceImpl {
 		
 		Application application = commonServiceImpl.getApp();
 		
-		if(modelVersion != null)
-			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
-		else
-			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
 		query.addCriteria(Criteria.where("active").is("Y"));
 		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(application.getUuid()));
 		query.with(new Sort(Sort.Direction.DESC, "version"));
@@ -3498,5 +3581,307 @@ public class ModelServiceImpl {
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 		return exec.fetchTestSet(testSetPath);		
+	}
+
+	public List<TrainExec> getTrainExecByModel(String modelUuid
+			, String modelVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<TrainExec> trainExecList = new ArrayList<>();
+		List<Train> trainList = getTrainByModel(modelUuid, null);
+		
+		if(trainList != null && !trainList.isEmpty()) {
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			for(Train train : trainList) {
+				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(train.getUuid()));
+				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+				
+				MatchOperation activeFilter = null;
+				if(active != null && !active.isEmpty()) {
+					activeFilter = match(new Criteria("active").is(active));
+				} else {
+					activeFilter = match(new Criteria("active").in("Y", "N"));
+				}
+				
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
+				MatchOperation dataRangeFilter = null;
+				if(startDate != null && !startDate.isEmpty() 
+						&& endDate != null && !endDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+				} else if(startDate != null && !startDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+				} else if(endDate != null && !endDate.isEmpty()) {
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+				}
+				
+				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+				
+				GroupOperation groupBy = group("uuid").max("version").as("version");
+				
+				Aggregation aggregation = null;
+				if(dataRangeFilter != null) {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy);
+				} else {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				}
+				
+				AggregationResults<TrainExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.trainExec.toString().toLowerCase(), TrainExec.class);
+				List<TrainExec> tempTrainExecList = aggregationResults.getMappedResults();
+				
+				if(tempTrainExecList != null && !tempTrainExecList.isEmpty()) {
+					for(TrainExec trainExec : tempTrainExecList) {
+						trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExec.getId()
+								, trainExec.getVersion()
+								, MetaType.trainExec.toString()
+								, "N");
+						trainExecList.add(trainExec);
+					}
+				}
+			}
+		} 
+		return trainExecList;
+	}
+	
+	public List<DeployExec> getDeployExecByModel(String modelUuid
+			, String modelVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<DeployExec> deployExecList = new ArrayList<>();
+		List<TrainExec> deployExecDependsOn = getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+		
+		if(deployExecDependsOn != null && !deployExecDependsOn.isEmpty()) {
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+			for(TrainExec trainExec : deployExecDependsOn) {
+				MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExec.getUuid()));
+				MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+				
+				MatchOperation activeFilter = null;
+				if(active != null && !active.isEmpty()) {
+					activeFilter = match(new Criteria("active").is(active));
+				} else {
+					activeFilter = match(new Criteria("active").in("Y", "N"));
+				}
+				
+				SimpleDateFormat simpleDateFormat = null;
+				MatchOperation dataRangeFilter = null;
+				if(startDate != null && !startDate.isEmpty() 
+						&& endDate != null && !endDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+				} else if(startDate != null && !startDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+				} else if(endDate != null && !endDate.isEmpty()) {
+					simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
+					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+				}
+				
+//				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+				MatchOperation statusFilter = null;
+				if(status != null) {
+					statusFilter = match(new Criteria("statusList.stage").is(status));
+				} else {
+					statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
+							Status.Stage.Failed.toString(),
+							Status.Stage.InProgress.toString(),
+							Status.Stage.NotStarted.toString(),
+							Status.Stage.Killed.toString()));
+				}
+				
+				GroupOperation groupBy = group("uuid").max("version").as("version");
+				
+				Aggregation aggregation = null;
+				if(dataRangeFilter != null) {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy);
+				} else {
+					aggregation = newAggregation(dependsOnFilter, statusFilter, activeFilter, appFilter, groupBy);
+				}
+				
+				
+				AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
+				List<DeployExec> tempDeployExecList = aggregationResults.getMappedResults();
+				
+				if(tempDeployExecList != null && !tempDeployExecList.isEmpty()) {
+					for(DeployExec deployExec : tempDeployExecList) {
+						deployExec = (DeployExec) commonServiceImpl.getOneByUuidAndVersion(deployExec.getId()
+								, deployExec.getVersion()
+								, MetaType.deployExec.toString()
+								, "N");
+						deployExecList.add(deployExec);
+					}
+				}
+			}
+		}
+		
+		return deployExecList;
+	}
+
+	public DeployExec getDeployExecByTrainExec(String trainExecUuid
+			, String trainExecVersion
+			, String active
+			, String status) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		MatchOperation dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(trainExecUuid));
+		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+		MatchOperation activeFilter = null;
+		if(active != null && !active.isEmpty()) {
+			activeFilter = match(new Criteria("active").in(active));
+		} else {
+			activeFilter = match(new Criteria("active").in("Y", "N"));
+		}
+		
+		MatchOperation statusFilter = null;
+		if(status != null && !status.isEmpty()) {
+			statusFilter = match(new Criteria("statusList.stage").is(status));
+		} else {
+			statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
+					Status.Stage.Failed.toString(),
+					Status.Stage.InProgress.toString(),
+					Status.Stage.NotStarted.toString(),
+					Status.Stage.Killed.toString()));
+		}
+		
+		GroupOperation groupBy = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
+		
+		Aggregation aggregation = newAggregation(appFilter, activeFilter, dependsOnFilter, statusFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
+		AggregationResults<DeployExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.deployExec.toString().toLowerCase(), DeployExec.class);
+		DeployExec deployExec = aggregationResults.getUniqueMappedResult();
+		if(deployExec != null) {
+			return (DeployExec) commonServiceImpl.getOneByUuidAndVersion(deployExec.getId()
+					, deployExec.getVersion()
+					, MetaType.deployExec.toString()
+					, "N");
+		} else {
+			return null;
+		}
+	}
+	
+	public List<TrainExecView> getTrainExecViewByCriteria(String modelUuid
+			, String modelVersion
+			, String trainExecUuid
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<TrainExecView> trainExecViewList = new ArrayList<>();
+		if(trainExecUuid != null && !trainExecUuid.isEmpty()) {
+			TrainExec trainExec = getTrainExecByCriteria(trainExecUuid, null, active, startDate, endDate, status);
+			if(trainExec != null) {
+				TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec, active, status);				
+				if(trainExecView != null) {
+					trainExecViewList.add(trainExecView);
+				}
+			}			
+		} else {
+			List<TrainExec> trainExecByModel = getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+			if(trainExecByModel != null && !trainExecByModel.isEmpty()) {
+				for(TrainExec trainExec : trainExecByModel) {
+					TrainExecView trainExecView = getTrainExecViewByTrainExec(trainExec, active, status);
+					if(trainExecView != null) {
+						trainExecViewList.add(trainExecView);
+					}
+				}
+			}
+		}
+		return trainExecViewList;
+	}
+	
+	public TrainExec getTrainExecByCriteria(String trainExecUuid
+			, String trainExecVersion
+			, String active
+			, String startDate
+			, String endDate
+			, String status) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		String appUuid = commonServiceImpl.getApp().getUuid();		
+		MatchOperation uuidFilter = match(new Criteria("uuid").is(trainExecUuid));
+		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
+		
+		MatchOperation activeFilter = null;
+		if(active != null && !active.isEmpty()) {
+			activeFilter = match(new Criteria("active").is(active));
+		} else {
+			activeFilter = match(new Criteria("active").in("Y", "N"));
+		}
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
+		MatchOperation dataRangeFilter = null;
+		if(startDate != null && !startDate.isEmpty() 
+				&& endDate != null && !endDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)).gte(simpleDateFormat.parse(startDate)));
+		} else if(startDate != null && !startDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").gte(simpleDateFormat.parse(startDate)));
+		} else if(endDate != null && !endDate.isEmpty()) {
+			dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
+		}
+		
+		MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//		if(status != null && !status.isEmpty()) {
+//			statusFilter = match(new Criteria("statusList.stage").is(status));
+//		} else {
+//			statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//		}
+		
+		GroupOperation groupBy = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitToOnlyFirstDoc = limit(1);
+		
+		Aggregation aggregation = null;
+		if(dataRangeFilter != null) {
+			aggregation = newAggregation(uuidFilter, statusFilter, activeFilter, appFilter, dataRangeFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
+		} else {
+			aggregation = newAggregation(uuidFilter, statusFilter, activeFilter, appFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);
+		}
+		
+		AggregationResults<TrainExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.trainExec.toString().toLowerCase(), TrainExec.class);
+		TrainExec trainExec = aggregationResults.getUniqueMappedResult();
+		
+		if(trainExec != null) {			
+			return (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExec.getId()
+						, trainExec.getVersion()
+						, MetaType.trainExec.toString()
+						, "N");
+		} else {
+			return null;
+		}
+	}
+	
+	public TrainExecView getTrainExecViewByTrainExec(TrainExec trainExec
+			, String active
+			, String status) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(trainExec != null) {
+			TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			TrainResultView trainResultView = trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion());
+			TrainExecView trainExecView = new TrainExecView();
+			
+			//setting base entity
+			trainExecView.setUuid(trainExec.getUuid());
+			trainExecView.setVersion(trainExec.getVersion());
+			trainExecView.setName(trainExec.getName());
+			trainExecView.setDesc(trainExec.getDesc());
+			trainExecView.setCreatedBy(trainExec.getCreatedBy());
+			trainExecView.setCreatedOn(trainExec.getCreatedOn());
+			trainExecView.setTags(trainExec.getTags());
+			trainExecView.setActive(trainExec.getActive());
+			trainExecView.setLocked(trainExec.getLocked());
+			trainExecView.setPublished(trainExec.getPublished());
+			trainExecView.setAppInfo(trainExec.getAppInfo());
+			trainExecView.setStatusList(trainExec.getStatusList());
+			
+			//setting view specific properties
+			trainExecView.setTrainResultView(trainResultView);
+			DeployExec deployExec = getDeployExecByTrainExec(trainExec.getUuid(), trainExec.getVersion(), active, status);
+			trainExecView.setDeployExec(deployExec);
+			
+			return trainExecView;
+		} else {
+			return null;
+		}
 	}
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -864,6 +866,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						defaultDir = filePathUrl_2;
 						String pmmlLocation = filePathUrl_2 + "/" + train.getUuid() + "_" + train.getVersion() + "_"
 								+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
+						
+						File pmmlFile = new File(pmmlLocation);
+						if(pmmlFile.exists()) {
+						FileUtils.forceDelete(pmmlFile);
+						} 
 						boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
 						if(isSaved)
 							logger.info("PMML saved at location: "+pmmlLocation);

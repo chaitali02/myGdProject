@@ -7080,6 +7080,18 @@
                 "type" : "privilege",
                 "uuid" : "cb7c8a0a-e198-11e8-9f32-f2801f1b9fd1"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "c41c3200-6c5d-4452-bc8f-c7c20a6f6a49"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "b374936e-af8d-4665-8b5d-4e6d081c2b6a"
+            }
         }
 		
     ]

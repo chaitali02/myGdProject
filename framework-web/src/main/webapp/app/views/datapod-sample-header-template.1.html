@@ -4,17 +4,18 @@
   ng-class="{ 'sortable': sortable, 'ui-grid-header-cell-last-col': isLastCol }"
   ui-grid-one-bind-aria-labelledby-grid="col.uid + '-header-text ' + col.uid + '-sortdir-text'"
   aria-sort="{{col.sort.direction == asc ? 'ascending' : (col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}">
-  
+  <!-- <div style="margin: 5px 0px 0px 9px;" tooltip-placement="left" tooltip-append-to-body="true" uib-tooltip="Cal Historam"><i class="fa fa-bar-chart" style="color: grey;font-size:15px;" aria-hidden="true"></i>
+  </div> -->
+      <!-- <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"></i> -->
+
   <div
     role="button"
     tabindex="0"
     ng-keydown="handleKeyDown($event)"
     class="ui-grid-cell-contents ui-grid-header-cell-primary-focus"
     col-index="renderIndex"
-    title="TOOLTIP">
-    
+    title="TOOLTIP" style="padding-top:14px;">
     <span class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">{{ col.name  CUSTOM_FILTERS }}</span>
-
     <span
       ui-grid-one-bind-id-grid="col.uid + '-sortdir-text'"
       ui-grid-visible="col.sort.direction"
@@ -30,8 +31,16 @@
        {{col.sort.priority + 1}}
      </sub>
     </span>
+    <!-- <div class="ui-grid-header-cell-label" style="font-size:9px;color:gray;" ui-grid-one-bind-id-grid="col.uid + '-header-text'" >{{ col.colDef.attrType}}</div> -->
   </div>
+  <div style ="left:10px;"class="ui-grid-column-menu-button"  ><i class="fa fa-bar-chart" style="color: grey;font-size:15px;" aria-hidden="true" tooltip-placement="left" tooltip-append-to-body="true" uib-tooltip="Histogram" ng-click="grid.appScope.calculateHistrogram(col)"></i>
+      <!-- <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}" tooltip-placement="left" tooltip-append-to-body="true" uib-tooltip="{{col.colDef.attrType}}" style="font-size: 11px;"></i> -->
 
+  </div>
+  <div style ="left:30px;margin-top:-2px;"class="ui-grid-column-menu-button"  >
+    <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}" tooltip-placement="right" tooltip-append-to-body="true" uib-tooltip="{{col.colDef.attrType}}" style="font-size: 11px;"></i>
+
+  </div>  
   <div
     role="button"
     tabindex="0"
@@ -48,6 +57,6 @@
       &nbsp;
     </i>
   </div>
-
+   
   <div ui-grid-filter></div>
 </div>

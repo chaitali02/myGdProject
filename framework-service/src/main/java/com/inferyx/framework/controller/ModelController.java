@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -44,6 +45,8 @@ import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
@@ -471,5 +474,64 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return modelServiceImpl.getTestSet(trainExecUuid, trainExecVersion);
+	}
+	
+	@RequestMapping(value = "/train/getTrainExecByModel", method = RequestMethod.GET)
+	public List<TrainExec> getTrainExecByModel(@RequestParam("uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+	}
+	
+	@RequestMapping(value = "/train/getDeployExecByModel", method = RequestMethod.GET)
+	public List<DeployExec> getDeployExecByModel(@RequestParam("uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getDeployExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+	}
+	
+
+	@RequestMapping(value = "/getTrainExecViewByCriteria", method = RequestMethod.GET)
+	public List<TrainExecView> getTrainExecViewByCriteria(
+			@RequestParam(value = "trainExecUuid", required = false) String trainExecUuid,
+			@RequestParam(value = "uuid", required = false) String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid, active, startDate, endDate, status);
+	}
+	
+	@RequestMapping(value = "/deploy", method = RequestMethod.GET)
+	public boolean deploy(
+			@RequestParam(value = "uuid", required = false) String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		
+		return true;
+	}
+	
+	@RequestMapping(value = "/undeploy", method = RequestMethod.GET)
+	public boolean undeploy(
+			@RequestParam(value = "uuid", required = false) String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		
+		return true;
 	}
 }

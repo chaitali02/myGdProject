@@ -10,7 +10,7 @@
         {
             "attributeId" : 0,
             "displaySeq" : 0,
-            "name" : "datapodUUID",
+            "name" : "datapoduuid",
             "type" : "string",
             "desc" : "DatapodUUID",
             "key" : "0",
@@ -22,7 +22,7 @@
         {
             "attributeId" : 1,
             "displaySeq" : 1,
-            "name" : "datapodVersion",
+            "name" : "datapodversion",
             "type" : "string",
             "desc" : "DatapodVersion",
             "key" : "",
@@ -34,7 +34,7 @@
         {
             "attributeId" : 2,
             "displaySeq" : 2,
-            "name" : "datapodName",
+            "name" : "datapodname",
             "type" : "string",
             "desc" : "DatapodName",
             "key" : "",
@@ -46,7 +46,7 @@
         {
             "attributeId" : 3,
             "displaySeq" : 3,
-            "name" : "attributeId",
+            "name" : "attributeid",
             "type" : "string",
             "desc" : "AttributeId",
             "key" : "",
@@ -58,7 +58,7 @@
         {
             "attributeId" : 4,
             "displaySeq" : 4,
-            "name" : "attributeName",
+            "name" : "attributename",
             "type" : "string",
             "desc" : "AttributeName",
             "key" : "",
@@ -70,7 +70,7 @@
         {
             "attributeId" : 5,
             "displaySeq" : 5,
-            "name" : "numRows",
+            "name" : "numrows",
             "type" : "long",
             "desc" : "Number of Rows",
             "key" : "",
@@ -82,7 +82,7 @@
         {
             "attributeId" : 6,
             "displaySeq" : 6,
-            "name" : "minVal",
+            "name" : "minval",
             "type" : "double",
             "desc" : "Minimum value in data",
             "key" : "",
@@ -94,7 +94,7 @@
         {
             "attributeId" : 7,
             "displaySeq" : 7,
-            "name" : "maxVal",
+            "name" : "maxval",
             "type" : "double",
             "desc" : "Maximum value in data",
             "key" : "",
@@ -106,7 +106,7 @@
         {
             "attributeId" : 8,
             "displaySeq" : 8,
-            "name" : "avgVal",
+            "name" : "avgval",
             "type" : "double",
             "desc" : "Average value in data",
             "key" : "",
@@ -118,7 +118,7 @@
         {
             "attributeId" : 9,
             "displaySeq" : 9,
-            "name" : "medianVal",
+            "name" : "medianval",
             "type" : "double",
             "desc" : "Median value in data",
             "key" : "",
@@ -130,7 +130,7 @@
         {
             "attributeId" : 10,
             "displaySeq" : 10,
-            "name" : "stdDev",
+            "name" : "stddev",
             "type" : "double",
             "desc" : "Standard deviation in data",
             "key" : "",
@@ -142,7 +142,7 @@
         {
             "attributeId" : 11,
             "displaySeq" : 11,
-            "name" : "numDistinct",
+            "name" : "numdistinct",
             "type" : "integer",
             "desc" : "No of distinct values",
             "key" : "",
@@ -154,7 +154,7 @@
         {
             "attributeId" : 12,
             "displaySeq" : 12,
-            "name" : "perDistinct",
+            "name" : "perdistinct",
             "type" : "double",
             "desc" : "Percentage distinct values",
             "key" : "",
@@ -166,7 +166,7 @@
         {
             "attributeId" : 13,
             "displaySeq" : 13,
-            "name" : "numNull",
+            "name" : "numnull",
             "type" : "integer",
             "desc" : "No of null values",
             "key" : "",
@@ -178,7 +178,7 @@
         {
             "attributeId" : 14,
             "displaySeq" : 14,
-            "name" : "perNull",
+            "name" : "pernull",
             "type" : "double",
             "desc" : "Percentage null values",
             "key" : "",
@@ -190,7 +190,7 @@
         {
             "attributeId" : 15,
             "displaySeq" : 15,
-            "name" : "minLength",
+            "name" : "minlength",
             "type" : "double",
             "desc" : " ",
             "key" : "",
@@ -202,7 +202,7 @@
         {
             "attributeId" : 16,
             "displaySeq" : 16,
-            "name" : "maxLength",
+            "name" : "maxlength",
             "type" : "double",
             "desc" : " ",
             "key" : "",
@@ -214,7 +214,7 @@
         {
             "attributeId" : 17,
             "displaySeq" : 17,
-            "name" : "avgLength",
+            "name" : "avglength",
             "type" : "double",
             "desc" : " ",
             "key" : "",
@@ -226,7 +226,7 @@
         {
             "attributeId" : 18,
             "displaySeq" : 18,
-            "name" : "numDuplicates",
+            "name" : "numduplicates",
             "type" : "double",
             "desc" : " ",
             "key" : "",

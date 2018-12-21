@@ -371,7 +371,7 @@ public class MetadataServiceImpl {
 		query.fields().include("statusList");
 		
 		//Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");
 		
 		//to find 
 		if(!StringUtils.isBlank(role) && role.equalsIgnoreCase("admin")) {
@@ -395,9 +395,9 @@ public class MetadataServiceImpl {
 			query.addCriteria(Criteria.where("_id").ne("1").andOperator(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)),
 							  										  Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate))));
 			else if (startDate != null && !startDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").gte(startDate));
+			query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
 			else if (endDate != null && !endDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").lte(endDate));
+			query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList<?> tagList= new ArrayList<>(Arrays.asList(tags.split(",")));
 				query.addCriteria(Criteria.where("tags").all(tagList));
@@ -670,7 +670,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		// Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 		// to find
 		//String appUuid = null ;
 		String appUuid =commonServiceImpl.findAppId(type);
@@ -704,25 +704,29 @@ public class MetadataServiceImpl {
 			if ((startDate != null && !startDate.isEmpty()) && (endDate != null && !endDate.isEmpty())) {
 				criteriaList.add(where("_id").ne("1").and("createdOn").lte(simpleDateFormat.parse(endDate))
 						.gte(simpleDateFormat.parse(startDate)));
-			}
-
-			else if (startDate != null && !startDate.isEmpty())
+			} else if (startDate != null && !startDate.isEmpty()) {
 				criteriaList.add(where("createdOn").gte(simpleDateFormat.parse(startDate)));
-			else if (endDate != null && !endDate.isEmpty())
+			} else if (endDate != null && !endDate.isEmpty()) {
 				criteriaList.add(where("createdOn").lte(simpleDateFormat.parse(endDate)));
+			}
+			
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList tagList = new ArrayList(Arrays.asList(tags.split(",")));
 				criteriaList.add(where("tags").all(tagList));
 			}
+			
 			if (active != null && !active.isEmpty()) {
 				criteriaList.add(where("active").is(active));
 			}
+			
 			if (StringUtils.isNotBlank(uuid)) {
 				criteriaList.add(where("uuid").is(uuid));
 			}
+			
 			if (StringUtils.isNotBlank(version)) {
 				criteriaList.add(where("version").is(version));
 			}
+			
 			if (StringUtils.isNotBlank(published)) {
 				criteriaList.add(where("published").is(published));
 			}
@@ -1371,7 +1375,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 
 		String appUuid = commonServiceImpl.findAppId(type);
 

@@ -115,6 +115,8 @@
 	<bean id="zkConnMap" name="zkConnThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="kafkaConsumerMap" name="kafkaConsumerMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="streamMap" name="streamMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="modelMap" name="modelMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="trainToModelMap" name="trainToModelMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -367,7 +369,7 @@
 	<bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
 	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/>
 	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
-	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
+	<!-- <bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/> -->
 	
 	<bean id="reconOperator" class="com.inferyx.framework.operator.ReconOperator"/>
 	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>

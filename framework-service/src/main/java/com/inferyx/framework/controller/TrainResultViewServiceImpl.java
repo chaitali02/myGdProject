@@ -78,7 +78,7 @@ public class TrainResultViewServiceImpl {
 		AggregationResults<TrainResult> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.trainresult.toString().toLowerCase(), TrainResult.class);
 		TrainResult trainResult = (TrainResult) scheduleAggrResults.getUniqueMappedResult();	
 		if(trainResult != null) {
-			return (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResult.getId(), trainResult.getVersion(), MetaType.trainresult.toString());
+			return (TrainResult) commonServiceImpl.getOneByUuidAndVersion(trainResult.getId(), trainResult.getVersion(), MetaType.trainresult.toString(), "N");
 		} else {
 			return null;//throw new RuntimeException("No train result found.");
 		}		

@@ -60,5 +60,6 @@
 	"username": "inferyx",
 	"password": "",
         "path": "/user/hive/warehouse/ecocap.db",
-	"sessionParameters": ""
+  	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict",
+  	"sid": null
 }

@@ -477,6 +477,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "train", "type": "train", "typeCount": "train", "uuid": "null", "caption": "Training" },
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
             { "name": "simulate", "type": "simulate", "typeCount": "simulate", "uuid": "null", "caption": "Simulation" },
+            { "name": "modelDeploy", "type":"deployexec", "typeCount": "deployexec", "uuid": "null", "caption": "Model Deploy" },
             { "name": "resultmodelmodel", "type": "trainexec", "typeCount": "trainexec", "uuid": "null", "caption": "Results" }
         ]
     };
@@ -2528,7 +2529,29 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
                 }]
             }
-        })
+        })   
+        .state('modelDeploy', {
+            url: "/ModelDeploy",
+            templateUrl:"views/model-deploy.html",
+            data: { pageTitle: 'Data Science' },
+            //controller: "GraphResourcesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                    {
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/ModelDeployController.js',
+                            'js/services/ModelDeployService.js'
+                        ]
+                    }
+                    ]);
+
+                }]
+            }
+        })   
+
+        
 
         .state('createmodel', {
             url: "/CreateModel?id&mode&returnBack&version",

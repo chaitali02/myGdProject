@@ -5582,6 +5582,18 @@
                 "type" : "privilege",
                 "uuid" : "6a7920ed-0608-45cb-92df-2e26174508f7"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "c41c3200-6c5d-4452-bc8f-c7c20a6f6a49"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "b374936e-af8d-4665-8b5d-4e6d081c2b6a"
+            }
         }
 	]
 }

@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +88,7 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.HistogramOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -144,6 +143,8 @@ public class DatapodServiceImpl {
 	private MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
+	@Autowired
+	private HistogramOperator histogramOperator;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -1406,5 +1407,16 @@ public class DatapodServiceImpl {
 		}
 
 		return status;
+	}
+
+	public List<Map<String, Object>> getAttrHistogram(String datapodUuid, String datapodVersion, String attributeId, int numBuckets, RunMode runMode) throws Exception {
+		List<AttributeRefHolder> attrRefHolderList = new ArrayList<>();
+		AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+		attrRefHolder.setAttrId(attributeId);
+		attrRefHolder.setRef(new MetaIdentifier(MetaType.datapod, datapodUuid, datapodVersion));
+		attrRefHolderList.add(attrRefHolder);
+		String limitValue = Helper.getPropertyValue("framework.histogram.sample.size");
+		int limit = Integer.parseInt(limitValue);
+		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, runMode);
 	}
 }
