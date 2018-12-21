@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.domain.ModelTrainDomain;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -29,7 +28,6 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
-import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
  * @author joy
@@ -63,7 +61,6 @@ public class ModelPredictController {
 						@RequestParam("userId") String userUuid,
 						@RequestParam("appId") String appId) throws JSONException, ParseException, IOException {
 		
-		String modelTrainKey = null;
 		User user = (User) commonServiceImpl.getOneByUuidAndVersion(userUuid, null, MetaType.user.toString());
 		Application app = (Application) commonServiceImpl.getOneByUuidAndVersion(appId, null, MetaType.application.toString());
 		MetaIdentifier appRef = new MetaIdentifier(MetaType.application, appId, app.getVersion());
@@ -78,7 +75,7 @@ public class ModelPredictController {
 																		train.getDependsOn().getRef().getVersion(), 
 																		MetaType.model.toString(), "N");
 		ModelTrainDomain modelTrainDomain = new ModelTrainDomain(model, trainExec); 
-		modelTrainKey = trainExecUuid+"_"+trainExecVersion+"_"+model.getUuid();
+//		String modelTrainKey = trainExecUuid+"_"+trainExecVersion+"_"+model.getUuid();
 		modelMap.put(model.getUuid(), modelTrainDomain);
 		trainToModelMap.put(trainExecUuid, model.getUuid());
 		logger.info("Deployed model - " + model.getUuid());

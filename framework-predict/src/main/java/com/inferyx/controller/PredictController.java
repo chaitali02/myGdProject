@@ -3,14 +3,11 @@
  */
 package com.inferyx.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.domain.FeatureValuesDomain;
 import com.inferyx.domain.ModelTrainDomain;
 import com.inferyx.framework.common.Helper;
