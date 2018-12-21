@@ -270,7 +270,6 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	}
 	
 	$scope.autoMapFeature = function (type) {
-		debugger
 		$scope.selectedAutoMode = type
 		if ($scope.selectedAutoMode == "By Name") {
 		  var allMapSourceAttribute = {};

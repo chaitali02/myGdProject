@@ -594,11 +594,18 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           filterInfo.rhsTypes=null;
           if(filterInfo.operator =='BETWEEN'){
             filterInfo.rhsTypes =RuleFactory.disableRhsType(['attribute','formula','dataset','function','paramlist'])
-          }else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
+          }else if(['IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType([]);
           }else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['string','dataset']);
           }
+          else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS NULL' ,'IS NOT NULL'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+					}
           else{
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['dataset']);
           }
