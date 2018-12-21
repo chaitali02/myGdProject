@@ -33,8 +33,6 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.spark.sql.functions;
-import org.apache.spark.sql.expressions.Window;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -89,6 +87,8 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
+import org.apache.spark.sql.expressions.Window;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
@@ -499,6 +499,40 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setDataFrame(df);
 		if(registerTempTable) {
 			registerTempTable(df, tableName);
+		}
+		return rsHolder;
+	}
+	
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				ConnectionHolder conHolder = connector.getConnection();
+				Object obj = conHolder.getStmtObject();
+				if (obj instanceof SparkSession) {
+					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+					Dataset<Row> df = sparkSession.createDataFrame(data, structType);
+//					df.show();
+					rsHolder.setDataFrame(df);
+					rsHolder.setType(ResultType.dataframe);
+					long countRows = df.count();
+					rsHolder.setCountRows(countRows);
+					df.createOrReplaceGlobalTempView(tableName);
+					registerTempTable(df, tableName);
+					logger.info("temp table registered: " + tableName);
+				}
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return rsHolder;
 	}
