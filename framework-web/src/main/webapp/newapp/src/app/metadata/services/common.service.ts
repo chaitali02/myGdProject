@@ -234,6 +234,24 @@ getRuleExecByRule(uuid:Number): Observable<any[]> {
  .catch(this.handleError);
 }
 
+getFunctionByCriteria(category: any, inputReq: any, type: any): Observable<any[]> {
+  let url = '/metadata/getFunctionByCriteria?action=view&category=' + category + '&inputReq=' + inputReq + '&type=' + type;
+  return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+    })
+    .catch(this.handleError);
+}
+
+getParamByApp(uuid: any, type: any): Observable<any[]> {
+  let url = '/metadata/getParamByApp?action=view&uuid=' + uuid + '&type=' + type;
+  return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+    })
+    .catch(this.handleError);
+}
+
 getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):Observable<any[]>{
 
   let url ='common/getAllLatestParamListByTemplate?action=view&templateFlg=' + templateFlg + "&type=" + type  +"&paramListType="+paramListType;

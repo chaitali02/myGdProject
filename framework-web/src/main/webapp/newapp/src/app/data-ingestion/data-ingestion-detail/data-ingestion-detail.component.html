@@ -220,8 +220,7 @@
 
                       <label class="col-md-2 control-label">Ignore Case</label>
                       <div class="col-md-1">
-                        <input type="checkbox" style="width:16px;height:16px;" [(ngModel)]="ingestData.ignoreCase" name="ignoreCase" [disabled]=""
-                        />
+                        <input type="checkbox" style="width:16px;height:16px;" [(ngModel)]="ingestData.ignoreCase" name="ignoreCase" [disabled]=""/>
                       </div>
                     </div>
 
@@ -380,14 +379,14 @@
                               <tr>
                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
                                   <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
-                                    (click)="checkAllFilterRow()" />
+                                    (click)="checkAllFilterRow()"/>
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
                                 <th style="text-align: center;width:15%;">LHS Type</th>
                                 <th style="text-align: center;width:20%;">LHS Attribute</th>
-                                <th style="text-align: center;width:25%;">Operator</th>
+                                <th style="text-align: center;width:20%;">Operator</th>
                                 <th style="text-align: center;width:15%;">RHS Type</th>
-                                <th style="text-align: center;width:20%;">RHS Attribute</th>
+                                <th style="text-align: center;width:25%;">RHS Attribute</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -470,10 +469,10 @@
                                 </td>
                                 <td>
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN' && data.operator !== '!='"
+                                    *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
                                     placeholder="--Enter integer value--">
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator !== '!='"
+                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'"
                                     placeholder="--Enter String--">
                                   <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
@@ -491,12 +490,12 @@
                                       [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.rhsType == 'datapod' && selectedSourceType == 'FILE' && data.operator !== '!='">
+                                  <div *ngIf="data.rhsType == 'datapod' && selectedSourceType == 'FILE'">
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'">
                                   </div>
                                   <div *ngIf="data.rhsType == 'dataset' ">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
-                                    <i class="fa fa-search" (click)="searchOption()" style="width:10%;display:inline-block" pTooltip="Search"></i>
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
+                                    <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block" pTooltip="Search"></i>
                                   </div>
                                   <div *ngIf="data.rhsType == 'function'">
                                     <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
@@ -637,10 +636,10 @@
                                   </p-dropdown>
                                 </td>
 
-                                <td *ngIf="data.sourceType == 'datapod' && selectedSourceType == 'TABLE'">{{data.sourceAttribute | json}}
+                                <td *ngIf="data.sourceType == 'datapod' && selectedSourceType == 'TABLE'">
                                   <p-dropdown [options]="allSourceAttribute" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}" datakey="attrName"
                                     [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                    placeholder="--Select--">{{allSourceAttribute | json}}
+                                    placeholder="--Select--">
                                   </p-dropdown>
                                 </td>
                                 <td *ngIf="data.sourceType == 'datapod' && selectedSourceType !== 'TABLE'">
@@ -649,7 +648,7 @@
                                 <td *ngIf="data.sourceType == 'function'">
                                   <p-dropdown [options]="functionArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px'}"
                                     [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
-                                  </p-dropdown>{{functionArray |json}}
+                                  </p-dropdown>
                                 </td>
                                 <td *ngIf="data.sourceType == 'formula'">
                                   <p-dropdown [options]="FormulaArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px'}"
@@ -663,7 +662,7 @@
                                   <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}" [disabled]="mode == 'true'">
                                 </td>
 
-                                <td>{{data.targetAttribute | json}}
+                                <td>
                                   <div *ngIf="data.IsTargetAttributeSimple == 'true'">
                                     <input type="text" class="form-control" [(ngModel)]="data.targetAttribute" name="targetAttribute+{{i}}" [disabled]="mode && selectedTargetType == 'TABLE'">
                                   </div>
@@ -674,7 +673,7 @@
                                     <p-dropdown [options]="allSourceAttributeTarget" [(ngModel)]="data.targetAttribute" name="targetAttribute+{{i}}" datakey="label"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                       placeholder="--Select--">
-                                    </p-dropdown>{{allSourceAttributeTarget | json}}
+                                    </p-dropdown>
                                   </div>
                                 </td>
                               </tr>
