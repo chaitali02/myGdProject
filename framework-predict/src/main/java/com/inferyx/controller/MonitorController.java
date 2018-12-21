@@ -68,7 +68,4 @@ public class MonitorController {
 		monDomain.setMaxMem(maxMem);
 		return monDomain;
 	}
-	
-	
-
 }

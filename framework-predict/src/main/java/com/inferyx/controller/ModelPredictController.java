@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
+import com.inferyx.module.TomcatStarter;
 
 /**
  * @author joy
@@ -83,7 +84,7 @@ public class ModelPredictController {
 	}
 	
 	@RequestMapping(value = "/undeploy", method = RequestMethod.POST)
-	public String undeploy(@RequestParam("trainExec_uuid") String trainExecUuid, 
+	public boolean undeploy(@RequestParam("trainExec_uuid") String trainExecUuid, 
 						@RequestParam(name="version", required=false) String trainExecVersion, 
 						@RequestParam("userId") String userUuid,
 						@RequestParam("appId") String appId) throws JSONException, ParseException, IOException {
@@ -94,7 +95,7 @@ public class ModelPredictController {
 			modelMap.remove(modelUuid);
 		}
 		logger.info("Undeployed model - " + modelUuid);
-		return modelUuid;
+		return true;
 	}
 	
 	@RequestMapping(value = "/getDeployStatus", method = RequestMethod.GET)
@@ -112,6 +113,5 @@ public class ModelPredictController {
 		}
 		logger.info(" Model for trainExec " + trainExecUuid + " is not deployed ");
 		return false;
-	}
-	
+	}	
 }

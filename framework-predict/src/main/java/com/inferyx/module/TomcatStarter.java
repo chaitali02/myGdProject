@@ -15,13 +15,17 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 public class TomcatStarter {
 	
-
+	static String portNumber = null;
 	public TomcatStarter() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public TomcatStarter(String portNumber) {
+		TomcatStarter.portNumber = portNumber;
+	}
 	public static void main(String[] args) throws Exception {
 		Tomcat tomcat = new Tomcat();
+//		tomcat.setPort(Integer.parseInt(portNumber));
 		tomcat.setPort(Integer.parseInt(args[0]));
 
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());

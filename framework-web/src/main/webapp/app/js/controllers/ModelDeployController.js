@@ -302,6 +302,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     }
     
     $scope.setState=function(row,type){
+    	debugger
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = type+" Submitted Successfully"
