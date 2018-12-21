@@ -727,9 +727,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.onChangeOperator = function (index) {
-		if ($scope.rulecompare != null) {
-			$scope.rulecompare.filterChg = "y"
-		}
+		
+		$scope.filterTableArray[index].isRhsNA=false;
 		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
@@ -740,6 +739,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['IS NULL' ,'IS NOT NULL'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
@@ -761,7 +766,18 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			filter.selected = $scope.selectedAllFitlerRow;
 		});
 	}
-
+	
+	function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
 	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
@@ -778,7 +794,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
 		filertable.rhstype = $scope.rhsType[0];
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes=returnRshType();
+		
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
@@ -1031,10 +1048,11 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			attributeinfo.isSourceAtributeParamList = false;
 			attributeinfo.isSourceName=true;
 			$scope.attributeTableArray.push(attributeinfo);
-			setTimeout(function(){
-				$scope.onChangeSourceName(i);
-			},10);
-			
+			setTimeout(function(index){
+			//	console.log(index);
+				$scope.onChangeSourceName(index);
+			},10,(i));
+
 		}
 		
 	}
@@ -1114,7 +1132,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 	$scope.isDublication = function (arr, field, index, name) {
 		var res = -1;
-		console.log(name)
+	//	console.log(name)
 		for (var i = 0; i < arr.length ; i++) {
 			if (arr[i][field] == arr[index][field] && i != index) {
 			    $scope.myform3[name].$invalid = true;
@@ -1129,7 +1147,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.onChangeSourceName = function (index) {
-		
+	//	console.log($scope.attributeTableArray)
 		$scope.attributeTableArray[index].isSourceName = true;
 		if ($scope.attributeTableArray[index].name) {
 			var res = $scope.isDublication($scope.attributeTableArray, "name", index, "sourceName" + index);
@@ -1145,7 +1163,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				
 			}
 		}
-		console.log($scope.myform3)
+	//	console.log($scope.myform3)
 
 	}
 

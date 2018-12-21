@@ -1165,7 +1165,6 @@ var confirmDialog = function(newVal, yes, no) {
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      debugger
         if($scope.ruleLodeFormula==null)
         $scope.getSourceByFormula();
 
@@ -1864,7 +1863,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   };
 
   $scope.okrulesave = function () {
-    debugger
+
     var hidemode = "yes";
   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
