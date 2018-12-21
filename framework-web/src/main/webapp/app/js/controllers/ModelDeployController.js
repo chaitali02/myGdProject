@@ -103,6 +103,15 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
   
         },
         {
+            displayName: 'Num Features',
+            visible: true,
+            name: 'numFeatures',
+            cellClass: 'text-center',
+            minWidth: 90,
+            headerCellClass: 'text-center',
+  
+        },
+        {
             displayName: 'Accuracy',
             visible: true,
             name: 'accuracy',
@@ -187,8 +196,10 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
               '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
               '    <i class="fa fa-angle-down"></i></button>',
               '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
+             // '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
+             /// '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="20" height="20"> Deploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="20" height="20" style="transform: rotate(180deg)"> Undeploy</a></li>',                       
               '    </ul>',
               '  </div>',
               '</div>'
@@ -302,14 +313,15 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     }
     
     $scope.setState=function(row,type){
-        notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = type+" Submitted Successfully"
-        $scope.$emit('notify', notify);
+        notify.type    = 'success';
+        notify.title   = 'Success';
         if(type == "Deploy"){
+            notify.content = "Model Deployed Successfully"
+            $scope.$emit('notify', notify);    
             ModelDeployService.deploy(row.uuid, row.version,"trainexec")
                 .then(function (response) { onGetDeploy(response.data)},function (response) { onError(response.data) });
             var onGetDeploy = function (response) {
+                debugger
              console.log(response);
             // row.response.deployExec.active="Y";
             $scope.getTrainExecViewByCriteria(false);
@@ -318,6 +330,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
             console.log(response);
            }
         }else{
+            notify.content = "Model UnDeployed Successfully"
+            $scope.$emit('notify', notify);    
             ModelDeployService.undeploy(row.uuid, row.version,"trainexec")
                 .then(function (response) { onGetundeploy(response.data)},function (response) { onError(response.data)});
             var onGetundeploy = function (response) {

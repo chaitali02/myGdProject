@@ -594,11 +594,18 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           filterInfo.rhsTypes=null;
           if(filterInfo.operator =='BETWEEN'){
             filterInfo.rhsTypes =RuleFactory.disableRhsType(['attribute','formula','dataset','function','paramlist'])
-          }else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
+          }else if(['IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType([]);
           }else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['string','dataset']);
           }
+          else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS NULL' ,'IS NOT NULL'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+					}
           else{
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['dataset']);
           }
@@ -655,6 +662,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
             filterInfo.isrhsFormula = false;
             filterInfo.isrhsDataset = false;
             filterInfo.rhsvalue =response.filterInfo[i].operand[1].value;
+            var temp=response.filterInfo[i].operator;
+						temp=temp.replace(/ /g,'');
             if(response.filterInfo[i].operator =="BETWEEN"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
@@ -666,6 +675,9 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
 						}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+            }
+            else if(temp == "ISNULL" || temp == "ISNOTNULL" ){
+							filterInfo.isRhsNA = true;
 						}
 						else{
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
