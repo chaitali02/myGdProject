@@ -186,21 +186,21 @@ public class DeployServiceImpl {
 	}
 	
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
-		Application application = commonServiceImpl.getApp();
-//		new TomcatStarter(application.getDeployPort());
-		String path=this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-		path = path.replaceAll("framework-service", "framework-predict").concat("com/inferyx/module/");
-		System.out.println("absolute path: "+path);
-		
-		ProcessBuilder pb = new ProcessBuilder("java", "TomcatStarter", application.getDeployPort());
-		pb.environment().put("java", path);
-		Process p = pb.start();
-		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-		String errLine = "";
-		while((errLine = errBuffRdrIn.readLine()) != null) {
-		// display each output line form python script
-			logger.error(errLine);
-		}
+//		Application application = commonServiceImpl.getApp();
+////		new TomcatStarter(application.getDeployPort());
+//		String path=this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+//		path = path.replaceAll("framework-service", "framework-predict").concat("com/inferyx/module/");
+//		System.out.println("absolute path: "+path);
+//		
+//		ProcessBuilder pb = new ProcessBuilder("java", "TomcatStarter", application.getDeployPort());
+//		pb.environment().put("java", path);
+//		Process p = pb.start();
+//		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//		String errLine = "";
+//		while((errLine = errBuffRdrIn.readLine()) != null) {
+//		// display each output line form python script
+//			logger.error(errLine);
+//		}
 		return "Process started successfully.";		 
 	}
 	

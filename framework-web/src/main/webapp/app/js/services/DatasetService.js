@@ -519,14 +519,23 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					var filterInfo = {};
 					filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
 					filterInfo.operator = response.filterInfo[i].operator;
+					filterInfo.isRhsNA = false;
 					var rhsTypes = null;
 					filterInfo.rhsTypes = null;
+					debugger
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['string', 'dataset']);
+					}
+					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS NULL' ,'IS NOT NULL'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
 					}
 					else {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['dataset']);
@@ -589,6 +598,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsParamlist = false;
 						filterInfo.isrhsFunction = false;
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+						var temp=response.filterInfo[i].operator;
+						temp=temp.replace(/ /g,'');
 						if (response.filterInfo[i].operator == "BETWEEN") {
 							obj.caption = "integer";
 							filterInfo.rhsvalue1 = response.filterInfo[i].operand[1].value.split("and")[0];
@@ -600,6 +611,10 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						} else if (response.filterInfo[i].operator == '=' && response.filterInfo[i].operand[1].attributeType == "integer") {
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+						}
+						
+						else if(temp == "ISNULL" || temp == "ISNOTNULL" ){
+							filterInfo.isRhsNA = true;
 						}
 						else {
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");

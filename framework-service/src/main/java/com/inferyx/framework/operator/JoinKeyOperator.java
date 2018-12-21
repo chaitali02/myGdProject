@@ -109,7 +109,7 @@ public class JoinKeyOperator {
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
-			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
+			if (sourceAttr.getRef().getType().equals(MetaType.simple) && (!filterInfo.getOperator().trim().equalsIgnoreCase("IS NULL") && !filterInfo.getOperator().trim().equalsIgnoreCase("IS NOT NULL"))) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
 				} else {
@@ -197,6 +197,9 @@ public class JoinKeyOperator {
 				return generateRHSOperand(operandValue, filterInfo, filterSource);
 			}			
 		} else {
+			if(operandValue.size() == 1)
+				return String.format("(%s %s)", operandValue.get(0), filterInfo.getOperator());
+			else
 			return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
 		}		
 	}

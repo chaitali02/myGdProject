@@ -1184,10 +1184,15 @@ public class SparkExecutor<T> implements IExecutor {
 			boolean writeToParquet, String clientContext) throws Exception {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(csvFileName);
+		Dataset<Row> df = sparkSession.read()
+						.format("com.databricks.spark.csv")
+						.option("inferSchema", "true")
+						.option("header", "true")
+						.load(csvFileName);
 		df.printSchema();
+		
 		StructType st = df.schema();
+		
 		Seq<StructField> seqFields = st.thisCollection();
 		Iterator<StructField> iter = st.iterator();
 		List<Attribute> attributes = new ArrayList<Attribute>();
@@ -1197,10 +1202,14 @@ public class SparkExecutor<T> implements IExecutor {
 			if(!sf.dataType().typeName().equalsIgnoreCase("version")) {
 				Attribute attr1 = new Attribute();
 				attr1.setAttributeId(i++);
-				attr1.setType(sf.dataType().typeName());
-				attr1.setName(sf.name());
-				attr1.setDesc(sf.name());
-				attr1.setDispName(sf.name());
+				if (!sf.dataType().typeName().equalsIgnoreCase("timestamp")) {
+					attr1.setType((sf.dataType().typeName()));
+				} else {
+					attr1.setType("string");
+				}
+				attr1.setName(sf.name().toLowerCase());
+				attr1.setDesc(sf.name().toLowerCase());
+				attr1.setDispName(sf.name().toLowerCase());
 				attr1.setActive("Y");
 				attr1.setLength(null);
 				attributes.add(attr1);

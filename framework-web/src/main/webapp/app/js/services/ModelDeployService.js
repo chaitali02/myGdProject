@@ -134,12 +134,12 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
                     resultInfo.dStatus="-NA-";
                     resultInfo.lastDeployedDate="-NA-";
                 }
-                 
                 resultInfo.response=response[i];
                 resultInfo.name=response[i].name;
                 resultInfo.uuid=response[i].uuid;
                 resultInfo.version=response[i].version;
                 resultInfo.createdBy=response[i].createdBy;
+                resultInfo.numFeatures=response[i].trainResultView.numFeatures;
                 resultInfo.f1Score= parseFloat(response[i].trainResultView.f1Score.toFixed(2));
                 resultInfo.accuracy= parseFloat(response[i].trainResultView.accuracy.toFixed(2));
                 resultInfo.recall= parseFloat(response[i].trainResultView.recall.toFixed(2));

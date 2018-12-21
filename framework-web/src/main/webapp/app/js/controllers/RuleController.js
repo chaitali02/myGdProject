@@ -929,19 +929,31 @@ var confirmDialog = function(newVal, yes, no) {
 	}
 
   $scope.onChangeOperator=function(index){
-	
+    $scope.filterTableArray[index].isRhsNA=false;
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 		  $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['attribute','formula','dataset','function','paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+		}else if(['IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
 			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,[]);
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
+    }
+    else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} 
+    else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
       $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+    }
+    else if (['IS NULL' ,'IS NOT NULL'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else{
 			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
@@ -955,8 +967,18 @@ var confirmDialog = function(newVal, yes, no) {
     });
   }
     
-  
-  $scope.addRowFilter = function () {
+  function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
+	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
 		}
@@ -966,14 +988,13 @@ var confirmDialog = function(newVal, yes, no) {
 		filertable.islhsSimple = true;
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
-    filertable.isrhsSimple = true;
-    if($scope.filterTableArray.length >0){
-      filertable.logicalOperator=$scope.logicalOperator[0]
-    }
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
-    filertable.operator = $scope.operator[0].value
-    filertable.lhstype = $scope.lhsType[0];
-    filertable.rhsTypes=CF_FILTER.rhsType;
+		filertable.isrhsSimple = true;
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[0]
+		filertable.rhstype = $scope.rhsType[0];
+		filertable.rhsTypes=returnRshType();
     filertable.rhsTypes=$scope.disableRhsType(filertable.rhsTypes,['dataset']);
 		filertable.rhstype = filertable.rhsTypes[0];
 		filertable.rhsvalue;
@@ -1165,7 +1186,6 @@ var confirmDialog = function(newVal, yes, no) {
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      debugger
         if($scope.ruleLodeFormula==null)
         $scope.getSourceByFormula();
 
@@ -1864,7 +1884,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   };
 
   $scope.okrulesave = function () {
-    debugger
+
     var hidemode = "yes";
   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
