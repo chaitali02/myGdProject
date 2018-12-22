@@ -3,6 +3,9 @@
  */
 package com.inferyx.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
@@ -157,7 +160,7 @@ public class PredictController {
 	
 	
 	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void getPrediction(@RequestParam("model_uuid") String modeluuid,
+	public List<Map<String, Object>> getPrediction(@RequestParam("model_uuid") String modeluuid,
 								@RequestParam("userId") String userUuid,
 								@RequestParam("appId") String appId, 
 								@RequestBody FeatureValuesDomain featureValues) throws Exception {
@@ -174,18 +177,15 @@ public class PredictController {
 		MetaIdentifier trainInfoRef = new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion(), train.getName());
 		MetaIdentifierHolder trainInfo = new MetaIdentifierHolder(trainInfoRef);
 		
-		Predict predict = new Predict();
-		predict.setBaseEntity();
-		predict.setTrainInfo(trainInfo);
-		predict.setFeatureAttrMap(train.getFeatureAttrMap());
-		predict.setIncludeFeatures(train.getIncludeFeatures());
-		predict.setDependsOn(train.getDependsOn());
-		predict.setAppInfo(train.getAppInfo());
-		predict.setCreatedBy(train.getCreatedBy());
-
-		PredictExec predictExec = null;
-		predictExec = modelServiceImpl.create(predict, null, null, predictExec);
-		modelServiceImpl.predict(predict, predictExec, null, modelTrainDomain.getModel(), RunMode.ONLINE, appId, featureValues.getFeatureList());
+		List<Predict> predictList = modelServiceImpl.getPredictByModel(modeluuid, modelTrainDomain.getModel().getVersion());
+		
+		Map<String, List<Map<String, Object>>> featuresMap = new HashMap<>();
+		featuresMap.put("features", featureValues.getFeatureList());
+		Map<String, Object> featureWrapper = new HashMap<>();
+		featureWrapper.put("features", featuresMap);
+		List<Map<String, Object>> predictedData = modelServiceImpl.getPrediction(trainExec.getUuid(), featureWrapper);
+		logger.info(" Prediction : " + predictedData);
+		return predictedData;
 		
 	}
 	
