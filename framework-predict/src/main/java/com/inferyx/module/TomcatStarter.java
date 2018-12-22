@@ -32,7 +32,7 @@ public class TomcatStarter {
 		System.out.println("new File(\".\").getAbsolutePath() : " + new File(".").getAbsolutePath());
 
 		XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
-		applicationContext.setConfigLocations("file:src/main/resources/framework-predict.xml");
+		applicationContext.setConfigLocations("classpath:framework-predict.xml");
 		Tomcat.addServlet(ctx, "framework", new org.springframework.web.servlet.DispatcherServlet(applicationContext));
 		ctx.addServletMapping("/*", "framework");
 		

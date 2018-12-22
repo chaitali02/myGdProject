@@ -139,7 +139,7 @@ public class PredictController {
 			predict.setBaseEntity();
 			predict.setTrainInfo(trainInfo);
 			predict.setFeatureAttrMap(train.getFeatureAttrMap());
-			predict.setIncludeFeatures(train.getIncludeFeatures());
+//			predict.setIncludeFeatures(train.getIncludeFeatures());
 			predict.setSource(sourceIdHolder);
 			predict.setTarget(targetIdHolder);
 			predict.setDependsOn(train.getDependsOn());
