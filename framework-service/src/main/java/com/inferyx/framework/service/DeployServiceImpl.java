@@ -45,6 +45,8 @@ public class DeployServiceImpl {
 	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
+//	@Autowired
+//	private RestTemplate restTemplate;
 	
 	static Logger logger = Logger.getLogger(DeployServiceImpl.class);
 	
@@ -55,10 +57,14 @@ public class DeployServiceImpl {
 			String processStatus = null;
 			try {
 				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
+				logger.info("Process status : " + processStatus);
 			} catch (Exception e) {
-				//process is not started hence starting the process 
+				//process is not started hence starting the process
+				logger.info("Process has not started. So, starting the process ");
 				startProcess(trainExecUuid, trainExecVersion);
+				logger.info("Process started. Get process status ");
 				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
+				logger.info("Process status : " + processStatus);
 			}
 			
 			boolean deployStatus = getDeployStatus(trainExecUuid, trainExecVersion);
@@ -93,6 +99,7 @@ public class DeployServiceImpl {
 
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -185,22 +192,28 @@ public class DeployServiceImpl {
 		return  restTemplate.getForObject(url, String.class);		
 	}
 	
+	/*public String getProcessStatus(String port) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String url = "http://localhost:"+port+"/starter/monitor/getProcessStatus";
+		return  this.restTemplate.getForObject(url, String.class);		
+	}*/
+	
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
-//		Application application = commonServiceImpl.getApp();
-////		new TomcatStarter(application.getDeployPort());
+		Application application = commonServiceImpl.getApp();
+		String path = "/app/framework_predict";
+//		new TomcatStarter(application.getDeployPort());
 //		String path=this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 //		path = path.replaceAll("framework-service", "framework-predict").concat("com/inferyx/module/");
-//		System.out.println("absolute path: "+path);
-//		
-//		ProcessBuilder pb = new ProcessBuilder("java", "TomcatStarter", application.getDeployPort());
+		System.out.println("absolute path: "+path);
+		
+		ProcessBuilder pb = new ProcessBuilder(path+"/bin/predictStarter", application.getDeployPort(), "&");
 //		pb.environment().put("java", path);
-//		Process p = pb.start();
-//		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//		String errLine = "";
-//		while((errLine = errBuffRdrIn.readLine()) != null) {
-//		// display each output line form python script
-//			logger.error(errLine);
-//		}
+		Process p = pb.start();
+		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+		String errLine = "";
+		while((errLine = errBuffRdrIn.readLine()) != null) {
+		// display each output line form python script
+			logger.error(errLine);
+		}
 		return "Process started successfully.";		 
 	}
 	
