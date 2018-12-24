@@ -1163,7 +1163,18 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			filter.selected = $scope.selectedAllFitlerRow;
 		});
 	}
-
+	
+	function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
 	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
@@ -1181,7 +1192,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
 		filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes = returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
