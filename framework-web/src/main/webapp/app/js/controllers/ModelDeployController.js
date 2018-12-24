@@ -198,8 +198,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
               '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
              // '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
              /// '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="20" height="20"> Deploy</a></li>',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="20" height="20" style="transform: rotate(180deg)"> Undeploy</a></li>',                       
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16"> Deploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16" style="transform: rotate(180deg)"> Undeploy</a></li>',                       
               '    </ul>',
               '  </div>',
               '</div>'

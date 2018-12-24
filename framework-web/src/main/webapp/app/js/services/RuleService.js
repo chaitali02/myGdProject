@@ -602,7 +602,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
 					}
-					else if (['IS NULL' ,'IS NOT NULL'].indexOf(filterInfo.operator) != -1){
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
 						
 						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
 					}

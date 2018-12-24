@@ -372,8 +372,9 @@
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in rhsType  | orderBy : 'caption'  track by x.text+x.caption"
-                                      ng-disabled=" {{mode}}" class="form-control">
+                                    <!-- <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in rhsType  | orderBy : 'caption'  track by x.text+x.caption" -->
+                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
+                                    ng-disabled=" {{mode}}" class="form-control">
                                     </select>
                                   </span>
                                 </td>
@@ -427,8 +428,13 @@
                                             tooltip-placement="left">
                                         </span>
                                       </div>
-
                                     </span>
+                                    <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                          ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                      </span>
+                                    </div>
                                   </div>
                                   <div ng-if="tabledata.isrhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">

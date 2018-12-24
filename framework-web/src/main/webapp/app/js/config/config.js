@@ -113,8 +113,7 @@ InferyxApp.constant("CF_FILTER",{
 	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
 	{"caption":"IN","value":"IN"},
     {"caption":"NOT IN","value":"NOT IN"},
-    {"caption":"IS NULL","value":"IS NULL"},
-    {"caption":"IS NOT NULL","value":"IS NOT NULL"}],
+    {"caption":"IS","value":"IS"}],
     
 	lhsType : [{"text":"string","caption":"string"},
 	{ "text": "string", "caption":"integer"},

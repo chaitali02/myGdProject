@@ -257,7 +257,7 @@ public class HistogramOperator implements IOperator {
 		return String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 	}
 
-	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, RunMode runMode) throws Exception {
+	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
 		Datasource datapodDS = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datapodDS.getType());	
 		
@@ -275,10 +275,13 @@ public class HistogramOperator implements IOperator {
 			sql = "SELECT "
 					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
-					.concat(" FROM ").concat(tableName)
+					.concat(" FROM ").concat(tableName).concat(" ").concat(tableName)
 					.concat(" GROUP BY ").concat(attribute.getName())
 					.concat(" LIMIT "+limit);
-			exec.executeAndRegisterByDatasource(sql, "tempAttrHistogram", attrDpDs, appUuid);
+			
+			String ourLimitSql = "SELECT * FROM ("+sql+") "+tableName+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
+			
 		} else {
 			sql = generateSql(attrRefHolderList, null, null, runMode);
 			sql = sql.concat(" ").concat(" LIMIT "+limit);
