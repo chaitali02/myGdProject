@@ -524,7 +524,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					filterInfo.rhsTypes = null;
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} 
+					else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['string', 'dataset']);

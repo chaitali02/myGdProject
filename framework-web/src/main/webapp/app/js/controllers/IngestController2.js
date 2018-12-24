@@ -33,7 +33,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     else {
         $scope.isAdd = true;
     }
-    $scope.continueCount=1;
+	$scope.continueCount=1;
+	$scope.rhsNA=['NULL',"NOT NULL"];
     $scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" }, { "text": "STREAM-FILE", "caption": "Stream - File" }, { "text": "STREAM-TABLE", "caption": "Stream - Table" }];
     $scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
     $scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
@@ -1124,13 +1125,24 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+		} else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} 
+		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {
