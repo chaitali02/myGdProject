@@ -423,8 +423,13 @@
                                                                                         tooltip-placement="left">
                                                                                 </span>
                                                                             </div>
-
                                                                         </span>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">

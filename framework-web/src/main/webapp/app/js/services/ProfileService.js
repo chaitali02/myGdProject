@@ -648,10 +648,17 @@ ProfileModule.service("ProfileService", function ($q, ProfileFactory, sortFactor
 					filterInfo.rhsTypes = null;
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = ProfileFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = ProfileFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = ProfileFactory.disableRhsType(['string', 'dataset']);
+					}
+					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = ProfileFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = ProfileFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
 					}
 					else {
 						filterInfo.rhsTypes = ProfileFactory.disableRhsType(['dataset']);
