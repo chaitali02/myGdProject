@@ -15,6 +15,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.rhsType  = CF_FILTER.rhsType;
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
   $scope.isDestoryState = false; 
+  $scope.rhsNA=['NULL',"NOT NULL"];
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -229,6 +230,18 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.targetFilterTable[index.targetIndex].logicalOperator=$scope.targetFilterTable[index.sourceIndex].logicalOperator;
 			$scope.targetFilterTable[index.sourceIndex].logicalOperator=""
 		}
+  }
+  
+  function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
 	}
   $scope.addSourceFilterRow = function() {
     if($scope.sourceFilterTable == null) {
@@ -246,7 +259,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
     filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
@@ -268,7 +281,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
     filertable.rhstype = $scope.rhsType[0];
-    filertable.rhsTypes = CF_FILTER.rhsType;
+    filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue ;
@@ -542,14 +555,25 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
-    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
+    else if(['IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
       $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, []);
+		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
+    else if(['EXISTS','NOT EXISTS'].indexOf($scope.targetFilterTable[index].operator) !=-1){
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
 		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.targetFilterTable[index].operator) !=-1){
       $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['dataset']);
   		$scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
+    else if (['IS'].indexOf($scope.targetFilterTable[index].operator) != -1) {
+		
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes,['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+      $scope.targetFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
 		}
 		else{
@@ -567,14 +591,24 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
-    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+    else if(['IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
       $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, []);
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
+    else if(['EXISTS','NOT EXISTS'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
 		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
     else if(['<','>',"<=",'>='].indexOf($scope.sourceFilterTable[index].operator) !=-1){
       $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['dataset']);
   		$scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
+    else if (['IS'].indexOf($scope.sourceFilterTable[index].operator) != -1) {
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}
 		else{
