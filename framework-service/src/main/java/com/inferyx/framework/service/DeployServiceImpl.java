@@ -11,7 +11,6 @@
 package com.inferyx.framework.service;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -62,6 +61,7 @@ public class DeployServiceImpl {
 				//process is not started hence starting the process
 				logger.info("Process has not started. So, starting the process ");
 				startProcess(trainExecUuid, trainExecVersion);
+				Thread.sleep(60000*3);
 				logger.info("Process started. Get process status ");
 				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
 				logger.info("Process status : " + processStatus);
@@ -187,6 +187,18 @@ public class DeployServiceImpl {
 	
 	public String getProcessStatus(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Application application = commonServiceImpl.getApp();
+//		InetAddress ip;
+//        String hostname;
+//        
+//        try {
+//			ip = InetAddress.getLocalHost();
+//            hostname = ip.getHostName();
+//            System.out.println("Your current IP address : " + ip);
+//            System.out.println("Your current Hostname : " + hostname);
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		String url = "http://localhost:"+application.getDeployPort()+"/starter/monitor/getProcessStatus";
 		RestTemplate restTemplate = new RestTemplate();
 		return  restTemplate.getForObject(url, String.class);		
@@ -214,7 +226,7 @@ public class DeployServiceImpl {
 		// display each output line form python script
 			logger.error(errLine);
 		}
-		return "Process started successfully.";		 
+		return "Process started successfully.";	 
 	}
 	
 	public boolean stopProcess(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {

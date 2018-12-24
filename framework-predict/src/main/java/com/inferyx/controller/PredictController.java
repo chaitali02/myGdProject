@@ -171,13 +171,13 @@ public class PredictController {
 		frameworkThreadServiceImpl.setSession(user.getName(), appInfo);
 		ModelTrainDomain modelTrainDomain = modelMap.get(modeluuid);
 		TrainExec trainExec = modelTrainDomain.getTrainExec();
-		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), 
-						trainExec.getDependsOn().getRef().getVersion(),
-						MetaType.train.toString());
-		MetaIdentifier trainInfoRef = new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion(), train.getName());
-		MetaIdentifierHolder trainInfo = new MetaIdentifierHolder(trainInfoRef);
-		
-		List<Predict> predictList = modelServiceImpl.getPredictByModel(modeluuid, modelTrainDomain.getModel().getVersion());
+//		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), 
+//						trainExec.getDependsOn().getRef().getVersion(),
+//						MetaType.train.toString());
+//		MetaIdentifier trainInfoRef = new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion(), train.getName());
+//		MetaIdentifierHolder trainInfo = new MetaIdentifierHolder(trainInfoRef);
+//		
+//		List<Predict> predictList = modelServiceImpl.getPredictByModel(modeluuid, modelTrainDomain.getModel().getVersion());
 		
 		Map<String, List<Map<String, Object>>> featuresMap = new HashMap<>();
 		featuresMap.put("features", featureValues.getFeatureList());

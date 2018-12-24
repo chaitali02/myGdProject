@@ -3534,21 +3534,27 @@ public class ModelServiceImpl {
 		}
 
 		List<Row> data = new ArrayList<>();
-		List<Object> value = new ArrayList<>();
+		List<Double> value = new ArrayList<>();
 		for (Map<String, Object> map : list2) {
-			if (map.get("value") instanceof java.lang.Integer) {
-				Integer i = (Integer) map.get("value"); // Auto-boxing to Integer
-				Double b = new Double(i);
-				value.add(b);
-			} else {
-				value.add(map.get("value"));
-			}
+			Set<String> keySet = map.keySet();
+			Iterator<String> keyItr = keySet.iterator();
+			while(keyItr.hasNext()) {
+				String key = keyItr.next();
+				value.add(Double.parseDouble(map.get(key).toString()));
+//				if (map.get(key) instanceof java.lang.Integer) {
+//					value.add(Double.parseDouble(map.get(key).toString()));
+//				} else {
+//					value.add((Double) map.get(key));
+//				}
+				fields.add(DataTypes.createStructField(key, DataTypes.DoubleType, true));
+			}			
 		}
-
-		for (Map<String, Object> map : list2) {
-			fields.add(DataTypes.createStructField(map.get("key").toString(), DataTypes.DoubleType, true));
-		}
-		
+//
+//		for (Map<String, Object> map : list2) {
+//			
+//			fields.add(DataTypes.createStructField(map.get("prediction").toString(), DataTypes.DoubleType, true));
+//		}
+				
 		data.add(RowFactory.create(value.toArray(new Double[value.size()])));
 
 		data.forEach(t -> System.out.println(t.get(0)));
