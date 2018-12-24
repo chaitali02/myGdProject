@@ -449,8 +449,13 @@
                                             tooltip-placement="left" ng-change="onChangeSimple()">
                                         </span>
                                       </div>
-
                                     </span>
+                                    <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                          ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                      </span>
+                                    </div>
                                   </div>
                                   <div ng-if="tabledata.isrhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -504,18 +509,16 @@
                                         ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
-                                  <div ng-if="tabledata.isRhsNA" style="text-align:center">-NA-</div>
+                                  <!-- <div ng-if="tabledata.isRhsNA" style="text-align:center">-NA-</div> -->
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <div style="text-align: center;">
                                       <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
 
                                       </a>
                                       <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                       </a>
                                     </div>
