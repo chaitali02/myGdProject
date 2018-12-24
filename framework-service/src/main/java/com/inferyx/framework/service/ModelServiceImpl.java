@@ -3557,10 +3557,11 @@ public class ModelServiceImpl {
 				(tableName + "_pred_data"));
 		rsHolder.getDataFrame().show();
 		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
-		//String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+		String[] fieldArray = getMappedAttrs(train.getFeatureAttrMap()); 
+				//modelExecServiceImpl.getAttributeNames(predict);
 
 
-		//exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), predict.getLabelInfo().toString(), appUuid);
+		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
 		
 	
 		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);

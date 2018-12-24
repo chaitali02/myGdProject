@@ -15,20 +15,24 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 public class TomcatStarter {
 	
-
+	static String portNumber = null;
 	public TomcatStarter() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public TomcatStarter(String portNumber) {
+		TomcatStarter.portNumber = portNumber;
+	}
 	public static void main(String[] args) throws Exception {
 		Tomcat tomcat = new Tomcat();
+//		tomcat.setPort(Integer.parseInt(portNumber));
 		tomcat.setPort(Integer.parseInt(args[0]));
 
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
 		System.out.println("new File(\".\").getAbsolutePath() : " + new File(".").getAbsolutePath());
 
 		XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
-		applicationContext.setConfigLocations("file:src/main/resources/framework-predict.xml");
+		applicationContext.setConfigLocations("classpath:framework-predict.xml");
 		Tomcat.addServlet(ctx, "framework", new org.springframework.web.servlet.DispatcherServlet(applicationContext));
 		ctx.addServletMapping("/*", "framework");
 		

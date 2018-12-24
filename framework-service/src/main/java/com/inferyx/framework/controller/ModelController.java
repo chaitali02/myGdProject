@@ -31,13 +31,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -54,6 +57,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
+import com.inferyx.framework.service.SecurityServiceImpl;
 
 @RestController
 @RequestMapping(value = "/model")
@@ -72,6 +76,8 @@ public class ModelController {
 	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private TrainResultViewServiceImpl trainResultViewServiceImpl; 
+	@Autowired
+	private SecurityServiceImpl securityServiceImpl;
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
@@ -513,25 +519,5 @@ public class ModelController {
 			@RequestParam(value = "endDate", required = false) String endDate,
 			@RequestParam(value = "status", required = false) String status) throws Exception {
 		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid, active, startDate, endDate, status);
-	}
-	
-	@RequestMapping(value = "/deploy", method = RequestMethod.GET)
-	public boolean deploy(
-			@RequestParam(value = "uuid", required = false) String trainExecUuid,
-			@RequestParam(value = "version", required = false) String trainExecVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		
-		return true;
-	}
-	
-	@RequestMapping(value = "/undeploy", method = RequestMethod.GET)
-	public boolean undeploy(
-			@RequestParam(value = "uuid", required = false) String trainExecUuid,
-			@RequestParam(value = "version", required = false) String trainExecVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		
-		return true;
 	}
 }

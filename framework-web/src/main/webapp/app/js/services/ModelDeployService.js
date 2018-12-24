@@ -40,14 +40,14 @@ DatascienceModule.factory('ModelDeployFactory', function ($http, $location) {
     factory.deploy = function (uuid, version, type) {
         var url = $location.absUrl().split("app")[0]
         return $http({
-            url: url + "model/deploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
+            url: url + "datascience/deploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
             method: "GET"
         }).then(function (response) { return response })
     }
     factory.undeploy = function (uuid, version, type) {
         var url = $location.absUrl().split("app")[0]
         return $http({
-            url: url + "model/undeploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
+            url: url + "datascience/undeploy?action=view&uuid=" + uuid +"&version="+version +"&type=" + type,
             method: "GET"
         }).then(function (response) { return response })
     }
@@ -136,6 +136,8 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
                 }
                 resultInfo.response=response[i];
                 resultInfo.name=response[i].name;
+                resultInfo.uuid=response[i].uuid;
+                resultInfo.version=response[i].version;
                 resultInfo.createdBy=response[i].createdBy;
                 resultInfo.numFeatures=response[i].trainResultView.numFeatures;
                 resultInfo.f1Score= parseFloat(response[i].trainResultView.f1Score.toFixed(2));

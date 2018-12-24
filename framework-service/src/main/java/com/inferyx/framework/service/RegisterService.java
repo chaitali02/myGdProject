@@ -3065,7 +3065,7 @@ public class RegisterService {
 		List<AttributeRefHolder> attrRefDetails = new ArrayList<AttributeRefHolder>();
 		MetaIdentifier finalDataRef = new MetaIdentifier();
 		//Dataset dataset = datasetServiceImpl.findLatestByUuid(uuid);
-		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(uuid,  MetaType.dataset.toString());
+		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(uuid,  MetaType.dataset.toString(),"N");
 		List<AttributeSource> sourceAttributes = dataset.getAttributeInfo();
 		for (int i = 0; i < sourceAttributes.size(); i++) {
 			AttributeRefHolder attributeRef = new AttributeRefHolder();

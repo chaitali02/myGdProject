@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class FeatureValuesDomain {
 	
-	private List<Map<String, String>> featureList;
+	private List<Map<String, Object>> featureList;
 	private List<String> predictionList;
 
 	/**
@@ -25,14 +25,14 @@ public class FeatureValuesDomain {
 	/**
 	 * @return the featureList
 	 */
-	public List<Map<String, String>> getFeatureList() {
+	public List<Map<String, Object>> getFeatureList() {
 		return featureList;
 	}
 
 	/**
 	 * @param featureList the featureList to set
 	 */
-	public void setFeatureList(List<Map<String, String>> featureList) {
+	public void setFeatureList(List<Map<String, Object>> featureList) {
 		this.featureList = featureList;
 	}
 

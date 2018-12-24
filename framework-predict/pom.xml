@@ -38,11 +38,15 @@
                 <artifactId>appassembler-maven-plugin</artifactId>
                 <version>1.1.1</version>
                 <configuration>
-                    <assembleDirectory>target</assembleDirectory>
+                    <assembleDirectory>assemble</assembleDirectory>
+                    <showConsoleWindow>true</showConsoleWindow>
+			        <platforms>
+			          <platform>unix</platform>
+			        </platforms>
                     <programs>
                         <program>
                             <mainClass>com.inferyx.module.TomcatStarter</mainClass>
-                            <name>webapp</name>
+                            <name>predictStarter</name>
                         </program>
                     </programs>
                 </configuration>
