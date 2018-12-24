@@ -109,10 +109,14 @@ public class JoinKeyOperator {
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
-			if (sourceAttr.getRef().getType().equals(MetaType.simple) && (!filterInfo.getOperator().trim().equalsIgnoreCase("IS NULL") && !filterInfo.getOperator().trim().equalsIgnoreCase("IS NOT NULL"))) {
+			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
-				} else {
+				}
+				else if(sourceAttr.getValue() !=null && filterInfo.getOperator().trim().equalsIgnoreCase("IS")) {
+					operandValue.add(sourceAttr.getValue());
+				}
+				else {
 					String value = sourceAttr.getValue();
 					if(value != null && sourceAttr.getAttributeType() !=null) {
 						String attrType=sourceAttr.getAttributeType();

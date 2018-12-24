@@ -56,6 +56,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showGraphDiv = false
 	$scope.graphDataStatus = false
 	$scope.logicalOperator = ["AND", "OR"];
+	$scope.rhsNA=['NULL',"NOT NULL"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
 	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', '!=', 'LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
@@ -750,10 +751,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
-		else if (['IS NULL' ,'IS NOT NULL'].indexOf($scope.filterTableArray[index].operator) != -1) {
+		else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].isRhsNA=true;
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist']);
-			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {

@@ -522,10 +522,10 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					filterInfo.isRhsNA = false;
 					var rhsTypes = null;
 					filterInfo.rhsTypes = null;
-					debugger
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} 
+					else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['string', 'dataset']);
@@ -533,9 +533,9 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
 					}
-					else if (['IS NULL' ,'IS NOT NULL'].indexOf(filterInfo.operator) != -1){
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
 						
-						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
 					}
 					else {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['dataset']);

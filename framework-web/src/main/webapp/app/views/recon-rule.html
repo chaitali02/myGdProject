@@ -450,7 +450,13 @@
                                                                                 </span>
                                                                             </div>
                                                                         </span>
-                                                                      </div>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" 
@@ -755,6 +761,12 @@
                                                                                 </span>
                                                                             </div>
                                                                         </span>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -813,11 +825,9 @@
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <div style="text-align: center;">
                                                                         <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrTargetFilterRowUp($index)">
-                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                                                         </a>
                                                                         <a class="move-column" ng-disabled="($index == targetFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrTargetFilterRowDown($index)">
-                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                                                         </a>
                                                                         </div>

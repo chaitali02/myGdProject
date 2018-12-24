@@ -162,6 +162,40 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			});
 		}
 	}
+	
+	$scope.gridOptionsHitogram={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+
+	$scope.filteredRowsHitogram = [];
+	$scope.gridOptionsHitogram.onRegisterApi = function (gridApi) {
+		$scope.gridOptionsHitogram = gridApi;
+		$scope.filteredRowsHitogram = $scope.gridOptionsHitogram.core.getVisibleRows($scope.gridOptionsHitogram.grid);
+	};
+	
+	$scope.getGridStyleHistogram = function () {
+		
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsHitogram && $scope.filteredRowsHitogram.length > 0) {
+			style['height'] = (($scope.filteredRowsHitogram.length < 10 ? $scope.filteredRowsHitogram.length * 50 : 400) + 70) + 'px';
+		}
+		else {
+		
+			style['height'] = "150px";
+		}
+		return style;
+	}
 
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -596,7 +630,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.counter = 0;
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
-				$scope.getResults($scope.originalData);
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
 			}
 			$scope.spinner = false;
 
@@ -625,8 +659,44 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		// console.log(data)
 		 return data;
 	}
+	
+	$scope.refreshDataHistogram=function(str){
+       console.log(str)
+		var data = $filter('filter')($scope.originalDataHistogram, str, undefined);
+		$scope.gridOptionsHitogram.data= data;//$scope.getResults(data);
+	}
+
+	$scope.onClickChart=function(){
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=true;
+	}
+
+	$scope.onClickGrid=function(){
+		
+		$scope.isShowDataGrid=true;
+		$scope.isShowChart=false;
+		$scope.gridOptionsHitogram.columnDefs=[];
+		$scope.gridOptionsHitogram.columnDefs=[
+			{
+				name: 'bucket',
+				displayName: 'Bucket',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+			},
+			{
+				name: 'frequency',
+				displayName: 'Frequency',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+		    }
+		]
+		$scope.gridOptionsHitogram.data=$scope.originalDataHistogram//$scope.getResults($scope.originalDataHistogram);
+	}
+
 	$scope.calculateHistrogram=function(row){
 		$scope.histogramDetail=row.colDef;
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=true
 		console.log(row);
 		$('#histogamModel').modal({
 			backdrop: 'static',
@@ -642,7 +712,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isHistogramInprogess=false;
 			$scope.isHistogramError=false;
 			$scope.datacol={};
-			$scope.datacol.datapoints=response;
+			if(response.length >=20){
+				$scope.datacol.datapoints=response.slice(0,20);
+
+			}else{
+				$scope.datacol.datapoints=response;
+			}
+			$scope.originalDataHistogram=response;
 			var dataColumn={}
 			dataColumn.id="frequency";
 			dataColumn.name="frequency"
@@ -653,6 +729,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			var datax={};
 			datax.id ="bucket";
 			$scope.datacol.datax=datax;
+			
 		}
 		var onError =function(){
 			$scope.isHistogramInprogess=false;
@@ -697,7 +774,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.counter = 0;
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
-				$scope.getResults($scope.originalData);
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
 			}
 			$scope.spinner = false;
 
@@ -723,12 +800,15 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	$scope.onPerPageChange = function () {
 		$scope.pagination.currentPage = 1;
-		$scope.getResults($scope.originalData)
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
 	}
 
 	$scope.pageChanged = function () {
-		$scope.getResults($scope.originalData)
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
 	};
+	$scope.pageChangedHistogram=function(){
+		$scope.gridOptionsHitogram.data=$scope.getResults($scope.originalDataHistogram);
+	}
 
 	$scope.getResults = function (params) {
 		$scope.pagination.totalItems = params.length;
@@ -745,13 +825,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
 		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-		$scope.gridOptions.data = params.slice(offset, limit);
+	//	$scope.gridOptions.data = params.slice(offset, limit);
+		return params.slice(offset, limit);
 		console.log($scope.gridOptions.data)
 	}
 
 	$scope.refreshData = function () {
 		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-		$scope.getResults(data);
+		$scope.gridOptions.data=$scope.getResults(data);
 	};
 	$scope.refreshCompareMetaData = function (searchtext) {
 		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
