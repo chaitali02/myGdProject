@@ -23,7 +23,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
-    $scope.isDestoryState = false; 
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -37,6 +36,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.isAdd = true;
   }
+  $scope.isDestoryState = false; 
+  $scope.rhsNA=['NULL',"NOT NULL"];
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
   $scope.userDetail.name = $rootScope.setUserName;
@@ -519,13 +520,24 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+		} else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
+		} 
+		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+    }
+    else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {
