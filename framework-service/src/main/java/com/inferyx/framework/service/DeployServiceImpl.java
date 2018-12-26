@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,13 @@ public class DeployServiceImpl {
 					throw new RuntimeException("Some error occured.");
 				}
 			}
-			
+			Model model = getModelByTrainExec(trainExecUuid, trainExecVersion);
+			List<String> trainExecList = getDeployStatusByModel(model.getUuid(), trainExecUuid, trainExecVersion);
+			if(!trainExecList.isEmpty()) {
+				for(String deployedTrainExecUuid : trainExecList) {
+					unDeploy(deployedTrainExecUuid, null);
+				}
+			}
 			boolean deployStatus = getDeployStatus(trainExecUuid, trainExecVersion);
 			
 			if(!deployStatus && processStatus.equalsIgnoreCase("ALIVE")) {
@@ -154,6 +161,23 @@ public class DeployServiceImpl {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		boolean response = restTemplate.getForObject(deployURL, boolean.class);
+		System.out.println("response: "+response);
+		
+		return response;
+	}
+	
+	public List<String> getDeployStatusByModel(String modelUuid, String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Application application = commonServiceImpl.getApp();
+		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
+		String deployURL = "http://localhost:"+application.getDeployPort()
+							+ "/starter/model/getDeployStatusByModel?"
+							+ "model_uuid="+modelUuid
+							+ "&trainExecUuid="+trainExecUuid
+							+ "&userId="+userInfo.getRef().getUuid()
+							+ "&appId="+application.getUuid();
+		
+		RestTemplate restTemplate = new RestTemplate();
+		List<String> response = restTemplate.getForObject(deployURL, List.class);
 		System.out.println("response: "+response);
 		
 		return response;

@@ -5,6 +5,8 @@ package com.inferyx.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
@@ -114,4 +116,22 @@ public class ModelPredictController {
 		logger.info(" Model for trainExec " + trainExecUuid + " is not deployed ");
 		return false;
 	}	
+	
+	@RequestMapping(value = "/getDeployStatusByModel", method = RequestMethod.GET)
+	public List<String> getDeployStatusByModel(@RequestParam("model_uuid") String model_uuid,
+			@RequestParam("trainExecUuid") String trainExecUuid,
+			@RequestParam("userId") String userUuid,
+			@RequestParam("appId") String appUuid) throws JSONException, ParseException, IOException {
+		List<String> trainExecList = new ArrayList<>();
+		if(modelMap.containsKey(model_uuid)) {
+			ModelTrainDomain modelTrainDomain = modelMap.get(model_uuid);
+			boolean trainExecDployStatus = getDeployStatus(modelTrainDomain.getTrainExec().getUuid(), null, userUuid, appUuid);
+			if(trainExecDployStatus) {
+				trainExecList.add(modelTrainDomain.getTrainExec().getUuid());
+			}
+			return trainExecList;
+		} else {
+			return trainExecList;
+		}
+	}
 }
