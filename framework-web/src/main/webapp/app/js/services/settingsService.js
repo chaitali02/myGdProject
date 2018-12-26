@@ -45,5 +45,55 @@ AdminModule.service("SettingsService",function($q,$http,$location,CommonFactory)
       }
     return deferred.promise;
   }
+   
+  this.getProcessStatus=function(){
+    var deferred = $q.defer();
+    var url = "datascience/getProcessStatus";
+    CommonFactory.httpGet(url).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+    var OnSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError=function(response){
+      deferred.reject({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  this.startProcess=function(){
+    var deferred = $q.defer();
+    var url = "datascience/startProcess";
+    CommonFactory.httpGet(url).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+    var OnSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError=function(response){
+      deferred.reject({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  this.stopProcess=function(){
+    var deferred = $q.defer();
+    var url = "datascience/stopProcess";
+    CommonFactory.httpGet(url).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+    var OnSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError=function(response){
+      deferred.reject({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+
 
 })

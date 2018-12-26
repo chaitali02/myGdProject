@@ -98,6 +98,7 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
             if(response && response.length >0){
                 for(var i=0;i<response.length ;i++){
                  var resultInfo={};
+                 resultInfo.isModelDeployExist="N";   
                 if (response[i].statusList != null) {
                     response[i].statusList.sort(sortFactory.sortByProperty("createdOn"));
                     var len = response[i].statusList.length - 1;
@@ -121,19 +122,31 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
                 }
                 
                 if(response[i].deployExec !=null && response[i].deployExec.statusList !=null && response[i].deployExec.statusList.length > 0){
+                    
                     if (response[i].deployExec.statusList[len].stage == "NotStarted") {
                         resultInfo.dStatus = "Not Started"
                     } else if (response[i].deployExec.statusList[len].stage == "InProgress") {
                       result.dStatus = "In Progress"
                     } else {
                         resultInfo.dStatus =response[i].deployExec.statusList[len].stage;
-                        resultInfo.lastDeployedDate=$filter('date')(response[i].deployExec.statusList[len].createdOn, "EEE MMM dd  hh:mm:ss yyyy");
+                        if(response[i].deployExec.statusList[len].stage == "Completed")
+                            resultInfo.lastDeployedDate=$filter('date')(response[i].deployExec.statusList[len].createdOn, "EEE MMM dd  hh:mm:ss yyyy");
+                        else 
+                        resultInfo.lastDeployedDate="-NA-";
                     }
+
+
+                    if(response[i].deployExec.active == "Y" && resultInfo.isModelDeployExist !="Y" &&  response[i].deployExec.statusList[len].stage == "Completed"){
+                        resultInfo.isModelDeployExist="Y";   
+                    }
+                    else
+                        resultInfo.isModelDeployExist="N";  
                   }
                   else{
                     resultInfo.dStatus="-NA-";
                     resultInfo.lastDeployedDate="-NA-";
                 }
+              
                 resultInfo.response=response[i];
                 resultInfo.name=response[i].name;
                 resultInfo.uuid=response[i].uuid;
