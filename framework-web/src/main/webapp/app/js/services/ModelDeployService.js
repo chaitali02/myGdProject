@@ -95,8 +95,10 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
         ModelDeployFactory.findTrainExecViewByCriteria(uuid, version, type, trainexecuuid,startdate, enddate,active, status).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
             var result=[];
+            var isModelDeployExist="N";
             if(response && response.length >0){
                 for(var i=0;i<response.length ;i++){
+                    debugger
                  var resultInfo={};
                  resultInfo.isModelDeployExist="N";   
                 if (response[i].statusList != null) {
@@ -134,19 +136,24 @@ DatascienceModule.service("ModelDeployService", function ($http, ModelDeployFact
                         else 
                         resultInfo.lastDeployedDate="-NA-";
                     }
-
-
-                    if(response[i].deployExec.active == "Y" && resultInfo.isModelDeployExist !="Y" &&  response[i].deployExec.statusList[len].stage == "Completed"){
-                        resultInfo.isModelDeployExist="Y";   
-                    }
-                    else
-                        resultInfo.isModelDeployExist="N";  
                   }
                   else{
                     resultInfo.dStatus="-NA-";
                     resultInfo.lastDeployedDate="-NA-";
                 }
-              
+                if(response[i].deployExec !=null && response[i].deployExec.active == "Y" && resultInfo.isModelDeployExist !="Y" &&  response[i].deployExec.statusList[len].stage == "Completed"){
+                    resultInfo.isModelDeployExist="Y"; 
+                    isModelDeployExist ="Y"; 
+                }
+                else{
+                    
+                    if(isModelDeployExist =="Y"){
+                        resultInfo.isModelDeployExist="Y";
+                    }else{
+                        resultInfo.isModelDeployExist="N";
+                    }
+                
+                }  
                 resultInfo.response=response[i];
                 resultInfo.name=response[i].name;
                 resultInfo.uuid=response[i].uuid;
