@@ -672,7 +672,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.onClickGrid=function(){
-		
+		$scope.searchTextHostogram;
 		$scope.isShowDataGrid=true;
 		$scope.isShowChart=false;
 		$scope.gridOptionsHitogram.columnDefs=[];
@@ -696,7 +696,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.calculateHistrogram=function(row){
 		$scope.histogramDetail=row.colDef;
 		$scope.isShowDataGrid=false;
-		$scope.isShowChart=true
+		$scope.isShowChart=false;
 		console.log(row);
 		$('#histogamModel').modal({
 			backdrop: 'static',
@@ -708,6 +708,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		MetadataDatapodSerivce.getAttrHistogram(row.colDef.uuid,row.colDef.version,'datapod',row.colDef.attributeId).then(function (response) { onSuccessGetAttrHistogram(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetAttrHistogram = function (response) {
 			console.log(response);
+			$scope.isShowDataGrid=false;
+		    $scope.isShowChart=true;
 			ConvertTwoDisit(response, 'bucket');
 			$scope.isHistogramInprogess=false;
 			$scope.isHistogramError=false;
