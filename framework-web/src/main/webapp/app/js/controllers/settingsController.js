@@ -6,12 +6,16 @@ var notify = {
   title: 'Success',
   timeout: 3000 //time in ms
 };
+
 AdminModule.controller('settingsController', function (cacheService,$scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
 
 
   $scope.activeForm = 0;
   $scope.go = function (index) {
-    $scope.tabIndex = index
+    $scope.tabIndex = index;
+    if(index ==5){
+      $scope.getProcessStatus();
+    }
   }
   if (typeof $stateParams.index != "undefined") {
   $scope.activeForm=$stateParams.index;
@@ -374,6 +378,49 @@ $scope.selectData=function(data){
 }
 
 //***************************************End Application Engin****************************************
+
+//***************************************Start Prediction Engin****************************************
+$scope.getProcessStatus=function(){
+  $scope.isCheckingStatus=true;
+  $scope.serverStatus="Checking Status"
+  SettingsService.getProcessStatus().then(function (response) {onSuccessGetProcessStatus(response.data)},function(response){ OnError(response)});
+  var onSuccessGetProcessStatus= function (response) {
+    $scope.isCheckingStatus=false;
+    $scope.serverStatus="Running"
+  }
+  var OnError=function(response){
+    $scope.isCheckingStatus=false;
+    $scope.serverStatus="Not Running"
+  }
+}
+
+$scope.startServer=function(){
+  $scope.isInprogessStatus=true;
+  SettingsService.startProcess().then(function (response) {onSuccessGetStartProcess(response.data)},function(response){ OnError(response)});
+  var onSuccessGetStartProcess= function (response) {
+    $scope.isInprogessStatus=false;
+    $scope.serverStatus="Checking Status"
+    $scope.getProcessStatus();
+  }
+  var OnError=function(response){
+    $scope.isInprogessStatus=false;
+    $scope.getProcessStatus();
+  }
+}
+
+  $scope.stopeServer=function(){
+    $scope.isInprogessStatus=true;
+    SettingsService.stopProcess().then(function (response) {onSuccessGetStopProcess(response.data)},function(response){ OnError(response)});
+    var onSuccessGetStopProcess= function (response) {
+      $scope.isInprogessStatus=false;
+      $scope.getProcessStatus();
+    }
+    var OnError=function(response){
+      $scope.isInprogessStatus=false;
+      $scope.getProcessStatus();
+  }
+}
+//***************************************End Prediction Engin******************************************
 
 
 });

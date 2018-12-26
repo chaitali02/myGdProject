@@ -13,7 +13,9 @@
       return $http({
         method: 'GET',
         url:fullUrl,
-       
+        headers: {
+          'Accept': '*/*'
+        },
       }).then(function(response, status, headers) {
         return response;
       })
