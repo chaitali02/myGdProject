@@ -10,12 +10,16 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.service.DeployServiceImpl;
 
 /**
@@ -45,5 +49,20 @@ public class DataScienceController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return deployServiceImpl.unDeploy(trainExecUuid, trainExecVersion);
+	}
+	
+	@RequestMapping(value = "/startProcess", method = RequestMethod.GET)
+	public String startProcess() throws Exception {
+		return deployServiceImpl.startProcess(null, null);
+	}
+	
+	@RequestMapping(value = "/stopProcess")
+	public String stopProcess() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return deployServiceImpl.stopProcess(null, null);
+	}
+	
+	@RequestMapping(value = "/getProcessStatus", method = RequestMethod.GET)
+	public String getProcessStatus() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return deployServiceImpl.getProcessStatus(null, null);
 	}
 }
