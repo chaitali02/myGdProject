@@ -58,13 +58,13 @@ public class DeployServiceImpl {
 				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
 				logger.info("Process status : " + processStatus);
 			} catch (Exception e) {
-				//process is not started hence starting the process
-				logger.info("Process has not started. So, starting the process ");
-				startProcess(trainExecUuid, trainExecVersion);
-				Thread.sleep(60000*3);
-				logger.info("Process started. Get process status ");
-				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
-				logger.info("Process status : " + processStatus);
+				//Process has not started.
+				logger.info("Process has not started.");
+				if(e.toString().contains("Connection refused")) {
+					throw new RuntimeException("Process has not started.");
+				} else {
+					throw new RuntimeException("Some error occured.");
+				}
 			}
 			
 			boolean deployStatus = getDeployStatus(trainExecUuid, trainExecVersion);
@@ -229,7 +229,7 @@ public class DeployServiceImpl {
 		return "Process started successfully.";	 
 	}
 	
-	public boolean stopProcess(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String stopProcess(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Application application = commonServiceImpl.getApp();
 //		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 //		String url = "http://localhost:8088/starter/monitor/getProcessStatus"
@@ -242,6 +242,6 @@ public class DeployServiceImpl {
 //		RestTemplate restTemplate = new RestTemplate();
 //		String resp = restTemplate.getForObject(url, String.class);
 		
-		return true;
+		return "Process stopped successfully.";
 	}
 }
