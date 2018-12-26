@@ -11,12 +11,14 @@
 package com.inferyx.framework.service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -245,13 +247,40 @@ public class DeployServiceImpl {
 		
 		ProcessBuilder pb = new ProcessBuilder(path+"/bin/predictStarter", application.getDeployPort(), "&");
 //		pb.environment().put("java", path);
-		Process p = pb.start();
-		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-		String errLine = "";
-		while((errLine = errBuffRdrIn.readLine()) != null) {
-		// display each output line form python script
-			logger.error(errLine);
-		}
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Process process = null;
+				try {
+					process = pb.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				BufferedReader brErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				String line = null;
+				String errLine = null;
+				try {
+					while ((errLine = brErr.readLine()) != null || (line = br.readLine()) != null) {
+						System.out.print((StringUtils.isNotBlank(line) ? line + "\n" : "")
+								+ (StringUtils.isNotBlank(errLine) ? errLine + "\n" : ""));
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+		Thread.sleep(10000);
+//		Process p = pb.start();
+//		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//		String errLine = "";
+//		while((errLine = errBuffRdrIn.readLine()) != null) {
+//		// display each output line form python script
+//			logger.error(errLine);
+//		}
 		return "Process started successfully.";	 
 	}
 	
