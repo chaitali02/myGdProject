@@ -216,7 +216,7 @@
                         [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" 
                         [showTime]="true" hourFormat="12" 
                         (onSelect)=updateEndDate(tabledata.startDate,i)
-                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate" format="ddd MMM D HH:mm:ss YYYY z"
+                        [disabled]="mode == 'true'" [minDate]="startDate" format="ddd MMM D HH:mm:ss YYYY z"
                         [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}">
                       </p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
