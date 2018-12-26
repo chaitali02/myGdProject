@@ -207,13 +207,18 @@
                     <td>
                       <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
                         [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
-                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" [stepHour]="2" (onSelect)=updateEndDate(i)></p-calendar>
+                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" (onSelect)=updateEndDate(tabledata.startDate,i)></p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
-                      <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" hourFormat="12" (onSelect)=updateEndDate(i)
-                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                      <p-calendar 
+                        [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" 
+                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" 
+                        [showTime]="true" hourFormat="12" 
+                        (onSelect)=updateEndDate(tabledata.startDate,i)
+                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate" format="ddd MMM D HH:mm:ss YYYY z"
+                        [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}">
+                      </p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
@@ -290,9 +295,10 @@
 
               <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog2" [responsive]="true"
                 [contentStyle]="{'overflow':'visible'}">
-                <p-calendar selectionMode="multiple" [readonlyInput]="true" [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal+{{frequencyDetail.index}}"
-                  [inline]="true" [minDate]="minimumDate">
-                </p-calendar>
+                <p-calendar [readonlyInput]="true" [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal+{{frequencyDetail.index}}"
+                  [inline]="true" [minDate]="startDate" selectionMode="multiple" >
+                </p-calendar> 
+
                 <br>{{frequencyDetail.index|json}}
                 <div style="height: 50px; padding:  6px 0px 0px 0px; float: right;">
                   <button type="button" [disabled]="mode == 'true'" (click)="dialogCancel()" class="btn dark btn-outline">Cancel</button>
@@ -300,7 +306,8 @@
                     class="btn green">Done</button>
                 </div>
               </p-dialog>
-            </form>{{frequencyDetailCal}}
+            </form>
+            <!-- {{frequencyDetailCal}} -->
           </div>
         </div>
       </div>

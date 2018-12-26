@@ -111,6 +111,7 @@ export class BatchSchedulerComponent implements OnInit {
 
   optionChoose: any[];
   sortArr: any;
+  minimumDate : Date;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private datePipe: DatePipe) {
     this.privResponse = null;
@@ -149,6 +150,8 @@ export class BatchSchedulerComponent implements OnInit {
     this.frequencyDetail.weekDetail = [];
     this.optionChoose = this.attributes;
     this.isSubmitEnable = false;
+    
+   // this.minimumDate = this.startDate;
   }
 
   ngOnInit() {
@@ -751,13 +754,15 @@ export class BatchSchedulerComponent implements OnInit {
   onChangeAttrtype(index) {
     this.attributes[index].frequencyDetail = [];
     this.attributes[index].scheduleChg = "Y";
+    //this.minimumDate = this.startDate;
   }
   onChangeName(index) {
     this.attributes[index].scheduleChg = "Y";
   }
 
-  updateEndDate(index: any) {
-    this.attributes[index].endDate = "";
+  updateEndDate(startdate: Date, index: any) {
+    //this.attributes[index].endDate = "";
     this.attributes[index].scheduleChg = "Y";
+    this.startDate = startdate;
   }
 }
