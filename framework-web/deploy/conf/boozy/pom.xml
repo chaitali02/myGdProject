@@ -716,6 +716,7 @@
 		<module>framework-service</module>
 		<module>framework-batch</module>
 		<module>framework-udfs</module>
+		<module>framework-predict</module>
 	</modules>
 
 	<build>
