@@ -25,6 +25,8 @@ import { CommonService }from '../metadata/services/common.service';
 import { DashboardService } from '../metadata/services/dashboard.service';
 import { routing1  } from './data-visualization-routing.module';
 import { VizpodService } from  '../metadata/services/vizpod.service';
+import { ReportDetailComponent } from './report/reportdetail.component';
+import { DatasetService } from '../metadata/services/dataset.service';
 
 @NgModule({
     imports: [
@@ -49,13 +51,15 @@ import { VizpodService } from  '../metadata/services/vizpod.service';
         DataVisualizationComponent,
         DashboardComponent,
         DashboardDetailComponent,
-        VizpodDetailComponent
+        VizpodDetailComponent,
+        ReportDetailComponent
       
      ],
     providers: [
         CommonService,
         DashboardService,
         VizpodService,
+        DatasetService
 
     ],
   //  entryComponents: [DropdownComponent],

@@ -1777,6 +1777,43 @@ export class AppMetadata {
         childMenu:[],
         allowInChildMenu : false,
       },
+      'report':{
+        name : 'report',
+        caption : 'Report',
+        execType:'report',
+        metaType:'report',
+        color : '#EB54C3',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : 'reportresultlist',
+        //joblistState:'jobmonitoringlist',
+        detailState :'report',
+        //resultState:'reportresult',
+        moduleState: 'dataVisualization',
+        moduleCaption: 'Data Visualization',
+        childMenu:[],
+        allowInChildMenu : false,
+        class: 'fa fa-tasks'
+      },
+      'reportexec':{
+        name : 'reportexec',
+        caption : 'Report Exec',
+        execType:'reportexec',
+        metaType:'reportexec',
+        color : '#EB54C3',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : 'reportresultlist',
+        joblistState:'jobmonitoringlist',
+        detailState :'jobexecutorlistreportexec',
+        resultState:'reportresult',
+        moduleState: 'dataVisualization',
+        moduleCaption: 'Data Visualization',
+        childMenu:[],
+        allowInChildMenu : false,
+        class: 'fa fa-tasks'
+      }
+
     }
 
     this.obj.statusDefs = {
