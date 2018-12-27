@@ -63,38 +63,41 @@ DatascienceModule.controller('VartifAnalysisController', function (CommonService
         var onSuccessGetLatestByUuid = function (response) {
           $scope.modelData = response;
             var featureMapTableArray = [];
-            for (var i = 0; i < response.features.length; i++) {
-                var featureMap = {};
-                var sourceFeature = {};
-                featureMap.featureMapId = i;
-                featureMap.id = i;
-                featureMap.index = i;
-                sourceFeature.uuid = response.uuid;
-                sourceFeature.type = "model";
-                sourceFeature.featureId = response.features[i].featureId;
-                sourceFeature.featureName = response.features[i].name;
-                featureMap.sourceFeature = sourceFeature;
-                
-                featureMap.minRangeSlider = {}
-                if(response.features[i].minVal >0){
-                    featureMap.minRangeSlider.floor=response.features[i].minVal;
-                }else{
-                    featureMap.minRangeSlider.floor=0.0;
-                }
-                if(response.features[i].maxVal >0){
-                    featureMap.minRangeSlider.ceil=response.features[i].maxVal;
-                }else{
-                    featureMap.minRangeSlider.ceil=1;
+            if(response.features && response.features.length){
+                for (var i = 0; i < response.features.length; i++) {
+                    var featureMap = {};
+                    var sourceFeature = {};
+                    featureMap.featureMapId = i;
+                    featureMap.id = i;
+                    featureMap.index = i;
+                    sourceFeature.uuid = response.uuid;
+                    sourceFeature.type = "model";
+                    sourceFeature.featureId = response.features[i].featureId;
+                    sourceFeature.featureName = response.features[i].name;
+                    featureMap.sourceFeature = sourceFeature;
                     
+                    featureMap.minRangeSlider = {}
+                    if(response.features[i].minVal >0){
+                        featureMap.minRangeSlider.floor=response.features[i].minVal;
+                    }else{
+                        featureMap.minRangeSlider.floor=0.0;
+                    }
+                    if(response.features[i].maxVal >0){
+                        featureMap.minRangeSlider.ceil=response.features[i].maxVal;
+                    }else{
+                        featureMap.minRangeSlider.ceil=1;
+                        
+                    }
+                    featureMap.minRangeSlider.precision=2;
+                    featureMap.minRangeSlider.step=0.01;
+                    
+                    featureMap.minRangeSlider.showSelectionBar=true;
+                    var temValue=(featureMap.minRangeSlider.floor+ featureMap.minRangeSlider.ceil)/2;
+                    featureMap.selectValue=temValue;
+                    featureMapTableArray[i] = featureMap;
+                    $scope.featureMapTableArray = featureMapTableArray;
                 }
-                featureMap.minRangeSlider.precision=2;
-                featureMap.minRangeSlider.step=0.01;
-                featureMap.minRangeSlider.showSelectionBar=true;
-                var temValue=(featureMap.minRangeSlider.floor+ featureMap.minRangeSlider.ceil)/2;
-                featureMap.selectValue=temValue;
-                featureMapTableArray[i] = featureMap;
-                $scope.featureMapTableArray = featureMapTableArray;
-            }
+            } 
           
         }
     }

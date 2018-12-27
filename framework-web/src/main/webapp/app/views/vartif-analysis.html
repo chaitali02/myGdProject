@@ -72,11 +72,20 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-6">Prediction</label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
-                                            <input type="text" class="form-control" ng-model="predictionData[0].prediction" ng-disabled="true"/>
+                                            <input type="text" class="form-control" title="{{predictionData[0].prediction}}" ng-model="predictionData[0].prediction" ng-disabled="true"/>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 col-xs-12 custpadding"></div>
                                 </div>
+                                <!-- <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">Probability</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <input type="text" class="form-control" title="{{predictionData[0].probability}}" ng-model="predictionData[0].probability" ng-disabled="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 custpadding"></div>
+                                </div> -->
                             </div>
                         </div>
                         <br>
@@ -121,13 +130,13 @@
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                                                         <div class="joint-graph-zoom-slider col-md-2 col-md-offset-1" style="right:auto;opacity:1;margin-top:4px">
-                                                                            <rzslider style="margin:0px;"   rz-slider-model="data.selectValue" rz-slider-options="data.minRangeSlider"></rzslider>
+                                                                            <rzslider style="margin:0px;" rz-slider-model="data.selectValue" ng-disabled="iSSubmitEnable"  rz-slider-options="data.minRangeSlider"></rzslider>
                                                                         </div>
                                                                     </span>
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input type="number" class="form-control" ng-model="data.selectValue" title="{{data.selectValue}}" ng-disabled="iSSubmitEnable" min="{{data.minRangeSlider.min}}" max="{{data.minRangeSlider.ceil}}" required disable-validation-message="">
+                                                                        <input type="number" class="form-control" ng-model="data.selectValue" title="{{data.selectValue}}" ng-disabled="iSSubmitEnable" min="{{data.minRangeSlider.floor}}" max="{{data.minRangeSlider.ceil}}" required disable-validation-message="">
                                                                     </span>
                                                                 </td>
 
