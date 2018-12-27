@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -457,12 +458,17 @@ public class ModelController {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST)
 	public List<Map<String, Object>> getPredict(@RequestParam("uuid") String trainExecUUID,
 			@RequestBody(required = false) Object feature,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getPrediction(trainExecUUID, feature);
+		Map<String, List<Map<String, Object>>> featuresMap = new HashMap<>();
+		featuresMap.put("features", (List<Map<String, Object>>) ((Map<String, Object>) feature).get("featureList"));
+		Map<String, Object> featureWrapper = new HashMap<>();
+		featureWrapper.put("features", featuresMap);
+		return modelServiceImpl.getPrediction(trainExecUUID, featureWrapper);
 	}
 
 	@RequestMapping(value = "/getTrainResultByTrainExec", method = RequestMethod.GET)

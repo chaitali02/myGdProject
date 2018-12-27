@@ -478,6 +478,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
             { "name": "simulate", "type": "simulate", "typeCount": "simulate", "uuid": "null", "caption": "Simulation" },
             { "name": "modelDeploy", "type":"deployexec", "typeCount": "deployexec", "uuid": "null", "caption": "Model Deploy" },
+            { "name": "vartifAnalysis", "type":"VartifAnalysis", "typeCount": "VartifAnalysis", "uuid": "null", "caption": "Vartif Analysis" },
             { "name": "resultmodelmodel", "type": "trainexec", "typeCount": "trainexec", "uuid": "null", "caption": "Results" }
         ]
     };
@@ -2543,6 +2544,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/ModelDeployController.js',
                             'js/services/ModelDeployService.js'
+                        ]
+                    }
+                    ]);
+
+                }]
+            }
+        })   
+        .state('vartifAnalysis', {
+            url: "/VartifAnalysis",
+            templateUrl:"views/vartif-analysis.html",
+            data: { pageTitle: 'Data Science' },
+            //controller: "GraphResourcesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                    {
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/VartifAnalysisController.js',
+                            'js/services/VartifAnalysisService.js'
                         ]
                     }
                     ]);

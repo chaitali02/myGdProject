@@ -1,0 +1,171 @@
+<div ng-controller="VartifAnalysisController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a ui-sref="home">Home</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>{{$state.current.data.pageTitle}}</span>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>Vartif Analysis</span>
+                    </li>
+                </ul>
+                <div class="page-toolbar">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                        <i class="icon-calendar"></i>&nbsp;
+                        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Vartif Analysis
+                    </div>
+                    <div class="tools">
+                        <a title="Refresh" ng-click="reset()" data-toggle="tooltip" data-placement="top" tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="min-height:100px;">
+                    <form class="form-horizontal" ng-submit="getPrediction()" novalidate="novalidate">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">Model</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <select select2 class="form-control" ng-disabled="iSSubmitEnable" ng-change="onChangeModel()" data-ng-model="selectedModel" ng-options="r as r.name for r in allModel | orderBy :'name' track by r.uuid"
+                                                required disable-validation-message="">
+                                                <option value="">-Select-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">Train</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <select class="form-control ng-pristine ng-valid ng-not-empty ng-touched" ng-disabled="iSSubmitEnable" data-ng-model="searchForm.trainexec"
+                                                ng-options="r as r.displayname for r in allTrainExecInfo" select2 required disable-validation-message="">
+                                                <option value="">-Select-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">Prediction</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <input type="text" class="form-control" ng-model="predictionData[0].prediction" ng-disabled="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 custpadding"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject  sbold ">Features</span>
+                                        </div>
+                                        <div class="actions">
+
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
+                                            <div class="col-md-12">
+                                                <div class="">
+                                                    <table class=" row-border hover table  table-striped table-bordered vartifanalysis" style="table-layout:fixed;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:5%; text-align:center">ID</th>
+                                                                <th style="width:18%;text-align: center">Features</th>
+                                                                <th style="width:20%;text-align: center">Range</th>
+                                                                <th style="width:10%;text-align: center">Value</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody ng-repeat="data in featureMapTableArray">
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <input type="text" class="form-control" ng-value="$index+1" ng-disabled="true">
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.featureName}}" ng-disabled="true">
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                        <div class="joint-graph-zoom-slider col-md-2 col-md-offset-1" style="right:auto;opacity:1;margin-top:4px">
+                                                                            <rzslider style="margin:0px;"   rz-slider-model="data.selectValue" rz-slider-options="data.minRangeSlider"></rzslider>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <input type="number" class="form-control" ng-model="data.selectValue" title="{{data.selectValue}}" ng-disabled="iSSubmitEnable" min="{{data.minRangeSlider.min}}" max="{{data.minRangeSlider.ceil}}" required disable-validation-message="">
+                                                                    </span>
+                                                                </td>
+
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <button type="submit" class="btn green" ng-disabled="iSSubmitEnable">Submit</button>
+                                            <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isInprogess">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 custpadding"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

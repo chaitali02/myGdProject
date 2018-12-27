@@ -73,8 +73,8 @@ InferyxApp.constant('CF_SUCCESS_MSG',{
  rcSave:"RC Rule Saved Successfully",
  rcGroupSave:"RC Rule Groups Saved Successfully",
  rcSaveExecute:"RC Rule Saved and Submitted Successfully",
- rcGroupSaveExecute:"RC Rule Groups Saved and Submitted Successfully"
- 
+ rcGroupSaveExecute:"RC Rule Groups Saved and Submitted Successfully",
+ modelDeployIsExist:"Model already deployed.if you continue old one wiil be undeployed and seleced will be deployed."
 });
 InferyxApp.constant('CF_ACTION_TYPES',{
 view:"View",edit:"Edit",add:"Add",delete:"Delete",clone:"Clone",execute:"Execute",export:"Export",publish:"Publish",
