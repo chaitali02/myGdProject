@@ -220,6 +220,8 @@ public class ModelServiceImpl {
 	private DL4JExecutor dl4jExecutor;
 	@Autowired
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
+	@Resource(name="trainedModelMap")
+	private ConcurrentHashMap<String, Object> trainedModelMap;
 	
 	//private ParamMap paramMap;
 
@@ -2150,7 +2152,15 @@ public class ModelServiceImpl {
 					
 					//assembling the data to for feature vector
 					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
-					Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+					
+					String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
+					Object trainedModel = null;
+					if(trainedModelMap.get(key) != null) {
+						trainedModel = trainedModelMap.get(key);
+					} else {
+						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+						trainedModelMap.put(key, trainedModel);
+					}
 					
 					//prediction operation
 					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid);
@@ -3561,8 +3571,15 @@ public class ModelServiceImpl {
 
 		ResultSetHolder rsHolder = sparkExecutor.createAndRegisterDataset(data, DataTypes.createStructType(fields),
 				(tableName + "_pred_data"));
-		rsHolder.getDataFrame().show();
-		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+		
+		String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
+		Object trainedModel = null;
+		if(trainedModelMap.get(key) != null) {
+			trainedModel = trainedModelMap.get(key);
+		} else {
+			trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+			trainedModelMap.put(key, trainedModel);
+		}
 		String[] fieldArray = getMappedAttrs(train.getFeatureAttrMap()); 
 				//modelExecServiceImpl.getAttributeNames(predict);
 
