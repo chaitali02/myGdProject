@@ -478,7 +478,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
             { "name": "simulate", "type": "simulate", "typeCount": "simulate", "uuid": "null", "caption": "Simulation" },
             { "name": "modelDeploy", "type":"deployexec", "typeCount": "deployexec", "uuid": "null", "caption": "Model Deploy" },
-            { "name": "vartifAnalysis", "type":"VartifAnalysis", "typeCount": "VartifAnalysis", "uuid": "null", "caption": "Vartif Analysis" },
+            { "name": "vartifAnalysis", "type":"VartifAnalysis", "typeCount": "VartifAnalysis", "uuid": "null", "caption": "What-If Analysis" },
             { "name": "resultmodelmodel", "type": "trainexec", "typeCount": "trainexec", "uuid": "null", "caption": "Results" }
         ]
     };
@@ -2552,7 +2552,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })   
         .state('vartifAnalysis', {
-            url: "/VartifAnalysis",
+            url: "/WhatIfAnalysis",
             templateUrl:"views/vartif-analysis.html",
             data: { pageTitle: 'Data Science' },
             //controller: "GraphResourcesController",
