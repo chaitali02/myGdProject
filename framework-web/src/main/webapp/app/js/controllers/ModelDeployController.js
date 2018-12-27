@@ -1,8 +1,16 @@
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('ModelDeployController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, ModelDeployService, privilegeSvc,$filter,$timeout,dagMetaDataService,uiGridConstants) {
+DatascienceModule.controller('ModelDeployController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, ModelDeployService, privilegeSvc,$filter,$timeout,dagMetaDataService,uiGridConstants,CF_SUCCESS_MSG) {
     
-
+    // $scope.minRangeSlider = {
+    //     floor: 0.0,
+    //     ceil: 100,
+    //     precision: 2,
+    //     step: 0.01,
+    //     showSelectionBar: true,
+    //     }
+    
+    // $scope.zoomSize=5;
     $scope.iSSubmitEnable=true;
     $scope.gridOptions={};
     $scope.searchForm={};
@@ -320,7 +328,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
         console.log(row)
         $scope.mgs=type;
         if(row.isModelDeployExist =='Y' && type=="Deploy"){
-            $scope.mgs="Model already deployed.if you continue old one wiil be undeployed and seleced will be deployed.";
+            $scope.mgs=CF_SUCCESS_MSG.modelDeployIsExist;
         }else{
             $scope.mgs=type+" model ?"
         }

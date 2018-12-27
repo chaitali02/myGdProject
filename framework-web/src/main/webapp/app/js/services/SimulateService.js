@@ -20,6 +20,10 @@ DatascienceModule.factory('SimulateFactory', function ($http, $location) {
     return $http({
       url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type,
       method: "GET",
+      data: '',
+      headers: {
+          "Content-Type": "application/json"
+      }
     }).then(function (response) { return response })
 
 
