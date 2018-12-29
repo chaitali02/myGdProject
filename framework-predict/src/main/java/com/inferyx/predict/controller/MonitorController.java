@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.inferyx.controller;
+package com.inferyx.predict.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inferyx.domain.MonitorDomain;
+import com.inferyx.predict.domain.MonitorDomain;
 
 /**
  * @author joy

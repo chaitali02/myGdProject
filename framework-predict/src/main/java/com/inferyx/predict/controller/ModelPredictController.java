@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.controller;
+package com.inferyx.predict.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inferyx.domain.ModelTrainDomain;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -30,14 +29,15 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
-import com.inferyx.module.TomcatStarter;
+import com.inferyx.predict.domain.ModelTrainDomain;
+import com.inferyx.predict.module.TomcatStarter;
 
 /**
  * @author joy
  *
  */
-@RestController
-@RequestMapping(value = "/starter/model")
+//@RestController
+//@RequestMapping(value = "/starter/model")
 public class ModelPredictController {
 	
 	@Autowired

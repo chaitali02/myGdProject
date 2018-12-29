@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.domain;
+package com.inferyx.predict.domain;
 
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.TrainExec;

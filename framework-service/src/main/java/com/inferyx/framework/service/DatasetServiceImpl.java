@@ -88,7 +88,8 @@ public class DatasetServiceImpl {
 	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
-		
+		logger.info(" Start datasetSample ");
+		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
@@ -130,6 +131,7 @@ public class DatasetServiceImpl {
 				}
 				data.add(object);
 			}*/
+		logger.info("Time elapsed in getDatasetSample : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 		return data;
 	}
 
@@ -532,7 +534,10 @@ public class DatasetServiceImpl {
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		return datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		long startTime = System.currentTimeMillis();
+		String sql = datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		logger.info("Time elapsed in generateSql : " + (System.currentTimeMillis() - startTime)/1000 + " s");
+		return sql;
 	}
 
 	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {

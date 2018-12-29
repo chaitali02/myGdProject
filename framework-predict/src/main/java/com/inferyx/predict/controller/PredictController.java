@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.controller;
+package com.inferyx.predict.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inferyx.domain.FeatureValuesDomain;
-import com.inferyx.domain.ModelTrainDomain;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.ExecParams;
@@ -36,13 +34,15 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
+import com.inferyx.predict.domain.FeatureValuesDomain;
+import com.inferyx.predict.domain.ModelTrainDomain;
 
 /**
  * @author joy
  *
  */
-@RestController
-@RequestMapping(value = "/starter/predict")
+//@RestController
+//@RequestMapping(value = "/starter/predict")
 public class PredictController {
 	
 	@Autowired

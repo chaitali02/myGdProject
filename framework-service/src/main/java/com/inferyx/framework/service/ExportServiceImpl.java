@@ -15,24 +15,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +34,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -48,7 +44,6 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IExportDao;
-import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -58,6 +53,7 @@ import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.register.GraphRegister;
 import com.mongodb.util.JSON;
 
+@Service
 public class ExportServiceImpl implements Serializable {
 	/**
 	 * 

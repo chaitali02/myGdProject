@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDatasetDao;
@@ -24,13 +25,13 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Expression;
-import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.view.metadata.DatasetView;
 
+@Service
 public class DatasetViewServiceImpl {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;

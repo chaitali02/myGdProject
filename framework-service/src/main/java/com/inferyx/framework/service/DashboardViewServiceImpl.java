@@ -17,9 +17,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDashboardDao;
@@ -28,7 +27,6 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.domain;
+package com.inferyx.predict.domain;
 
 import java.util.List;
 import java.util.Map;

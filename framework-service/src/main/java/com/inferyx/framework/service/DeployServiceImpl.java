@@ -13,15 +13,24 @@ package com.inferyx.framework.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -90,13 +99,31 @@ public class DeployServiceImpl {
 									+ "&userId="+userInfo.getRef().getUuid()
 									+ "&appId="+application.getUuid();
 				
-				RestTemplate restTemplate = new RestTemplate();
+				
 				HashMap<String, String> parameters = new HashMap<>();
 				parameters.put("trainExec_uuid", trainExecUuid);
 				parameters.put("version", trainExecVersion);
 				parameters.put("userId", userInfo.getRef().getUuid());
 				parameters.put("appId", application.getUuid());
-				response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
+				AsyncRestTemplate restTemplate = new AsyncRestTemplate();
+				HttpMethod method = HttpMethod.POST;
+				Class<Boolean> responseType = Boolean.class;
+				//create request entity using HttpHeaders
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				HttpEntity<String> requestEntity = new HttpEntity<String>("params", headers);
+				ListenableFuture<ResponseEntity<Boolean>> future = restTemplate.exchange(deployURL, method, requestEntity, responseType, parameters);
+				try {
+					//waits for the result
+					ResponseEntity<Boolean> entity = future.get();
+					//prints body source code for the given URL
+					System.out.println(entity.getBody());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+//				response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
 				if(response) {
 					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.Completed);
 					
@@ -213,7 +240,7 @@ public class DeployServiceImpl {
 		return response;
 	}
 	
-	public String getProcessStatus(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getProcessStatus(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, InterruptedException, ExecutionException {
 		Application application = commonServiceImpl.getApp();
 //		InetAddress ip;
 //        String hostname;
@@ -227,9 +254,28 @@ public class DeployServiceImpl {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		String url = "http://localhost:"+application.getDeployPort()+"/starter/monitor/getProcessStatus";
-		RestTemplate restTemplate = new RestTemplate();
-		return  restTemplate.getForObject(url, String.class);		
+		String url = "http://localhost:"+application.getDeployPort()+"/predict/starter/monitor/getProcessStatus";
+		AsyncRestTemplate restTemplate = new AsyncRestTemplate();
+		HttpMethod method = HttpMethod.POST;
+		Class<String> responseType = String.class;
+		//create request entity using HttpHeaders
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> requestEntity = new HttpEntity<String>("params", headers);
+		ListenableFuture<ResponseEntity<String>> future = restTemplate.exchange(url, method, requestEntity, responseType);
+//		try {
+			//waits for the result
+			ResponseEntity<String> entity = future.get();
+			//prints body source code for the given URL
+			System.out.println(entity.getBody());
+			return entity.getBody();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			e.printStackTrace();
+//		}
+//		RestTemplate restTemplate = new RestTemplate();
+//		return  restTemplate.getForObject(url, String.class);	
 	}
 	
 	/*public String getProcessStatus(String port) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -255,6 +301,16 @@ public class DeployServiceImpl {
 				Process process = null;
 				try {
 					process = pb.start();
+					if(process.getClass().getName().equals("java.lang.UNIXProcess")) {
+						  /* get the PID on unix/linux systems */
+						  try {
+						    Field f = process.getClass().getDeclaredField("pid");
+						    f.setAccessible(true);
+						    int pid = f.getInt(process);
+						    System.out.println(" Process Id : " + pid);
+						  } catch (Throwable e) {
+						  }
+						}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -281,6 +337,8 @@ public class DeployServiceImpl {
 //		// display each output line form python script
 //			logger.error(errLine);
 //		}
+		System.out.println("Process started successfully.");
+		logger.info("Process started successfully.");
 		return "Process started successfully.";	 
 	}
 	

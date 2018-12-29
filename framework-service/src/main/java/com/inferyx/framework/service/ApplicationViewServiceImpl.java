@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
@@ -35,6 +36,7 @@ import com.inferyx.framework.register.GraphRegister;
  * @author Ganesh
  *
  */
+@Service
 public class ApplicationViewServiceImpl {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
