@@ -93,7 +93,7 @@ public class DeployServiceImpl {
 				Application application = commonServiceImpl.getApp();
 				MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 				String deployURL = "http://localhost:"+application.getDeployPort()
-									+ "/starter/model/deploy?"
+									+ "/web/predict/starter/model/deploy?"
 									+ "trainExec_uuid="+trainExecUuid
 									+ "&version="+trainExecVersion
 									+ "&userId="+userInfo.getRef().getUuid()
@@ -160,7 +160,7 @@ public class DeployServiceImpl {
 		Model model = getModelByTrainExec(trainExecUuid, trainExecVersion);
 		
 		String url = "http://localhost:"+application.getDeployPort()
-					+ "/starter/predict/getPrediction?"
+					+ "/web/predict/starter/predict/getPrediction?"
 					+ "model_uuid="+model.getUuid()
 					+ "&userId="+userInfo.getRef().getUuid()
 					+ "&appId="+application.getUuid();
@@ -184,7 +184,7 @@ public class DeployServiceImpl {
 		Application application = commonServiceImpl.getApp();
 		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 		String deployURL = "http://localhost:"+application.getDeployPort()
-							+ "/starter/model/getDeployStatus?"
+							+ "/web/predict/starter/model/getDeployStatus?"
 							+ "trainExec_uuid="+trainExecUuid
 							+ "&version="+trainExecVersion
 							+ "&userId="+userInfo.getRef().getUuid()
@@ -201,7 +201,7 @@ public class DeployServiceImpl {
 		Application application = commonServiceImpl.getApp();
 		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 		String deployURL = "http://localhost:"+application.getDeployPort()
-							+ "/starter/model/getDeployStatusByModel?"
+							+ "/web/predict/starter/model/getDeployStatusByModel?"
 							+ "model_uuid="+modelUuid
 							+ "&trainExecUuid="+trainExecUuid
 							+ "&userId="+userInfo.getRef().getUuid()
@@ -219,7 +219,7 @@ public class DeployServiceImpl {
 		Application application = commonServiceImpl.getApp();
 		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 		String deployURL = "http://localhost:"+application.getDeployPort()
-							+ "/starter/model/undeploy?"
+							+ "/web/predict/starter/model/undeploy?"
 							+ "trainExec_uuid="+trainExecUuid
 							+ "&version="+trainExecVersion
 							+ "&userId="+userInfo.getRef().getUuid()
@@ -254,9 +254,9 @@ public class DeployServiceImpl {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		String url = "http://localhost:"+application.getDeployPort()+"/predict/starter/monitor/getProcessStatus";
+		String url = "http://localhost:"+application.getDeployPort()+"/web/predict/starter/monitor/getProcessStatus";
 		AsyncRestTemplate restTemplate = new AsyncRestTemplate();
-		HttpMethod method = HttpMethod.POST;
+		HttpMethod method = HttpMethod.GET;
 		Class<String> responseType = String.class;
 		//create request entity using HttpHeaders
 		HttpHeaders headers = new HttpHeaders();
@@ -329,7 +329,7 @@ public class DeployServiceImpl {
 				}
 			}
 		}).start();
-		Thread.sleep(10000);
+		Thread.sleep(15000);
 //		Process p = pb.start();
 //		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 //		String errLine = "";

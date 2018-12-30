@@ -41,8 +41,8 @@ import com.inferyx.predict.domain.ModelTrainDomain;
  * @author joy
  *
  */
-//@RestController
-//@RequestMapping(value = "/starter/predict")
+@RestController
+@RequestMapping(value = "/starter/predict")
 public class PredictController {
 	
 	@Autowired

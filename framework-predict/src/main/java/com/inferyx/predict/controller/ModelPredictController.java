@@ -36,8 +36,8 @@ import com.inferyx.predict.module.TomcatStarter;
  * @author joy
  *
  */
-//@RestController
-//@RequestMapping(value = "/starter/model")
+@RestController
+@RequestMapping(value = "/starter/model")
 public class ModelPredictController {
 	
 	@Autowired
