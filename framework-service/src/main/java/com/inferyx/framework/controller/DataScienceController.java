@@ -12,6 +12,7 @@ package com.inferyx.framework.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,7 +63,7 @@ public class DataScienceController {
 	}
 	
 	@RequestMapping(value = "/getProcessStatus", method = RequestMethod.GET)
-	public String getProcessStatus() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getProcessStatus() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, InterruptedException, ExecutionException {
 		return deployServiceImpl.getProcessStatus(null, null);
 	}
 }
