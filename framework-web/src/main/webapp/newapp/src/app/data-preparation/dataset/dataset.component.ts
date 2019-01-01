@@ -81,7 +81,6 @@ export class DatasetComponent implements OnInit {
   operators: any;
   allMapSourceAttribute: SelectItem[] = [];
   VersionList: SelectItem[] = [];
-  //version: Version
   isSubmitEnable1: any;
   baseUrl: any;
 
@@ -116,8 +115,6 @@ export class DatasetComponent implements OnInit {
       { 'value': '', 'label': '' },
       { 'value': 'AND', 'label': 'AND' },
       { 'value': 'OR', 'label': 'OR' }]
-
-    // this.dataset.uuid = '';
 
     this.breadcrumbDataFrom = [{
       "caption": "Data Preparation ",
@@ -336,7 +333,6 @@ export class DatasetComponent implements OnInit {
           this._commonService.getFunctionByCriteria("", "N", "function")
           .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
           error => console.log("Error ::", error))
-    
         
           let rhsAttri = {}
           rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
@@ -355,7 +351,6 @@ export class DatasetComponent implements OnInit {
           filterInfo["rhsAttribute"] = rhsAttri;
         }
         else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
-          debugger
           let rhsAttri = {}
           rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
           rhsAttri["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
@@ -543,10 +538,6 @@ export class DatasetComponent implements OnInit {
     )
   }
   OnSuccesgetAllLatest(response1) {
-    // let dependOnTemp: DependsOn = new DependsOn();
-    // dependOnTemp.label =response1[0]["name"];
-    // dependOnTemp.uuid = response1[0]["uuid"];
-    // this.dataset.sourcedata=dependOnTemp
     let temp = []
     for (const n in response1) {
       let allname = {};
@@ -566,7 +557,6 @@ export class DatasetComponent implements OnInit {
     )
   }
   OnSuccesgetAllAttributeBySource(response) {
-    //console.log(response)
     this.lhsdatapodattributefilter = response;
     let temp = []
     for (const n in response) {
@@ -693,8 +683,6 @@ export class DatasetComponent implements OnInit {
     this.storage.set(key, val);
     console.log("data before sesion::" + JSON.stringify(this.storage));
     let a = this.storage.get(key);
-    // let abc= this.storage.get(key);
-    // this.sessionData[key]= this.storage.get(key);
   }
 
   onSelectExpression(event) {
@@ -979,7 +967,7 @@ export class DatasetComponent implements OnInit {
       .subscribe(response => { this.onSuccessgetParamByApp(response) },
       error => console.log("Error ::", error))
     }
-    else if (this.dataset.filterTableArray[index]["rhsType"] == 'dataset') {debugger
+    else if (this.dataset.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
       rhsAttribute["label"] = "-Select-";
       rhsAttribute["uuid"] = "";
@@ -1006,7 +994,6 @@ export class DatasetComponent implements OnInit {
   }
 
   onSuccessgetAllAttributeBySourceRhs1(response) {
-    
     let temp1 = [];
     for (const i in response) {
       let attributeObj = {};
@@ -1084,7 +1071,7 @@ export class DatasetComponent implements OnInit {
     }
   }
 
-  submitDialogBox(index){debugger
+  submitDialogBox(index){
     this.displayDialogBox = false;
     let rhsattribute = {}
     rhsattribute["label"] = this.dialogAttributeName.label;
@@ -1213,7 +1200,7 @@ export class DatasetComponent implements OnInit {
           operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute.attributeId;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.dataset.filterTableArray[i].rhsType == 'dataset') {debugger
+        else if (this.dataset.filterTableArray[i].rhsType == 'dataset') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "dataset";

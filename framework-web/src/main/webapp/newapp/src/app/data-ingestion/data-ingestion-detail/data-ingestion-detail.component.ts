@@ -9,9 +9,9 @@ import { DataIngestionService } from '../../metadata/services/dataIngestion.serv
 @Component({
   selector: 'app-data-ingestion-detail',
   templateUrl: './data-ingestion-detail.component.html'
-
 })
 export class DataIngestionDetailComponent implements OnInit {
+
   dialogAttributeName: any;
   dialogAttriNameArray: any[];
   dialogSelectName: any;
@@ -89,6 +89,7 @@ export class DataIngestionDetailComponent implements OnInit {
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
     this.isSubmit = "false"
     this.ingestData = {};
+    this.ingestData["active"] = true;
     this.sourceDs = {};
     this.targetDs = {};
     this.sourceTypeName = {};
@@ -179,7 +180,6 @@ export class DataIngestionDetailComponent implements OnInit {
       { value: 'datapod', label: 'attribute' },
       { value: 'formula', label: 'formula' },
       { value: 'function', label: 'function' },
-      // { value: 'attribute', label: 'attribute' }
     ]
     this.allAutoMapTable = [
       { value: '', label: '-Select-' },
@@ -191,7 +191,6 @@ export class DataIngestionDetailComponent implements OnInit {
       { value: 'FromSource', label: 'From Source' },
       { value: 'FromTarget', label: 'From Target' }
     ]
-
   }
 
   ngOnInit() {
@@ -202,13 +201,8 @@ export class DataIngestionDetailComponent implements OnInit {
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
-        //this.getAllLatest()
-      }
-      else {
-        //this.getAllLatest()
       }
     });
-    //console.log(this.selectedAppUuid)
   }
 
   onChangeAttributeTableType(index) {
@@ -438,7 +432,6 @@ export class DataIngestionDetailComponent implements OnInit {
     this.targetName = null;
     this.incrementKey = null;
     this.attributeTableArray = [];
-
     this.selectedTargetFormat = null;
     this.selectedSourceFormat = null;
     this.ingestData["ingestChg"] = "Y";
@@ -450,10 +443,10 @@ export class DataIngestionDetailComponent implements OnInit {
     if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'FILE' && this.mode == "true") {
       this.isAttributeMapDisable = true;
     }
-    else if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'FILE' && this.mode == "false") {
+    else if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'FILE' && this.mode !== "true") {
       this.isAttributeMapDisable = false;
     }
-    else {
+    else {debugger
       if (this.selectedSourceType != 'FILE' || this.selectedTargetType != 'FILE') {
         this.isAttributeMapDisable = true;
       }
@@ -654,7 +647,6 @@ export class DataIngestionDetailComponent implements OnInit {
       obj["value"]["uuid"] = response[i]['ref']['uuid'];
       obj["value"]["datapodname"] = response[i]['ref']['name'];
       // obj["value"]["dname"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-
       temp[i] = obj;
     }
     this.allSourceAttributeForIncrmSplitBy = temp;
@@ -719,7 +711,6 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onSuccessgetFormulaByType(response) {
-
     let FormulaObj = {};
     let temp = [];
     for (const i in response) {
@@ -830,7 +821,7 @@ export class DataIngestionDetailComponent implements OnInit {
           error => console.log("Error ::", error))
       }
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'datapod') {debugger
+    else if (this.filterTableArray[index]["rhsType"] == 'datapod') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getAllAttributeBySource(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
@@ -847,7 +838,7 @@ export class DataIngestionDetailComponent implements OnInit {
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
         error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'dataset') {debugger
+    else if (this.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
       rhsAttribute["label"] = "-Select-";
       rhsAttribute["uuid"] = "";
@@ -861,24 +852,21 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onChangeLhsType(index) {
     this.filterTableArray[index]["lhsAttribute"] == null;
-
     if (this.filterTableArray[index]["lhsType"] == 'formula') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getFormulaByType(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetFormulaByType(response) },
           error => console.log("Error ::", error))
-
       }
     }
 
-    else if (this.filterTableArray[index]["lhsType"] == 'datapod') {debugger
+    else if (this.filterTableArray[index]["lhsType"] == 'datapod') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getAllAttributeBySource(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
           error => console.log("Error ::", error))
       }
     }
-
     else {
       this.filterTableArray[index]["lhsAttribute"] = null;
     }
@@ -956,13 +944,12 @@ export class DataIngestionDetailComponent implements OnInit {
       //this.attributeTableArray = this.allSourceAttributeTarget;
       for (var i = 0; i < this.allSourceAttributeTarget.length; i++) {
         var attributemapjson = {};
-        var obj = {}
+        var obj = {};
         attributemapjson["attrMapId"] = i;
         attributemapjson["sourceType"] = "datapod";
         attributemapjson["sourceAttribute"] = "";
 
         var targetattribute = {}
-
         targetattribute["uuid"] = this.allSourceAttributeTarget[i].value.uuid;
         targetattribute["label"] = this.allSourceAttributeTarget[i].value.label;
         targetattribute["type"] = this.allSourceAttributeTarget[i].value.type;
@@ -1054,7 +1041,6 @@ export class DataIngestionDetailComponent implements OnInit {
           mapInfo["attrMapId"] = i;
           mapInfo["sourceType"] = "datapod";
           mapInfo["sourceAttribute"] = temp[i]["targetAttribute"]["attrName"];
-
           let obj = {};
           obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
           obj["label"] = temp[i]["targetAttribute"]["label"];
@@ -1133,19 +1119,18 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  searchOption(index){debugger
+  searchOption(index){
     this.displayDialogBox = true;
     this._commonService.getAllLatest("dataset")
     .subscribe(response => {this.onSuccessgetAllLatestDialogBox(response)},
     error => console.log("Error ::", error))
   }
 
-  onSuccessgetAllLatestDialogBox(response){debugger
+  onSuccessgetAllLatestDialogBox(response){
     this.dialogAttriArray =  [];
     let temp = [];
     for(const i in response){
       let dialogAttriObj = {};
-      
       dialogAttriObj["label"] = response[i].name;
       dialogAttriObj["value"] = {};
       dialogAttriObj["value"]["label"] = response[i].name;
@@ -1162,7 +1147,7 @@ export class DataIngestionDetailComponent implements OnInit {
     error => console.log("Error ::", error))
   }
 
-  onSuccessgetAttributesByDatasetDialogBox(response){debugger
+  onSuccessgetAttributesByDatasetDialogBox(response){
     this.dialogAttriNameArray =  [];
     for(const i in response){
       let dialogAttriNameObj = {};
@@ -1176,7 +1161,7 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  submitDialogBox(index){debugger
+  submitDialogBox(index){
     this.displayDialogBox = false;
     let rhsattribute = {}
     rhsattribute["label"] = this.dialogAttributeName.label;
@@ -1326,9 +1311,6 @@ export class DataIngestionDetailComponent implements OnInit {
       response => { this.onSuccessgetAttributesByDatapodTarget(response) },
       error => console.log("Error::", +error))
 
-    // if("selectedSourceType !='STREAM' || selectedTargetType !='TABLE'"){
-    //   this.targetAttribute1 = +"."+this.targetAttribute;
-    // }    
     this.attributeTableArray = response.attributeTableArray;
   }
 
@@ -1439,11 +1421,11 @@ export class DataIngestionDetailComponent implements OnInit {
         filterInfo["operand"] = [];
         if (this.filterTableArray[i].lhsType == 'integer' || this.filterTableArray[i].lhsType == 'string') {
           let operatorObj = {};
-          let ref = {}
+          let ref = {};
           ref["type"] = "simple";
           operatorObj["ref"] = ref;
           operatorObj["value"] = this.filterTableArray[i].lhsAttribute;
-          operatorObj["attributeType"] = "string"
+          operatorObj["attributeType"] = "string";
           filterInfo["operand"][0] = operatorObj;
         }
         else if (this.filterTableArray[i].lhsType == 'formula') {
@@ -1518,7 +1500,7 @@ export class DataIngestionDetailComponent implements OnInit {
           operatorObj["attributeId"] = this.filterTableArray[i].rhsAttribute.attributeId;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.filterTableArray[i].rhsType == 'dataset') {debugger
+        else if (this.filterTableArray[i].rhsType == 'dataset') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "dataset";
@@ -1612,7 +1594,7 @@ export class DataIngestionDetailComponent implements OnInit {
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
       this._commonService.getOneById("ingest", response).subscribe(
-        response => { this.onSuccessgetOneById(response); },
+        response => { this.onSuccessgetOneById(response);},
         error => console.log('Error :: ' + error))
     }
     else {
@@ -1644,7 +1626,6 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   public goBack() {
-    //this._location.back();
     this.router.navigate(['app/list/ingest'])
   }
   enableEdit(uuid, version) {
