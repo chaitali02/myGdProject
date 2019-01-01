@@ -35,7 +35,7 @@ public class TomcatStarter {
 //		tomcat.setPort(Integer.parseInt(portNumber));
 		tomcat.setPort(Integer.parseInt(args[0]));
 		
-		Context ctx = tomcat.addContext("/web", "/app/framework_predict/webapp");
+		Context ctx = tomcat.addContext("/web", "/app/framework_predict");
 //		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
 		logger.info("Context name : " + ctx.getName());
 		addDefaultServlet(ctx);
