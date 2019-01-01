@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
@@ -58,7 +59,7 @@ public class DataScienceController {
 	}
 	
 	@RequestMapping(value = "/stopProcess")
-	public String stopProcess() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String stopProcess() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
 		return deployServiceImpl.stopProcess(null, null);
 	}
 	

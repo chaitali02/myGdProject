@@ -17,10 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -62,8 +59,8 @@ public class DeployServiceImpl {
 	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
-	@Resource(name="portPIdProcessMap")
-	private ConcurrentHashMap<Integer, Map<Integer, Object>> portPIdProcessMap;
+	@Resource(name="portPIdMap")
+	private ConcurrentHashMap<Integer, Integer> portPIdMap;
 //	@Autowired
 //	private RestTemplate restTemplate;
 	
@@ -122,7 +119,7 @@ public class DeployServiceImpl {
 				parameters.put("appId", application.getUuid());
 //				AsyncRestTemplate restTemplate = new AsyncRestTemplate();
 				RestTemplate restTemplate = new RestTemplate();
-				HttpMethod method = HttpMethod.POST;
+//				HttpMethod method = HttpMethod.POST;
 				/*Class<Boolean> responseType = Boolean.class;
 				//create request entity using HttpHeaders
 				HttpHeaders headers = new HttpHeaders();
@@ -258,18 +255,6 @@ public class DeployServiceImpl {
 	
 	public String getProcessStatus(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, InterruptedException, ExecutionException {
 		Application application = commonServiceImpl.getApp();
-//		InetAddress ip;
-//        String hostname;
-//        
-//        try {
-//			ip = InetAddress.getLocalHost();
-//            hostname = ip.getHostName();
-//            System.out.println("Your current IP address : " + ip);
-//            System.out.println("Your current Hostname : " + hostname);
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		String url = "http://localhost:"+application.getDeployPort()+"/web/predict/starter/monitor/getProcessStatus";
 		AsyncRestTemplate restTemplate = new AsyncRestTemplate();
 		HttpMethod method = HttpMethod.GET;
@@ -279,36 +264,21 @@ public class DeployServiceImpl {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<String>("params", headers);
 		ListenableFuture<ResponseEntity<String>> future = restTemplate.exchange(url, method, requestEntity, responseType);
-//		try {
-			//waits for the result
-			ResponseEntity<String> entity = future.get();
-			//prints body source code for the given URL
-			System.out.println(entity.getBody());
-			return entity.getBody();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		}
-//		RestTemplate restTemplate = new RestTemplate();
-//		return  restTemplate.getForObject(url, String.class);	
-	}
+
+		//waits for the result
+		ResponseEntity<String> entity = future.get();
+		//prints body source code for the given URL
+		System.out.println(entity.getBody());
+		return entity.getBody();
 	
-	/*public String getProcessStatus(String port) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String url = "http://localhost:"+port+"/starter/monitor/getProcessStatus";
-		return  this.restTemplate.getForObject(url, String.class);		
-	}*/
+	}
 	
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
 		Application application = commonServiceImpl.getApp();
 		String path = "/app/framework_predict";
-//		new TomcatStarter(application.getDeployPort());
-//		String path=this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-//		path = path.replaceAll("framework-service", "framework-predict").concat("com/inferyx/module/");
 		System.out.println("absolute path: "+path);
 		
 		ProcessBuilder pb = new ProcessBuilder(path+"/bin/predictStarter", application.getDeployPort(), "&");
-//		pb.environment().put("java", path);
 		
 		new Thread(new Runnable() {
 			
@@ -323,13 +293,11 @@ public class DeployServiceImpl {
 						    Field f = process.getClass().getDeclaredField("pid");
 						    f.setAccessible(true);
 						    int pid = f.getInt(process);
-						    Map<Integer, Object> pIdProcessMap = new HashMap<>();
-						    pIdProcessMap.put(pid, process);
-						    portPIdProcessMap.put(Integer.parseInt(application.getDeployPort()), pIdProcessMap);
 						    System.out.println(" Process Id : " + pid);
 						  } catch (Throwable e) {
+								e.printStackTrace();
 						  }
-						}
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -348,38 +316,53 @@ public class DeployServiceImpl {
 				}
 			}
 		}).start();
-		Thread.sleep(15000);
-//		Process p = pb.start();
-//		BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//		String errLine = "";
-//		while((errLine = errBuffRdrIn.readLine()) != null) {
-//		// display each output line form python script
-//			logger.error(errLine);
-//		}
-		System.out.println("Process started successfully.");
+		
+		Thread.sleep(18000);
+		try {
+			int tomcatPId = getProcessIdForDeployPort();
+		    if(tomcatPId > 0) {
+			    portPIdMap.put(Integer.parseInt(application.getDeployPort()), tomcatPId);
+		    }
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException
+				| InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		logger.info("Process started successfully.");
 		return "Process started successfully.";	 
 	}
 	
-	public String stopProcess(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public int getProcessIdForDeployPort() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
 		Application application = commonServiceImpl.getApp();
-		Map<Integer, Object> pIdProcessMap = portPIdProcessMap.get(Integer.parseInt(application.getDeployPort()));
-		if(pIdProcessMap != null && !pIdProcessMap.isEmpty()) {
-			Integer pid = pIdProcessMap.keySet().iterator().next();
-			Process process = (Process) pIdProcessMap.get(pid);
-			process.destroyForcibly();
+		Process process = Runtime.getRuntime().exec("lsof -i:"+application.getDeployPort());
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line = "";
+		int count = 0;
+		while((line = buffReader.readLine()) != null) {
+			String []splits = line.split(" ");
+			if(count == 1) {
+				for(int i=0; i<splits.length; i++) {
+					if(!splits[i].equalsIgnoreCase("") && i>0) {
+						logger.info("tomcatPId: "+splits[i]);
+						return Integer.parseInt(splits[i]);
+					}
+				}
+			}
+			count++;
 		}
-//		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
-//		String url = "http://localhost:8088/starter/monitor/getProcessStatus"
-//				/*+ "?"
-//				+ "trainExec_uuid="+trainExecUuid
-//				+ "&version="+trainExecVersion
-//				+ "&userId="+userInfo.getRef().getUuid()
-//				+ "&appId="+application.getUuid()*/;
-//		//httpServletResponse.sendRedirect(url);
-//		RestTemplate restTemplate = new RestTemplate();
-//		String resp = restTemplate.getForObject(url, String.class);
-		
+		return 0;
+	}
+	
+	public String stopProcess(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
+		Application application = commonServiceImpl.getApp();
+		Integer tomcatPId  = portPIdMap.get(Integer.parseInt(application.getDeployPort()));
+		if(tomcatPId != null && tomcatPId > 0) {
+			logger.info("stopping process with PId: "+tomcatPId);
+			Runtime.getRuntime().exec("kill -9 "+tomcatPId);
+			Thread.sleep(3000);
+		}		
 		return "Process stopped successfully.";
 	}
 }
