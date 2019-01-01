@@ -33,9 +33,9 @@ import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
-import {UploadExecComponent } from './uploadExec/uploadExec.componet'
+import { UploadExecComponent } from './uploadExec/uploadExec.componet'
 import { BatchExecComponent } from './batchExec/batchExec.component';
-
+import { IngestExecComponent } from './ingestExec/ingestExec.component';
 
 @NgModule({
     imports: [
@@ -52,7 +52,7 @@ import { BatchExecComponent } from './batchExec/batchExec.component';
         MultiSelectModule,
         DropdownModule,
         GrowlModule,
-        CheckboxModule,
+        CheckboxModule
     ],
     declarations: [
         jobMonitoringDetailsComponent,
@@ -71,8 +71,8 @@ import { BatchExecComponent } from './batchExec/batchExec.component';
         SimulateExecComponent,
         DownloadExecComponent,
         UploadExecComponent,
-        BatchExecComponent
-
+        BatchExecComponent,
+        IngestExecComponent
     ],
     providers: [
         CommonService
