@@ -86,14 +86,21 @@ public class DeployServiceImpl {
 					throw new RuntimeException("Some error occured.");
 				}
 			}
+			logger.info(" Before fetching model from trainExec " );
 			Model model = getModelByTrainExec(trainExecUuid, trainExecVersion);
+			logger.info(" Model fetched from trainExec " );
 			List<String> trainExecList = getDeployStatusByModel(model.getUuid(), trainExecUuid, trainExecVersion);
+			logger.info(" Deploy status obtained ");
 			if(!trainExecList.isEmpty()) {
+				logger.info(" Going to undeploy ");
 				for(String deployedTrainExecUuid : trainExecList) {
 					unDeploy(deployedTrainExecUuid, null);
 				}
+				logger.info(" Undeployed ");
 			}
+			logger.info(" Before fetching deploy status ");
 			boolean deployStatus = getDeployStatus(trainExecUuid, trainExecVersion);
+			logger.info(" Deploy status : " + deployStatus);
 			
 			if(!deployStatus && processStatus.equalsIgnoreCase("ALIVE")) {
 				deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.InProgress);
@@ -107,15 +114,16 @@ public class DeployServiceImpl {
 									+ "&userId="+userInfo.getRef().getUuid()
 									+ "&appId="+application.getUuid();
 				
-				
+				logger.info(" Deploy URL : " + deployURL);
 				HashMap<String, String> parameters = new HashMap<>();
 				parameters.put("trainExec_uuid", trainExecUuid);
 				parameters.put("version", trainExecVersion);
 				parameters.put("userId", userInfo.getRef().getUuid());
 				parameters.put("appId", application.getUuid());
-				AsyncRestTemplate restTemplate = new AsyncRestTemplate();
+//				AsyncRestTemplate restTemplate = new AsyncRestTemplate();
+				RestTemplate restTemplate = new RestTemplate();
 				HttpMethod method = HttpMethod.POST;
-				Class<Boolean> responseType = Boolean.class;
+				/*Class<Boolean> responseType = Boolean.class;
 				//create request entity using HttpHeaders
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
@@ -130,8 +138,8 @@ public class DeployServiceImpl {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
-				}
-//				response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
+				}*/
+				response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
 				if(response) {
 					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.Completed);
 					
