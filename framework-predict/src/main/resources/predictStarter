@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BASEDIR=`dirname $0`/..
+BASEDIR=`(cd "$BASEDIR"; pwd)`
+echo $BASEDIR
+
+echo $1
+sh $BASEDIR/bin/predict $1 &
+exit 0
