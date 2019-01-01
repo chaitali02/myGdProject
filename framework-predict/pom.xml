@@ -45,7 +45,7 @@
 			        </platforms>
                     <programs>
                         <program>
-                            <mainClass>com.inferyx.module.TomcatStarter</mainClass>
+                            <mainClass>com.inferyx.predict.module.TomcatStarter</mainClass>
                             <name>predictStarter</name>
                         </program>
                     </programs>

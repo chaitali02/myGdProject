@@ -17,8 +17,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -56,6 +62,8 @@ public class DeployServiceImpl {
 	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
+	@Resource(name="portPIdProcessMap")
+	private ConcurrentHashMap<Integer, Map<Integer, Object>> portPIdProcessMap;
 //	@Autowired
 //	private RestTemplate restTemplate;
 	
@@ -307,6 +315,9 @@ public class DeployServiceImpl {
 						    Field f = process.getClass().getDeclaredField("pid");
 						    f.setAccessible(true);
 						    int pid = f.getInt(process);
+						    Map<Integer, Object> pIdProcessMap = new HashMap<>();
+						    pIdProcessMap.put(pid, process);
+						    portPIdProcessMap.put(Integer.parseInt(application.getDeployPort()), pIdProcessMap);
 						    System.out.println(" Process Id : " + pid);
 						  } catch (Throwable e) {
 						  }
@@ -343,7 +354,13 @@ public class DeployServiceImpl {
 	}
 	
 	public String stopProcess(String trainExecUuid, String trainExecVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//		Application application = commonServiceImpl.getApp();
+		Application application = commonServiceImpl.getApp();
+		Map<Integer, Object> pIdProcessMap = portPIdProcessMap.get(Integer.parseInt(application.getDeployPort()));
+		if(pIdProcessMap != null && !pIdProcessMap.isEmpty()) {
+			Integer pid = pIdProcessMap.keySet().iterator().next();
+			Process process = (Process) pIdProcessMap.get(pid);
+			process.destroyForcibly();
+		}
 //		MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
 //		String url = "http://localhost:8088/starter/monitor/getProcessStatus"
 //				/*+ "?"

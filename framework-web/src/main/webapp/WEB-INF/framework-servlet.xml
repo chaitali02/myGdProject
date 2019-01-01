@@ -132,6 +132,7 @@
 	<bean id="kafkaConsumerMap" name="kafkaConsumerMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="streamMap" name="streamMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="trainedModelMap" name="trainedModelMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="portPIdProcessMap" name="portPIdProcessMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
