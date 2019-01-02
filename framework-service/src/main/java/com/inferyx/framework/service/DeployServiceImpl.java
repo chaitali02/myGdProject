@@ -10,12 +10,20 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +34,16 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -43,6 +61,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ProcessExec;
+import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
@@ -61,6 +81,8 @@ public class DeployServiceImpl {
 	private ModelServiceImpl modelServiceImpl;
 	@Resource(name="portPIdMap")
 	private ConcurrentHashMap<Integer, Integer> portPIdMap;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 //	@Autowired
 //	private RestTemplate restTemplate;
 	
@@ -274,64 +296,81 @@ public class DeployServiceImpl {
 	}
 	
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
-		Application application = commonServiceImpl.getApp();
-		String path = "/app/framework_predict";
-		System.out.println("absolute path: "+path);
-		
-		ProcessBuilder pb = new ProcessBuilder(path+"/bin/predictStarter", application.getDeployPort(), "&");
-		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Process process = null;
-				try {
-					process = pb.start();
-					if(process.getClass().getName().equals("java.lang.UNIXProcess")) {
-						  /* get the PID on unix/linux systems */
-						  try {
-						    Field f = process.getClass().getDeclaredField("pid");
-						    f.setAccessible(true);
-						    int pid = f.getInt(process);
-						    System.out.println(" Process Id : " + pid);
-						  } catch (Throwable e) {
-								e.printStackTrace();
-						  }
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				BufferedReader brErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-				String line = null;
-				String errLine = null;
-				try {
-					while ((errLine = brErr.readLine()) != null || (line = br.readLine()) != null) {
-						System.out.print((StringUtils.isNotBlank(line) ? line + "\n" : "")
-								+ (StringUtils.isNotBlank(errLine) ? errLine + "\n" : ""));
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-		
-		Thread.sleep(18000);
+		ProcessExec processExec = new ProcessExec();
+		processExec.setBaseEntity();
 		try {
-			int tomcatPId = getProcessIdForDeployPort();
-		    if(tomcatPId > 0) {
-			    portPIdMap.put(Integer.parseInt(application.getDeployPort()), tomcatPId);
-		    }
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException | ParseException
-				| InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		logger.info("Process started successfully.");
-		return "Process started successfully.";	 
+			Application application = commonServiceImpl.getApp();
+			
+
+			SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			processExec.setType(MetaType.predict.toString());
+			
+			
+			String path = "/app/framework_predict";
+			System.out.println("absolute path: "+path);
+			
+			ProcessBuilder pb = new ProcessBuilder(path+"/bin/predictStarter", application.getDeployPort(), "&");
+			
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					Process process = null;
+					try {
+						process = pb.start();
+						if(process.getClass().getName().equals("java.lang.UNIXProcess")) {
+							  /* get the PID on unix/linux systems */
+							  try {
+							    Field f = process.getClass().getDeclaredField("pid");
+							    f.setAccessible(true);
+							    int pid = f.getInt(process);
+							    System.out.println(" Process Id : " + pid);
+							  } catch (Throwable e) {
+									e.printStackTrace();
+							  }
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					BufferedReader brErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+					String line = null;
+					String errLine = null;
+					try {
+						while ((errLine = brErr.readLine()) != null || (line = br.readLine()) != null) {
+							System.out.print((StringUtils.isNotBlank(line) ? line + "\n" : "")
+									+ (StringUtils.isNotBlank(errLine) ? errLine + "\n" : ""));
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+			
+			Date startDate = formatter.parse((new Date()).toString());
+			processExec.setStartTime(startDate);
+			Thread.sleep(18000);
+			try {
+				int tomcatPId = getProcessIdForDeployPort();
+			    if(tomcatPId > 0) {
+			    	processExec.setpId(""+tomcatPId);
+				    portPIdMap.put(Integer.parseInt(application.getDeployPort()), tomcatPId);
+			    }
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | ParseException
+					| InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.STARTED);
+			logger.info("Process started successfully.");
+			return "Process started successfully.";	 
+		} catch (Exception e) {
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Failed);
+			throw new RuntimeException(e);
+		}		
 	}
 	
 	public int getProcessIdForDeployPort() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
@@ -355,14 +394,34 @@ public class DeployServiceImpl {
 		return 0;
 	}
 	
-	public String stopProcess(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
+	public String stopProcess(String trainExecUuid, String trainExecVersion) throws Exception {
 		Application application = commonServiceImpl.getApp();
 		Integer tomcatPId  = portPIdMap.get(Integer.parseInt(application.getDeployPort()));
 		if(tomcatPId != null && tomcatPId > 0) {
 			logger.info("stopping process with PId: "+tomcatPId);
 			Runtime.getRuntime().exec("kill -9 "+tomcatPId);
+			ProcessExec processExec = getProcessExecbyProcessId(tomcatPId.toString());
+			if(processExec != null) {
+				SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+				Date stopTime = formatter.parse((new Date()).toString());
+				processExec.setStopTime(stopTime);
+				commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.STOPPED);
+			}
 			Thread.sleep(3000);
 		}		
 		return "Process stopped successfully.";
+	}
+	
+	public ProcessExec getProcessExecbyProcessId(String processId) throws JsonProcessingException {
+		MatchOperation filterByProcessId = match(new Criteria("pId").is(processId));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		Aggregation aggregation = newAggregation(filterByProcessId, groupByUuid);
+		AggregationResults<ProcessExec> aggrResults = mongoTemplate.aggregate(aggregation, MetaType.processExec.toString().toLowerCase(), ProcessExec.class);
+		ProcessExec processExec = aggrResults.getUniqueMappedResult();
+		if(processExec != null) {
+			return (ProcessExec) commonServiceImpl.getOneByUuidAndVersion(processExec.getId(), processExec.getVersion(), MetaType.processExec.toString(), "N");
+		} else {
+			return null;
+		}
 	}
 }

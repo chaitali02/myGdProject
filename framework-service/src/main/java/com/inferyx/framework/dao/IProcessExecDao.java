@@ -16,74 +16,75 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.inferyx.framework.domain.DeployExec;
+import com.inferyx.framework.domain.ProcessExec;
 
 /**
  * @author Ganesh
+ *
  */
-public interface IDeployExecDao extends MongoRepository<DeployExec, String> {
+public interface IProcessExecDao extends MongoRepository<ProcessExec, String> {
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
-	public DeployExec findOneByUuidAndVersion(String uuid, String version);
+	public ProcessExec findOneByUuidAndVersion(String uuid, String version);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 , 'version' : ?2 }")
-	public DeployExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
+	public ProcessExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
-	public List<DeployExec> test(String param1);
+	public List<ProcessExec> test(String param1);
 
 	@Query(value = "{'uuid':?0}")
-	public DeployExec findAllByUuid(String uuid);
+	public ProcessExec findAllByUuid(String uuid);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
-	public DeployExec findAllByUuid(String appUuid, String uuid);
+	public ProcessExec findAllByUuid(String appUuid, String uuid);
 
 	@Query(value = "{}")
-	public DeployExec findLatest(Sort sort);
+	public ProcessExec findLatest(Sort sort);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public DeployExec findLatest(String appUuid, Sort sort);
+	public ProcessExec findLatest(String appUuid, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0 }")
-	public DeployExec findLatestByUuid(String uuid, Sort sort);
+	public ProcessExec findLatestByUuid(String uuid, Sort sort);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 }")
-	public DeployExec findLatestByUuid(String appUuid, String datapodUUID, Sort sort);
+	public ProcessExec findLatestByUuid(String appUuid, String datapodUUID, Sort sort);
 
 	@Query(value = "{ 'userInfo.ref.uuid' : ?0 }")
-	public List<DeployExec> findActivityByUser(String uuid, Sort sort);
+	public List<ProcessExec> findActivityByUser(String uuid, Sort sort);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
-	public List<DeployExec> findAllVersion(String appUuid, String uuid);
+	public List<ProcessExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
-	public List<DeployExec> findAllVersion(String uuid);
+	public List<ProcessExec> findAllVersion(String uuid);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public List<DeployExec> findAll(String appUuid);
+	public List<ProcessExec> findAll(String appUuid);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
-	public DeployExec findOneById(String appUuid, String id);
+	public ProcessExec findOneById(String appUuid, String id);
 
 	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
-	public DeployExec findAsOf(String appUuid, String uuid, String version, Sort sort);
+	public ProcessExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
-	public DeployExec findAsOf(String uuid, String version, Sort sort);
+	public ProcessExec findAsOf(String uuid, String version, Sort sort);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 
 	@Query(value = "{ '_id' : ?0 }")
-	public DeployExec findOneById(String id);
+	public ProcessExec findOneById(String id);
 
 	@Query(value = "{}")
-	public List<DeployExec> findAll();
+	public List<ProcessExec> findAll();
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
-	public DeployExec save(String appUuid, String id);
+	public ProcessExec save(String appUuid, String id);
 
 	@Query(value = "{'_id' : ?0}")
-	public DeployExec save(String id);
+	public ProcessExec save(String id);
 
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);

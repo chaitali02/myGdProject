@@ -122,6 +122,7 @@ import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.dao.IPredictDao;
 import com.inferyx.framework.dao.IPredictExecDao;
 import com.inferyx.framework.dao.IPrivilegeDao;
+import com.inferyx.framework.dao.IProcessExecDao;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupDao;
@@ -215,17 +216,12 @@ public class CommonServiceImpl <T> {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	/*@Autowired
-	HiveContext hiveContext;*/
 	@Autowired
     DatapodServiceImpl datapodServiceImpl;
 	@Autowired
     RelationServiceImpl relationServiceImpl;
 	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	
+	ApplicationServiceImpl applicationServiceImpl;	
 	@Autowired
 	RegisterService registerService;
 	@Autowired
@@ -233,8 +229,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
-	
+	MetadataServiceImpl metadataServiceImpl;	
 	@Autowired
 	IDatapodDao iDatapodDao;
 	@Autowired
@@ -248,8 +243,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IFunctionDao iFunctionDao;
 	@Autowired 
-	IMapDao iMapDao;
-	
+	IMapDao iMapDao;	
 	@Autowired
 	IActivityDao iActivityDao;
 	@Autowired
@@ -395,8 +389,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	DownloadExec downloadExec;
 	@Autowired
-	UploadExec uploadExec;
-	
+	UploadExec uploadExec;	
 	@Autowired
 	IDownloadDao iDownloadDao;
 	@Autowired
@@ -485,7 +478,27 @@ public class CommonServiceImpl <T> {
 	ITrainResultDao iTrainResultDao;
 	@Autowired
 	IDeployExecDao iDeployExecDao;
+	@Autowired
+	IProcessExecDao iProcessExecDao;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iProcessExecDao
+	 */
+	public IProcessExecDao getiProcessExecDao() {
+		return iProcessExecDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iProcessExecDao the iProcessExecDao to set
+	 */
+	public void setiProcessExecDao(IProcessExecDao iProcessExecDao) {
+		this.iProcessExecDao = iProcessExecDao;
+	}
+
 	/**
 	 * @Ganesh 
 	 *
@@ -2834,6 +2847,12 @@ public class CommonServiceImpl <T> {
 		case Killed : 
 			statusList = setKilledStatus(statusList);
 			break;
+		case STARTED:
+			statusList = setStartedStatus(statusList);
+			break;
+		case STOPPED:
+			statusList = setStoppedStatus(statusList);
+			break;
 		default:
 			break;
 		}
@@ -2900,6 +2919,12 @@ public class CommonServiceImpl <T> {
 		case Killed : 
 			logger.info("Going to kill task : " + taskId + " : before setKilledStatus");
 			statusList = setKilledStatus(statusList);
+			break;
+		case STARTED:
+			statusList = setStartedStatus(statusList);
+			break;
+		case STOPPED:
+			statusList = setStoppedStatus(statusList);
 			break;
 		default:
 			break;
@@ -2969,6 +2994,12 @@ public class CommonServiceImpl <T> {
 			case Killed : 
 				statusList = setKilledStatus(statusList);
 				break;
+			case STARTED:
+				statusList = setStartedStatus(statusList);
+				break;
+			case STOPPED:
+				statusList = setStoppedStatus(statusList);
+				break;
 			default:
 				break;
 		}
@@ -2977,6 +3008,16 @@ public class CommonServiceImpl <T> {
 		Helper.getDomainClass(metaType).getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		save(metaType.toString(), retObj);
 		return retObj;
+	}
+
+	private List<Status> setStoppedStatus(List<Status> statusList) {
+		statusList.add(new Status(Status.Stage.STOPPED, new Date()));
+		return statusList;
+	}
+
+	private List<Status> setStartedStatus(List<Status> statusList) {
+		statusList.add(new Status(Status.Stage.STARTED, new Date()));
+		return statusList;
 	}
 
 	public void onHold (MetaType type, String uuid, String version) {

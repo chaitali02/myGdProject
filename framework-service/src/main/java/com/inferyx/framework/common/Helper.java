@@ -118,6 +118,7 @@ import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Privilege;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
@@ -329,6 +330,7 @@ public class Helper {
 				case ingestgroupExec : return "iIngestGroupExecDao";
 				case trainresult : return "iTrainResultDao";
 				case deployExec : return "iDeployExecDao";
+				case processExec : return "iProcessExecDao";
 				default:
 					return null;
 			}
@@ -365,6 +367,7 @@ public class Helper {
 		case simulateExec : return "ModelExecServiceImpl";
 		case trainresult : return "TrainResultServiceImpl";
 		case deployExec : return "DeployServiceImpl";
+		case processExec : return "ProcessServiceImpl";
 		default: return null;
 		}
 	}
@@ -373,10 +376,8 @@ public class Helper {
 		if(type == null)
 			return null;
 		switch(type) {
-		case map :
-			return Map.class;
-		case model :
-			return Model.class;			
+		case map : return Map.class;
+		case model : return Model.class;			
 		case meta : return Meta.class;
 		case relation: return Relation.class;
 		case dashboard: return Dashboard.class;
@@ -458,8 +459,8 @@ public class Helper {
 		case ingestgroupExec : return IngestGroupExec.class;
 		case trainresult : return TrainResult.class;
 		case deployExec : return DeployExec.class;
-		default:
-			return null;
+		case processExec : return ProcessExec.class;
+		default: return null;
 		}
 	}
 	
@@ -555,6 +556,7 @@ public class Helper {
 				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
 				case "trainresult" : return MetaType.trainresult; 
 				case "deployexec" : return MetaType.deployExec;
+				case "processexec" : return MetaType.processExec;
 				default : return null;
 			}
 		}

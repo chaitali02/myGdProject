@@ -59,7 +59,7 @@ public class DataScienceController {
 	}
 	
 	@RequestMapping(value = "/stopProcess")
-	public String stopProcess() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InterruptedException {
+	public String stopProcess() throws Exception {
 		return deployServiceImpl.stopProcess(null, null);
 	}
 	
