@@ -66,6 +66,7 @@ import com.inferyx.framework.domain.Schedule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.enums.ProcessType;
 
 /**
  * @author Ganesh
@@ -267,7 +268,7 @@ public class DeployServiceImpl {
 		parameters.put("userId", userInfo.getRef().getUuid());
 		parameters.put("appId", application.getUuid());
 		boolean response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
-		if(response) {
+		if(response && deployExec != null) {
 			deployExec.setActive("N");
 			commonServiceImpl.delete(deployExec.getId(), MetaType.deployExec.toString() );
 		}
@@ -298,13 +299,14 @@ public class DeployServiceImpl {
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
 		ProcessExec processExec = new ProcessExec();
 		processExec.setBaseEntity();
+		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.NotStarted);
+		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.InProgress);
 		try {
 			Application application = commonServiceImpl.getApp();
 			
 
 			SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-			processExec.setType(MetaType.predict.toString());
-			
+			processExec.setProcessType(ProcessType.STARTING_PREDICTION_ENGINE);
 			
 			String path = "/app/framework_predict";
 			System.out.println("absolute path: "+path);
@@ -363,8 +365,10 @@ public class DeployServiceImpl {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.STARTED);
+			String isAlive = getProcessStatus(trainExecUuid, trainExecVersion);
+			if(isAlive.equalsIgnoreCase("ALIVE")) {
+				commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.STARTED);
+			}
 			logger.info("Process started successfully.");
 			return "Process started successfully.";	 
 		} catch (Exception e) {

@@ -14,31 +14,34 @@ import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.ProcessType;
+
 /**
  * @author Ganesh
  *
  */
 @Document(collection="processexec")
 public class ProcessExec extends BaseExec {
-	private String type;
+	private ProcessType processType;
 	private String pId;
 	private Date startTime;
 	private Date stopTime;
+	
 	/**
 	 * @Ganesh
 	 *
-	 * @return the type
+	 * @return the processType
 	 */
-	public String getType() {
-		return type;
+	public ProcessType getProcessType() {
+		return processType;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param type the type to set
+	 * @param processType the processType to set
 	 */
-	public void setType(String type) {
-		this.type = type;
+	public void setProcessType(ProcessType processType) {
+		this.processType = processType;
 	}
 	/**
 	 * @Ganesh
