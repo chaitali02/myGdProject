@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Oct 20 16:48:31 IST 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -71,6 +72,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "country_code",
       "sourceAttr": {
         "ref": {
@@ -87,6 +89,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "country_risk_level",
       "sourceAttr": {
         "ref": {

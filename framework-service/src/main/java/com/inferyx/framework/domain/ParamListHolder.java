@@ -20,6 +20,8 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	private String paramId;
 	private String paramName;
 	private String paramType;
+	private String paramDispName;	
+	private String paramDesc;
 	private MetaIdentifierHolder paramValue;
 	private List<AttributeRefHolder> attributeInfo;
 	
@@ -83,6 +85,31 @@ public class ParamListHolder extends MetaIdentifierHolder{
 
 	public void setParamId(String paramId) {
 		this.paramId = paramId;
+	}
+	
+	/**
+	 * @return the paramDispName
+	 */
+	public String getParamDispName() {
+		return this.paramDispName;
+	}
+	/**
+	 * @param paramDispName the paramDispName to set
+	 */
+	public void setParamDispName(String paramDispName) {
+		this.paramDispName = paramDispName;
+	}
+	/**
+	 * @return the paramDesc
+	 */
+	public String getParamDesc() {
+		return this.paramDesc;
+	}
+	/**
+	 * @param paramDesc the paramDesc to set
+	 */
+	public void setParamDesc(String paramDesc) {
+		this.paramDesc = paramDesc;
 	}
 
 }

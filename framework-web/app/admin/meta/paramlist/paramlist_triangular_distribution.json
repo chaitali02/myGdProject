@@ -4,6 +4,8 @@
             "paramId" : "0",
             "paramName" : "lowerlimit",
             "paramType" : "double",
+   	        "paramDispName" : "Lower Limit",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -15,6 +17,8 @@
             "paramId" : "1",
             "paramName" : "mode",
             "paramType" : "double",
+   	        "paramDispName" : "Mode",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -26,6 +30,8 @@
             "paramId" : "2",
             "paramName" : "upperlimit",
             "paramType" : "double",
+   	        "paramDispName" : "Upper Limit",
+            "paramDesc" : "",	
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -48,6 +54,7 @@
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
     "appInfo" : [ 

@@ -4,6 +4,8 @@
 			"paramId": 0,
 			"paramName": "threshold",
 			"paramType": "double",
+   	   	    "paramDispName" : "Threshold",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -15,6 +17,8 @@
 			"paramId": 1,
 			"paramName": "maxIter",
 			"paramType": "integer",
+   	   	    "paramDispName" : "Max Iter",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -26,6 +30,8 @@
 			"paramId": 4,
 			"paramName": "tol",
 			"paramType": "double",
+   	   	    "paramDispName" : "Tol",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -49,7 +55,8 @@
 		"DEV",
 		"0.1.0"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
     "paramListType" : "model",
     "templateFlg" : "Y",

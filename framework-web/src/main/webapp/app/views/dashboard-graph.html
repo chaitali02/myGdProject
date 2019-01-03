@@ -44,9 +44,11 @@
             </div>
             <div class="actions">
             
-
-              <a class="btn btn-circle btn-icon-only btn-default" ui-sref="metaListdashboard({'id':dashboarddata.uuid,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
-                <i class="fa fa-edit " style="display:block;margin:2px 0px 0px 1px;"></i>    <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
+              
+              <!-- ui-sref="metaListdashboard({'id':dashboarddata.uuid,'mode':'false'})" -->
+              <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageDashboard || dashboarddata.locked == 'Y')? 'currentpage':'notcurrentpage'"  ng-click="onClickEditDashboard(dashboarddata.uuid,dashboarddata.locked)" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
+                <i class="fa fa-edit " style="display:block;margin:2px 0px 0px 1px;"></i>    
+                <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
                  bg-blue bg-hover-grey-salsa font-white 
                 bg-green bg-hover-grey-salsa font-white -->
               </a>
@@ -145,7 +147,8 @@
                         <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="{{showtooltip}}" ng-show="datacol.isChartShow"  uib-tooltip="Grid" ng-click="onClickGrid($parent.$index,$index)" ng-show="hideIcon">
                           <i class="fa fa-th" style="display:block;margin:2px 0px 0px 0px;"></i>   
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default" ui-sref="dvvizpod({'id':datacol.vizpodDetails.uuid,'version':datacol.vizpodDetails.version,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit"
+                        <!-- ui-sref="dvvizpod({'id':datacol.vizpodDetails.uuid,'version':datacol.vizpodDetails.version,'mode':'false'})" -->
+                        <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageVizpod|| datacol.vizpodDetails.locked == 'Y')? 'currentpage':'notcurrentpage'"  ng-click="onClickEditVizpod(datacol.vizpodDetails.uuid,datacol.vizpodDetails.version,datacol.vizpodDetails.locked)"  tooltip-placement="{{showtooltip}}" uib-tooltip="Edit"
                           ng-show="hideIcon">  
                        <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>

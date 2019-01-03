@@ -53,7 +53,7 @@ public class CSVRegister extends DataSourceRegister {
 			if(dagExec != null) {
 				registryList.get(i).setStatus("Registered");
 				registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
-				Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName());
+				Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName().toLowerCase());
 				registryList.get(i).setRegisteredOn(dp.getCreatedOn());
 				registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());
 

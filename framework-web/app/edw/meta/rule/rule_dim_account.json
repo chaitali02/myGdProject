@@ -263,7 +263,8 @@
 		"1.0.1",
 		"DEMO"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
 	"appInfo": [
 		{

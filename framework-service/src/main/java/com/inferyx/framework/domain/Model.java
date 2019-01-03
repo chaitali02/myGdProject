@@ -26,6 +26,8 @@ public class Model extends BaseEntity {
 	private String customFlag;
 
 
+	
+
 	/**
 	 * @Ganesh
 	 *

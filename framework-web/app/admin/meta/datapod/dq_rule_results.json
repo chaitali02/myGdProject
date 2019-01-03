@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("59031140dfbca717118def47"),
     "uuid" : "a942fb04-fd85-4f69-a33a-a0a8d68997c5",
     "version" : "1464977196",
     "name" : "dq_rule_results",
@@ -10,8 +9,9 @@
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" :  ISODate("2017-11-07T10:24:13.443Z"),
+    "createdOn" : ISODate("2018-12-15T07:05:52.872Z"),
     "active" : "N",
+    "locked" : "N",
     "appInfo" : [ 
         {
             "ref" : {
@@ -42,156 +42,173 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "rowkey",
+            "name" : "rowKey",
             "type" : "string",
+            "attrUnitType" : "#",
             "desc" : "rowkey",
-            "dispName" : "rowkey",
+            "dispName" : "Row Key",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 1,
-            "name" : "datapoduuid",
+            "name" : "datapodUuid",
             "type" : "string",
-            "desc" : "datapoduuid",
-            "dispName" : "datapoduuid",
+            "attrUnitType" : "#",
+            "desc" : "datapodUuid",
+            "dispName" : "Datapod Uuid",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 2,
-            "name" : "datapodversion",
+            "name" : "datapodVersion",
             "type" : "string",
-            "desc" : "datapodversion",
-            "dispName" : "datapodversion",
+            "attrUnitType" : "#",
+            "desc" : "datapodVersion",
+            "dispName" : "Datapod Version",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 3,
-            "name" : "datapodname",
+            "name" : "datapodName",
             "type" : "string",
-            "desc" : "datapodname",
-            "dispName" : "datapodname",
+            "attrUnitType" : "#",
+            "desc" : "datapodName",
+            "dispName" : "Datapod Name",
             "partition" : "N",
             "active" : "Y"
-        },
+        }, 
         {
             "attributeId" : 4,
-            "name" : "attributeid",
+            "name" : "attributeId",
             "type" : "string",
-            "desc" : "attributeid",
-            "dispName" : "attributeid",
+            "attrUnitType" : "#",
+            "desc" : "attributeId",
+            "dispName" : "Attribute Id",
             "partition" : "N",
             "active" : "Y"
-        },
+        }, 
         {
             "attributeId" : 5,
-            "name" : "attributename",
+            "name" : "attributeName",
             "type" : "string",
-            "desc" : "attributename",
-            "dispName" : "attributename",
+            "attrUnitType" : "#",
+            "desc" : "attributeName",
+            "dispName" : "Attribute Name",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 6,
-            "name" : "attributevalue",
+            "name" : "attributeValue",
             "type" : "string",
-            "desc" : "attributevalue",
-            "dispName" : "attributevalue",
+            "attrUnitType" : "#",
+            "desc" : "attributeValue",
+            "dispName" : "Attribute Value",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 7,
-            "name" : "nullcheck_pass",
+            "name" : "nullCheck_pass",
             "type" : "string",
-            "desc" : "nullcheck_pass",
-            "dispName" : "nullcheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "nullCheck_pass",
+            "dispName" : "Nullcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 8,
-            "name" : "valuecheck_pass",
+            "name" : "valueCheck_pass",
             "type" : "string",
-            "desc" : "valuecheck_pass",
-            "dispName" : "valuecheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "valueCheck_pass",
+            "dispName" : "Valuecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 9,
-            "name" : "rangecheck_pass",
+            "name" : "rangeCheck_pass",
             "type" : "string",
-            "desc" : "rangecheck_pass",
-            "dispName" : "rangecheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "rangeCheck_pass",
+            "dispName" : "Rangecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 10,
-            "name" : "datatypecheck_pass",
+            "name" : "dataTypeCheck_pass",
             "type" : "string",
+            "attrUnitType" : "#",
             "desc" : "datatypecheck_pass",
-            "dispName" : "datatypecheck_pass",
+            "dispName" : "Datatypecheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 11,
-            "name" : "dataformatcheck_pass",
+            "name" : "dataFormatCheck_pass",
             "type" : "string",
-            "desc" : "dataformatcheck_pass",
-            "dispName" : "dataformatcheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "dataFormatCheck_pass",
+            "dispName" : "Dataformatcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 12,
-            "name" : "lengthcheck_pass",
+            "name" : "lengthCheck_pass",
             "type" : "string",
-            "desc" : "lengthcheck_pass",
-            "dispName" : "lengthcheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "lengthCheck_pass",
+            "dispName" : "Lengthcheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 13,
-            "name" : "refintegritycheck_pass",
+            "name" : "refIntegrityCheck_pass",
             "type" : "string",
-            "desc" : "refintegritycheck_pass",
-            "dispName" : "refintegritycheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "refIntegrityCheck_pass",
+            "dispName" : "RefIntegritycheck Pass",
             "partition" : "N",
             "active" : "Y"
         }, 
         {
             "attributeId" : 14,
-            "name" : "dupcheck_pass",
+            "name" : "dupCheck_pass",
             "type" : "string",
-            "desc" : "dupcheck_pass",
-            "dispName" : "dupcheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "dupCheck_pass",
+            "dispName" : "Dupcheck Pass",
             "partition" : "N",
             "active" : "Y"
-        },
+        }, 
         {
             "attributeId" : 15,
-            "name" : "customcheck_pass",
+            "name" : "customCheck_pass",
             "type" : "string",
-            "desc" : "customcheck_pass",
-            "dispName" : "customcheck_pass",
+            "attrUnitType" : "#",
+            "desc" : "customCheck_pass",
+            "dispName" : "Customcheck Pass",
             "partition" : "N",
             "active" : "Y"
-        },
-		{
+        }, 
+        {
             "attributeId" : 16,
             "name" : "version",
             "type" : "string",
+            "attrUnitType" : "#",
             "desc" : "version",
-            "dispName" : "version",
+            "dispName" : "Version",
             "partition" : "N",
             "active" : "Y"
         }
-        ]
+    ]
 }

@@ -13,7 +13,8 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
   "appInfo": [
@@ -48,6 +49,8 @@
       "paramId": "0",
       "paramName": "lower",
       "paramType": "double",
+   	  "paramDispName" : "Lower",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -59,6 +62,8 @@
       "paramId": "1",
       "paramName": "upper",
       "paramType": "double",
+   	  "paramDispName" : "Upper",
+      "paramDesc" : "",		
       "paramValue": {
         "ref" : {
             "type" : "simple"

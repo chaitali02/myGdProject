@@ -27,7 +27,45 @@ public class Algorithm extends BaseEntity {
 	private String savePmml;
 	private MetaIdentifierHolder paramListWoH;
 	private MetaIdentifierHolder paramListWH;
+	private String customFlag = "N";
+	private String scriptName;
 
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the customFlag
+	 */
+	public String getCustomFlag() {
+		return customFlag;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param customFlag the customFlag to set
+	 */
+	public void setCustomFlag(String customFlag) {
+		this.customFlag = customFlag;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the scriptName
+	 */
+	public String getScriptName() {
+		return scriptName;
+	}
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param scriptName the scriptName to set
+	 */
+	public void setScriptName(String scriptName) {
+		this.scriptName = scriptName;
+	}
 	/**
 	 * @Ganesh
 	 *

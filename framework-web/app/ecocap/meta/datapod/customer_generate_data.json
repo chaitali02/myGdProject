@@ -13,7 +13,8 @@
   },
   "createdOn": "Wed Jun 13 17:11:06 IST 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -39,7 +40,7 @@
       "key": "",
       "partition": "N",
       "dispName": "id",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -50,7 +51,7 @@
       "key": "",
       "partition": "N",
       "dispName": "data",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -61,7 +62,7 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     }
   ]

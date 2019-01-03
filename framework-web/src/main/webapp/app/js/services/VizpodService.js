@@ -173,30 +173,6 @@
         
         var deferred = $q.defer();
         if (type == "relation") {
-          // VizpodFactory.findDatapodByRelation(uuid, type).then(function(response) {
-          //   onSuccess(response.data)
-          // });
-          // var onSuccess = function(response) {
-          //   var attributes = [];
-          //   for (var j = 0; j < response.length; j++) {
-          //     for (var i = 0; i < response[j].attributes.length; i++) {
-          //       var attributedetail = {};
-          //       attributedetail.id = j
-          //       attributedetail.class = "tagit-choice-default-dd";
-          //       attributedetail.type = "datapod";
-          //       attributedetail.uuid = response[j].uuid;
-          //       attributedetail.name = response[j].name;
-          //       attributedetail.attributeName = response[j].attributes[i].name;
-          //       attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-          //       attributedetail.attributeId = response[j].attributes[i].attributeId;
-          //       attributes.push(attributedetail)
-          //     }
-          //   }
-          //   deferred.resolve({
-          //     data: attributes
-          //   })
-          // }
-
           VizpodFactory.findAttributesByRelation(uuid, type, "").then(function (response) { onSuccess(response.data) });
           var onSuccess = function (response) {
             var attributes = [];
@@ -445,9 +421,8 @@
 
       this.getOneByUuidAndVersionView = function(uuid, version, type) {
         var deferred = $q.defer();
-        VizpodFactory.findOneByUuidAndVersion(uuid, version, type).then(function(response) {
-          onSuccess(response.data)
-        });
+        VizpodFactory.findOneByUuidAndVersion(uuid, version, type)
+          .then(function(response) {onSuccess(response.data)},function (response) { onError(response.data)});
         var onSuccess = function(response) {
           var vizpodjosn = {};
           vizpodjosn.vizpoddata = response;
@@ -509,6 +484,11 @@
           vizpodjosn.values = valueArray;
           deferred.resolve({
             data: vizpodjosn
+          })
+        };
+        var onError = function (response) {
+          deferred.reject({
+            data: response
           })
         }
         return deferred.promise;

@@ -7,15 +7,15 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <a  ui-sref="jobexecutor">{{$state.current.data.pageTitle}}</a>
-          <i class="fa fa-circle"></i>
-      </li>
-      <li>
-      <a  ui-sref="{{state}}">{{selectTitle}}</a>
+        <a ui-sref="jobexecutor">{{$state.current.data.pageTitle}}</a>
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{dagexecdata.name}}</span>
+        <a ui-sref="{{state}}">{{selectTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{execData.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
@@ -24,87 +24,105 @@
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
     </div>
-  </div><!-- END PAGE HEADER-->
+  </div>
+  <!-- END PAGE HEADER-->
   <br>
-  <div  options="dirOptions" type="'dagExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dagexecdata" comment-panel-directive></div>
+  <div options="dirOptions" type="'dagExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData"
+    comment-panel-directive></div>
 
   <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  <div class="row">
     <div class="col-md-12">
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{dagexecdata.name}}
+            <i class="fa fa-gift"></i>{{execData.name}}
           </div>
           <div class="tools">
-
-    		    <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdagexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showDagExecPage()"style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
+              <span class="fa fa-home" style="display: block;margin: 2px auto;color:white;"></span>
             </a>
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdagexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showLoadGraph(dagexecdata.uuid,dagexecdata.version)" style="height:14px;">
+            <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showExecPage()" style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a> -->
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-            <a  title="Close" ng-click="close()" data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" ng-click="close()" data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
             </a>
-    	  </div>
-      </div>
+          </div>
+        </div>
         <div class="portlet-body">
           <!-- BEGIN FORM-->
-          <div class="form-body graph-body" ng-if="showgraphdiv">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
-                 <div class="bounce2"></div>
+              <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body"  id="graphWrapper" tree-graph-directive uuid="dagexecdata.uuid" version="dagexecdata.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="execData.uuid" version="execData.version">
             </div>
           </div>
 
           <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" ng-show="showdagexec" name="myform" ng-submit="submitLoad()">
-              <div class="form-group">
-                <label class="col-md-3 control-label">UUID</label>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" ng-show="showExec" name="myform" ng-submit="submitLoad()">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="dagexecdata.uuid">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.uuid">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Name</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="dagexecdata.name">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.name">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true"  ng-model="dagexecdata.version">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.version">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-md-3 control-label">CreatedBy</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true"  ng-model="dagexecdata.createdBy.ref.name">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="execData.createdBy.ref.name">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-md-3 control-label">CreatedOn</label>
                   <div class="col-md-6">
-                    <input type="text" ng-model="dagexecdata.createdOn" ng-disabled="true" class="form-control">
+                    <input type="text" ng-model="execData.createdOn" ng-disabled="true" class="form-control">
                   </div>
                 </div>
 
                 <div class="form-group taginput">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tags-input ng-model="dagexecdata.tags"  ng-disabled="{{mode}}" min-length="0"></tags-input>
+                    <tags-input ng-model="execData.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
                   </div>
                 </div>
 
@@ -112,46 +130,47 @@
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
                   </label>
                   <div class="col-md-6">
-                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dagexecdata.desc" rows="2"  style="resize:none;"></textarea>
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.desc" rows="2" style="resize:none;"></textarea>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Status</label>
                   <div class="col-md-6">
-                    <tags-input class="cross tag-scroll" ng-model="statusList"  ng-disabled="{{mode}}" min-length="0" ></tags-input>
+                    <tags-input class="cross tag-scroll" ng-model="statusList" ng-disabled="{{mode}}" min-length="0"></tags-input>
                   </div>
                 </div>
 
 
-    			      <div class="form-group">
-    			   			<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-    			   			<div class="col-md-6 col-sm-6 col-xs-12">
-    			   			  <div class="btn-group"  ng-init="loaddata.active='Y'" >
-    			        		<label class="btn btn-default" ng-model="dagexecdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-    			        		<label class="btn btn-default" ng-model="dagexecdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
-    						    </div>
-    			    		</div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="loaddata.active='Y'">
+                      <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="execData.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="dagexecdata.published='N'">
-                      <label class="btn btn-default" ng-model="dagexecdata.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="dagexecdata.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    <div class="btn-group" ng-init="execData.published='N'">
+                      <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="execData.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Depends On</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="dagexecdata.dependsOn.name">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="execData.dependsOn.name">
                   </div>
                 </div>
 
                 <div class="form-group" style="padding-top:10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a ui-sref="{{state}}" class="btn btn-primary">Cancel</a>
-                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true" value="Submit" name="submit">
+                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+                      value="Submit" name="submit">
                     <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
                       <div class="bounce1"></div>
                       <div class="bounce2"></div>
@@ -160,7 +179,9 @@
                   </div>
                 </div>
                 <div class="x_title">
-                  <h4><strong>Details</strong></h4>
+                  <h4>
+                    <strong>Details</strong>
+                  </h4>
                   <hr>
                 </div>
                 <br/>
@@ -181,28 +202,29 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat-start="data in dagexecdata.stages">
+                      <tr ng-repeat-start="data in execData.stages">
                         <td>
-                          <input class="form-control"type="text" ng-model="data.stageId" ng-disabled="true"/>
+                          <input class="form-control" type="text" ng-model="data.stageId" ng-disabled="true" />
                         </td>
                         <td>
-                          <input class="form-control"type="text" ng-model="data.naypalrechaypalrechame" ng-disabled="{{mode}}"/>
+                          <input class="form-control" type="text" ng-model="data.naypalrechaypalrechame" ng-disabled="{{mode}}" />
                         </td>
                         <td>
-                          <input class="form-control"type="text" ng-model="data.dependsOn" ng-disabled="{{mode}}"/>
+                          <input class="form-control" type="text" ng-model="data.dependsOn" ng-disabled="{{mode}}" />
                         </td>
                         <td ng-init="getStagestatusList($index,data.statusList[data.statusList.length-1].stage)" style="text-align: center">
-                            <img ng-src="{{data.imgPath}}" width="15px" />
+                          <img ng-src="{{data.imgPath}}" width="15px" />
                         </td>
                         <td>
-                          <div  ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
+                          <div ng-click="expanded = !expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
                             <i ng-class="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
                           </div>
                         </td>
                       </tr>
-                      <tr ng-repeat-end ng-show="expanded" >
+                      <tr ng-repeat-end ng-show="expanded">
                         <td colspan="5" style="padding: 0px 17px;">
-                        <br><br>
+                          <br>
+                          <br>
                           <table class=" row-border hover table  table-striped table-bordered">
                             <thead class="theadborder">
                               <tr>
@@ -218,28 +240,28 @@
                             <tbody>
                               <tr ng-repeat="taskdata in data.tasks">
                                 <td>
-                                  <input class="form-control" type="text" ng-model="$index" ng-disabled="true"/>
+                                  <input class="form-control" type="text" ng-model="$index" ng-disabled="true" />
                                 </td>
                                 <td>
-                                  <input class="form-control" type="text" ng-model="taskdata.name" ng-disabled="{{mode}}"/>
+                                  <input class="form-control" type="text" ng-model="taskdata.name" ng-disabled="{{mode}}" />
                                 </td>
                                 <td>
-                                  <input class="form-control" type="text" ng-model="taskdata.dependsOn" ng-disabled="{{mode}}"/>
+                                  <input class="form-control" type="text" ng-model="taskdata.dependsOn" ng-disabled="{{mode}}" />
                                 </td>
                                 <td>
-                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.type" ng-disabled="{{mode}}"/>
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.type" ng-disabled="{{mode}}" />
                                 </td>
                                 <td>
-                                  <input class="form-control"type="text" ng-model="taskdata.operators[0].operatorInfo.ref.name" ng-disabled="{{mode}}"/>
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.name" ng-disabled="{{mode}}" />
                                 </td>
                                 <td ng-init="getTaskstatusList($parent.$index,$index,taskdata.statusList[taskdata.statusList.length-1].stage)" style="text-align: center">
-                                    <img ng-src="{{taskdata.imgPathTask}}" width="15px" />
+                                  <img ng-src="{{taskdata.imgPathTask}}" width="15px" />
                                 </td>
                                 <!-- <td>
                                   <input class="form-control"type="text" ng-model="data.statusList[taskdata.statusList.length-1].stage" ng-disabled="{{mode}}"/>
                                 </td> -->
-                                 <td style="text-align: center; Vertical-align: middle;width:5%;">
-                                  <input style="width:16px;height:16px;" name="taskshow" type="radio" ng-click="onTaskShowDetail(taskdata)"/>
+                                <td style="text-align: center; Vertical-align: middle;width:5%;">
+                                  <input style="width:16px;height:16px;" name="taskshow" type="radio" ng-click="onTaskShowDetail(taskdata)" />
                                 </td>
                               </tr>
                             </tbody>
@@ -255,5 +277,6 @@
           </div>
         </div>
       </div>
-    </div><!-- END MAIN CONTENT -->
-  </div>
+    </div>
+  </div><!-- END MAIN CONTENT -->
+</div>

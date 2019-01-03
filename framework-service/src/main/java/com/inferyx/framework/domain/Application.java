@@ -16,6 +16,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Application extends BaseEntity{
 	private MetaIdentifierHolder dataSource;
 	private MetaIdentifierHolder paramList;
+	private String deployPort;
+	
+	/**
+	 * @Ganesh 
+	 *
+	 * @return the deployPort
+	 */
+	public String getDeployPort() {
+		return deployPort;
+	}
+
+	/**
+	 * @Ganesh 
+	 *
+	 * @param deployPort the deployPort to set
+	 */
+	public void setDeployPort(String deployPort) {
+		this.deployPort = deployPort;
+	}
+
 	public MetaIdentifierHolder getDataSource() {
 		return dataSource;
 	}

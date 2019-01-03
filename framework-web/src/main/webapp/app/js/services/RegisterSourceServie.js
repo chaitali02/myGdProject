@@ -111,7 +111,7 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	this.getRegister=function(uuid,version,data,type){
 	  	  var deferred = $q.defer();
 
-		  	  RegisterSourceFacoty.findRegister(uuid,version,data,type).then(function(response){OnSuccess(response.data)});
+		  	  RegisterSourceFacoty.findRegister(uuid,version,data,type).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
 		  	  var OnSuccess=function(response){
 		  		var result=[]
 		  		  for(var i=0;i<response.length;i++){
@@ -138,7 +138,11 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 					    data:result
 			      });
 	  	  }
-
+		  	var onError = function (response) {
+		        deferred.reject({
+		          data: response
+		        })
+		  	}
 		  	/*if(type == "HIVE"){
 		  		 RegisterSourceFacoty.findRegisterHiveDB(uuid,version,data).then(function(response){OnSuccess(response.data)});
 			  	  var OnSuccess=function(response){
@@ -195,7 +199,8 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 				resultjson.registeredOn=response[i].registeredOn;
 				resultjson.registeredBy=response[i].registeredBy;
 				resultjson.compareStatus=response[i].compareStatus;
-				
+				resultjson.isSuccessShow=false;
+                resultjson.isErrorShow=false;
 	  			if(response[i].status == "UnRegistered"){
 					resultjson.isDisabled=false;
 	  				resultjson.status="Not Registered"

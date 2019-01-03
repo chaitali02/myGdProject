@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_SIMULATION_STAGE; 
+drop table if exists industry_factor_simulation_stage; 
 
-CREATE TABLE INDUSTRY_FACTOR_SIMULATION_STAGE 
+create table industry_factor_simulation_stage 
   ( 
-     ITERATION_ID INTEGER(50), 
-     FACTOR1      DECIMAL(10, 2), 
-     FACTOR2      DECIMAL(10, 2), 
-     FACTOR3      DECIMAL(10, 2), 
-     FACTOR4      DECIMAL(10, 2), 
-     VERSION      INTEGER(50) 
+     iteration_id integer(50), 
+     factor1      decimal(10, 2), 
+     factor2      decimal(10, 2), 
+     factor3      decimal(10, 2), 
+     factor4      decimal(10, 2), 
+     version      integer(50) 
   );

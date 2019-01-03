@@ -29,6 +29,10 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
     return $http({
       url: url + "model/getAllModelByType?action=view&customFlag=" + flag + "&type=" + type,
       method: "GET",
+      data: '',
+      headers: {
+          "Content-Type": "application/json"
+      }
     }).then(function (response) { return response })
 
 
@@ -155,11 +159,30 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
         return response;
       })
   }
+  factory.findFunctionByCategory = function (type, category) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+        method: 'GET',
+        url: url + "metadata/getFunctionByCategory?action=view&type="+type+"category="+category,
+    }).
+        then(function (response, status, headers) {
+            return response;
+        })
+  }
   return factory;
 })
 
 DatascienceModule.service("PredictService", function ($http, PredictFactory, $q, sortFactory) {
-
+  this.getFunctionByCategory = function (type, category) {
+    var deferred = $q.defer();
+    PredictFactory.findFunctionByCategory(type,category).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     PredictFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
@@ -231,6 +254,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
             var attributedetail = {};
             attributedetail.uuid = response[j].uuid;
             attributedetail.datapodname = response[j].name;
+            attributedetail.type ="datapod"
+            attributedetail.attrType = response[j].type;
             attributedetail.name = response[j].attributes[i].name;
             attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
             attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -252,6 +277,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
@@ -273,6 +300,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
@@ -293,6 +322,8 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -345,12 +376,17 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    PredictFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    PredictFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
 
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

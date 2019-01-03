@@ -25,7 +25,9 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.StructType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
@@ -47,6 +49,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 
 public interface IExecutor {
@@ -349,9 +352,32 @@ public interface IExecutor {
 	 * @param tableName
 	 * @param clientContext
 	 * @param trainOtherParam TODO
+	 * @param trainResult TODO
+	 * @param defaultPath TODO
+	 * @param rowIdentifierCols TODO
+	 * @param includeFeatures TODO
+	 * @param trainingDfSql TODO
+	 * @param validationDfSql TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException;
+	
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param label
+	 * @param trainName
+	 * @param trainPercent
+	 * @param valPercent
+	 * @param tableName
+	 * @param clientContext
+	 * @param algoClass
+	 * @param trainOtherParam
+	 * @param paramList
+	 * @return
+	 * @throws IOException
+	 */
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam) throws IOException;
 	
 	/**
 	 * 
@@ -401,14 +427,15 @@ public interface IExecutor {
 
 	/**
 	 * @Ganesh
-	 *
+	 * @param sql TODO
 	 * @param tableName
 	 * @param mappingList
 	 * @param clientContext
+	 *
 	 * @return
 	 * @throws IOException
 	 */
-	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException;
 
 	/**
@@ -546,11 +573,17 @@ public interface IExecutor {
 	 * @param hyperParamList 
 	 * @param clientContext
 	 * @param trainOtherParam TODO
+	 * @param trainResult TODO
+	 * @param defaultPath TODO
+	 * @param rowIdentifierCols TODO
+	 * @param includeFeatures TODO
+	 * @param trainingDfSql TODO
+	 * @param validationDfSql TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
 			throws IOException;
 	
 	/**
@@ -662,5 +695,109 @@ public interface IExecutor {
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 
 	Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext)
+			throws IOException;
+
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param trainName
+	 * @param trainPercent
+	 * @param valPercent
+	 * @param tableName
+	 * @param clientContext
+	 * @param saveFileName
+	 * @return
+	 * @throws IOException
+	 */
+	Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return 
+	 * @throws IOException
+	 */
+	List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext)
+			throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param sql
+	 * @param datasource
+	 * @param clientContext
+	 * @return 
+	 * @throws IOException
+	 */
+	ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException;
+	
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param datasource
+	 * @param targetDatapod
+	 * @param saveMode
+	 * @return 
+	 * @throws IOException
+	 */
+	ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param location
+	 * @return data
+	 * @throws IOException
+	 */
+	List<Map<String, Object>> fetchTestSet(String location) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rsHolder
+	 * @param sql
+	 * @param datasource
+	 * @param tableName
+	 * @param registerTempTable
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException
+	 */
+	ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param fieldArray
+	 * @param rsHolder
+	 * @param tempTableName
+	 * @param datasource
+	 * @param registerTempTable
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException
+	 */
+	Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @param data
+	 * @param structType
+	 * @param tableName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName, String clientContext)
 			throws IOException;
 }

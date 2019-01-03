@@ -13,6 +13,7 @@
     "createdOn" : ISODate("2018-07-04T01:48:29.190Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "operatorType" : "matrix",
     "appInfo" : [ 

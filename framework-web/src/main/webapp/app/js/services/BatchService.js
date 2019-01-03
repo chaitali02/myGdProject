@@ -191,7 +191,8 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		BatchFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		BatchFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var batchResult={};
 			var weekNumToDays={"0":"SUN","1":"MON","2":"TUE","3":"WED","4":"THU","5":"FRI","6":"SAT"};
@@ -204,7 +205,12 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.name=response.scheduleInfo[i].name;
 					scheduleInfo.uuid=response.scheduleInfo[i].uuid;
 					scheduleInfo.startDate=moment(response.scheduleInfo[i].startDate);
-					scheduleInfo.minDate=moment(response.scheduleInfo[i].startDate);
+					if(moment(response.scheduleInfo[i].startDate) >moment().subtract(new Date(), 'day')){
+						scheduleInfo.minDate=moment().subtract(new Date(), 'day');
+					}else{
+						scheduleInfo.minDate=moment(response.scheduleInfo[i].startDate);
+					}
+				//	scheduleInfo.minDate=moment().subtract(new Date(), 'day');//moment(response.scheduleInfo[i].startDate);
 					scheduleInfo.endDate=moment(response.scheduleInfo[i].endDate);
 					scheduleInfo.frequencyType=response.scheduleInfo[i].frequencyType;
 					scheduleInfo.frequencyDetail=[];
@@ -212,7 +218,7 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 					scheduleInfo.isEndDateChange="N";
 					if(response.scheduleInfo[i].frequencyDetail){
 						for(var j=0;j<response.scheduleInfo[i].frequencyDetail.length;j++){
-							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'){
+							if(response.scheduleInfo[i].frequencyType !='MONTHLY' &&  response.scheduleInfo[i].frequencyType !='QUARTERLY'&&  response.scheduleInfo[i].frequencyType !='HOURLY' ){
 								scheduleInfo.frequencyDetail[j]=weekNumToDays[response.scheduleInfo[i].frequencyDetail[j]];
 							}
 							else if(response.scheduleInfo[i].frequencyType =='QUARTERLY'){
@@ -242,6 +248,11 @@ BatchModule.service("BatchService", function ($q, BatchFactory, sortFactory,$fil
 			batchResult.scheduleInfoArray=scheduleInfoArray;
 			deferred.resolve({
 				data: batchResult
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;

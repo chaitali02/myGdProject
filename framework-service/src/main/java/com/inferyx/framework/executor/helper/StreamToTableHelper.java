@@ -124,6 +124,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		Datasource targetDS = streamInput.getTargetDS();
 		Datapod targetDP = streamInput.getTargetDP();
 		String datasourceType = targetDS.getType();
+		String dbName = targetDS.getDbname();
 		String sessionParameters = targetDS.getSessionParameters();
 		String url = Helper.genUrlByDatasource(targetDS);
 		String driver = targetDS.getDriver(); 
@@ -136,8 +137,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		String[] dataTypes =  new String[] {"integer", "varchar(70)", "varchar(70)"
 				, "integer", "integer", "integer"};;
 		String[] attributeList2 = null;
-		if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString()) 
-				&& targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+		if(!targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			attributeList2 = new String[targetDP.getAttributes().size()];
 			for(int i=0; i<targetDP.getAttributes().size(); i++) {
 				attributeList2[i] = targetDP.getAttributes().get(i).getName();
@@ -178,7 +178,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 								df = df.withColumn(attributeList[i], df.col(attributeList[i]).cast(dataTypes[i]));
 								//i++;
 							} 
-							persistDataframe(df, tableName, datasourceType, sessionParameters, url, driver, userName, password, saveMode);							
+							persistDataframe(df, tableName, datasourceType, sessionParameters, url, driver, userName, password, saveMode, dbName);							
 						} else if(ingestionType.equalsIgnoreCase(IngestionType.STREAMTOFILE.toString())) {
 							if(fileFormat == null) {
 								df.coalesce(1).write().mode(saveMode).format("csv").option("delimiter", ",").csv(targetPath);
@@ -224,7 +224,8 @@ public class StreamToTableHelper<T, K> implements Serializable {
 	
 	public void persistDataframe(Dataset<Row> df, String tableName, String datasourceType, 
 			String sessionParameters, String url, String driver, 
-			String userName, String password, String saveMode) {
+			String userName, String password, String saveMode,
+			String dbName) {
 
 //		logger.info("inside method persistDataframe");
 //		df.show(false);
@@ -236,6 +237,7 @@ public class StreamToTableHelper<T, K> implements Serializable {
 						df.sparkSession().sql("SET "+sessionParam);
 					}
 				}
+			df.sparkSession().sql("USE "+dbName);
 			df.write().mode(saveMode).insertInto(tableName);
 		} else {
 			Properties connectionProperties = new Properties();

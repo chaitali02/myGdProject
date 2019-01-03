@@ -37,7 +37,16 @@
                         </span>
                     </div>
                     <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+                            tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(reconruledata.uuid,reconruledata.version,mode)">
+                            <i class="fa fa-home icon-circle home-icon-circle"></i>
+                        </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                            tooltip ng-class="(isEdit==true || isPrivlage || reconruledata.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+                            data-ng-click="enableEdit(reconruledata.uuid,reconruledata.version)">
+                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+                        </a>
+                        <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
                             tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
                             data-ng-click="enableEdit(reconruledata.uuid,reconruledata.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
@@ -46,7 +55,7 @@
                             tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
                             data-ng-click="showview(reconruledata.uuid,reconruledata.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a>
+                        </a> -->
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
                             data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph()">
@@ -74,7 +83,17 @@
                         <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="reconruledata.uuid" version="rule.defaultVersion.version"></div>
                     </div>
                     <div class="form-wizard" ng-show="showForm">
-                        <div class="form-body" style="padding-top: 20px;">
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                        </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </div>
+                        <div class="form-body" style="padding-top: 20px;" ng-show="!isEditInprogess && !isEditVeiwError">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
                                     <a href="javascript:;" class="step" aria-expanded="true">
@@ -183,6 +202,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-default" ng-model="reconruledata.locked" ng-disabled="{{showactive}}" uib-btn-radio="'Y'">Yes</label>
+                                                    <label class="btn btn-default" ng-model="reconruledata.locked" ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
@@ -287,16 +315,17 @@
                                                                         ng-disabled="{{mode}}"/>
                                                                     </span>
                                                                 </th>
-                                                                <th style="width:15%;text-align:center;">Logical Operator</th>
-                                                                <th style="width:14%;text-align:center;"> LHS Type</th>
-                                                                <th style="width:190px;text-align:center;">LHS Attribute</th>
-                                                                <th style="width:15%;text-align:center;">Operator</th>
-                                                                <th style="width:14%;text-align:center;">RHS Type</th>
-                                                                <th style="width:190px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:16%;text-align:center;">Logical Operator</th>
+                                                                <th style="width:13%;text-align:center;"> LHS Type</th>
+                                                                <th style="width:180px;text-align:center;">LHS Attribute</th>
+                                                                <th style="width:13%;text-align:center;">Operator</th>
+                                                                <th style="width:13%;text-align:center;">RHS Type</th>
+                                                                <th style="width:180px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:8%;text-align:center;">Move</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr ng-repeat="tabledata in sourceFilterTable">
+                                                            <tr ng-repeat="tabledata in sourceFilterTable" drag-drop draggable="{{isDragable}}" after-drop="onSourceFilterDrop">
                                                                 <td style="text-align:center;Vertical-align:middle;">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" 
@@ -388,7 +417,7 @@
                                                                                 tooltip-placement="left">
                                                                             </span>
                                                 
-                                                                            <span ng-if="['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                                                            <span ng-if="(['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 || spacialOperator.indexOf(tabledata.operator) !=-1) && tabledata.rhstype.caption=='string'">
                                                                                 <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                                                                                 <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                 required disable-validation-message="" uib-tooltip="{{myform2['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
@@ -421,7 +450,13 @@
                                                                                 </span>
                                                                             </div>
                                                                         </span>
-                                                                      </div>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" 
@@ -477,6 +512,21 @@
                                                                              required disable-validation-message="" ng-change="onChangeRhsParamList('source')"></select>
                                                                         </span>
                                                                     </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <div style="text-align: center;">
+                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrSourceFilterRowUp($index)">
+                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                                                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+
+                                                                        </a>
+                                                                        <a class="move-column" ng-disabled="($index == sourceFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrSourceFilterRowDown($index)">
+                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                                                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                                                        </a>
+                                                                        </div>
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -581,16 +631,17 @@
                                                                         ng-disabled="{{mode}}" />
                                                                     </span>
                                                                 </th>
-                                                                <th style="width:15%;text-align:center;">Logical Operator</th>
+                                                                <th style="width:16%;text-align:center;">Logical Operator</th>
                                                                 <th style="width:13%;text-align:center;"> LHS Type</th>
-                                                                <th style="width:200px;text-align:center;">LHS Attribute</th>
+                                                                <th style="width:180px;text-align:center;">LHS Attribute</th>
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
-                                                                <th style="width:200px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:180px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:8%;text-align:center;">Move</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr ng-repeat="tabledata in targetFilterTable">
+                                                            <tr ng-repeat="tabledata in targetFilterTable" drag-drop draggable="{{isDragable}}" after-drop="onTargetFilterDrop">
                                                                 <td style="text-align:center;Vertical-align:middle;">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
@@ -677,7 +728,7 @@
                                                                                     tooltip-placement="left">
                                                                             </span>
                                                 
-                                                                            <span ng-if="['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">
+                                                                            <span ng-if="(['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 || spacialOperator.indexOf(tabledata.operator) !=-1) && tabledata.rhstype.caption=='string'">
                                                                                 <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
                                                                                 <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                     required disable-validation-message="" uib-tooltip="{{myform3['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
@@ -710,6 +761,12 @@
                                                                                 </span>
                                                                             </div>
                                                                         </span>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -763,6 +820,18 @@
                                                                              required disable-validation-message="" ng-change="onChangeRhsParamList('source')"></select>
                                                                         </span>
                                                                     </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <div style="text-align: center;">
+                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrTargetFilterRowUp($index)">
+                                                                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                                                                        </a>
+                                                                        <a class="move-column" ng-disabled="($index == targetFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrTargetFilterRowDown($index)">
+                                                                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                                                        </a>
+                                                                        </div>
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

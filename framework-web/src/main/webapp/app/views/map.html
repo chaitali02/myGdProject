@@ -28,7 +28,8 @@
 	<!-- END PAGE HEADER-->
 	<br>
 	<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-	<div  options="dirOptions" type="'map'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="mapdata" comment-panel-directive></div>
+	<div options="dirOptions" type="'map'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="mapdata"
+	 comment-panel-directive></div>
 
 	<div class="row">
 		<div class="col-md-12">
@@ -39,14 +40,22 @@
 					</div>
 
 					<div class="tools">
-						<a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+						<a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+						 style="height:16px;font-size:16px;" data-ng-click="showHome(mapdata.uuid,mapdata.version,mode)">
+							<i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+						</a>
+						<a title="Edit" ng-class="(isEdit==true || isPrivlage || mapdata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+						 data-placement="top" tooltip ng-click="enableEdit(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
+							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+						</a>
+						<!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
 						 data-placement="top" tooltip ng-click="enableEdit(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
 						<a title="View" data-toggle="tooltip" data-placement="top" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
 						 tooltip ng-click="showView(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
 							<span class="glyphicon glyphicon-file" style="color: white;"></span>
-						</a>
+						</a> -->
 						<a title="Knowledge Graph" data-toggle="tooltip" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
 						 data-placement="top" tooltip data-ng-click="showGraph(mapdata.uuid,mapdata.version)" style="height:14px;">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -74,222 +83,260 @@
 					</div>
 
 					<div class="form-body" ng-show="showFrom" style="padding-top: 50px;">
-						<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitMap()" form-on-change="mapFormChange()" prevent-enter-submit>
-							<div class="form-body">
-								<div class="form-group" ng-show="mapdata.uuid">
-									<label class="col-md-3 control-label">UUID</label>
-									<div class="col-md-6">
-										<input type="text" class="form-control" ng-disabled="true" ng-model="mapdata.uuid" disabled="disabled">
-									</div>
-
-								</div>
-								<div class="form-group">
-									<label class="col-md-3 control-label">Name
-										<span class="required" aria-required="true"> * </span>
-									</label>
-									<div class="col-md-6">
-										<input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(mapdata.name)" ng-model="mapdata.name"
-										 required="">
-									</div>
-								</div>
-
-								<div class="form-group" ng-show="mapdata.uuid">
-									<label class="col-md-3 control-label">Version</label>
-									<div class="col-md-6">
-										<select class="form-control" select2 ng-change="selectVersion()" ng-disabled="isversionEnable" data-ng-model="map.defaultVersion.version"
-										 ng-options="c.version as c.version for c in map.versions">
-
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group" ng-show="mapdata.uuid">
-									<label class="col-md-3 control-label">CreatedBy</label>
-									<div class="col-md-6">
-										<input type="text" class="form-control" ng-disabled="true" ng-model="mapdata.createdBy.ref.name" disabled="disabled">
-									</div>
-								</div>
-
-								<div class="form-group" ng-show="mapdata.uuid">
-									<label class="col-md-3 control-label">CreatedOn</label>
-									<div class="col-md-6">
-										<input type="text" ng-model="mapdata.createdOn" ng-disabled="true" class="form-control" disabled="disabled">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-									<div class="col-md-6">
-										<!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
-										<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-											<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-												max-results-to-show="10">
-											</auto-complete>
-										</tags-input>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-									<div class="col-md-6">
-
-										<textarea class="form-control" ng-disabled="{{mode}}" ng-model="mapdata.desc" rows="2" style="resize:none;"></textarea>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12">Source
-										<span class="required" aria-required="true"> * </span>
-									</label>
-									<div class="col-md-2 col-sm-2 col-xs-12">
-										<select class="form-control" ng-change="onChangeMapSourceTypes()" data-ng-model="sourcetype" ng-options="r for r in MapSourceTypes"
-										 ng-disabled="{{mode}}" required="">
-										</select>
-									</div>
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px;padding-right: 0px;">Name
-										<span class="required" aria-required="true"> * </span>
-									</label>
-									<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-										<select class="form-control" select2 name="" data-ng-change="onChangeMapSource()" data-ng-model="allMapSource.defaultoption"
-										 ng-options="r as r.name for r in allMapSource.options track by r.uuid" ng-disabled="{{mode}}">
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12">Target
-										<span class="required" aria-required="true"> * </span>
-									</label>
-									<div class="col-md-2 col-sm-2 col-xs-12">
-										<select title="Type" class="form-control" data-ng-disabled="{{mode}}" ng-change="onChangeTargetType()" data-ng-model="targetype" data-ng-options="r for r in MapTargeTypes"
-										 required="">
-										</select>
-									</div>
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px; padding-right: 0px;">Name
-										<span class="required" aria-required="true"> * </span>
-									</label>
-									<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-										<select class="form-control" select2 name="" data-ng-change="onChangeMapTarget()" data-ng-model="allMapTarget.defaultoption"
-										 ng-options="r as r.name for r in allMapTarget.options track by r.uuid" ng-disabled="{{mode}}">
-										</select>
+						<div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+							<h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+						</div>
+						<div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+							<div class="spinner">
+								<div class="bounce1"></div>
+								<div class="bounce2"></div>
+								<div class="bounce3"></div>
+							</div>
+						</div>
+						<div ng-show="!isEditInprogess && !isEditVeiwError">
+							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitMap()" form-on-change="mapFormChange()"
+							 prevent-enter-submit>
+								<div class="form-body">
+									<div class="form-group" ng-show="mapdata.uuid">
+										<label class="col-md-3 control-label">UUID</label>
+										<div class="col-md-6">
+											<input type="text" class="form-control" ng-disabled="true" ng-model="mapdata.uuid" disabled="disabled">
+										</div>
 
 									</div>
-								</div>
-
-
-
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-									<div class="col-md-6 col-sm-6 col-xs-12">
-										<div class="btn-group" ng-init="mapdata.active='Y'">
-											<label class="btn btn-default" ng-model="mapdata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-											 uncheckable>Yes</label>
-											<label class="btn btn-default" ng-model="mapdata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-											 uncheckable>No</label>
+									<div class="form-group">
+										<label class="col-md-3 control-label">Name
+											<span class="required" aria-required="true"> * </span>
+										</label>
+										<div class="col-md-6">
+											<input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(mapdata.name)" ng-model="mapdata.name"
+											 required="">
 										</div>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-									<div class="col-md-6 col-sm-6 col-xs-12">
-										<div class="btn-group" ng-init="mapdata.published='N'">
-											<label class="btn btn-default" ng-model="mapdata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-											 uncheckable>Yes</label>
-											<label class="btn btn-default" ng-model="mapdata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-											 uncheckable>No</label>
+
+									<div class="form-group" ng-show="mapdata.uuid">
+										<label class="col-md-3 control-label">Version</label>
+										<div class="col-md-6">
+											<select class="form-control" select2 ng-change="selectVersion()" ng-disabled="isversionEnable" data-ng-model="map.defaultVersion.version"
+											 ng-options="c.version as c.version for c in map.versions">
+
+											</select>
 										</div>
 									</div>
-								</div>
-								<div class="form-group" style="padding-top: 10px;">
-									<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-										<a ui-sref="metadata({type:'map'})" class="btn btn-primary">Cancel</a>
-										<!-- mapHasChanged == false ||  -->
-										<input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
-										 name="submit">
-										<span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-											<div class="bounce1"></div>
-											<div class="bounce2"></div>
-											<div class="bounce3"></div>
-										</span>
+
+									<div class="form-group" ng-show="mapdata.uuid">
+										<label class="col-md-3 control-label">CreatedBy</label>
+										<div class="col-md-6">
+											<input type="text" class="form-control" ng-disabled="true" ng-model="mapdata.createdBy.ref.name" disabled="disabled">
+										</div>
 									</div>
-								</div>
 
-								<div class="x_title">
-									<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true" ng-click="removeRow()"></button>
-									<button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="true" ng-click="addRow()"></button>
-									<h4>
-										<strong>Details</strong>
-									</h4>
-									<hr>
+									<div class="form-group" ng-show="mapdata.uuid">
+										<label class="col-md-3 control-label">CreatedOn</label>
+										<div class="col-md-6">
+											<input type="text" ng-model="mapdata.createdOn" ng-disabled="true" class="form-control" disabled="disabled">
+										</div>
+									</div>
 
-								</div>
-								<br/>
+									<div class="form-group">
+										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+										<div class="col-md-6">
+											<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+											 add-on-enter="true" add-on-space="true">
+												<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+												</auto-complete>
+											</tags-input>
+										</div>
+									</div>
 
-								<div>
-									<table class=" row-border hover table  table-striped table-bordered">
-										<thead>
-											<tr>
-												<th style="width:7%;" class="text-center">ID</th>
-												<th style="width:20%;text-align: center">Source Type</th>
-												<th style="width:45%;" class="text-center">Source Attributes</th>
-												<th style="width:45%;" class="text-center">Target Attributes</th>
+									<div class="form-group">
+										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+										<div class="col-md-6">
 
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="tabledata in allMapTargetAttribute">
-												<td>
-													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-														<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
-													</span>
-												</td>
-												<td>
-													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-														<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-														 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-														 class="form-control"></select>
-													</span>
-												</td>
-												<td>
-													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-														<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
-														 ng-disabled="{{mode}}">
-													</span>
-													<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
+											<textarea class="form-control" ng-disabled="{{mode}}" ng-model="mapdata.desc" rows="2" style="resize:none;"></textarea>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Source
+											<span class="required" aria-required="true"> * </span>
+										</label>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<select class="form-control" ng-change="onChangeMapSourceTypes()" data-ng-model="sourcetype" ng-options="r for r in MapSourceTypes"
+											 ng-disabled="{{mode}}" required="">
+											</select>
+										</div>
+										<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px;padding-right: 0px;">Name
+											<span class="required" aria-required="true"> * </span>
+										</label>
+										<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
+											<select class="form-control" select2 name="" data-ng-change="onChangeMapSource()" data-ng-model="allMapSource.defaultoption"
+											 ng-options="r as r.name for r in allMapSource.options track by r.uuid" ng-disabled="{{mode}}">
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Target
+											<span class="required" aria-required="true"> * </span>
+										</label>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<select title="Type" class="form-control" data-ng-disabled="{{mode}}" ng-change="onChangeTargetType()" data-ng-model="targetype"
+											 data-ng-options="r for r in MapTargeTypes" required="">
+											</select>
+										</div>
+										<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px; padding-right: 0px;">Name
+											<span class="required" aria-required="true"> * </span>
+										</label>
+										<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
+											<select class="form-control" select2 name="" data-ng-change="onChangeMapTarget()" data-ng-model="allMapTarget.defaultoption"
+											 ng-options="r as r.name for r in allMapTarget.options track by r.uuid" ng-disabled="{{mode}}">
+											</select>
+
+										</div>
+									</div>
+
+
+
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+										<div class="col-md-6 col-sm-6 col-xs-12">
+											<div class="btn-group" ng-init="mapdata.active='Y'">
+												<label class="btn btn-default" ng-model="mapdata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="mapdata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>No</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+										<div class="col-md-6 col-sm-6 col-xs-12">
+											<div class="btn-group">
+												<label class="btn btn-default" ng-model="mapdata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="mapdata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>No</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+										<div class="col-md-6 col-sm-6 col-xs-12">
+											<div class="btn-group" ng-init="mapdata.published='N'">
+												<label class="btn btn-default" ng-model="mapdata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="mapdata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+												 uncheckable>No</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 10px;">
+										<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+											<a ui-sref="metadata({type:'map'})" class="btn btn-primary">Cancel</a>
+											<!-- mapHasChanged == false ||  -->
+											<input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+											 name="submit">
+											<span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+												<div class="bounce1"></div>
+												<div class="bounce2"></div>
+												<div class="bounce3"></div>
+											</span>
+										</div>
+									</div>
+                                    <div class="btn-group pull-right">
+										<a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+											<i class="fa fa-angle-down"></i>
+										</a>
+										<ul class="dropdown-menu pull-right">
+											<li ng-click="autoMapFeature('By Name')">
+												<a href="javascript:;">By Name</a>
+											</li>
+											<li class="divider" style="margin: 0px;"> </li>
+											<li  ng-click="autoMapFeature('By Order')">
+												<a href="javascript:;">By Order</a>
+											</li>
+										  
+										</ul>
+									
+									</div>
+									<div class="x_title">
+										<!-- <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true" ng-click="removeRow()"></button>
+										<button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="true" ng-click="addRow()"></button> -->
+										<h4>
+											<strong>Details</strong>
+										</h4>
+										<hr>
+
+									</div>
+									<br/>
+
+									<div>
+										<table class=" row-border hover table  table-striped table-bordered">
+											<thead>
+												<tr>
+													<th style="width:7%;" class="text-center">ID</th>
+													<th style="width:20%;text-align: center">Source Type</th>
+													<th style="width:45%;" class="text-center">Source Attributes</th>
+													<th style="width:45%;" class="text-center">Target Attributes</th>
+
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="tabledata in allMapTargetAttribute">
+													<td>
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+															<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
 														</span>
-													</div>
-													<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
+													</td>
+													<td>
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-															 style="font-family: 'FontAwesome', Helvetica;">
-																<!-- <option value="">Create New &#xf067;</option> -->
-															</select>
+															<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
+															 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
+															 class="form-control"></select>
 														</span>
-													</div>
-													<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
+													</td>
+													<td>
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+															<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
+															 ng-disabled="{{mode}}">
 														</span>
-													</div>
-													<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
+														<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
+															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+															</span>
+														</div>
+														<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
+															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
+																 style="font-family: 'FontAwesome', Helvetica;">
+																	<!-- <option value="">Create New &#xf067;</option> -->
+																</select>
+															</span>
+														</div>
+														<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
+															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+															</span>
+														</div>
+														<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
+															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"
+																 ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+															</span>
+														</div>
+													</td>
+													<td>
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"
-															 ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+															<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
 														</span>
-													</div>
-												</td>
-												<td>
-													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-														<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
-													</span>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-						</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+							    </form>
+							</div>
 						</div>
 					</div>
 				</div>

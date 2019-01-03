@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
@@ -33,6 +34,7 @@ import com.inferyx.framework.service.DatapodServiceImpl;
  * @author Ganesh
  *
  */
+@Component
 public class LoadOperator implements IOperator {
 	
 	@Autowired
@@ -44,9 +46,11 @@ public class LoadOperator implements IOperator {
 	
 	public String generateSql(String targetTableName, MetaIdentifierHolder targetHolder, String filePathUrl) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		StringBuilder loadQuery = new StringBuilder();
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
+
 		loadQuery.append("LOAD DATA LOCAL INPATH '");
 		loadQuery.append(filePathUrl).append("' ");
 		loadQuery.append(" INTO TABLE ");

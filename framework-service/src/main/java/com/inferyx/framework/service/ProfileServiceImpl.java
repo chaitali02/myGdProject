@@ -53,9 +53,7 @@ import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -66,7 +64,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -74,9 +71,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.factory.ProfileOperatorFactory;
 import com.inferyx.framework.operator.ProfileOperator;
-import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -103,8 +98,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	ProfileOperatorFactory profileOperatorFactory;
 	@Autowired
 	MetadataUtil daoRegister;
 	@Autowired
@@ -134,8 +127,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Autowired
 	Engine engine;
 	@Autowired
-	private DatapodRegister datapodRegister;
-
+	ProfileOperator profileOperator; 
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
 
@@ -544,22 +536,29 @@ public class ProfileServiceImpl extends RuleTemplate {
 		ProfileExec profileExec =null;
 		try {
 			Profile profile = null;
-			ProfileOperator profileOperator = null;
+//			ProfileOperator profileOperator = null;
 			StringBuilder sbProfileSelect = new StringBuilder();
 			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 					MetaType.profileExec.toString());
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
-			
+//			Datasource datasource = commonServiceImpl.getDatasourceByObject(profile);
 			for (int i = 0; i < profile.getAttributeInfo().size(); i++) {
-				profileOperator = profileOperatorFactory.getOperator(runMode);
+//				profileOperator = profileOperatorFactory.getOperator(runMode, datasource);
 				String sql = profileOperator.generateSql(profile, profileExec,
 						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, otherParams, runMode);
 				if(sql != null)
 					sbProfileSelect.append(sql).append(" UNION ALL ");
 			}
-
-			profileExec.setExec(sbProfileSelect.substring(0, sbProfileSelect.length() - 10).toString());
+			String unionSql = sbProfileSelect.substring(0, sbProfileSelect.length() - 10);
+//			if(profile.getFilterInfo() != null && !profile.getFilterInfo().isEmpty()) {
+//				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
+//				Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
+//				String filter = filterOperator2.generateSql(profile.getFilterInfo(), refKeyMap, filterSource, otherParams, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+//				Datapod datapod = commonServiceImpl.getDatapodByObject(profile);
+//				unionSql = "SELECT * FROM ("+unionSql+") ".concat(datapod.getName()).concat(" WHERE 1=1").concat(filter);
+//			}
+			profileExec.setExec(unionSql);
 			synchronized (profileExec.getUuid()) {
 				ProfileExec profileExec1 = (ProfileExec) daoRegister.getRefObject(
 						new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
@@ -568,6 +567,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			synchronized (profileExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
+			}
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -797,4 +799,11 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
+	
+//	@Override
+//	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		MetaIdentifier datapodRef = ((Profile)baseRule).getDependsOn().getRef();
+//		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
+//		return commonServiceImpl.getDatasourceByDatapod(datapod);
+//	}
 }

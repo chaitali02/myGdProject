@@ -31,7 +31,7 @@ public class SparkServiceImpl implements java.io.Serializable {
 	/*@Autowired
 	private HiveContext hiveContext;*/
 	@Autowired
-	SparkExecutor executor;
+	SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -114,5 +114,9 @@ public class SparkServiceImpl implements java.io.Serializable {
 			}
 		}
 		return data;*/
+	}
+
+	public boolean dropTempTable(List<String> tempTableList) {
+		return sparkExecutor.dropTempTable(tempTableList);
 	}
 }

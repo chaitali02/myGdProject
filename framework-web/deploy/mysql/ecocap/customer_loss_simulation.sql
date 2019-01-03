@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS CUSTOMER_LOSS_SIMULATION; 
+drop table if exists customer_loss_simulation; 
 
-CREATE TABLE CUSTOMER_LOSS_SIMULATION 
+create table customer_loss_simulation 
   ( 
-     CUST_ID        VARCHAR(50), 
-     ITERATIONID    INTEGER(50), 
-     CUSTOMER_LOSS  DECIMAL(10, 2), 
-     REPORTING_DATE VARCHAR(50), 
-     VERSION        INTEGER(50) 
+     cust_id        varchar(50), 
+     iterationid    integer(50), 
+     customer_loss  decimal(10, 2), 
+     reporting_date varchar(50), 
+     version        integer(50) 
   ); 

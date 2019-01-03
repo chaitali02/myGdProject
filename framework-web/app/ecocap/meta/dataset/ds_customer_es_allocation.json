@@ -14,7 +14,8 @@
   },
   "createdOn": "Sun Jul 29 22:12:21 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -40,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "cust_id",
       "sourceAttr": {
         "ref": {
@@ -56,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "es_contribution",
       "sourceAttr": {
         "ref": {
@@ -72,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "fm_es_allocation",
       "sourceAttr": {
         "ref": {
@@ -88,6 +92,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -104,6 +109,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

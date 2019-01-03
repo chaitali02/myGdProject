@@ -5,7 +5,7 @@ import java.sql.*;
 class TestPostgreConnection {
 	public static void main(String args[]) {
 
-		final String url = "jdbc:postgresql://localhost/edw_small";
+		final String url = "jdbc:postgresql://boozy.gridedge.com/edw_small";
 		final String user = "inferyx";
 		final String password = "inferyx";
 
@@ -22,6 +22,8 @@ class TestPostgreConnection {
 			while (resultSet.next()) {
 				System.out.println("Enter....");
 				//System.out.printf("%-30.30s  %-30.30s%n", resultSet.getString("model"), resultSet.getString("price"));
+				System.out.println(resultSet.getInt(1) + "  " + resultSet.getString(2) + "  " + resultSet.getString(3));
+				
 
 			}
 		} catch (SQLException e) {

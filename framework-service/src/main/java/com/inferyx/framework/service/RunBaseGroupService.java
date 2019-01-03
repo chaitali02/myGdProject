@@ -287,6 +287,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 		BaseRuleExec baseRuleExec = null;
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+		boolean waitAndComplete = false;
 		do {
 				for (MetaIdentifierHolder ruleExecHolder : baseGroupExec.getExecList()) {
 					
@@ -310,7 +311,9 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 					}
 				}	// End For
 				Thread.sleep(10000);
-		} while(!waitAndComplete(baseGroup, baseGroupExec, taskList));
+				waitAndComplete = waitAndComplete(baseGroup, baseGroupExec, taskList);
+				logger.info("Wait And Complete : " + waitAndComplete);
+		} while(!waitAndComplete);
 		groupExecMeta = baseGroupExec.getRef(groupExecType);
 		TaskHolder taskHolder = new TaskHolder(name, groupExecMeta);
 		return taskHolder;
@@ -351,12 +354,13 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getUuid(), baseGroupExec.getVersion(), groupExecType.toString());
 				Status.Stage latestStatus = Helper.getLatestStatus(baseGroupExec.getStatusList()).getStage();
 				Status status=commonServiceImpl.getGroupStatus(baseGroupExec,groupExecType, execType);
+				logger.info(" Latest status and status in basegroupService.waitAndComplete : " + latestStatus + ":" + status.getStage());
 				synchronized (baseGroupExec.getUuid()) {
 					 if(status.getStage().equals(Status.Stage.Killed)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Terminating);
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Killed);
 					 }
-					 if(!latestStatus.equals(status.getStage())){
+					 if(!latestStatus.equals(status.getStage()) || status.getStage().equals(Status.Stage.Failed)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,status.getStage());
 						 return true;  
 					 }

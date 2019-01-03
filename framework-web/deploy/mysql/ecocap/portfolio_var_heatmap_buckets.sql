@@ -1,9 +1,9 @@
 
-DROP TABLE IF EXISTS PORTFOLIO_VAR_HEATMAP_BUCKETS; 
+drop table if exists portfolio_var_heatmap_buckets; 
 
-CREATE TABLE PORTFOLIO_VAR_HEATMAP_BUCKETS 
+create table portfolio_var_heatmap_buckets 
   ( 
-     PORTFOLIO_PD_BUCKET  VARCHAR(50), 
-     PORTFOLIO_LGD_BUCKET VARCHAR(50), 
-     VERSION              VARCHAR(50) 
+     portfolio_pd_bucket  varchar(50), 
+     portfolio_lgd_bucket varchar(50), 
+     version              varchar(50) 
   ); 

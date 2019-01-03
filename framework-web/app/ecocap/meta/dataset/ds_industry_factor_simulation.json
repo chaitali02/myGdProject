@@ -12,9 +12,10 @@
     },
     "value": null
   },
-  "createdOn": "Tue Aug 14 22:21:26 EDT 2018",
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -40,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "iteration_id",
       "sourceAttr": {
         "ref": {
@@ -56,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "factor1",
       "sourceAttr": {
         "ref": {
@@ -72,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "factor2",
       "sourceAttr": {
         "ref": {
@@ -88,6 +92,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "factor3",
       "sourceAttr": {
         "ref": {
@@ -104,6 +109,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "factor4",
       "sourceAttr": {
         "ref": {
@@ -120,6 +126,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -136,6 +143,7 @@
     },
     {
       "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

@@ -70,7 +70,18 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('creaetgraphpod', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.graphpodData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('creaetgraphpod', {
 			id: uuid,
@@ -137,10 +148,14 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		GraphpodService.getOneByUuidandVersion($stateParams.id, $stateParams.version,CF_META_TYPES.graphpod).then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		GraphpodService.getOneByUuidandVersion($stateParams.id, $stateParams.version,CF_META_TYPES.graphpod)
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.graphpodData = response.graphpod
+			$scope.isEditInprogess=false;
+			$scope.graphpodData = response.graphpod;
 			var defaultversion = {};
 			defaultversion.version =$scope.graphpodData.version;
 			defaultversion.uuid = $scope.graphpodData.uuid;
@@ -156,18 +171,28 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End If
 	else {
+		$scope.graphpodData={};
+		$scope.graphpodData.locked="N"
 		
 	}
 
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		GraphpodService.getOneByUuidandVersion(uuid, version,CF_META_TYPES.graphpod).then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		GraphpodService.getOneByUuidandVersion(uuid, version,CF_META_TYPES.graphpod)
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.graphpodData = response.graphpod
+			$scope.isEditInprogess=false;
+			$scope.graphpodData = response.graphpod;
 			var defaultversion = {};
 			defaultversion.version =$scope.graphpodData.version;
 			defaultversion.uuid = $scope.graphpodData.uuid;
@@ -183,6 +208,10 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 
@@ -498,6 +527,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		graphpodJson.name = $scope.graphpodData.name
 		graphpodJson.desc = $scope.graphpodData.desc
 		graphpodJson.active = $scope.graphpodData.active;
+		graphpodJson.locked = $scope.graphpodData.locked;
 		graphpodJson.published = $scope.graphpodData.published;
 		var tagArray = [];
 		if ($scope.tags != null) {

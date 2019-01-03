@@ -1,6 +1,6 @@
 /****/
 AdminModule = angular.module('AdminModule');
-AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService) {
+AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants,dagMetaDataService,CommonService) {
   $scope.isSearchDisable = true;
   $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
@@ -33,6 +33,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         minWidth: 250,
         cellClass: 'text-right',
         headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
         sort: {
           direction: uiGridConstants.ASC,
           // priority: 0,
@@ -49,7 +50,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         displayName: 'Registered On',
         name: 'registeredOn',
         cellClass: 'text-center',
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.registeredOn}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
       },
       {
         displayName: 'Registered By',
@@ -62,7 +64,9 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         name: 'status',
         cellClass: 'text-center',
         headerCellClass: 'text-center',
-        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status}}</span></div>'
+        // cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status  }}</span> <span><i  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow"style="color:{{row.entity.status==\'Not Registered\'?\'#DF0000\':\'#71F354\'}};font-size:14px;" class="{{row.entity.status!=\'Not Registered\' ? \'icon-check\' :  \'icon-close\'}}" aria-hidden="true"></i></span></div>'
+        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> In Progess <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> <img  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow" ng-src="{{row.entity.status!=\'Failed\' ? \'assets/layouts/layout/img/new_status/Completed.svg\' :  \'assets/layouts/layout/img/new_status/Killed.svg\'}}"  width="20" height="20"></div>'
+
       },
       {
         displayName: 'Compare Status',
@@ -116,20 +120,29 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     $scope.selectDataSource= {};
     $scope.allDataSource=[];
     $scope.searchtext=null;
-    $scope.getDatasourceByApp();
+    //$scope.getDatasourceByApp();
+    $scope.getAllLatestDatasource(); 
     $scope.gridOptions.data=[];
   }
 
-  $scope.getDatasourceByApp = function () {
+  // $scope.getDatasourceByApp = function () {
+  //   $scope.selectDataSource = null;
+  //   $scope.allDataSource = null;
+  //   RegisterSourceService.getDatasourceByApp($rootScope.appUuid).then(function (response){ onSuccessGetDatasourceByType(response.data)})
+  //   var onSuccessGetDatasourceByType = function (response) {
+  //     $scope.allDataSource = response
+  //   }
+  // }
+  // $scope.getDatasourceByApp();
+  $scope.getAllLatestDatasource = function () {
     $scope.selectDataSource = null;
     $scope.allDataSource = null;
-    RegisterSourceService.getDatasourceByApp($rootScope.appUuid).then(function (response){ onSuccessGetDatasourceByType(response.data)})
-    var onSuccessGetDatasourceByType = function (response) {
+    CommonService.getAllLatest("datasource").then(function (response){ onSuccessGetAllLatest(response.data)})
+    var onSuccessGetAllLatest = function (response) {
       $scope.allDataSource = response
     }
   }
-  $scope.getDatasourceByApp();
-  
+  $scope.getAllLatestDatasource(); 
   $scope.onChangeSource=function(){
     console.log($scope.selectDataSource)
     if($scope.selectDataSource !=null){
@@ -250,7 +263,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       count = count + 1;
     }
     console.log(JSON.stringify(registerSourceArray))
-    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)});
+    RegisterSourceService.getRegister($scope.selectDataSource.uuid, $scope.selectDataSource.version, registerSourceArray, $scope.selectDataSource.type).then(function (response) {onSuccessGetcreateAndLoad(response.data)},function (response) {onError(response.data)});
     var onSuccessGetcreateAndLoad = function (response) {
      // console.log(JSON.stringify(response))
       $scope.searchButtonText = "Register";
@@ -264,6 +277,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
           $scope.gridOptions.data[id].status = response[i].status;
           $scope.gridOptions.data[id].selected= false;
           $scope.gridOptions.data[id].isDisabled=true;
+          $scope.gridOptions.data[id].isSuccessShow=true;
+          $scope.gridOptions.data[id].isErrorShow=false;
           $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
           $scope.gridOptions.data[id].compareStatus=response[i].compareStatus
         }
@@ -275,6 +290,8 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
             $scope.gridOptions.data[index].status = response[i].status;
             $scope.gridOptions.data[index].selected= false;
             $scope.gridOptions.data[index].isDisabled=true;
+            $scope.gridOptions.data[id].isSuccessShow=true;
+            $scope.gridOptions.data[id].isErrorShow=false;
             $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
             $scope.gridOptions.data[index].compareStatus=response[i].compareStatus
         }
@@ -287,7 +304,40 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       notify.content = 'Datapod Registered Successfully'
       $scope.$emit('notify', notify);
     }
+<<<<<<< HEAD
 
+=======
+    var onError=function(response){
+      $scope.searchButtonText = "Register";
+    	var selectRegisterSoucre=$scope.getSelectedRow();
+    	$scope.dataLoading = false;
+      $scope.dataLoading = false;
+      $scope.selectedAllRow = false;
+      for (var i = 0; i < selectRegisterSoucre.length; i++) {
+        if(!$scope.searchtext){
+          var id = selectRegisterSoucre[i].id - 1
+          $scope.gridOptions.data[id].status = "Failed";
+          $scope.gridOptions.data[id].selected= false;
+          $scope.gridOptions.data[id].isDisabled=false;
+          $scope.gridOptions.data[id].isSuccessShow=false;
+          $scope.gridOptions.data[id].isErrorShow=true;
+        }
+        else{
+          var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+          if(index!=-1){
+            $scope.gridOptions.data[index].status ="Failed";
+            $scope.gridOptions.data[index].selected= false;
+            $scope.gridOptions.data[index].isDisabled=false;
+            $scope.gridOptions.data[id].isSuccessShow=false;
+            $scope.gridOptions.data[id].isErrorShow=true;
+          }
+        }
+      //$scope.gridOptions.data.splice(i,1);
+      // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+      }
+
+    }
+>>>>>>> master
   }
   
 

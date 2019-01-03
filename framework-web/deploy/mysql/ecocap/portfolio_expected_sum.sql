@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS PORTFOLIO_EXPECTED_SUM; 
+drop table if exists portfolio_expected_sum; 
 
-CREATE TABLE PORTFOLIO_EXPECTED_SUM 
+create table portfolio_expected_sum 
   ( 
-     EXPECTED_SUM   DECIMAL(10, 2), 
-     REPORTING_DATE VARCHAR(50), 
-     VERSION        INTEGER(50) 
+     expected_sum   decimal(10, 2), 
+     reporting_date varchar(50), 
+     version        integer(50) 
   ); 

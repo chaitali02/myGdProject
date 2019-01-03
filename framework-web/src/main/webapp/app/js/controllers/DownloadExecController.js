@@ -3,8 +3,9 @@
   JobMonitoringModule.controller('DetailDownloadExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
-    $scope.showdownloadexec = true;
-   
+    $scope.showExec = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle = dagMetaDataService.elementDefs['downloadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['downloadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['downloadexec'].execType + "'})"
     $rootScope.isCommentVeiwPrivlage=true;
@@ -33,27 +34,27 @@
         $state.go($scope.statedetail.name, $scope.statedetail.params)
       }
     }
-    JobMonitoringService.getLatestByUuid($scope.uuid, "downloadexec").then(function(response) {
-      onSuccess(response.data)
-    });
-    var onSuccess = function(response) {
-      $scope.downloadexecdata = response;
+    JobMonitoringService.getLatestByUuid($scope.uuid, "downloadexec")
+      .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+    var onSuccess = function (response) {
+      $scope.isEditInprogess=false;
+      $scope.execData = response;
+    }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
     }
 
     
     $scope.showGraph = function(uuid, version) {
-      $scope.showdownloadexec = false;
-      $scope.showgraph = false
-      $scope.graphDatastatusList = true
-      $scope.showgraphdiv = true;
+      $scope.showExec = false;
+      $scope.showGraphDiv = true;
 
     }
 
-    $scope.showdownloadexecPage = function() {
-      $scope.showdownloadexec = true
-      $scope.showgraph = false
-      $scope.graphDatastatusList = false
-      $scope.showgraphdiv = false;
+    $scope.showExecPage = function() {
+      $scope.showExec = true
+      $scope.showGraphDiv = false;
     }
 
 

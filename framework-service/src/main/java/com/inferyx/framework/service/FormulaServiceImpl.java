@@ -342,7 +342,22 @@ public class FormulaServiceImpl {
 		} else
 			return iFormulaDao.findAllVersion(uuid);
 	}*/
-
+    public List<Formula> findFormulaByApp() throws JsonProcessingException{
+    	
+    	List<Formula> result = new ArrayList<Formula>();
+    	String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
+		if (appUuid != null) {
+			Application application= (Application) commonServiceImpl.getOneByUuidAndVersion(appUuid,null,MetaType.application.toString());
+			if(application !=null) {
+				String uuid=application.getParamList().getRef().getUuid();
+				result=findFormulaByType(uuid);
+			}
+			
+		}
+    	return result;
+    }
+    
 	public List<Formula> findFormulaByType(String uuid) throws JsonProcessingException {
 		/*
 		 * String appUuid = (securityServiceImpl.getAppInfo() != null &&

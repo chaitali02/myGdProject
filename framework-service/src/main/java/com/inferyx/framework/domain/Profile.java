@@ -19,7 +19,8 @@ public class Profile extends BaseRule {
 	
 	private MetaIdentifierHolder dependsOn;
 	private List<AttributeRefHolder> attributeInfo;
-	
+	private List<FilterInfo> filterInfo;	
+
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;
 	}
@@ -31,6 +32,12 @@ public class Profile extends BaseRule {
 	}
 	public void setAttributeInfo(List<AttributeRefHolder> attributeInfo) {
 		this.attributeInfo = attributeInfo;
+	}
+	public List<FilterInfo> getFilterInfo() {
+		return filterInfo;
+	}
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
+		this.filterInfo = filterInfo;
 	}	
 
 }

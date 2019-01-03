@@ -19,10 +19,10 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 
 		}).then(function (response) { return response })
 	}
-	factory.datapodSubmit = function (data, type,upd_tag) {
+	factory.datapodSubmit = function (data, type, upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=" + type+"&upd_tag="+upd_tag,
+			url: url + "common/submit?action=edit&type=" + type + "&upd_tag=" + upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -66,21 +66,21 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findDatapodSample = function (uuid, version,rows) {
+	factory.findDatapodSample = function (uuid, version, rows) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion="+version+"&rows="+rows,
+			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&rows=" + rows,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.findResultByDatastore = function (uuid, version,limit) {
+	factory.findResultByDatastore = function (uuid, version, limit) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit="+limit,
+			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit=" + limit,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-    
+
 	factory.findDownloadSample = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -88,24 +88,31 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.findDatastoreByDatapod = function (uuid,version,type) {
+	factory.findDatastoreByDatapod = function (uuid, version, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "metadata/getDatastoreByDatapod?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			url: url + "metadata/getDatastoreByDatapod?action=view&uuid=" + uuid + "&version=" + version + "&type" + type,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.findCompareMetadata = function (uuid,version,type) {
+	factory.findCompareMetadata = function (uuid, version, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			url: url + "datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.findSynchronizeMetadata = function (uuid,version,type) {
+	factory.findSynchronizeMetadata = function (uuid, version, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/synchronizeMetadata?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
+			url: url + "datapod/synchronizeMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.findAttrHistogram = function (uuid, version, type, attributeId) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/getAttrHistogram?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&attributeId="+attributeId,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
@@ -114,24 +121,10 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
-	this.synchronizeMetadata = function (uuid,version,type) {
+	
+	this.getAttrHistogram = function (uuid, version, type, attributeId) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findSynchronizeMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
-		var onSuccess = function (response) {
-			deferred.resolve({
-				data: response
-			});
-		}
-		var onError = function (response) {
-			deferred.reject({
-				data: response
-			})
-		}
-		return deferred.promise;
-	}
-	this.compareMetadata = function (uuid,version,type) {
-		var deferred = $q.defer();
-		MetadataDatapodFactory.findCompareMetadata(uuid,version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findAttrHistogram(uuid, version, type, attributeId).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -145,9 +138,24 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		return deferred.promise;
 	}
 
-	this.getResultByDatastore = function (uuid,version,limit) {
+	this.synchronizeMetadata = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findResultByDatastore(uuid,version,limit).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findSynchronizeMetadata(uuid, version, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.compareMetadata = function (uuid, version, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findCompareMetadata(uuid, version, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -161,9 +169,9 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		return deferred.promise;
 	}
 
-	this.getDatastoreByDatapod = function (data,type) {
+	this.getResultByDatastore = function (uuid, version, limit) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findDatastoreByDatapod(data.uuid,data.version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findResultByDatastore(uuid, version, limit).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -177,9 +185,25 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		return deferred.promise;
 	}
 
-	this.getDatapodSample = function (data,rows) {
+	this.getDatastoreByDatapod = function (data, type) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findDatapodSample(data.uuid,data.version,rows).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.findDatastoreByDatapod(data.uuid, data.version, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.getDatapodSample = function (data, rows) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version, rows).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			//console.log(response)
 			deferred.resolve({
@@ -256,6 +280,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
 				attribute.length = response.attributes[i].length;
+				attribute.unit = response.attributes[i].unit;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -317,7 +342,8 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 	};
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataDatapodFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var datapodjson = {};
 			datapodjson.datapodata = response;
@@ -332,7 +358,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
 				attribute.length = response.attributes[i].length;
-				//console.log(response.attributes[i].key);
+				attribute.attrUnitType = response.attributes[i].attrUnitType;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -343,16 +369,20 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attributearray[i] = attribute
 			}
 			datapodjson.attributes = attributearray
-			//console.log(JSON.stringify(attributearray));
 			deferred.resolve({
 				data: datapodjson
 			})
-		}
+		};
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		};
 		return deferred.promise;
 	}
-	this.submit = function (data, type,upd_tag) {
+	this.submit = function (data, type, upd_tag) {
 		var deferred = $q.defer();
-		MetadataDatapodFactory.datapodSubmit(data, type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodFactory.datapodSubmit(data, type, upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

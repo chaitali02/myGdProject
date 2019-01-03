@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Aug 11 16:00:42 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -40,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "customer_var_contribution_top1_perc",
       "sourceAttr": {
         "ref": {
@@ -56,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "customer_var_contribution_top5_perc",
       "sourceAttr": {
         "ref": {
@@ -72,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "customer_var_contribution_top10_perc",
       "sourceAttr": {
         "ref": {
@@ -88,6 +92,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "customer_var_contribution_top50_perc",
       "sourceAttr": {
         "ref": {
@@ -104,6 +109,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -120,6 +126,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

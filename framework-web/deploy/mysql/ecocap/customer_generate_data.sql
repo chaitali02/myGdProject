@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS CUSTOMER_GENERATE_DATA; 
+drop table if exists customer_generate_data; 
 
-CREATE TABLE CUSTOMER_GENERATE_DATA 
+create table customer_generate_data 
   ( 
-     ID      INTEGER(50), 
-     DATA    DECIMAL(10, 2), 
-     VERSION INTEGER(50) 
+     id      integer(50), 
+     data    decimal(10, 2), 
+     version integer(50) 
   ); 

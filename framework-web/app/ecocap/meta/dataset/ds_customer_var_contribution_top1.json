@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Aug 11 13:19:11 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -53,6 +54,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "top_n",
       "sourceAttr": {
         "ref": {
@@ -69,6 +71,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "fm_customer_var_contribution_topn_perc",
       "sourceAttr": {
         "ref": {
@@ -85,6 +88,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -101,6 +105,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

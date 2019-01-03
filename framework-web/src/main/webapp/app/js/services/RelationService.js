@@ -95,7 +95,7 @@ MetadataModule.factory('MetadataRelationFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findAttributesByRelation = function (uuid,type) {
+	factory.findAttributesByRelation = function (uuid, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'GET',
@@ -131,10 +131,10 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 	this.getAllAttributeBySource = function (uuid, type, version) {
 		var deferred = $q.defer();
 		if (type == "relation") {
-		//	MetadataRelationFactory.findDatapodByRelation(uuid, "datapod", version).then(function (response) { onSuccess(response.data) });
-		    MetadataRelationFactory.findAttributesByRelation(uuid, "relation", version).then(function (response) { onSuccess(response.data) });
+			//	MetadataRelationFactory.findDatapodByRelation(uuid, "datapod", version).then(function (response) { onSuccess(response.data) });
+			MetadataRelationFactory.findAttributesByRelation(uuid, "relation", version).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				
+
 				// var allattributes = [];
 				// var attributes = [];
 				// for (var j = 0; j < response.length; j++) {
@@ -158,11 +158,11 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				// relationattribute.attributes = attributes;
 				var allattributes = [];
 				var attributes = [];
-				var isNew=true;
-				var count=0;
+				var isNew = true;
+				var count = 0;
 				var attr;
 				for (var j = 0; j < response.length; j++) {
-					
+
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
 					attributedetail.type = response[j].ref.type;
@@ -171,21 +171,21 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-					allattributes.push(attributedetail);					
-					if(j == 0){
+					allattributes.push(attributedetail);
+					if (j == 0) {
 						attr = [];
 						attr.push(attributedetail);
-						
+
 					}
-					if(j > 0  && attr.length >0 && attr[attr.length-1].uuid == attributedetail.uuid)
+					if (j > 0 && attr.length > 0 && attr[attr.length - 1].uuid == attributedetail.uuid)
 						attr.push(attributedetail);
-					else{
-						if(j !=0){
+					else {
+						if (j != 0) {
 							attributes[count] = attr;
 							attr = [];
 							attr.push(attributedetail);
-							
-							count=count+1;
+
+							count = count + 1;
 						}
 					}
 
@@ -398,7 +398,8 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 	};
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataRelationFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataRelationFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var relationjson = {};
 			relationjson.relationdata = response;
@@ -408,10 +409,10 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				if (response.relationInfo[i].joinType == "") {
 					relationInfo.relationJoinType = "EQUI JOIN"
 				}
-				else if(response.relationInfo[i].joinType =="CROSS"){
+				else if (response.relationInfo[i].joinType == "CROSS") {
 					relationInfo.relationJoinType = "CROSS JOIN"
 				}
-				
+
 				else {
 					relationInfo.relationJoinType = response.relationInfo[i].joinType;
 				}
@@ -422,9 +423,7 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				ref.type = response.relationInfo[i].join.ref.type;
 				relationInfo.join = ref;
 				relationInfo.isjoinDisable = false;
-				relationInfo.joinMetaType=response.relationInfo[i].join.ref.type;
-				// joinarray.push(ref);
-				//relationInfo.joinarray=joinarray;
+				relationInfo.joinMetaType = response.relationInfo[i].join.ref.type;
 				var joinKeyArray = [];
 				if (response.relationInfo[i].joinKey && response.relationInfo[i].joinKey.length > 0) {
 					for (var l = 0; l < response.relationInfo[i].joinKey.length; l++) {
@@ -451,11 +450,6 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 
 					}
 				} else {
-					//	relationInfo.isjoinDisable=true;
-					// var joinjson = {}
-					// joinjson.logicalOperator =''
-					// joinjson.relationOperator = ''
-					// joinKeyArray.push(joinjson);
 				}
 				relationInfo.joinKey = joinKeyArray;
 				relationInfoArray.push(relationInfo);
@@ -463,9 +457,13 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 			}
 
 			relationjson.relationInfo = relationInfoArray
-			//console.log(JSON.stringify(relationInfoArray))
 			deferred.resolve({
 				data: relationjson
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;

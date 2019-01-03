@@ -18,7 +18,8 @@
 		"DEV",
 		"0.1.0"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
 	"appInfo": [
 		{

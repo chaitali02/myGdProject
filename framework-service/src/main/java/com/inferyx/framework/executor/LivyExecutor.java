@@ -36,10 +36,12 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.StructType;
 import org.apache.spark.storage.StorageLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.client.LivyClientImpl;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.MetadataUtil;
@@ -60,12 +62,14 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -327,7 +331,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -384,7 +388,7 @@ public class LivyExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
 	 */
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -449,7 +453,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -617,6 +621,70 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
+			Map<String, String> trainOtherParam) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;

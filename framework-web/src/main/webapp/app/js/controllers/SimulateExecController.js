@@ -5,6 +5,8 @@ JobMonitoringModule.controller('DetailSimulateExecController', function ($filter
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.selectTitle = dagMetaDataService.elementDefs['simulateexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['simulateexec'].listState + "({type:'" + dagMetaDataService.elementDefs['modelexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage=true;
@@ -31,10 +33,10 @@ JobMonitoringModule.controller('DetailSimulateExecController', function ($filter
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
-  JobMonitoringService.getLatestByUuid($scope.uuid, "simulateexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "simulateexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
+    $scope.isEditInprogess=false;
     $scope.execData = response;
     var status = [];
     for (i = 0; i < response.statusList.length; i++) {
@@ -51,6 +53,10 @@ JobMonitoringModule.controller('DetailSimulateExecController', function ($filter
       $scope.refkeylist = refkeylist
       $scope.refkeylistclass = "cross"
     }
+  }
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
   $scope.showGraph = function () {

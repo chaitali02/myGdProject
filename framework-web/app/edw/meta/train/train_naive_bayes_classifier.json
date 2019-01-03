@@ -14,8 +14,10 @@
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
@@ -27,12 +29,21 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
             "feature" : {
                 "featureId" : "1",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
@@ -44,12 +55,21 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "2",
+            "featureDisplaySeq" : "2",
             "feature" : {
                 "featureId" : "2",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
@@ -61,12 +81,21 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "3",
+            "featureDisplaySeq" : "3",
             "feature" : {
                 "featureId" : "3",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
@@ -77,6 +106,39 @@
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "featureDisplaySeq" : "4",
+            "feature" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "2bb1e14a-fde5-4da9-ab88-a5fb0947cb69"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
                 }
             }
         }
@@ -106,6 +168,7 @@
     "createdOn" : ISODate("2018-09-03T19:14:22.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {
@@ -115,5 +178,22 @@
                 "version" : "1464977196"
             }
         }
-    ]
+    ],
+"rowIdentifier" : [ 
+        {
+           "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }, 
+        {
+            "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }
+    ],
+    "includeFeatures" : "Y"
 }

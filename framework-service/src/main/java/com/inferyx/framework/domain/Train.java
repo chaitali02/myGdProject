@@ -24,6 +24,48 @@ public class Train extends BaseEntity {
 	private AttributeRefHolder labelInfo;
 	private String useHyperParams;
 	private String featureImportance;
+	private List<AttributeRefHolder> rowIdentifier;
+	private String includeFeatures = "N";
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the rowIdentifier
+	 */
+	public List<AttributeRefHolder> getRowIdentifier() {
+		return this.rowIdentifier;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param rowIdentifier the rowIdentifier to set
+	 */
+	public void setRowIdentifier(List<AttributeRefHolder> rowIdentifier) {
+		this.rowIdentifier = rowIdentifier;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the includeFeatures
+	 */
+	public String getIncludeFeatures() {
+		return this.includeFeatures;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param includeFeatures the includeFeatures to set
+	 */
+	public void setIncludeFeatures(String includeFeatures) {
+		this.includeFeatures = includeFeatures;
+	}
 
 	/**
 	 *

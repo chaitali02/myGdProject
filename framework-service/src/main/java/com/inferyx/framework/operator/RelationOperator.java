@@ -25,6 +25,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -164,6 +165,8 @@ public class RelationOperator {
 					rightTable = populateVerUnion(tableArr);
 				}
 			}
+			
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(relation);
 			if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
 				MetaIdentifier joinMI = relInfoList.get(i).getJoin().getRef();
 				if(joinMI.getType().equals(MetaType.dataset)) {
@@ -177,7 +180,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				} else {
 					builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
@@ -187,7 +190,7 @@ public class RelationOperator {
 						builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				}
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -203,7 +206,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				} else if(joinMI.getType().equals(MetaType.datapod)) {
 					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
@@ -217,14 +220,14 @@ public class RelationOperator {
 							builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 						}
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 						}
 					} else {
 						builder.append(joinType + " JOIN ").append(" ");
 						builder.append(dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
 
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 						}
 					}
 				}
