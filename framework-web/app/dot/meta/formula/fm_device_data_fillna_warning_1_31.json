@@ -1,8 +1,8 @@
 {
     "dependsOn" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "4e75a09c-db24-41a7-b7f7-1ef24a4eecf4"
+            "type" : "datapod",
+            "uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
         }
     },
     "formulaInfo" : [ 
@@ -20,8 +20,8 @@
         }, 
         {
             "ref" : {
-                "type" : "dataset",
-                "uuid" : "6a1d9d4a-ad0f-4085-8895-004cf733f8e5"
+                "type" : "datapod",
+                "uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
             },
             "attributeId" : 42
         }, 

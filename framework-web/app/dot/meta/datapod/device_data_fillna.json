@@ -1393,9 +1393,9 @@
             "active" : "Y"
         }
     ],
-    "uuid": "db48358e-4b2b-4e91-9f9c-b0373f1213ee",
+    "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
   "version": "1545347790",
-  "name": "device_data",
+  "name": "device_data_fillna",
     "createdBy" : {
         "ref" : {
             "type" : "user",
