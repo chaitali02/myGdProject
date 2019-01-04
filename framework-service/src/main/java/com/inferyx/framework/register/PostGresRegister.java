@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataStore;
@@ -67,6 +68,8 @@ public class PostGresRegister {
 	CommonServiceImpl<?> commonServiceImpl;
     @Autowired 
     LoadServiceImpl loadServiceImpl;
+	@Autowired
+	private IDatapodDao iDatapodDao;
 
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
@@ -86,101 +89,102 @@ public class PostGresRegister {
 			DatabaseMetaData dbMetadata = con.getMetaData();
 
 			for (int i = 0; i < registryList.size(); i++) {
-				String tableName = registryList.get(i).getName();
-				DataStore datastore = new DataStore();
-				List<Attribute> attrList = new ArrayList<>();
-				logger.info("Table is : " + tableName);
-				datapod = new Datapod();
-				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
-
-				if (datapodList.size() > 0)
-					datapod.setUuid(datapodList.get(0).getUuid());
-
-				datapod.setName(tableName);
-				
-				ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
-				List<String> pkList = new ArrayList<>();
-				while(rsPriKey.next()) {
-					pkList.add(rsPriKey.getString("COLUMN_NAME"));
-				}
-				
-				ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
-				for(int j = 0; rs.next(); j++) {
-					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
-					Attribute attr = new Attribute();
-					String colName = rs.getString("COLUMN_NAME");
-					attr.setAttributeId(j);
-					attr.setName(colName);
-					attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
-					attr.setDesc(colName);
-					if(pkList.contains(colName)) {
-						attr.setKey("Y");
-					} else {
-						attr.setKey("N");
+				try {
+					String tableName = registryList.get(i).getName();
+					DataStore datastore = new DataStore();
+					List<Attribute> attrList = new ArrayList<>();
+					logger.info("Table is : " + tableName);
+					datapod = new Datapod();
+					List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
+					if (datapodList != null && !datapodList.isEmpty()) {
+						datapod.setUuid(datapodList.get(0).getUuid());
 					}
-					attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
-					attr.setPartition("N");
-					attr.setActive("Y");
-					attr.setDispName(colName);
-					attrList.add(attr);
+
+					datapod.setName(tableName);
+					
+					ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
+					List<String> pkList = new ArrayList<>();
+					while(rsPriKey.next()) {
+						pkList.add(rsPriKey.getString("COLUMN_NAME"));
+					}
+					
+					ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
+					for(int j = 0; rs.next(); j++) {
+						logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
+						Attribute attr = new Attribute();
+						String colName = rs.getString("COLUMN_NAME");
+						attr.setAttributeId(j);
+						attr.setName(colName);
+						attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
+						attr.setDesc(colName);
+						if(pkList.contains(colName)) {
+							attr.setKey("Y");
+						} else {
+							attr.setKey("N");
+						}
+						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
+						attr.setPartition("N");
+						attr.setActive("Y");
+						attr.setDispName(colName);
+						attrList.add(attr);
+					}
+					rs.close();
+					datapod.setAttributes(attrList);
+					datapod.setDatasource(datastoreMeta);
+					datapod.setBaseEntity();
+					datapod = datapodServiceImpl.save(datapod);
+
+					if (registryList.get(i).getName().equals(tableName)) {
+						registryList.get(i).setRegisteredOn(datapod.getCreatedOn());
+						registryList.get(i).setStatus("Registered");
+						registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
+					}
+
+					MetaIdentifierHolder holder = new MetaIdentifierHolder();
+					MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
+					datastore.setName(datapod.getName());
+					datastore.setDesc(datapod.getDesc());
+					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setNumRows(0);
+					datastore.setCreatedBy(datapod.getCreatedBy());
+					holder.setRef(datastoreRef);
+					datastore.setMetaId(holder);
+					datastore.setBaseEntity();
+					
+					//Creating load & loadExec
+					Load load = new Load();
+					load.setBaseEntity();
+					load.setHeader("Y");
+					MetaIdentifier sourceMI = new MetaIdentifier();
+					sourceMI.setType(MetaType.datasource);
+					sourceMI.setUuid(datasource.getUuid());
+					MetaIdentifierHolder sourceHolder = new MetaIdentifierHolder(sourceMI);
+					sourceHolder.setValue(datasource.getDbname() + "." + tableName);
+					load.setSource(sourceHolder);
+					MetaIdentifier targetMI = new MetaIdentifier();
+					targetMI.setType(MetaType.datapod);
+					targetMI.setUuid(datapod.getUuid());
+					MetaIdentifierHolder targetHolder = new MetaIdentifierHolder(targetMI);
+					load.setTarget(targetHolder);
+					load.setName(datapod.getName());
+					commonServiceImpl.save(MetaType.load.toString(), load);
+					LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
+					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
+					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
+					MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+					datastore.setExecId(execId);
+					//datastoreServiceImpl.save(datastore);
+					commonServiceImpl.save(MetaType.datastore.toString(), datastore);
+					dpList.add(datapod);
+				} catch (Exception e) {
+					iDatapodDao.delete(datapod);
 				}
-				rs.close();
-				datapod.setAttributes(attrList);
-				datapod.setDatasource(datastoreMeta);
-				Datapod savedDp = null;
-				savedDp = datapodServiceImpl.save(datapod);
-
-				if (registryList.get(i).getName().equals(tableName)) {
-					registryList.get(i).setRegisteredOn(savedDp.getCreatedOn());
-					registryList.get(i).setStatus("Registered");
-					registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
-
-				}
-
-				MetaIdentifierHolder holder = new MetaIdentifierHolder();
-				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
-				datastore.setName(datapod.getName());
-				datastore.setDesc(datapod.getDesc());
-				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
-				//IExecutor exec = execFactory.getExecutor(ExecContext.HIVE.toString());
-				//ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
-			//	rsHolder.getResultSet().next();
-				datastore.setNumRows(0);
-				datastore.setCreatedBy(datapod.getCreatedBy());
-				holder.setRef(datastoreRef);
-				datastore.setMetaId(holder);
-				datastore.setBaseEntity();
-				//Creating load & loadExec
-				Load load = new Load();
-				load.setBaseEntity();
-				load.setHeader("Y");
-				MetaIdentifier sourceMI = new MetaIdentifier();
-				sourceMI.setType(MetaType.datasource);
-				sourceMI.setUuid(datasource.getUuid());
-				MetaIdentifierHolder sourceHolder = new MetaIdentifierHolder(sourceMI);
-				sourceHolder.setValue(datasource.getDbname() + "." + tableName);
-				load.setSource(sourceHolder);
-				MetaIdentifier targetMI = new MetaIdentifier();
-				targetMI.setType(MetaType.datapod);
-				targetMI.setUuid(datapod.getUuid());
-				MetaIdentifierHolder targetHolder = new MetaIdentifierHolder(targetMI);
-				load.setTarget(targetHolder);
-				load.setName(datapod.getName());
-				commonServiceImpl.save(MetaType.load.toString(), load);
-				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
-				datastore.setExecId(execId);
-				//datastoreServiceImpl.save(datastore);
-				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
-				dpList.add(savedDp);
-
 			}
+			return registryList;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return registryList;
 	}
 
 	public String getconvertedDataType( String datatype) {

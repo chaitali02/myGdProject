@@ -45,7 +45,6 @@ public class CSVRegister extends DataSourceRegister {
 	}*/
 
 	public List<Registry> register(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
-		//Datasource ds = datasourceServiceImpl.findOneByUuidAndVersion(uuid, version);
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		String filepath = hdfsInfo.getHdfsURL()+ds.getPath();
 		for(int i=0; i<registryList.size(); i++) {
@@ -56,7 +55,6 @@ public class CSVRegister extends DataSourceRegister {
 				Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName().toLowerCase());
 				registryList.get(i).setRegisteredOn(dp.getCreatedOn());
 				registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());
-
 			}
 		}
  		return registryList;

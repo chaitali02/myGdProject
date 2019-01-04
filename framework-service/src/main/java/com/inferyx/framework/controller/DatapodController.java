@@ -131,7 +131,6 @@ public class DatapodController {
 			@RequestParam(value = "desc") String desc,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		datapodServiceImpl.setDataStoreServiceImpl(datastoreServiceImpl);
 		try{
 			datapodServiceImpl.upload(csvFile,datapodUuid,desc);
 		}catch (Exception e) {

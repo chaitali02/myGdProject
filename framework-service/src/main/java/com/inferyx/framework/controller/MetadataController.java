@@ -536,13 +536,8 @@ public class MetadataController {
 			@RequestParam("type") String type,
 			@RequestBody List<Registry> registryList,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "mode", required = false) String mode) throws Exception {
-		RunMode runMode;
-		if (mode == null) {
-			runMode = RunMode.ONLINE;
-		} else {
-			runMode = RunMode.valueOf(mode); 
-		}
+			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return registerService.register(uuid, version, type, registryList, runMode);
 	}
 

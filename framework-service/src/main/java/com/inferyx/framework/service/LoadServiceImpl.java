@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -44,7 +43,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -62,8 +60,6 @@ public class LoadServiceImpl {
 	GraphRegister<?> registerGraph;
 	@Autowired
 	ILoadDao iLoadDao;
-	@Autowired
-	IDatapodDao iDatapodDao;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -89,7 +85,7 @@ public class LoadServiceImpl {
 	@Autowired
 	private LoadOperator loadOperator;
 	@Autowired
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 
 	static final Logger logger = Logger.getLogger(LoadServiceImpl.class);
 
@@ -313,7 +309,6 @@ public class LoadServiceImpl {
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
-			iDatapodDao.delete(datapod);
 			throw new RuntimeException(e);
 		}
 	}
