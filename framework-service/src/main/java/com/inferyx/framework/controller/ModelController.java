@@ -32,16 +32,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -58,7 +55,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.service.SecurityServiceImpl;
 
 @RestController
 @RequestMapping(value = "/model")
@@ -76,9 +72,7 @@ public class ModelController {
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
-	private TrainResultViewServiceImpl trainResultViewServiceImpl; 
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
+	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
