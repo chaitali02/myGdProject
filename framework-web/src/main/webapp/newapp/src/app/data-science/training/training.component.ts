@@ -775,7 +775,7 @@ export class TrainingComponent implements OnInit {
           }
         });
         let paramInfoArray = [];
-        if (this.paramsetArrayTable && newDataList.length > 0) {debugger
+        if (this.paramsetArrayTable && newDataList.length > 0) {
           let ref = {}
           ref["uuid"] = this.selectParamsetName["uuid"];
           ref["version"] = this.selectParamsetName["version"];

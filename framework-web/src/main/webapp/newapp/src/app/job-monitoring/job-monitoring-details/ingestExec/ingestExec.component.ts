@@ -69,7 +69,7 @@ export class IngestExecComponent {
     error => console.log("Error :: " + error));
   }
 
-	onSuccessgetOneByUuidAndVersion(response){debugger
+	onSuccessgetOneByUuidAndVersion(response){
     this.ingestData=response
     this.createdBy=this.ingestData.createdBy.ref.name;
     this.dependsOn=this.ingestData.dependsOn.ref.name;

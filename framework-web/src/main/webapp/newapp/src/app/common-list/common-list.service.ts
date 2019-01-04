@@ -302,7 +302,7 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-//   executeWithParams(uuid,version,type,action,execParams){debugger
+//   executeWithParams(uuid,version,type,action,execParams){
 //     this.headers=null;
 //     this.headers=new Headers({'sessionId': this.sessionId});
 //     if(type=="rule"){

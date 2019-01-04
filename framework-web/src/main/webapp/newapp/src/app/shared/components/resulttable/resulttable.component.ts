@@ -62,7 +62,7 @@ export class TableRenderComponent {
     })   
     
   }
-  results(type, uuid, version,mode){debugger
+  results(type, uuid, version,mode){
     this._jointjsGroupService.getResults(type,uuid,version,mode)
     .subscribe(
     response => {

@@ -117,6 +117,10 @@ export class SidebarComponent {
         name: "Rule Results",
         type: "dqexec"
       }
+      // {
+      //   name: "Compare Results",
+      //   type: "comparedq"
+      // }
       ]
     };
 
