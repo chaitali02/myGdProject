@@ -1,0 +1,185 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 0 AND 200"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'0-200'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 201 AND 400"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'201-400'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 401 AND 600"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'401-600'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 601 AND 800"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'601-800'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'morethan800'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "f3c1697f-9884-4e21-82b2-c96a6c9540e7",
+	"version" : "1546639646",
+	"name" : "fm_device_data_cat3",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-01-04T22:07:26Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822",
+				"name" : "Dept Of Transportation"
+			}
+		}
+	]
+}

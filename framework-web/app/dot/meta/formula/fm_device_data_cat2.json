@@ -1,0 +1,216 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 0 AND 2000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'0-2000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 2001 AND 3000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'2001-3000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 3001 AND 4000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'3001-4000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 4001 AND 5000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'4001-5000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "BETWEEN 5001 AND 6000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'5001-6000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'morethan6000'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "7ee4a3f3-f98a-44b0-9874-9a5b67babffe",
+	"version" : "1546639503",
+	"name" : "fm_device_data_cat2",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-01-04T22:05:03Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822",
+				"name" : "Dept Of Transportation"
+			}
+		}
+	]
+}
