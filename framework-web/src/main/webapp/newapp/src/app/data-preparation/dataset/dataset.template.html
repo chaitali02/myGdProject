@@ -236,7 +236,7 @@
                               *ngIf="data.lhsType == 'integer'" placeholder="--Enter integer value--">
                             <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter values into single quotes"
                               tooltipPosition="top" tooltipEvent="focus" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                              *ngIf="data.lhsType == 'string'" placeholder="--Enter string --">
+                              *ngIf="data.lhsType == 'string'" placeholder="--Enter string--">
                             <div *ngIf="data.lhsType == 'formula'">
                               <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                                 [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
@@ -250,7 +250,7 @@
                           </td>
                           <td>
                             <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" >
+                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                             </p-dropdown>
                           </td>
                           <td>

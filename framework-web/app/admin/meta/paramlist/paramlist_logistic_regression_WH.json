@@ -9,9 +9,10 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:50:50 IST 2018",
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
  	"appInfo": [
 			{
@@ -51,6 +52,8 @@
       "paramId": "0",
       "paramName": "regParam",
       "paramType": "list",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -62,6 +65,8 @@
       "paramId": "1",
       "paramName": "elasticNetParam",
       "paramType": "list",
+  	  "paramDispName" : "Elastic NetParam",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -73,6 +78,8 @@
       "paramId": "2",
       "paramName": "numFolds",
       "paramType": "integer",
+  	  "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"

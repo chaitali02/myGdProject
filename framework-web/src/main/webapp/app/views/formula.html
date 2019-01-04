@@ -92,7 +92,8 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'formula'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="formuladata" comment-panel-directive></div>
+  <div options="dirOptions" type="'formula'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="formuladata"
+    comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
@@ -102,14 +103,22 @@
             <i class="fa fa-gift"></i>{{formuladata.name}}
           </div>
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(formuladata.uuid,formuladata.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || formuladata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              data-placement="top" tooltip ng-click="enableEdit(formuladata.uuid,formuladata.version)" ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(formuladata.uuid,formuladata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
               ng-click="showView(formuladata.uuid,formuladata.version)" style="height:16px;" ng-hide="isAdd">
               <i class="fa fa-file" style="color:white;"></i>
-            </a>
+            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showFrom==false)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(formuladata.uuid,formuladata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -135,179 +144,201 @@
             </div>
           </div>
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
-            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFormula()" form-on-change="formulaFormChange()" prevent-enter-submit>
-              <div class="form-group" ng-show="formuladata.uuid">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="formuladata.uuid">
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(formuladata.name)" ng-model="formuladata.name"
-                    required="">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="formuladata.uuid">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="formula.defaultVersion.version"
-                    ng-options="c.version as c.version for c in formula.versions">
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="formuladata.uuid">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="formuladata.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="formuladata.uuid">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="formuladata.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
-                  <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
-                    </auto-complete>
-                </tags-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="formuladata.desc" rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-2 col-sm-2 col-xs-12">
-                  <select class="form-control" ng-change="onChangedepandsOnTypes()" data-ng-model="selectedDependsOnType" ng-options="r for r in depandsOnTypes"
-                    ng-disabled=" isDependonDisabled || {{mode}}" required="">
-                  </select>
-                </div>
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;margin-left:-21px;">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-3 col-sm-3 col-xs-12" style="width:27%;">
-                  <select class="form-control" select2 name="" ng-change="selectDependson()" data-ng-model="allformuladepands.defaultoption"
-                    ng-options="r as r.name for r in allformuladepands.options track by r.uuid" ng-disabled=" isDependonDisabled || {{mode}}">
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="formuladata.active='Y'">
-                    <label class="btn btn-default" ng-model="formuladata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="formuladata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFormula()" form-on-change="formulaFormChange()"
+                prevent-enter-submit>
+                <div class="form-group" ng-show="formuladata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="formuladata.uuid">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="formuladata.published='N'">
-                    <label class="btn btn-default" ng-model="formuladata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="formuladata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(formuladata.name)" ng-model="formuladata.name"
+                      required="">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">FormulaInfo</label>
-                <div class="col-md-6">
-                  <div id="formulaInfo" contenteditable="false" ng-model="textarea" ng-disabled="{{mode}}">
-                    <span ng-init="getFunctionInfo($index,data)" title="{{data.title}}" ng-dblclick="onDbclcikEdit(data.type,$index)" ng-mouseenter="onMouseEnterTitle(data.type,$index)" ng-class="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')"
-                      ng-repeat="data in formulainfoarray track by $index">{{data.value}}
+
+                <div class="form-group" ng-show="formuladata.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="formula.defaultVersion.version"
+                      ng-options="c.version as c.version for c in formula.versions">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="formuladata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="formuladata.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="formuladata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="formuladata.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true"
+                      add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="formuladata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <select class="form-control" ng-change="onChangedepandsOnTypes()" data-ng-model="selectedDependsOnType" ng-options="r for r in depandsOnTypes"
+                      ng-disabled=" isDependonDisabled || {{mode}}" required="">
+                    </select>
+                  </div>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;margin-left:-21px;">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12" style="width:27%;">
+                    <select class="form-control" select2 name="" ng-change="selectDependson()" data-ng-model="allformuladepands.defaultoption"
+                      ng-options="r as r.name for r in allformuladepands.options track by r.uuid" ng-disabled=" isDependonDisabled || {{mode}}">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="formuladata.active='Y'">
+                      <label class="btn btn-default" ng-model="formuladata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="formuladata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="formuladata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="formuladata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="formuladata.published='N'">
+                      <label class="btn btn-default" ng-model="formuladata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="formuladata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">FormulaInfo</label>
+                  <div class="col-md-6">
+                    <div id="formulaInfo" contenteditable="false" ng-model="textarea" ng-disabled="{{mode}}">
+                      <span ng-init="getFunctionInfo($index,data)" title="{{data.title}}" ng-dblclick="onDbclcikEdit(data.type,$index)" ng-mouseenter="onMouseEnterTitle(data.type,$index)"
+                        ng-class="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')"
+                        ng-repeat="data in formulainfoarray track by $index">{{data.value}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label"></label>
+                  <div class="col-md-6 clearfix" style="width:52%">
+                    <span ng-repeat="x in formulafuction" class="{{x.class}} formula_span" ng-disabled="{{mode}}" ng-click="addData(x)">
+                      <a href="javascript:;">
+                        <i> {{x.value}} </i>
+                      </a>
+                    </span>
+                    <span class="formula_function btn red formula_span" ng-disabled="{{mode}}">
+                      <a ng-click="clear()" style="color: #fff;"> Clear </a>
+                    </span>
+                    <span class="formula_function btn blue formula_span" ng-disabled="{{mode}}">
+                      <a ng-click="undo()" style="color: #fff;"> Undo </a>
+                    </span>
+                    <!-- <span class="formula_function btn red formula_span" ng-disabled="{{mode}}">
+                    <a ng-click="undo()" style="color: #fff;"> Delete </a>
+                  </span> -->
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+                  <div class="col-md-2 col-sm-2 col-xs-12" style="width:15%;">
+                    <select title="Type" data-toggle="tooltip" data-placement="top" tooltip ng-model="attributeType" ng-options=" x as x.caption for x in attributeTypes track by x.text"
+                      ng-change="onChangeAttribute(attributeType.text)" ng-disabled="{{mode}}" class="form-control"></select>
+                  </div>
+                  <div class="col-md-3 col-sm-3 col-xs-12" style="margin-left:-19px;width:29%;">
+                    <div ng-show="isSourceAtributeDatapod">
+                      <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute | orderBy:'datapodname' track by attr.uuid+attr.attributeId"
+                        ng-disabled="{{mode}}">
+                      </select>
+                    </div>
+                    <input type="text" class="form-control" ng-model="sourcesimple" ng-show="isSourceAtributeSimple" ng-disabled="{{mode}}">
+                    <div ng-show="isSourceAtributeFormula">
+                      <select ng-model="sourceformula" select2 ng-disabled="{{mode}}" class="form-control" ng-options="c as c.name for c in formulaLodeFormula track by c.uuid"
+                        style="font-family: 'FontAwesome', Helvetica;" ng-change="onChangeFormula(data.sourceformula,$index)">
+                        <!-- <option value="">Create New &#xf067;</option> -->
+                      </select>
+                    </div>
+                    <div ng-show="isSourceAtributeExpression">
+                      <select select2 ng-model="sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in formulaLodeExpression track by c.uuid"
+                        ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
+                    </div>
+                    <div ng-show="isSourceAtributeFunction">
+                      <select select2 ng-model="sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
+                    </div>
+                    <div ng-show="isSourceAtributeParamlist">
+
+                      <select select2 ng-model="sourceparamlist" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.dname for c in lodeParamlist"></select>
+                    </div>
+                  </div>
+                  <a ng-click="addAttribute()" class="formula_function btn green" ng-disabled="{{mode}}" style="margin-left:-5px;"> Add+ </a>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a ui-sref="metadata({type:'formula'})" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
                     </span>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label"></label>
-                <div class="col-md-6 clearfix" style="width:52%">
-                  <span ng-repeat="x in formulafuction" class="{{x.class}} formula_span" ng-disabled="{{mode}}" ng-click="addData(x)">
-                    <a href="javascript:;">
-                      <i> {{x.value}} </i>
-                    </a>
-                  </span>
-                  <span class="formula_function btn red formula_span" ng-disabled="{{mode}}">
-                    <a ng-click="clear()" style="color: #fff;"> Clear </a>
-                  </span>
-                  <span class="formula_function btn blue formula_span" ng-disabled="{{mode}}">
-                    <a ng-click="undo()" style="color: #fff;"> Undo </a>
-                  </span>
-                  <!-- <span class="formula_function btn red formula_span" ng-disabled="{{mode}}">
-                    <a ng-click="undo()" style="color: #fff;"> Delete </a>
-                  </span> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                <div class="col-md-2 col-sm-2 col-xs-12" style="width:15%;">
-                  <select title="Type" data-toggle="tooltip" data-placement="top" tooltip ng-model="attributeType" ng-options=" x as x.caption for x in attributeTypes track by x.text"
-                    ng-change="onChangeAttribute(attributeType.text)" ng-disabled="{{mode}}" class="form-control"></select>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-12" style="margin-left:-19px;width:29%;">
-                  <div ng-show="isSourceAtributeDatapod">
-                    <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute | orderBy:'datapodname' track by attr.uuid+attr.attributeId"
-                      ng-disabled="{{mode}}">
-                    </select>
-                  </div>
-                  <input type="text" class="form-control" ng-model="sourcesimple" ng-show="isSourceAtributeSimple" ng-disabled="{{mode}}">
-                  <div ng-show="isSourceAtributeFormula">
-                    <select ng-model="sourceformula" select2 ng-disabled="{{mode}}" class="form-control" ng-options="c as c.name for c in formulaLodeFormula track by c.uuid"
-                      style="font-family: 'FontAwesome', Helvetica;" ng-change="onChangeFormula(data.sourceformula,$index)">
-                      <!-- <option value="">Create New &#xf067;</option> -->
-                    </select>
-                  </div>
-                  <div ng-show="isSourceAtributeExpression">
-                    <select select2 ng-model="sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in formulaLodeExpression track by c.uuid"
-                      ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
-                  </div>
-                  <div ng-show="isSourceAtributeFunction">
-                    <select select2 ng-model="sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
-                  </div>
-                  <div ng-show="isSourceAtributeParamlist">
-
-                    <select select2 ng-model="sourceparamlist" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.dname for c in lodeParamlist"></select>
-                  </div>
-                </div>
-                <a ng-click="addAttribute()" class="formula_function btn green" ng-disabled="{{mode}}" style="margin-left:-5px;"> Add+ </a>
-              </div>
-
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a ui-sref="metadata({type:'formula'})" class="btn btn-primary">Cancel</a>
-                  <!-- formulaHasChanged == false ||  -->
-                  <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
-                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                  </span>
-                </div>
-              </div>
-              <br/>
-            </form>
+                <br/>
+              </form>
+            </div>
           </div>
         </div>
       </div>

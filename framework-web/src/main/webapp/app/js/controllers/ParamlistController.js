@@ -70,7 +70,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramtable = null;
 	$scope.isUseTemlate=false;
 	$scope.isTemplageInfoRequired=false;
-	$scope.typeSimple = ["string", "double", "integer", "list"];
+	$scope.typeSimple = ["string", "double", "integer", "list","decimal"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
@@ -82,7 +82,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"distribution","caption":"distribution"},
 		{"name":"datapod","caption":"datapod"},
 		{"name":"function","caption":"function"},
-	    {"name":"list","caption":"list"}, ];
+		{"name":"list","caption":"list"},
+		{"name":"array","caption":"array"}];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
 	$scope.privileges = [];
@@ -147,17 +148,28 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.graphDataStatus = false;
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
-		$scope.showPage()
-		$state.go('createparamlist', {
+		if($scope.isPrivlage || $scope.paramlistData.locked =="Y"){
+			return false;
+		}
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
 			version: version,
 			mode: 'false'
 		});
 	}
 	$scope.showview = function (uuid, version) {
-		$scope.showPage()
-		$state.go('createparamlist', {
+		$scope.showPage();
+		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
 			version: version,
 			mode: 'true'
@@ -217,6 +229,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		  var paramInfo={}
 			paramInfo.paramId=$scope.selectedTemplate.params[i].paramId; 
 			paramInfo.paramName=$scope.selectedTemplate.params[i].paramName;
+			paramInfo.paramDesc=$scope.selectedTemplate.params[i].paramDesc;
+            paramInfo.paramDispName=$scope.selectedTemplate.params[i].paramDispName;
 			paramInfo.paramType=$scope.selectedTemplate.params[i].paramType.toLowerCase();
 			if($scope.selectedTemplate.params[i].paramValue !=null && $scope.selectedTemplate.params[i].paramValue.ref.type == "simple"){
 			  paramInfo.paramValue=$scope.selectedTemplate.params[i].paramValue.value;
@@ -289,10 +303,14 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist")
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -306,12 +324,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				$scope.selectedTemplate=selectedTemplate;
 				$scope.isUseTemlate=true;
 				$scope.isTemplageInfoRequired=true;
-			}else{
+			}
+			else{
 				$scope.isUseTemlate=false;
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.paramlistData.uuid,$scope.paramlistData.version)
 			}
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -322,14 +340,26 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				}
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End If
+	else{
+		$scope.paramlistData={};
+        $scope.paramlistData.locked="N"		
+	}
 
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		ParamListService.getOneByUuidandVersion(uuid, version, 'paramlist')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.paramlistData = response
+			$scope.isEditInprogess=false;
+			$scope.paramlistData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -356,6 +386,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					$scope.tags = tags;
 				}
 			}
+		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 
 	}
@@ -414,6 +448,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.name = $scope.paramlistData.name
 		paramlistJson.desc = $scope.paramlistData.desc
 		paramlistJson.active = $scope.paramlistData.active;
+		paramlistJson.locked = $scope.paramlistData.locked;
 		paramlistJson.published = $scope.paramlistData.published;
 		paramlistJson.templateFlg = $scope.paramlistData.templateFlg;
 		var templateInfo={};
@@ -449,6 +484,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				paraminfo.paramId = $scope.paramtable[i].paramId;
 				paraminfo.paramName = $scope.paramtable[i].paramName;
 				paraminfo.paramType = $scope.paramtable[i].paramType;
+				paraminfo.paramDesc = $scope.paramtable[i].paramDesc;
+				paraminfo.paramDispName = $scope.paramtable[i].paramDispName;
 				var paramValue={}
 				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
 				 var paramRef={}	 
@@ -475,6 +512,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 
+				}
+				else if($scope.paramtable[i].paramType =='array'){
+					var paramArrayTags=[];
+					if($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length >0){
+						for(var j=0;j<$scope.paramtable[i].paramArrayTags.length;j++){
+							paramArrayTags[j]=$scope.paramtable[i].paramArrayTags[j].text
+						}
+					}
+					
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value=paramArrayTags.toString();;
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
 				}
 				else {
 					paramValue=null;

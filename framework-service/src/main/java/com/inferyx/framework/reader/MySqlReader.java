@@ -50,7 +50,7 @@ public class MySqlReader implements IReader {
 																				datapod.getDatasource().getRef().getType().toString());
 			IExecutor exec = execFactory.getExecutor(execDatasource.getType());
 			String dbName = tableDatasource.getDbname();		
-			rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());
+			rsHolder = exec.executeSqlByDatasource("SELECT * FROM "+dbName+"."+datapod.getName(), tableDatasource, null);
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
 		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();

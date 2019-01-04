@@ -15,5 +15,5 @@ package com.inferyx.framework.enums;
  *
  */
 public enum FunctionCategory {
-	AGGREGATE, DATE, STRING, CONDITIONAL
+	AGGREGATE, DATE, STRING, CONDITIONAL,MATh
 }

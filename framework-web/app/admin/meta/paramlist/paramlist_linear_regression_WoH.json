@@ -5,6 +5,8 @@
             "paramId" : "1",
             "paramName" : "maxIter",
             "paramType" : "integer",
+  		    "paramDispName" : "Max Iter",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -16,6 +18,8 @@
             "paramId" : "4",
             "paramName" : "tol",
             "paramType" : "double",
+  		    "paramDispName" : "Tol",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -40,6 +44,7 @@
         "0.1.0"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
     "templateFlg" : "Y",

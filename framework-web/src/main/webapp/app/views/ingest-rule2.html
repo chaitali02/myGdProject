@@ -38,7 +38,16 @@
                         </span>
                     </div>
                     <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+                            tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(ingestData.uuid,ingestData.version,mode)">
+                            <i class="fa fa-home icon-circle home-icon-circle"></i>
+                        </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                            tooltip ng-class="(isEdit==true || isPrivlage || ingestData.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+                            data-ng-click="enableEdit(ingestData.uuid,ingestData.version)">
+                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+                        </a>
+                        <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
                             tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
                             data-ng-click="enableEdit(ingestData.uuid,ingestData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
@@ -47,7 +56,7 @@
                             tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
                             data-ng-click="showview(ingestData.uuid,ingestData.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a>
+                        </a> -->
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
                             tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph()">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -74,7 +83,17 @@
                         <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="ingestData.uuid" version="ingest.defaultVersion.version"></div>
                     </div>
                     <div class="form-wizard" ng-show="showForm">
-                        <div class="form-body" style="padding-top: 20px;">
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                        </div>
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </div>
+                        <div class="form-body" style="padding-top: 20px;" ng-show="!isEditInprogess &&  !isEditVeiwError">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
                                     <a href="javascript:;" class="step" aria-expanded="true">
@@ -179,11 +198,22 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="btn-group" ng-init="ingestData.active='Y'">
+                                                <div class="col-md-6 col-sm-6 col-xs-12" ng-init="ingestData.active='Y'">
+                                                    <div class="btn-group" >
                                                         <label class="btn btn-default" ng-model="ingestData.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                                                             uncheckable>Yes</label>
                                                         <label class="btn btn-default" ng-model="ingestData.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                                                            uncheckable>No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="btn-group">
+                                                        <label class="btn btn-default" ng-model="ingestData.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}"
+                                                            uncheckable>Yes</label>
+                                                        <label class="btn btn-default" ng-model="ingestData.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}"
                                                             uncheckable>No</label>
                                                     </div>
                                                 </div>
@@ -457,15 +487,16 @@
                                                                 </th>
                                                                 <th style="width:15%;text-align:center;">Logical Operator</th>
                                                                 <th style="width:13%;text-align:center;"> LHS Type</th>
-                                                                <th style="width:200px;text-align:center;">LHS Attribute</th>
+                                                                <th style="width:180px;text-align:center;">LHS Attribute</th>
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
-                                                                <th style="width:200px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:180px;text-align:center;">RHS Attribute</th>
+                                                                <th style="width:8%;text-align:center;">Move</th>
                                                             </tr>
                                                         </thead>
 
                                                         <tbody>
-                                                            <tr ng-repeat="tabledata in filterTableArray">
+                                                            <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
                                                                 <td class="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
@@ -548,7 +579,7 @@
                                                                                     tooltip-placement="left">
                                                                             </span>
 
-                                                                            <span ng-if="['=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 && (tabledata.rhstype.caption=='string'|| tabledata.rhstype.caption=='attribute')">
+                                                                            <span ng-if="(['=','!=','LIKE','NOT LIKE','RLIKE'].indexOf(tabledata.operator) !=-1 || spacialOperator.indexOf(tabledata.operator) !=-1) && (tabledata.rhstype.caption=='string'|| tabledata.rhstype.caption=='attribute')">
                                                                                 <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                                                     required disable-validation-message="">
                                                                             </span>
@@ -579,8 +610,13 @@
                                                                                         tooltip-placement="left">
                                                                                 </span>
                                                                             </div>
-
                                                                         </span>
+                                                                        <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -628,6 +664,20 @@
                                                                                 ng-change="onChangeRhsParamList()"></select>
                                                                         </span>
                                                                     </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        <div style="text-align: center;">
+                                                                        <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
+                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                                                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                                                                        </a>
+                                                                        <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
+                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                                                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                                                        </a>
+                                                                        </div>
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

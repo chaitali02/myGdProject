@@ -1,4 +1,3 @@
-
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -17,6 +16,14 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class DataQualityDetailComponent {
+  paramlistArray: any[];
+  functionArray: any[];
+  dialogAttributeName: any;
+  dialogAttriNameArray: any[];
+  dialogSelectName: any;
+  dialogAttriArray: any[];
+  displayDialogBox: boolean;
+
   rhsTypeArray: { 'value': string; 'label': string; }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
   rhsFormulaArray: any[];
@@ -65,19 +72,24 @@ export class DataQualityDetailComponent {
   IsSelectSoureceAttr: any
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataQualityService: DataQualityService) {
     this.dqdata = {};
-    this.selectRefIntegrity = {}
+    this.displayDialogBox = false;
+    this.dialogAttributeName = {};
+    this.selectRefIntegrity = {};
     this.operators = [
-      { 'value': '<', 'label': 'LESS THAN' },
-      { 'value': '>', 'label': 'GREATER THAN' },
-      { 'value': '<=', 'label': 'LESS OR  EQUAL' },
-      { 'value': '>=', 'label': 'GREATER OR EQUAL' },
+      { 'value': '<', 'label': 'LESS THAN(<)' },
+      { 'value': '>', 'label': 'GREATER THAN(>)' },
+      { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
+      { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
       { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': 'BETWEEN', 'label': 'BETWEEN' },
       { 'value': 'LIKE', 'label': 'LIKE' },
       { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
       { 'value': 'RLIKE', 'label': 'RLIKE' },
       { 'value': 'EXISTS', 'label': 'EXISTS' },
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+      { 'value': 'IN', 'label': 'IN' },
+      { 'value': 'NOT IN', 'label': 'NOT IN' },
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -95,16 +107,18 @@ export class DataQualityDetailComponent {
       { 'value': 'integer', 'label': 'integer' },
       { 'value': 'datapod', 'label': 'attribute' },
       { 'value': 'formula', 'label': 'formula' },
-      { 'value': 'dataset', 'label': 'dataset' }
-    ];  
+      { 'value': 'dataset', 'label': 'dataset' },
+      { 'value': 'paramlist', 'label': 'paramlist' },
+      { 'value': 'function', 'label': 'function' }
+    ];
     this.datatype = [
-    { 'value': '', 'label': '' },
-    { 'value': 'String', 'label': 'String' },
-    { 'value': 'Int', 'label': 'Int' },
-    { 'value': 'Float', 'label': 'Float' },
-    { 'value': 'Double', 'label': 'Double' },
-    { 'value': 'Date', 'label': 'Date' }
-  ];
+      { 'value': '', 'label': '' },
+      { 'value': 'String', 'label': 'String' },
+      { 'value': 'Int', 'label': 'Int' },
+      { 'value': 'Float', 'label': 'Float' },
+      { 'value': 'Double', 'label': 'Double' },
+      { 'value': 'Date', 'label': 'Date' }
+    ];
     this.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false
@@ -164,7 +178,6 @@ export class DataQualityDetailComponent {
     }
   }
   onSourceAttributeChagne = function () {
-
     if (this.selectAttribute != null) {
       this.IsSelectSoureceAttr = true
       this.dqdata.nullCheck = true;
@@ -216,7 +229,7 @@ export class DataQualityDetailComponent {
   countBack = function () {
     this.continueCount = this.continueCount - 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-   }
+  }
 
   getAllLatest() {
     this._commonService.getAllLatest(this.source).subscribe(
@@ -391,6 +404,34 @@ export class DataQualityDetailComponent {
           filterInfo["rhsAttribute"] = rhsAttri1;
         }
 
+        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'paramlist') {
+          this._commonService.getParamByApp("", "application")
+            .subscribe(response => { this.onSuccessgetParamByApp(response) },
+            error => console.log("Error ::", error))
+
+          let rhsAttri = {}
+          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
+          rhsAttri["label"] = "app." + response.dqdata.filterInfo[k].operand[1].attributeName;
+          filterInfo["rhsAttribute"] = rhsAttri;
+        }
+        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'function') {
+          this._commonService.getFunctionByCriteria("", "N", "function")
+            .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+            error => console.log("Error ::", error))
+          let rhsAttri = {}
+          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
+          filterInfo["rhsAttribute"] = rhsAttri;
+        }
+        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {
+          let rhsAttri = {}
+          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+          rhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
+          rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].attributeName;
+          filterInfo["rhsAttribute"] = rhsAttri;
+        }
+
         else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
           let stringValue = response.dqdata.filterInfo[k].operand[1].value;
           let onlyNumbers = /^[0-9]+$/;
@@ -412,7 +453,7 @@ export class DataQualityDetailComponent {
             filterInfo["rhsAttribute2"] = betweenValArray[1];
           }
         }
-        filterInfoArray.push(filterInfo);        
+        filterInfoArray.push(filterInfo);
         this.dqdata.filterTableArray = filterInfoArray
       }
     }
@@ -429,7 +470,7 @@ export class DataQualityDetailComponent {
       }//End For
       this.valueCheck = valueCheck;
     }//En
-   
+
     this.dqdata.duplicateKeyCheck = response.dqdata["duplicateKeyCheck"] == "Y" ? true : false;
     this.dqdata.nullCheck = response.dqdata["nullCheck"] == "Y" ? true : false;
     this.dqdata.upperBound = response.dqdata.rangeCheck.upperBound;
@@ -449,6 +490,60 @@ export class DataQualityDetailComponent {
       selectintegrityattribute.attrId = response.dqdata.refIntegrityCheck.attrId
       this.selectIntegrityAttribute = selectintegrityattribute;
     }
+  }
+  searchOption(index) {
+    this.displayDialogBox = true;
+    this._commonService.getAllLatest("dataset")
+      .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
+      error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAllLatestDialogBox(response) {
+    this.dialogAttriArray = [];
+    let temp = [];
+    for (const i in response) {
+      let dialogAttriObj = {};
+      dialogAttriObj["label"] = response[i].name;
+      dialogAttriObj["value"] = {};
+      dialogAttriObj["value"]["label"] = response[i].name;
+      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      temp[i] = dialogAttriObj;
+    }
+    this.dialogAttriArray = temp
+    console.log(JSON.stringify(this.dialogAttriArray));
+  }
+
+  onChangeDialogAttribute() {
+    this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
+      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
+      error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAttributesByDatasetDialogBox(response) {
+    this.dialogAttriNameArray = [];
+    for (const i in response) {
+      let dialogAttriNameObj = {};
+      dialogAttriNameObj["label"] = response[i].attrName;
+      dialogAttriNameObj["value"] = {};
+      dialogAttriNameObj["value"]["label"] = response[i].attrName;
+      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
+      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+
+  submitDialogBox(index) {
+    this.displayDialogBox = false;
+    let rhsattribute = {}
+    rhsattribute["label"] = this.dialogAttributeName.label;
+    rhsattribute["uuid"] = this.dialogAttributeName.uuid;
+    rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+    this.dqdata.filterTableArray[index].rhsAttribute = rhsattribute;
+  }
+
+  cancelDialogBox() {
+    this.displayDialogBox = false;
   }
 
   getAllVersionByUuid() {
@@ -502,7 +597,7 @@ export class DataQualityDetailComponent {
 
   onChangeLhsType(index) {
     this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
-    
+
     if (this.dqdata.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
@@ -522,7 +617,7 @@ export class DataQualityDetailComponent {
 
   onChangeRhsType(index) {
     this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
-   
+
     if (this.dqdata.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
@@ -534,12 +629,52 @@ export class DataQualityDetailComponent {
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
         error => console.log("Error ::", error))
     }
-
+    else if (this.dqdata.filterTableArray[index]["rhsType"] == 'function') {
+      this._commonService.getFunctionByCriteria("", "N", "function")
+        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+        error => console.log("Error ::", error))
+    }
+    else if (this.dqdata.filterTableArray[index]["rhsType"] == 'paramlist') {
+      this._commonService.getParamByApp("", "application")
+        .subscribe(response => { this.onSuccessgetParamByApp(response) },
+        error => console.log("Error ::", error))
+    }
+    else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset') {
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
     else {
       this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
     }
   }
-
+  onSuccessgetFunctionByCriteria(response) {
+    let temp = [];
+    for (const i in response) {
+      let attributeObj = {};
+      attributeObj["label"] = response[i].name;
+      attributeObj["value"] = {};
+      attributeObj["value"]["uuid"] = response[i].uuid;
+      attributeObj["value"]["label"] = response[i].name;
+      temp[i] = attributeObj
+    }
+    this.functionArray = temp;
+  }
+  onSuccessgetParamByApp(response) {
+    let temp = [];
+    for (const i in response) {
+      let attributeObj = {};
+      attributeObj["label"] = "app." + response[i].paramName;
+      attributeObj["value"] = {};
+      attributeObj["value"]["uuid"] = response[i].ref.uuid;
+      attributeObj["value"]["attributeId"] = response[i].paramId;
+      attributeObj["value"]["label"] = "app." + response[i].paramName;
+      temp[i] = attributeObj
+    }
+    this.paramlistArray = temp;
+  }
   onSuccessgetFormulaByRhsType(response) {
     this.rhsFormulaArray = [];
     let rhsFormulaObj = {};
@@ -568,10 +703,11 @@ export class DataQualityDetailComponent {
       this.attributesArray = temp1;
     }
   }
-  onChangeOperators(index) {
-    this.dqdata.filterTableArray[index]["rhsType"] = null;
+  onChangeOperator(index) {
+    if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
+      this.dqdata.filterTableArray[index].rhsType = 'dataset';
+    }
   }
-
   addRow() {
     if (this.dqdata.filterTableArray == null) {
       this.dqdata.filterTableArray = [];
@@ -579,10 +715,10 @@ export class DataQualityDetailComponent {
     var len = this.dqdata.filterTableArray.length + 1
     var filertable = {};
     filertable["logicalOperator"] = ""
-    filertable["lhsType"] = ""
+    filertable["lhsType"] = "integer"
     filertable["lhsAttribute"] = ""
     filertable["operator"] = ""
-    filertable["rhsType"] = ""
+    filertable["rhsType"] = "integer"
     filertable["rhsAttribute"] = ""
     this.dqdata.filterTableArray.splice(this.dqdata.filterTableArray.length, 0, filertable);
   }
@@ -661,7 +797,7 @@ export class DataQualityDetailComponent {
         tagArrayvaluecheck[counttag] = this.valueCheck[counttag]
       }
     }
-   
+
     var rangeCheck = {};
     if (typeof this.dqdata.lowerBound != "undefined" && typeof this.dqdata.upperBound != "undefined") {
       rangeCheck["lowerBound"] = this.dqdata.lowerBound;
@@ -690,7 +826,7 @@ export class DataQualityDetailComponent {
       dqJson["refIntegrityCheck"] = {};
     }
 
-    let filterInfoArray = [];   
+    let filterInfoArray = [];
     if (this.dqdata.filterTableArray.length > 0) {
       for (let i = 0; i < this.dqdata.filterTableArray.length; i++) {
 
@@ -753,6 +889,33 @@ export class DataQualityDetailComponent {
           //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
           filterInfo["operand"][1] = operatorObj;
         }
+        else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
+          let operatorObj = {};
+          let ref = {}
+          ref["type"] = "function";
+          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj["ref"] = ref;
+          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
+          filterInfo["operand"][1] = operatorObj;
+        }
+        else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
+          let operatorObj = {};
+          let ref = {}
+          ref["type"] = "paramlist";
+          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj["ref"] = ref;
+          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo["operand"][1] = operatorObj;
+        }
+        else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
+          let operatorObj = {};
+          let ref = {}
+          ref["type"] = "dataset";
+          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj["ref"] = ref;
+          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo["operand"][1] = operatorObj;
+        }
         else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
           let operatorObj = {};
           let ref = {}
@@ -766,7 +929,7 @@ export class DataQualityDetailComponent {
       }
       dqJson["filterInfo"] = filterInfoArray;
       console.log(JSON.stringify(filterInfoArray));
-    }   
+    }
     console.log(JSON.stringify(dqJson));
     this._commonService.submit("dq", dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },

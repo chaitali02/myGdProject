@@ -92,12 +92,16 @@ DatascienceModule.service("OperatorService", function ($http, OperatorFactory, $
   }
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    OperatorFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    OperatorFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data)}, function (response) { onError(response.data)});
     var onSuccess = function (response) {
-
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

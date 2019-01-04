@@ -13,6 +13,7 @@ package com.inferyx.framework.domain;
 public class Attribute {
 	
 	private Integer attributeId;
+	private Integer displaySeq;
     private String name;
     private String type;
     private String desc;
@@ -22,8 +23,29 @@ public class Attribute {
     private String dispName;
 	private String active = "Y";
 	private Integer length;
+	private String attrUnitType;
     
 	
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @return the attrUnitType
+	 */
+	public String getAttrUnitType() {
+		return attrUnitType;
+	}
+
+	/**
+	 *
+	 * @Vaibhav
+	 *
+	 * @param attrUnitType the attrUnitType to set
+	 */
+	public void setAttrUnitType(String attrUnitType) {
+		this.attrUnitType = attrUnitType;
+	}
 
 	/**
 	 * @Ganesh
@@ -164,6 +186,16 @@ public class Attribute {
     public void setExpression(Expression expression) {
         this.expression = expression;
     }
+
+	public Integer getDisplaySeq() {
+		return displaySeq;
+	}
+
+	public void setDisplaySeq(Integer displaySeq) {
+		this.displaySeq = displaySeq;
+	}
+    
+   
 
     
 }

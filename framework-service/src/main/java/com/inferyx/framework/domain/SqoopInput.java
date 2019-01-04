@@ -41,6 +41,7 @@ public class SqoopInput {
 	private String splitByCol;
 	private String[] attributeMap;
 	private boolean deleteMode;
+	private String connManagerClassName;
 	
 	/**
 	 *
@@ -571,6 +572,20 @@ public class SqoopInput {
 	}
 
 
+	/**
+	 * @return the connManagerClassName
+	 */
+	public String getConnManagerClassName() {
+		return connManagerClassName;
+	}
+
+	/**
+	 * @param connManagerClassName the connManagerClassName to set
+	 */
+	public void setConnManagerClassName(String connManagerClassName) {
+		this.connManagerClassName = connManagerClassName;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -589,7 +604,8 @@ public class SqoopInput {
 				+ ", overwriteHiveTable=" + overwriteHiveTable + ", hiveTableName=" + hiveTableName
 				+ ", hiveDatabaseName=" + hiveDatabaseName + ", hCatalogTableName=" + hCatalogTableName
 				+ ", hCatalogDatabaseName=" + hCatalogDatabaseName + ", sqlQuery=" + sqlQuery + ", splitByCol="
-				+ splitByCol + ", attributeMap=" + Arrays.toString(attributeMap) + ", deleteMode=" + deleteMode + "]";
+				+ splitByCol + ", attributeMap=" + Arrays.toString(attributeMap) + ", deleteMode=" + deleteMode
+				+ ", connManagerClassName=" + connManagerClassName + "]";
 	}
 
 	/* (non-Javadoc)

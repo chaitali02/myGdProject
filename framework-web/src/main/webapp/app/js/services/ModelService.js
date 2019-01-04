@@ -221,11 +221,64 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       url: url + "model/operator/getResults?action=view&uuid=" + uuid + "&version=" + version,
     }).then(function (response, status, headers) { return response; })
   }
+  factory.findAlgorithmByLibrary = function (libraryType,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url +"metadata/getAlgorithmByLibrary?action=view&libraryType=" + libraryType + "&type=" + type,
+    }).then(function (response, status, headers) { return response; })
+  }
   
+  factory.findTrainResultByTrainExec = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/getTrainResultByTrainExec?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET"
+    }).then(function (response) { return response })
+  }; 
+
+
+  factory.findTestSet = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/train/getTestSet?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET"
+    }).then(function (response) { return response })
+  }; 
   return factory;
 })
 
-DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory) {
+DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory){
+  this.getTestSet = function (uuid, version, type) {
+    var deferred = $q.defer();
+    ModelFactory.findTestSet(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
+  this.getTrainResultByTrainExec = function (uuid, version, type) {
+    var deferred = $q.defer();
+    ModelFactory.findTrainResultByTrainExec(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) {onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
   this.getFormulaByType = function (type) {
     var deferred = $q.defer();
     ModelFactory.findFormulaByType(type).then(function (response) { onSuccess(response.data) });
@@ -265,7 +318,16 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     }
     return deferred.promise;
   }
-
+  this.getAlgorithmByLibrary = function (libraryType,type) {
+    var deferred = $q.defer();
+    ModelFactory.findAlgorithmByLibrary(libraryType,type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAlgorithmByTrainExec = function (uuid, version, type) {
     var deferred = $q.defer();
     ModelFactory.findAlgorithumByTrainExec(uuid, version, type).then(function (response) { onSuccess(response.data) });
@@ -346,7 +408,7 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
           }
         }
 
-        console.log(JSON.stringify(attributes))
+       // console.log(JSON.stringify(attributes))
         deferred.resolve({
           data: attributes
         })
@@ -486,12 +548,17 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    ModelFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    ModelFactory.findOneByUuidandVersion(uuid, version, type)
+      .then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

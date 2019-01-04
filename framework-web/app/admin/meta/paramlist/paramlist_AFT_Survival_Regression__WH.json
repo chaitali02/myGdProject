@@ -11,7 +11,8 @@
   },
   "createdOn": "Sat Jul 07 13:06:42 IST 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   	"appInfo": [
 			{
@@ -51,6 +52,8 @@
       "paramId": "0",
       "paramName": "aggregationDepth",
       "paramType": "list",
+      "paramDispName" : "Aggregation Depth",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -62,6 +65,8 @@
       "paramId": "1",
       "paramName": "numFolds",
       "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"

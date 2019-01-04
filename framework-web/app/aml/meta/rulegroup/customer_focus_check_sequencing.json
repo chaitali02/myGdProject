@@ -1,0 +1,43 @@
+{
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "74bdb939-06bc-44cd-b37a-e873eb054a7b"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "9a128b85-66e6-4169-95e1-be9d54d45e08"
+			}
+		}
+	],
+	"inParallel" : "true",
+	"uuid" : "02e47418-eb0a-423e-881b-f14317f14a7b",
+	"version" : "1542604433",
+	"name" : "Customer Focus - Check Sequencing",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T05:13:53Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

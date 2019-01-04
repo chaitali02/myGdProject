@@ -114,6 +114,23 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   // $scope.gridOptions = $scope.isJobExec ? dagMetaDataService.gridOptionsJobExec : ($scope.isExec ? dagMetaDataService.gridOptionsJobExec : dagMetaDataService.gridOptions);
   
   $scope.gridOptions = $scope.isJobExec ? dagMetaDataService.gridOptionsJobExec : ($scope.isExec ? dagMetaDataService.gridOptionsResults : dagMetaDataService.gridOptions);
+  if($scope.isJobExec !=true && $scope.isExec !=true){
+    if($scope.gridOptions.columnDefs[0].name !="locked"){
+      $scope.gridOptions.columnDefs.splice(0,0,{
+        displayName: 'Locked',
+        name: 'locked',
+        maxWidth: 100,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        cellTemplate: ['<div class="ui-grid-cell-contents">',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,true)"><i  title ="Lock" class="icon-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,false)"><i title ="UnLock" class="icon-lock-open" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        ].join('')
+      });
+    }
+  }
+  //fa fa-lock
+  //fa fa-unlock-alt
   $scope.filteredRows = [];
   $scope.gridOptions.onRegisterApi = function (gridApi) {
     $scope.gridApi = gridApi;
@@ -160,7 +177,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   $scope.setStatus = function (row, status) {
     $scope.selectDetail=row;
-    $scope.selectDetail.setStatus=status
+    $scope.selectDetail.setStatus=status;
+    var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
+    $scope.confMsg=tempCaption.split("Exec")[0]
     $('#killmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -168,31 +187,30 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.okKill = function () {
-    
     var api = false;
     switch ($scope.newType.toLowerCase()) {
       case 'dqexec':
         api = 'dataqual';
         break;
-      case 'dqgroupExec':
+      case 'dqgroupexec':
         api = 'dataqual';
         break;
-      case 'profileExec':
+      case 'profileexec':
         api = 'profile';
         break;
-      case 'profilegroupExec':
+      case 'profilegroupexec':
         api = 'profile';
         break;
-      case 'ruleExec':
+      case 'ruleexec':
         api = 'rule';
         break;
-      case 'rulegroupExec':
+      case 'rulegroupexec':
         api = 'rule';
         break;
-      case 'reconExec':
+      case 'reconexec':
         api = 'recon';
         break;
-      case 'recongroupExec':
+      case 'recongroupexec':
         api = 'recon';
         break;
       case 'dagexec':
@@ -201,10 +219,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'batchexec':
         api = 'batch';
         break;
-      case 'ingestExec':
+      case 'ingestexec':
         api = 'ingest';
         break;
-      case 'ingestgroupExec':
+      case 'ingestgroupexec':
         api = 'ingest';
         break;
     }
@@ -225,6 +243,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.restartExec = function (row, status) {
     $scope.selectDetail=row;
+    var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
+    $scope.confMsg=tempCaption.split("Exec")[0]
+
     $('#restartmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -414,6 +435,34 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       });
     }
     $('#publishedConfModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $scope.lockOrUnLock = function (data, unLock){
+    
+    var action = unLock== true ? "unLock" : "lock";
+    $scope.setActivity(data.uuid, data.version, $scope.select, action);
+    var uuid = data.id;
+    $scope.selectuuid = uuid;
+    $scope.lockModalMsg = unLock ? 'UnLock' : 'Lock';
+    $scope.onSuccessLockOrUnLock = function (response) {
+      data.locked = unLock ? 'N' : 'Y';
+      $scope.lockmessage = $scope.caption + (unLock ? " UnLocked" : " Locked") + " Successfully";
+    }
+
+    $scope.okLocked = function () {
+      $('#lockedConfModal').modal('hide');
+      CommonService[unLock ? 'unLock' : 'lock']($scope.selectuuid, $scope.select).then(function (response) {
+      $scope.onSuccessLockOrUnLock(response.data);
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.lockmessage;
+        $scope.$emit('notify', notify);
+      });
+    }
+    $('#lockedConfModal').modal({
       backdrop: 'static',
       keyboard: false
     });
@@ -620,6 +669,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.paramtablecol = null
     $scope.paramtable = null;
     $scope.isTabelShow = false;
+    $scope.isPramsetInProgess=true;
     CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
       onSuccessGetExecuteModel(response.data)
     });
@@ -628,15 +678,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         backdrop: 'static',
         keyboard: false
       });
+      $scope.isPramsetInProgess=false;
       $scope.allparamset = response;
     }
   }
   
   $scope.getParamListByTrainORRule=function(){
     $scope.paramlistdata=null;
+    $scope.isPramlistInProgess=true;
     CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
     var onSuccesGetParamListByTrain = function (response) {
       $scope.allParamList=response;
+      $scope.isPramlistInProgess=false;
       if(response.length == 0){
       $scope.isParamListRquired=false;
       }

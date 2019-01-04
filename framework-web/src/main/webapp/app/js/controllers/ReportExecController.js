@@ -5,6 +5,8 @@ JobMonitoringModule.controller('DetailReportExecController', function ($filter, 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.state = dagMetaDataService.elementDefs['reportexec'].listState + "({type:'" + dagMetaDataService.elementDefs['reportexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
   var privileges = privilegeSvc.privileges['comment'] || [];
@@ -31,10 +33,10 @@ JobMonitoringModule.controller('DetailReportExecController', function ($filter, 
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "reportexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "reportexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
+    $scope.isEditInprogess=false;
     $scope.execData = response;
    
     var statusList = [];
@@ -54,6 +56,10 @@ JobMonitoringModule.controller('DetailReportExecController', function ($filter, 
       $scope.refkeylist = refkeylist
       $scope.refkeylistclass = "cross"
     }
+  };
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
 

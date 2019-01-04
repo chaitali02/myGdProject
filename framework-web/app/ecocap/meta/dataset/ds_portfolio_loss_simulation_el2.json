@@ -14,7 +14,8 @@
   },
   "createdOn": "Mon Aug 06 16:06:30 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -71,6 +72,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "iterationid",
       "sourceAttr": {
         "ref": {
@@ -87,6 +89,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "portfolio_loss",
       "sourceAttr": {
         "ref": {
@@ -103,6 +106,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "fm_expected_loss",
       "sourceAttr": {
         "ref": {
@@ -119,6 +123,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "fm_value_at_risk",
       "sourceAttr": {
         "ref": {
@@ -135,6 +140,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "fm_economic_capital",
       "sourceAttr": {
         "ref": {
@@ -151,6 +157,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -167,6 +174,7 @@
     },
     {
       "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

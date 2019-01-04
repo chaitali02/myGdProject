@@ -14,7 +14,8 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
   "appInfo": [
@@ -49,6 +50,8 @@
       "paramId": "0",
       "paramName": "sourceDatapod",
       "paramType": "attributes",
+   	  "paramDispName" : "Source Datapod",
+      "paramDesc" : "",	
       "paramValue": null,
       "paramRef": null
     },
@@ -56,6 +59,8 @@
       "paramId": "1",
       "paramName": "key",
       "paramType": "attributes",
+   	  "paramDispName" : "Key",
+      "paramDesc" : "",	
       "paramValue": null,
       "paramRef": null
     },
@@ -63,6 +68,8 @@
       "paramId": "2",
       "paramName": "saveLocation",
       "paramType": "datapod",
+   	  "paramDispName" : "Save Location",
+      "paramDesc" : "",	
       "paramRef": null
     }
   ]

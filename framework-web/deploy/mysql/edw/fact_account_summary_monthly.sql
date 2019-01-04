@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS FACT_ACCOUNT_SUMMARY_MONTHLY;
-CREATE TABLE FACT_ACCOUNT_SUMMARY_MONTHLY(	
-	ACCOUNT_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
-	TOTAL_TRANS_COUNT INTEGER(10),
-	TOTAL_TRANS_AMOUNT_USD INTEGER(10),
-	AVG_TRANS_AMOUNT INTEGER(10),
-	MIN_AMOUNT DECIMAL(10,2),
-	MAX_AMOUNT INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ACCOUNT_ID_PK  PRIMARY KEY(ACCOUNT_ID,YYYY_MM));
+drop table if exists fact_account_summary_monthly;
+create table fact_account_summary_monthly(	
+	account_id varchar(50) default 0 not null,
+	yyyy_mm varchar(50) default 0 not null,
+	total_trans_count integer(10),
+	total_trans_amount_usd integer(10),
+	avg_trans_amount integer(10),
+	min_amount decimal(10,2),
+	max_amount integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_id_pk  primary key(account_id,yyyy_mm));

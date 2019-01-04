@@ -643,13 +643,62 @@
 		    <version>2.0.12</version>
 		    <optional>true</optional>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.bytedeco</groupId>
 		    <artifactId>javacpp</artifactId>
 		    <version>1.1</version>
 		    <optional>true</optional>
-		</dependency>
+		</dependency> -->
 		
+		<!-- DeepLearning4J -->
+		<dependency>
+	  		<groupId>org.nd4j</groupId>
+	  		<artifactId>nd4j-native-platform</artifactId>
+	  		<version>0.9.1</version>
+		    <optional>true</optional>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.deeplearning4j</groupId>
+	  		<artifactId>deeplearning4j-core</artifactId>
+	  		<version>0.9.1</version>
+		    <optional>true</optional>
+	  	</dependency>
+	  	<!-- <dependency>
+	  		<groupId>org.datavec</groupId>
+	  		<artifactId>datavec-spark_2.11</artifactId>
+	  		<version>0.9.1_spark_2</version>
+	  		<exclusions>
+	  			<exclusion>
+		          <groupId>org.scala-lang</groupId>
+		          <artifactId>scala-compiler</artifactId>
+		        </exclusion>
+	  		</exclusions>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.deeplearning4j</groupId>
+	  		<artifactId>dl4j-spark_2.11</artifactId>
+	  		<version>0.9.1_spark_2</version>
+	  		<exclusions>
+	  			<exclusion>
+		          <groupId>org.scala-lang</groupId>
+		          <artifactId>scala-compiler</artifactId>
+		        </exclusion>
+	  		</exclusions>
+	  	</dependency> -->
+	  	<!-- https://mvnrepository.com/artifact/org.datavec/datavec-api -->
+		<dependency>
+		    <groupId>org.datavec</groupId>
+		    <artifactId>datavec-api</artifactId>
+		    <version>0.9.1</version>
+		    <optional>true</optional>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.nd4j/nd4j-api -->
+		<dependency>
+		    <groupId>org.nd4j</groupId>
+		    <artifactId>nd4j-api</artifactId>
+		    <version>0.9.1</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -667,6 +716,7 @@
 		<module>framework-service</module>
 		<module>framework-batch</module>
 		<module>framework-udfs</module>
+		<module>framework-predict</module>
 	</modules>
 
 	<build>

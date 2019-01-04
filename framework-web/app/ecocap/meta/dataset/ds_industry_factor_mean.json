@@ -14,7 +14,8 @@
   },
   "createdOn": "Sun Aug 12 09:58:29 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -71,6 +72,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "id",
       "sourceAttr": {
         "ref": {
@@ -87,6 +89,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "mean",
       "sourceAttr": {
         "ref": {
@@ -103,6 +106,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -119,6 +123,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

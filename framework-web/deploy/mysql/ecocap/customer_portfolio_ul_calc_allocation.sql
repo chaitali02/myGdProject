@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION; 
+drop table if exists customer_portfolio_ul_calc_allocation; 
 
-CREATE TABLE CUSTOMER_PORTFOLIO_UL_CALC_ALLOCATION 
+create table customer_portfolio_ul_calc_allocation 
   ( 
-     CUST_ID                      VARCHAR(50), 
-     PORTFOLIO_UL_CUST_ALLOCATION DECIMAL(10, 2), 
-     REPORTING_DATE               VARCHAR(50), 
-     VERSION                      INTEGER(50) 
+     cust_id                      varchar(50), 
+     portfolio_ul_cust_allocation decimal(10, 2), 
+     reporting_date               varchar(50), 
+     version                      integer(50) 
   ); 

@@ -638,7 +638,8 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	}
 	this.getOneByUuidAndVersionDQView = function (uuid, version, type) {
 		var deferred = $q.defer();
-		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var dqJson = {};
 			dqJson.dqdata = response
@@ -656,10 +657,17 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 					filterInfo.rhsTypes = null;
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['string', 'dataset']);
+					}
+					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
 					}
 					else {
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['dataset']);
@@ -839,8 +847,12 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 			deferred.resolve({
 				data: dqJson
 			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
 		}
-
 		return deferred.promise;
 	}
 	this.getLatestByUuidDQView = function (uuid, type) {
@@ -871,7 +883,6 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 				}
 			}
 			dqJson.filterInfo = filterInfoArray;
-			console.log(JSON.stringify(filterInfoArray))
 			deferred.resolve({
 				data: dqJson
 			})
@@ -881,10 +892,16 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	}
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response) });
+		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 
@@ -892,13 +909,18 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	}
 	this.getOneByUuidAndVersion1 = function (uuid, version, type) {
 		var deferred = $q.defer();
-		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
 			})
 		}
-
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		}
 		return deferred.promise;
 	}
 	this.getLatestByUuid = function (uuid, type) {

@@ -10,6 +10,7 @@
 	"attributeInfo": [
 		 {
             "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
             "attrSourceName" : "account_id",
             "sourceAttr" : {
                 "attrId" : "8",
@@ -22,6 +23,7 @@
         }, 
         {
             "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
             "attrSourceName" : "yyyy_mm",
             "sourceAttr" : {
                 "attrId" : "55",
@@ -34,6 +36,7 @@
         }, 
         {
             "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
             "attrSourceName" : "formula_total_trans_count",
             "sourceAttr" : {
                 "ref" : {
@@ -44,6 +47,7 @@
         }, 
         {
             "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
             "attrSourceName" : "formula_sum_trans_amount_usd",
             "sourceAttr" : {
                 "ref" : {
@@ -54,6 +58,7 @@
         }, 
         {
             "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
             "attrSourceName" : "formula_avg_trans_amount",
             "sourceAttr" : {
                 "ref" : {
@@ -64,6 +69,7 @@
         }, 
         {
             "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
             "attrSourceName" : "formula_min_amount",
             "sourceAttr" : {
                 "ref" : {
@@ -74,6 +80,7 @@
         }, 
         {
             "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
             "attrSourceName" : "formula_max_amount",
             "sourceAttr" : {
                 "ref" : {
@@ -99,7 +106,8 @@
 		"1.0.1",
 		"DEMO"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
 	"appInfo": [
 		{

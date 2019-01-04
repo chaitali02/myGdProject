@@ -477,7 +477,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "train", "type": "train", "typeCount": "train", "uuid": "null", "caption": "Training" },
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
             { "name": "simulate", "type": "simulate", "typeCount": "simulate", "uuid": "null", "caption": "Simulation" },
-            { "name": "resultmodelmodel", "type": "modelexec", "typeCount": "modelexec", "uuid": "null", "caption": "Results" }
+            { "name": "modelDeploy", "type":"deployexec", "typeCount": "deployexec", "uuid": "null", "caption": "Model Deploy" },
+            { "name": "vartifAnalysis", "type":"VartifAnalysis", "typeCount": "VartifAnalysis", "uuid": "null", "caption": "What-If Analysis" },
+            { "name": "resultmodelmodel", "type": "trainexec", "typeCount": "trainexec", "uuid": "null", "caption": "Results" }
         ]
     };
 
@@ -1281,7 +1283,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
 
         .state('metaListdatapod', {
-            url: "/dataPreparation/datapod?id&mode&returnBack&version",
+            url: "/dataPreparation/datapod?id&mode&version&returnBack",
             templateUrl: "views/datapod.html",
             data: { pageTitle: 'Data Preparation' },
             controller: "",
@@ -2303,6 +2305,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/DataPipelineController.js',
                             'js/services/DagService.js',
+                            'js/services/ModelService.js'
                         ]
                     });
                 }]
@@ -2527,7 +2530,49 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
                 }]
             }
-        })
+        })   
+        .state('modelDeploy', {
+            url: "/ModelDeploy",
+            templateUrl:"views/model-deploy.html",
+            data: { pageTitle: 'Data Science' },
+            //controller: "GraphResourcesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                    {
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/ModelDeployController.js',
+                            'js/services/ModelDeployService.js'
+                        ]
+                    }
+                    ]);
+
+                }]
+            }
+        })   
+        .state('vartifAnalysis', {
+            url: "/WhatIfAnalysis",
+            templateUrl:"views/vartif-analysis.html",
+            data: { pageTitle: 'Data Science' },
+            //controller: "GraphResourcesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                    {
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/VartifAnalysisController.js',
+                            'js/services/VartifAnalysisService.js'
+                        ]
+                    }
+                    ]);
+
+                }]
+            }
+        })   
+
+        
 
         .state('createmodel', {
             url: "/CreateModel?id&mode&returnBack&version",
@@ -2597,6 +2642,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('trainrestultpage', {
             url: "/trainResults?id&version&type&name",
             templateUrl: "views/train-result.html",
+            data: { pageTitle: 'Data Science' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ModelResultController.js',
+                            'js/services/ModelService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('trainrestultpage2', {
+            url: "/trainResults2?id&version&type&name",
+            templateUrl: "views/train-result2.html",
             data: { pageTitle: 'Data Science' },
             controller: "",
             resolve: {

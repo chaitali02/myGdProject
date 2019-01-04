@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER,CF_SUCCESS_MSG) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -14,7 +14,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.lshType  = CF_FILTER.lhsType;
   $scope.rhsType  = CF_FILTER.rhsType;
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
-
+  $scope.isDestoryState = false; 
+  $scope.rhsNA=['NULL',"NOT NULL"];
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -72,6 +73,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   
   $scope.getLovByType();
   
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -96,12 +101,24 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.showForm = true
     $scope.showGraphDiv = false
   }
+
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createreconerule', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false
     $scope.showGraphDiv = true;
   };
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.reconruledata.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go('createreconerule', {
       id: uuid,
@@ -151,7 +168,81 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		}
 		return rshTypes;
 	}
+  $scope.onAttrSourceFilterRowDown=function(index){	
+		var rowTempIndex=$scope.sourceFilterTable[index];
+    var rowTempIndexPlus=$scope.sourceFilterTable[index+1];
+		$scope.sourceFilterTable[index]=rowTempIndexPlus;
+		$scope.sourceFilterTable[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.sourceFilterTable[index+1].logicalOperator=$scope.sourceFilterTable[index].logicalOperator;
+			$scope.sourceFilterTable[index].logicalOperator=""
+		}
+	}
 
+	$scope.onAttrSourceFilterRowUp=function(index){
+		var rowTempIndex=$scope.sourceFilterTable[index];
+        var rowTempIndexMines=$scope.sourceFilterTable[index-1];
+		$scope.sourceFilterTable[index]=rowTempIndexMines;
+		$scope.sourceFilterTable[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.sourceFilterTable[index].logicalOperator=$scope.sourceFilterTable[index-1].logicalOperator;
+			$scope.sourceFilterTable[index-1].logicalOperator=""
+		}
+  }  
+  
+  $scope.onAttrTargetFilterRowDown=function(index){	
+		var rowTempIndex=$scope.targetFilterTable[index];
+    var rowTempIndexPlus=$scope.targetFilterTable[index+1];
+		$scope.targetFilterTable[index]=rowTempIndexPlus;
+		$scope.targetFilterTable[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.targetFilterTable[index+1].logicalOperator=$scope.targetFilterTable[index].logicalOperator;
+			$scope.targetFilterTable[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrTargetFilterRowUp=function(index){
+		var rowTempIndex=$scope.targetFilterTable[index];
+    var rowTempIndexMines=$scope.targetFilterTable[index-1];
+		$scope.targetFilterTable[index]=rowTempIndexMines;
+		$scope.targetFilterTable[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.targetFilterTable[index].logicalOperator=$scope.targetFilterTable[index-1].logicalOperator;
+			$scope.targetFilterTable[index-1].logicalOperator=""
+		}
+  } 
+  $scope.onSourceFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.sourceFilterTable[index.sourceIndex].logicalOperator=$scope.sourceFilterTable[index.targetIndex].logicalOperator;
+			$scope.sourceFilterTable[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.sourceFilterTable[index.targetIndex].logicalOperator=$scope.sourceFilterTable[index.sourceIndex].logicalOperator;
+			$scope.sourceFilterTable[index.sourceIndex].logicalOperator=""
+		}
+	}
+  $scope.onTargetFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.targetFilterTable[index.sourceIndex].logicalOperator=$scope.targetFilterTable[index.targetIndex].logicalOperator;
+			$scope.targetFilterTable[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.targetFilterTable[index.targetIndex].logicalOperator=$scope.targetFilterTable[index.sourceIndex].logicalOperator;
+			$scope.targetFilterTable[index.sourceIndex].logicalOperator=""
+		}
+  }
+  
+  function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
   $scope.addSourceFilterRow = function() {
     if($scope.sourceFilterTable == null) {
       $scope.sourceFilterTable = [];
@@ -168,7 +259,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
     filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
@@ -190,13 +281,13 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lshType[0]
     filertable.rhstype = $scope.rhsType[0];
-    filertable.rhsTypes = CF_FILTER.rhsType;
+    filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue ;
     $scope.targetFilterTable.splice($scope.targetFilterTable.length, 0, filertable);
   }
-
+   
   $scope.removeSourceFilterRow = function() {
     var newDataList = [];
     $scope.checkAll = false;
@@ -301,7 +392,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable[index].isrhsFunction = true;
       CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
         onSuccressGetFunction(response.data)});	
-			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allSourceFilterFunction = response;
 			}
@@ -414,7 +504,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable[index].isrhsFunction = true;
       CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
         onSuccressGetFunction(response.data)});	
-			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allTargetFilterFunction = response;
 			}
@@ -466,14 +555,25 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
-    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
+    else if(['IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
       $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, []);
 		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
     }
+    else if(['EXISTS','NOT EXISTS'].indexOf($scope.targetFilterTable[index].operator) !=-1){
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
     else if(['<','>',"<=",'>='].indexOf($scope.targetFilterTable[index].operator) !=-1){
-      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['string', 'dataset']);
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes, ['dataset']);
   		$scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
+    else if (['IS'].indexOf($scope.targetFilterTable[index].operator) != -1) {
+		
+      $scope.targetFilterTable[index].rhsTypes = $scope.disableRhsType($scope.targetFilterTable[index].rhsTypes,['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+      $scope.targetFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
 		}
 		else{
@@ -491,14 +591,24 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
-    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+    else if(['IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
       $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, []);
 		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
     }
+    else if(['EXISTS','NOT EXISTS'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
     else if(['<','>',"<=",'>='].indexOf($scope.sourceFilterTable[index].operator) !=-1){
-      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['string', 'dataset']);
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['dataset']);
   		$scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
+    else if (['IS'].indexOf($scope.sourceFilterTable[index].operator) != -1) {
+      $scope.sourceFilterTable[index].rhsTypes = $scope.disableRhsType($scope.sourceFilterTable[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[0];
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}
 		else{
@@ -553,7 +663,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 	}
 
 	$scope.SubmitSearchAttr=function(){
-    console.log($scope.selectDatasetAttr);
     $scope.searchAttr.filterType =='source'?$scope.sourceFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr: $scope.targetFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;		
 		$('#searchAttr').modal('hide')
   }
@@ -562,7 +671,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     ReconRuleService.getAllLatest(selectType).then(function(response) { onSuccessGetAllLatest(response.data)});
     var onSuccessGetAllLatest = function(response) {
       if(type=="source"){
-        console.log(defaultoption)
         $scope.allSource=response;
         if(!defaultValue){
           $scope.allSource.defaultoption={}
@@ -601,7 +709,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         $scope.sourceFilterAttribute=response;
       }else{
         $scope.allTargetAtrribute=response;
-       // console.log(response[0]);
         if(defaultValue)
         $scope.selectTargetAtrribute=response[0];
         $scope.targetFilterAttribute=response;
@@ -649,6 +756,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     $scope.showactive = "true";
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     ReconRuleService.getAllVersionByUuid($stateParams.id, "recon").then(function(response) {onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function(response) {
       for (var i = 0; i < response.length; i++) {
@@ -657,8 +766,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         $scope.rule.versions[i] = ruleversion;
       }
     }
-    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recon').then(function(response) { onSuccess(response.data)});
+    ReconRuleService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recon')
+      .then(function(response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function(response) {
+     $scope.isEditInprogess=false;
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
      var defaultversion = {};
@@ -694,14 +805,25 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
      $scope.getAllLatestFunction('source');
      $scope.getAllLatestFunction('target');
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }else{
     $scope.getAllLatest("source",$scope.selectSourceType,true,{});
     $scope.getAllLatest("target",$scope.selectTargetType,true,{});
+    $scope.reconruledata={};
+    $scope.reconruledata.locked="N";
   }
+  
   $scope.selectVersion=function(){
-    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon').then(function(response) { onSuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    ReconRuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid,$scope.rule.defaultVersion.version, 'recon')
+      .then(function(response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function(response) {
+     $scope.isEditInprogess=false;
      $scope.reconruledata=response.ruledata;
      $scope.originalCompare=response.ruledata;
      var defaultversion = {};
@@ -737,7 +859,11 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      $scope.getAllLatestFunction('source');
      $scope.getAllLatestFunction('target');
 
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   $scope.submit=function(){
     var upd_tag="N"
@@ -748,6 +874,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     jsonObj.name = $scope.reconruledata.name;
     jsonObj.desc = $scope.reconruledata.desc;
     jsonObj.active = $scope.reconruledata.active;
+    jsonObj.locked = $scope.reconruledata.locked;
     jsonObj.published = $scope.reconruledata.published;
     jsonObj.sourceDistinct=$scope.reconruledata.sourceDistinct;
     jsonObj.targetDistinct=$scope.reconruledata.targetDistinct;
@@ -790,10 +917,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     refTargetFun.uuid=$scope.selectTargetFunction.uuid;
     targetFunc.ref=refTargetFun;
     jsonObj.targetFunc=targetFunc;
-
-    var sourcefilter = {}
     
-  
+    var sourcefilter = {}
     var sourceFilterInfo = [];
     if($scope.sourceFilterTable !=null){
       if($scope.sourceFilterTable.length >0){
@@ -805,6 +930,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
           var lhsref = {}
           var rhsoperand = {}
           var rhsref = {};
+          filterInfo.display_seq=i;
           if(typeof $scope.sourceFilterTable[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
@@ -895,13 +1021,13 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     if($scope.targetFilterTable !=null){
       if($scope.targetFilterTable.length>0){
         for(var i=0;i<$scope.targetFilterTable.length;i++) {
-        
           var  filterInfo  = {};
-          var operand = []
-          var lhsoperand = {}
-          var lhsref = {}
-          var rhsoperand = {}
+          var operand = [];
+          var lhsoperand = {};
+          var lhsref = {};
+          var rhsoperand = {};
           var rhsref = {};
+          filterInfo.display_seq=i;
           if(typeof $scope.targetFilterTable[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
@@ -1001,7 +1127,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
         var onSuccessGetOneById = function(result) {
           ReconRuleService.execute(result.data.uuid,result.data.version).then(function(response){onSuccess(response.data)});
           var onSuccess=function(response){
-            $scope.saveMessage="Rule Saved and Submitted Successfully."
+            $scope.saveMessage=CF_SUCCESS_MSG.rcSaveExecute;//"Rule Saved and Submitted Successfully."
             console.log(JSON.stringify(response))
             $scope.isSubmitProgess=false;
             $scope.isSubmitDisable=true;
@@ -1016,7 +1142,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       else{
         $scope.isSubmitProgess=false;
         $scope.isSubmitDisable=true;
-        $scope.saveMessage = "Rule Saved Successfully" 
+        $scope.saveMessage =CF_SUCCESS_MSG.rcSave; //"Rule Saved Successfully" 
         notify.type='success',
         notify.title= 'Success',
         notify.content=$scope.saveMessage
@@ -1036,7 +1162,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrule');
       }, 2000);
@@ -1045,9 +1171,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
 });
 
-ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService) {
+ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService,CF_SUCCESS_MSG) {
   
   $scope.select = 'rules group';
+  $scope.isDestoryState = false; 
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
@@ -1113,7 +1240,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  $scope.getLovByType();
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
+
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -1127,15 +1258,26 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   $scope.showPage = function() {
     $scope.showForm = true;
     $scope.showGraphDiv = false;
-  
   }
-
+  
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createreconerulegroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+   
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   }
 
   $scope.enableEdit=function (uuid,version) {
+    if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+      return false;
+    }
     $scope.showPage()
     $state.go('createreconerulegroup', {
       id: uuid,
@@ -1173,6 +1315,8 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false
     RuleGroupService.getAllVersionByUuid($stateParams.id, "recongroup").then(function(response) {onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function(response) {
       for (var i = 0; i < response.length; i++) {
@@ -1181,8 +1325,10 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         $scope.rulegroup.versions[i] = rulegroupversion;
       }
     }
-    RuleGroupService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recongroup').then(function(response) {onsuccess(response.data)});
+    RuleGroupService.getOneByUuidAndVersion($stateParams.id,$stateParams.version, 'recongroup')
+      .then(function(response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags
       $scope.checkboxModelparallel = response.inParallel;
@@ -1195,18 +1341,29 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid// + "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
+  }else{
+    $scope.ruleGroupDetail={};
+    $scope.ruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function() {
     $scope.myform.$dirty = false;
-    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'recongroup').then(function(response) {onsuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false
+    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'recongroup')
+      .then(function(response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function(response) {
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags
       var defaultversion = {};
@@ -1223,7 +1380,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
   $scope.loadRules = function(query) {
@@ -1234,7 +1395,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
   $scope.okrulesave = function() {
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+   if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function() {
         $state.go('datareconrulegroup');
       }, 2000);
@@ -1252,6 +1413,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
+    ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
     ruleGroupJson.published = $scope.ruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1287,7 +1449,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
           var onSuccess = function(response) {
             console.log(JSON.stringify(response))
             $scope.isSubmitProgess = false;
-            $scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.rcGroupSaveExecute;//"Rule Groups Saved and Submitted Successfully"
             notify.type='success',
             notify.title= 'Success',
             notify.content=$scope.saveMessage
@@ -1298,7 +1460,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
       } //End If
       else {
         $scope.isSubmitProgess = false;
-        $scope.saveMessage = "Rule Group Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.rcGroupSave//"Rule Groups Saved Successfully"
         notify.title= 'Success',
         notify.content=$scope.saveMessage
         $scope.$emit('notify', notify);

@@ -13,11 +13,10 @@ package com.inferyx.framework.domain;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="uploadexec")
-public class UploadExec extends BaseEntity
+public class UploadExec extends BaseExec
 {
 	private String location;
 	private String fileName;
-	private MetaIdentifierHolder dependsOn;
 	
 	public String getFileName() {
 		return fileName;
@@ -35,11 +34,5 @@ public class UploadExec extends BaseEntity
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public MetaIdentifierHolder getDependsOn() {
-		return dependsOn;
-	}
 
-	public void setDependsOn(MetaIdentifierHolder dependsOn) {
-		this.dependsOn = dependsOn;
-	}
 }

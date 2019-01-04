@@ -1702,6 +1702,24 @@ export class AppMetadata {
         class: 'fa fa-flask'
       },
 
+      'ingestExec': {
+        name: 'ingest',
+        caption: 'Ingest Exec',
+        execType: 'ingestexec',
+        metaType: 'ingestexec',
+        color: '#8E44AD',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'ingestExec',
+        moduleCaption: 'Data Ingestion',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-flask'
+      },
+
       'batch': {
         name: 'batch',
         caption: 'batch',

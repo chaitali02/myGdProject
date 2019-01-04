@@ -14,39 +14,51 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainExecView;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
+import com.inferyx.framework.service.SecurityServiceImpl;
 
 @RestController
 @RequestMapping(value = "/model")
@@ -63,6 +75,10 @@ public class ModelController {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private TrainResultViewServiceImpl trainResultViewServiceImpl; 
+	@Autowired
+	private SecurityServiceImpl securityServiceImpl;
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
@@ -176,8 +192,9 @@ public class ModelController {
 		 */
 		return modelServiceImpl.uploadScript(customScriptFile, model, modelId, modelUuid, modelVersion, scriptName);
 	}
-
-	@RequestMapping(value = "/executeScript", method = RequestMethod.GET)
+	
+	/********************** UNUSED **********************/
+	/*@RequestMapping(value = "/executeScript", method = RequestMethod.GET)
 	public @ResponseBody String executeScript(@RequestParam("scriptName") String scriptName,
 			@RequestParam("modelType") String modelType,
 			@RequestParam(value = "modelExecUuid", required = false) String modelExecUuid,
@@ -186,7 +203,7 @@ public class ModelController {
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return new ObjectMapper().writeValueAsString(
 				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion));
-	}
+	}*/
 
 	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getAlgorithmByModelExec", method = RequestMethod.GET)
@@ -251,7 +268,7 @@ public class ModelController {
 		}
 	}
 	
-	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Model> getAllModelByType(@RequestParam("customFlag") String customFlag,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "modelType" ,required = false) String modelType) throws Exception {
@@ -441,5 +458,72 @@ public class ModelController {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/getPrediction", method = RequestMethod.POST)
+	public List<Map<String, Object>> getPredict(@RequestParam("uuid") String trainExecUUID,
+			@RequestBody(required = false) Object feature,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		Map<String, List<Map<String, Object>>> featuresMap = new HashMap<>();
+		featuresMap.put("features", (List<Map<String, Object>>) ((Map<String, Object>) feature).get("featureList"));
+		Map<String, Object> featureWrapper = new HashMap<>();
+		featureWrapper.put("features", featuresMap);
+		return modelServiceImpl.getPrediction(trainExecUUID, featureWrapper);
+	}
 
+	@RequestMapping(value = "/getTrainResultByTrainExec", method = RequestMethod.GET)
+	public String getTrainResultByTrainExec(@RequestParam("uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonGenerationException, JsonMappingException, IOException {
+		TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExecUuid, trainExecVersion);
+		return new ObjectMapper().writeValueAsString(trainResultViewServiceImpl.getOneByUuidAndVersion(trainResult.getUuid(), trainResult.getVersion()));
+	}
+	
+	@RequestMapping(value = "/train/getTestSet", method = RequestMethod.GET)
+	public List<Map<String, Object>> getTestSet(@RequestParam("uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return modelServiceImpl.getTestSet(trainExecUuid, trainExecVersion);
+	}
+	
+	@RequestMapping(value = "/train/getTrainExecByModel", method = RequestMethod.GET)
+	public List<TrainExec> getTrainExecByModel(@RequestParam("uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+	}
+	
+	@RequestMapping(value = "/train/getDeployExecByModel", method = RequestMethod.GET)
+	public List<DeployExec> getDeployExecByModel(@RequestParam("uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getDeployExecByModel(modelUuid, modelVersion, active, startDate, endDate, status);
+	}
+	
+
+	@RequestMapping(value = "/getTrainExecViewByCriteria", method = RequestMethod.GET)
+	public List<TrainExecView> getTrainExecViewByCriteria(
+			@RequestParam(value = "trainExecUuid", required = false) String trainExecUuid,
+			@RequestParam(value = "uuid", required = false) String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "status", required = false) String status) throws Exception {
+		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid, active, startDate, endDate, status);
+	}
 }

@@ -9,9 +9,10 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:30:18 IST 2018",
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {

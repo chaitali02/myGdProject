@@ -19,6 +19,13 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class BusinessRulesDetailComponent {
+	dialogAttributeName: any;
+	dialogAttriNameArray: any[];
+	dialogAttriArray: any[];
+	displayDialogBox: boolean;
+	dialogSelectName : any;
+	paramlistArray: any[];
+	functionArray: any[];
 	rhsTypeArray: { value: string; label: string; }[];
 	lhsTypeArray: { 'value': string; 'label': string; }[];
 	rhsFormulaArray: any[];
@@ -69,13 +76,16 @@ export class BusinessRulesDetailComponent {
 	constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _ruleService: RuleService) {
 		this.dqdata = {};
 		this.continueCount = 1;
-		this.isSubmit = "false"
+		this.isSubmit = "false";
+		this.displayDialogBox = false;
+		this.dialogAttributeName = {};
+		this.dialogSelectName = {};
 		this.sources = ["datapod", "relation", "dataset", "rule"];
 		this.source = this.sources[0];
 		this.progressbarWidth = 25 * this.continueCount + "%";
 		this.dataqualitycompare = null;
 		this.filterTableArray = null;
-		this.dqdata["active"] = true
+		this.dqdata["active"] = true;
 		this.breadcrumbDataFrom = [{
 			"caption": "Business Rules",
 			"routeurl": "/app/list/rule"
@@ -111,51 +121,53 @@ export class BusinessRulesDetailComponent {
 			}
 		});
 		this.lhsTypeArray = [
-      { 'value': 'string', 'label': 'string' },
-      { 'value': 'integer', 'label': 'integer' },
-      { 'value': 'datapod', 'label': 'attribute' },
-      { 'value': 'formula', 'label': 'formula' }
-    ];
-    this.rhsTypeArray = [
-      { value: 'string', label: 'string' },
-      { value: 'integer', label: 'integer' },
-      { value: 'datapod', label: 'attribute' },
-      { value: 'formula', label: 'formula' },
-      { value: 'dataset', label: 'dataset' }
+			{ 'value': 'string', 'label': 'string' },
+			{ 'value': 'integer', 'label': 'integer' },
+			{ 'value': 'datapod', 'label': 'attribute' },
+			{ 'value': 'formula', 'label': 'formula' }
+		];
+		this.rhsTypeArray = [
+			{ value: 'string', label: 'string' },
+			{ value: 'integer', label: 'integer' },
+			{ value: 'datapod', label: 'attribute' },
+			{ value: 'formula', label: 'formula' },
+			{ value: 'dataset', label: 'dataset' },
+			{ value: 'function', label: 'function' },
+			{ value: 'paramlist', label: 'paramlist' }
 		]
 		this.operators = [
-      { 'value': '<', 'label': 'LESS THAN' },
-      { 'value': '>', 'label': 'GREATER THAN' },
-      { 'value': '<=', 'label': 'LESS OR  EQUAL' },
-      { 'value': '>=', 'label': 'GREATER OR EQUAL' },
-      { 'value': '=', 'label': 'EQUAL TO(=)' },
-      { 'value': 'BETWEEN', 'label': 'BETWEEN' },
-      { 'value': 'LIKE', 'label': 'LIKE' },
-      { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
-      { 'value': 'RLIKE', 'label': 'RLIKE' },
-      { 'value': 'EXISTS', 'label': 'EXISTS' },
-      { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
-    ];
-    this.logicalOperators = [
-      { 'value': '', 'label': '' },
-      { 'value': 'AND', 'label': 'AND' },
-      { 'value': 'OR', 'label': 'OR' }]
-
+			{ 'value': '<', 'label': 'LESS THAN' },
+			{ 'value': '>', 'label': 'GREATER THAN' },
+			{ 'value': '<=', 'label': 'LESS OR  EQUAL' },
+			{ 'value': '>=', 'label': 'GREATER OR EQUAL' },
+			{ 'value': '=', 'label': 'EQUAL TO(=)' },
+			{ 'value': '!=', 'label': 'NOT EQUAL(!=)' },
+			{ 'value': 'BETWEEN', 'label': 'BETWEEN' },
+			{ 'value': 'LIKE', 'label': 'LIKE' },
+			{ 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
+			{ 'value': 'RLIKE', 'label': 'RLIKE' },
+			{ 'value': 'EXISTS', 'label': 'EXISTS' },
+			{ 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+		];
+		this.logicalOperators = [
+			{ 'value': '', 'label': '' },
+			{ 'value': 'AND', 'label': 'AND' },
+			{ 'value': 'OR', 'label': 'OR' }]
 	}
 
 	public goBack() {
 		// this._location.back();
-		this.router.navigate(['app/list/rule'])
+		this.router.navigate(['app/list/rule']);
 	}
 
 	changeType() {
-		this.filterTableArray = null;
-		this.attributeTableArray = null;
+		this.dqdata.filterTableArray = null;
+		this.dqdata.attributeTableArray = null;
 		this.getAllLatest(true)
 	}
 	changeSourceType() {
-		this.filterTableArray = null;
-		this.attributeTableArray = null;
+		this.dqdata.filterTableArray = null;
+		this.dqdata.attributeTableArray = null;
 		this.getAllAttributeBySource();
 	}
 
@@ -267,7 +279,6 @@ export class BusinessRulesDetailComponent {
 	}
 
 	onSelectparamSet() {
-
 		var paramSetjson = {};
 		var paramInfoArray = [];
 		if (this.paramsetdata && this.paramsetdata != null) {
@@ -313,10 +324,9 @@ export class BusinessRulesDetailComponent {
 	onSuccessGetParamSetByParmLsit(response) {
 		this.allParameterset = response
 		this.isShowExecutionparam = true;
-
 	}
-	selectAllRow() {
 
+	selectAllRow() {
 		if (!this.selectallattribute) {
 			this.selectallattribute = true;
 		}
@@ -382,9 +392,7 @@ export class BusinessRulesDetailComponent {
 		setTimeout(() => {
 			this.goBack()
 		}, 1000);
-
 	}
-
 
 	getAllFunctions() {
 		this._commonService.getAllLatestFunction("function", "N").subscribe(
@@ -530,6 +538,33 @@ export class BusinessRulesDetailComponent {
 			error => console.log("Error :: " + error));
 	}
 
+	onSuccessgetFunctionByCriteria(response) {
+		let temp = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].name;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].name;
+			temp[i] = attributeObj
+		}
+		this.functionArray = temp;
+	}
+
+	onSuccessgetParamByApp(response) {
+		let temp = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = "app." + response[i].paramName;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].ref.uuid;
+			attributeObj["value"]["attributeId"] = response[i].paramId;
+			attributeObj["value"]["label"] = "app." + response[i].paramName;
+			temp[i] = attributeObj
+		}
+		this.paramlistArray = temp;
+	}
+
 	onSuccessgetOneByUuidAndVersion(response) {
 		this.breadcrumbDataFrom[2].caption = response.dqdata.name
 		this.dqdata = response.dqdata;
@@ -562,101 +597,132 @@ export class BusinessRulesDetailComponent {
 		this.getAllLatest(false);
 		this.getAllFunctions()
 
-    if(response.dqdata.filterInfo != null){
-      let filterInfoArray = [];
-      if (response.dqdata.filterInfo.length > 0) {
-        for (let k = 0; k < response.dqdata.filterInfo.length; k++) {
-          let filterInfo = {};
-          let lhsFilter = {};
-          filterInfo["logicalOperator"] = response.dqdata.filterInfo[k].logicalOperator
-          filterInfo["lhsType"] = response.dqdata.filterInfo[k].operand[0].ref.type;
-          filterInfo["operator"] = response.dqdata.filterInfo[k].operator;
-          filterInfo["rhsType"] = response.dqdata.filterInfo[k].operand[1].ref.type;
-  
-          if (response.dqdata.filterInfo[k].operand[0].ref.type == 'formula') {
-            this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-              .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-              error => console.log("Error ::", error))
-  
-            let lhsAttri1 = {}
-            lhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
-            lhsAttri1["label"] = response.dqdata.filterInfo[k].operand[0].ref.name;
-            filterInfo["lhsAttribute"] = lhsAttri1;
-          }
-  
-          else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'datapod') {
-  
-            this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-              .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-              error => console.log("Error ::", error))
-            let lhsAttri = {}
-            lhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
-            lhsAttri["label"] = response.dqdata.filterInfo[k].operand[0].ref.name + "." + response.dqdata.filterInfo[k].operand[0].attributeName;
-            lhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[0].attributeId;
-            filterInfo["lhsAttribute"] = lhsAttri;
-          }
-  
-          else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'simple') {
-            let stringValue = response.dqdata.filterInfo[k].operand[0].value;
-            let onlyNumbers = /^[0-9]+$/;
-            let result = onlyNumbers.test(stringValue);
-            if (result == true) {
-              filterInfo["lhsType"] = 'integer';
-            } else {
-              filterInfo["lhsType"] = 'string';
-            }
-            filterInfo["lhsAttribute"] = response.dqdata.filterInfo[k].operand[0].value;
-          }
-  
-          if (response.dqdata.filterInfo[k].operand[1].ref.type == 'formula') {
-            this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-              .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-              error => console.log("Error ::", error))
-            //filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
-            let rhsAttri = {}
-            rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-            rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
-            filterInfo["rhsAttribute"] = rhsAttri;
-          }
-  
-          else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
-            this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-              .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
-              error => console.log("Error ::", error))
-  
-            let rhsAttri1 = {}
-            rhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-            rhsAttri1["label"] = response.dqdata.filterInfo[k].operand[1].ref.name + "." + response.dqdata.filterInfo[k].operand[1].attributeName;
-            rhsAttri1["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
-            filterInfo["rhsAttribute"] = rhsAttri1;
-          }
-  
-          else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
-            let stringValue = response.dqdata.filterInfo[k].operand[1].value;
-            let onlyNumbers = /^[0-9]+$/;
-            let result = onlyNumbers.test(stringValue);
-            if (result == true) {
-              filterInfo["rhsType"] = 'integer';
-            } else {
-              filterInfo["rhsType"] = 'string';
-            }
-            filterInfo["rhsAttribute"] = response.dqdata.filterInfo[k].operand[1].value;
-  
-            let result2 = stringValue.includes("and")
-            if (result2 == true) {
-              filterInfo["rhsType"] = 'integer';
-  
-              let betweenValArray = []
-              betweenValArray = stringValue.split("and");
-              filterInfo["rhsAttribute1"] = betweenValArray[0];
-              filterInfo["rhsAttribute2"] = betweenValArray[1];
-            }
-          }
-          filterInfoArray.push(filterInfo);
-        }
-      }
-      this.dqdata.filterTableArray = filterInfoArray
-    }
+		if (response.dqdata.filterInfo != null) {
+			let filterInfoArray = [];
+			if (response.dqdata.filterInfo.length > 0) {
+				for (let k = 0; k < response.dqdata.filterInfo.length; k++) {
+					let filterInfo = {};
+					let lhsFilter = {};
+					filterInfo["logicalOperator"] = response.dqdata.filterInfo[k].logicalOperator
+					filterInfo["lhsType"] = response.dqdata.filterInfo[k].operand[0].ref.type;
+					filterInfo["operator"] = response.dqdata.filterInfo[k].operator;
+					filterInfo["rhsType"] = response.dqdata.filterInfo[k].operand[1].ref.type;
+
+					if (response.dqdata.filterInfo[k].operand[0].ref.type == 'formula') {
+						this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+							error => console.log("Error ::", error))
+
+						let lhsAttri1 = {}
+						lhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
+						lhsAttri1["label"] = response.dqdata.filterInfo[k].operand[0].ref.name;
+						filterInfo["lhsAttribute"] = lhsAttri1;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'datapod') {
+
+						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+							error => console.log("Error ::", error))
+						let lhsAttri = {}
+						lhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
+						lhsAttri["label"] = response.dqdata.filterInfo[k].operand[0].ref.name + "." + response.dqdata.filterInfo[k].operand[0].attributeName;
+						lhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[0].attributeId;
+						filterInfo["lhsAttribute"] = lhsAttri;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'simple') {
+						let stringValue = response.dqdata.filterInfo[k].operand[0].value;
+						let onlyNumbers = /^[0-9]+$/;
+						let result = onlyNumbers.test(stringValue);
+						if (result == true) {
+							filterInfo["lhsType"] = 'integer';
+						} else {
+							filterInfo["lhsType"] = 'string';
+						}
+						filterInfo["lhsAttribute"] = response.dqdata.filterInfo[k].operand[0].value;
+					}
+
+					if (response.dqdata.filterInfo[k].operand[1].ref.type == 'formula') {
+						this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+							error => console.log("Error ::", error))
+						//filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+						rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {debugger
+						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+							error => console.log("Error ::", error))
+
+						let rhsAttri1 = {}
+						rhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+						rhsAttri1["label"] = response.dqdata.filterInfo[k].operand[1].ref.name + "." + response.dqdata.filterInfo[k].operand[1].attributeName;
+						rhsAttri1["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
+						filterInfo["rhsAttribute"] = rhsAttri1;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'function') {
+						this._commonService.getFunctionByCriteria("", "N", "function")
+							.subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+							error => console.log("Error ::", error))
+
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].ref.name;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'paramlist') {
+						this._commonService.getParamByApp("", "application")
+							.subscribe(response => { this.onSuccessgetParamByApp(response) },
+							error => console.log("Error ::", error))
+
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
+						rhsAttri["label"] = "app." + response.dqdata["filterInfo"][k].operand[1].attributeName;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {debugger
+							let rhsAttri = {}
+							rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+							rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
+							rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].attributeName;
+							filterInfo["rhsAttribute"] = rhsAttri;
+					}
+
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
+						let stringValue = response.dqdata.filterInfo[k].operand[1].value;
+						let onlyNumbers = /^[0-9]+$/;
+						let result = onlyNumbers.test(stringValue);
+						if (result == true) {
+							filterInfo["rhsType"] = 'integer';
+						} else {
+							filterInfo["rhsType"] = 'string';
+						}
+						filterInfo["rhsAttribute"] = response.dqdata.filterInfo[k].operand[1].value;
+
+						let result2 = stringValue.includes("and")
+						if (result2 == true) {
+							filterInfo["rhsType"] = 'integer';
+
+							let betweenValArray = []
+							betweenValArray = stringValue.split("and");
+							filterInfo["rhsAttribute1"] = betweenValArray[0];
+							filterInfo["rhsAttribute2"] = betweenValArray[1];
+						}
+					}
+					filterInfoArray.push(filterInfo);
+				}
+			}
+			this.dqdata.filterTableArray = filterInfoArray
+		}
 	}
 
 	getAllVersionByUuid() {
@@ -687,140 +753,215 @@ export class BusinessRulesDetailComponent {
 	}
 
 	onSuccessgetFormulaByLhsType(response) {
-    this.lhsFormulaArray = []
-    for (const i in response) {
-      let formulaObj = {};
-      formulaObj["label"] = response[i].name;
-      formulaObj["value"] = {};
-      formulaObj["value"]["uuid"] = response[i].uuid;
-      formulaObj["value"]["label"] = response[i].name;
-      this.lhsFormulaArray[i] = formulaObj;
-    }
+		this.lhsFormulaArray = []
+		for (const i in response) {
+			let formulaObj = {};
+			formulaObj["label"] = response[i].name;
+			formulaObj["value"] = {};
+			formulaObj["value"]["uuid"] = response[i].uuid;
+			formulaObj["value"]["label"] = response[i].name;
+			this.lhsFormulaArray[i] = formulaObj;
+		}
 	}
-	
+
 	onSuccessgetAllAttributeBySourceLhs(response) {
-    this.attributesArray = []
-    let temp1 = [];
-    for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].dname;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].dname;
-      attributeObj["value"]["attributeId"] = response[i].attributeId;
-      temp1[i] = attributeObj
-      this.attributesArray = temp1;
-    }
+		this.attributesArray = []
+		let temp1 = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].dname;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].dname;
+			attributeObj["value"]["attributeId"] = response[i].attributeId;
+			temp1[i] = attributeObj
+			this.attributesArray = temp1;
+		}
 	}
-	
+
 	onSuccessgetFormulaByRhsType(response) {
-    this.rhsFormulaArray = [];
-    let rhsFormulaObj = {};
-    let temp = [];
-    for (const i in response) {
-      rhsFormulaObj["label"] = response[i].name;
-      rhsFormulaObj["value"] = {};
-      rhsFormulaObj["value"]["label"] = response[i].name;
-      rhsFormulaObj["value"]["uuid"] = response[i].uuid;
-      temp[i] = rhsFormulaObj;
-    }
-    this.rhsFormulaArray = temp
+		this.rhsFormulaArray = [];
+		let rhsFormulaObj = {};
+		let temp = [];
+		for (const i in response) {
+			rhsFormulaObj["label"] = response[i].name;
+			rhsFormulaObj["value"] = {};
+			rhsFormulaObj["value"]["label"] = response[i].name;
+			rhsFormulaObj["value"]["uuid"] = response[i].uuid;
+			temp[i] = rhsFormulaObj;
+		}
+		this.rhsFormulaArray = temp
 	}
-	
+
 	onSuccessgetAllAttributeBySourceRhs(response) {
-    this.attributesArray = []
-    let temp1 = [];
-    for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].dname;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].dname;
-      attributeObj["value"]["attributeId"] = response[i].attributeId;
-      temp1[i] = attributeObj
-      this.attributesArray = temp1;
-    }
+		this.attributesArray = []
+		let temp1 = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].dname;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].dname;
+			attributeObj["value"]["attributeId"] = response[i].attributeId;
+			temp1[i] = attributeObj
+			this.attributesArray = temp1;
+		}
 	}
-	
+
 	onChangeLhsType(index) {
-    this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
-    if (this.dqdata.filterTableArray[index]["lhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-        error => console.log("Error ::", error))
-    }
+		this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
+		if (this.dqdata.filterTableArray[index]["lhsType"] == 'formula') {
+			this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+				error => console.log("Error ::", error))
+		}
 
-    else if (this.dqdata.filterTableArray[index]["lhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-        error => console.log("Error ::", error))
-    }
+		else if (this.dqdata.filterTableArray[index]["lhsType"] == 'datapod') {
+			this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+				error => console.log("Error ::", error))
+		}
 
-    else {
-      this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
-    }
-  }
-
-  onChangeRhsType(index) {
-    this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
-    if (this.dqdata.filterTableArray[index]["rhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-        error => console.log("Error ::", error))
-    }
-
-    else if (this.dqdata.filterTableArray[index]["rhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
-        error => console.log("Error ::", error))
-    }
-
-    else {
-      this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
-    }
+		else {
+			this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
+		}
 	}
-	
+
+	onChangeRhsType(index) {
+		this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
+		if (this.dqdata.filterTableArray[index]["rhsType"] == 'formula') {
+			this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+				error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'datapod') {
+			this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+				error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'function') {
+			this._commonService.getFunctionByCriteria("", "N", "function")
+				.subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+				error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'paramlist') {
+			this._commonService.getParamByApp("", "application")
+			.subscribe(response => { this.onSuccessgetParamByApp(response) },
+			error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset'){
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute;
+		}
+		
+		else {
+			this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
+		}
+	}
+
 	addRow() {
-    if (this.dqdata.filterTableArray == null) {
-      this.dqdata.filterTableArray = [];
-    }
-    var len = this.dqdata.filterTableArray.length + 1
-    var filertable = {};
-    filertable["logicalOperator"] = ""
-    filertable["lhsType"] = ""
-    filertable["lhsAttribute"] = ""
-    filertable["operator"] = ""
-    filertable["rhsType"] = ""
-    filertable["rhsAttribute"] = ""
-    this.dqdata.filterTableArray.splice(this.dqdata.filterTableArray.length, 0, filertable);
+		if (this.dqdata.filterTableArray == null) {
+			this.dqdata.filterTableArray = [];
+		}
+		var len = this.dqdata.filterTableArray.length + 1
+		var filertable = {};
+		filertable["logicalOperator"] = ""
+		filertable["lhsType"] = "integer"
+		filertable["lhsAttribute"] = ""
+		filertable["operator"] = ""
+		filertable["rhsType"] = "integer"
+		filertable["rhsAttribute"] = ""
+		this.dqdata.filterTableArray.splice(this.dqdata.filterTableArray.length, 0, filertable);
 	}
-	
-  removeRow() {
-    let newDataList = [];
-    this.selectedAllFitlerRow = false;
-    this.dqdata.filterTableArray.forEach(selected => {
-      if (!selected.selected) {
-        newDataList.push(selected);
-      }
-    });
-    if (newDataList.length > 0) {
-      newDataList[0].logicalOperator = "";
-    }
-    this.dqdata.filterTableArray = newDataList;
+
+	removeRow() {
+		let newDataList = [];
+		this.selectedAllFitlerRow = false;
+		this.dqdata.filterTableArray.forEach(selected => {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		if (newDataList.length > 0) {
+			newDataList[0].logicalOperator = "";
+		}
+		this.dqdata.filterTableArray = newDataList;
 	}
 
 	checkAllFilterRow() {
-    if (!this.selectedAllFitlerRow) {
-      this.selectedAllFitlerRow = true;
-    }
-    else {
-      this.selectedAllFitlerRow = false;
-    }
-    this.dqdata.filterTableArray.forEach(filter => {
-      filter.selected = this.selectedAllFitlerRow;
-    });
+		if (!this.selectedAllFitlerRow) {
+			this.selectedAllFitlerRow = true;
+		}
+		else {
+			this.selectedAllFitlerRow = false;
+		}
+		this.dqdata.filterTableArray.forEach(filter => {
+			filter.selected = this.selectedAllFitlerRow;
+		});
+	}
+
+	searchOption(index){
+    this.displayDialogBox = true;
+    this._commonService.getAllLatest("dataset")
+    .subscribe(response => {this.onSuccessgetAllLatestDialogBox(response)},
+    error => console.log("Error ::", error))
   }
-	
+
+  onSuccessgetAllLatestDialogBox(response){
+    this.dialogAttriArray =  [];
+    let temp = [];
+    for(const i in response){
+      let dialogAttriObj = {};
+      
+      dialogAttriObj["label"] = response[i].name;
+      dialogAttriObj["value"] = {};
+      dialogAttriObj["value"]["label"] = response[i].name;
+      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      temp[i] = dialogAttriObj;
+    }
+    this.dialogAttriArray = temp
+    console.log(JSON.stringify(this.dialogAttriArray));
+  }
+  
+  onChangeDialogAttribute(){
+    this._commonService.getAttributesByDataset("dataset",this.dialogSelectName.uuid)
+    .subscribe(response => {this.onSuccessgetAttributesByDatasetDialogBox(response)},
+    error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAttributesByDatasetDialogBox(response){
+    this.dialogAttriNameArray =  [];
+    for(const i in response){
+      let dialogAttriNameObj = {};
+      dialogAttriNameObj["label"] = response[i].attrName;
+      dialogAttriNameObj["value"] = {};
+      dialogAttriNameObj["value"]["label"] = response[i].attrName;
+      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
+      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+
+  submitDialogBox(index){
+    this.displayDialogBox = false;
+    let rhsattribute = {}
+    rhsattribute["label"] = this.dialogAttributeName.label;
+    rhsattribute["uuid"] = this.dialogAttributeName.uuid;
+    rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+    this.dqdata.filterTableArray[index].rhsAttribute = rhsattribute;
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
+  }
+
 	ruleSubmit() {
 		this.isSubmit = "true"
 		let dqJson = {};
@@ -842,7 +983,7 @@ export class BusinessRulesDetailComponent {
 		ref["uuid"] = this.sourcedata.uuid;
 		source["ref"] = ref;
 		dqJson["source"] = source;
-		if(this.selectParameterlist != null){
+		if (this.selectParameterlist != null) {
 			let paramlist = {}
 			let ref = {}
 			ref["uuid"] = this.selectParameterlist.uuid;
@@ -851,7 +992,7 @@ export class BusinessRulesDetailComponent {
 			dqJson["paramList"] = paramlist;
 		}
 		else
-		dqJson["paramList"] = null;
+			dqJson["paramList"] = null;
 
 		let filterInfoArray = [];
 		if (this.dqdata.filterTableArray != null) {
@@ -916,6 +1057,33 @@ export class BusinessRulesDetailComponent {
 					//operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
 					filterInfo["operand"][1] = operatorObj;
 				}
+				else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
+					let operatorObj = {};
+					let ref = {}
+					ref["type"] = "function";
+					ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+					operatorObj["ref"] = ref;
+					//operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
+					filterInfo["operand"][1] = operatorObj;
+				}
+				else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
+					let operatorObj = {};
+					let ref = {}
+					ref["type"] = "paramlist";
+					ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+					operatorObj["ref"] = ref;
+					operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+					filterInfo["operand"][1] = operatorObj;
+				}
+				else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
+          let operatorObj = {};
+          let ref = {}
+          ref["type"] = "dataset";
+          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj["ref"] = ref;
+          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo["operand"][1] = operatorObj;
+        }
 				else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
 					let operatorObj = {};
 					let ref = {}
@@ -930,66 +1098,66 @@ export class BusinessRulesDetailComponent {
 			dqJson["filterInfo"] = filterInfoArray;
 			console.log(JSON.stringify(filterInfoArray));
 		}
-    if(this.attributeTableArray != null){
-      var sourceAttributesArray = [];
-      for (var i = 0; i < this.attributeTableArray.length; i++) {
-        let attributemap = {};
-        attributemap["attrSourceId"] = i;
-        attributemap["attrSourceName"] = this.attributeTableArray[i].name
-        let sourceAttr = {};
-        let sourceref = {};
-        if (this.attributeTableArray[i].sourceAttributeType.text == "string") {
-          sourceref["type"] = "simple";
-          sourceAttr["ref"] = sourceref;
-          if (typeof this.attributeTableArray[i].sourcesimple == "undefined") {
-            sourceAttr["value"] = "";
-          }
-          else {
-            sourceAttr["value"] = this.attributeTableArray[i].sourcesimple;
-          }
-          attributemap["sourceAttr"] = sourceAttr;
-        }// End Simple IF
-  
-        else if (this.attributeTableArray[i].sourceAttributeType.text == "datapod") {
-          let uuid = this.attributeTableArray[i].sourceattribute.uuid
-          let attrid = this.attributeTableArray[i].sourceattribute.attrId
-          sourceref["uuid"] = uuid;
-          if (this.source == "relation") {
-            sourceref["type"] = "datapod";
-          }
-          else {
-            sourceref["type"] = this.source;
-          }
-          sourceAttr["ref"] = sourceref;
-          sourceAttr["attrId"] = attrid;
-          attributemap["sourceAttr"] = sourceAttr;
-        } // End Datapod ELSE IF
-  
-        else if (this.attributeTableArray[i].sourceAttributeType.text == "expression") {
-          sourceref["type"] = "expression";
-          sourceref["uuid"] = this.attributeTableArray[i].sourceexpression.uuid;
-          sourceAttr["ref"] = sourceref;
-          attributemap["sourceAttr"] = sourceAttr;
-        }// End Expresson ELSEIF
-  
-        else if (this.attributeTableArray[i].sourceAttributeType.text == "formula") {
-          sourceref["type"] = "formula";
-          sourceref["uuid"] = this.attributeTableArray[i].sourceformula.uuid;
-          sourceAttr["ref"] = sourceref;
-          attributemap["sourceAttr"] = sourceAttr;
-  
-        } // End Fromula ELSEIF
-        else if (this.attributeTableArray[i].sourceAttributeType.text == "function") {
-          sourceref["type"] = "function";
-          sourceref["uuid"] = this.attributeTableArray[i].sourcefunction.uuid;
-          sourceAttr["ref"] = sourceref;
-          attributemap["sourceAttr"] = sourceAttr
-        }
-        sourceAttributesArray[i] = attributemap;
-      }//End FOR Loop
-  
-      dqJson["attributeInfo"] = sourceAttributesArray;  
-    }
+		if (this.attributeTableArray != null) {
+			var sourceAttributesArray = [];
+			for (var i = 0; i < this.attributeTableArray.length; i++) {
+				let attributemap = {};
+				attributemap["attrSourceId"] = i;
+				attributemap["attrSourceName"] = this.attributeTableArray[i].name
+				let sourceAttr = {};
+				let sourceref = {};
+				if (this.attributeTableArray[i].sourceAttributeType.text == "string") {
+					sourceref["type"] = "simple";
+					sourceAttr["ref"] = sourceref;
+					if (typeof this.attributeTableArray[i].sourcesimple == "undefined") {
+						sourceAttr["value"] = "";
+					}
+					else {
+						sourceAttr["value"] = this.attributeTableArray[i].sourcesimple;
+					}
+					attributemap["sourceAttr"] = sourceAttr;
+				}// End Simple IF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "datapod") {
+					let uuid = this.attributeTableArray[i].sourceattribute.uuid
+					let attrid = this.attributeTableArray[i].sourceattribute.attrId
+					sourceref["uuid"] = uuid;
+					if (this.source == "relation") {
+						sourceref["type"] = "datapod";
+					}
+					else {
+						sourceref["type"] = this.source;
+					}
+					sourceAttr["ref"] = sourceref;
+					sourceAttr["attrId"] = attrid;
+					attributemap["sourceAttr"] = sourceAttr;
+				} // End Datapod ELSE IF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "expression") {
+					sourceref["type"] = "expression";
+					sourceref["uuid"] = this.attributeTableArray[i].sourceexpression.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr;
+				}// End Expresson ELSEIF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "formula") {
+					sourceref["type"] = "formula";
+					sourceref["uuid"] = this.attributeTableArray[i].sourceformula.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr;
+
+				} // End Fromula ELSEIF
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "function") {
+					sourceref["type"] = "function";
+					sourceref["uuid"] = this.attributeTableArray[i].sourcefunction.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr
+				}
+				sourceAttributesArray[i] = attributemap;
+			}//End FOR Loop
+
+			dqJson["attributeInfo"] = sourceAttributesArray;
+		}
 		console.log(dqJson);
 		this._commonService.submit("rule", dqJson).subscribe(
 			response => { this.OnSuccessubmit(response) },

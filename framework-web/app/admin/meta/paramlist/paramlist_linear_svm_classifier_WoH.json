@@ -13,7 +13,8 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
     "templateFlg" : "Y",
@@ -56,6 +57,8 @@
       "paramId": "0",
       "paramName": "maxIter",
       "paramType": "integer",
+  	  "paramDispName" : "Max Iter",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -67,6 +70,8 @@
       "paramId": "1",
       "paramName": "regParam",
       "paramType": "double",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

@@ -1,18 +1,18 @@
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_SUMMARY; 
+drop table if exists portfolio_loss_summary; 
 
-CREATE TABLE PORTFOLIO_LOSS_SUMMARY 
+create table portfolio_loss_summary 
   ( 
-     PORTFOLIO_AVG_PD           DECIMAL(10, 2), 
-     PORTFOLIO_AVG_LGD          DECIMAL(10, 2), 
-     PORTFOLIO_TOTAL_EAD        DECIMAL(10, 2), 
-     PORTFOLIO_EXPECTED_LOSS    DECIMAL(10, 2), 
-     PORTFOLIO_VALUE_AT_RISK    DECIMAL(10, 2), 
-     PORTFOLIO_ECONOMIC_CAPITAL DECIMAL(10, 2), 
-     PORTFOLIO_EXPECTED_SUM     DECIMAL(10, 2), 
-     PORTFOLIO_ES_PERCENTAGE    DECIMAL(10, 2), 
-     PORTFOLIO_VAL_PERCENTAGE   DECIMAL(10, 2), 
-     PORTFOLIO_EL_PERCENTAGE    DECIMAL(10, 2), 
-     PORTFOLIO_EC_PERCENTAGE    DECIMAL(10, 2), 
-     REPORTING_DATE             VARCHAR(50), 
-     VERSION                    INTEGER(50) 
+     portfolio_avg_pd           decimal(10, 2), 
+     portfolio_avg_lgd          decimal(10, 2), 
+     portfolio_total_ead        decimal(10, 2), 
+     portfolio_expected_loss    decimal(10, 2), 
+     portfolio_value_at_risk    decimal(10, 2), 
+     portfolio_economic_capital decimal(10, 2), 
+     portfolio_expected_sum     decimal(10, 2), 
+     portfolio_es_percentage    decimal(10, 2), 
+     portfolio_val_percentage   decimal(10, 2), 
+     portfolio_el_percentage    decimal(10, 2), 
+     portfolio_ec_percentage    decimal(10, 2), 
+     reporting_date             varchar(50), 
+     version                    integer(50) 
   ); 

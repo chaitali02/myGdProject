@@ -1,0 +1,104 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "a5c2e7bc-47da-4f2c-aaca-84250b7718fb"
+        }
+    },
+    "formulaInfo" : [ 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "IF"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "a5c2e7bc-47da-4f2c-aaca-84250b7718fb"
+            },
+            "attributeId" : 169
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "="
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "'"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "'"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ","
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "0"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ","
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "'Unknown'"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }
+    ],
+    "formulaType" : "simple",
+    "uuid" : "0ace9eee-645d-4e30-bc6e-b8a71eb0faba",
+    "version" : "1545306939",
+    "name" : "fault_code_type_3_handleNull",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-12-20T11:55:39.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ea",
+                "version" : "1521430822",
+                "name" : "Predictive Maintaince"
+            }
+        }
+    ]
+}

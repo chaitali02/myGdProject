@@ -1,0 +1,172 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002888"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'WR'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "AND"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "%"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "1000"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "NULL"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ",0)"
+		}
+	],
+	"formulaType" : "aggr",
+	"uuid" : "57dd756a-58db-41db-af62-ad8363876718",
+	"version" : "1542415028",
+	"name" : "fm_all_wire_transfers_round_amount_avg",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-17T00:37:08Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

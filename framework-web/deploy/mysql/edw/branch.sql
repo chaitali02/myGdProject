@@ -1,14 +1,14 @@
-DROP TABLE IF EXISTS BRANCH;
-CREATE TABLE BRANCH(	
-	BRANCH_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	BRANCH_TYPE_ID VARCHAR(50),
-	BANK_ID VARCHAR(50),
-	ADDRESS_ID VARCHAR(50),
-	BRANCH_NAME VARCHAR(100),
-	BRANCH_DESC VARCHAR(500),
-	BRANCH_CONTACT_NAME VARCHAR(100),
-	BRANCH_CONTACT_PHONE VARCHAR(100),
-	BRANCH_CONTACT_EMAIL VARCHAR(100),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_ID_PK  PRIMARY KEY(BRANCH_ID));
+drop table if exists branch;
+create table branch(	
+	branch_id varchar(50) default 0 not null,
+	branch_type_id varchar(50),
+	bank_id varchar(50),
+	address_id varchar(50),
+	branch_name varchar(100),
+	branch_desc varchar(500),
+	branch_contact_name varchar(100),
+	branch_contact_phone varchar(100),
+	branch_contact_email varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_id_pk  primary key(branch_id));

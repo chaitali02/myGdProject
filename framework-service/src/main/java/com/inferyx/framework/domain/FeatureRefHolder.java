@@ -13,6 +13,7 @@ package com.inferyx.framework.domain;
 public class FeatureRefHolder extends MetaIdentifierHolder {
 	private String featureId;
 	private String featureName;
+	private double featureDefaultValue;
 	/**
 	 * @Ganesh
 	 *
@@ -44,6 +45,12 @@ public class FeatureRefHolder extends MetaIdentifierHolder {
 	 */
 	public void setFeatureName(String featureName) {
 		this.featureName = featureName;
+	}
+	public double getFeatureDefaultValue() {
+		return featureDefaultValue;
+	}
+	public void setFeatureDefaultValue(double featureDefaultValue) {
+		this.featureDefaultValue = featureDefaultValue;
 	}
 	
 }

@@ -567,7 +567,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 
     this.getOneByUuidAndVersion = function (uuid, version, type) {
         var deferred = $q.defer();
-        IngestRuleFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+        IngestRuleFactory.findOneByUuidAndVersion(uuid, version, type)
+            .then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
         var onSuccess = function (response) {
             var ingestJSOn = {};
             ingestJSOn.ingestData = response;
@@ -587,10 +588,18 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 					filterInfo.rhsTypes = null;
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+                    }
+                    else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['string', 'dataset']);
+					}
+					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
 					}
 					else {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['dataset']);
@@ -702,7 +711,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
                         filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
                     }
-                    else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.filter.dependsOn.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
+                    else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.sourceDetail.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -908,9 +917,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                 }
             }
             ingestJSOn.ingesttabalearray = attributeArray;
-            console.log(ingestJSOn.ingesttabalearray)
+          //  console.log(ingestJSOn.ingesttabalearray)
             deferred.resolve({
                 data: ingestJSOn
+            })
+        };
+        var onError = function (response) {
+            deferred.reject({
+              data: response
             })
         }
         return deferred.promise;

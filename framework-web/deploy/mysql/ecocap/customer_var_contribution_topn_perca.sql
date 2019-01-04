@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC; 
+drop table if exists customer_var_contribution_topn_perc; 
 
-CREATE TABLE CUSTOMER_VAR_CONTRIBUTION_TOPN_PERC 
+create table customer_var_contribution_topn_perc 
   ( 
-     REPORTING_DATE        VARCHAR(50), 
-     TOP_N                 VARCHAR(50), 
-     VAR_CONTRIBUTION_PERC DECIMAL(10, 2), 
-     VERSION               INTEGER(50) 
+     reporting_date        varchar(50), 
+     top_n                 varchar(50), 
+     var_contribution_perc decimal(10, 2), 
+     version               integer(50) 
   ); 

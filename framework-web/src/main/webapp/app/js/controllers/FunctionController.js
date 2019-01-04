@@ -46,7 +46,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	$scope.funcType = ["hive", "impala", "oracle"];
 	$scope.allTypes = ["file", "hive", "impala", "mysql", "oracle"];
 	$scope.allParamTypes = ["string", "function"]
-	$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
+	//$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
+	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE"];
 	$scope.isDependencyShow = false;
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'distinct', 'binary', 'number',
 		'decimal'
@@ -88,7 +89,19 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		$scope.showGraphDiv = true;
 	}
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListfunction', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.functiondata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListfunction', {
 			id: uuid,
@@ -197,6 +210,15 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		// $scope is required here, hence the injection above, even though we're using "controller as" syntax
 		$scope.$broadcast('onExpandAll', { expanded: expanded });
 	};
+
+	$scope.onChangeInputReq=function(){
+		if($scope.functiondata.inputReq =="Y"){
+			$scope.addrow();
+		}else{
+			$scope.functionTableArray=[];
+		}
+		
+	}
 	
 
 	$scope.convertUppdercase = function (value) {
@@ -212,6 +234,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataFunctionSerivce.getAllVersionByUuid($stateParams.id, "function").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -221,8 +245,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 		}//End onGetAllVersionByUuid
 
-		MetadataFunctionSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, "function").then(function (response) { onGetLatestByUuid(response.data) });
+		MetadataFunctionSerivce.getOneByUuidandVersion($stateParams.id, $stateParams.version, "function")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
 			$scope.selectCatogory = response.functiondata.category;
 			$scope.selectFunctionType = response.functiondata.funcType;
@@ -242,13 +268,27 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 			$scope.paramtable = response.paramInfo;
 		}//End onGetLatestByUuid
-
+        var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End If
+	else{
+		$scope.functiondata={};
+		$scope.functiondata.locked="N";
+		$scope.functiondata.inputReq="N";
+		
+
+	}
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataFunctionSerivce.getOneByUuidandVersion($scope.function.defaultVersion.uuid, $scope.function.defaultVersion.version, 'function').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFunctionSerivce.getOneByUuidandVersion($scope.function.defaultVersion.uuid, $scope.function.defaultVersion.version, 'function')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
 			$scope.selectCatogory = response.functiondata.category;
 			$scope.selectFunctionType = response.functiondata.funcType;
@@ -268,7 +308,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			}
 			$scope.paramtable = response.paramInfo;
 		}//End getOneByUuidandVersion
-
+        var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 
@@ -296,10 +339,11 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.name = $scope.functiondata.name
 		functionJson.desc = $scope.functiondata.desc
 		functionJson.active = $scope.functiondata.active;
+		functionJson.locked = $scope.functiondata.locked;
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
 		functionJson.category = $scope.selectCatogory;
-		functionJson.funcType = $scope.selectFunctionType;
+	// 	functionJson.funcType = $scope.selectFunctionType;
 		functionJson.inputReq = $scope.functiondata.inputReq;
 		var tagArray = [];
 		if ($scope.tags != null) {

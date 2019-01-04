@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DefValue;
 import com.inferyx.framework.domain.ExecParams;
@@ -43,6 +44,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
@@ -69,6 +71,8 @@ public class AttributeMapOperator {
 	protected FunctionOperator functionOperator;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	private RunMode runMode;
 	
@@ -217,6 +221,8 @@ public class AttributeMapOperator {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		Object object = daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString());
+		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		try {
 
 			if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.datapod)  
@@ -243,12 +249,12 @@ public class AttributeMapOperator {
 
 				return builder.append("CASE WHEN ")
 						.append(expressionOperator.generateSql(((Expression) object).getExpressionInfo(),
-								((Expression) object).getDependsOn(), refKeyMap, otherParams, execParams))
+								((Expression) object).getDependsOn(), refKeyMap, otherParams, execParams, mapSourceDS))
 						.append(" THEN ")
 						.append(expressionOperator.generateMetCondition(((Expression) object).getMatch(), null, refKeyMap,
-								otherParams, execParams))
+								otherParams, execParams, mapSourceDS))
 						.append(" ELSE ").append(expressionOperator
-								.generateNotMetCondition(((Expression) object).getNoMatch(), null, refKeyMap, otherParams, execParams)).
+								.generateNotMetCondition(((Expression) object).getNoMatch(), null, refKeyMap, otherParams, execParams, mapSourceDS)).
 						append(" END ").append(" ").toString();
 				 
 				// }
@@ -267,7 +273,7 @@ public class AttributeMapOperator {
 
 			if (object instanceof Formula) {
 				//if (sourceAttr.getCondition() == null) {
-				return formulaOperator.generateSql((Formula) object, refKeyMap, otherParams, execParams);
+				return formulaOperator.generateSql((Formula) object, refKeyMap, otherParams, execParams, mapSourceDS);
 				//}
 				/*Condition condition = (Condition) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getCondition().getRef(), refKeyMap));
@@ -289,12 +295,19 @@ public class AttributeMapOperator {
 					}
 					return "";
 				}
-				if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
+				/*if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
 					functionOperator.setRunMode(runMode);
 					if (function.getFunctionInfo().contains("(")) {
 						return functionOperator.generateSql((Function) object, refKeyMap, otherParams);
 					}
 					return functionOperator.generateSql((Function) object, refKeyMap, otherParams);//.concat("()");
+				}*/
+				if (function.getInputReq() == null || function.getInputReq().equalsIgnoreCase("N")) {
+					functionOperator.setRunMode(runMode);
+					if (function.getFunctionInfo().contains("(")) {
+						return functionOperator.generateSql((Function) object, refKeyMap, otherParams, mapSourceDS);
+					}
+					return functionOperator.generateSql((Function) object, refKeyMap, otherParams, mapSourceDS);//.concat("()");
 				}
 			}
 		}catch (Exception e) {
@@ -402,7 +415,7 @@ public class AttributeMapOperator {
 	public String selectGroupBy(List<AttributeMap> attrMapList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
 			HashMap<String, String> otherParams, 
-			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, MetaIdentifierHolder mapSource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder groupByStr = new StringBuilder("");// StringBuilder(" GROUP BY ");
 		String groupInfo = "";
 		boolean isGroupBy = false;
@@ -412,6 +425,8 @@ public class AttributeMapOperator {
 		/*if (!isGroupBy(attrMapList, refKeyMap, otherParams)) {
 			return "";
 		}*/
+		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString());
+		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		for (AttributeMap attr : attrMapList) {
 			if (attr.getSourceAttr().getRef().getType() == MetaType.datapod 
 					|| attr.getSourceAttr().getRef().getType() == MetaType.dataset) {
@@ -419,17 +434,17 @@ public class AttributeMapOperator {
 				//groupByStr.append(attr.getSourceAttr().getAttrName()).append(",");
 			} else if (attr.getSourceAttr().getRef().getType() == MetaType.expression) {
 				Expression expression = (Expression) daoRegister.getRefObject(attr.getSourceAttr().getRef());
-				if(expression.getMatch().getRef().getType() == MetaType.formula  || expression.getNoMatch().getRef().getType() == MetaType.formula)
-				{
+				MetaIdentifierHolder exprSource = new MetaIdentifierHolder(expression.getRef(MetaType.expression));
+				if(expression.getMatch().getRef().getType() == MetaType.formula  || expression.getNoMatch().getRef().getType() == MetaType.formula) {
 					Formula formula = (Formula) daoRegister.getRefObject(expression.getMatch().getRef());
 					if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 						isGroupBy = true;
 					} else {
-						groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
+						groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams, exprSource));
 					}
 				}
 				for (FilterInfo filterInfo : expression.getExpressionInfo()) {
-					groupInfo = selectGroupBy(createAttrMapWithSourceAttr(filterInfo.getOperand()), refKeyMap, otherParams, execParams);
+					groupInfo = selectGroupBy(createAttrMapWithSourceAttr(filterInfo.getOperand()), refKeyMap, otherParams, execParams, exprSource);
 					if (StringUtils.isNotBlank(groupInfo)) {
 						groupByStr.append(groupInfo).append(",");
 					}
@@ -439,7 +454,7 @@ public class AttributeMapOperator {
 				if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 					isGroupBy = true;
 				} else {
-					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams)).append(",");
+					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, mapSourceDS)).append(",");
 //					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
 				}
 			}

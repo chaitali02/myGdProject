@@ -18,8 +18,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,6 +38,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -358,7 +362,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		return listStr.toArray(new String[listStr.size()]);
 	}
 
-	public String[] getAttributeNames(Train train) throws JsonProcessingException {
+	public String[] getMappedFeatureNames(Train train) throws JsonProcessingException {
 		train = modelServiceImpl.resolveName(train);
 		List<FeatureAttrMap> listAttrSource = train.getFeatureAttrMap();
 		List<String> listStr = new ArrayList<String>();
@@ -629,11 +633,33 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					MetaType.datastore.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			
 			String targetTable = null;
-			if(targetDp != null)
+			Datasource targetDS = null;
+			if(targetDp != null) {
 				targetTable = datasource.getDbname()+"."+targetDp.getName();
-			List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
-	
+				targetDS = commonServiceImpl.getDatasourceByObject(targetDp);
+			} else {
+				targetDS = datasource;
+			}
+			
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			List<Map<String, Object>> strList = null;
+			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& targetDp != null) {
+				String tableName = null;
+				if(targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					tableName = targetDS.getSid().concat(".").concat(targetDp.getName());
+				} else {
+					tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());					
+				}
+				String sql = "SELECT * FROM "+tableName;
+				strList = exec.executeAndFetchByDatasource(sql, targetDS, appUuid);
+			} else {
+				strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, appUuid);
+			}
+				
 			return strList;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -841,9 +867,48 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			super.resume(uuid,version, Helper.getMetaType(type));
 		}
 		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
-			super.kill(uuid, version,Helper.getMetaType(type));
+		      kill(uuid, version,Helper.getMetaType(type));
 		}
 		
+	}
+	
+	public void kill (String uuid, String version, MetaType execType) {
+		BaseExec baseExec = null;
+		try {
+			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
+		} catch (JsonProcessingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		if (baseExec == null) {
+			logger.info("RuleExec not found. Exiting...");
+			return;
+		}
+		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
+			logger.info("Latest Status is not in InProgress. Exiting...");
+		}
+		try {
+			synchronized (baseExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+			}
+			@SuppressWarnings("unchecked")
+			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
+				futureTask.cancel(true);
+			synchronized (baseExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+			}
+		} catch (Exception e) {
+			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			try {
+				synchronized (baseExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			taskThreadMap.remove(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
+			e.printStackTrace();
+		}
 	}
 	
 	public void restartTrain(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
@@ -853,28 +918,35 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
 			Algorithm algorithm= null;
-			if (model.getDependsOn().getRef().getVersion() != null)
+			if (model.getDependsOn().getRef().getVersion() != null) {
 				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-			else 
-				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-				
-			
-			String algoClassName = algorithm.getTrainClass();
-			Object algoClass = Class.forName(algoClassName).newInstance();
-			List<ParamMap> paramMapList = null;
-			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion(), paramMapList);
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
-					trainExec = null;
-				}
 			} else {
-				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode,algoClass);
+				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 			}
+			
+			if(algorithm.getLibraryType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				modelServiceImpl.prepareTrain(train.getUuid(), train.getVersion(), trainExec, trainExec.getExecParams(), runMode);
+			} else {
+				String algoClassName = algorithm.getTrainClass();
+				Object algoClass = Class.forName(algoClassName).newInstance();
+				List<ParamMap> paramMapList = null;
+				if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
+						&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					if(execParams == null) {
+						execParams = trainExec.getExecParams();
+					}
+					paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
+				}
+				if (paramMapList.size() > 0) {
+					for (ParamMap paramMap : paramMapList) {
+						Thread.sleep(1000); // Should be parameterized in a class
+						modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+						trainExec = null;
+					}
+				} else {
+					modelServiceImpl.train(train, model, trainExec, execParams, null, runMode,algoClass);
+				}
+			}			
 		} catch (Exception e) {
 			synchronized (trainExec.getUuid()) {
 				try {
@@ -982,4 +1054,5 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			throw new Exception((message != null) ? message : "Simulate restart operation failed.");
 		}
 	}
+	
 }

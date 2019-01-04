@@ -19,6 +19,7 @@ import { DataQualityService}from '../metadata/services/dataQuality.services';
 
 import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-quality-routing.module'
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { routing1} from './data-quality-routing.module'
         CheckboxModule,
         routing1,
         ResultModule,
-        ProjectSharedModule
+        ProjectSharedModule,
+        DialogModule
        
     ],
     declarations: [

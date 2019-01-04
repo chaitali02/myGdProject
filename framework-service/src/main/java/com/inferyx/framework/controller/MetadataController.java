@@ -11,6 +11,7 @@
 package com.inferyx.framework.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -38,11 +39,13 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
@@ -622,6 +625,13 @@ public class MetadataController {
 
 		return registerService.getFormulaByType(uuid);
 	}
+	@RequestMapping(value = "/getFormulaByApp", method = RequestMethod.GET)
+	public @ResponseBody String getFormulaByType(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws JsonProcessingException, JSONException {
+		return registerService.getFormulaByApp();
+	}
 
 	@RequestMapping(value = "/getVizpodByType", method = RequestMethod.GET)
 	public @ResponseBody String getVizpodByType(@RequestParam("uuid") String uuid,
@@ -1056,5 +1066,33 @@ public class MetadataController {
 			@RequestParam(value = "uuid") String uuid,
 			@RequestParam(value = "version", required = false) String version) {
 		return metadataServiceImpl.getMessageByUuidAndVersion(uuid, version);
+	}
+	
+	@RequestMapping(value = "/getAlgorithmByLibrary",method=RequestMethod.GET)
+	public @ResponseBody List<Algorithm> getAlgorithmByLibrary(@RequestParam(value="libraryType") String libraryType, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getAlgorithmByLibrary(libraryType);
+	}
+	
+	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdpByDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString());
+	}
+	
+	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getrcDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString());
+	}
+	
+	@RequestMapping(value = "/getDqDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdqDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
 	}
 }

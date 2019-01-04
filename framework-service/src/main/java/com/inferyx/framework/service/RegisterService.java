@@ -121,6 +121,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
+import com.inferyx.framework.register.ImpalaRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
 import com.inferyx.framework.register.PostGresRegister;
@@ -234,6 +235,8 @@ public class RegisterService {
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
 	private ApplicationViewServiceImpl applicationViewServiceImpl;
+	@Autowired
+	private ImpalaRegister impalaRegister;
 	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -3062,7 +3065,7 @@ public class RegisterService {
 		List<AttributeRefHolder> attrRefDetails = new ArrayList<AttributeRefHolder>();
 		MetaIdentifier finalDataRef = new MetaIdentifier();
 		//Dataset dataset = datasetServiceImpl.findLatestByUuid(uuid);
-		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(uuid,  MetaType.dataset.toString());
+		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(uuid,  MetaType.dataset.toString(),"N");
 		List<AttributeSource> sourceAttributes = dataset.getAttributeInfo();
 		for (int i = 0; i < sourceAttributes.size(); i++) {
 			AttributeRefHolder attributeRef = new AttributeRefHolder();
@@ -3157,6 +3160,15 @@ public class RegisterService {
 
 		return result;
 	}
+    
+	public String getFormulaByApp() throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByApp());
+		return result;
+	}
+	
+	
 
 	public String getVizpodByType(String uuid) throws JsonProcessingException {
 		String result = null;
@@ -3496,12 +3508,12 @@ public class RegisterService {
 			Map<String, String> tablesWithPath = new Hashtable<>();
 			try {				
 				IConnector connector = connectionFactory.getConnector(datasource.getType());
-				ConnectionHolder connectionHolder = connector.getConnection();
+				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				DatabaseMetaData dbMetaData = con.getMetaData();
 				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 				while(rs.next()) {
-					tablesWithPath.put(rs.getString(3), (datasource.getDbname()+"."+rs.getString(3)));
+					tablesWithPath.put(rs.getString(3).toLowerCase(), (datasource.getDbname()+"."+rs.getString(3).toLowerCase()));
 //					tables.add(rs.getString(3));
 				}
 				logger.info("Tables are :: " + tablesWithPath);				
@@ -3522,6 +3534,7 @@ public class RegisterService {
 				if (listOfFiles[i].isFile()) {
 					logger.info("File " + listOfFiles[i].getName());
 					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
+					fileName=fileName.toLowerCase();
 					logger.info(fileName);
 //					fileList.add(fileName);
 					String path = datasource.getPath() + listOfFiles[i].getName();
@@ -3675,6 +3688,7 @@ public class RegisterService {
 				registry.setDesc(null);
 				registry.setRegisteredOn(null);
 				registry.setStatus("UnRegistered");
+				registry.setCompareStatus(Compare.NEW.toString());
 				registryList.add(registry);
 			}
 			i++;
@@ -3683,21 +3697,52 @@ public class RegisterService {
 	}
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
-			throws Exception {
-		if (type.equalsIgnoreCase(ExecContext.FILE.toString())) {
+			 {
+		try {
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
+		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			return hiveRegister.registerDB(uuid, version, registryList, runMode);
-		} /*else if (type.equalsIgnoreCase("impala")) {
+		}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return impalaRegister.registerDB(uuid, version, registryList);
-		} */else if (type.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+		}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
+		}}
+		catch(Exception e) {
+			if(e.getMessage().contains("Cannot resolve column name"))
+			try {
+				commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (e.getMessage() != null) ? "Cannot resolve column name" : "Cannot resolve column name", null);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | JSONException | ParseException
+					| IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}else {
+			datapodServiceImpl.setResponseMsg(e.getMessage());	
+			}
+		}
+		return registryList;
+
+	}
+	
+	
+	public String getdataTypeBydbType(String dbtype, String datatype)
+			throws Exception {
+	    if (dbtype.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+			return mysqlRegister.getconvertedDataType(datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			return oracleRegister.getconvertedDataType( datatype);
+		} else if (dbtype.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.getconvertedDataType( datatype);
+		} else {
+			return datatype;
 		}
 
 	}
@@ -4506,7 +4551,7 @@ public class RegisterService {
 		query.fields().include("published");
 		query.fields().include("appInfo");
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
 			
 		try {
 			if ((startDate != null	&& !StringUtils.isEmpty(startDate))

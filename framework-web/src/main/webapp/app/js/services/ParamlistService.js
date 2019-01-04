@@ -111,15 +111,17 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    ParamListFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    ParamListFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
     var onSuccess = function (response) {
       var paramArray=[];
       for(var i=0;i<response.params.length;i++){
         var paramInfo={}
           paramInfo.paramId=response.params[i].paramId; 
           paramInfo.paramName=response.params[i].paramName;
+          paramInfo.paramDesc=response.params[i].paramDesc;
+          paramInfo.paramDispName=response.params[i].paramDispName;
           paramInfo.paramType=response.params[i].paramType.toLowerCase();
-          if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list"].indexOf(response.params[i].paramType) != -1){
+          if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list","decimal"].indexOf(response.params[i].paramType) != -1){
             paramInfo.paramValue=response.params[i].paramValue.value;
             paramInfo.paramValueType="simple"
         }
@@ -127,6 +129,11 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
           var temp=response.params[i].paramValue.value.replace(/["']/g, "")
           paramInfo.paramValue=new Date(temp);
           paramInfo.paramValueType="date"
+        }
+        else if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["array"].indexOf(response.params[i].paramType) !=-1){
+          var temp=response.params[i].paramValue.value.split(",");
+          paramInfo.paramArrayTags=temp;
+          paramInfo.paramValueType="array"
         }
         else if(response.params[i].paramValue !=null){
           var paramValue={};
@@ -143,6 +150,11 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }
