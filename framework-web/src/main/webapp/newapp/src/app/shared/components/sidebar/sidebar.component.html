@@ -38,44 +38,35 @@
       </a>
     </li>
 
-    <!--Metadata Navigator Menu-->
-    
-    <li class="nav-item">
-      <a [routerLink]="['metadataNavigator']">
-        <i class="fa fa-paper-plane"></i>
-        <span class="title">Metadata Navigator</span>
-      </a>
-    </li>
-    
-     <!--DataIngestion Menu-->
-     <li class="nav-item" (click)="check(DataIngestionMenu.id,true)" [ngClass]="{'open': selectedItemId === DataIngestionMenu.id}">
+    <!--Datavisualization Menu-->
+    <li class="nav-item" (click)="check(DataVisualizationMenu.id,true)" [ngClass]="{'open': selectedItemId === DataVisualizationMenu.id}">
       <a class="nav-link nav-toggle">
-        <i class="fa fa-random"></i>
-        <span class="title">Data Ingestion</span>
+        <i class="fa fa-desktop "></i>
+        <span class="title">Data Visualization</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu" [style.display]="selectedItemId === DataIngestionMenu.id && toggle ==true ? 'block' : none" >
-        <li *ngFor="let dataingestsubmenu of DataIngestionMenu.subMenu" class="nav-item">
-          <a [routerLink]="['list', dataingestsubmenu.type]" class="nav-link">
-            <span class="title">{{dataingestsubmenu.name}}</span>
-            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
+      <ul class="sub-menu" [style.display]="selectedItemId === DataVisualizationMenu.id && toggle ==true ? 'block' : none">
+        <li *ngFor="let dashboardsubmenu of DataVisualizationMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dashboardsubmenu.type]" class="nav-link">
+            <span class="title">{{dashboardsubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
     </li>
 
-    <!--Datavisualization Menu-->
-    <li class="nav-item" (click)="check(DataVisualizationMenu.id,true)" [ngClass]="{'open': selectedItemId === DataVisualizationMenu.id}">
-      <a  class="nav-link nav-toggle" >
-        <i class="fa fa-desktop "></i>
-        <span class="title">Data Visualization</span>
+    <!--DataIngestion Menu-->
+    <li class="nav-item" (click)="check(DataIngestionMenu.id,true)" [ngClass]="{'open': selectedItemId === DataIngestionMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-random"></i>
+        <span class="title">Data Ingestion</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu"  [style.display]="selectedItemId === DataVisualizationMenu.id && toggle ==true ? 'block' : none" >
-        <li *ngFor="let dashboardsubmenu of DataVisualizationMenu.subMenu" class="nav-item">
-          <a [routerLink]="['list', dashboardsubmenu.type]" class="nav-link">
-            <span class="title">{{dashboardsubmenu.name}}</span>
-            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span> -->
+      <ul class="sub-menu" [style.display]="selectedItemId === DataIngestionMenu.id && toggle ==true ? 'block' : none">
+        <li *ngFor="let dataingestsubmenu of DataIngestionMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dataingestsubmenu.type]" class="nav-link">
+            <span class="title">{{dataingestsubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
           </a>
         </li>
       </ul>
@@ -88,7 +79,7 @@
         <span class="title">Data Profiling</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu" [style.display]="selectedItemId === DataProfileMenu.id && toggle ==true ? 'block' : none" >
+      <ul class="sub-menu" [style.display]="selectedItemId === DataProfileMenu.id && toggle ==true ? 'block' : none">
         <li *ngFor="let dataprofilesubmenu of DataProfileMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dataprofilesubmenu.type]" class="nav-link">
             <span class="title">{{dataprofilesubmenu.name}}</span>
@@ -106,7 +97,7 @@
         <span class="title">Data Quality</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu" [style.display]="selectedItemId === DataQualityMenu.id && toggle ==true ? 'block' : none" >
+      <ul class="sub-menu" [style.display]="selectedItemId === DataQualityMenu.id && toggle ==true ? 'block' : none">
         <li *ngFor="let dataqualitysubmenu of DataQualityMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dataqualitysubmenu.type]" class="nav-link">
             <span class="title">{{dataqualitysubmenu.name}}</span>
@@ -138,7 +129,7 @@
         <span class="title">Data Reconciliation</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu" [style.display]="selectedItemId === DataReconMenu.id && toggle ==true ? 'block' : none" >
+      <ul class="sub-menu" [style.display]="selectedItemId === DataReconMenu.id && toggle ==true ? 'block' : none">
         <li *ngFor="let datareconsubmenu of DataReconMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', datareconsubmenu.type]" class="nav-link">
             <span class="title">{{datareconsubmenu.name}}</span>
@@ -147,7 +138,7 @@
         </li>
       </ul>
     </li>
-   
+
     <!--BusinessRule Menu-->
     <li class="nav-item" (click)="check(BusinessRuleMenu.id,true)" [ngClass]="{'open': selectedItemId === BusinessRuleMenu.id}">
       <a class="nav-link nav-toggle">
@@ -194,6 +185,7 @@
         </li>
       </ul>
     </li>
+
     <!--Graph Analysis -->
     <li class="nav-item" (click)="check(GraphAnalysis.id,true)" [ngClass]="{'open': selectedItemId === GraphAnalysis.id}">
       <a class="nav-link nav-toggle">
@@ -203,11 +195,11 @@
       </a>
       <ul class="sub-menu" [style.display]="selectedItemId === GraphAnalysis.id && toggle ==true ? 'block' : none">
         <li class="nav-item">
-            <a [routerLink]="['graphAnalysis/graphpod']">
-              <span class="title">Create</span>
-            </a>
-          </li>
-        <li *ngFor="let graphanalysissubmenu of GraphAnalysis.subMenu" class="nav-item">        
+          <a [routerLink]="['graphAnalysis/graphpod']">
+            <span class="title">Create</span>
+          </a>
+        </li>
+        <li *ngFor="let graphanalysissubmenu of GraphAnalysis.subMenu" class="nav-item">
           <a [routerLink]="['list', graphanalysissubmenu.type]" class="nav-link">
             <span class="title">{{graphanalysissubmenu.name}}</span>
             <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span> -->
@@ -225,11 +217,11 @@
       </a>
       <ul class="sub-menu" [style.display]="selectedItemId === DataPipelineMenu.id && toggle ==true ? 'block' : none">
         <li class="nav-item">
-            <a [routerLink]="['dataPipeline/dag']">
-              <span class="title">Create</span>
-            </a>
-          </li>
-        <li *ngFor="let datapipelinesubmenu of DataPipelineMenu.subMenu" class="nav-item">        
+          <a [routerLink]="['dataPipeline/dag']">
+            <span class="title">Create</span>
+          </a>
+        </li>
+        <li *ngFor="let datapipelinesubmenu of DataPipelineMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', datapipelinesubmenu.type]" class="nav-link">
             <span class="title">{{datapipelinesubmenu.name}}</span>
             <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span> -->
@@ -247,19 +239,19 @@
       </a>
       <ul class="sub-menu" [style.display]="selectedItemId === BatchSchedulerMenu.id && toggle ==true ? 'block' : none">
         <li class="nav-item">
-            <a [routerLink]="['batchScheduler/batch']">
-              <span class="title">Create</span>
-            </a>
-          </li>
-        <li *ngFor="let batchschedulersubmenu of BatchSchedulerMenu.subMenu" class="nav-item">        
+          <a [routerLink]="['batchScheduler/batch']">
+            <span class="title">Create</span>
+          </a>
+        </li>
+        <li *ngFor="let batchschedulersubmenu of BatchSchedulerMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', batchschedulersubmenu.type]" class="nav-link">
-              <!-- <a [routerLink]="['list', batchschedule.type]" class="nav-link"> -->
+            <!-- <a [routerLink]="['list', batchschedule.type]" class="nav-link"> -->
             <span class="title">{{batchschedulersubmenu.name}}</span>
             <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && batchschedulersubmenu.type!=''" [innerHTML]="_MetaStats[batchschedulersubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
-    </li>   
+    </li>
 
     <!--Admin Menu-->
     <li class="nav-item" (click)="check(adminMenu.id,true)" [ngClass]="{'open': selectedItemId === adminMenu.id}">
@@ -268,7 +260,7 @@
         <span class="title">Admin</span>
         <span class="arrow"></span>
       </a>
-      <ul class="sub-menu"  [style.display]="selectedItemId === adminMenu.id && toggle ==true ? 'block' : none">
+      <ul class="sub-menu" [style.display]="selectedItemId === adminMenu.id && toggle ==true ? 'block' : none">
         <li class="nav-item" *ngFor="let admindatasubmenu of adminMenu.subMenu">
           <a [routerLink]="['list', admindatasubmenu.type]" class="nav-link">
             <span class="title" style="text-transform: capitalize">{{admindatasubmenu.name}}</span>
@@ -280,7 +272,7 @@
             <span class="title">Register Source</span>
           </a>
         </li>
-        <li class="nav-item">        
+        <li class="nav-item">
           <a [routerLink]="['admin/migration-assist']">
             <span class="title">Migration Assist</span>
           </a>
@@ -293,19 +285,27 @@
       </ul>
     </li>
 
-      <!--Job Monitoring Menu-->
+    <!--Job Monitoring Menu-->
     <li class="nav-item">
       <a [routerLink]="['jobMonitoring']">
         <i class="fa fa-tasks"></i>
         <span class="title">Job Monitoring</span>
       </a>
     </li>
-   
-     <!--System Monitoring Menu-->
+
+    <!--System Monitoring Menu-->
     <li class="nav-item">
-      <a  [routerLink]="['systemMonitoring']">
+      <a [routerLink]="['systemMonitoring']">
         <i class="fa fa-tasks"></i>
         <span class="title">System Monitoring</span>
+      </a>
+    </li>
+
+    <!--Metadata Navigator Menu-->
+    <li class="nav-item">
+      <a [routerLink]="['metadataNavigator']">
+        <i class="fa fa-paper-plane"></i>
+        <span class="title">Metadata Navigator</span>
       </a>
     </li>
   </ul>

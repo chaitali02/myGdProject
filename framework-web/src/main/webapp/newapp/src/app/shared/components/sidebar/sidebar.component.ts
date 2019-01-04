@@ -80,8 +80,11 @@ export class SidebarComponent {
       {
         name: "Vizpod",
         type: "vizpod"
-      }
-      ]
+      },
+      {
+        name: "Report",
+        type: "report"
+      }]
     };
     this.DataProfileMenu = {
       id:1,

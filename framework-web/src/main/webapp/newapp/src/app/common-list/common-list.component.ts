@@ -120,7 +120,7 @@ export class CommonListComponent {
   msgs: Message[] = [];
   items: any
   typeSimple: string[];
-  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec', 'batchexec'];
+  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec', 'batchexec', 'report', 'reportexec'];
   // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','trainexec'];
   allStatus = [
     {
@@ -393,7 +393,7 @@ export class CommonListComponent {
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
-  view(uuid, version) {
+  view(uuid, version) {debugger
     if (this.parentType == "rule") {
       this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
@@ -411,12 +411,6 @@ export class CommonListComponent {
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
     }
-    // else if(this.type == "batchexec"){
-    //   let _moduleUrl = "dataPipeline"
-    //   //this.routerUrl = "Data Pipeline"
-    //   this.router.navigate(["./" + _moduleUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
-    // //app/list/batch/00a08bf4-2871-4b65-b5a0-031373dd0e56/1543055175/false
-    // }
     else {
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['detailState']
