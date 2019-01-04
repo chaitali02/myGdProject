@@ -207,6 +207,15 @@ getFormulaByType(uuid:Number,type:String): Observable<any[]> {
    .catch(this.handleError);
 }
 
+getFormulaByType2(uuid:Number,type:String): Observable<any[]> {
+  let url ='/metadata/getFormulaByType2?action=view&uuid='+uuid+'&type='+type;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
+
 getExpressionByType(uuid:Number,type:String): Observable<any[]> {
   let url ='/metadata/getExpressionByType?action=view&uuid='+uuid+'&type='+type;
   return this._sharedService.getCall(url)

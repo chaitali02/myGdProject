@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule ,DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular/main';
-import { MultiSelectModule } from 'primeng/primeng';
+import { MultiSelectModule, DialogModule, ChipsModule } from 'primeng/primeng';
 import { DropdownModule,SelectItem } from 'primeng/primeng';
 import { DataTableModule,SharedModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/primeng';
@@ -27,6 +27,7 @@ import { routing1  } from './data-visualization-routing.module';
 import { VizpodService } from  '../metadata/services/vizpod.service';
 import { ReportDetailComponent } from './report/reportdetail.component';
 import { DatasetService } from '../metadata/services/dataset.service';
+import { ReportService } from '../metadata/services/report.service';
 
 @NgModule({
     imports: [
@@ -45,6 +46,8 @@ import { DatasetService } from '../metadata/services/dataset.service';
         DndModule.forRoot(),
         routing1,
         ProjectSharedModule,
+        DialogModule,
+        ChipsModule
         
     ],
     declarations: [
@@ -59,7 +62,8 @@ import { DatasetService } from '../metadata/services/dataset.service';
         CommonService,
         DashboardService,
         VizpodService,
-        DatasetService
+        DatasetService,
+        ReportService
 
     ],
   //  entryComponents: [DropdownComponent],

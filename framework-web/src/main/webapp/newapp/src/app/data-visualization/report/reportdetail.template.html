@@ -11,6 +11,13 @@
           <i class="fa fa-gift"></i>{{reportdata.name}}
         </div>
         <div class="tools">
+          <a title="Run Report" data-toggle="tooltip" data-placement="top" tooltip (click)="runReport(uuid,version)"
+            style="height:16px;">
+            <i class="fa fa-play" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
+          <a title="Download" (click)="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download">
+            <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
           <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
             *ngIf="mode">
             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -32,17 +39,18 @@
         </div>
       </div>
 
-      <div class="portlet-body form">
+
+      <div class="portlet-body form" *ngIf="isShowReportData">
         <!-- <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
                     <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                     <div class="form-body show-graph-body" id="graphWrapper">
                          <app-d3></app-d3>
                     </div>
                 </div> -->
-        <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()" #myNewForm="ngForm">
+        <div class="form-body" style="padding-top:50px;">
+          <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()" #myNewForm="ngForm">
 
-          <div class="form-body" style="padding-top:50px;">
-            
+
             <div class="form-group" *ngIf="mode">
               <label class="col-md-3 control-label">UUID</label>
               <div class="col-md-6">
@@ -291,6 +299,13 @@
                                 [filter]="true" placeholder="--Select--">
                               </p-dropdown>
                             </div>
+
+                            <div *ngIf="attributeTableArray[i].isSourceAtributeParamList">
+                              <p-dropdown [options]="allMapParamList" [(ngModel)]="attributeTableArray[i].sourceparamlist"
+                                name="sourceparamlist+{{i}}" placeholder="--Select--" dataKey="uuid" [disabled]="mode == 'true'"
+                                [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)='onChangeParamlist(attributeTableArray[i].sourceparamlist,i)'>
+                              </p-dropdown>
+                            </div>
                           </td>
                         </tr>
                       </tbody>
@@ -299,12 +314,102 @@
                 </div>
               </div>
             </div>
+          </form>
+        </div>
+      </div>
+      <!-- <div class="col-md-7" style="float: right;" *ngIf="isShowSpinner">
+                      <span class="spinner" ng-show="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                      </span>
+                    </div> -->
 
 
+      <div class="portlet-body form" *ngIf="isShowSimpleData">
+        <div class="row">
+          <div class="col-md-12">
 
+            <div class="portlet box">
+              <div class="portlet-body">
+
+                <div class="row" *ngIf="isShowSimpleData">
+
+                  <div style="white-space: nowrap; overflow-x: auto;">
+                    <tag-input class="filterChips" [(ngModel)]="filterValue" name="filterValue" (onClick)="onClickChips()" (onRemove)="onChipsRemove(filterValue)" placeholder="">
+                    </tag-input>
+                    
+                    <span style="cursor: pointer; float: right; margin-right: 2%; margin-top: -5%;" (click)="openFilterPopup()">
+                      <i class="fa fa-filter" style="font-size:24px;"></i>
+                      Filter
+                    </span>
+                  </div>
+
+                  <div class="col-md-12" style="margin-top:3%">
+                    <div class="col-md-7" style="float: right;" *ngIf="isShowSpinner">
+                      <span class="spinner" ng-show="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                      </span>
+                    </div>
+                    <div class="row col-md-offset-9" style="float:right; margin-right: 0%;margin-bottom:2%">
+                      <i class="col-md-2 fa fa-search" style="margin-top: 3%;"></i>
+                      <input #gb class="col-md-10" type="text" pInputText placeholder="Search">
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <p-dataTable [value]="colsdata" #dt exportFilename="data" selectionMode="multiple"
+                          [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+                          [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                          [rowsPerPageOptions]="[5,10,20]">
+                          <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [sortable]="true"></p-column>
+                        </p-dataTable>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-        </form>
+        <!-- Dialog Start -->
+        <p-dialog header="Filter" [modal]="true" [(visible)]="displayDialog" [responsive]="true" [contentStyle]="{'overflow-y':'scroll', 'maxHeight': '270px', 'minWidth' : '480px'}">
+          <form class="form-horizontal" name="myformFilter">
+            <div class="modal-body">
+              <div class="slimScrollDiv">
+
+                <div class="form-body centercontent" *ngIf="showDialogSpinner">
+                  <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 8px;">
+                  <div class="form-group" *ngFor="let data of filterAttribureIdValues;let i=index">
+                    <label class="col-md-4 control-label">{{data.attrName}}</label>
+                    <div class="col-md-8">
+
+                      <p-dropdown [options]="data.attrValue" [(ngModel)]="filterDropdownValue[i]" name="filterDropdownValue+{{i}}"
+                        dataKey="u_Id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                        (onChange)="changeAttrValue()" placeholder="-- Select --">
+                      </p-dropdown>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline" (click)="cancelFilterDialog()">Close</button>
+              <button type="button" class="btn green" (click)="submitFilterDialog(filterDropdownValue, filterAttribureIdValues)">Submit</button>
+            </div>
+          </form>
+        </p-dialog>
+
       </div>
     </div>
   </div>

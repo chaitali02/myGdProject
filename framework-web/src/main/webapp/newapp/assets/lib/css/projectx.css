@@ -1199,3 +1199,9 @@ cursor: not-allowed !important;
   padding: 0;
   width: 21% !important;
 }
+
+.filterChips{
+  /* border-bottom: 1px solid darkgray !important; */
+  margin-left: 2%;
+  margin-right: 8%;
+}

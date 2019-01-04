@@ -10,6 +10,7 @@ import { Version } from '../../metadata/domain/version'
 import { DependsOn } from '../dependsOn'
 import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { DatasetService } from '../../metadata/services/dataset.service';
+import { ReportService } from '../../metadata/services/report.service';
 import { SelectItem } from 'primeng/primeng';
 
 @Component({
@@ -30,6 +31,7 @@ export class ReportDetailComponent {
     msgs: any;
     sources: string[];
     allNames: any[];
+    filterPopUpData: any[];
     sourcedata: DependsOn;
     source: any;
     breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
@@ -60,8 +62,25 @@ export class ReportDetailComponent {
     sourceAttributeTypes: { "value": string; "label": string; }[];
     allMapSourceAttribute: SelectItem[] = [];
     lhsdatapodattributefilter: any;
+    allMapParamList: any;
+    reportExec: any;
+    reportExecData: any;
+    isShowSimpleData: boolean = false;
+    isShowReportData: boolean = true;
+    isShowSpinner: boolean = false;
+    showDialogSpinner: boolean = false;
+    colsdata: any;
+    cols: any;
+    filterAttribureIdValues: any[];
+    selectedAttributeValue: any;
+    displayDialog: boolean = false;
+    filterAttribureIdData: any;
+    sourcedata1: any;
+    filterDropdownValue: any[] = [{ label: null, u_id: null }];
+    filterDropdownName: any;
+    filterValue: any;
 
-    constructor(private activatedRoute: ActivatedRoute, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService) {
+    constructor(private activatedRoute: ActivatedRoute, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService, private _reportService: ReportService) {
         this.reportdata = {};
         this.IsDisable = "false";
         this.isSubmitEnable = true;
@@ -117,11 +136,11 @@ export class ReportDetailComponent {
         this.attributeTableArray = [];
 
         this.sourceAttributeTypes = [
-            { "value": "function", "label": "function" },
             { "value": "string", "label": "string" },
             { "value": "datapod", "label": "attribute" },
             { "value": "expression", "label": "expression" },
             { "value": "formula", "label": "formula" },
+            { "value": "function", "label": "function" },
             { "value": "paramlist", "label": "paramlist" }
         ]
     }
@@ -271,7 +290,6 @@ export class ReportDetailComponent {
                 error => console.log("Error :: " + error));
     }
     onSuccessGetOneByUuidAndVersion(response) {
-
         this.breadcrumbDataFrom[2].caption = response.name;
         this.reportdata = response;
 
@@ -341,6 +359,8 @@ export class ReportDetailComponent {
                     attributeinfojson["isSourceAtributeDatapod"] = true;
                     attributeinfojson["isSourceAtributeFormula"] = false;
                     attributeinfojson["isSourceAtributeExpression"] = false;
+                    attributeinfojson["isSourceAtributeFunction"] = false;
+                    attributeinfojson["isSourceAtributeParamList"] = false;
                 }
                 else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
                     let obj = {}
@@ -353,7 +373,7 @@ export class ReportDetailComponent {
                     attributeinfojson["isSourceAtributeFormula"] = false;
                     attributeinfojson["isSourceAtributeExpression"] = false;
                     attributeinfojson["isSourceAtributeFunction"] = false;
-
+                    attributeinfojson["isSourceAtributeParamList"] = false;
                 }
                 if (response.attributeInfo[i].sourceAttr.ref.type == "expression") {
                     let sourceexpression = {};
@@ -369,6 +389,7 @@ export class ReportDetailComponent {
                     attributeinfojson["isSourceAtributeFormula"] = false;
                     attributeinfojson["isSourceAtributeExpression"] = true;
                     attributeinfojson["isSourceAtributeFunction"] = false;
+                    attributeinfojson["isSourceAtributeParamList"] = false;
                     this.getAllExpression(false, 0)
                 }
                 if (response.attributeInfo[i].sourceAttr.ref.type == "formula") {
@@ -385,6 +406,7 @@ export class ReportDetailComponent {
                     attributeinfojson["isSourceAtributeFormula"] = true;
                     attributeinfojson["isSourceAtributeExpression"] = false;
                     attributeinfojson["isSourceAtributeFunction"] = false;
+                    attributeinfojson["isSourceAtributeParamList"] = false;
                     this.getAllFormula(false, 0);
                 }
                 if (response.attributeInfo[i].sourceAttr.ref.type == "function") {
@@ -401,7 +423,25 @@ export class ReportDetailComponent {
                     attributeinfojson["isSourceAtributeFormula"] = false;
                     attributeinfojson["isSourceAtributeExpression"] = false;
                     attributeinfojson["isSourceAtributeFunction"] = true;
+                    attributeinfojson["isSourceAtributeParamList"] = false;
                     this.getAllFunctions(false, 0);
+                }
+                if (response.attributeInfo[i].sourceAttr.ref.type == "paramlist") {
+                    let sourceparamlist = {};
+                    sourceparamlist["uuid"] = response.attributeInfo[i].sourceAttr.ref.uuid;
+                    sourceparamlist["label"] = response.attributeInfo[i].sourceAttr.ref.name
+                    let obj = {}
+                    obj["value"] = "paramlist"
+                    obj["label"] = "paramlist"
+                    attributeinfojson["sourceAttributeType"] = obj;
+                    attributeinfojson["sourceparamlist"] = sourceparamlist;
+                    attributeinfojson["isSourceAtributeSimple"] = false;
+                    attributeinfojson["isSourceAtributeDatapod"] = false;
+                    attributeinfojson["isSourceAtributeFormula"] = false;
+                    attributeinfojson["isSourceAtributeExpression"] = false;
+                    attributeinfojson["isSourceAtributeFunction"] = false;
+                    attributeinfojson["isSourceAtributeParamList"] = true;
+                    this.getParamByApp(false, 0);
                 }
                 attributeinfojson["sourceattribute"] = sourceattribute;
                 attributearray[i] = attributeinfojson
@@ -412,112 +452,6 @@ export class ReportDetailComponent {
 
         console.log(JSON.stringify(response));
     }
-
-    // indexOfByMultiplaValue(array, data) {
-    //     let result = -1;
-    //     for (let i = 0; i < array.length; i++) {
-    //         if (array[i].uuid == data.uuid && array[i].attrId == data.attrId) {
-    //             result = i;
-    //             break
-    //         }
-    //         else {
-    //             result = -1
-    //         }
-
-    //     }//End For
-    //     return result;
-    // }//End indexOfdata
-
-    // indexOfBySingleValue = function (array, data) {
-    //     let result = -1;
-    //     for (let i = 0; i < array.length; i++) {
-    //         if (array[i].uuid == data.uuid) {
-    //             result = 0;
-    //             break
-    //         }
-    //         else {
-    //             result = -1
-    //         }
-
-    //     }//End For
-    //     return result;
-    // }//End indexOfdata
-
-    // addToKey($event: any) {
-
-    //     let data = $event.dragData
-    //     let len = this.keylist.length;
-    //     let keyjson = {};
-    //     keyjson["id"] = len;
-    //     keyjson["itemName"] = data["itemName"]
-    //     keyjson["name"] = data["name"]
-    //     keyjson["type"] = data["type"]
-    //     keyjson["uuid"] = data["uuid"]
-    //     keyjson["attrId"] = data["attrId"]
-    //     keyjson["attrName"] = data["attrName"];
-    //     if (this.indexOfByMultiplaValue(this.keylist, data) == -1 && this.indexOfByMultiplaValue(this.grouplist, data) == -1 && this.IsDisable != "true") {
-    //         this.IsEmpty = "false"
-    //         this.keylist.push(keyjson);
-    //     }
-    // }
-    // addToGroup($event: any) {
-    //     let data = $event.dragData
-    //     let len = this.grouplist.length;
-    //     let groupjson = {};
-    //     groupjson["id"] = len;
-    //     groupjson["itemName"] = data["itemName"]
-    //     groupjson["name"] = data["name"]
-    //     groupjson["type"] = data["type"]
-    //     groupjson["uuid"] = data["uuid"]
-    //     groupjson["attrId"] = data["attrId"]
-    //     groupjson["attrName"] = data["attrName"];
-    //     if (this.indexOfByMultiplaValue(this.grouplist, data) == -1 && this.indexOfByMultiplaValue(this.keylist, data) == -1 && this.IsDisable != "true") {
-    //         this.grouplist.push(groupjson);
-    //     }
-    // }
-    // addToValue($event: any) {
-
-    //     let data = $event.dragData
-    //     let len = this.valuelist.length;
-    //     let valuejson = {};
-    //     valuejson["id"] = len;
-    //     valuejson["itemName"] = data["itemName"]
-
-    //     valuejson["type"] = data["type"]
-    //     valuejson["uuid"] = data["uuid"]
-    //     valuejson["attrId"] = data["attrId"]
-    //     valuejson["attrName"] = data["attrName"];
-    //     if (data.type == "formula" || data.type == "expression") {
-    //         valuejson["name"] = data["name"]
-    //         if (this.indexOfBySingleValue(this.valuelist, data) == -1 && this.IsDisable != "true") {
-    //             this.IsEmpty = "false"
-    //             this.valuelist.push(valuejson);
-
-    //         }
-    //     }
-    //     else if (this.indexOfByMultiplaValue(this.valuelist, data) == -1 && this.IsDisable != "true") {
-    //         valuejson["name"] = data["attrName"]
-    //         this.IsEmpty = "false"
-    //         this.valuelist.push(valuejson);
-    //     }
-    // }
-
-    // removeValue(index) {
-    //     if (this.IsDisable != "true") {
-    //         this.valuelist.splice(index, 1);
-    //     }
-    // }//End removeValue
-    // removeGroup(index) {
-    //     if (this.IsDisable != "true") {
-    //         this.grouplist.splice(index, 1);
-    //     }
-    // }//End removeValue
-
-    // removeKey(index) {
-    //     if (this.IsDisable != "true") {
-    //         this.keylist.splice(index, 1);
-    //     }
-    // }//End removeValue
 
     checkEmpty() {
 
@@ -532,9 +466,18 @@ export class ReportDetailComponent {
         var upd_tag = 'Y'
         this.isSubmitEnable = true
         let reportjson = {}
+
         reportjson["uuid"] = this.reportdata.uuid;
         reportjson["name"] = this.reportdata.name;
         reportjson["desc"] = this.reportdata.desc;
+        reportjson["active"] = this.reportdata.active == true ? 'Y' : "N";
+        reportjson["published"] = this.reportdata.published == true ? 'Y' : "N";
+        reportjson["title"] = this.reportdata.title;
+        reportjson["header"] = this.reportdata.header;
+        reportjson["footer"] = this.reportdata.footer;
+        reportjson["headerAlign"] = this.headerAlign;
+        reportjson["footerAlign"] = this.footerAlign;
+
         var tagArray = [];
         if (this.reportdata.tags != null) {
             for (var counttag = 0; counttag < this.reportdata.tags.length; counttag++) {
@@ -543,33 +486,97 @@ export class ReportDetailComponent {
             }
         }
         reportjson['tags'] = tagArray;
-        reportjson["active"] = this.reportdata.active == true ? 'Y' : "N"
-        reportjson["published"] = this.reportdata.published == true ? 'Y' : "N"
+
         let dependsOn = {};
         let ref = {};
         ref["type"] = this.source
         ref["uuid"] = this.sourcedata.uuid;
         dependsOn["ref"] = ref;
-        reportjson["source"] = dependsOn;
+        reportjson["dependsOn"] = dependsOn;
 
         let filterInfoArrayNew = [];
         if (this.filterInfoTags != null) {
             for (const c in this.filterInfoTags) {
                 let filterInfoRef = {};
                 let filterRef = {};
-                filterInfoRef["uuid"] = this.filterInfoTags[c].id;
+                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split(".")[0];
                 filterInfoRef["type"] = "datapod";
                 filterRef["ref"] = filterInfoRef;
+                filterRef["attrId"] = this.filterInfoTags[c].id.split(".")[1];
                 filterInfoArrayNew.push(filterRef);
             }
         }
 
         reportjson["filterInfo"] = filterInfoArrayNew;
 
-        reportjson['filterInfo'] = [],
-            reportjson['dimension'] = [],
-            console.log(JSON.stringify(reportjson));
-        this._commonService.submit(reportjson, 'report', upd_tag).subscribe(
+        //reportjson['filterInfo'] = [],
+        var sourceAttributesArray = [];
+        for (var i = 0; i < this.attributeTableArray.length; i++) {
+            var attributemap = {};
+            attributemap["attrSourceId"] = i;
+            attributemap["attrSourceName"] = this.attributeTableArray[i].name
+            //attributeinfo.attrSourceName=dataset.attributeTableArray[l].name
+            var sourceAttr = {};
+            var sourceref = {};
+            if (this.attributeTableArray[i].sourceAttributeType.value == "string") {
+                sourceref["type"] = "simple";
+                sourceAttr["ref"] = sourceref;
+                if (typeof this.attributeTableArray[i].sourcesimple == "undefined") {
+                    sourceAttr["value"] = "";
+                }
+                else {
+                    sourceAttr["value"] = this.attributeTableArray[i].sourcesimple;
+                }
+                attributemap["sourceAttr"] = sourceAttr;
+            }
+            else if (this.attributeTableArray[i].sourceAttributeType.value == "datapod") {
+                let uuid = this.attributeTableArray[i].sourceattribute.id.split("_")[0]
+                var attrid = this.attributeTableArray[i].sourceattribute.id.split("_")[1]
+                sourceref["uuid"] = uuid;
+                if (this.source == "relation") {
+                    sourceref["type"] = "datapod";
+                }
+                else {
+                    sourceref["type"] = this.source;
+                }
+                sourceAttr["ref"] = sourceref;
+                sourceAttr["attrId"] = attrid;
+                sourceAttr["attrType"] = null;
+                attributemap["sourceAttr"] = sourceAttr;
+            }
+            if (this.attributeTableArray[i].sourceAttributeType.value == "expression") {
+                sourceref["type"] = "expression";
+                sourceref["uuid"] = this.attributeTableArray[i].sourceexpression.uuid;
+                sourceAttr["ref"] = sourceref;
+                attributemap["sourceAttr"] = sourceAttr;
+
+            }
+            if (this.attributeTableArray[i].sourceAttributeType.value == "formula") {
+                sourceref["type"] = "formula";
+                sourceref["uuid"] = this.attributeTableArray[i].sourceformula.uuid;
+                sourceAttr["ref"] = sourceref;
+                attributemap["sourceAttr"] = sourceAttr;
+
+            }
+            if (this.attributeTableArray[i].sourceAttributeType.value == "function") {
+                sourceref["type"] = "function"
+                sourceref["uuid"] = this.attributeTableArray[i].sourcefunction.uuid;
+                sourceAttr["ref"] = sourceref;
+                attributemap["sourceAttr"] = sourceAttr
+            }
+            if (this.attributeTableArray[i].sourceAttributeType.value == "paramlist") {
+                sourceref["type"] = "paramlist"
+                sourceref["uuid"] = this.attributeTableArray[i].sourceparamlist.uuid;
+                sourceAttr["ref"] = sourceref;
+                //sourceAttr["attrId"] = attrid;
+                attributemap["sourceAttr"] = sourceAttr
+            }
+            sourceAttributesArray[i] = attributemap;
+        }
+        reportjson["attributeInfo"] = sourceAttributesArray;
+        //reportjson['dimension'] = [],
+        console.log(JSON.stringify(reportjson));
+        this._commonService.submit('report', reportjson, upd_tag).subscribe(
             response => { this.OnSuccessubmit(response) },
             error => console.log('Error :: ' + error)
         )
@@ -578,7 +585,7 @@ export class ReportDetailComponent {
     OnSuccessubmit(response) {
         this.msgs = [];
         this.isSubmitEnable = true;
-        this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Vizpod Saved Successfully' });
+        this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Report Saved Successfully' });
         setTimeout(() => {
             this.goBack()
         }, 1000);
@@ -645,7 +652,7 @@ export class ReportDetailComponent {
     }
 
     getAllExpression(defaulfMode, index) {
-        this._datasetService.getExpressionByType(this.sourcedata.uuid, this.source).subscribe(
+        this._datasetService.getExpressionByType2(this.sourcedata.uuid, this.source).subscribe(
             response => { this.onSuccessExpression(response, defaulfMode, index) },
             error => console.log('Error :: ' + error)
         )
@@ -674,8 +681,7 @@ export class ReportDetailComponent {
     }
 
     getAllFormula(defaulfMode, index) {
-        debugger
-        this._commonService.getFormulaByType(this.sourcedata.uuid, "formula").subscribe(
+        this._commonService.getFormulaByType2(this.sourcedata.uuid, "datapod").subscribe(
             response => { this.onSuccessgetAllFormula(response, defaulfMode, index) },
             error => console.log('Error :: ' + error)
         )
@@ -683,21 +689,23 @@ export class ReportDetailComponent {
     onSuccessgetAllFormula(response, defaulfMode, index) {
         //this.allMapFormula = response
         let temp = []
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allMapFormula = temp;
-        if (this.allMapFormula != null) {
-            if (defaulfMode == true) {
-                let sourceformula = {};
-                sourceformula["uuid"] = this.allMapFormula[0]["value"].uuid;
-                sourceformula["label"] = this.allMapFormula[0].label;
-                this.attributeTableArray[index].sourceformula = sourceformula;
+        if (response.length > 0) {
+            for (const n in response) {
+                let allname = {};
+                allname["label"] = response[n]['name'];
+                allname["value"] = {};
+                allname["value"]["label"] = response[n]['name'];
+                allname["value"]["uuid"] = response[n]['uuid'];
+                temp[n] = allname;
+            }
+            this.allMapFormula = temp;
+            if (this.allMapFormula != null) {
+                if (defaulfMode == true) {
+                    let sourceformula = {};
+                    sourceformula["uuid"] = this.allMapFormula[0]["value"].uuid;
+                    sourceformula["label"] = this.allMapFormula[0].label;
+                    this.attributeTableArray[index].sourceformula = sourceformula;
+                }
             }
         }
     }
@@ -726,6 +734,31 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].sourcefunction = sourcefunction;
         }
     }
+
+    getParamByApp(defaulfMode, index) {
+        this._reportService.getParamByApp("", "application")
+            .subscribe(response => { this.onSuccessgetParamByApp(response, defaulfMode, index) },
+                error => console.log("Error ::", error)
+            )
+    }
+    onSuccessgetParamByApp(response, defaulfMode, index) {
+        let temp = []
+        for (const n in response) {
+            let allname = {};
+            allname["label"] = "app." + response[n]['paramName'];
+            allname["value"] = {};
+            allname["value"]["label"] = "app." + response[n]['paramName'];
+            allname["value"]["uuid"] = response[n].ref['uuid'];
+            temp[n] = allname;
+        }
+        this.allMapParamList = temp
+        if (defaulfMode == true) {
+            let sourcefunction = {};
+            sourcefunction["uuid"] = this.allMapParamList[0]["value"].uuid;
+            sourcefunction["label"] = this.allMapParamList[0].label;
+            this.attributeTableArray[index].sourcefunction = sourcefunction;
+        }
+    }
     onChangeSourceAttribute(type, index) {
         if (type == "string") {
             this.attributeTableArray[index].isSourceAtributeSimple = true;
@@ -734,6 +767,7 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].sourcesimple = "''";
             this.attributeTableArray[index].isSourceAtributeExpression = false;
             this.attributeTableArray[index].isSourceAtributeFunction = false;
+            this.attributeTableArray[index].isSourceAtributeParamList = false;
         }
         else if (type == "datapod") {
             this.attributeTableArray[index].isSourceAtributeSimple = false;
@@ -741,6 +775,7 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].isSourceAtributeFormula = false;
             this.attributeTableArray[index].isSourceAtributeExpression = false;
             this.attributeTableArray[index].isSourceAtributeFunction = false;
+            this.attributeTableArray[index].isSourceAtributeParamList = false;
             this.attributeTableArray[index].sourceattribute = {}
             this.getAllAttributeBySource();
             if (this.allMapSourceAttribute && this.allMapSourceAttribute.length > 0) {
@@ -756,6 +791,7 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].isSourceAtributeFormula = true;
             this.attributeTableArray[index].isSourceAtributeExpression = false;
             this.attributeTableArray[index].isSourceAtributeFunction = false;
+            this.attributeTableArray[index].isSourceAtributeParamList = false;
             this.attributeTableArray[index].sourceformula = {}
             this.getAllFormula(true, index);
 
@@ -766,6 +802,7 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].isSourceAtributeFormula = false;
             this.attributeTableArray[index].isSourceAtributeExpression = true;
             this.attributeTableArray[index].isSourceAtributeFunction = false;
+            this.attributeTableArray[index].isSourceAtributeParamList = false;
             this.attributeTableArray[index].sourceexpression = {}
             this.getAllExpression(true, index);
 
@@ -776,9 +813,19 @@ export class ReportDetailComponent {
             this.attributeTableArray[index].isSourceAtributeFormula = false;
             this.attributeTableArray[index].isSourceAtributeExpression = false;
             this.attributeTableArray[index].isSourceAtributeFunction = true;
-            this.attributeTableArray[index].isSourceAtributeFunction = true;
+            this.attributeTableArray[index].isSourceAtributeParamList = false;
             this.attributeTableArray[index].sourcefunction = {}
             this.getAllFunctions(true, index);
+        }
+        else if (type == "paramlist") {
+            this.attributeTableArray[index].isSourceAtributeSimple = false;
+            this.attributeTableArray[index].isSourceAtributeDatapod = false;
+            this.attributeTableArray[index].isSourceAtributeFormula = false;
+            this.attributeTableArray[index].isSourceAtributeExpression = false;
+            this.attributeTableArray[index].isSourceAtributeFunction = false;
+            this.attributeTableArray[index].isSourceAtributeParamList = true;
+            this.attributeTableArray[index].sourceparamlist = {}
+            this.getParamByApp(true, index);
         }
     }
 
@@ -786,5 +833,177 @@ export class ReportDetailComponent {
         if (data != null) {
             this.attributeTableArray[index].name = data.label.split(".")[1]
         }
+    }
+    onChangeParamlist(data, index) {
+        if (!this.attributeTableArray[index].isSourceName)
+            this.attributeTableArray[index].name = data.label.split(".")[1];
+    }
+
+    runReport(uuid, version) {
+
+        this.isShowReportData = false;
+        //isDataError = false;
+        //tableclass = "centercontent";
+        //showForm = false;
+        //showGraphDiv = false;
+
+        this.reportExecute(uuid, version, null);
+    }
+
+    reportExecute(uuid, version, data) {
+        //spinner = true;
+        this.isShowSpinner = true;
+        this._reportService.reportExecute(uuid, version, data)
+            .subscribe(response => { this.onSuccessReportExecute(response) },
+                error => console.log("Error ::", error)
+            )
+
+    }
+    onSuccessReportExecute(response: any): any {
+        //spinner = false;
+        this.isShowSpinner = false
+        this.isShowSimpleData = true;
+        this.getSample(response);
+    }
+
+    getSample(data: any): any {
+        this._reportService.getReportSample(data["uuid"], data["version"])
+            .subscribe(response => { this.onSuccessGetSample(response) },
+                error => console.log("Error ::", error)
+            )
+    }
+    onSuccessGetSample(response: any[]): any {
+        this.colsdata = response;
+        let columns = [];
+        console.log(response)
+        if (response.length && response.length > 0) {
+            Object.keys(response[0]).forEach(val => {
+                if (val != "rownum") {
+                    let width = ((val.split("").length * 9) + 20) + "px"
+                    columns.push({ "field": val, "header": val, colwidth: width });
+                }
+            });
+        }
+        this.cols = columns
+    }
+    openFilterPopup() {
+        this.displayDialog = true;
+        if (this.filterAttribureIdValues == null) {
+            this.getFilterValue(this.reportdata);
+        }
+    }
+    getFilterValue(data: any): any {
+        this.showDialogSpinner = true;
+        this.filterAttribureIdValues = [];
+
+        if (data.filterInfo && data.filterInfo.length > 0) {
+            for (var n = 0; n < data.filterInfo.length; n++) {
+                let attrName = data.filterInfo[n].attrName;
+                this._reportService.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId, data.filterInfo[n].ref.type)
+                    .subscribe(response => { this.onSuccessGetAttributeValues(response, attrName) },
+                        error => console.log("Error ::", error)
+                    );
+            }
+            this.filterInfoArray = [];
+        }
+    }
+
+    onSuccessGetAttributeValues(response: any, attrName: any): any {
+        var filterAttribure = {}
+        let allNameArray = [];
+        for (const n in response) {
+            let allname = {};
+            let count = 0;
+            allname["label"] = response[n]['value'];
+            allname["value"] = {};
+            allname["value"]["label"] = response[n]['value'];
+            allname["value"]["u_Id"] = response[n]['value'] + "_" + count;
+            allNameArray.push(allname);
+            count++;
+        }
+        filterAttribure["attrValue"] = allNameArray;
+        filterAttribure["attrName"] = attrName;
+        this.filterAttribureIdValues.push(filterAttribure);
+
+        this.showDialogSpinner = false;
+    }
+
+    cancelFilterDialog() {
+        console.log("Cancel call....");
+    }
+
+    submitFilterDialog(filterValue: any[], filterName: any) {
+
+        var tags = [];
+        for (var i = 0; i < filterValue.length; i++) {
+            let attrName = filterName[i]["attrName"];
+            var tag = {};
+            //tag['value'] = filterValue[i]["label"];
+            tag['display'] = attrName + "-" + filterValue[i]["label"];
+            tags[i] = tag
+
+        }
+        this.filterValue = tags;
+
+        let uuid = this.reportdata["uuid"];
+        let version = this.reportdata["version"];
+
+        let filterjson = {}
+        let filterInfoArrayNew = [];
+        if (this.filterInfoTags != null) {
+            for (const c in this.filterInfoTags) {
+                let filterInfoRef = {};
+                let filterRef = {};
+                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split(".")[0];
+                filterInfoRef["type"] = "datapod";
+                filterRef["ref"] = filterInfoRef;
+                filterRef["attrId"] = this.filterInfoTags[c].id.split(".")[1];
+
+                for (let i = 0; i < this.filterInfoTags.length; i++) {
+                    let name = this.filterInfoTags[c].itemName.split(".")[1];
+                    let name2 = filterName[i]["attrName"];
+                    if (name == filterName[i]["attrName"]) {
+                        filterRef["value"] = filterValue[i]["label"];
+                        break;
+                    }
+                }
+                //filterRef["value"] = filterName[c]["attrName"];
+                filterInfoArrayNew.push(filterRef);
+            }
+        }
+        filterjson["filterInfo"] = filterInfoArrayNew;
+
+        this.reportExecute(this.reportdata["uuid"], this.reportdata["version"], filterjson);
+        this.displayDialog = false;
+    }
+    changeAttrValue() {
+
+    }
+    onChipsRemove(filterValues) {
+        
+        let filterjson = {}
+        let filterInfoArrayNew = [];
+        for (const c in filterValues) {
+            for (const d in this.filterInfoTags) {
+                let filterValuesName = filterValues[c].display.split("-")[0];
+                let otherName = this.filterInfoTags[d].itemName.split(".")[1];
+                if (filterValuesName == otherName) {
+                    let filterInfoRef = {};
+                    let filterRef = {};
+                    filterInfoRef["uuid"] = this.filterInfoTags[d].id.split(".")[0];
+                    filterInfoRef["type"] = "datapod";
+                    filterRef["ref"] = filterInfoRef;
+                    filterRef["attrId"] = this.filterInfoTags[d].id.split(".")[1];
+                    filterRef["value"] = filterValues[c].display.split("-")[1];
+                    filterInfoArrayNew.push(filterRef);
+                    break;
+                }
+            }
+        }
+        filterjson["filterInfo"] = filterInfoArrayNew;
+        this.reportExecute(this.reportdata["uuid"], this.reportdata["version"], filterjson);
+    }
+    onClickChips(){
+        console.log("on Change chips");
     }
 }
