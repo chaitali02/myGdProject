@@ -54,7 +54,7 @@
             </div>
   
             <div class="form-body" style="padding-top:50px;">
-              <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitgraphData()" #myNewForm="ngForm">
+              <form class="form-horizontal" name="myform" novalidate="novalidate" #myNewForm="ngForm">
                 <div class="form-group" *ngIf="mode">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
@@ -77,7 +77,7 @@
                       [filter]="true" (onChange)="onVersionChange()" [disabled]="mode == 'true'" placeholder="Select" >
                     </p-dropdown>{{VersionList | json}} -->
   
-                    <p-dropdown [options]="VersionList" [(ngModel)]="graphData.version" name="version" [style]="{'width':'100%','padding':'3px'}"
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
                       [disabled]="mode == 'true'" (onChange)="onVersionChange()" [filter]="true" placeholder="--Select--">
                     </p-dropdown>
   
@@ -86,7 +86,7 @@
                 <div class="form-group" *ngIf="mode">
                   <label class="col-md-3 control-label">CreatedBy</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" [disabled]="false" [(ngModel)]="graphData.createdBy" name="createdBy">
+                    <input type="text" class="form-control" [disabled]="false" [(ngModel)]="createdBy" name="createdBy">
                   </div>
                 </div>
   
@@ -134,7 +134,7 @@
                 <div class="form-group" style="padding-top: 10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                    <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                    <input type="submit" class="btn btn-success" (click)="submit()" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
                   </div>
                 </div>
   
@@ -198,11 +198,12 @@
                                   </td>
                                   <td>
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <div style="width:150px;">
-                                        <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                      <div style="width:150px;" *ngIf="tabledata.allAttributeInto">
+                                        
+                                        <!--<select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control" required disable-validation-message=""></select> -->
                                           <p-dropdown [options]="tabledata.allAttributeInto" [(ngModel)]="tabledata.nodeId" appendTo="body" name="nodeId+{{i}}" [style]="{'width':'140px','padding':'3px'}"
-                                          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                          [disabled]="mode == 'true'" [dataKey]="id" [filter]="true" placeholder="--Select--">
                                         </p-dropdown>
                                       </div>
                                     </span>
@@ -217,11 +218,11 @@
                                     </span>
                                   </td>
                                  
-                                  <td>
-                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <td >
+                                    <span *ngIf="tabledata.allAttributeInto" class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <div style="width:200px;">
                                         <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.nodeName" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                        [disabled]="mode == 'true'" [filter]="true" [dataKey]="id" placeholder="--Select--">
                                         </p-dropdown>
                                         <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeName" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control" required disable-validation-message=""></select> -->
@@ -229,7 +230,9 @@
           
                                     </span>
                                   </td>
-                                  <td ><span *ngIf="tabledata.allAttributeInto.length >1">
+                                  <td >
+                                    <span *ngIf="tabledata.allAttributeInto">
+                                    <span *ngIf="tabledata.allAttributeInto.length >1">
                                     <div style="width:200px;text-align:center;" >
                                         <p-multiSelect [options]="tabledata.allAttributeInto" name="nodeProperties+{{i}}" [(ngModel)]="tabledata.nodeProperties" [style]="{'width':'200px','padding':'3px'}" appendTo="body"></p-multiSelect>
                                         <!-- <angular2-multiselect 
@@ -259,10 +262,11 @@
                                     <div style="width:200px;text-align:center;" ng-if="tabledata.allAttributeInto.length ==0">
                                       NA
                                     </div> -->
+                                  </span>
                                   </td>
                                   <td>
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                        <p-dropdown [options]="nodeIcon" appendTo="body" [(ngModel)]="tabledata.nodeIcon" placeholder="--Select--" name="nodeIcon+{{i}}"[style]="{'width':'150px'}">
+                                        <p-dropdown [options]="nodeIcon" appendTo="body" [dataKey]="value" [(ngModel)]="tabledata.nodeIcon" placeholder="--Select--" name="nodeIcon+{{i}}"[style]="{'width':'150px'}">
                                             <ng-template let-item pTemplate="selectedItem">{{item|json}}
                                                 <!-- <span [ngClass]="item.class"></span>
                                                 <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span> -->
@@ -324,7 +328,7 @@
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                       <div style="width:200px;">
                                           <p-dropdown [options]="tabledata.size" appendTo="body" [(ngModel)]="tabledata.nodeSize" name="nodeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                          [disabled]="mode == 'true'" [dataKey]="id" [filter]="true" placeholder="--Select--">
                                           </p-dropdown>
                                         <!-- <select select2 [disabled]="mode == 'true'" [(ngModel)]="tabledata.nodeSize" ng-options="x as x.name for x in tabledata.allAttributeInto |filter:filterByAttrType() track by x.uuid+x.attributeId"
                                           [disabled]="mode == 'true'" class="form-control">
@@ -355,7 +359,7 @@
                           <div class="form-body">
                               <div class="row">
                                 <div class="col-md-12">
-                                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeEdgeeRow()" [disabled]="mode == 'true'"></button>
+                                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeEdgeRow()" [disabled]="mode == 'true'"></button>
                                   <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addEdgeRow()" [disabled]="mode == 'true'"></button>
                                 </div>
                                 <div class="clearfix"></div>
@@ -367,7 +371,7 @@
                                       <tr>
                                         <th style="width:5%;text-align: center; Vertical-align: middle;">
                                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectedAllNodeRow" name="selectedAllNodeRow+{{i}}" (click)="allNodeRow()"
+                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectedAllEdgeRow" name="selectedAllEdgeRow+{{i}}" (click)="allEdgeRow()"
                                             />
                                           </span>
                                         </th>
@@ -385,7 +389,7 @@
                                      
                                         <td style="text-align:center;Vertical-align:middle;">
                                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectedAllEdgeRow" name="selectedAllEdgeRow+{{i}}"/>
+                                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selectedEdge" name="selectedEdgeRow+{{i}}"/>
                                           </span>
                                         </td>
                                         <td>
@@ -429,7 +433,9 @@
                                             </div>                
                                           </span>
                                         </td> -->
-                                        <td ><span *ngIf="tabledata.allAttributeInto.length >1">
+                                        <td >
+                                            <span *ngIf="tabledata.allAttributeInto">
+                                          <span *ngIf="tabledata.allAttributeInto.length >1">
                                           <div style="width:200px;text-align:center;" >
                                               <p-multiSelect [options]="tabledata.allAttributeInto" name="edgeProperties+{{i}}" [(ngModel)]="tabledata.edgeProperties" [style]="{'width':'200px','padding':'3px'}" appendTo="body"></p-multiSelect>
                                               <!-- <angular2-multiselect 
@@ -447,12 +453,13 @@
                                         </span>
                                           <div style="width:200px;text-align:center;" *ngIf="tabledata.allAttributeInto.length ==0">
                                               NA
-                                            </div>                                          
+                                            </div>   
+                                            </span>                                       
                                         </td>
                                         <td>
-                                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <span *ngIf="tabledata.allAttributeInto" class="form-group" style="margin-left:0px;margin-right:0px;">
                                               <div style="width:200px;">
-                                                  <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.sourceNodeId" name="sourceNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                                  <p-dropdown [dataKey]="id" [options]="tabledata.allAttributeInto" [dataKey]="id" appendTo="body" [(ngModel)]="tabledata.sourceNodeId" name="sourceNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                                                   [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                                                   </p-dropdown>
                                               </div>
@@ -460,9 +467,9 @@
                                             </span>
                                           </td>
                                           <td>
-                                              <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                              <span *ngIf="tabledata.allAttributeInto" class="form-group" style="margin-left:0px;margin-right:0px;">
                                                 <div style="width:200px;">
-                                                    <p-dropdown [options]="tabledata.allAttributeInto" appendTo="body" [(ngModel)]="tabledata.targetNodeId" name="targetNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                                    <p-dropdown [dataKey]="id" [options]="tabledata.allAttributeInto" [dataKey]="id" appendTo="body" [(ngModel)]="tabledata.targetNodeId" name="targetNodeId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                                                     [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                                                     </p-dropdown>                                                </div>
                     
@@ -556,7 +563,7 @@
                        <div class="form-group">
                         <label class="col-md-3 control-label">Type</label>
                         <div class="col-md-8">
-                              <p-dropdown [options]="allType"  [(ngModel)]="selectType" name="selectType+{{i}}" (onChange)="onChangeType()" [style]="{'width':'200px','padding':'3px'}"
+                              <p-dropdown [dataKey]="id" [options]="allType"  [(ngModel)]="selectType" name="selectType+{{i}}" (onChange)="onChangeType()" [style]="{'width':'200px','padding':'3px'}"
                               [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                             </p-dropdown>
                           
@@ -565,7 +572,7 @@
                       <div class="form-group">
                         <label class="col-md-3 control-label">Select</label>
                         <div class="col-md-8">
-                              <p-dropdown [options]="allDatapod.options" [(ngModel)]="allDatapod.defaultoption" name="allDatapod+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                              <p-dropdown [dataKey]="id" [options]="allDatapod.options" [(ngModel)]="allDatapod.defaultoption" name="allDatapod+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                               [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                             </p-dropdown>
                          
@@ -594,7 +601,7 @@
                     <div class="form-group">
                       <label class="col-md-3 control-label">Type</label>
                       <div class="col-md-6">
-                          <p-dropdown [options]="nodeHighlightType"  [(ngModel)]="highlightInfo.selectType" name="selectType+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                          <p-dropdown [dataKey]="id" [options]="nodeHighlightType"  [(ngModel)]="highlightInfo.selectType" name="selectType+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                           [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                         </p-dropdown>
                         <!-- <select  class="form-control" data-ng-model="highlightInfo.selectType" 
@@ -604,8 +611,8 @@
                     </div>
                     <div class="form-group">
                       <label class="col-md-3 control-label">Select</label>
-                      <div class="col-md-6">
-                          <p-dropdown [options]="allAttr"  [(ngModel)]="highlightInfo.propertyId" name="propertyId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                      <div class="col-md-6">{{allAttr|json}}
+                          <p-dropdown [dataKey]="id" [options]="allAttr"  [(ngModel)]="highlightInfo.propertyId" name="propertyId+{{i}}" [style]="{'width':'200px','padding':'3px'}"
                           [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
                         </p-dropdown>
                         <!-- <select select2 [disabled]="mode == 'true'" ng-model="highlightInfo.propertyId" ng-options="x as x.name for x in allAttr track by x.uuid+x.attributeId"
@@ -613,8 +620,8 @@
                       </div>
                     </div>
                     <div class="x_title">
-                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" (click)="removePropertyInfoRow()" [disabled]="mode == 'true'"></button>
-                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" (click)="addPropertyInfoRow()" [disabled]="mode == 'true'"></button>
+                        <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removePropertyInfoRow()" [disabled]="mode == 'true'"></button>
+                        <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addPropertyInfoRow()" [disabled]="mode == 'true'"></button>
                         <h4>
                           <strong>Property Info</strong>
                         </h4>
@@ -626,7 +633,7 @@
                           <tr>
                             <th style="text-align: center; Vertical-align: middle;width:5%;">
                               <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectedAllPropertyRow" name="selectedAllPropertyRow+{{i}}" ng-change="allPropertyRow()"/>
+                                <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectedAllPropertyRow" name="selectedAllPropertyRow+{{i}}" (click)="allPropertyRow()"/>
                               </span>
                             </th>
                             <th style="text-align: center;width:50%;">Name</th>
@@ -637,7 +644,7 @@
                           <tr *ngFor="let tabledata of propertyInfoTableArray ;let i=index">
                             <td style="text-align: center; Vertical-align: middle;width:5%;">
                               <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedbg+{{i}}" [disabled]="mode == 'true'" />
+                                <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selectedPinfo" name="selectedPinfo+{{i}}" [disabled]="mode == 'true'" />
                                 </span>
                             </td>
                             <td>
@@ -656,7 +663,7 @@
                             <td>
                                 <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                     <div class="custom-ui-select" style="min-width:150px;">
-                                        <p-dropdown [options]="nodeBackGroundColor"  [(ngModel)]="tabledata.propertyValue" name="propertyValue+{{i}}" [style]="{'width':'150px'}" filter="true">
+                                        <p-dropdown [dataKey]="id" [options]="nodeBackGroundColor"  [(ngModel)]="tabledata.propertyValue" name="propertyValue+{{i}}" [style]="{'width':'150px'}" filter="true">
                                             <ng-template let-item pTemplate="selectedItem">                                              
                                                 <div  [ngStyle]="{background:item.label}">{{item.label}}</div>
                                             </ng-template>

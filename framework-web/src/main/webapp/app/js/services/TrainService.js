@@ -124,11 +124,31 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
       url: url + "metadata/getParamListByAlgorithm?action=view&uuid=" + uuid + "&version=" + version+"&type="+type+"&isHyperParam="+isHyperParam,
       method: "GET"
     }).then(function (response) { return response })
-  }; 
+  };
+  factory.findFunctionByCategory = function (type, category) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+        method: 'GET',
+        url: url + "metadata/getFunctionByCategory?action=view&type="+type+"category="+category,
+    }).
+        then(function (response, status, headers) {
+            return response;
+        })
+  }
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
+  this.getFunctionByCategory = function (type, category) {
+    var deferred = $q.defer();
+    TrainFactory.findFunctionByCategory(type,category).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getParamListByAlgorithm = function (uuid,version,type,isHyperParam) {
     var deferred = $q.defer();
     TrainFactory.findParamListByAlgorithm(uuid,version,type,isHyperParam).then(function (response) { onSuccess(response.data) });
@@ -193,6 +213,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
             var attributedetail = {};
             attributedetail.uuid = response[j].uuid;
             attributedetail.datapodname = response[j].name;
+            attributedetail.type ="datapod"
+            attributedetail.attrType = response[j].type;
             attributedetail.name = response[j].attributes[i].name;
             attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
             attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -214,8 +236,11 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType=response[j].attrType;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)
@@ -236,7 +261,10 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
           attributedetail.uuid = response[j].ref.uuid;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType=response[j].attrType;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)
@@ -254,6 +282,8 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
         for (var j = 0; j < response.length; j++) {
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
@@ -309,12 +339,16 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    TrainFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    TrainFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

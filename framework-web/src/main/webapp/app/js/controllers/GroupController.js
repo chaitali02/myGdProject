@@ -52,7 +52,6 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	$scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -67,13 +66,25 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		$scope.privileges = privilegeSvc.privileges['group'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
 	/*Start showPage*/
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-	
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListgroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.groupdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListgroup', {
 			id: uuid,
@@ -81,6 +92,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			mode: 'false'
 		});
 	}
+
 	$scope.showView = function (uuid, version) {
 		if(!$scope.isEdit){
 			$scope.showPage()
@@ -97,10 +109,12 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		content: '',
 		timeout: 3000 //time in ms
 	};
+
 	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
 		$scope.isshowmodel = newvalue
 		sessionStorage.isshowmodel = newvalue
 	})
+
 	$scope.groupFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.groupHasChanged = true;
@@ -152,8 +166,10 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	/*start If*/
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
-
+        $scope.showactive="true"
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		AdminGroupService.getAllVersionByUuid($stateParams.id, "group").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -164,27 +180,17 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 
 		}//End getAllVersionByUuid
 
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "group").then(function (response) { onGetLatestByUuid(response.data) });
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "group")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.groupdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.group.defaultVersion = defaultversion;
-			//$scope.roleInfoTags=response.roleInfo;
 			$scope.appId = response.appId.ref
 			$scope.roleId = response.roleId.ref
-			//    	    var roleInfo=[];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//    	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-
-			// $scope.roleInfoTags=roleInfo;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -194,10 +200,15 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 					$scope.tags = tags;
 				}
 			}//End Innter If
-		}//End getLatestByUuid
+		};//End getLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}/*End If*/
 	else {
-
+		$scope.groupdata={};
+		$scope.groupdata.locked="N";
 
 	}//End Else
 
@@ -206,24 +217,23 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	$scope.selectVersion = function () {
 		$scope.tags = null;
 		$scope.myform.$dirty = false;
-		AdminGroupService.getOneByUuidAndVersion($scope.group.defaultVersion.uuid, $scope.group.defaultVersion.version, 'group').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminGroupService.getOneByUuidAndVersion($scope.group.defaultVersion.uuid, $scope.group.defaultVersion.version, 'group')
+			.then(function (response) { onGetByOneUuidandVersion(response.data) },function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.groupdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.group.defaultVersion = defaultversion;
-			//    	    var roleInfo=[];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//    	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-
-			// $scope.roleInfoTags=roleInfo;
+			$scope.appId = response.appId.ref
+			$scope.roleId=null;
+			setTimeout(() => {
+				$scope.roleId = response.roleId.ref	
+			},100);
+			
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -233,6 +243,10 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 					$scope.tags = tags;
 				}
 			}//End Innter If
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	} /* end selectVersion*/
 
@@ -264,6 +278,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		groupJson.name = $scope.groupdata.name;
 		groupJson.desc = $scope.groupdata.desc;
 		groupJson.active = $scope.groupdata.active;
+		groupJson.locked = $scope.groupdata.locked;
 		groupJson.published = $scope.groupdata.published;
 		var Appid = {};
 		var refAppid = {};
@@ -277,12 +292,6 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		refRoleid.type = "role";
 		Roleid.ref = refRoleid;
 		groupJson.roleId = Roleid
-		// var refAppid={}
-		// refAppid=$scope.appId;
-		// groupJson.appId.ref=refAppid;
-		// var refRoleid={}
-		// refRoleid=$scope.roleId;
-		// groupJson.roleId.ref=refRoleid;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
@@ -294,19 +303,6 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			}
 		}
 		groupJson.tags = tagArray
-
-		//       var roleInfoArray=[];
-		//        if($scope.roleInfoTags!=null){
-		//	        for(var c=0;c<$scope.roleInfoTags.length;c++){
-		//		   		var roleinforef={};
-		//		   		var roleref={};
-		//		     	roleinforef.uuid=$scope.roleInfoTags[c].uuid;
-		//		     	roleinforef.type="role";
-		//	         	roleref.ref=roleinforef
-		//		     	roleInfoArray.push(roleref);
-		//		   	}
-		//		}
-		//       	groupJson.roleInfo=roleInfoArray
 		AdminGroupService.submit(groupJson, 'group',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;

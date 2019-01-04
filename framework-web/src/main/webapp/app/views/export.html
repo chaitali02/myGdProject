@@ -1,201 +1,225 @@
 <div data-ng-controller="DetailExportController">
-   <!-- BEGIN PAGE HEADER-->
-    <div class="page-bar">
-     <ul class="page-breadcrumb">
-       <li>
+  <!-- BEGIN PAGE HEADER-->
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
         <a ui-sref="home">Home</a>
         <i class="fa fa-circle"></i>
-       </li>
-       <li>
+      </li>
+      <li>
         <a ui-sref="migrationassist">Migration Assist</a>
         <i class="fa fa-circle"></i>
-       </li>
-       <li>
+      </li>
+      <li>
         <a ui-sref="migrationassist({type:'Export'})">Export</a>
         <i class="fa fa-circle"></i>
-       </li>
-       <li>
+      </li>
+      <li>
         <span>{{exportdata.name}}</span>
-       </li>
-     </ul>
-     <div class="page-toolbar">
-       <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-         <i class="icon-calendar"></i>&nbsp;
-         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
-       </div>
-     </div>
-    </div><!-- END PAGE HEADER-->
-    <br>
-    <!-- BEGIN MAIN CONTENT -->
-      <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-      <div  options="dirOptions" type="'export'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="exportdata" comment-panel-directive></div>
+      </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+  </div>
+  <!-- END PAGE HEADER-->
+  <br>
+  <!-- BEGIN MAIN CONTENT -->
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div options="dirOptions" type="'export'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="exportdata"
+    comment-panel-directive></div>
 
-    <div class="row" >
-      <div class="col-md-12">
-        <!-- BEGIN: ACCORDION DEMO -->
-        <div class="portlet box green">
-          <div class="portlet-title">
-            <div class="caption">
-              <i class="fa fa-gift"></i>{{exportdata.name}}
-            </div>
-            <div class="tools">
-              <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==true? 'currentpage':'notcurrentpage'"  data-ng-click="showPage()" style="height:16px;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>{{exportdata.name}}
+          </div>
+          <div class="tools">
+            <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showPage()" style="height:16px;font-size:16px;">
+              <span class="fa fa-home" style="color:white;"></span>
+            </a>
+            <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==true? 'currentpage':'notcurrentpage'"  data-ng-click="showPage()" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
-              </a>
-              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-ng-click="showGraph()" style="height:14px;">
-                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-              </a>
-              <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip"     data-placement="top" tooltip>
-                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-              </a>
-              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="migrationassist({type:'export'})" class="" style="height:14px;">
-                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-              </a>
+              </a> -->
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==false? 'currentpage':'notcurrentpage'"
+              ng-show="isDependencyShow" data-ng-click="showGraph()" style="height:14px;">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="migrationassist({type:'export'})" class=""
+              style="height:14px;">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body">
+          <!-- BEGIN FORM-->
+          <div class="form-body graph-body" ng-if="showgraphdiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="exportdata.uuid" version="exportdata.version">
             </div>
           </div>
-          <div class="portlet-body">
-           <!-- BEGIN FORM-->
-            <div class="form-body graph-body" ng-if="showgraphdiv">
-            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-              <div class="spinner" id="graphloader">
+
+          <div class="form-body" style="padding-top:50px;" ng-show="showExport">
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
                 <div class="bounce1"></div>
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
               </div>
-              <div class="form-body show-graph-body"  id="graphWrapper" tree-graph-directive uuid="exportdata.uuid" version="exportdata.version">
-              </div>
             </div>
-
-           <div class="form-body" style="padding-top:50px;" ng-show="showExport">
-            <form  class="form-horizontal" novalidate="novalidate" ng-submit="submitExport()" prevent-enter-submit>
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="exportdata.uuid">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="exportdata.name" required="">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control"  ng-disabled="true"  ng-model="exportdata.version">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true"  ng-model="exportdata.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="exportdata.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="exportdata.tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
-                    </auto-complete>
-                </tags-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="exportdata.desc" rows="2"  style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" >
-                    <label class="btn btn-default" ng-model="exportdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="exportdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" ng-submit="submitExport()" prevent-enter-submit>
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="exportdata.uuid">
                   </div>
                 </div>
-              </div>
 
-              <div class="form-group" ng-show="exportdata.uuid">
-                <label class="col-md-3 control-label">Location</label>
-                <div class="col-md-6">
-                 <input type="text" ng-model="exportdata.location" ng-disabled="{{mode}}"  class="form-control">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="exportdata.name" required="">
+                  </div>
                 </div>
-              </div>
-             
-              <div class="form-group" ng-hide="exportdata.uuid">
-                <label class="control-label col-md-3 col-sm-1 col-xs-12">Meta Type</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <select select2 title="Type" ng-change="getAllNames()" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="metatype" ng-options="r as r.name for r in allmetadata">
-                  </select> -->
-                  <tags-input ng-model="metatype" on-tag-removed="onRemoveMetaType()"  on-tag-added="onAddMetaType()" add-from-autocomplete-only="true">
-                      <auto-complete source="loadAllMetaType($query)" min-length="1" >
-                        </auto-complete>
+
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="exportdata.version">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="exportdata.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="exportdata.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
                     </tags-input>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-1 col-xs-12" for="select">Meta Info</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                 
-                  <tags-input  ng-disabled="{{mode}}"  class="tag-scroll" ng-model="metaNameTags" add-from-autocomplete-only="true" display-property="name" key-property="id">
-                      <auto-complete source="loadAllMetaName($query)" min-length="1"   highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
-                        </auto-complete>
+
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="exportdata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="exportdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="exportdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="exportdata.locked" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="exportdata.locked" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="exportdata.uuid">
+                  <label class="col-md-3 control-label">Location</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="exportdata.location" ng-disabled="{{mode}}" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-hide="exportdata.uuid">
+                  <label class="control-label col-md-3 col-sm-1 col-xs-12">Meta Type</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input ng-model="metatype" on-tag-removed="onRemoveMetaType()" on-tag-added="onAddMetaType()" add-from-autocomplete-only="true">
+                      <auto-complete source="loadAllMetaType($query)" min-length="1">
+                      </auto-complete>
                     </tags-input>
-                  <!-- <tags-input class="tag-scroll"  ng-model="metaNameTags" ng-disabled="isDisabled" display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" style="height:65px;">
-                    <auto-complete source="loadAllMetaName($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
-                    </auto-complete>
-                  </tags-input> -->
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Include Dependencies ?</label>
-                <div class="col-md-9" >
-                  <div class="mt-checkbox-list" style="margin-top:-7px" ng-init="exportdata.includeDep='N'">
-                    <label class="mt-checkbox mt-checkbox-outline">
-                      <input  ng-disabled="{{mode}}" type="checkbox"  ng-model="exportdata.includeDep" ng-true-value="'Y'" ng-false-value="'N'">
-                        <span  ng-disabled="{{mode}}"></span>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-1 col-xs-12" for="select">Meta Info</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <tags-input ng-disabled="{{mode}}" class="tag-scroll" ng-model="metaNameTags" add-from-autocomplete-only="true" display-property="name"
+                      key-property="id">
+                      <auto-complete source="loadAllMetaName($query)" min-length="1" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
+                      </auto-complete>
+                    </tags-input>
+
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Include Dependencies ?</label>
+                  <div class="col-md-9">
+                    <div class="mt-checkbox-list" style="margin-top:-7px" ng-init="exportdata.includeDep='N'">
+                      <label class="mt-checkbox mt-checkbox-outline">
+                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="exportdata.includeDep" ng-true-value="'Y'" ng-false-value="'N'">
+                        <span ng-disabled="{{mode}}"></span>
                       </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-             
-             <div class="form-group">
-               <div class="col-md-offset-3 col-md-4">
-                 <a data-ui-sref="migrationassist({type:'export'})"  class="btn btn-primary">Cancel</a>
-                 <button type="submit" class="btn green" ng-disabled="isSubmitExportEnable"  ng-mouseover="onExportSubmit()">Submit</button>
-                 <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                   <div class="bounce1"></div>
-                   <div class="bounce2"></div>
-                   <div class="bounce3"></div>
-                 </span>
-               </div>
-             </div>
-            </form>
+
+                <div class="form-group">
+                  <div class="col-md-offset-3 col-md-4">
+                    <a data-ui-sref="migrationassist({type:'export'})" class="btn btn-primary">Cancel</a>
+                    <button type="submit" class="btn green" ng-disabled="isSubmitExportEnable" ng-mouseover="onExportSubmit()">Submit</button>
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div><!-- END MAIN CONTENT -->
- </div>
+  </div>
+  <!-- END MAIN CONTENT -->
+</div>
 <br>
 <br>
 <br>

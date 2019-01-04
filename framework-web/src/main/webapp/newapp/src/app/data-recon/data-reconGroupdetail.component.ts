@@ -275,4 +275,7 @@ export class DataReconGroupDetailComponent {
     };
 
   }
+  clear(){
+    this.selectedItems=[]
+  }
 }

@@ -57,8 +57,9 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   $scope.dependsOnType= ["algorithm", "formula"];
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
   $scope.type = ["string", "double", "date"];
-  $scope.scriptTypes= ["SPARK","PYTHON", "R"];
-  $scope.scriptType="SPARK"
+  $scope.scriptTypes= ["SPARK","PYTHON", "R","DL4J","TENSORFLOW"];
+  $scope.scriptTypeMapping={"SPARK":"SPARKML","PYTHON":"PYTHON","R":"R","DL4J":"DL4J","TENSORFLOW":"TENSORFLOW"};
+  //$scope.scriptType="SPARK"
   $scope.count = 0;
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
@@ -136,7 +137,20 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.showForm = true;
     $scope.showGraphDiv = false
   }
+
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createmodel', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit=function (uuid,version) {
+    
+    if($scope.isPrivlage || $scope.modeldata.locked =="Y"){
+      return false;
+    }   
     $scope.showPage()
     $state.go('createmodel', {
       id: uuid,
@@ -156,7 +170,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }     
   }
   $scope.changeScript= function(){
-    $scope.checkboxCustom=$scope.scriptType =="SPARK"?false:true
+    if($scope.scriptType =="SPARK" || $scope.scriptType =="PYTHON"){
+      $scope.checkboxCustom=false;
+    }else{
+      $scope.checkboxCustom=true;
+    }
+    $scope.onChangeDependsOnType(true);
 
   }
 
@@ -186,7 +205,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }
     var len = $scope.featureTableArray.length + 1
     var feature= {};
-    feature.featureId="1"
+    feature.featureId="1";
+    feature.id = len - 1;
     feature.name = "";
     feature.type =  $scope.featuureType[0];
     feature.desc = "";
@@ -196,6 +216,24 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
     $scope.focusRow(len-1)
   }
+  $scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform2.$dirty=true;
+	}
+  $scope.onAttrRowDown=function(index){
+	  var rowTempIndex=$scope.featureTableArray[index];
+    var rowTempIndexPlus=$scope.featureTableArray[index+1];
+		$scope.featureTableArray[index]=rowTempIndexPlus;
+		$scope.featureTableArray[index+1]=rowTempIndex;
+  }
+  
+	$scope.onAttrRowUp=function(index){
+		var rowTempIndex=$scope.featureTableArray[index];
+    var rowTempIndexMines=$scope.featureTableArray[index-1];
+		$scope.featureTableArray[index]=rowTempIndexMines;
+		$scope.featureTableArray[index-1]=rowTempIndex;
+	}
+
 
   $scope.removeRow = function() {
     $scope.slectAllRow = false;
@@ -229,8 +267,16 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   } //End GetAllVersion
   
   $scope.getAllLatest=function(defaultValue){
-    ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
-    var onGetAllLatest = function(response) {
+    // ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
+    // var onGetAllLatest = function(response) {
+    //   $scope.allDependsOn= response
+    //   if(defaultValue)
+    //     $scope.selectedDependsOn= $scope.allDependsOn[0];
+    //   $scope.onChangeDependsOn();
+    // }
+    
+    ModelService.getAlgorithmByLibrary($scope.scriptTypeMapping[$scope.scriptType],$scope.selectedDependsOnType).then(function(response) { onSuccessGetAlgorithmByLibrary(response.data)});
+    var onSuccessGetAlgorithmByLibrary = function(response) {
       $scope.allDependsOn= response
       if(defaultValue)
         $scope.selectedDependsOn= $scope.allDependsOn[0];
@@ -281,11 +327,9 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }else{
       $scope.getFormulaByType(defaultValue);
     }
-    
   }
 
   $scope.onChangeDependsOn = function() {
-    
       if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOnType == "formula") {
        $scope.isParamListShow=true;
        $scope.getParamListByFormula();
@@ -375,10 +419,14 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.showactive="true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.getAllVersion($stateParams.id)
-    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model").then(function(response) {onSuccessGetLatestByUuid(response.data)});
+    ModelService.getOneByUuidandVersion($stateParams.id,$stateParams.version,"model")
+      .then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
-      $scope.modeldata = response
+      $scope.modeldata = response;
+      $scope.isEditInprogess=false;
       $scope.scriptType=response.type
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -393,8 +441,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 					$scope.tags = tags;
 				}
 			}
-
-      if($scope.modeldata.type=='SPARK'){
+      if($scope.modeldata.type=='SPARK' || ($scope.modeldata.type=='PYTHON' && $scope.modeldata.customFlag =="N")){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
       // $scope.getAllLatest();
@@ -423,21 +470,19 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           $scope.getParamListByFormula();
           $scope.isParamListShow=true
         }
-        //$scope.getAllLatestAlgorithm();
-        // var algorithm = {}
-        // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
-        // algorithm.name = $scope.modeldata.algorithm.ref.name;
-        // $scope.selectalgorithm = algorithm
+        
         $scope.checkboxCustom=false
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
-          featureObj.featureId=$scope.modeldata.features[i].featureId
+          featureObj.featureId=$scope.modeldata.features[i].featureId;
+          featureObj.id=$scope.modeldata.features[i].featureId;
           featureObj.name=$scope.modeldata.features[i].name
           featureObj.type=$scope.modeldata.features[i].type
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
+          featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
@@ -454,12 +499,19 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.checkboxCustom=true;
         $scope.getModelScript(response.uuid,response.version)
       }
-    }//End 
+    }//End
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   } //End If onSuccessGetLatestByUuid
   else {
+    $scope.modeldata={};
+    $scope.modeldata.locked="N";
     $scope.showactive="false"
+    $scope.addRow();
    // $scope.getAllLatestAlgorithm();
-    $scope.onChangeDependsOnType(true);
+   // $scope.onChangeDependsOnType(true);
   }
   
 
@@ -472,7 +524,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.model.defaultVersion = defaultversion;
-      if($scope.modeldata.type=='SPARK'){
+      if($scope.modeldata.type=='SPARK' || ($scope.modeldata.type=='PYTHON' && $scope.modeldata.customFlag =="N")){
         //$scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
        //$scope.getAllLatest();
@@ -516,7 +568,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type =="string"?true:false;
           if($scope.selectedDependsOnType== "formula" &&  $scope.modeldata.features[i].paramListInfo){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
@@ -544,6 +597,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     modelJson.name = $scope.modeldata.name
     modelJson.desc = $scope.modeldata.desc
     modelJson.active = $scope.modeldata.active;
+    modelJson.locked = $scope.modeldata.locked;
     modelJson.published=$scope.modeldata.published;
    // modelJson.trainPercent=70//$scope.modeldata.trainPercent
     //modelJson.valPercent=30//$scope.modeldata.valPercent
@@ -559,8 +613,9 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 			}
     }
     modelJson.tags = tagArray;
+    
+    modelJson.type=$scope.scriptType;
     if(!$scope.checkboxCustom){
-      modelJson.type="SPARK"
       modelJson.customFlag="N"
       //  var source = {};
       // var ref = {};
@@ -576,12 +631,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       // algorithm.ref = ref;
       // modelJson.algorithm = algorithm;
 
-      var dependsOn = {};
-      var ref = {};
-      ref.type = $scope.selectedDependsOnType;
-      ref.uuid = $scope.selectedDependsOn.uuid;
-      dependsOn.ref = ref;
-      modelJson.dependsOn = dependsOn;
+      // var dependsOn = {};
+      // var ref = {};
+      // ref.type = $scope.selectedDependsOnType;
+      // ref.uuid = $scope.selectedDependsOn.uuid;
+      // dependsOn.ref = ref;
+      // modelJson.dependsOn = dependsOn;
       
       
       // if ($scope.isLabelDisable == false) {
@@ -599,16 +654,24 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       //   modelJson.labelRequired="N"
       // }
       modelJson.label=$scope.selectLabel;
+      var dependsOn = {};
+      var ref = {};
+      ref.type = $scope.selectedDependsOnType;
+      ref.uuid = $scope.selectedDependsOn.uuid;
+      dependsOn.ref = ref;
+      modelJson.dependsOn = dependsOn;
       var featureArray=[];
       if($scope.featureTableArray.length >0){
         for(var i=0;i< $scope.featureTableArray.length;i++){
         var featureObj={};
-        featureObj.featureId=i
+        featureObj.featureId =$scope.featureTableArray[i].id;
+			  featureObj.featureDisplaySeq = i;
         featureObj.name=$scope.featureTableArray[i].name
         featureObj.type=$scope.featureTableArray[i].type
         featureObj.desc=$scope.featureTableArray[i].desc
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
+        featureObj.defaultValue=$scope.featureTableArray[i].defaultValue;
         if($scope.selectedDependsOnType =="formula" && $scope.allParamlist.length >0){
           var paramListInfo={};
           var ref={};
@@ -628,6 +691,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       ModelService.submit(modelJson, 'model',upd_tag).then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
+    
       modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();

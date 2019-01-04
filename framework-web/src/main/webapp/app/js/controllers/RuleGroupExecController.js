@@ -4,7 +4,9 @@ JobMonitoringModule.controller('DetailRuleGroupExecController', function( $filte
 
     $scope.uuid=$stateParams.id;
     $scope.mode=$stateParams.mode;
-    $scope.showrulegroupexec=true;
+    $scope.showExec=true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle=dagMetaDataService.elementDefs['rulegroupexec'].caption;
     $scope.state=dagMetaDataService.elementDefs['rulegroupexec'].listState+"({type:'"+dagMetaDataService.elementDefs['rulegroupexec'].execType+"'})"
     $scope.onShowDetail = function(data){
@@ -55,9 +57,11 @@ JobMonitoringModule.controller('DetailRuleGroupExecController', function( $filte
         //null,
 
     ];
-    JobMonitoringService.getLatestByUuid($scope.uuid,"rulegroupexec").then(function(response){onSuccess(response.data)});
-    var onSuccess=function(response){
-        $scope.rulegroupexecdata=response;
+    JobMonitoringService.getLatestByUuid($scope.uuid,"rulegroupexec")
+        .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+    var onSuccess = function (response) {
+        $scope.isEditInprogess=false;    
+        $scope.execData=response;
         var statusList=[];
         for(i=0;i<response.statusList.length;i++){
         	d=$filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -75,21 +79,21 @@ JobMonitoringModule.controller('DetailRuleGroupExecController', function( $filte
                 execList[i]=ruleexec;
         	}
        	$scope.execList=execList
+    };
+    var onError=function(){
+        $scope.isEditInprogess=false;
+        $scope.isEditVeiwError=true;
     }
 
-    $scope.showLoadGraph=function(uuid,version){
-    		$scope.showrulegroupexec=false;
-    		$scope.showgraph=false
-    		$scope.graphDatastatusList=true
-    		$scope.showgraphdiv=true;
+    $scope.showGraph=function(uuid,version){
+    		$scope.showExec=false;
+    		$scope.showGraphDiv=true;
 
     }
 
-    $scope.showRuleGroupExecPage=function(){
-    	$scope.showrulegroupexec=true
-    	$scope.showgraph=false
-    	$scope.graphDatastatusList=false
-    	$scope.showgraphdiv=false;
+    $scope.showExecPage=function(){
+    	$scope.showExec=true
+    	$scope.showGraphDiv=false;
     }
 
 

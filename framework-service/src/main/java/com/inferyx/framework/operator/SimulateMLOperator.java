@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -218,7 +219,8 @@ public class SimulateMLOperator implements Serializable {
 				i++;
 			}
 			
-			builder.append(formulaOperator.generateSql(formula, null, null, null)).append(" AS ").append(model.getLabel());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			builder.append(formulaOperator.generateSql(formula, null, null, null, datasource)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 			

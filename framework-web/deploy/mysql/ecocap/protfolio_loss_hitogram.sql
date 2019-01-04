@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_HISTOGRAM; 
+drop table if exists portfolio_loss_histogram; 
 
-CREATE TABLE PORTFOLIO_LOSS_HISTOGRAM 
+create table portfolio_loss_histogram 
   ( 
-     REPORTING_DATE VARCHAR(50), 
-     BUCKET         VARCHAR(50), 
-     FREQUENCY      INTEGER(50), 
-     VERSION        INTEGER(50) 
+     reporting_date varchar(50), 
+     bucket         varchar(50), 
+     frequency      integer(50), 
+     version        integer(50) 
   );

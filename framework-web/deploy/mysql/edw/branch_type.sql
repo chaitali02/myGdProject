@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS BRANCH_TYPE;
-CREATE TABLE BRANCH_TYPE(	
-	BRANCH_TYPE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	BRANCH_TYPE_CODE VARCHAR(10),
-	BRANCH_TYPE_DESC VARCHAR(500),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT BRANCH_TYPE_ID_PK  PRIMARY KEY(BRANCH_TYPE_ID));
+drop table if exists branch_type;
+create table branch_type(	
+	branch_type_id varchar(50) default 0 not null,
+	branch_type_code varchar(10),
+	branch_type_desc varchar(500),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint branch_type_id_pk  primary key(branch_type_id));

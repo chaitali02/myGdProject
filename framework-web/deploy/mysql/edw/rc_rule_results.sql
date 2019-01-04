@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS RC_RULE_RESULTS;
-CREATE TABLE RC_RULE_RESULTS(	
-	SOURCEUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	SOURCEVERSION VARCHAR(50),
-	SOURCENAME VARCHAR(100),
-	SOURCEATTRIBUTEID VARCHAR(50),
-	SOURCEATTRIBUTENAME VARCHAR(100),
-	SOURCEVALUE DECIMAL(10,2),
-	TARGETUUID VARCHAR(50) DEFAULT 0 NOT NULL,
-	TARGETVERSION VARCHAR(50),
-	TARGETNAME VARCHAR(100),
-	TARGETATTRIBUTEID VARCHAR(50),
-	TARGETATTRIBUTENAME VARCHAR(100),
-	TARGETVALUE DECIMAL(10,2),
-	STATUS VARCHAR(50),
-	VERSION INTEGER(10));
+drop table if exists rc_rule_results;
+create table rc_rule_results(	
+	sourceuuid varchar(50) default 0 not null,
+	sourceversion varchar(50),
+	sourcename varchar(100),
+	sourceattributeid varchar(50),
+	sourceattributename varchar(100),
+	sourcevalue decimal(10,2),
+	targetuuid varchar(50) default 0 not null,
+	targetversion varchar(50),
+	targetname varchar(100),
+	targetattributeid varchar(50),
+	targetattributename varchar(100),
+	targetvalue decimal(10,2),
+	status varchar(50),
+	version integer(10));

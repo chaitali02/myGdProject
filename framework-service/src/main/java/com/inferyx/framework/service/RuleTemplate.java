@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -33,6 +36,7 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -234,6 +238,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setHelper(helper);
 		runBaseRuleService.setExecutorServiceImpl(executorServiceImpl);
 		runBaseRuleService.setExecParams(execParams);
+		runBaseRuleService.setDatasource(getDatasource(baseRule));
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
@@ -245,6 +250,12 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			logger.info(" taskThreadMap while creating baseRule : " + taskThreadMap);
 		}
 		return baseRuleExec;
+	}
+
+	public Datasource getDatasource(BaseRule baseRule)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return commonServiceImpl.getDatasourceByApp();
 	}
 
 }

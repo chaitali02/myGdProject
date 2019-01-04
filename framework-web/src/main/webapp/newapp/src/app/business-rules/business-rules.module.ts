@@ -19,6 +19,7 @@ import { RuleService } from '../metadata/services/rule.service';
 import { CommonService}from '../metadata/services/common.service';
 import { JointjsService} from '../shared/components/jointjs/jointjsservice';
 import { routing1} from './business-rules-routing.module';
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 @NgModule({
     imports: [
@@ -30,8 +31,8 @@ import { routing1} from './business-rules-routing.module';
         CheckboxModule,
         routing1,
         ResultModule,
-        ProjectSharedModule
-       
+        ProjectSharedModule,
+        DialogModule       
     ],
     declarations: [
         BusinessRulesComponent,

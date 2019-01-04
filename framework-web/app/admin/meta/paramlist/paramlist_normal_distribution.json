@@ -14,6 +14,7 @@
     "createdOn" : ISODate("2018-08-16T17:16:20.888Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
     "appInfo" : [ 
@@ -47,6 +48,8 @@
             "paramId" : "0",
             "paramName" : "min",
             "paramType" : "integer",
+   	        "paramDispName" : "Min",
+            "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -58,6 +61,8 @@
             "paramId" : "1",
             "paramName" : "max",
             "paramType" : "integer",
+   	        "paramDispName" : "Max",
+            "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -69,6 +74,8 @@
             "paramId" : "2",
             "paramName" : "mean",
             "paramType" : "double",
+   	        "paramDispName" : "Mean",
+            "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -80,6 +87,8 @@
             "paramId" : "3",
             "paramName" : "seed",
             "paramType" : "double",
+   	        "paramDispName" : "Seed",
+            "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

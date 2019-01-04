@@ -55,7 +55,19 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListsession', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.sessiondata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListsession', {
 			id: uuid,
@@ -90,9 +102,10 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 	}/*End ShowGraph*/
 
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
-
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		AdminSessionService.getAllVersionByUuid($stateParams.id, "session").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -103,8 +116,10 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 			}
 
 		}
-		AdminSessionService.getLatestByUuid($stateParams.id, "session").then(function (response) { onGetLatestByUuid(response.data) });
+		AdminSessionService.getLatestByUuid($stateParams.id, "session")
+			.then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.sessiondata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
@@ -126,20 +141,29 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
+	}else{
+		$scope.sessiondata={};
+		$scope.sessiondata.locked="N";
 	}
 
 	$scope.selectVersion = function () {
-
-		AdminSessionService.getByOneUuidandVersion($scope.session.defaultVersion.uuid, $scope.session.defaultVersion.version, 'session').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminSessionService.getByOneUuidandVersion($scope.session.defaultVersion.uuid, $scope.session.defaultVersion.version, 'session')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.sessiondata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.session.defaultVersion = defaultversion;
 			$scope.selectsessionType = response.type
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -149,6 +173,10 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 

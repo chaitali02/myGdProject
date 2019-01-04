@@ -49,7 +49,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	$scope.algorithm.versions = [];
 	$scope.isshowmodel = false;
 	//$scope.librarytypes = ["sparkML", "R", "Java"];
-	$scope.librarytypes = ["SPARKML", "R", "JAVA"];
+	$scope.librarytypes = ["SPARKML", "R", "JAVA","PYTHON","DL4J","TENSORFLOW"];
 	$scope.paramtable = null;
 	//$scope.types = ["clustering", "classification", "regression", "simulation"];
 	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION"];
@@ -99,7 +99,18 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.showGraphDiv = false
 	}
 
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createalgorithm', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.algorithmData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createalgorithm', {
 			id: uuid,
@@ -118,7 +129,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			});
 	    }
 	}
-	
+	$scope.onChangeCusFlg=function(){
+		if($scope.algorithmData.customFlag =='Y'){
+			$scope.algorithmData.scriptName="";
+		}else{
+			$scope.algorithmData.trainClass="";
+			$scope.algorithmData.modelClass="";
+		}
+	}
 	$scope.getAllLatestParamListByTemplate=function(){
 		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","model").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
@@ -141,24 +159,20 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
 		$scope.getAllVersion($stateParams.id)
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "algorithm").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "algorithm")
+			.then(function (response) { onSuccessGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.algorithmData = response
+			$scope.isEditInprogess=false;
+			$scope.algorithmData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
 			$scope.selectlibrary = response.libraryType
-			// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			// var onSuccessGetAllLatestParamlist = function (response) {
-			// 	$scope.allparamlist = response;
-			// 	var paramlist = {};
-			// 	paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
-			// 	paramlist.name = ""
-			// 	$scope.selectparamlist = paramlist;
-
-			// }
+	
 			$scope.getAllLatestParamListByTemplate();
 			var selectParamlistWithoutHype={};
 			selectParamlistWithoutHype.uuid=response.paramListWoH.ref.uuid;
@@ -188,14 +202,17 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			}
 			$scope.summaryMethods=summaryMethodsArray;
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End If
 	else {
-		// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-		// var onSuccessGetAllLatestParamlist = function (response) {
-		// 	$scope.allparamlist = response;
-		// 	$scope.selectparamlist = $scope.allparamlist[0];
-		// }
 		$scope.getAllLatestParamListByTemplate();
+		$scope.algorithmData={};
+		$scope.algorithmData.locked="N";
+		$scope.algorithmData.customFlag="N";
+		
 	}
 
 
@@ -205,24 +222,19 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.selectparamlist = null;
 		$scope.selecttype = null;
 		$scope.selectlibrary = null;
-		AlgorithmService.getOneByUuidandVersion(uuid, version, 'algorithm').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		CommonService.getOneByUuidAndVersion(uuid, version, 'algorithm')
+			.then(function (response) { onGetByOneUuidandVersion(response.data) }, function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.algorithmData = response
+			$scope.isEditInprogess=false;
+			$scope.algorithmData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
 			$scope.selectlibrary = response.libraryType
-			// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			// var onSuccessGetAllLatestParamlist = function (response) {
-			// 	$scope.allparamlist = response;
-			// 	var paramlist = {};
-			// 	paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
-			// 	paramlist.name = ""
-			// 	$scope.selectparamlist = paramlist;
-
-			// }
 			$scope.getAllLatestParamListByTemplate();
 			var tags = [];
 			if (response.tags != null) {
@@ -243,7 +255,11 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				}
 			}
 			$scope.summaryMethods=summaryMethodsArray;
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 
@@ -257,6 +273,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.name = $scope.algorithmData.name
 		algorithmJson.desc = $scope.algorithmData.desc
 		algorithmJson.active = $scope.algorithmData.active;
+		algorithmJson.locked = $scope.algorithmData.locked;
+		algorithmJson.customFlag = $scope.algorithmData.customFlag;
+		algorithmJson.scriptName = $scope.algorithmData.scriptName;
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;

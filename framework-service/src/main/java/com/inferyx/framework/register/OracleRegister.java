@@ -11,6 +11,7 @@
 package com.inferyx.framework.register;
 
 
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -75,12 +77,12 @@ public class OracleRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
 			IConnector connector = connectionFactory.getConnector(datasource.getType());
-			ConnectionHolder conHolder = connector.getConnection();
+			ConnectionHolder conHolder =connector.getConnectionByDatasource(datasource);//connector.getConnection();
 			Statement stmt = (Statement) conHolder.getStmtObject();			
 
 			for (int i = 0; i < registryList.size(); i++) {
@@ -94,8 +96,18 @@ public class OracleRegister {
 					datapod.setUuid(datapodList.get(0).getUuid());
 				
 				datapod.setName(tableName);
+				
+				DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
+				ResultSet rsPriKey = dbMetadata.getPrimaryKeys(null, null, tableName);
+				List<String> pkList = new ArrayList<>();
+				while(rsPriKey.next()) {
+					pkList.add(rsPriKey.getString("COLUMN_NAME"));
+				}
+				
 				ResultSet rs = stmt.executeQuery("SELECT column_name, data_type FROM all_tab_columns WHERE owner='"
 						+ datasource.getDbname().toUpperCase() + "' AND table_name='" + tableName + "'");
+
+				ResultSet rsTabMeta = dbMetadata.getColumns(null, null, tableName, null);
 				for(int j = 0; rs.next(); j++) {
 					logger.info("Col_Name: " + rs.getString(1) +",\t type: " + rs.getString(2));
 					Attribute attr = new Attribute();
@@ -103,9 +115,15 @@ public class OracleRegister {
 					String colType = rs.getString(2);
 					attr.setAttributeId(j);
 					attr.setName(colName);
-					attr.setType(colType);
-					attr.setDesc("");
-					attr.setKey("");
+					attr.setType(getconvertedDataType(rs.getString(2)));
+					attr.setDesc(colName);
+					if(pkList.contains(colName)) {
+						attr.setKey("Y");
+					} else {
+						attr.setKey("N");
+					}
+					rsTabMeta.next();
+					attr.setLength(Integer.parseInt(rsTabMeta.getString("COLUMN_SIZE")));
 					attr.setPartition("N");
 					attr.setActive("Y");
 					attr.setDispName(colName);
@@ -129,13 +147,14 @@ public class OracleRegister {
 				datastore.setName(datapod.getName());
 				datastore.setDesc(datapod.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.ORACLE.toString());
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+			/*	ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
 				rsHolder.getResultSet().next();
-				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				datastore.setNumRows(rsHolder.getResultSet().getInt(1));*/
 				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
-
+				datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+				datastore.setBaseEntity();
 				//Creating load & loadExec
 				Load load = new Load();
 				load.setBaseEntity();
@@ -156,7 +175,8 @@ public class OracleRegister {
 				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
-				
+				MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
+				datastore.setExecId(execId);
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
 				dpList.add(savedDp);
@@ -165,5 +185,25 @@ public class OracleRegister {
 			e.printStackTrace();
 		}
 		return registryList;
+	}
+
+	public String getconvertedDataType(String datatype) {
+
+		switch (datatype) {
+		case "VARCHAR2":
+			return "VARCHAR";
+		case "INTEGER":
+			return "INTEGER";
+		case "DECIMAL":
+			return "DECIMAL";
+		case "BIGDECIMAL":
+			return "DECIMAL";
+		case "CHAR":
+			return "CHAR";
+		case "BOOLEAN":
+			return "CHAR";
+		default:
+			return datatype;
+		}
 	}
 }

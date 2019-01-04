@@ -171,9 +171,11 @@ public class CommonController<T> {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
+	public String save(@RequestBody Object metaObject,
+			@RequestParam("type") String type,
 			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
-			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletRequest request)
 			throws Exception {
 		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.dqview.toString())
@@ -244,6 +246,28 @@ public class CommonController<T> {
 			return objectWriter.writeValueAsString(baseEntity);
 		else {
 			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unpublish."));
+			response.setStatus(401);
+			return objectWriter.writeValueAsString(unAuthorised);
+		}			
+	}
+	@RequestMapping(value = "/lock", method = RequestMethod.PUT)
+	public String lock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.locked(id, type);
+		return objectWriter.writeValueAsString(baseEntity);
+	}
+	
+	@RequestMapping(value = "/unLock", method = RequestMethod.PUT)
+	public String unLock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.unLocked(id, type);
+		if(baseEntity != null)
+			return objectWriter.writeValueAsString(baseEntity);
+		else {
+			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unlock."));
 			response.setStatus(401);
 			return objectWriter.writeValueAsString(unAuthorised);
 		}			
@@ -340,9 +364,10 @@ public class CommonController<T> {
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "uuid", required = false) String uuid,
 											   @RequestParam(value = "version", required = false) String version,
+											   @RequestParam(value = "dataSourceUuid", required = false) String dataSourceUuid,
 											   @RequestParam(value = "action", required = false) String action)
-											throws IOException, JSONException, ParseException {
-		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action);
+											throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action,dataSourceUuid);
 		
 		return result;
 	}

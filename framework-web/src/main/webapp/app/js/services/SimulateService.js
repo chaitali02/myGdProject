@@ -20,6 +20,10 @@ DatascienceModule.factory('SimulateFactory', function ($http, $location) {
     return $http({
       url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type,
       method: "GET",
+      data: '',
+      headers: {
+          "Content-Type": "application/json"
+      }
     }).then(function (response) { return response })
 
 
@@ -382,12 +386,17 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
 
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    SimulateFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    SimulateFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
 
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

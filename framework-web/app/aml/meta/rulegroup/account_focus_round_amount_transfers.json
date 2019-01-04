@@ -1,0 +1,67 @@
+{
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "264178cc-3025-480d-86bd-a58fdb1fc269"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "beb9555a-d63d-4d61-b05b-0f5f4fbef744"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "26f2362f-d6a4-4262-8a7c-0257cd3746f9"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "4eefbd6d-24da-49a5-be4f-0b933ad7a8fb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "ac528181-6bf5-44a4-a305-4d80e41f8adf"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "48762d4e-5103-4224-85ee-d3795ea8ca72"
+			}
+		}
+	],
+	"inParallel" : "true",
+	"uuid" : "c5374d4a-15ce-4368-bdd9-ef5173b9a35f",
+	"version" : "1542494948",
+	"name" : "Account Focus - Round Amount Transfers",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-17T22:49:08Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

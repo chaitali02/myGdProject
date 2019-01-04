@@ -3,7 +3,9 @@ JobMonitoringModule = angular.module('JobMonitoringModule');
 JobMonitoringModule.controller('DetailProfileExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService, privilegeSvc) {
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
-  $scope.showrprofileexec = true;
+  $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.selectTitle = dagMetaDataService.elementDefs['profileexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['profileexec'].listState + "({type:'" + dagMetaDataService.elementDefs['profileexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
@@ -31,9 +33,11 @@ JobMonitoringModule.controller('DetailProfileExecController', function ($filter,
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
-  JobMonitoringService.getLatestByUuid($scope.uuid, "profileexec").then(function (response) { onSuccess(response.data) });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "profileexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
-    $scope.profileexecdata = response;
+    $scope.isEditInprogess=false;
+    $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
       d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -41,28 +45,28 @@ JobMonitoringModule.controller('DetailProfileExecController', function ($filter,
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     $scope.statusList = statusList;
+  };
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
-  $scope.showLoadGraph = function (uuid, version) {
-    $scope.showrprofileexec = false;
-    $scope.showgraph = false
-    $scope.graphDatastatusList = false
-    $scope.showgraphdiv = true;
+  $scope.showGraph = function (uuid, version) {
+    $scope.showExec = false;
+    $scope.showGraphDiv = true;
 
   }
 
-  $scope.showProfileExecPage = function () {
-    $scope.showrprofileexec = true
-    $scope.showgraph = false
-    $scope.graphDatastatusList = false
-    $scope.showgraphdiv = false;
+  $scope.showExecPage = function () {
+    $scope.showExec = true
+    $scope.showGraphDiv = false;
   }
   $scope.showSqlFormater=function(){
     $('#sqlFormaterModel').modal({
       backdrop: 'static',
       keyboard: false
     });
-    $scope.formateSql=sqlFormatter.format($scope.profileexecdata.exec);
+    $scope.formateSql=sqlFormatter.format($scope.execData.exec);
   }
 
 

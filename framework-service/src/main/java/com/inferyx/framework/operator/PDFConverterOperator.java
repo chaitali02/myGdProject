@@ -19,7 +19,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.lept.PIX;
-import org.bytedeco.javacpp.tesseract.TessBaseAPI;
+//import org.bytedeco.javacpp.tesseract.TessBaseAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -106,8 +106,9 @@ public class PDFConverterOperator implements IOperator {
 		        baos.flush();
 		        byte[] imageInByte = baos.toByteArray();
 		        baos.close();
-		        
-		        TessBaseAPI api = new TessBaseAPI();
+
+		        // Commenting out tesseract for now
+/*		        TessBaseAPI api = new TessBaseAPI();
 		        if (api.Init(null, "eng") != 0) {
 		            System.err.println("Could not initialize tesseract.");
 		            System.exit(1);
@@ -124,7 +125,7 @@ public class PDFConverterOperator implements IOperator {
 		        api.End();
 		        outText.deallocate();
 		        pixDestroy(pix);
-			}
+*/			}
 			document = null;
 			renderer =  null;
 		}

@@ -14,7 +14,8 @@
   },
   "createdOn": "Wed Aug 15 20:50:47 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -46,7 +47,7 @@
       "key": "",
       "partition": "N",
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -57,7 +58,7 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     }
   ]

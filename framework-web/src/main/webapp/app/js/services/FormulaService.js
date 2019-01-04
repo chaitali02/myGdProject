@@ -519,7 +519,8 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
 		var functionArray = ["+", '-', "/", "%", "*", '(', ")", "=", "<=", ">=", "<", ">", "sum", "max", "mix", "count", "avg", "case", "when", "else", "end", "then"]
-		MetadataFormulaFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataFormulaFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var formulajosn = {};
 			formulajosn.formuladata = response;
@@ -558,12 +559,16 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				}
 				formulaarray[i] = formulainfo;
 			}
-			//console.log(JSON.stringify(formulaarray))
 			formulajosn.formulainfoarray = formulaarray;
 			deferred.resolve({
 				data: formulajosn
 			})
-		}
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
 		return deferred.promise;
 	}
 	this.submit = function (data,type,upd_tag) {

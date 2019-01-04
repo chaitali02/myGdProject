@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.service.SparkServiceImpl;
 
 @Controller
@@ -42,4 +43,15 @@ public class SparkController {
 		return sparkServiceImpl.submitQuery(sql,rows,format,header);
 	}
 
+	@RequestMapping(value = "/dropTempTable", method=RequestMethod.POST)
+	public @ResponseBody boolean dropTempTable(@RequestBody List<String> tempTableList,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) {
+		try {
+			return sparkServiceImpl.dropTempTable(tempTableList);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
 }

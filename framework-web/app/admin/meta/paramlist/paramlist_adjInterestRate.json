@@ -4,6 +4,8 @@
             "paramId" : "0",
             "paramName" : "interestRate",
             "paramType" : "double",
+            "paramDispName" : "Interest Rate",
+            "paramDesc" : "",
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -15,6 +17,8 @@
             "paramId" : "1",
             "paramName" : "adjInterestRate",
             "paramType" : "double",
+            "paramDispName" : "Adj InterestRate",
+            "paramDesc" : "",
             "paramValue" : {
 		"ref" : {
 		    "type" : "simple"
@@ -36,6 +40,7 @@
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",    
     "paramListType" : "model",
     "appInfo" : [ 

@@ -81,13 +81,17 @@
         </div>
         <div class="tools">
           <!-- <a class="fullscreen" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}"></a> -->
+          <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"
+            ng-disabled="isD3FDGraphShow" href="javascript:;" data-ng-click="showFDGraph()" style="height:16px;font-size:16px;">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
           <a uib-tooltip="Edit Filter" tooltip-placement="top"  ng-click="applyFilter()" href="javascript:;"    ng-class="isD3KnowlageGraphShow==true? 'currentpage':'notcurrentpage'"style="height:16px;">
             <span class="fa fa-filter" style="color:white;"></span>
           </a>
-          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"
+          <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"
             ng-disabled="isD3FDGraphShow" href="javascript:;" data-ng-click="showFDGraph()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>
-          </a>
+          </a> -->
           <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showKGraph()" ng-class="isD3KnowlageGraphShow==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
           </a>

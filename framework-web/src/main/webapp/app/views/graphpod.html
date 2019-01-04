@@ -1,4 +1,4 @@
-nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-controller="GraphpodDetailController">
+<div data-ng-controller="GraphpodDetailController">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
     <ul class="page-breadcrumb">
@@ -40,7 +40,16 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
               <i class="fa fa-gift"></i>{{graphpodData.name | strReplace:'_':' '|capitalize}}
             </div>
             <div class="tools">
-              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(graphpodData.uuid,graphpodData.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a title="Edit" ng-class="(isEdit==true || isPrivlage || graphpodData.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
+                style="height:16px;">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                 data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
                 style="height:16px;">
                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -48,7 +57,7 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
               <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true ||showForm==true) ? 'currentpage':'notcurrentpage'"
                 ng-click="showView(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
-              </a>
+              </a> -->
               <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                 data-ng-click="showGraph(graphpodData.uuid,graphpodData.version)" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -74,8 +83,17 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
             </div>
 
             <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
-
-
+              <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+                <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+              </div>
+              <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+                <div class="spinner">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+              </div>
+              <div  ng-show="!isEditInprogess && !isEditVeiwError">
               <div class="form-group" ng-show="graphpodData.uuid">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -142,6 +160,15 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
                   </div>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" >
+                    <label class="btn btn-default" ng-model="graphpodData.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="graphpodData.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
@@ -167,9 +194,13 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
               </div>
 
             </div>
+
+
+
+          </div>
           </div>
         </div>
-        <div class="portlet box green" data-ng-show="showForm">
+        <div class="portlet box green" data-ng-show="showForm && !isEditInprogess && !isEditVeiwError">
           <div class="portlet-title">
             <div class="caption">
               <i class="fa fa-gift"></i>Node Detail
@@ -340,7 +371,7 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
             </div>
           </div>
         </div>
-        <div class="portlet box green" data-ng-show="showForm">
+        <div class="portlet box green" data-ng-show="showForm && !isEditInprogess && !isEditVeiwError">
           <div class="portlet-title">
             <div class="caption">
               <i class="fa fa-gift"></i>Edge Detail
@@ -540,7 +571,6 @@ nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-c
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-          <!-- <h4 class="modal-title">Highlight Info</h4> -->
           <h4 class="modal-title">{{highlightInfo.caption}}</h4>
           
         </div>

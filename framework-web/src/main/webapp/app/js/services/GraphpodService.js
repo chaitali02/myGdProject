@@ -118,7 +118,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
   }
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    GraphpodFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    GraphpodFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
     var onSuccess = function (response) {
       var jsongraphpod={}
       jsongraphpod.graphpod=response;
@@ -303,6 +303,11 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
       deferred.resolve({
         data: jsongraphpod
       });
+    };
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

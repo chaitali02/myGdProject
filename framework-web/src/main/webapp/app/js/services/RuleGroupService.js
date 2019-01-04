@@ -146,14 +146,18 @@ RuleModule.service("RuleGroupService", function ($q, RuleGroupFactory, sortFacto
 	}
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		RuleGroupFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		RuleGroupFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-
 			deferred.resolve({
 				data: response
 			})
 		}
-
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		}
 		return deferred.promise;
 	}
 	this.getAllLatest = function (type) {

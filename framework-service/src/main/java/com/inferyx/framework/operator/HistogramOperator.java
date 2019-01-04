@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
@@ -21,6 +22,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -36,6 +38,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
+
 
 /**
  * @author Ganesh
@@ -161,13 +164,16 @@ public class HistogramOperator implements IOperator {
 			
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString());
 			
-			String tableName = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+			String tableName = null;
+			if(otherParams != null && !otherParams.isEmpty()) {
+				tableName = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");				
+			}
 			if(tableName == null || tableName.isEmpty()) {
 				tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			}
 			sqlBuilder.append("SELECT ");
 			
-			for(int i=0; i<sourceAttrs.size(); i++) {
+			for(int i=0; i < sourceAttrs.size(); i++) {
 				String attrName = datapod.getAttributeName(Integer.parseInt(sourceAttrs.get(i).getAttrId()));				
 				sqlBuilder.append("CAST(").append(attrName).append(" AS DOUBLE) AS ").append(attrName);
 				if(i<(sourceAttrs.size()-1))
@@ -249,5 +255,42 @@ public class HistogramOperator implements IOperator {
 	
 	protected String getFileName (Datapod locationDatapod, String execVersion) {
 		return String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
+	}
+
+	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
+		Datasource datapodDS = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datapodDS.getType());	
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		MetaIdentifier attrDpMI = attrRefHolderList.get(0).getRef();
+		Datapod attrDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpMI.getUuid(), attrDpMI.getVersion(), attrDpMI.getType().toString(), "N");
+		Datasource attrDpDs = commonServiceImpl.getDatasourceByObject(attrDp);
+		
+		Attribute attribute = attrDp.getAttribute(Integer.parseInt(attrRefHolderList.get(0).getAttrId()));
+		String attributeType = attribute.getType();
+		String sql = null;
+		if(attributeType.equalsIgnoreCase("String")) {
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			sql = "SELECT "
+					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
+					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
+					.concat(" FROM ").concat(tableName).concat(" ").concat(tableName)
+					.concat(" GROUP BY ").concat(attribute.getName())
+					.concat(" LIMIT "+limit);
+			
+			String ourLimitSql = "SELECT * FROM ("+sql+") "+tableName+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
+			
+		} else {
+			sql = generateSql(attrRefHolderList, null, null, runMode);
+			sql = sql.concat(" ").concat(" LIMIT "+limit);
+
+			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid);
+			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
+		}
+		
+		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
+		return exec.executeAndFetchByDatasource(dataSql, attrDpDs, appUuid);
 	}
 }

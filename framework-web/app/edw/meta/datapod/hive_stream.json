@@ -9,12 +9,12 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "kye",
+            "name" : "key",
             "type" : "integer",
-            "desc" : "kye",
+            "desc" : "key",
             "key" : "0",
             "partition" : "N",
-            "dispName" : "kye",
+            "dispName" : "key",
             "active" : "Y"
         }, 
         {
@@ -82,6 +82,7 @@
     "createdOn" : ISODate("2018-10-30T14:27:08.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

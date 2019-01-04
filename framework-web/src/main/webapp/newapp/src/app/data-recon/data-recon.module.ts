@@ -21,6 +21,7 @@ import { DataReconService}from '../metadata/services/dataRecon.services';
 
 import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-recon-routing.module'
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 
 @NgModule({
@@ -33,8 +34,8 @@ import { routing1} from './data-recon-routing.module'
         CheckboxModule,
         routing1,
         ResultModule,
-        ProjectSharedModule
-       
+        ProjectSharedModule,
+        DialogModule
     ],
     declarations: [
         DataReconComponent,

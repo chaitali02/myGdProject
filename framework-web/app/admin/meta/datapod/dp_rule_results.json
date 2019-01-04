@@ -1,38 +1,4 @@
 {
-    "uuid" : "77aefb4c-191c-11e7-93ae-92361f002671",
-    "version" : "1488620350",
-    "name" : "dp_rule_results",
-    "desc" : "Profile Results",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-        }
-    },
-    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
-    "tags" : null,
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }
-    ],
     "datasource" : {
         "ref" : {
             "type" : "datasource",
@@ -43,190 +9,283 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "DatapodUUID",
+            "displaySeq" : 0,
+            "name" : "datapoduuid",
             "type" : "string",
             "desc" : "DatapodUUID",
             "key" : "0",
             "partition" : "N",
-            "dispName" : "DatapodUUID",
+            "dispName" : "Datapod UUID",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "*"
         }, 
         {
             "attributeId" : 1,
-            "name" : "DatapodVersion",
+            "displaySeq" : 1,
+            "name" : "datapodversion",
             "type" : "string",
             "desc" : "DatapodVersion",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "DatapodVersion",
+            "dispName" : "Datapod Version",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 2,
-            "name" : "DatapodName",
+            "displaySeq" : 2,
+            "name" : "datapodname",
             "type" : "string",
             "desc" : "DatapodName",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "DatapodName",
+            "dispName" : "Datapod Name",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "*"
         }, 
         {
             "attributeId" : 3,
-            "name" : "AttributeId",
+            "displaySeq" : 3,
+            "name" : "attributeid",
             "type" : "string",
             "desc" : "AttributeId",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "AttributeId",
+            "dispName" : "Attribute Id",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 4,
-            "name" : "AttributeName",
+            "displaySeq" : 4,
+            "name" : "attributename",
             "type" : "string",
             "desc" : "AttributeName",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "AttributeName",
+            "dispName" : "Attribute Name",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "*"
         }, 
         {
             "attributeId" : 5,
-            "name" : "numRows",
-            "type" : "Long",
+            "displaySeq" : 5,
+            "name" : "numrows",
+            "type" : "long",
             "desc" : "Number of Rows",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "numRows",
+            "dispName" : "Num Rows",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 6,
-            "name" : "minVal",
-            "type" : "Double",
+            "displaySeq" : 6,
+            "name" : "minval",
+            "type" : "double",
             "desc" : "Minimum value in data",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "minVal",
+            "dispName" : "Min Val",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 7,
-            "name" : "maxVal",
-            "type" : "Double",
+            "displaySeq" : 7,
+            "name" : "maxval",
+            "type" : "double",
             "desc" : "Maximum value in data",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "maxVal",
+            "dispName" : "Max Val",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 8,
-            "name" : "avgVal",
-            "type" : "Double",
+            "displaySeq" : 8,
+            "name" : "avgval",
+            "type" : "double",
             "desc" : "Average value in data",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "avgVal",
+            "dispName" : "Avg Val",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 9,
-            "name" : "medianVal",
-            "type" : "Double",
+            "displaySeq" : 9,
+            "name" : "medianval",
+            "type" : "double",
             "desc" : "Median value in data",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "medianVal",
+            "dispName" : "Median Val",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 10,
-            "name" : "stdDev",
-            "type" : "Double",
+            "displaySeq" : 10,
+            "name" : "stddev",
+            "type" : "double",
             "desc" : "Standard deviation in data",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "stdDev",
+            "dispName" : "Std Dev",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 11,
-            "name" : "numDistinct",
-            "type" : "Integer",
+            "displaySeq" : 11,
+            "name" : "numdistinct",
+            "type" : "integer",
             "desc" : "No of distinct values",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "numDistinct",
+            "dispName" : "Num Distinct",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 12,
-            "name" : "perDistinct",
-            "type" : "Double",
+            "displaySeq" : 12,
+            "name" : "perdistinct",
+            "type" : "double",
             "desc" : "Percentage distinct values",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "perDistinct",
+            "dispName" : "Per Distinct",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "%"
         }, 
         {
             "attributeId" : 13,
-            "name" : "numNull",
-            "type" : "Integer",
+            "displaySeq" : 13,
+            "name" : "numnull",
+            "type" : "integer",
             "desc" : "No of null values",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "numNull",
+            "dispName" : "Num Null",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 14,
-            "name" : "perNull",
-            "type" : "Double",
+            "displaySeq" : 14,
+            "name" : "pernull",
+            "type" : "double",
             "desc" : "Percentage null values",
-            "key" : null,
+            "key" : "",
             "partition" : "N",
-            "dispName" : "perNull",
+            "dispName" : "Per Null",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "%"
         }, 
         {
             "attributeId" : 15,
-            "name" : "sixSigma",
+            "displaySeq" : 15,
+            "name" : "minlength",
             "type" : "double",
-            "desc" : "Null Values to the total row count",
-            "key" : null,
+            "desc" : " ",
+            "key" : "",
             "partition" : "N",
-            "dispName" : "sixSigma",
+            "dispName" : "Min Length",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
         }, 
         {
             "attributeId" : 16,
-            "name" : "version",
-            "type" : "Integer",
-            "desc" : "version",
-            "key" : null,
+            "displaySeq" : 16,
+            "name" : "maxlength",
+            "type" : "double",
+            "desc" : " ",
+            "key" : "",
             "partition" : "N",
-            "dispName" : "version",
+            "dispName" : "Max Length",
             "active" : "Y",
-            "expr" : null
+            "attrUnitType" : "#"
+        }, 
+        {
+            "attributeId" : 17,
+            "displaySeq" : 17,
+            "name" : "avglength",
+            "type" : "double",
+            "desc" : " ",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "Avg Length",
+            "active" : "Y",
+            "attrUnitType" : "#"
+        }, 
+        {
+            "attributeId" : 18,
+            "displaySeq" : 18,
+            "name" : "numduplicates",
+            "type" : "double",
+            "desc" : " ",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "Num Duplicates",
+            "active" : "Y",
+            "attrUnitType" : "#"
+        }, 
+        {
+            "attributeId" : 19,
+            "displaySeq" : 19,
+            "name" : "version",
+            "type" : "string",
+            "desc" : "version",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "Version",
+            "active" : "Y",
+            "attrUnitType" : "#"
+        }
+    ],
+    "uuid" : "77aefb4c-191c-11e7-93ae-92361f002671",
+    "version" : "1544557215",
+    "name" : "dp_rule_results",
+    "desc" : "Profile Results",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-12-11T19:40:15.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "name" : "Administration"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "name" : "Data Warehouse"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+                "name" : "Fraud Analytics"
+            }
         }
     ]
 }

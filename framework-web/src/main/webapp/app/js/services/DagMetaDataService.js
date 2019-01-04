@@ -120,11 +120,14 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         cellClass: 'text-center',
         headerCellClass: 'text-center'
       },
+     
       {
         displayName: 'Name',
         name: 'name',
         minWidth: 220,
-        headerCellClass: 'text-center'
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
+        
       },
       {
         displayName: 'Version',
@@ -155,6 +158,84 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       }
     ]
   };
+  obj.gridOptionsResultDefault = {
+    // paginationPageSizes: [10, 25, 50, 75],
+    // paginationPageSize: 10,
+    // enableFiltering: true,
+    enableGridMenu: true,
+    rowHeight: 40,
+    exporterSuppressCtiolumns: [ 'action' ],
+    exporterMenuPdf: true,
+    exporterPdfOrientation: 'landscape',
+    exporterPdfPageSize: 'A4',
+    exporterPdfDefaultStyle: {fontSize: 9},
+    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+    columnDefs: [
+      {
+        displayName: 'UUID',
+        name: 'uuid',
+        visible: false,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center'
+      },
+     
+      {
+        displayName: 'Name',
+        name: 'name',
+        minWidth: 150,
+        headerCellClass: 'text-center',
+        cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>'
+      },
+      {
+        displayName: 'Version',
+        name: 'version',
+        visible: false,
+        maxWidth:110,
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        sort: {
+          direction: uiGridConstants.DESC,
+         // priority: 0,
+        },
+      },
+      {
+        displayName: 'Submitted By',
+        name: 'createdBy.ref.name',
+        cellClass: 'text-center',
+        maxWidth:140,
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Start Time',
+        name: 'startTime',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 190,
+        sort: {
+          direction: uiGridConstants.ASC,
+         // priority: 0,
+        },
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.startTime}}>{{row.entity.startTime}}</div></div>'
+      },
+      {
+        displayName: 'End Time',
+        name: 'endtime',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 190,
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.endTime}}>{{row.entity.endTime}}</div></div>'
+      },
+      {
+        displayName: 'Duration',
+        name: 'duration',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 110,
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.duration}}</div></div>'
+      }
+    ]
+  };
+
 
   obj.gridOptions = angular.copy(obj.gridOptionsDefault);
   obj.gridOptions.columnDefs.push({
@@ -179,18 +260,21 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       name: 'action',
       cellClass: 'text-center',
       headerCellClass: 'text-center',
-      maxWidth:150,
+      maxWidth:110,
       cellTemplate: [
         '<div class="ui-grid-cell-contents">',
-        '<div class="col-md-12" style="display:inline-flex;">',   
-        '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
+        '<div class="col-md-12" style="display:inline-flex;padding-left:0px;padding-right:0px">',   
+        '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body >',
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'View\') == -1"><a ng-click="grid.appScope.action(row.entity,\'view\',grid.appScope.privileges)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') == -1" ><a ng-click="grid.appScope.action(row.entity,\'edit\')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
+        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') != -1 && row.entity.locked ==\'N\'?false:true"><a ng-click="grid.appScope.action(row.entity,\'edit\')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.delete(row.entity)"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.delete(row.entity,true)"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
+        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ng-if="row.entity.locked == \'N\'"><a ng-click="grid.appScope.lockOrUnLock(row.entity,false)"><i class="icon-lock" aria-hidden="true"></i> Lock</a></li>',
+        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ng-if="row.entity.locked == \'Y\'"><a ng-click="grid.appScope.lockOrUnLock(row.entity,true)"><i class="icon-lock-open" aria-hidden="true"></i>  Unlock</a></li>',
+             
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publish(row.entity)"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publish(row.entity,true)"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Execute\') == -1 || row.entity.active==\'N\'" ng-if="grid.appScope.isExecutable == -1"><a ng-click="grid.appScope.execute(row.entity)"><i class="fa fa-tasks" aria-hidden="true"></i>  Execute</a></li>',
@@ -209,7 +293,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   )
 
 
-  obj.gridOptionsResults = angular.copy(obj.gridOptionsDefault);
+  obj.gridOptionsResults = angular.copy(obj.gridOptionsResultDefault);
   obj.gridOptionsResults.columnDefs.push(
     {
       displayName: 'Status',
@@ -240,7 +324,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
         '       <li><a  ng-show="grid.appScope.newType.indexOf(\'ingestExec\') != -1?true:false" ng-disabled="true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
         //'      <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
    //   '        <li><a ng-disabled="[\'Not Started\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'OnHold\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
@@ -807,7 +891,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
 
     'dataset':{
       name : 'dataset',
-      caption : 'Data Set',
+      caption : 'Dataset',
       execType:'',
       metaType:'dataset',
       color : '#00695C',
@@ -1624,6 +1708,23 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : true,
     },
+    'train2':{
+      name : 'train',
+      caption : 'Training',
+      color : '#1DE9B6',
+      icon : 'model.svg',
+      parentIconCaption:'',
+      childIconCaption:'Training',
+      execType:'trainExec',
+      metaType:'train',
+      iconPath : 'assets/layouts/layout/img/train.svg',
+      allowInMenu : false,
+      state: 'createtrain',
+      detailState: 'createtrain',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+  
     'trainexec':{
       name : 'trainexec',
       caption : 'train Exec',
@@ -1636,6 +1737,21 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlisttarinexec',
       resultState:'trainrestultpage',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'train2exec':{
+      name : 'trainexec',
+      caption : 'train Exec',
+      execType:'trainexec',
+      metaType:'trainexec',
+      color : '#EB54C3',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlisttarinexec',
+      resultState:'trainrestultpage2',
       childMenu:[],
       allowInChildMenu : false,
     },
@@ -1922,6 +2038,36 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'schedule':{
+        name : 'schedule',
+        caption:'schedule',
+        execType:'schedule',
+        metaType:'schedule',
+        color : '#fff8dc',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : '',
+        joblistState : '',
+        detailState :'',
+        resultState:'',
+        childMenu:[],
+        allowInChildMenu : false,
+      },
+      'lov':{
+          name : 'lov',
+          caption:'lov',
+          execType:'lov',
+          metaType:'lov',
+          color : '#FF3AF5',
+          parentIconCaption:'',
+          allowInMenu : false,
+          listState : '',
+          joblistState : '',
+          detailState :'',
+          resultState:'',
+          childMenu:[],
+          allowInChildMenu : false,
+        },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];

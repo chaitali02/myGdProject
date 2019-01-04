@@ -16,7 +16,7 @@ AdminModule.factory('MetadataDatasourceFactory', function ($http, $location) {
 	factory.findOneByUuidAndVersion = function (uuid, version, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "metadata/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
 			method: "GET",
 
 		}).then(function (response) { return response })
@@ -96,10 +96,16 @@ AdminModule.service('MetadataDatasourceSerivce', function ($q, sortFactory, Meta
 	};
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataDatasourceFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataDatasourceFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;

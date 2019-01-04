@@ -88,7 +88,8 @@ public class DatasetServiceImpl {
 	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
-		
+		logger.info(" Start datasetSample ");
+		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
@@ -104,7 +105,22 @@ public class DatasetServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+		try {
+		data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), "No data found for dataset.", null);
+			throw new RuntimeException( "No data found for dataset.");
+		}
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
@@ -115,6 +131,7 @@ public class DatasetServiceImpl {
 				}
 				data.add(object);
 			}*/
+		logger.info("Time elapsed in getDatasetSample : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 		return data;
 	}
 
@@ -517,7 +534,10 @@ public class DatasetServiceImpl {
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		return datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		long startTime = System.currentTimeMillis();
+		String sql = datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		logger.info("Time elapsed in generateSql : " + (System.currentTimeMillis() - startTime)/1000 + " s");
+		return sql;
 	}
 
 	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {
@@ -544,7 +564,9 @@ public class DatasetServiceImpl {
 		builder.append(" FROM ");
 		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(dataSet);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+//		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+		return exec.executeAndFetchByDatasource(builder.toString(), datapodDS, commonServiceImpl.getApp().getUuid());
 	}
 }

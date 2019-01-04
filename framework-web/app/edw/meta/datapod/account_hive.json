@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Oct 06 15:30:45 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+ "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -45,7 +46,8 @@
       "key": "0",
       "partition": "N",
       "dispName": "account_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -57,7 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_type_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -69,7 +72,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_status_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -81,7 +85,8 @@
       "key": "",
       "partition": "N",
       "dispName": "product_type_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -93,7 +98,8 @@
       "key": "",
       "partition": "N",
       "dispName": "customer_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -105,7 +111,8 @@
       "key": "",
       "partition": "N",
       "dispName": "pin_number",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -117,7 +124,8 @@
       "key": "",
       "partition": "N",
       "dispName": "nationality",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -129,7 +137,8 @@
       "key": "",
       "partition": "N",
       "dispName": "primary_iden_doc",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -141,7 +150,8 @@
       "key": "",
       "partition": "N",
       "dispName": "primary_iden_doc_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -153,7 +163,8 @@
       "key": "",
       "partition": "N",
       "dispName": "secondary_iden_doc",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -165,7 +176,8 @@
       "key": "",
       "partition": "N",
       "dispName": "secondary_iden_doc_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -177,7 +189,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_open_date",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -189,7 +202,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_number",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -201,7 +215,8 @@
       "key": "",
       "partition": "N",
       "dispName": "opening_balance",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -213,7 +228,8 @@
       "key": "",
       "partition": "N",
       "dispName": "current_balance",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -225,7 +241,8 @@
       "key": "",
       "partition": "N",
       "dispName": "overdue_balance",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -237,7 +254,8 @@
       "key": "",
       "partition": "N",
       "dispName": "overdue_date",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -249,7 +267,8 @@
       "key": "",
       "partition": "N",
       "dispName": "currency_code",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -261,7 +280,8 @@
       "key": "",
       "partition": "N",
       "dispName": "interest_type",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -273,7 +293,8 @@
       "key": "",
       "partition": "N",
       "dispName": "interest_rate",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -285,7 +306,8 @@
       "key": "",
       "partition": "N",
       "dispName": "load_date",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     },
     {
@@ -297,7 +319,8 @@
       "key": "",
       "partition": "N",
       "dispName": "load_id",
-      "active": "Y",
+      "active" : "Y",
+
       "length": null
     }
   ]

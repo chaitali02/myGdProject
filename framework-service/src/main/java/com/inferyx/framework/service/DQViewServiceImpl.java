@@ -12,21 +12,19 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDataQualDao;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.view.metadata.DQView;
 
+@Service
 public class DQViewServiceImpl {
 	
 	@Autowired

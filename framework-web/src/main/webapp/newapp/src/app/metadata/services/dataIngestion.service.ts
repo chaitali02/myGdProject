@@ -155,6 +155,13 @@ export class DataIngestionService {
 							rhsAttri["label"] = "app."+response["filterInfo"][k].operand[1].attributeName;
 							filterInfo["rhsAttribute"] = rhsAttri;
 						}
+						else if (response["filterInfo"][k].operand[1].ref.type == 'dataset') {
+							let rhsAttri = {}
+							rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
+							rhsAttri["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
+							rhsAttri["label"] = response["filterInfo"][k].operand[1].attributeName;
+							filterInfo["rhsAttribute"] = rhsAttri;
+						}
 						else if (response["filterInfo"][k].operand[1].ref.type == 'datapod') {
 							let rhsAttri1 = {}
 							rhsAttri1["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;

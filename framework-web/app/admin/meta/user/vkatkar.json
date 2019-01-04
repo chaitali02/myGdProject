@@ -33,6 +33,12 @@
                 "type" : "group",
                 "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70ea"
+            }
         }
         
         
@@ -49,6 +55,7 @@
     "createdOn" : ISODate("2018-03-19T03:38:22.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

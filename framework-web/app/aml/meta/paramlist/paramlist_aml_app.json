@@ -1,95 +1,104 @@
 {
-  "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-  "version": "1521430822",
-  "name": "paramlist_aml_app",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Oct 20 12:34:37 IST 2018",
-  "tags": [],
-  "active": "Y",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "business_date",
-      "paramType": "string",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "2018-07-01"
-      },
-      "paramRef": null
-    },
-    {
-      "paramId": "1",
-      "paramName": "last_30days_start_date",
-      "paramType": "string",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "2018-06-01"
-      },
-      "paramRef": null
-    },
-    {
-      "paramId": "2",
-      "paramName": "last_60days_start_date",
-      "paramType": "string",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "2018-05-01"
-      },
-      "paramRef": null
-    },
-    {
-      "paramId": "3",
-      "paramName": "last_90days_start_date",
-      "paramType": "string",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "2018-04-01"
-      },
-      "paramRef": null
-    }
-  ],
-  "paramListType": "application",
-  "templateFlg": "Y",
-  "templateInfo": null
+	"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+	"version" : "1521430822",
+	"name" : "paramlist_aml_app",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "business_date",
+			"paramType" : "string",
+            "paramDispName" : "Business Date",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "2018-07-01"
+			},
+			"paramRef" : null
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "last_30days_start_date",
+			"paramType" : "string",
+            "paramDispName" : "Last 30 Days Start Date",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "2018-06-01"
+			},
+			"paramRef" : null
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "last_60days_start_date",
+			"paramType" : "string",
+            "paramDispName" : "Last 60 Days Start Date",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "2018-05-01"
+			},
+			"paramRef" : null
+		},
+		{
+			"paramId" : "3",
+			"paramName" : "last_90days_start_date",
+			"paramType" : "string",
+            "paramDispName" : "Last 90 Days Start Date",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "2018-04-01"
+			},
+			"paramRef" : null
+		}
+	],
+	"paramListType" : "application",
+	"templateFlg" : "Y",
+	"templateInfo" : null
 }

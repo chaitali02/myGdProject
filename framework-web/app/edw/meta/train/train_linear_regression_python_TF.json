@@ -1,66 +1,67 @@
 {
-  "id": "5bdd3d85275052145b8000c6",
-  "uuid": "821dd874-c720-4f91-8557-ef3fd5618eed",
-  "version": "1541225861",
-  "name": "test_train",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "606527f4-be8f-465b-82e3-10f17c700cd4"
+        }
     },
-    "value": null
-  },
-  "createdOn": "Sat Nov 03 11:47:41 IST 2018",
-  "tags": [],
-  "active": "Y",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "model",
-      "uuid": "606527f4-be8f-465b-82e3-10f17c700cd4",
-      "version": null,
-      "name": "model_train_linear_regression_python_TF"
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
     },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e79c813c-40da-4b7d-9b5c-4012ae68bf2b",
-      "version": null,
-      "name": "glass"
+    "featureAttrMap" : [],
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "labelInfo" : {
+        "attrId" : "0",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "e79c813c-40da-4b7d-9b5c-4012ae68bf2b"
+        }
     },
-    "value": null
-  },
-  "featureAttrMap": [],
-  "trainPercent": 70,
-  "valPercent": 30,
-  "labelInfo": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e79c813c-40da-4b7d-9b5c-4012ae68bf2b",
-      "version": null,
-      "name": "glass"
+    "useHyperParams" : "N",
+    "uuid" : "821dd874-c720-4f91-8557-ef3fd5618eed",
+    "version" : "1541238355",
+    "name" : "train_linear_regression_python_TF",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
     },
-    "value": null,
-    "attrId": "0",
-    "attrName": "RI",
-    "attrType": null
-  },
-  "useHyperParams": "N",
-  "featureImportance": null
+    "createdOn" : ISODate("2018-11-03T09:45:55.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ],
+"rowIdentifier" : [ 
+        {
+           "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+        }, 
+        {
+            "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+        }
+    ],
+    "includeFeatures" : "N"
 }

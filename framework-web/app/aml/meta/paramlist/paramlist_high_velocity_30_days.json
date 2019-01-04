@@ -1,59 +1,64 @@
 {
-    "params" : [ 
-        {
-            "paramId" : "0",
-            "paramName" : "trans_velocity",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "1"
-            }
-        }, 
-        {
-            "paramId" : "2",
-            "paramName" : "lookback_days",
-            "paramType" : "integer",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "30"
-            }
-        }
-    ],
-    "paramListType" : "rule",
-    "templateFlg" : "N",
-    "templateInfo" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41"
-        }
-    },
-    "uuid" : "906b8bed-0c97-4188-a0a3-69250c0fdc30",
-    "version" : "1540367060",
-    "name" : "paramlist_high_velocity_30_days",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-24T07:44:20.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822",
-                "name" : "Anti Money Laundering"
-            }
-        }
-    ]
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "trans_velocity",
+			"paramType" : "integer",
+            "paramDispName" : "Trans Velocity",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1"
+			}
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "lookback_days",
+			"paramType" : "integer",
+            "paramDispName" : "Lookback Days",
+            "paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "30"
+			}
+		}
+	],
+	"paramListType" : "rule",
+	"templateFlg" : "N",
+	"templateInfo" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41"
+		}
+	},
+	"uuid" : "906b8bed-0c97-4188-a0a3-69250c0fdc30",
+	"version" : "1540367060",
+	"name" : "paramlist_high_velocity_30_days",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
 }

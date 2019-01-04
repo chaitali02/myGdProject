@@ -16,6 +16,7 @@
         "DEMO"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "inputReq" : "Y",
     "appInfo" : [ 
@@ -31,12 +32,7 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
+       
         {
             "ref" : {
                 "type" : "application",
@@ -53,6 +49,12 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        },
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
             }
         }
     ],
@@ -88,6 +90,6 @@
             "paramInfoHolder" : []
         }
     ],
-    "funcType" : "hive",
-    "category" : "date"
+
+    "category" : "DATE"
 }

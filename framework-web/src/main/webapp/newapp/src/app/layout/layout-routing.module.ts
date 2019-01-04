@@ -32,7 +32,6 @@ const routes: Routes = [
             { path: 'systemMonitoring', loadChildren: 'app/system-monitoring/system-monitoring.module#SystemMonitoringModule' },
             //{ path: 'systemMonitoring/list/:type',redirectTo :'list/:type'},
 
-
             { path: 'jobMonitoring', component: jobMonitoringComponent },
             { path: 'jobMonitoring/list/:type', redirectTo: 'list/:type' },
             { path: 'list/:type/JobMonitoring', redirectTo: 'JobMonitoring' },
@@ -70,6 +69,7 @@ const routes: Routes = [
             { path: 'list/:type/reconexec', redirectTo: 'reconexec' },
             { path: 'reconexec', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'graphAnalysis', loadChildren: 'app/graph-analysis/graph-analysis.module#graphAnalysisModule' },
+            { path: 'list/:type/graphAnalysis', redirectTo: 'graphAnalysis' },
             // { path: 'reconexec/viewdrresultspage/:type/:id/:version/:mode/reconexec',redirectTo :'reconexec'},
 
             { path: 'dataIngestion', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule' },

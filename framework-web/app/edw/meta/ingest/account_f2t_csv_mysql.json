@@ -13,11 +13,12 @@
     },
     "value": null
   },
-  "createdOn": "Tue Sep 25 05:59:26 EDT 2018",
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
   "tags": [
     "DEV"
   ],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {

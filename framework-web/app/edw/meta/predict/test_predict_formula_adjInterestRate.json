@@ -11,25 +11,19 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
-    "target" : {
+       "target" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "4a92b971-5741-4dcc-a8e0-96c1fa92a327"
+            "type" : "file"
         }
     },
-    "labelInfo" : {
-        "attrId" : "0",
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
-        }
-    },
-    "featureAttrMap" : [ 
+  	"featureAttrMap" : [ 
         {
             "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
                 "featureName" : "interestRate",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "4f746686-019f-47da-a744-b77acf1b2a99"
@@ -41,9 +35,26 @@
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }
     ],
+     "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "ce0f9ed6-6f22-49d4-8b7e-7fd62f55eb42",
     "version" : "1523439599",
     "name" : "predict_formula_adjInterestRate",
@@ -58,6 +69,7 @@
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
+  	"locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

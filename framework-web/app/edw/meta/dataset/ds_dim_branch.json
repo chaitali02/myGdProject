@@ -9,6 +9,7 @@
     "attributeInfo" : [ 
         {
             "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
             "attrSourceName" : "branch_id",
             "sourceAttr" : {
                 "ref" : {
@@ -19,6 +20,7 @@
         }, 
         {
             "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
             "attrSourceName" : "src_branch_id",
             "sourceAttr" : {
                 "attrId" : "0",
@@ -31,6 +33,7 @@
         }, 
         {
             "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
             "attrSourceName" : "branch_type_code",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -43,6 +46,7 @@
         }, 
         {
             "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
             "attrSourceName" : "branch_name",
             "sourceAttr" : {
                 "attrId" : "4",
@@ -55,6 +59,7 @@
         }, 
         {
             "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
             "attrSourceName" : "branch_desc",
             "sourceAttr" : {
                 "attrId" : "5",
@@ -67,6 +72,7 @@
         }, 
         {
             "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
             "attrSourceName" : "branch_contact_name",
             "sourceAttr" : {
                 "attrId" : "6",
@@ -79,6 +85,7 @@
         }, 
         {
             "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
             "attrSourceName" : "branch_contact_phone",
             "sourceAttr" : {
                 "attrId" : "7",
@@ -91,6 +98,7 @@
         }, 
         {
             "attrSourceId" : "7",
+            "attrDisplaySeq" : "7",
             "attrSourceName" : "branch_contact_email",
             "sourceAttr" : {
                 "attrId" : "8",
@@ -103,6 +111,7 @@
         }, 
         {
             "attrSourceId" : "8",
+            "attrDisplaySeq" : "8",
             "attrSourceName" : "load_date",
             "sourceAttr" : {
                 "ref" : {
@@ -113,6 +122,7 @@
         }, 
         {
             "attrSourceId" : "9",
+            "attrDisplaySeq" : "9",
             "attrSourceName" : "load_id",
             "sourceAttr" : {
                 "ref" : {
@@ -142,6 +152,7 @@
         "DEV"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

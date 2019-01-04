@@ -27,10 +27,10 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 
 		}).then(function (response) { return response })
 	}
-	factory.submit = function (data,type,upd_tag){
+	factory.submit = function (data, type, upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
+			url: url + "common/submit?action=edit&type=" + type + "&upd_tag=" + upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -140,7 +140,7 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findAttributesByRelation = function (uuid,type) {
+	factory.findAttributesByRelation = function (uuid, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'GET',
@@ -454,7 +454,8 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 	}
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataMapFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataMapFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var mapjson = {};
 			mapjson.mapdata = response;
@@ -546,14 +547,17 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 			deferred.resolve({
 				data: mapjson
 			})
-		}
-
-
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
 		return deferred.promise;
 	}
-	this.submit = function (data,type,upd_tag) {
+	this.submit = function (data, type, upd_tag) {
 		var deferred = $q.defer();
-		MetadataMapFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataMapFactory.submit(data, type, upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

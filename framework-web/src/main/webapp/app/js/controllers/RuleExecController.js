@@ -4,7 +4,9 @@ JobMonitoringModule.controller('DetailRuleExecController', function ($state, $fi
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
-  $scope.showruleexec = true;
+  $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.selectTitle = dagMetaDataService.elementDefs['ruleexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['ruleexec'].listState + "({type:'" + dagMetaDataService.elementDefs['ruleexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
@@ -31,11 +33,11 @@ JobMonitoringModule.controller('DetailRuleExecController', function ($state, $fi
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
-  JobMonitoringService.getLatestByUuid($scope.uuid, "ruleexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "ruleexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
-    $scope.ruleexecdata = response;
+      $scope.isEditInprogess=false;
+    $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
       d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -49,27 +51,26 @@ JobMonitoringModule.controller('DetailRuleExecController', function ($state, $fi
     }
     $scope.refkeylist = refkeylist
   }
-
-  $scope.showLoadGraph = function (uuid, version) {
-    $scope.showruleexec = false;
-    $scope.showgraph = false
-    $scope.graphDatastatusList = true
-    $scope.showgraphdiv = true;
-
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
-  $scope.showRuleExecPage = function () {
-    $scope.showruleexec = true
-    $scope.showgraph = false
-    $scope.graphDatastatusList = false
-    $scope.showgraphdiv = false;
+  $scope.showGraph = function (uuid, version) {
+    $scope.showExec = false;
+    $scope.showGraphDiv = true
+  }
+
+  $scope.showExecPage = function () {
+    $scope.showExec = true
+    $scope.showGraphDiv = false
   }
   $scope.showSqlFormater=function(){
     $('#sqlFormaterModel').modal({
       backdrop: 'static',
       keyboard: false
     });
-    $scope.formateSql=sqlFormatter.format($scope.ruleexecdata.exec);
+    $scope.formateSql=sqlFormatter.format($scope.execData.exec);
   }
 
 });

@@ -79,7 +79,18 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.showGraphDiv = false
 	}//End showPage
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListdatasource', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.datasourcedata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListdatasource', {
 			id: uuid,
@@ -133,7 +144,6 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 
 
 	$scope.onChangeDatasoureType = function () {
-		debugger
 		if ($scope.datasourcetype == $scope.datasourceTypes[0]) {
 			$scope.isHiveFieldDisabled = false;
 			$scope.isFileFieldDisabled = true;
@@ -165,8 +175,12 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$timeout(function () {
 			$scope.myform.$dirty = false;
 		}, 0)
-		MetadataDatasourceSerivce.getOneByUuidAndVersion(uuid, version, 'datasource').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatasourceSerivce.getOneByUuidAndVersion(uuid, version, 'datasource')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -184,16 +198,24 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 					$scope.tags = tags;
 				}//End for loop
 			}//End Innder If
-		}//End getLatestByUuid
+		};//End getLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End selectVersion
 
 	/*Start If*/
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		$scope.getAllVersion($stateParams.id)//Call SelectAllVersion Function
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datasource').then(function (response) { onSuccess(response.data) });
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datasource')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -210,9 +232,17 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 					$scope.tags = tags;
 				}//End for loop
 			}//End Innder If
-		}//End getLatestByUuid
+		};//End getLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 		/*}//End Inner Else */
 	}//End If
+	else{
+		$scope.datasourcedata={};
+		$scope.datasourcedata.locked="N";
+	}
 
 
 
@@ -239,6 +269,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		datasourceJson.password = $scope.datasourcedata.password
 		datasourceJson.path = $scope.datasourcedata.path
 		datasourceJson.active = $scope.datasourcedata.active;
+		datasourceJson.locked = $scope.datasourcedata.locked;
 		datasourceJson.published = $scope.datasourcedata.published;
 		datasourceJson.sessionParameters = $scope.datasourcedata.sessionParameters
 		var tagArray = [];

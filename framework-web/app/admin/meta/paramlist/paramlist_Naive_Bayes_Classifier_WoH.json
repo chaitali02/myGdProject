@@ -13,13 +13,14 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
  	"appInfo": [
-			{
+		{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -57,6 +58,8 @@
       "paramId": "3",
       "paramName": "smoothing",
       "paramType": "double",
+   	  "paramDispName" : "Smoothing",
+       "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

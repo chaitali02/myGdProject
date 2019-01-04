@@ -13,7 +13,8 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
   "appInfo": [
@@ -48,6 +49,8 @@
       "paramId": "0",
       "paramName": "distribution",
       "paramType": "distribution",
+   	  "paramDispName" : "Distribution",
+      "paramDesc" : "",		
       "paramValue": {
         "ref" : {
             "type" : "distribution",
@@ -60,6 +63,8 @@
       "paramId": "1",
       "paramName": "numIterations",
       "paramType": "integer",
+   	  "paramDispName" : "Num Iterations",
+      "paramDesc" : "",		
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -72,6 +77,8 @@
       "paramId": "2",
       "paramName": "saveLocation",
       "paramType": "datapod",
+   	  "paramDispName" : "Save Location",
+      "paramDesc" : "",		
       "paramValue": null,
       "paramRef": null
     }

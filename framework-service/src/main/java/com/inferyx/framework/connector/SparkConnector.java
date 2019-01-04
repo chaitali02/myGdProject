@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +40,10 @@ public class SparkConnector implements IConnector{
 	@SuppressWarnings({ "resource", "static-access" })
 	private SparkSession getSparkSession() throws IOException {
 		if (this.sparkSession == null) {
-			synchronized (this) {
+			synchronized ("1") {
 				if (this.sparkSession == null) {
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
+					System.out.println("Creating a spark context as sparkSession is : " + this.sparkSession);
 					SparkContext sparkContext = new SparkContext(sparkConf);
 					this.sparkSession = new SparkSession(sparkContext).builder().enableHiveSupport().getOrCreate();
 					registerUDF.register(sparkSession);

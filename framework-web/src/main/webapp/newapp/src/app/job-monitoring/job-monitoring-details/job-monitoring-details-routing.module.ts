@@ -18,8 +18,7 @@ import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
 import { UploadExecComponent } from './uploadExec/uploadExec.componet';
 import { BatchExecComponent } from './batchExec/batchExec.component';
-
-DownloadExecComponent
+import { IngestExecComponent } from './ingestExec/ingestExec.component';
 
 const routes: Routes = [
     {
@@ -40,7 +39,8 @@ const routes: Routes = [
             { path: 'dagExec/:id/:version/:mode', component: PipelineExecComponent, pathMatch: 'full' },
             { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' },
             { path: 'uploadExec/:id/:version/:mode', component: UploadExecComponent, pathMatch: 'full' },
-            { path: 'batchExec/:id/:version/:mode', component: BatchExecComponent, pathMatch: 'full' }
+            { path: 'batchExec/:id/:version/:mode', component: BatchExecComponent, pathMatch: 'full' },
+            { path: 'ingestExec/:id/:version/:mode', component: IngestExecComponent, pathMatch: 'full' }
         ]
     }
 ]

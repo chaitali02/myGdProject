@@ -55,6 +55,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ReportOperator;
 
@@ -80,6 +81,8 @@ public class ReportServiceImpl {
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	private WorkbookUtil workbookUtil;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -194,7 +197,8 @@ public class ReportServiceImpl {
 			tableName = getTableName(report, reportExec, execContext);
 			appUuid = commonServiceImpl.getApp().getUuid();
 			ResultSetHolder rsHolder = null;
-			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
+			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
+			if (runMode != null && runMode.equals(RunMode.BATCH)) {
 				if(execContext.equals(ExecContext.FILE)
 						|| execContext.equals(ExecContext.livy_spark)
 						|| execContext.equals(ExecContext.spark))
@@ -205,7 +209,7 @@ public class ReportServiceImpl {
 					exec.executeSql(sql, appUuid);
 				}
 			} else {
-				rsHolder = exec.executeAndRegister(reportExec.getExec(), tableName, appUuid);
+				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
 				countRows = rsHolder.getCountRows();
 			}
 			
