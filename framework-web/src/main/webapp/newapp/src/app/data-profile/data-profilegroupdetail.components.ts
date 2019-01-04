@@ -275,4 +275,7 @@ export class DataProfileGroupDetailComponent {
     };
 
   }
+  clear(){
+    this.selectedItems=[]
+  }
 }

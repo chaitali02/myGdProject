@@ -173,8 +173,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			defaultversion.uuid = $scope.graphpodData.uuid;
 			$scope.graphpod.defaultVersion = defaultversion;
 			var tags = [];
-			$scope.nodeTableArray=response.nodeInfo;
-			$scope.edgeTableArray=response.edgeInfo;
+				$scope.nodeTableArray=response.nodeInfo;
+				$scope.edgeTableArray=response.edgeInfo;
 			if ($scope.graphpodData .tags != null) {
 				for (var i = 0; i < $scope.graphpodData.tags.length; i++) {
 					var tag = {};
@@ -258,7 +258,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			keyboard: false
 		});	
 		if(type =='node'){
-			setTimeout(function () {debugger;
+			setTimeout(function () {;
 				$scope.selectAttr=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety];
 				if($scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]){
 	            	$scope.selectType=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type;
@@ -327,12 +327,12 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			return false;
 		};
 	};
-	$scope.getAllAttributeBySource=function(data,index,type){
+	$scope.getAllAttributeBySource=function(data,index,type){debugger
 		if(!data){
 			return null;
 		}
 		CommonService.getAllAttributeBySource(data.uuid,data.type).then(function (response) { onSuccessAttributeBySource(response.data) });
-		var onSuccessAttributeBySource = function (response) {
+		var onSuccessAttributeBySource = function (response) {debugger
 			if(type =='node'){
 		    	$scope.nodeTableArray[index].allAttributeInto=response;
 			}

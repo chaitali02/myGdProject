@@ -128,6 +128,10 @@
                   <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings" name="attributeInfo">
                   </angular2-multiselect>
                 </div>
+                <div class="col-md-1">
+                    <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                      aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                  </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>

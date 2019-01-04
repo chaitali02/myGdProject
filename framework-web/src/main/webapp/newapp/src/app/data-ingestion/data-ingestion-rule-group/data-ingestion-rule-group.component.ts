@@ -250,4 +250,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/dataIngestion/ingestgroup', this.ingestGroupData.uuid, this.ingestGroupData.version, 'true']);
   }
+  clear(){
+    this.ruleInfo=[]
+  }
 }

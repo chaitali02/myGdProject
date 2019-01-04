@@ -276,4 +276,7 @@ export class DataQualityGroupDetailComponent {
     };
 
   }
+  clear(){
+this.selectedItems=[]
+  }
 }
