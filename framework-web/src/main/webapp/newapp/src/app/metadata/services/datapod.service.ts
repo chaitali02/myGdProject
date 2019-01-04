@@ -70,6 +70,13 @@ export class DatapodService{
       })
       .catch(this.handleError);
     }
-
+    getLatestDataSourceByUuid(id,type): Observable<any[]> {
+        let url ="common/getLatestByUuid?action=view&uuid="+id+"&type="+type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
 
 }

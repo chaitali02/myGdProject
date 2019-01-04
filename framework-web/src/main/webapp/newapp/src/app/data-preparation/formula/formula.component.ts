@@ -20,6 +20,9 @@ import { DependsOn } from './dependsOn'
 })
 
 export class FormulaComponent {
+  lodeParamlist: any[];
+  isSourceAtributeParamlist: boolean;
+  sourcefunction: any;
   sourceexpression: any;
   sourceformula: any;
   sourcesimple: any;
@@ -88,6 +91,7 @@ export class FormulaComponent {
   }
 
   ngOnInit() {
+    this.lodeParamlist=[]
     this.formulaarray = [];
     this.formulajson["active"] = true;
     this.isSourceAtributeSimple = true;
@@ -105,10 +109,11 @@ export class FormulaComponent {
       { "text": "datapod", "caption": "attribute" },
       { "text": "expression", "caption": "expression" },
       { "text": "formula", "caption": "formula" },
-      { "text": "function", "caption": "function" }
+      { "text": "function", "caption": "function" },
+      { "text": "paramlist", "caption": "paramlist" }
     ]
     this.selectAttribute = this.attributeTypes[0].text
-    this.depandsOnTypes = ['datapod', 'relation', 'dataset', 'paramlist'];
+    this.depandsOnTypes = ["datapod", "relation", 'dataset','rule', 'paramlist'];
     this.formulafuction = [
       { 'type': 'simple', 'value': '+', 'class': 'formula_function btn' },
       { 'type': 'simple', 'value': '-', 'class': 'formula_function btn' },
@@ -134,6 +139,12 @@ export class FormulaComponent {
       { 'type': 'simple', 'value': 'ELSE', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'END', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'THEN', 'class': 'formula_function btn ' },
+      { "type": "simple", "value": "OVER", "class": "formula_button btn " },
+      { "type": "simple", "value": "ORDER BY", "class": "formula_button btn " },
+      { "type": "simple", "value": "PARTITION BY", "class": "formula_button btn " },
+      
+      { "type": "simple", "value": "ASC", "class": "formula_button btn " },
+      { "type": "simple", "value": "DESC", "class": "formula_button btn  " },
     ];
   }
   public goBack() {
@@ -179,16 +190,21 @@ export class FormulaComponent {
       data["uuid"] = this.sourceexpression.uuid;
       this.sourceexpression = null;
     }
-    // else if(this.selectAttribute =="function"){
-    //   // CommonService.getOneByUuidAndVersion($scope.sourcefunction.uuid,$scope.sourcefunction.version,'function').then(function (response) {onSuccess(response.data)});
-    //   // var onSuccess=function(response){
-    //   // console.log(JSON.stringify($scope.sourcefunction))
-    //   // data.type=$scope.attributeType.text
-    //   //     data.value=response.functionInfo.toUpperCase();
-    //   //     data.uuid=$scope.sourcefunction.uuid;
-    //   //     data.category=response.category
-    //   //     $scope.sourcefunction=null;
-    // }
+    else if(this.selectAttribute =="function"){
+      this._commonService.getLatestByUuid(this.sourcefunction.uuid,'function').subscribe(
+        response => { 
+           data["type"]=this.attributeTypes.text
+           data["value"]=response.functionInfo[0]["name"].toUpperCase();
+           data["uuid"]=this.sourcefunction.uuid;
+           data["category"]=response.category
+           this.sourcefunction=null;
+         },
+        error => console.log('Error :: ' + error)
+      )
+    }
+    else{
+
+    }
     //}
     this.formulaarray[len] = data;
   }
@@ -244,7 +260,9 @@ export class FormulaComponent {
       error => console.log('Error :: ' + error)
     )
   }
-
+  clearFormula(){
+    this.formulaarray=[]
+  }
   OnSuccesgetAllAttributeBySource(response) {
     let temp = []
     for (const n in response) {
@@ -257,6 +275,7 @@ export class FormulaComponent {
       allname1["value"]["id"] = response[n]['id'];
       temp[n] = allname1;
     }
+    //this.formulaarray=[]
     this.allAttribute = temp;
     this.sourceattribute = this.allAttribute[0];
   }
@@ -417,6 +436,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
     }
     else if (type == "datapod") {
       this.isSourceAtributeSimple = false;
@@ -424,6 +444,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllAttributeBySource()
     }
     else if (type == "formula") {
@@ -432,6 +453,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = true;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllFormula();
     }
     else if (type == "expression") {
@@ -440,6 +462,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = true;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllExpression();
     }
     else if (type == "function") {
@@ -448,9 +471,60 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = true;
+      this.isSourceAtributeParamlist = false;
       this.getAllFunctions();
     }
-  }
+    else if (type == "paramlist") {
+			this.isSourceAtributeSimple = false;
+			this.isSourceAtributeDatapod = false;
+			this.isSourceAtributeFormula = false;
+			this.isSourceAtributeExpression = false;
+			this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = true;
+      this.getAllParam()
+			// .getParamByParamList(this.allformuladepands.defaultoption.uuid,"paramlist").then(function (response) { onSuccessParamlist(response.data) });
+			// var onSuccessParamlist = function (response) {
+			// 	if(this.lodeParamlist && this.lodeParamlist.length ==0){
+			// 		this.lodeParamlist = response;
+			// 	}else if(this.lodeParamlist.length >0  && this.lodeParamlist[0].uuid != response[0].uuid){
+			// 		for(var i=0;i<response.length;i++){
+			// 			var paramjson={}
+			// 			var paramsjson = {};
+			// 			paramsjson.uuid = response[i].uuid;
+			// 			paramsjson.name = response[i].name 
+			// 			paramsjson.dname = response[i].datapodname+"."+response[i].dname;
+			// 			paramsjson.attributeId = response[i].attributeId;
+			// 			paramsjson.attrType = response[i].paramType;
+			// 			paramsjson.paramName = response[i].paramName;
+			// 			paramsjson.caption = "formula."+paramsjson.paramName;
+			// 			this.lodeParamlist.push(paramsjson);
+					}
+				}
+			
+        getAllParam(){
+          this._commonService.getParamByParamList(this.dependsOn.uuid,"paramlist")
+          .subscribe(
+          response => {
+            // if(this.lodeParamlist && this.lodeParamlist.length ==0){
+            //   this.lodeParamlist = response;
+            // }else if(this.lodeParamlist.length >0  && this.lodeParamlist[0].uuid != response[0].uuid){
+              for(var i=0;i<response.length;i++){
+                var paramjson={}
+                var paramsjson = {};
+                paramsjson["uuid"] = response[i].uuid;
+                paramsjson["name"] = response[i].name 
+                paramsjson["dname"] = response[i].datapodname+"."+response[i].dname;
+                paramsjson["attributeId"] = response[i].attributeId;
+                paramsjson["attrType"] = response[i].paramType;
+                paramsjson["paramName"] = response[i].paramName;
+                paramsjson["caption"] = "formula."+paramsjson["paramName"];
+                this.lodeParamlist.push(paramsjson);
+              }
+           // }
+          },   
+          error => console.log("Error :: " + error));
+          }
+  
 
   onSuccessGetFunctionByFunctionInfo(response) {
     const len = this.formulaarray.length;
@@ -558,7 +632,7 @@ export class FormulaComponent {
               formulaSubmitJson["formulaType"] = this.formulaarray[i].formulatype;
           }
           if (this.formulaarray[i].type == "function") {
-            //alert($scope.formulainfoarray[i].category)
+            //alert(this.formulainfoarray[i].category)
             if (this.formulaarray[i].category == "aggregate") {
               formulaSubmitJson["formulaType"] = "aggr"
             }

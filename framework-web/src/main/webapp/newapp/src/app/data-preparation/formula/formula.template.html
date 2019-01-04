@@ -10,7 +10,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>formula_total_customers
+            <i class="fa fa-gift"></i>{{formulajson.name}}
           </div>
           <div class="tools">
             <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
@@ -19,7 +19,7 @@
             <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;">
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
             <a  title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
@@ -112,7 +112,7 @@
                     [disabled]="mode == 'true'"
                     [style]="{'width':'100%','padding':'3px'}"
                     [filter]="true"
-                    (onChange)="changeType()"
+                    (onChange)="changeType();clearFormula()"
                     placeholder="select"
                     >
                     </p-dropdown>
@@ -216,6 +216,16 @@
                       placeholder="select">
                       </p-dropdown>
                   </div>
+                  <div *ngIf="isSourceAtributeParamlist">
+                    <p-dropdown [options]="lodeParamlist"          
+                    [(ngModel)]="sourceparamlist"
+                    name="sourcefunction"
+                    [disabled]="mode == 'true'"
+                    [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true"
+                    placeholder="select">
+                    </p-dropdown>
+                </div>
                 </div>
                 <a  (click)="addAttribute()"  class="formula_function btn green" style="margin-left:-5px;"> Add+ </a>
               </div>

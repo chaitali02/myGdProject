@@ -352,4 +352,12 @@ execute(uuid,version,type,action): Observable<any> {
 })
  .catch(this.handleError);
 }
+getParamByParamList(uuid:Number, type:String): Observable<any[]> {
+  let url ="metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 }
