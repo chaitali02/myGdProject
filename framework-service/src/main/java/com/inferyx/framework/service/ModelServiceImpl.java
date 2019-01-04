@@ -1417,16 +1417,16 @@ public class ModelServiceImpl {
 				 * log file_name formation : modeluuid + modelversion + trainexecversion
 				 * 
 				 */
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
-					logger.info(" Custom log path : " + logPath);
-				}
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							"Created raw model exec, uuid: " + trainExec.getUuid(), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//					logger.info(" Custom log path : " + logPath);
+//				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							"Created raw model exec, uuid: " + trainExec.getUuid(), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 			trainExec.setExecParams(execParams);
 			
@@ -1438,14 +1438,14 @@ public class ModelServiceImpl {
 			trainExec.setName(train.getName());
 			trainExec.setAppInfo(train.getAppInfo());	
 			//iModelExecDao.save(modelExec);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
-				logger.info(" Custom log path : " + logPath);                                                                                                         
-				customLogger.writeLog(this.getClass(), 
-						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
-						logPath, 
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//				logger.info(" Custom log path : " + logPath);                                                                                                         
+//				customLogger.writeLog(this.getClass(), 
+//						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
+//						logPath, 
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			commonServiceImpl.save(MetaType.trainExec.toString(), trainExec);
 			
 			if (Helper.getLatestStatus(statusList) != null 
@@ -1453,12 +1453,12 @@ public class ModelServiceImpl {
 							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
 							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
 				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 				return trainExec;
 			}
 			
@@ -1466,26 +1466,26 @@ public class ModelServiceImpl {
 			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(),
+//						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			
+//			}
 			
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			e.printStackTrace();
 			String message = null;
 			try {

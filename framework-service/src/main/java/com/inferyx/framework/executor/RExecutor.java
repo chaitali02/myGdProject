@@ -173,8 +173,8 @@ public class RExecutor implements IExecutor {
 		if (obj instanceof RConnection) {
 			RConnection rCon = (RConnection) obj;
 			try {
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution started.", logPath, 135);
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution started.", logPath, 135);
 				rCon.voidEval("sink(\""+ logPath +"\", append=TRUE, split=FALSE)");
 				byte[] encoded = Files.readAllBytes(Paths.get(scriptPath));				
 				String fileContent = new String(encoded, Charset.defaultCharset());
@@ -194,35 +194,35 @@ public class RExecutor implements IExecutor {
 				}
 				logger.info(new ObjectMapper().writeValueAsString(nativeObject));
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(),
-							"Result: " + new ObjectMapper().writeValueAsString(nativeObject), logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(),
+//							"Result: " + new ObjectMapper().writeValueAsString(nativeObject), logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 				isSuccessful = true;
 			} catch (REngineException e) {
 				e.printStackTrace();
-
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} finally {
-				if (!isSuccessful)
-					if (logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (!isSuccessful)
+//					if (logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 				if (rCon != null)
 					rCon.close();
 			}

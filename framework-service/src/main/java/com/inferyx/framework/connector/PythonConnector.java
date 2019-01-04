@@ -13,8 +13,6 @@ package com.inferyx.framework.connector;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -73,8 +71,8 @@ public class PythonConnector implements IConnector {
 		try {
 			Properties postProperties = new Properties();
 
-			if(logPath != null && !StringUtils.isBlank(logPath))
-				customLogger.writeLog(this.getClass(), "Setting connection properties.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			if(logPath != null && !StringUtils.isBlank(logPath))
+//				customLogger.writeLog(this.getClass(), "Setting connection properties.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			
 	    	postProperties.put("python.console.encoding", "UTF-8"); // Used to prevent: console: Failed to install '': java.nio.charset.UnsupportedCharsetException: cp0.
 	    	postProperties.put("python.security.respectJavaAccessibility", "false"); //don't respect java accessibility, so that we can access protected members on subclasses
@@ -83,22 +81,22 @@ public class PythonConnector implements IConnector {
 	    	Properties preProperties = System.getProperties();		
 	    	PythonInterpreter.initialize(preProperties, postProperties, new String[0]);
 
-			if(logPath != null && !StringUtils.isBlank(logPath))
-				customLogger.writeLog(this.getClass(), "Acquiring connection.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			if(logPath != null && !StringUtils.isBlank(logPath))
+//				customLogger.writeLog(this.getClass(), "Acquiring connection.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			
 	        pyInterpreter = new PythonInterpreter();
 	        
 	        conholder.setType(ExecContext.PYTHON.toString());
 			conholder.setConObject(pyInterpreter);
 
-			if(logPath != null && !StringUtils.isBlank(logPath))
-				customLogger.writeLog(this.getClass(), "Connection acquired.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			if(logPath != null && !StringUtils.isBlank(logPath))
+//				customLogger.writeLog(this.getClass(), "Connection acquired.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 		}catch (Exception e) {
 			e.printStackTrace();
-			if(logPath != null && !StringUtils.isBlank(logPath))
-				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			if(logPath != null && !StringUtils.isBlank(logPath))
+//				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
 			
 			throw new IOException(e.getCause().getMessage());
 		}

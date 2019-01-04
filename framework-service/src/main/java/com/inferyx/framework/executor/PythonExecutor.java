@@ -184,16 +184,16 @@ public class PythonExecutor implements IExecutor {
 				byte[] encoded = Files.readAllBytes(Paths.get(scriptPath));
 				
 				String fileContent = new String(encoded, Charset.defaultCharset());
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution started.", logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution started.", logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				pyInterperter.setOut(new FileOutputStream(new File(logPath), true));
 				pyInterperter.exec(fileContent);
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				//pyObject = new PyObject();
 				isSuccessful = true;
@@ -204,26 +204,26 @@ public class PythonExecutor implements IExecutor {
 			} catch (FileNotFoundException | NullPointerException e) {
 				e.printStackTrace();
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} finally {
-				if (!isSuccessful)
-					if (logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath,
-								Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (!isSuccessful)
+//					if (logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath,
+//								Thread.currentThread().getStackTrace()[1].getLineNumber());
 
 				if (pyInterperter != null) {
 					pyInterperter.close();

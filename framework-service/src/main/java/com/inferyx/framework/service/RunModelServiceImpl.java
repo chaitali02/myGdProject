@@ -667,35 +667,35 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			execute();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
 					Status.Stage.Completed);
-			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						trainExec.getStatusList().size() > 0
-								? "Latest status: "
-										+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-								: "Status list is empty",
-						logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(),
+//						trainExec.getStatusList().size() > 0
+//								? "Latest status: "
+//										+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//								: "Status list is empty",
+//						logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				if (modelType.equalsIgnoreCase(ExecContext.R.toString())
-						|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeErrorLog(this.getClass(),
-							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (modelType.equalsIgnoreCase(ExecContext.R.toString())
+//						|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeErrorLog(this.getClass(),
+//							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
 						Status.Stage.Failed);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 
-				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeErrorLog(this.getClass(),
-							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeErrorLog(this.getClass(),
+//							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(execType, trainExec.getUuid(), trainExec.getVersion()));
@@ -723,12 +723,12 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			Map<String,String> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
-			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
-						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
+//						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			boolean isSuccess = false;
 			Object result = null;
 			String[] fieldArray = modelExecServiceImpl.getMappedFeatureNames(train);
@@ -872,10 +872,11 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						FileUtils.forceDelete(pmmlFile);
 						} 
 						boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
-						if(isSaved)
+						if(isSaved) {
 							logger.info("PMML saved at location: "+pmmlLocation);
-						else
+						} else {
 							logger.info("PMML not saved.");
+						}
 					 }catch (JAXBException e) {
 						e.printStackTrace();
 					} catch (Exception e) {
@@ -888,17 +889,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
-//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
-//							try {
-//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
-//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
-//								if(!featureWeightList.isEmpty()) {
-//									summary.put("featureImportances", featureWeightList);
-//								}
-//							} catch (Exception e) {
-//								e.printStackTrace();
-//							}							
-//						}
 						String fileName = tableName+".result";
 						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						
@@ -990,15 +980,15 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			
 			if (!isSuccess) {
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							trainExec.getStatusList().size() > 0
-									? "Latest status: "
-											+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-									: "Status list is empty",
-							logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							trainExec.getStatusList().size() > 0
+//									? "Latest status: "
+//											+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//									: "Status list is empty",
+//							logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
