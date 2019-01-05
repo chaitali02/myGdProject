@@ -262,6 +262,7 @@ export class FormulaComponent {
   }
   clearFormula(){
     this.formulaarray=[]
+    this.formulaInfo = {}
   }
   OnSuccesgetAllAttributeBySource(response) {
     let temp = []
@@ -378,7 +379,7 @@ export class FormulaComponent {
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     this.dependsOn = dependOnTemp
-
+    
     this.formulaarray = [];
     const functionArray = ['+', '-', '/', '%', '*', '(', ')', '=', '<=', '>=', '<', '>', 'sum', 'max', 'mix', 'count', 'avg', 'case', 'when', 'else', 'end', 'then'];
     for (var i = 0; i < response.formulaInfo.length; i++) {
@@ -401,7 +402,7 @@ export class FormulaComponent {
       }
       else {
         if (response.formulaInfo[i].ref.type == "function") {
-          formulainfo["value"] = response.formulaInfo[i].ref.name;
+          formulainfo["value"] = response.formulaInfo[i].ref.name.split("(")[0].toUpperCase();
         }
         else {
           formulainfo["value"] = response.formulaInfo[i].ref.name;
