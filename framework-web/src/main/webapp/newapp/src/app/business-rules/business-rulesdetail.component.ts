@@ -23,7 +23,7 @@ export class BusinessRulesDetailComponent {
 	dialogAttriNameArray: any[];
 	dialogAttriArray: any[];
 	displayDialogBox: boolean;
-	dialogSelectName : any;
+	dialogSelectName: any;
 	paramlistArray: any[];
 	functionArray: any[];
 	rhsTypeArray: { value: string; label: string; }[];
@@ -136,10 +136,10 @@ export class BusinessRulesDetailComponent {
 			{ value: 'paramlist', label: 'paramlist' }
 		]
 		this.operators = [
-			{ 'value': '<', 'label': 'LESS THAN' },
-			{ 'value': '>', 'label': 'GREATER THAN' },
-			{ 'value': '<=', 'label': 'LESS OR  EQUAL' },
-			{ 'value': '>=', 'label': 'GREATER OR EQUAL' },
+			{ 'value': '<', 'label': 'LESS THAN(<)' },
+			{ 'value': '>', 'label': 'GREATER THAN(>)' },
+			{ 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
+			{ 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
 			{ 'value': '=', 'label': 'EQUAL TO(=)' },
 			{ 'value': '!=', 'label': 'NOT EQUAL(!=)' },
 			{ 'value': 'BETWEEN', 'label': 'BETWEEN' },
@@ -148,6 +148,8 @@ export class BusinessRulesDetailComponent {
 			{ 'value': 'RLIKE', 'label': 'RLIKE' },
 			{ 'value': 'EXISTS', 'label': 'EXISTS' },
 			{ 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+			{ 'value': 'IN', 'label': 'IN' },
+			{ 'value': 'NOT IN', 'label': 'NOT IN' }
 		];
 		this.logicalOperators = [
 			{ 'value': '', 'label': '' },
@@ -392,6 +394,16 @@ export class BusinessRulesDetailComponent {
 		setTimeout(() => {
 			this.goBack()
 		}, 1000);
+	}
+
+	onChangeOperator(index) {
+		this.dqdata.filterTableArray[index].rhsAttribute = null;
+		if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
+			this.dqdata.filterTableArray[index].rhsType = 'dataset';
+		}
+		else{
+			this.dqdata.filterTableArray[index].rhsType = 'integer';
+		}	
 	}
 
 	getAllFunctions() {
@@ -654,7 +666,7 @@ export class BusinessRulesDetailComponent {
 						filterInfo["rhsAttribute"] = rhsAttri;
 					}
 
-					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {debugger
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
 						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
 							.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
 							error => console.log("Error ::", error))
@@ -689,12 +701,12 @@ export class BusinessRulesDetailComponent {
 						filterInfo["rhsAttribute"] = rhsAttri;
 					}
 
-					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {debugger
-							let rhsAttri = {}
-							rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
-							rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
-							rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].attributeName;
-							filterInfo["rhsAttribute"] = rhsAttri;
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
+						rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].attributeName;
+						filterInfo["rhsAttribute"] = rhsAttri;
 					}
 
 					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
@@ -849,18 +861,18 @@ export class BusinessRulesDetailComponent {
 
 		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'paramlist') {
 			this._commonService.getParamByApp("", "application")
-			.subscribe(response => { this.onSuccessgetParamByApp(response) },
-			error => console.log("Error ::", error))
+				.subscribe(response => { this.onSuccessgetParamByApp(response) },
+				error => console.log("Error ::", error))
 		}
 
-		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset'){
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute;
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset') {
+			let rhsAttribute = {};
+			rhsAttribute["label"] = "-Select-";
+			rhsAttribute["uuid"] = "";
+			rhsAttribute["attributeId"] = "";
+			this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute;
 		}
-		
+
 		else {
 			this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
 		}
@@ -907,60 +919,60 @@ export class BusinessRulesDetailComponent {
 		});
 	}
 
-	searchOption(index){
-    this.displayDialogBox = true;
-    this._commonService.getAllLatest("dataset")
-    .subscribe(response => {this.onSuccessgetAllLatestDialogBox(response)},
-    error => console.log("Error ::", error))
-  }
+	searchOption(index) {
+		this.displayDialogBox = true;
+		this._commonService.getAllLatest("dataset")
+			.subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
+			error => console.log("Error ::", error))
+	}
 
-  onSuccessgetAllLatestDialogBox(response){
-    this.dialogAttriArray =  [];
-    let temp = [];
-    for(const i in response){
-      let dialogAttriObj = {};
-      
-      dialogAttriObj["label"] = response[i].name;
-      dialogAttriObj["value"] = {};
-      dialogAttriObj["value"]["label"] = response[i].name;
-      dialogAttriObj["value"]["uuid"] = response[i].uuid;
-      temp[i] = dialogAttriObj;
-    }
-    this.dialogAttriArray = temp
-    console.log(JSON.stringify(this.dialogAttriArray));
-  }
-  
-  onChangeDialogAttribute(){
-    this._commonService.getAttributesByDataset("dataset",this.dialogSelectName.uuid)
-    .subscribe(response => {this.onSuccessgetAttributesByDatasetDialogBox(response)},
-    error => console.log("Error ::", error))
-  }
+	onSuccessgetAllLatestDialogBox(response) {
+		this.dialogAttriArray = [];
+		let temp = [];
+		for (const i in response) {
+			let dialogAttriObj = {};
 
-  onSuccessgetAttributesByDatasetDialogBox(response){
-    this.dialogAttriNameArray =  [];
-    for(const i in response){
-      let dialogAttriNameObj = {};
-      dialogAttriNameObj["label"] = response[i].attrName;
-      dialogAttriNameObj["value"] = {};
-      dialogAttriNameObj["value"]["label"] = response[i].attrName;
-      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
-      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
-      this.dialogAttriNameArray[i] = dialogAttriNameObj;
-    }
-  }
+			dialogAttriObj["label"] = response[i].name;
+			dialogAttriObj["value"] = {};
+			dialogAttriObj["value"]["label"] = response[i].name;
+			dialogAttriObj["value"]["uuid"] = response[i].uuid;
+			temp[i] = dialogAttriObj;
+		}
+		this.dialogAttriArray = temp
+		console.log(JSON.stringify(this.dialogAttriArray));
+	}
 
-  submitDialogBox(index){
-    this.displayDialogBox = false;
-    let rhsattribute = {}
-    rhsattribute["label"] = this.dialogAttributeName.label;
-    rhsattribute["uuid"] = this.dialogAttributeName.uuid;
-    rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
-    this.dqdata.filterTableArray[index].rhsAttribute = rhsattribute;
-  }
+	onChangeDialogAttribute() {
+		this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
+			.subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
+			error => console.log("Error ::", error))
+	}
 
-  cancelDialogBox(){
-    this.displayDialogBox = false;
-  }
+	onSuccessgetAttributesByDatasetDialogBox(response) {
+		this.dialogAttriNameArray = [];
+		for (const i in response) {
+			let dialogAttriNameObj = {};
+			dialogAttriNameObj["label"] = response[i].attrName;
+			dialogAttriNameObj["value"] = {};
+			dialogAttriNameObj["value"]["label"] = response[i].attrName;
+			dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
+			dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+			this.dialogAttriNameArray[i] = dialogAttriNameObj;
+		}
+	}
+
+	submitDialogBox(index) {
+		this.displayDialogBox = false;
+		let rhsattribute = {}
+		rhsattribute["label"] = this.dialogAttributeName.label;
+		rhsattribute["uuid"] = this.dialogAttributeName.uuid;
+		rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+		this.dqdata.filterTableArray[index].rhsAttribute = rhsattribute;
+	}
+
+	cancelDialogBox() {
+		this.displayDialogBox = false;
+	}
 
 	ruleSubmit() {
 		this.isSubmit = "true"
@@ -1076,14 +1088,14 @@ export class BusinessRulesDetailComponent {
 					filterInfo["operand"][1] = operatorObj;
 				}
 				else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "dataset";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
-        }
+					let operatorObj = {};
+					let ref = {}
+					ref["type"] = "dataset";
+					ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+					operatorObj["ref"] = ref;
+					operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+					filterInfo["operand"][1] = operatorObj;
+				}
 				else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
 					let operatorObj = {};
 					let ref = {}

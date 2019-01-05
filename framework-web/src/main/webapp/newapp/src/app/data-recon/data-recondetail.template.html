@@ -566,7 +566,7 @@
                                       <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
 
-                                    <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS' || data.operator == 'IN' || data.operator == 'NOT IN' ">
+                                    <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS'">
                                       <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
                                       <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
                                       <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
@@ -574,6 +574,16 @@
                                       <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
                                       <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
                                       <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">
+                                      <option [ngValue]="rhsTypeArray[0].value" >{{rhsTypeArray[0].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[1].value" >{{rhsTypeArray[1].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[2].value" >{{rhsTypeArray[2].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[3].value" >{{rhsTypeArray[3].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[4].value" >{{rhsTypeArray[4].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[5].value" >{{rhsTypeArray[5].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[6].value" >{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
                                   </select>
                                 </td>

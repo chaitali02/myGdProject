@@ -199,8 +199,8 @@ export class DataIngestionDetailComponent implements OnInit {
       this.version = params['version'];
       this.mode = params['mode'];
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id, this.version);
       }
     });
   }
@@ -446,7 +446,7 @@ export class DataIngestionDetailComponent implements OnInit {
     else if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'FILE' && this.mode !== "true") {
       this.isAttributeMapDisable = false;
     }
-    else {debugger
+    else {
       if (this.selectedSourceType != 'FILE' || this.selectedTargetType != 'FILE') {
         this.isAttributeMapDisable = true;
       }
@@ -964,6 +964,16 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
+  onChangeOperator(index){
+    this.filterTableArray[index].rhsAttribute = null;
+    if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
+      this.filterTableArray[index].rhsType = 'dataset' ;
+    }
+    else{
+			this.filterTableArray[index].rhsType = 'integer';
+		}
+  }
+  
   onChangeAutoMode() {
     if (this.attributeTableArray != null) {
       let temp = this.attributeTableArray;
@@ -1156,7 +1166,6 @@ export class DataIngestionDetailComponent implements OnInit {
       dialogAttriNameObj["value"]["label"] = response[i].attrName;
       dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
       dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
-
       this.dialogAttriNameArray[i] = dialogAttriNameObj;
     }
   }

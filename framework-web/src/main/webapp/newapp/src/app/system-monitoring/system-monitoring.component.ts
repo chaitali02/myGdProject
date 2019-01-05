@@ -606,8 +606,6 @@ export class SystemMonitoringComponent implements OnInit {
       let _routerUrl = this.metaconfig.getMetadataDefs(this.metaType)['detailState']
       this.router.navigate(["../../" + _moduleUrl + '/' + _routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
-
-
   }
 
   refreshSearchMon() {
