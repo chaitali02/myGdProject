@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  length: string;
   isDisabled: boolean;
   resultcols: any[];
   resultData: any;
@@ -459,6 +460,8 @@ export class DatapodComponent {
         }
       });
     }
+    
+    this.length=((response.length < 10 ? response.length * 50 : 435) + 193) + 'px'
     this.resultcols = columns
     this.columnOptions = [];
     for (let i = 0; i < this.resultcols.length; i++) {
@@ -468,5 +471,7 @@ export class DatapodComponent {
   onRowSelect(event) {
     console.log(event.data);
   }
+  downloadDatastoreResult(){
 
+  }
 }
