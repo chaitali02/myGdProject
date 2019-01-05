@@ -317,13 +317,14 @@
           </form>
         </div>
       </div>
-      <!-- <div class="col-md-7" style="float: right;" *ngIf="isShowSpinner">
-                      <span class="spinner" ng-show="spinner">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
-                        <div class="bounce3"></div>
-                      </span>
-                    </div> -->
+      
+      <div class="col-md-7" style="float: right; padding-top: 5%" *ngIf="isShowSpinner">
+        <span class="spinner" ng-show="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </span>
+      </div>
 
 
       <div class="portlet-body form" *ngIf="isShowSimpleData">
@@ -333,12 +334,13 @@
             <div class="portlet box">
               <div class="portlet-body">
 
-                <div class="row" *ngIf="isShowSimpleData">
+                <div class="row">
 
                   <div style="white-space: nowrap; overflow-x: auto;">
-                    <tag-input class="filterChips" [(ngModel)]="filterValue" name="filterValue" (onClick)="onClickChips()" (onRemove)="onChipsRemove(filterValue)" placeholder="">
+                    <tag-input class="filterChips" [(ngModel)]="filterValue" name="filterValue" (onClick)="onClickChips()"
+                      (onRemove)="onChipsRemove(filterValue)" placeholder="">
                     </tag-input>
-                    
+
                     <span style="cursor: pointer; float: right; margin-right: 2%; margin-top: -5%;" (click)="openFilterPopup()">
                       <i class="fa fa-filter" style="font-size:24px;"></i>
                       Filter
@@ -346,13 +348,13 @@
                   </div>
 
                   <div class="col-md-12" style="margin-top:3%">
-                    <div class="col-md-7" style="float: right;" *ngIf="isShowSpinner">
+                    <!-- <div class="col-md-7" style="float: right;" *ngIf="isShowSpinner">
                       <span class="spinner" ng-show="spinner">
                         <div class="bounce1"></div>
                         <div class="bounce2"></div>
                         <div class="bounce3"></div>
                       </span>
-                    </div>
+                    </div> -->
                     <div class="row col-md-offset-9" style="float:right; margin-right: 0%;margin-bottom:2%">
                       <i class="col-md-2 fa fa-search" style="margin-top: 3%;"></i>
                       <input #gb class="col-md-10" type="text" pInputText placeholder="Search">
