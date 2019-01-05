@@ -641,10 +641,11 @@ public class MetadataController {
 	public @ResponseBody String getFormulaByType2(@RequestParam(value="uuid",required = false) String uuid,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType)
+			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType, 
+			@RequestParam(value = "resolveFlag", required = false, defaultValue = "Y") String resolveFlag)
 			throws JsonProcessingException, JSONException {
 
-		return registerService.getFormulaByType2(uuid,formulaType);
+		return registerService.getFormulaByType2(uuid,formulaType, resolveFlag);
 	}
 
 	@RequestMapping(value = "/getExpressionByType", method = RequestMethod.GET)

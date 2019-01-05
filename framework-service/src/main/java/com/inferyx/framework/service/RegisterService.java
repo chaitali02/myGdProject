@@ -3933,12 +3933,17 @@ public class RegisterService {
 	}
 
 	public String getFormulaByType2(String uuid,String[] formulaType) throws JsonProcessingException {
+		return getFormulaByType2(uuid,formulaType, "Y");
+	}
+	public String getFormulaByType2(String uuid,String[] formulaType, String resolveFlag) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid,formulaType));
+		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid,formulaType, resolveFlag));
 
 		return result;
 	}
+	
+	
 
 	public String getExpressionByType2(String uuid) throws JsonProcessingException {
 		String result = null;

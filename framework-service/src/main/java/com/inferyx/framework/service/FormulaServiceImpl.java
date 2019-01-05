@@ -446,6 +446,10 @@ public class FormulaServiceImpl {
 	}*/
 
 	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
+		return findFormulaByType2(uuid, formulaType, "Y");
+	}
+	
+	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType, String resolveFlag) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null
 				&& securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
@@ -488,7 +492,7 @@ public class FormulaServiceImpl {
 		List<FormulaTypeHolder> result = new ArrayList<FormulaTypeHolder>();
 		for (Formula s : formulaList) {
 			//Formula formulaLatest = iFormulaDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			Formula formulaLatest = (Formula) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(), MetaType.formula.toString());
+			Formula formulaLatest = (Formula) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(), MetaType.formula.toString(), resolveFlag);
 			FormulaTypeHolder formulaTypeHolder = new FormulaTypeHolder();
 			MetaIdentifier formulaInfo = new MetaIdentifier(MetaType.formula,formulaLatest.getUuid(),formulaLatest.getVersion(),formulaLatest.getName());
 			formulaTypeHolder.setFormulaType(formulaLatest.getFormulaType());			
