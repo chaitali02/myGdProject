@@ -107,8 +107,7 @@ public class DatasetServiceImpl {
 		//ResultSetHolder rsHolder = null;
 		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
 		try {
-		data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
-		
+			data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());		
 		}catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -118,19 +117,9 @@ public class DatasetServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), "No data found for dataset.", null);
-			throw new RuntimeException( "No data found for dataset.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), message != null ? message : "No data found for dataset "+dataset.getName()+".", null);
+			throw new RuntimeException(message != null ? message : "No data found for dataset "+dataset.getName()+".");
 		}
-		/*DataFrame df = rsHolder.getDataFrame();		
-			Row[] dfRows = df.limit(rows).collect();
-			String[] columns = df.columns();
-			for (Row row : dfRows) {
-				Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
-				for (String column : columns) {
-					object.put(column, row.getAs(column));
-				}
-				data.add(object);
-			}*/
 		logger.info("Time elapsed in getDatasetSample : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 		return data;
 	}
