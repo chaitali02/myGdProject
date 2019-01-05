@@ -58,7 +58,6 @@ export class BatchSchedulerComponent implements OnInit {
   frequencyDetailCal: any;
   today = new Date();
   date1: Date;
-  startDate: Date;
   endDate: Date;
   checkboxModelexecution: boolean;
   IsProgerssShow: string;
@@ -111,7 +110,9 @@ export class BatchSchedulerComponent implements OnInit {
 
   optionChoose: any[];
   sortArr: any;
-  minimumDate : Date;
+  minimumDate: Date;
+  startDate= new Date();
+  
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private datePipe: DatePipe) {
     this.privResponse = null;
@@ -150,8 +151,8 @@ export class BatchSchedulerComponent implements OnInit {
     this.frequencyDetail.weekDetail = [];
     this.optionChoose = this.attributes;
     this.isSubmitEnable = false;
-    
-   // this.minimumDate = this.startDate;
+
+     this.minimumDate = this.startDate;
   }
 
   ngOnInit() {
@@ -435,9 +436,13 @@ export class BatchSchedulerComponent implements OnInit {
             attribute["frequencyType"] = a.toUpperCase();
 
           let indexArr: any = [];
-          let frequencyDetails: any[] = [];
+          let frequencyDetails: any[] = []; debugger
 
-          if (this.attributes[i]["attrtype"] == "Monthly") {
+          if (this.attributes[i]["attrtype"] == "Once" || this.attributes[i]["attrtype"] == "Daily" || this.attributes[i]["attrtype"] == "Yearly") {
+            frequencyDetails = this.attributes[i].frequencyDetail;
+            console.log("asfghg");
+          }
+          else if (this.attributes[i]["attrtype"] == "Monthly") {
             frequencyDetails = this.attributes[i].frequencyDetail;
           }
 
@@ -659,7 +664,7 @@ export class BatchSchedulerComponent implements OnInit {
       }
       this.displayDialog2 = true;
     }
-    this.isSubmitEnable = true; 
+    this.isSubmitEnable = true;
     this.attributes[index].scheduleChg = "Y";
     this.frequencyDetail.index = index;
   }
@@ -760,9 +765,11 @@ export class BatchSchedulerComponent implements OnInit {
     this.attributes[index].scheduleChg = "Y";
   }
 
-  updateEndDate(startdate: Date, index: any) {
-    //this.attributes[index].endDate = "";
+  onUpdateStartDate(startdate: Date, index: any) {
+    debugger
+    this.attributes[index].endDate = "";
     this.attributes[index].scheduleChg = "Y";
-    this.startDate = startdate;
+    this.minimumDate = startdate;
   }
+
 }
