@@ -350,7 +350,6 @@ export class SystemMonitoringComponent implements OnInit {
   }
 
   OnSucessgetAllMeta(response) {
-    //debugger
     let temp = []
     for (const n in response) {
       let allname = {};

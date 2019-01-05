@@ -654,7 +654,7 @@ export class BusinessRulesDetailComponent {
 						filterInfo["rhsAttribute"] = rhsAttri;
 					}
 
-					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {debugger
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
 						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
 							.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
 							error => console.log("Error ::", error))
@@ -689,7 +689,7 @@ export class BusinessRulesDetailComponent {
 						filterInfo["rhsAttribute"] = rhsAttri;
 					}
 
-					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {debugger
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {
 							let rhsAttri = {}
 							rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
 							rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;

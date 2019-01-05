@@ -160,31 +160,31 @@ export class ReportDetailComponent {
             else {
                 this.getAllLatest(true);
             }
-            this.getAllLatestDatapod();
+            //this.getAllLatestDatapod();
         });
     }
-    getAllLatestDatapod() {
-        this._commonService.getAllLatest('datapod')
-            .subscribe(
-                response => {
-                    this.onSuccessgetAllLatestDatapod(response)
-                },
-                error => console.log("Error ::" + error));
-    }
+    // getAllLatestDatapod() {
+    //     this._commonService.getAllLatest('datapod')
+    //         .subscribe(
+    //             response => {
+    //                 this.onSuccessgetAllLatestDatapod(response)
+    //             },
+    //             error => console.log("Error ::" + error));
+    // }
 
-    onSuccessgetAllLatestDatapod(response) {
-        this.privResponse = response
-        this.filterInfoArray = [];
+    // onSuccessgetAllLatestDatapod(response) {
+    //     this.privResponse = response
+    //     this.filterInfoArray = [];
 
-        for (const i in response) {
-            let filterRef = {};
-            filterRef["id"] = response[i]['uuid'];
-            filterRef["itemName"] = response[i]['name'];
-            filterRef["version"] = response[i]['version'];
+    //     for (const i in response) {
+    //         let filterRef = {};
+    //         filterRef["id"] = response[i]['uuid'];
+    //         filterRef["itemName"] = response[i]['name'];
+    //         filterRef["version"] = response[i]['version'];
 
-            this.filterInfoArray[i] = filterRef;
-        }
-    }
+    //         this.filterInfoArray[i] = filterRef;
+    //     }
+    // }
     onVersionChange(version) {
         this.version = version;
         this.getOneByUuidAndVersion();
@@ -197,15 +197,18 @@ export class ReportDetailComponent {
     }
 
     getAllLatest(IsDefault) {
+        //let type = this.source;
         this._commonService.getAllLatest(this.source).subscribe(
             response => { this.OnSuccesgetAllLatest(response, IsDefault) },
             error => console.log('Error :: ' + error)
         )
     }
     changeType() {
+        console.log("onChange call...");
         this.keylist = [];
         this.valuelist = [];
         this.grouplist = [];
+        this.filterInfoTags = []
         this.getAllAttributeBySource();
     }
     selectType() {
@@ -222,8 +225,6 @@ export class ReportDetailComponent {
             dependOnTemp.label = response1[0]["name"];
             dependOnTemp.uuid = response1[0]["uuid"];
             this.sourcedata = dependOnTemp;
-
-
         }
         for (const n in response1) {
             let allname = {};
@@ -235,8 +236,7 @@ export class ReportDetailComponent {
         }
         this.allNames = temp
         this.getAllAttributeBySource();
-
-
+        //this.getAttributesByDatapod();
     }
 
     getAllAttributeBySource() {
@@ -258,6 +258,14 @@ export class ReportDetailComponent {
             temp[n] = allname;
         }
         this.allMapSourceAttribute = temp
+        
+        this.filterInfoArray = [];
+        for (const i in response) {
+            let filterRef = {};
+            filterRef["id"] = response[i]['id'];    
+            filterRef["itemName"] = response[i]['name'];
+            this.filterInfoArray[i] = filterRef;
+        }
     }
 
     getAllVersionByUuid() {
@@ -499,10 +507,10 @@ export class ReportDetailComponent {
             for (const c in this.filterInfoTags) {
                 let filterInfoRef = {};
                 let filterRef = {};
-                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split(".")[0];
-                filterInfoRef["type"] = "datapod";
+                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split("_")[0];
+                filterInfoRef["type"] = this.source;
                 filterRef["ref"] = filterInfoRef;
-                filterRef["attrId"] = this.filterInfoTags[c].id.split(".")[1];
+                filterRef["attrId"] = this.filterInfoTags[c].id.split("_")[1];
                 filterInfoArrayNew.push(filterRef);
             }
         }
@@ -668,10 +676,10 @@ export class ReportDetailComponent {
             temp[n] = allname;
         }
         this.allMapExpression = temp;
-        this.allMapExpression.splice(0, 0, {
-            "label": "---CreateNew---",
-            "value": { "label": "---CreateNew---", "uuid": "01" }
-        });
+        // this.allMapExpression.splice(0, 0, {
+        //     "label": "---CreateNew---",
+        //     "value": { "label": "---CreateNew---", "uuid": "01" }
+        // });
         if (defaulfMode == true) {
             //   let sourceexpression = {};
             //   sourceexpression["uuid"] = this.allMapExpression[0]["value"].uuid;
@@ -853,6 +861,7 @@ export class ReportDetailComponent {
     reportExecute(uuid, version, data) {
         //spinner = true;
         this.isShowSpinner = true;
+        this.isShowSimpleData = false;
         this._reportService.reportExecute(uuid, version, data)
             .subscribe(response => { this.onSuccessReportExecute(response) },
                 error => console.log("Error ::", error)
@@ -933,7 +942,8 @@ export class ReportDetailComponent {
     }
 
     submitFilterDialog(filterValue: any[], filterName: any) {
-
+        this.isShowSimpleData = false;
+        this.isShowSpinner = true;
         var tags = [];
         for (var i = 0; i < filterValue.length; i++) {
             let attrName = filterName[i]["attrName"];

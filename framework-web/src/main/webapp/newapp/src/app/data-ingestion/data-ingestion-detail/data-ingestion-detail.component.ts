@@ -446,7 +446,7 @@ export class DataIngestionDetailComponent implements OnInit {
     else if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'FILE' && this.mode !== "true") {
       this.isAttributeMapDisable = false;
     }
-    else {debugger
+    else {
       if (this.selectedSourceType != 'FILE' || this.selectedTargetType != 'FILE') {
         this.isAttributeMapDisable = true;
       }
