@@ -58,5 +58,11 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
         }
-    ]
+    ],
+    "defaultGroup" : {
+        "ref" : {
+            "type" : "group",
+            "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
+        }
+    }
 }

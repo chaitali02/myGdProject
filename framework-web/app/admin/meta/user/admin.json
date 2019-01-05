@@ -15,5 +15,11 @@
     "password" : "admin",
 	"groupInfo": [{"ref": {"type": "group","uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c1"}},
 	              {"ref": {"type": "group","uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"}}],
-	"roleInfo": [{"ref": {"type": "role","uuid": "d04716df-e96a-419f-9118-c81342b47f87"}}]
+	"roleInfo": [{"ref": {"type": "role","uuid": "d04716df-e96a-419f-9118-c81342b47f87"}}],
+    "defaultGroup" : {
+        "ref" : {
+            "type" : "group",
+            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+        }
+    }
 }
