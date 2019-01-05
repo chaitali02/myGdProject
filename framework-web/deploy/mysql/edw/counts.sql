@@ -1,55 +1,55 @@
-SELECT TABNAME,CNT FROM
+select tabname,cnt from
 (
-SELECT 'ACCOUNT_MYSQL' AS TABNAME, COUNT(*) AS CNT FROM ACCOUNT_MYSQL
-UNION
-SELECT 'ACCOUNT' AS TABNAME, COUNT(*) AS CNT FROM ACCOUNT
-UNION
-SELECT 'ACCOUNT_STATUS_TYPE' AS TABNAME, COUNT(*) AS CNT FROM ACCOUNT_STATUS_TYPE
-UNION
-SELECT 'ACCOUNT_TYPE' AS TABNAME, COUNT(*) AS CNT FROM ACCOUNT_TYPE
-UNION
-SELECT 'ADDRESS' AS TABNAME, COUNT(*) AS CNT FROM ADDRESS
-UNION
-SELECT 'BANK' AS TABNAME, COUNT(*) AS CNT FROM BANK
-UNION
-SELECT 'BRANCH' AS TABNAME, COUNT(*) AS CNT FROM BRANCH
-UNION
-SELECT 'BRANCH_TYPE' AS TABNAME, COUNT(*) AS CNT FROM BRANCH_TYPE
-UNION
-SELECT 'CUSTOMER' AS TABNAME, COUNT(*) AS CNT FROM CUSTOMER
-UNION
-SELECT 'DIM_DATE' AS TABNAME, COUNT(*) AS CNT FROM DIM_DATE
-UNION
-SELECT 'PRODUCT_TYPE' AS TABNAME, COUNT(*) AS CNT FROM PRODUCT_TYPE
-UNION
-SELECT 'TRANSACTION' AS TABNAME, COUNT(*) AS CNT FROM TRANSACTION
-UNION
-SELECT 'TRANSACTION_TYPE' AS TABNAME, COUNT(*) AS CNT FROM TRANSACTION_TYPE
-UNION
-SELECT 'DIM_ACCOUNT' AS TABNAME, COUNT(*) AS CNT FROM DIM_ACCOUNT
-UNION
-SELECT 'DIM_ADDRESS' AS TABNAME, COUNT(*) AS CNT FROM DIM_ADDRESS
-UNION
-SELECT 'DIM_BANK' AS TABNAME, COUNT(*) AS CNT FROM DIM_BANK
-UNION
-SELECT 'DIM_BRANCH' AS TABNAME, COUNT(*) AS CNT FROM DIM_BRANCH
-UNION
-SELECT 'DIM_COUNTRY' AS TABNAME, COUNT(*) AS CNT FROM DIM_COUNTRY
-UNION
-SELECT 'DIM_CUSTOMER' AS TABNAME, COUNT(*) AS CNT FROM DIM_CUSTOMER
-UNION
-SELECT 'DIM_TRANSACTION_TYPE' AS TABNAME, COUNT(*) AS CNT FROM DIM_TRANSACTION_TYPE
-UNION
-SELECT 'DP_RULE_RESULTS' AS TABNAME, COUNT(*) AS CNT FROM DP_RULE_RESULTS
-UNION
-SELECT 'DQ_RULE_RESULTS' AS TABNAME, COUNT(*) AS CNT FROM DQ_RULE_RESULTS
-UNION
-SELECT 'FACT_ACCOUNT_SUMMARY_MONTHLY' AS TABNAME, COUNT(*) AS CNT FROM FACT_ACCOUNT_SUMMARY_MONTHLY
-UNION
-SELECT 'FACT_CUSTOMER_SUMMARY_MONTHLY' AS TABNAME, COUNT(*) AS CNT FROM FACT_CUSTOMER_SUMMARY_MONTHLY
-UNION
-SELECT 'FACT_TRANSACTION' AS TABNAME, COUNT(*) AS CNT FROM FACT_TRANSACTION
-UNION
-SELECT 'RC_RULE_RESULTS' AS TABNAME, COUNT(*) AS CNT FROM RC_RULE_RESULTS
-) T1
-ORDER BY TABNAME; 
+select 'account_mysql' as tabname, count(*) as cnt from account_mysql
+union
+select 'account' as tabname, count(*) as cnt from account
+union
+select 'account_status_type' as tabname, count(*) as cnt from account_status_type
+union
+select 'account_type' as tabname, count(*) as cnt from account_type
+union
+select 'address' as tabname, count(*) as cnt from address
+union
+select 'bank' as tabname, count(*) as cnt from bank
+union
+select 'branch' as tabname, count(*) as cnt from branch
+union
+select 'branch_type' as tabname, count(*) as cnt from branch_type
+union
+select 'customer' as tabname, count(*) as cnt from customer
+union
+select 'dim_date' as tabname, count(*) as cnt from dim_date
+union
+select 'product_type' as tabname, count(*) as cnt from product_type
+union
+select 'transaction' as tabname, count(*) as cnt from transaction
+union
+select 'transaction_type' as tabname, count(*) as cnt from transaction_type
+union
+select 'dim_account' as tabname, count(*) as cnt from dim_account
+union
+select 'dim_address' as tabname, count(*) as cnt from dim_address
+union
+select 'dim_bank' as tabname, count(*) as cnt from dim_bank
+union
+select 'dim_branch' as tabname, count(*) as cnt from dim_branch
+union
+select 'dim_country' as tabname, count(*) as cnt from dim_country
+union
+select 'dim_customer' as tabname, count(*) as cnt from dim_customer
+union
+select 'dim_transaction_type' as tabname, count(*) as cnt from dim_transaction_type
+union
+select 'dp_rule_results' as tabname, count(*) as cnt from dp_rule_results
+union
+select 'dq_rule_results' as tabname, count(*) as cnt from dq_rule_results
+union
+select 'fact_account_summary_monthly' as tabname, count(*) as cnt from fact_account_summary_monthly
+union
+select 'fact_customer_summary_monthly' as tabname, count(*) as cnt from fact_customer_summary_monthly
+union
+select 'fact_transaction' as tabname, count(*) as cnt from fact_transaction
+union
+select 'rc_rule_results' as tabname, count(*) as cnt from rc_rule_results
+) t1
+order by tabname; 

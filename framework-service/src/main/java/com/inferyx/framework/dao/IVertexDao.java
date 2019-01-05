@@ -86,8 +86,13 @@ public interface IVertexDao extends MongoRepository<Vertex, String> {
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
+
+	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	public void delete(String appUuid);
+	
+	
 	@Query(value = "{'_id' : ?0}")
-	public void delete(String id);
+	public void delete1(String id);
 	
 	@Query(value = "{}")
 	public Vertex findLatest(Sort sort);

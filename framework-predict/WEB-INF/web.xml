@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved. 
+   
+    This unpublished material is proprietary to GridEdge Consulting LLC.
+    The methods and techniques described herein are considered  trade 
+    secrets and/or confidential. Reproduction or distribution, in whole or 
+    in part, is forbidden.
+   
+    Written by Yogesh Palrecha <ypalrecha@gridedge.com>
+ -->
+ 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    xsi:schemaLocation="
+      http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    id="WebApp_ID" version="3.0">
+
+    <session-config>
+        <session-timeout>40</session-timeout>
+    </session-config>
+
+ 
+   <!--  <display-name>Spring MVC Application</display-name>
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config> -->
+
+ 
+    <!-- Spring root -->
+
+<!--      <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener> -->
+     <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+	<listener>
+    	<listener-class>com.inferyx.framework.security.SessionCounter</listener-class>
+    </listener>
+  <!--  
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>
+         org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+      </param-value>
+    </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>spring.security.rest.api</param-value>
+    </context-param> -->
+ 
+    <!-- Spring child -->
+    <servlet>
+        <servlet-name>framework</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>framework</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+     
+    <!-- Spring Security -->
+     <filter>
+        <filter-name>privilegeProcessingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter>
+    	<filter-name>activityPrivilegeFilter</filter-name>
+    	<filter-class>com.inferyx.framework.security.UserActivityPrivilegeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>activityPrivilegeFilter</filter-name>
+    	<url-pattern>/common/**</url-pattern>
+    	<url-pattern>/metadata/**</url-pattern>
+    </filter-mapping>
+    <filter>
+    	<filter-name>apiLogFilter</filter-name>
+    	<filter-class>com.inferyx.framework.security.ApiLogFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>apiLogFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+  <!--  <filter>
+        <filter-name>privilegeProcessingFilter</filter-name>
+        <filter-class>com.inferyx.framework.security.PrivilegeProcessingFilter</filter-class>
+    </filter> -->
+     <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+     <filter-mapping>
+        <filter-name>privilegeProcessingFilter</filter-name>
+        <url-pattern>/framework1/*</url-pattern>
+    </filter-mapping> 
+
+</web-app>

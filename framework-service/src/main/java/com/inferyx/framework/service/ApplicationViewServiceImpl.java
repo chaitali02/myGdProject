@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
@@ -35,6 +36,7 @@ import com.inferyx.framework.register.GraphRegister;
  * @author Ganesh
  *
  */
+@Service
 public class ApplicationViewServiceImpl {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -57,12 +59,14 @@ public class ApplicationViewServiceImpl {
 		applicationView.setVersion(application.getVersion());
 		applicationView.setName(application.getName());
 		applicationView.setActive(application.getActive());
+		applicationView.setLocked(application.getLocked());
 		applicationView.setAppInfo(application.getAppInfo());
 		applicationView.setCreatedBy(application.getCreatedBy());
 		applicationView.setCreatedOn(application.getCreatedOn());
 		applicationView.setDesc(application.getDesc());
 		applicationView.setPublished(application.getPublished());
 		applicationView.setTags(application.getTags());
+		applicationView.setDeployPort(application.getDeployPort());
 		
 		//setting applicationView properties specific to application		
 		MetaIdentifierHolder paramListHolder = application.getParamList();
@@ -85,6 +89,9 @@ public class ApplicationViewServiceImpl {
 			//setting application baseEntity
 			application.setName(applicationView.getName());
 			application.setTags(applicationView.getTags());
+			application.setLocked(applicationView.getLocked());
+			application.setDeployPort(applicationView.getDeployPort());
+
 			application.setBaseEntity();
 			if(applicationView.getParamList() != null) {
 				paramListMIH = processParamList(applicationView, application.getUuid());
@@ -121,6 +128,7 @@ public class ApplicationViewServiceImpl {
 		application.setTags(applicationView.getTags());
 		application.setUuid(applicationView.getUuid());
 		application.setVersion(Helper.getVersion());
+		application.setDeployPort(applicationView.getDeployPort());
 		return application;
 	}
     
@@ -138,6 +146,7 @@ public class ApplicationViewServiceImpl {
     public MetaIdentifierHolder processParamList(ApplicationView applicationView, String applicationUuid) throws JsonProcessingException, JSONException, ParseException {
     	ParamList appParamList = applicationView.getParamList();
     	appParamList.setName("paramlist_"+applicationView.getName());
+    	appParamList.setLocked(applicationView.getLocked());
     	appParamList.setBaseEntity();
     	BaseEntity savedParamList = (BaseEntity) commonServiceImpl.save(MetaType.paramlist.toString(), appParamList);
 		return new MetaIdentifierHolder(new MetaIdentifier(MetaType.paramlist, savedParamList.getUuid(), null));

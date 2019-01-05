@@ -95,8 +95,18 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.showForm = false;
 		$scope.showGraphDiv = true
 	}
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListexpression', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.expressiondata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListexpression', {
 			id: uuid,
@@ -153,6 +163,8 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataExpressionSerivce.getAllVersionByUuid($stateParams.id, "expression").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -162,8 +174,10 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 
 			}
 		}
-		MetadataExpressionSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'expression').then(function (response) { onSuccess(response.data) });
+		MetadataExpressionSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'expression')
+		.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -199,11 +213,17 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}
 	else {
 		$scope.showactive = "false"
 		$scope.expressionmetnotmat = {}
+		$scope.expressiondata={};
+		$scope.expressiondata.locked="N";
 		var metinfo = {}
 		metinfo.ismetlhsSimple = true;
 		//metinfo.metlhsvalu="''"
@@ -211,7 +231,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		var notmetinfo = {}
 		notmetinfo.isnotmetlhsSimple = true;
 		$scope.expressionmetnotmat.notmetinfo = notmetinfo;
-		if (typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListexpression") {
+		if ($sessionStorage.fromStateName && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListexpression") {
 			$scope.selectExpression = $sessionStorage.dependon.type
 			$scope.isDependonDisabled = true;
 			MetadataExpressionSerivce.getAllLatest($scope.selectExpression).then(function (response) { onSuccessRelation(response.data) });
@@ -264,8 +284,12 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	$scope.selectVersion = function () {
 		$scope.expressionRelation = null;
 		$scope.myform.$dirty = false;
-		MetadataExpressionSerivce.getOneByUuidAndVersion($scope.expression.defaultVersion.uuid, $scope.expression.defaultVersion.version, 'expression', $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataExpressionSerivce.getOneByUuidAndVersion($scope.expression.defaultVersion.uuid, $scope.expression.defaultVersion.version, 'expression')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -301,7 +325,11 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 
@@ -453,6 +481,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		expressionjson.uuid = $scope.expressiondata.uuid;
 		expressionjson.name = $scope.expressiondata.name;
 		expressionjson.active = $scope.expressiondata.active;
+		expressionjson.locked = $scope.expressiondata.locked;
 		expressionjson.desc = $scope.expressiondata.desc;
 		expressionjson.published = $scope.expressiondata.published;
 
@@ -618,7 +647,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id, 'version': $scope.stageParams.version, 'mode': $scope.stageParams.mode }); }, 2000);
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName, { 'type': $scope.stageParams.type }); }, 2000);
+				setTimeout(function () { $state.go('metadata', { 'type': 'expression' }); }, 2000);
 			}
 		}
 

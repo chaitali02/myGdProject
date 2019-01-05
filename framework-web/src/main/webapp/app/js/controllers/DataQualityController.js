@@ -1,7 +1,7 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER,CF_SUCCESS_MSG) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -36,6 +36,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.isAdd = true;
   }
+  $scope.isDestoryState = false; 
+  $scope.rhsNA=['NULL',"NOT NULL"];
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
   $scope.userDetail.name = $rootScope.setUserName;
@@ -93,7 +95,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulePage = function () {
     $scope.showgraph = false;
     $scope.showRule = true;
@@ -101,8 +105,18 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.graphDataStatus = false;
     $scope.showgraphdiv = false
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showRulePage();
+		$state.go('createdataquality', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.dataqualitydata.locked =="Y"){
+      return false; 
+    } 
     $scope.showRulePage()
     $state.go('createdataquality', {
       id: uuid,
@@ -190,9 +204,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.showactive = "true"
     $scope.isSelectSoureceAttr = false
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     DataqulityService.getAllVersionByUuid($stateParams.id, "dq").then(function (response) {
-      onGetAllVersionByUuid(response.data)
-    });
+      onGetAllVersionByUuid(response.data)});
     var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
         var dqversion = {};
@@ -201,10 +216,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     }
 
-    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id, $stateParams.version, "dq").then(function (response) {
-      onGetSuccess(response.data)
-    });
+    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id, $stateParams.version, "dq")
+    .then(function (response) {onGetSuccess(response.data)}),function(response) {onError(response.data)};
     var onGetSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.dataqualitydata = response.dqdata;
       $scope.tags = response.dqdata.tags;
       var defaultversion = {};
@@ -261,9 +276,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         onSuccessgetAllLatest(response.data)
       });
       var onSuccessgetAllLatest = function (response) {
-
         $scope.allDependsOn = response
-
         DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
@@ -280,18 +293,26 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           $scope.refIntegrityCheckoptions = response;
         }
       }
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   else {
-    $scope.showactive = "false"
+    $scope.showactive = "false";
+    $scope.dataqualitydata.locked="N";
   }
 
   $scope.selectVersion = function () {
     $scope.isSelectSoureceAttr = false
     $scope.myform1.$dirty = false;
-    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dq").then(function (response) {
-      onGetSuccess(response.data)});
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dq")
+    .then(function (response) { onGetSuccess(response.data)},function(response) {onError(response.data)});
     var onGetSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.dataqualitydata = response.dqdata;
       if (response.dqdata.tags.length > 0) {
         $scope.tags = response.dqdata.tags;
@@ -341,7 +362,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         onSuccressGetFunction(response.data)
       });
       var onSuccressGetFunction = function (response) {
-        console.log(response)
         $scope.allFunction = response;
       }
       if (response.dqdata.attribute != null) {
@@ -374,27 +394,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           $scope.refIntegrityCheckoptions = response;
         }
       }
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
-  /*$scope.OnSourceTypeChange=function(){
-	    	$scope.dataqualityoptions=[];
-	    	DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function(response){onSuccess(response.data)});
-		    var onSuccess=function(response){
-		    	console.log(response[0].name)
-		    	$scope.allDependsOn=response
-		    	var selectDependsOn={};
-		    	selectDependsOn.uuid=response[0].uuid;
-		    	selectDependsOn.name=response[0].name;
-		    	selectDependsOn.version=response[0].version;
-		    	$scope.selectDependsOcustomFormatCheckn=selectDependsOn
-		    	DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid,$scope.dataqualitysourceType).then(function(response){onSuccess(response.data)});
-			    var onSuccess=function(response){
-			    	$scope.dataqualityoptions=response;
-			    	$scope.lhsdatapodattributefilter=response;
-			    }
-		    }
-	    }*/
+
   $scope.dependsOnDataQuality = function () {
     $scope.dataqualityoptions;
     if (!$scope.selectDependsOn) {
@@ -513,13 +520,24 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+		} else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['string', 'dataset']);
+		} 
+		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+    }
+    else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {
@@ -534,7 +552,18 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       filter.selected = $scope.checkAll;
     });
   }
-
+  
+  function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
   $scope.addRowFilter = function () {
     if ($scope.filterTableArray == null) {
       $scope.filterTableArray = [];
@@ -551,7 +580,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     filertable.operator = $scope.operator[0].value;
     filertable.lhstype = $scope.lhsType[0];
     filertable.rhstype = $scope.rhsType[0];
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes = returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
     filertable.rhsvalue;
     filertable.lhsvalue;
@@ -570,6 +599,40 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     newDataList[0].logicalOperator = "";
     $scope.filterTableArray = newDataList;
   }
+
+  $scope.onAttrFilterRowDown=function(index){	
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexPlus=$scope.filterTableArray[index+1];
+		$scope.filterTableArray[index]=rowTempIndexPlus;
+		$scope.filterTableArray[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrFilterRowUp=function(index){
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexMines=$scope.filterTableArray[index-1];
+		$scope.filterTableArray[index]=rowTempIndexMines;
+		$scope.filterTableArray[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
+			$scope.filterTableArray[index-1].logicalOperator=""
+		}
+	}  
+	
+	$scope.onFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=$scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
+		}
+  }
+  
   $scope.selectlhsType = function (type, index) {
     if (type == "string") {
       $scope.filterTableArray[index].islhsSimple = true;
@@ -717,9 +780,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
   }
   $scope.okDQRuleSave = function () {
-    $('#dataqualitysave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataquality');
       }, 2000);
@@ -751,7 +813,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     }
     dataqualityjosn.tags = tagArray;
-    dataqualityjosn.active = $scope.dataqualitydata.active
+    dataqualityjosn.active = $scope.dataqualitydata.active;
+    dataqualityjosn.locked = $scope.dataqualitydata.locked;
     dataqualityjosn.published = $scope.dataqualitydata.published
     var attributeref = {}
     var attribute = {};
@@ -788,8 +851,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     dataqualityjosn.rangeCheck = rengeCheck;
     dataqualityjosn.dataTypeCheck = $scope.selectDataType
     dataqualityjosn.dateFormatCheck = $scope.selectdatefromate
-    if (typeof $scope.dataqualitydata.CustomFormatCheck != "undefined") {
-      dataqualityjosn.customFormatCheck = $scope.dataqualitydata.CustomFormatCheck
+    if (typeof $scope.dataqualitydata.customFormatCheck != "undefined") {
+      dataqualityjosn.customFormatCheck = $scope.dataqualitydata.customFormatCheck
     }
 
     var lengthCheck = {}
@@ -823,6 +886,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           var lhsref = {}
           var rhsoperand = {}
           var rhsref = {};
+          filterInfo.display_seq=i;
           if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator = ""
           }
@@ -908,7 +972,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         
       }
     } else {
-      dataqualityjosn.filter = null;
+      dataqualityjosn.filterInfo = null;
      
     }
     console.log(JSON.stringify(dataqualityjosn))
@@ -925,17 +989,17 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
             onSuccess(response.data)
           });
           var onSuccess = function (response) {
-            $scope.saveMessage = "DQ Rule Saved and Submitted Successfully";
+            $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute//"DQ Rule Saved and Submitted Successfully";
             notify.type = 'success',
-              notify.title = 'Success',
-              notify.content = $scope.saveMessage
+            notify.title = 'Success',
+            notify.content = $scope.saveMessage
             $scope.$emit('notify', notify);
             $scope.okDQRuleSave();
           }
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
-        $scope.saveMessage = "DQ Rule Saved Successfully";
+        $scope.saveMessage = CF_SUCCESS_MSG.dqSave;//"DQ Rule Saved Successfully";
         notify.type = 'success',
           notify.title = 'Success',
           notify.content = $scope.saveMessage
@@ -956,8 +1020,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService, CommonService,CF_SUCCESS_MSG) {
   $scope.select = 'Rule Group';
+  $scope.isDestoryState = false; 
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
@@ -977,6 +1042,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen = true;
+
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
     $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -1030,15 +1096,27 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     });
   };
   $scope.getLovByType();
-
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });  
   $scope.showRulGroupePage = function () {
     $scope.showRuleGroup = true;
     $scope.showgraphdiv = false;
     $scope.graphDataStatus = false;
     $scope.showRuleGroupForm = true;
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showRulGroupePage();
+		$state.go('createdataqualitygroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.dqruleGroupDetail.locked =="Y"){
+      return false; 
+    } 
     $scope.showRulGroupePage()
     $state.go('createdataqualitygroup', {
       id: uuid,
@@ -1099,6 +1177,8 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     DataqulityService.getAllVersionByUuid($stateParams.id, "dqgroup").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
@@ -1110,21 +1190,18 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       }
 
     }
-    DataqulityService.getOneByUuidAndVersion1($stateParams.id, $stateParams.version, 'dqgroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    DataqulityService.getOneByUuidAndVersion1($stateParams.id, $stateParams.version, 'dqgroup')
+    .then(function (response) {onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.dqruleGroupDetail = response;
       var defaultversion = {};
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.dqgroup.defaultVersion = defaultversion;
       $scope.checkboxModelparallel = response.inParallel;
-
       $scope.uuid = response.uuid;
       $scope.version = response.version;
-
       $scope.tags = response.tags
       var ruleTagArray = [];
       for (var i = 0; i < response.ruleInfo.length; i++) {
@@ -1133,20 +1210,27 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
         ruletag.name = response.ruleInfo[i].ref.name;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruletag.id = response.ruleInfo[i].ref.uuid
-
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
+  }else{
+    $scope.dqruleGroupDetail={};
+    $scope.dqruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function () {
-    $scope.myform1.$dirty = false;
-    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    $scope.myform.$dirty = false;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.dqruleGroupDetail = response.data;
       var defaultversion = {};
       defaultversion.version = response.data.version;
@@ -1165,21 +1249,26 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       }
       $scope.ruleTags = ruleTagArray
     }
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
+
   $scope.loadRules = function (query) {
     return $timeout(function () {
       return $filter('filter')($scope.dqall, query);
     });
   };
-  $scope.clear = function () {
 
+  $scope.clear = function () {
     $scope.ruleTags = null;
   }
 
   $scope.okDqGroupSave = function () {
     $('#dqrulegroupsave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+    if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewdataqualitygroup');
       }, 2000);
@@ -1200,6 +1289,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     dqruleGroupJson.name = $scope.dqruleGroupDetail.name;
     dqruleGroupJson.desc = $scope.dqruleGroupDetail.desc;
     dqruleGroupJson.active = $scope.dqruleGroupDetail.active;
+    dqruleGroupJson.locked = $scope.dqruleGroupDetail.locked;
     dqruleGroupJson.published = $scope.dqruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1219,7 +1309,6 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       var ref = {};
       ref.type = "dq";
       ref.uuid = $scope.ruleTags[i].uuid;
-      // ref.version=$scope.ruleTags[i].version;
       ruleInfo.ref = ref;
       ruleInfoArray[i] = ruleInfo;
     }
@@ -1242,7 +1331,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
           });
           var onSuccess = function (response) {
             $scope.dataLoading = false;
-            $scope.saveMessage = "DQ Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSaveExecute;//"DQ Rule Groups Saved and Submitted Successfully"
             // if ($scope.isshowmodel == "true") {
             //   $('#dqrulegroupsave').modal({
             //     backdrop: 'static',
@@ -1259,7 +1348,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "DQ Rule Group Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSave;//"DQ Rule Groups Saved Successfully"
         // if ($scope.isshowmodel == "true") {
         //   $('#dqrulegroupsave').modal({
         //     backdrop: 'static',
@@ -1475,6 +1564,48 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.getResults(result);
   }
 
+  $scope.getColumnDetail = function (type, result) {
+    CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+    var onSuccess = function (respone) {
+      $scope.ColumnDetails=respone;
+      $scope.isDataError = false;
+      if($scope.ColumnDetails && $scope.ColumnDetails.length >0){
+        for(var i=0;i<$scope.ColumnDetails.length;i++){
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = $scope.ColumnDetails[i].name
+          attribute.displayName = $scope.ColumnDetails[i].displayName
+          attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        }
+      }
+      else{
+        angular.forEach(response.data[0], function (value, key) {
+          var attribute = {};
+          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+          if (hiveKey.indexOf(key) != -1) {
+            attribute.visible = false
+          } else {
+            attribute.visible = true
+          }
+          attribute.name = key
+          attribute.displayName = key
+          attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+          $scope.gridOptions.columnDefs.push(attribute)
+        });
+      }
+
+      $scope.gridOptions.data = result;
+      $scope.originalData = result;
+      $scope.testgrid = true;
+      $scope.showprogress = false;
+    }
+  }
 
   $scope.getResults = function (params) {
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
@@ -1503,28 +1634,12 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       order = params.order;
 
     }
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order).then(function (response) {
-      getResult(response.data)
-    }, function (response) { OnError(response.data) });
+
+    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order)
+      .then(function (response) {getResult(response.data)}, function (response) { OnError(response.data) });
     var getResult = function (response) {
-      $scope.isDataError = false;
-      angular.forEach(response.data[0], function (value, key) {
-        var attribute = {};
-        var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-        if (hiveKey.indexOf(key) != -1) {
-          attribute.visible = false
-        } else {
-          attribute.visible = true
-        }
-        attribute.name = key
-        attribute.displayName = key
-        attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-        $scope.gridOptions.columnDefs.push(attribute)
-      });
-      $scope.gridOptions.data = response.data;
-      $scope.originalData = response.data;
-      $scope.testgrid = true;
-      $scope.showprogress = false;
+      $scope.getColumnDetail('dq',response.data);  
+    
     }
     var OnError = function (response) {
       $scope.showprogress = false;

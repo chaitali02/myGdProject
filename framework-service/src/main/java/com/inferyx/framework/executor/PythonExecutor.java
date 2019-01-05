@@ -22,9 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
@@ -36,12 +39,16 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.StructType;
+import org.nd4j.shade.jackson.databind.ObjectMapper;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.connector.PythonConnector;
@@ -65,6 +72,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 
@@ -225,14 +233,49 @@ public class PythonExecutor implements IExecutor {
 		return isSuccessful;
 	}
 	
-	public boolean executTFScript(String scriptPath, String clientContext) throws Exception {
+	public List<String> executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
+		logger.info("Before executing tf script ");
 		try {
-			String command = "python3 ".concat(scriptPath);
+			String pythonDirPath = Helper.getPropertyValue("framework.python.exec");	
+			String command = pythonDirPath.concat(" ").concat(scriptPath);
+			
+			/*
+			 * Note: do not change/add/concat before following command
+			 * The following argument/command in command is specifically placed at 1st location
+			 * after script path. This argument/command is the python directory location.
+			 * 
+			 */
+			command = command.concat(" ").concat(pythonDirPath);
+			
+			if (arguments != null && arguments.size() > 0) {
+				command = command.concat(" ").concat(arguments.stream().collect(Collectors.joining(" ")));
+			}
+			logger.info("Before executing tf script command : " + command);
 			Process p = Runtime.getRuntime().exec(command);
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String ret = in.readLine();
-			System.out.println("value is : "+ret);	
-			return true;
+			BufferedReader bfrIn = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+			boolean isSuccessful = false;
+			List<String> scriptPrintedMsgs = new ArrayList<>();
+			while((line = bfrIn.readLine()) != null) {
+			// display each output line form python script
+				if(line.contains("Successfull operation")) {
+					isSuccessful = true;
+				} 
+				scriptPrintedMsgs.add(line);
+				System.out.println(line);
+			}		
+			if(!isSuccessful) {
+				BufferedReader errBuffRdrIn = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+				String errLine = "";
+				String errMessage = "";
+				while((errLine = errBuffRdrIn.readLine()) != null) {
+				// display each output line form python script
+					logger.error(errLine);
+					errMessage = errMessage.concat(errLine).concat("\n");
+				}
+				throw new RuntimeException(errMessage);
+			}
+			return scriptPrintedMsgs;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -367,7 +410,7 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -424,7 +467,7 @@ public class PythonExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
 	 */
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -489,7 +532,7 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -497,8 +540,11 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> summary = new HashMap<>();
+		String modelPath = (String) trndModel;
+		modelPath = modelPath  + "/" + "model.spec";
+		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
+		return summary;
 	}
 
 	@Override
@@ -553,6 +599,70 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
+			Map<String, String> trainOtherParam) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
+			String tableName, String clientContext, String saveFileName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;

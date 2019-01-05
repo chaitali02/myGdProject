@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.Formula;
@@ -179,8 +180,9 @@ public class PredictMLOperator {
 				}
 			}
 			
-			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
-			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(label);
+//			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(predict);
+			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null, mapSourceDS)).append(" AS ").append("label");
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 

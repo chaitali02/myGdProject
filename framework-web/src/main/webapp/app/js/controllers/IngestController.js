@@ -1219,8 +1219,18 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}
-
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('ingestrulegroupdetail', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestrulegroupdetail', {
 			id: uuid,
@@ -1258,7 +1268,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		RuleGroupService.getAllVersionByUuid($stateParams.id, "ingestgroup").then(function (response) { onGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
+		RuleGroupService.getAllVersionByUuid($stateParams.id, "ingestgroup")
+			.then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var rulegroupversion = {};
@@ -1266,8 +1279,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				$scope.rulegroup.versions[i] = rulegroupversion;
 			}
 		}
-		RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
+		RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingestgroup')
+			.then(function (response) { onsuccess(response.data) },function(response) {onError(response.data)});
 		var onsuccess = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.ruleGroupDetail = response;
 			$scope.tags = response.tags
 			$scope.checkboxModelparallel = response.inParallel;
@@ -1285,13 +1300,24 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				ruleTagArray[i] = ruletag;
 			}
 			$scope.ruleTags = ruleTagArray
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
+	}else{
+		$scope.ruleGroupDetail={};
+		$scope.ruleGroupDetail.locked="N";
 	}
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'ingestgroup').then(function (response) { onsuccess(response.data) });
+		$scope.isEditInprogess=true;
+        $scope.isEditVeiwError=false;
+		RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'ingestgroup')
+			.then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
 		var onsuccess = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.ruleGroupDetail = response;
 			$scope.tags = response.tags
 			var defaultversion = {};
@@ -1308,6 +1334,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				ruleTagArray[i] = ruletag;
 			}
 			$scope.ruleTags = ruleTagArray
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 
@@ -1337,6 +1367,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		ruleGroupJson.name = $scope.ruleGroupDetail.name;
 		ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
 		ruleGroupJson.active = $scope.ruleGroupDetail.active;
+		ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
 		ruleGroupJson.published = $scope.ruleGroupDetail.published;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -1372,7 +1403,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 					var onSuccess = function (response) {
 						console.log(JSON.stringify(response))
 						$scope.isSubmitProgess = false;
-						$scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+						$scope.saveMessage = "Rule Groups Saved and Submitted Successfully"
 						notify.type = 'success',
 						notify.title = 'Success',
 						notify.content = $scope.saveMessage
@@ -1383,7 +1414,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 			} //End If
 			else {
 				$scope.isSubmitProgess = false;
-				$scope.saveMessage = "Rule Group Saved Successfully"
+				$scope.saveMessage = "Rule Groups Saved Successfully"
 				notify.title = 'Success',
 				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);

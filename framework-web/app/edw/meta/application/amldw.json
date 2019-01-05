@@ -11,6 +11,7 @@
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {
@@ -35,5 +36,6 @@
      "paramList" : {
       "ref":{"type":"paramlist",
              "uuid":"1555bf00-7b09-400d-a9f6-d1a30b7a9e6b"}
-     }
+     },
+     "deployPort" : "5001"
 }

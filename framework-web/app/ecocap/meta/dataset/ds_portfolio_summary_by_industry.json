@@ -14,7 +14,8 @@
   },
   "createdOn": "Wed Aug 08 16:54:00 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -40,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "industry",
       "sourceAttr": {
         "ref": {
@@ -56,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "portfolio_avg_pd",
       "sourceAttr": {
         "ref": {
@@ -72,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "portfolio_avg_lgd",
       "sourceAttr": {
         "ref": {
@@ -88,6 +92,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "portfolio_total_ead",
       "sourceAttr": {
         "ref": {
@@ -104,6 +109,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -120,6 +126,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

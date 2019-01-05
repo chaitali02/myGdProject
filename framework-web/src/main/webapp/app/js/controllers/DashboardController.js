@@ -54,6 +54,12 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.getLovByType();
 	
 	$scope.onChangeVizpod=function(vizpodInfo,parentIndex,index){
+		if(parentIndex ==-1){
+			parentIndex=0;
+		}
+		if(index == -1){
+			index =0;
+		}
 		$scope.sectionRows[parentIndex].columns[index].name=vizpodInfo.name;
 	}
 	
@@ -179,6 +185,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 
 	$scope.mode = " ";
 	$scope.dataLoading = false;
+	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -225,7 +232,19 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.graphDataStatus = false;
 		$scope.showgraphdiv = false
 	}//End showDashboardPage
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showDashboardPage()
+		$state.go('metaListdashboard', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.dashboarddata.locked =="Y"){
+			return false;
+		}
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {
 			id: uuid,
@@ -334,9 +353,11 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}
 
 	if (typeof $stateParams.id != "undefined") {
-
+      
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDahsboardSerivce.getAllVersionByUuid($stateParams.id, "dashboard").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -346,9 +367,11 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			}
 		}//End onGetAllVersionByUuid
 
-		MetadataDahsboardSerivce.getLatestByUuidView($stateParams.id, "dashboard").then(function (response) { onGetLatestByUuid(response.data) });
+		MetadataDahsboardSerivce.getLatestByUuidView($stateParams.id, "dashboard")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onGetLatestByUuid = function (response) {
-			$scope.dashboarddata = response.dashboarddata
+			$scope.isEditInprogess=false;
+			$scope.dashboarddata = response.dashboarddata;
 			$scope.dashboardCompare = response.dashboarddata;
 			var defaultversion = {};
 			defaultversion.version = response.dashboarddata.version;
@@ -379,20 +402,29 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				$scope.getAllAttributeBySource()// Call Function
 			}//End onSuccessGetAllLatest
 		}//End
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}//End IF
 
 	else {
-
+	 $scope.dashboarddata={};
+	 $scope.dashboarddata.locked="N";
 
 	}//End Else
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
 		$scope.alldependsOn = null;
-		MetadataDahsboardSerivce.getOneByUuidAndVersionView($scope.dashboard.defaultVersion.uuid, $scope.dashboard.defaultVersion.version, 'dashboard').then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDahsboardSerivce.getOneByUuidAndVersionView($scope.dashboard.defaultVersion.uuid, $scope.dashboard.defaultVersion.version, 'dashboard')
+			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetOneByUuidAndVersion = function (response) {
-			$scope.dashboarddata = response.dashboarddata
+			$scope.isEditInprogess=false;
+			$scope.dashboarddata = response.dashboarddata;
 			$scope.dashboardCompare = response.dashboarddata;
 			var defaultversion = {};
 			defaultversion.version = response.dashboarddata.version;
@@ -422,6 +454,10 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				$scope.getAllAttributeBySource()// Call Function
 			}//End onSuccessGetAllLatest
 		}//End onSuccessGetOneByUuidAndVersion
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 	$scope.addRow = function () {
@@ -453,42 +489,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.sectiontable = newDataList;
 	}
 
-    /*$scope.checkAllFilterRow = function(){
-		 if (!$scope.selectedAllFitlerRow){
-	            $scope.selectedAllFitlerRow = true;
-	     }
-		 else {
-	          $scope.selectedAllFitlerRow = false;
-	     }
-		 angular.forEach($scope.filterTableArray, function(filter) {
-			 filter.selected = $scope.selectedAllFitlerRow;
-	        });
-	 }
-    $scope.addRowFilter=function(){
-    	if($scope.filterTableArray ==null){
-    		$scope.filterTableArray=[];
-    	}
-    	var filertable={};
-    	filertable.logicalOperator=$scope.logicalOperator[0];
-    	filertable.lhsFilter=$scope.lhsdatapodattributefilter[0]
-    	filertable.operator=$scope.operator[0]
-      	$scope.filterTableArray.splice($scope.filterTableArray.length, 0,filertable);
-    }
-    $scope.removeRowFitler=function(){
-    	var newDataList=[];
-    	$scope.checkAll=false;
-    	angular.forEach($scope.filterTableArray, function(selected){
-             if(!selected.selected){
-                 newDataList.push(selected);
-             }
-         });
-
-    	if(newDataList.length >0){
-	    	newDataList[0].logicalOperator="";
-	    	}
-    	$scope.filterTableArray =newDataList;
-    }*/
-
 	/*Start SubmitDashboard*/
 	$scope.submitDashboard = function () {
         var upd_tag="N"
@@ -496,16 +496,14 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		var dashboardjson = {}
-		/*dashboardjson.srcChg="n";
-		if($scope.dashboardCompare == null){
-
-	    	dashboardjson.srcChg="y";
-	    	dashboardjson.filterChg="y";
-   	    }*/
+	
 		dashboardjson.uuid = $scope.dashboarddata.uuid
 		dashboardjson.name = $scope.dashboarddata.name
 		dashboardjson.desc = $scope.dashboarddata.desc
 		dashboardjson.active = $scope.dashboarddata.active;
+		dashboardjson.locked = $scope.dashboarddata.locked;
+
+		
 		dashboardjson.published = $scope.dashboarddata.published;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -525,15 +523,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		ref.type = $scope.selectDependsOnType
 		dependson.ref = ref;
 		dashboardjson.dependsOn = dependson;
-		/* if($scope.dashboardCompare != null && $scope.dashboardCompare.dependsOn.ref.uuid !=$scope.alldependsOn.defaultoption.uuid){
-			dashboardjson.srcChg="y";
-
-		}*/
-        /* else if($scope.dashboardCompare != null){
-
-        	 dashboardjson.srcChg="y";
-
-         }*/
 
 		//SectionInfo
 		var sectionArray = [];
@@ -562,7 +551,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				var ref = {};
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
-				// ref.version=$scope.profileTags[i].version;
 				filterInfo.ref = ref;
 				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
 				filterInfoArray[i] = filterInfo;

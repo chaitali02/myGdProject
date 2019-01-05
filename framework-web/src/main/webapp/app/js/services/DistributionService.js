@@ -92,12 +92,16 @@ DatascienceModule.service("DistributionService", function ($http, DistributionFa
   }
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
-    DistributionFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+    DistributionFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

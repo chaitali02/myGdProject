@@ -33,7 +33,7 @@ export class C3Component{
     }
     
     ChartRender(data,columns,color,type,datax){
-      debugger;
+      
       let d3 = this.d3;
       let _min;
       let _max;

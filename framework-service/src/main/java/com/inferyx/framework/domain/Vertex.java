@@ -12,11 +12,14 @@ package com.inferyx.framework.domain;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "vertex")
 public class Vertex {
 	private String parent;
+	@Indexed(name = "uuid", direction = IndexDirection.DESCENDING)
 	private String uuid;
 	private String version;
 	private String name;
@@ -26,7 +29,17 @@ public class Vertex {
 	private String createdOn;
 	private String active;
 	private GraphMetaIdentifierHolder metaRef;
-	
+	private List<MetaIdentifierHolder> appInfo;
+
+
+	public List<MetaIdentifierHolder> getAppInfo() {
+		return appInfo;
+	}
+
+	public void setAppInfo(List<MetaIdentifierHolder> appInfo) {
+		this.appInfo = appInfo;
+	}
+
 	public GraphMetaIdentifierHolder getGraphMetaHolder() {
 		return metaRef;
 	}
@@ -110,11 +123,11 @@ public class Vertex {
 	public String toString() {
 		return "Vertex [parent=" + parent + ", uuid=" + uuid + ", version=" + version + ", name=" + name + ", nodeType="
 				+ nodeType + ", dataType=" + dataType + ", desc=" + desc + ", createdOn=" + createdOn + ", active="
-				+ active + ", graphMetaHolder=" + metaRef + "]";
+				+ active + ", graphMetaHolder=" + metaRef + ", appInfo=" + appInfo + "]";
 	}
 
 	public Vertex(String uuid, String version, String name, String nodeType, String dataType, String desc,
-			String createdOn, String active, GraphMetaIdentifierHolder metaRef) {
+			String createdOn, String active, GraphMetaIdentifierHolder metaRef , List<MetaIdentifierHolder> appInfo) {
 		super();
 		this.uuid = uuid;
 		this.version = version;
@@ -125,6 +138,7 @@ public class Vertex {
 		this.createdOn = createdOn;
 		this.active = active;
 		this.metaRef = metaRef;
+		this.appInfo=(List<MetaIdentifierHolder>) appInfo;
 	}
 
 	

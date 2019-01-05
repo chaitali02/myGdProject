@@ -146,6 +146,16 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.findFormulaByApp = function (type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getFormulaByApp?action=view&type=" + type
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	factory.disableRhsType = function (arrayStr) {
 		var rTypes = [
 			{ "text": "string", "caption": "string", "disabled": false },
@@ -310,6 +320,30 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 
 		return deferred.promise;
 	}
+
+	this.getFormulaByApp = function (type) {
+		var deferred = $q.defer();
+		MetadataDatasetFactory.findFormulaByApp(type).then(function (response) { onSuccess(response.data) });
+		var formulaarray = [];
+		var onSuccess = function (response) {
+			for (var i = 0; i < response.length; i++) {
+				var formulajson = {}
+				formulajson.name = response[i].name;
+				formulajson.uuid = response[i].uuid;
+				formulajson.class = "";
+				formulajson.iconclass = "";
+				formulaarray.push(formulajson);
+
+			}
+
+			deferred.resolve({
+				data: formulaarray
+			})
+			
+		}
+		return deferred.promise;
+	}
+
 	this.getFormulaByType = function (uuid, type) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findFormulaByType(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -466,7 +500,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 	}
 	this.getDatasetDataByOneUuidandVersion = function (id, version) {
 		var deferred = $q.defer();
-		MetadataDatasetFactory.findByUuidandVersion(id, version).then(function (response) { onSuccess(response.data) });
+		MetadataDatasetFactory.findByUuidandVersion(id, version).then(function (response) { onSuccess(response.data)},function (response) {onError(response.data) });
 		var onSuccess = function (response) {
 			var datasetviewjson = {};
 			datasetviewjson.dataset = response;
@@ -485,14 +519,23 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					var filterInfo = {};
 					filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
 					filterInfo.operator = response.filterInfo[i].operator;
+					filterInfo.isRhsNA = false;
 					var rhsTypes = null;
 					filterInfo.rhsTypes = null;
 					if (filterInfo.operator == 'BETWEEN') {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
-					} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+					} 
+					else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['string', 'dataset']);
+					}
+					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
 					}
 					else {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['dataset']);
@@ -555,6 +598,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsParamlist = false;
 						filterInfo.isrhsFunction = false;
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+						var temp=response.filterInfo[i].operator;
+						temp=temp.replace(/ /g,'');
 						if (response.filterInfo[i].operator == "BETWEEN") {
 							obj.caption = "integer";
 							filterInfo.rhsvalue1 = response.filterInfo[i].operand[1].value.split("and")[0];
@@ -566,6 +611,10 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						} else if (response.filterInfo[i].operator == '=' && response.filterInfo[i].operand[1].attributeType == "integer") {
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+						}
+						
+						else if(temp == "ISNULL" || temp == "ISNOTNULL" ){
+							filterInfo.isRhsNA = true;
 						}
 						else {
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
@@ -694,11 +743,13 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				}
 			}
 			datasetviewjson.filterInfo = filterInfoArray
-			console.log(JSON.stringify(datasetviewjson.filterInfo));
+			//console.log(JSON.stringify(datasetviewjson.filterInfo));
 			var sourceAttributesArray = [];
 			for (var n = 0; n < response.attributeInfo.length; n++) {
 				var attributeInfo = {};
-				attributeInfo.name = response.attributeInfo[n].attrSourceName
+				attributeInfo.name = response.attributeInfo[n].attrSourceName;
+				attributeInfo.id = response.attributeInfo[n].attrSourceId;
+				attributeInfo.index = n+1;
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
@@ -807,11 +858,16 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 			datasetviewjson.sourceAttributes = sourceAttributesArray
 			deferred.resolve({
 				data: datasetviewjson
-			})
-		}
-
+			});
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			});
+		};
 		return deferred.promise;
 	}
+	
 	this.getDatasetDataByUuid = function (id, type) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findByUuid(id, type).then(function (response) { onSuccess(response.data) });

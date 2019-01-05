@@ -4,7 +4,9 @@ JobMonitoringModule.controller('DetailMapExecController', function ($filter, $st
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
-  $scope.showmapexec = true;
+  $scope.showExec = true;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
   $scope.state = dagMetaDataService.elementDefs['mapexec'].listState + "({type:'" + dagMetaDataService.elementDefs['mapexec'].execType + "'})"
   $rootScope.isCommentVeiwPrivlage = true;
   var privileges = privilegeSvc.privileges['comment'] || [];
@@ -31,12 +33,11 @@ JobMonitoringModule.controller('DetailMapExecController', function ($filter, $st
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "mapexec").then(function (response) {
-    onSuccess(response.data)
-  });
+  JobMonitoringService.getLatestByUuid($scope.uuid, "mapexec")
+  .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
   var onSuccess = function (response) {
-    $scope.mapexecdata = response;
-   
+    $scope.isEditInprogess=false;
+    $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
       d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -54,32 +55,29 @@ JobMonitoringModule.controller('DetailMapExecController', function ($filter, $st
       $scope.refkeylist = refkeylist
       $scope.refkeylistclass = "cross"
     }
+  };
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
   }
 
 
-  $scope.showLoadGraph = function (uuid, version) {
-    $scope.showmapexec = false;
-    $scope.showgraph = false
-    $scope.graphDatastatusList = true
-    $scope.showgraphdiv = true;
-    var newUuid = uuid + "_" + version;
-
-
-
+  $scope.showGraph = function (uuid, version) {
+    $scope.showExec = false;
+    $scope.showGraphDiv = true;
   }
-  $scope.showMapExecPage = function () {
-    $scope.showmapexec = true
-    $scope.showgraph = false
-    $scope.graphDatastatusList = false
-    $scope.showgraphdiv = false;
+
+  $scope.showExecPage = function () {
+    $scope.showExec = true
+    $scope.showGraphDiv = false;
   }
-  
-  $scope.showSqlFormater=function(){
+
+  $scope.showSqlFormater = function () {
     $('#sqlFormaterModel').modal({
       backdrop: 'static',
       keyboard: false
     });
-    $scope.formateSql=sqlFormatter.format($scope.mapexecdata.exec);
+    $scope.formateSql = sqlFormatter.format($scope.execData.exec);
   }
 
 

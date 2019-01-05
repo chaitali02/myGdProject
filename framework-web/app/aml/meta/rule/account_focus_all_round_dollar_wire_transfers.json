@@ -1,0 +1,220 @@
+{
+	"filterInfo" : [
+		{
+			"logicalOperator" : "",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 4
+				},
+				{
+					"ref" : {
+						"type" : "simple"
+					},
+					"value" : "WR",
+					"attributeType" : "string"
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "fa36737b-f3ca-4ae9-8a77-9e079c013a99"
+					}
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143"
+					},
+					"attributeId" : 0
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "4067d7ab-77df-40b2-9322-533fda0f6f9d"
+					}
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143"
+					},
+					"attributeId" : 1
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "8b1238dd-fa1b-4d47-b5c8-b560cf11033a"
+					}
+				},
+				{
+					"ref" : {
+						"type" : "simple"
+					},
+					"value" : "0",
+					"attributeType" : "integer"
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 5
+				},
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "7eca606a-b789-4826-a91d-42511d8c1a08"
+					}
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : "<",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 5
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
+					},
+					"attributeId" : 0
+				}
+			]
+		}
+	],
+	"debugMode" : false,
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "rule_name",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "All Round Amount Wire Transfers"
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "customer_id",
+			"sourceAttr" : {
+				"attrId" : "3",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "account_id",
+			"sourceAttr" : {
+				"attrId" : "2",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "trans_count",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "005e4b59-c62d-4e50-9bad-00289273e3af"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "trans_sum_usd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "c8889a2f-825f-47be-b121-0152ab6fa92c"
+				}
+			}
+		}
+	],
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143"
+		}
+	},
+	"uuid" : "264178cc-3025-480d-86bd-a58fdb1fc269",
+	"version" : "1542600354",
+	"name" : "Account Focus - All Round Dollar Wire Transfers",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T04:05:54Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

@@ -19,7 +19,8 @@
 		"0.1.0"
 	],
     	"limit" : 0,
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
 	"appInfo": [
 		{
@@ -66,6 +67,7 @@
 	"attributeInfo": [
 		{
 			"attrSourceId": "0",
+            "attrDisplaySeq" : "0",
 			"attrSourceName": "customer_id",
 			"sourceAttr": {
 				"ref": {
@@ -82,6 +84,7 @@
 		},
 		{
 			"attrSourceId": "1",
+            "attrDisplaySeq" : "1",
 			"attrSourceName": "address_id",
 			"sourceAttr": {
 				"ref": {
@@ -98,6 +101,7 @@
 		},
 		{
 			"attrSourceId": "2",
+            "attrDisplaySeq" : "2",
 			"attrSourceName": "first_name",
 			"sourceAttr": {
 				"ref": {
@@ -114,6 +118,7 @@
 		},
 		{
 			"attrSourceId": "3",
+            "attrDisplaySeq" : "3",
 			"attrSourceName": "last_name",
 			"sourceAttr": {
 				"ref": {
@@ -130,6 +135,7 @@
 		},
 		{
 			"attrSourceId": "4",
+            "attrDisplaySeq" : "4",
 			"attrSourceName": "address_line1",
 			"sourceAttr": {
 				"ref": {
@@ -146,6 +152,7 @@
 		},
 		{
 			"attrSourceId": "5",
+            "attrDisplaySeq" : "5",
 			"attrSourceName": "address_line2",
 			"sourceAttr": {
 				"ref": {
@@ -162,6 +169,7 @@
 		},
 		{
 			"attrSourceId": "6",
+            "attrDisplaySeq" : "6",
 			"attrSourceName": "city",
 			"sourceAttr": {
 				"ref": {
@@ -178,6 +186,7 @@
 		},
 		{
 			"attrSourceId": "7",
+            "attrDisplaySeq" : "7",
 			"attrSourceName": "state",
 			"sourceAttr": {
 				"ref": {
@@ -194,6 +203,7 @@
 		},
 		{
 			"attrSourceId": "8",
+            "attrDisplaySeq" : "8",
 			"attrSourceName": "country",
 			"sourceAttr": {
 				"ref": {
@@ -210,6 +220,7 @@
 		},
 		{
 			"attrSourceId": "9",
+            "attrDisplaySeq" : "9",
 			"attrSourceName": "state_risk_band",
 			"sourceAttr": {
 				"ref": {

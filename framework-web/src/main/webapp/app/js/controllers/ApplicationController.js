@@ -1,7 +1,7 @@
 AdminModule = angular.module('AdminModule');
 
 AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc, CommonService, $timeout, $filter) {
-	$scope.mode = " ";
+	
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -35,7 +35,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.isEdit = true;
 	}
+	$scope.mode = "false";
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -64,7 +66,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		{ "name": "distribution", "caption": "distribution" },
 		{ "name": "datapod", "caption": "datapod" },
 		{ "name": "function", "caption": "function" },
-		{ "name": "list", "caption": "list" },];
+		{ "name": "list", "caption": "list" },{"name":"array","caption":"array"}];
 	$scope.isTableDisable = false;
 	$scope.popup2 = {
     	opened: false
@@ -85,13 +87,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	$scope.open2 = function() {
 		$scope.popup2.opened = true;
 	};
+
 	$scope.privileges = privilegeSvc.privileges['application'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['application'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+    
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
@@ -110,7 +113,19 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListapplication', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.applicationdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
@@ -158,6 +173,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 
 		}
 	}
+	
 	$scope.showGraph = function (uuid, version) {
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
@@ -196,7 +212,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			stage.selected = $scope.selectallattribute;
 		});
 	}
-
+   
+	
 	$scope.removeRow = function () {
 		if ($scope.isTableDisable) {
 			return false;
@@ -297,8 +314,12 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$timeout(function () {
 			$scope.myform.$dirty = false;
 		}, 0)
-		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'applicationview').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'applicationview')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.applicationdata = response.application;
 			var defaultversion = {};
 			defaultversion.version = response.application;
@@ -332,18 +353,27 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End SelectVersion
 
-
+    
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
+		$scope.showactive="true";
 		var id;
 		id = $stateParams.id;
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
-		MetadataApplicationSerivce.getOneByUuidAndVersion(id,$stateParams.version || "", "applicationview").then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataApplicationSerivce.getOneByUuidAndVersion(id,$stateParams.version || "", "applicationview")
+			.then(function (response) { onGetByOneUuidandVersion(response.data) },function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.applicationdata = response.application;
 			$scope.applicationCompare=$scope.applicationdata; 
 			var defaultversion = {};
@@ -378,8 +408,16 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End IF
+	else{
+		$scope.applicationdata={};
+		$scope.applicationdata.locked="N";
+	}
 	
 
 
@@ -408,7 +446,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.name = $scope.applicationdata.name
 		applicationJson.desc = $scope.applicationdata.desc
 		applicationJson.active = $scope.applicationdata.active;
+		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
+		applicationJson.deployPort = $scope.applicationdata.deployPort;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -444,6 +484,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				paraminfo.paramId = $scope.paramtable[i].paramId;
 				paraminfo.paramName = $scope.paramtable[i].paramName;
 				paraminfo.paramType = $scope.paramtable[i].paramType;
+				paraminfo.paramDesc = $scope.paramtable[i].paramDesc;
+				paraminfo.paramDispName = $scope.paramtable[i].paramDispName;
 				var paramValue={}
 				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
 					var paramRef={}	 
@@ -470,6 +512,20 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 
+				}
+				else if($scope.paramtable[i].paramType =='array'){
+					var paramArrayTags=[];
+					if($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length >0){
+						for(var j=0;j<$scope.paramtable[i].paramArrayTags.length;j++){
+							paramArrayTags[j]=$scope.paramtable[i].paramArrayTags[j].text
+						}
+					}
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value=paramArrayTags.toString();;
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
 				}
 				else {
 					paramValue=null;

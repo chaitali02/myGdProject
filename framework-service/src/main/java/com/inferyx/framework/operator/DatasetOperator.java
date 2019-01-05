@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -39,6 +40,7 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 	@Component
 	public class DatasetOperator {
@@ -52,12 +54,12 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		@Autowired
 		MapOperator mapOperator;
 		@Autowired
-		FilterOperator filterOperator;
-		@Autowired
 		DataStoreServiceImpl datastoreServiceImpl;
-		
+		@Autowired
+		private CommonServiceImpl<?> commonServiceImpl;		
 		@Autowired
 		FilterOperator2 filterOperator2;
+		
 		static final Logger logger = Logger.getLogger(DatasetOperator.class);
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
@@ -147,8 +149,9 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
 				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
-
-				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+				
+				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataset);
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 				//String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : filterStr;
@@ -157,14 +160,16 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		} 
 		
 		public String generateGroupBy (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
+			MetaIdentifierHolder datasetSource = new MetaIdentifierHolder(dataset.getRef(MetaType.dataset));
+			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams, datasetSource);
 		}
 		
 		public String generateHaving (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
 				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
 
-				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataset);
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
 
 //				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);

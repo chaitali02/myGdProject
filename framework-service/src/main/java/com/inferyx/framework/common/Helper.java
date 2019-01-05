@@ -21,15 +21,38 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
+import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.layers.ActivationLayer;
+import org.deeplearning4j.nn.conf.layers.AutoEncoder;
+import org.deeplearning4j.nn.conf.layers.BatchNormalization;
+import org.deeplearning4j.nn.conf.layers.Convolution1DLayer;
+import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.DropoutLayer;
+import org.deeplearning4j.nn.conf.layers.EmbeddingLayer;
+import org.deeplearning4j.nn.conf.layers.GlobalPoolingLayer;
+import org.deeplearning4j.nn.conf.layers.GravesBidirectionalLSTM;
+import org.deeplearning4j.nn.conf.layers.GravesLSTM;
+import org.deeplearning4j.nn.conf.layers.LSTM;
+import org.deeplearning4j.nn.conf.layers.Layer;
+import org.deeplearning4j.nn.conf.layers.LocalResponseNormalization;
+import org.deeplearning4j.nn.conf.layers.LossLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.conf.layers.RBM;
+import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
+import org.deeplearning4j.nn.conf.layers.Subsampling1DLayer;
+import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
+import org.deeplearning4j.nn.conf.layers.misc.FrozenLayer;
+import org.deeplearning4j.nn.conf.layers.variational.VariationalAutoencoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +78,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
@@ -94,6 +118,7 @@ import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Privilege;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
@@ -119,6 +144,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Tag;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
@@ -147,7 +173,7 @@ public class Helper {
 	}
 	
 	public static String getCurrentTimeStamp(){
-		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(new Date());
+		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new Date());
 		return timestamp;
 	}
 
@@ -302,6 +328,9 @@ public class Helper {
 				case ingestExec : return "iIngestExecDao";
 				case ingestgroup : return "iIngestGroupDao";
 				case ingestgroupExec : return "iIngestGroupExecDao";
+				case trainresult : return "iTrainResultDao";
+				case deployExec : return "iDeployExecDao";
+				case processExec : return "iProcessExecDao";
 				default:
 					return null;
 			}
@@ -336,6 +365,9 @@ public class Helper {
 		case trainExec : return "ModelExecServiceImpl";
 		case predictExec : return "ModelExecServiceImpl";
 		case simulateExec : return "ModelExecServiceImpl";
+		case trainresult : return "TrainResultServiceImpl";
+		case deployExec : return "DeployServiceImpl";
+		case processExec : return "ProcessServiceImpl";
 		default: return null;
 		}
 	}
@@ -344,10 +376,8 @@ public class Helper {
 		if(type == null)
 			return null;
 		switch(type) {
-		case map :
-			return Map.class;
-		case model :
-			return Model.class;			
+		case map : return Map.class;
+		case model : return Model.class;			
 		case meta : return Meta.class;
 		case relation: return Relation.class;
 		case dashboard: return Dashboard.class;
@@ -427,8 +457,10 @@ public class Helper {
 		case ingestExec : return IngestExec.class;
 		case ingestgroup : return IngestGroup.class;
 		case ingestgroupExec : return IngestGroupExec.class;
-		default:
-			return null;
+		case trainresult : return TrainResult.class;
+		case deployExec : return DeployExec.class;
+		case processExec : return ProcessExec.class;
+		default: return null;
 		}
 	}
 	
@@ -522,6 +554,9 @@ public class Helper {
 				case "ingestexec" : return  MetaType.ingestExec; 
 				case "ingestgroup" : return MetaType.ingestgroup;
 				case "ingestgroupexec" : return  MetaType.ingestgroupExec; 
+				case "trainresult" : return MetaType.trainresult; 
+				case "deployexec" : return MetaType.deployExec;
+				case "processexec" : return MetaType.processExec;
 				default : return null;
 			}
 		}
@@ -1100,5 +1135,51 @@ public class Helper {
 			regex = Pattern.compile("^"+fileName+"$", Pattern.CASE_INSENSITIVE);
 		}
 		return regex;
+	}
+	
+	/********************* Data Science Methods *********************************/
+	
+	/**
+	 * 
+	 * @param optimizationAlgoStr
+	 * @return
+	 */
+	public OptimizationAlgorithm getOptimizationAlgorithm(String optimizationAlgoStr) {
+		if (StringUtils.isBlank(optimizationAlgoStr)) {
+			return null;
+		}
+		return OptimizationAlgorithm.valueOf(optimizationAlgoStr);
+	}
+	
+	/**
+	 * 
+	 * @param layerName
+	 * @return
+	 */
+	public Layer.Builder getLayerBuilders(String layerName) {
+		switch(layerName) {
+		 case "autoEncoder":  return new AutoEncoder.Builder();
+		 case "convolution":  return new ConvolutionLayer.Builder();
+		 case "convolution1d":  return new Convolution1DLayer.Builder();
+		 case "gravesLSTM":  return new GravesLSTM.Builder();
+		 case "LSTM":  return new LSTM.Builder();
+		 case "gravesBidirectionalLSTM":  return new GravesBidirectionalLSTM.Builder();
+		 case "output":  return new OutputLayer.Builder();
+		 case "rnnoutput":  return new RnnOutputLayer.Builder();
+		 case "loss":  return new LossLayer.Builder();
+		 case "RBM":  return new RBM.Builder();
+		 case "dense":  return new DenseLayer.Builder();
+		 case "subsampling":  return new SubsamplingLayer.Builder();
+		 case "subsampling1d":  return new Subsampling1DLayer.Builder();
+		 case "batchNormalization":  return new BatchNormalization.Builder();
+		 case "localResponseNormalization":  return new LocalResponseNormalization.Builder();
+		 case "embedding":  return new EmbeddingLayer.Builder();
+		 case "activation":  return new ActivationLayer.Builder();
+		 case "VariationalAutoencoder":  return new VariationalAutoencoder.Builder();
+		 case "dropout":  return new DropoutLayer.Builder();
+		 case "GlobalPooling":  return new GlobalPoolingLayer.Builder();
+		 case "FrozenLayer":  return new FrozenLayer.Builder();
+		 default : return new DenseLayer.Builder();
+		}
 	}
 }

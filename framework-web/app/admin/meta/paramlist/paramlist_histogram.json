@@ -14,7 +14,8 @@
   },
   "createdOn": "Wed Aug 08 16:40:14 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -59,6 +60,8 @@
       "paramId": "0",
       "paramName": "sourceAttr",
       "paramType": "attribute",
+      "paramDispName" : "Source Attr",
+      "paramDesc" : "",	
       "paramValue": null,
       "paramRef": null
     },
@@ -66,6 +69,8 @@
       "paramId": "1",
       "paramName": "numBuckets",
       "paramType": "integer",
+      "paramDispName" : "Num Buckets",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple",
@@ -81,6 +86,8 @@
       "paramId": "2",
       "paramName": "saveLocation",
       "paramType": "datapod",
+      "paramDispName" : "Save Location",
+      "paramDesc" : "",	
       "paramValue": null,
       "paramRef": null
     },
@@ -88,6 +95,8 @@
       "paramId": "3",
       "paramName": "key",
       "paramType": "string",
+      "paramDispName" : "Key",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple",

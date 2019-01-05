@@ -13,7 +13,8 @@
   },
   "createdOn": "Wed Jun 13 19:31:22 IST 2018",
   "tags": null,
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -39,7 +40,7 @@
       "key": null,
       "partition": null,
       "dispName": "cust_id",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -50,7 +51,7 @@
       "key": null,
       "partition": null,
       "dispName": "industry",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -61,7 +62,7 @@
       "key": null,
       "partition": null,
       "dispName": "pd",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -72,7 +73,7 @@
       "key": null,
       "partition": null,
       "dispName": "exposure",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -83,7 +84,7 @@
       "key": null,
       "partition": null,
       "dispName": "lgd",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -94,7 +95,7 @@
       "key": null,
       "partition": null,
       "dispName": "lgd_var",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -105,7 +106,7 @@
       "key": null,
       "partition": null,
       "dispName": "correlation",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -116,7 +117,7 @@
       "key": null,
       "partition": null,
       "dispName": "sqrt_correlation",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -127,7 +128,7 @@
       "key": null,
       "partition": null,
       "dispName": "def_point",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -138,7 +139,7 @@
       "key": null,
       "partition": null,
       "dispName": "reporting_date",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     },
     {
@@ -149,7 +150,7 @@
       "key": null,
       "partition": null,
       "dispName": "version",
-      "active": "Y",
+      "active" : "Y",
       "expr": null
     }
   ]

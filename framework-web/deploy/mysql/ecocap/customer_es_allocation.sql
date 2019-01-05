@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS CUSTOMER_ES_ALLOCATION; 
+drop table if exists customer_es_allocation; 
 
-CREATE TABLE CUSTOMER_ES_ALLOCATION 
+create table customer_es_allocation 
   ( 
-     CUST_ID         VARCHAR(50), 
-     ES_CONTRIBUTION DECIMAL(10, 2), 
-     ES_ALLOCATION   DECIMAL(10, 2), 
-     REPORTING_DATE  VARCHAR(50), 
-     VERSION         INTEGER(50) 
+     cust_id         varchar(50), 
+     es_contribution decimal(10, 2), 
+     es_allocation   decimal(10, 2), 
+     reporting_date  varchar(50), 
+     version         integer(50) 
   ); 

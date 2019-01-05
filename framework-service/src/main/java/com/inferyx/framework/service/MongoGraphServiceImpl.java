@@ -15,9 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +68,7 @@ public class MongoGraphServiceImpl {
 		return map;
 	}
 
-	protected Map<String, Object> getVertexMap(Vertex vertex) {
+	protected Map<String, Object> getVertexMap(Vertex vertex,String degree) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		if (vertex == null) {
 			return null;
@@ -99,22 +103,39 @@ public class MongoGraphServiceImpl {
 		map.put("active", vertex.getActive());
 		GraphMetaIdentifierHolder graphmetaholder = new GraphMetaIdentifierHolder();
 		GraphMetaIdentifier graphmi = new GraphMetaIdentifier();
-		if (vertex.getGraphMetaHolder() != null) {
-			graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
-			graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
-			graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
-		} else {
-			graphmi.setType(vertex.getNodeType());
+		if (degree.equalsIgnoreCase("1")) {
+			if (vertex.getGraphMetaHolder() != null) {
+				graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
+				graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
+				graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
+			} else {
+				graphmi.setType(vertex.getNodeType());
 
-			String[] tokens = vertex.getUuid().split("_");
-			graphmi.setUuid(tokens[0]);
-			graphmi.setVersion(vertex.getVersion());
+				String[] tokens = vertex.getUuid().split("_");
+				graphmi.setUuid(tokens[0]);
+				graphmi.setVersion(vertex.getVersion());
+			}
+			// graphmi.setName(vertex.getName());
+			graphmetaholder.setRef(graphmi);
+			/*
+			 * if(graphmetaholder.equals(null) ) { map.put("metaRef",graphmetaholder); }
+			 */
+		} else {
+			if (vertex.getGraphMetaHolder() != null) {
+				graphmi.setVersion(vertex.getVersion());
+				graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
+				graphmi.setUuid(vertex.getUuid());
+				graphmi.setVersion(vertex.getVersion());
+			} else {
+				graphmi.setType(vertex.getNodeType());
+
+				String[] tokens = vertex.getUuid().split("_");
+				graphmi.setUuid(tokens[0]);
+				graphmi.setVersion(vertex.getVersion());
+			}
+			// graphmi.setName(vertex.getName());
+			graphmetaholder.setRef(graphmi);
 		}
-		// graphmi.setName(vertex.getName());
-		graphmetaholder.setRef(graphmi);
-		/*
-		 * if(graphmetaholder.equals(null) ) { map.put("metaRef",graphmetaholder); }
-		 */
 		map.put("metaRef", graphmetaholder);
 
 		return map;
@@ -155,7 +176,7 @@ public class MongoGraphServiceImpl {
 			}
 			for (String vertexKey : vertexMap.keySet()) {
 				Vertex vertex = vertexMap.get(vertexKey);
-				graphVertex.add(getVertexMap(vertex));
+				graphVertex.add(getVertexMap(vertex,degree));
 			}
 		}
 
@@ -252,6 +273,7 @@ public class MongoGraphServiceImpl {
 //		return result;
 //	}
 	
+	@SuppressWarnings({ "unchecked", "null", "unused" })
 	public String getTreeGraphJson(String uuid, String version, String degree) {
 		NodeDetail nodeDetail = new NodeDetail();
 		String result = null;
@@ -259,9 +281,13 @@ public class MongoGraphServiceImpl {
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		Map<String, Edge> edgeMap = new HashMap<>();
 		Map<String, Vertex> vertexMap = new HashMap<>();
+		Map<String, Vertex> uniqueVertexMap = new HashMap<>();
+		Map<String, Edge> uniqueEdgeList = new HashMap<>();
+
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
-
+		List<Vertex> uniqueVertexList =new ArrayList<Vertex>();
+		List<Edge> edgeList1 =new ArrayList<Edge>();
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
 		List<String> nodetype = null;
@@ -288,20 +314,32 @@ public class MongoGraphServiceImpl {
 
 			if (!version.equalsIgnoreCase("0")) {
 				edgeList = iEdgeDao.findAllByDst(uuid + "_" + version);
+
+				for (Edge edge : edgeList) {
+					uniqueEdgeList.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
+				}
+				edgeList1.addAll(uniqueEdgeList.values());
+
 			} else {
-				edgeList = iEdgeDao.findAllByDst(uuid);
+				edgeList1 = iEdgeDao.findAllByDst(uuid);
 			}
 			// Get all srcs from edgeList
-			if (edgeList != null) {
+			if (edgeList1 != null) {
 				uuidList = new ArrayList<>();
 				nodetype = new ArrayList<>();
-				for (Edge edge : edgeList) {
+				for (Edge edge : edgeList1) {
 					edgeMap.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
+					String srcUuid = edge.getSrc();
+					GraphMetaIdentifierHolder srcMetaRef = edge.getSrcMetaRef();
 					uuidList.add(edge.getSrc());
-					nodetype.add(edge.getRelationType());
+					nodetype.add(edge.getSrcMetaRef().getRef().getType());
+					edge.setSrc(edge.getDst());
+					edge.setDst(srcUuid);
+					edge.setSrcMetaRef(edge.getDstMetaRef());
+					edge.setDstMetaRef(srcMetaRef);
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
@@ -316,9 +354,31 @@ public class MongoGraphServiceImpl {
 		}
 
 		// vertexList = iVertexDao.findAllByUuidContaining(uuidList);
-		vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
-		if (vertexList != null) {
+		if (degree.equalsIgnoreCase("1")) {
+			vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
 			for (Vertex vertex : vertexList) {
+				uniqueVertexMap.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+			}
+			uniqueVertexList.addAll(uniqueVertexMap.values());
+			
+		} else {
+			vertexList =  iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
+			for (Vertex vertex : vertexList) {
+				uniqueVertexMap.put(vertex.getUuid() + "_" + vertex.getNodeType(), vertex);
+			}
+			uniqueVertexList.addAll(uniqueVertexMap.values());
+			
+		}
+		
+	/*for (String uuid_nodetype : uniqVertexList.keySet()) {
+			Vertex vertex = uniqVertexList.get(uuid_nodetype);
+			if (vertex != null)
+				vertexList1.add(vertex);
+		}
+		//List<Vertex> vertexList1 = vertexList.stream().distinct().collect(Collectors.toList());
+*/
+		if (uniqueVertexList != null) {
+			for (Vertex vertex : uniqueVertexList) {
 				String relationName = null;
 				// if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
 				// System.out.println("********"+relationName);
@@ -360,7 +420,7 @@ public class MongoGraphServiceImpl {
 				Vertex vertex = vertexMap.get(vertexKey);
 				if (!vertex.getUuid().equals(uuid)) {
 					// vertex.setParent(parentvertex.getName());
-					Map<String, Object> mapresult = getVertexMap(vertex);
+					Map<String, Object> mapresult = getVertexMap(vertex, degree);
 					// mapresult.put("id",mapresult.get("id")+parentvertex.getUuid());
 					graphVertex.add(mapresult);
 				}

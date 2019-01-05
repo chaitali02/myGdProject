@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
@@ -36,8 +37,11 @@ public class LabelImage {
 
   public static void main(String[] args) {
 	  args = new String[2];
-	  args[0] = "/home/gridedge-5/Desktop/inception5h/";
-	  args[1] = "/home/gridedge-5/Desktop/Desktop/5-10-2018_stream_hive_table_console_log.png";
+	 /* args[0] = "/home/gridedge-5/Desktop/inception5h/";
+	  args[1] = "/home/gridedge-5/Desktop/Desktop/5-10-2018_stream_hive_table_console_log.png";*/
+	  args[0] = "/home/joy/Documents/Files/DeepLearning/inception5h/";
+//	  args[1] = "/home/joy/Documents/Files/DeepLearning/inception5h/Error.png";
+	  args[1] = "/home/joy/Documents/Files/DeepLearning/inception5h/black-L-shape-sofa-design-and-black-white-wall-design-with-wardrobe-in-living-room.jpg";
     if (args.length != 2) {
       printUsage(System.err);
       System.exit(1);

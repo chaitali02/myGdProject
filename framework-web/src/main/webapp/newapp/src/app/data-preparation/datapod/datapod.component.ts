@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  selectdatasourceName: any;
   runMode: any;
   IsError: boolean;
   columnOptions: any[];
@@ -185,10 +186,19 @@ export class DatapodComponent {
     this.active = response.datapoddata['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.tags = response['tags'];
-    this.selectdatasourceType = (response.datapoddata['datasource']['ref']['name']).toUpperCase();
+    this.selectdatasourceName = (response.datapoddata['datasource']['ref']['name']).toUpperCase();
+   // this.selectType(this.selectdatasourceName);
+   this._datapodService.getLatestDataSourceByUuid(response.datapoddata['datasource']['ref']['uuid'],response.datapoddata['datasource']['ref']['type'])
+   .subscribe(
+    response => {
+      this.OnSuccesLatestDatasourceByUuid(response)
+    },
+    error => console.log("Error :: " + error));
+  }
+  OnSuccesLatestDatasourceByUuid(response){
+    this.selectdatasourceType=response.type
     this.selectType(this.selectdatasourceType);
   }
-
   showDatapodSampleTable(data) {
     this.isDataError = false;
     this.isShowSimpleData = true;
@@ -230,6 +240,7 @@ export class DatapodComponent {
   }
 
   selectType(val) {
+    
     this._datapodService.getDatasourceByType(val)
       .subscribe(
       response => {

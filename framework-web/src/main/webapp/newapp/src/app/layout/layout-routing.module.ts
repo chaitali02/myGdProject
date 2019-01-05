@@ -8,6 +8,7 @@ import { D3Component } from '../D3/d3.component';
 import { metadataNavigatorComponent } from '../metadata-navigator/metadataNavigator.component';
 import { jobMonitoringComponent } from '../job-monitoring/jobMonitoring.component';
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
+import { CompareResultComponent } from '../data-quality/compareresult/compareresult.component';
 
 const routes: Routes = [
     {
@@ -61,6 +62,7 @@ const routes: Routes = [
             { path: 'dataQuality', loadChildren: 'app/data-quality/data-quality.module#DataQualityModule' },
             { path: 'list/:type/dataQuality', redirectTo: 'dataQuality' },
             { path: 'dataQuality/dqgroupexec/:type/:id/:version/:mode/dataQuality', redirectTo: 'dataQuality' },
+            { path: 'dataQuality/compare', component: CompareResultComponent },
 
             { path: 'recon', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'list/:type/recon', redirectTo: 'recon' },
@@ -69,6 +71,7 @@ const routes: Routes = [
             { path: 'list/:type/reconexec', redirectTo: 'reconexec' },
             { path: 'reconexec', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'graphAnalysis', loadChildren: 'app/graph-analysis/graph-analysis.module#graphAnalysisModule' },
+            { path: 'list/:type/graphAnalysis', redirectTo: 'graphAnalysis' },
             // { path: 'reconexec/viewdrresultspage/:type/:id/:version/:mode/reconexec',redirectTo :'reconexec'},
 
             { path: 'dataIngestion', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule' },

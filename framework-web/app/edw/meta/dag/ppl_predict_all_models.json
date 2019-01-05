@@ -14,7 +14,8 @@
   },
   "createdOn": "Mon Sep 03 15:21:58 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -61,7 +62,7 @@
           ],
           "xPos": 600,
           "yPos": 50,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -89,7 +90,7 @@
           ],
           "xPos": 820,
           "yPos": 70,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -117,7 +118,7 @@
           ],
           "xPos": 980,
           "yPos": 130,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -145,7 +146,7 @@
           ],
           "xPos": 1090,
           "yPos": 310,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -173,7 +174,7 @@
           ],
           "xPos": 1090,
           "yPos": 430,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -201,7 +202,7 @@
           ],
           "xPos": 970,
           "yPos": 530,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         },
         {
@@ -229,14 +230,14 @@
           ],
           "xPos": 610,
           "yPos": 620,
-          "active": "Y",
+          "active" : "Y",
           "statusList": []
         }
       ],
       "name": "stage",
       "xPos": 420,
       "yPos": 320,
-      "active": "Y",
+      "active" : "Y",
       "statusList": []
     }
   ],

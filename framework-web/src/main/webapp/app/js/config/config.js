@@ -1,7 +1,9 @@
 InferyxApp=angular.module('InferyxApp');
 //CF:CONSTANT_FLAG
 InferyxApp.constant("CF_APP_SETTING",{
-    "companyName":"INFERYX"
+    "companyName":"INFERYX",
+    "companyLog":"assets/layouts/layout/img/logo.png"
+
 });
 
 
@@ -54,6 +56,26 @@ InferyxApp.constant('CF_META_TYPES',{
 	GenDataAttr : "GEN_DATA_ATTR",GenDataValList: 
 });*/
 
+
+InferyxApp.constant('CF_SUCCESS_MSG',{
+ ruleSave:"Rule Saved Successfully",
+ ruleGroupSave:"Rule Groups Saved Successfully",
+ ruleSaveExecute:"Rule Saved and Submitted Successfully",
+ ruleGroupSaveExecute:"Rule Groups Saved and Submitted Successfully",
+ dqSave:"DQ Rule Saved Successfully",
+ dqGroupSave:"DQ Rule Groups Saved Successfully",
+ dqSaveExecute:"DQ Rule Saved and Submitted Successfully",
+ dqGroupSaveExecute:"DQ Rule Groups Saved and Submitted Successfully",
+ profileSave:"Profile Rule Saved Successfully",
+ profileGroupSave:"Profile Rule Groups Saved Successfully",
+ profileSaveExecute:"Profile Rule Saved and Submitted Successfully",
+ profileGroupSaveExecute:"Profile Rule Groups Saved and Submitted Successfully",
+ rcSave:"RC Rule Saved Successfully",
+ rcGroupSave:"RC Rule Groups Saved Successfully",
+ rcSaveExecute:"RC Rule Saved and Submitted Successfully",
+ rcGroupSaveExecute:"RC Rule Groups Saved and Submitted Successfully",
+ modelDeployIsExist:"Model already deployed.if you continue old one wiil be undeployed and seleced will be deployed."
+});
 InferyxApp.constant('CF_ACTION_TYPES',{
 view:"View",edit:"Edit",add:"Add",delete:"Delete",clone:"Clone",execute:"Execute",export:"Export",publish:"Publish",
 unpublish:"Unpublish",restore:"Restore",export:"Export"
@@ -90,7 +112,8 @@ InferyxApp.constant("CF_FILTER",{
 	{"caption":"EXISTS","value":"EXISTS"},
 	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
 	{"caption":"IN","value":"IN"},
-    {"caption":" NOT IN","value":"NOT IN"}],
+    {"caption":"NOT IN","value":"NOT IN"},
+    {"caption":"IS","value":"IS"}],
     
 	lhsType : [{"text":"string","caption":"string"},
 	{ "text": "string", "caption":"integer"},

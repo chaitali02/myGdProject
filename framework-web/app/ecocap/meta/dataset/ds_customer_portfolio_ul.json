@@ -14,7 +14,8 @@
   },
   "createdOn": "Wed Jul 25 14:27:19 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -40,6 +41,7 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
       "attrSourceName": "cust_id",
       "sourceAttr": {
         "ref": {
@@ -56,6 +58,7 @@
     },
     {
       "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
       "attrSourceName": "industry",
       "sourceAttr": {
         "ref": {
@@ -72,6 +75,7 @@
     },
     {
       "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
       "attrSourceName": "pd",
       "sourceAttr": {
         "ref": {
@@ -88,6 +92,7 @@
     },
     {
       "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
       "attrSourceName": "exposure",
       "sourceAttr": {
         "ref": {
@@ -104,6 +109,7 @@
     },
     {
       "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
       "attrSourceName": "lgd",
       "sourceAttr": {
         "ref": {
@@ -120,6 +126,7 @@
     },
     {
       "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
       "attrSourceName": "lgd_var",
       "sourceAttr": {
         "ref": {
@@ -136,6 +143,7 @@
     },
     {
       "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
       "attrSourceName": "correlation",
       "sourceAttr": {
         "ref": {
@@ -152,6 +160,7 @@
     },
     {
       "attrSourceId": "7",
+      "attrDisplaySeq" : "7",
       "attrSourceName": "sqrt_correlation",
       "sourceAttr": {
         "ref": {
@@ -168,6 +177,7 @@
     },
     {
       "attrSourceId": "8",
+      "attrDisplaySeq" : "8",
       "attrSourceName": "def_point",
       "sourceAttr": {
         "ref": {
@@ -184,6 +194,7 @@
     },
     {
       "attrSourceId": "9",
+      "attrDisplaySeq" : "9",
       "attrSourceName": "unexpected_loss",
       "sourceAttr": {
         "ref": {
@@ -200,6 +211,7 @@
     },
     {
       "attrSourceId": "10",
+      "attrDisplaySeq" : "10",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
@@ -216,6 +228,7 @@
     },
     {
       "attrSourceId": "11",
+      "attrDisplaySeq" : "11",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {

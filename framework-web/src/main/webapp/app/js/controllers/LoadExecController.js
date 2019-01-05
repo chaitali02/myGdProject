@@ -4,7 +4,8 @@
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showExec = true;
-
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.selectTitle = dagMetaDataService.elementDefs['loadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['loadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['loadexec'].execType + "'})"
     $rootScope.isCommentVeiwPrivlage=true;
@@ -32,8 +33,10 @@
       }
     }
 
-    JobMonitoringService.getLatestByUuid($scope.uuid, "loadexec").then(function(response) {onSuccess(response.data) });
-    var onSuccess = function(response) {
+    JobMonitoringService.getLatestByUuid($scope.uuid, "loadexec")
+    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+    var onSuccess = function (response) {
+      $scope.isEditInprogess=false;
       $scope.execData = response;
       var statusList = [];
       for (i = 0; i < response.statusList.length; i++) {
@@ -42,6 +45,10 @@
         statusList[i] = response.statusList[i].stage + "-" + d;
       }
       $scope.statusList = statusList
+    }
+    var onError=function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
     }
 
     $scope.showGraph = function(uuid, version) {

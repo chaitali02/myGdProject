@@ -52,6 +52,19 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
     return style;
   }
   $scope.gridOptions = angular.copy(dagMetaDataService.gridOptionsDefault);
+  if($scope.gridOptions.columnDefs[0].name !="locked"){
+    $scope.gridOptions.columnDefs.splice(0,0,{
+      displayName: 'Locked',
+      name: 'locked',
+      minWidth: 20,
+      cellClass: 'text-center',
+      headerCellClass: 'text-center',
+    	cellTemplate: ['<div class="ui-grid-cell-contents">',
+        '<div ng-if="row.entity.locked == \'Y\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'UnLock\')"><i  title ="Lock" class="icon-lock" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        '<div  ng-if="row.entity.locked == \'N\'"><ul style="list-style:none;padding-left:0px"><li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'Lock\')"><i title ="UnLock" class="icon-lock-open" style="color:#a0a0a0;font-size:20px;"></i></a></li></div>',
+        ].join('')
+    });
+  }
   $scope.gridOptions.columnDefs.push({
     displayName: 'Status',
     name: 'active',
@@ -69,7 +82,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
       name: 'action',
       cellClass: 'text-center',
       headerCellClass: 'text-center',
-      maxWidth: 150,
+      maxWidth: 110,
       // cellTemplate: [
 
       //   '<div class="ui-grid-cell-contents"><a class="btn btn-xs btn-primary" name="execbutton"  ng-click="grid.appScope.show_dashboard(row.entity)">View</a></div>',
@@ -78,16 +91,18 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
       cellTemplate: [
 
         '<div class="ui-grid-cell-contents">',
-        '<div class="col-md-12" style="display:inline-flex;">',
+        '<div class="col-md-12" style="display:inline-flex;;padding-left:0px;padding-right:0px">',
         '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'View\') == -1"><a ng-click="grid.appScope.show_dashboard(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') == -1" ><a ng-click="grid.appScope.editDashboard(row.entity)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
+        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') != -1 && row.entity.locked ==\'N\'?false:true"><a ng-click="grid.appScope.editDashboard(row.entity)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Delete\')"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Restore\')"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Publish\')"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
+        '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unlock\') == -1" ng-if="row.entity.locked == \'N\'"><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'Lock\')"><i class="icon-lock" aria-hidden="true"></i> Lock</a></li>',
+				'    <li ng-disabled="grid.appScope.privileges.indexOf(\'Lock\') == -1" ng-if="row.entity.locked == \'Y\'"><a ng-click="grid.appScope.lockOrUnLock(row.entity,\'UnLock\')"><i class="icon-lock-open" aria-hidden="true"></i>  Unlock</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Unpublish\')"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Clone\') == -1"><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Export\') == -1"><a ng-click="grid.appScope.export(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
@@ -191,6 +206,16 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
     });
   }
 
+  $scope.lockOrUnLock = function (data, action) {
+		var uuid = data.uuid;
+		var version = data.version;
+		$scope.obj = data;
+		$scope.msg = action;
+		$('#confModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
 
   $scope.submitOk = function (action) {
     if (action == "Clone") {
@@ -209,7 +234,12 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
     }
     else if (action == "Unpublish") {
       $scope.okPublished();
-    }
+    }else if(action == "Lock"){
+			$scope.okLocked();
+		}
+		else if(action == "UnLock"){
+			$scope.okLocked();
+		}
   }
 
   $scope.okClone = function () {
@@ -267,8 +297,8 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
         if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
           $scope.gridOptions.data[$scope.obj.index].active = "Y"
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = "Dashboard Restored Successfully"
+        notify.title = 'Success',
+        otify.content = "Dashboard Restored Successfully"
         $scope.$emit('notify', notify);
       }
     }
@@ -322,7 +352,32 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
       }
     }
   }
-
+  $scope.okLocked = function () {
+		$('#confModal').modal('hide');
+		if ($scope.obj.locked == 'N') {
+			CommonService.lock($scope.obj.id,'dashboard').then(function (response) { OnSuccessLock(response.data) });
+			var OnSuccessLock = function (response) {
+				
+				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
+					$scope.gridOptions.data[$scope.obj.index].locked ="Y";
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = "Dashboard Lock Successfully"
+				$scope.$emit('notify', notify);
+			}
+		}
+		else {
+			CommonService.unLock($scope.obj.id,'dashboard').then(function (response) { OnSuccessUnLock(response.data) });
+			var OnSuccessUnLock = function (response) {
+				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
+					$scope.gridOptions.data[$scope.obj.index].locked = "N"
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = "Dashboard Unpublish Successfully"
+				$scope.$emit('notify', notify);
+			}
+		}
+	}
 
 
   DahsboardSerivce.getAllLatestCompleteObjects("dashboard").then(function (response) { onSuccessGetAllLatestCompleteObjects(response.data) });
@@ -378,7 +433,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
 
 
 //Start ShowDashboradController
-DatavisualizationModule.controller('ShowDashboradController2', function ($location, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce,CF_DOWNLOAD) {
+DatavisualizationModule.controller('ShowDashboradController2', function ($location,privilegeSvc,$http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce,CF_DOWNLOAD) {
   $scope.showmap = true;
   $scope.isApplyFilter = true
   $scope.datax = [];
@@ -452,7 +507,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
     return style;
   }
-
+  $scope.privilegesDashboard = privilegeSvc.privileges['dashboard'] || [];
+  $scope.isPrivlageDashboard = $scope.privilegesDashboard.indexOf('Edit') == -1;
+  $scope.privilegesVizpod = privilegeSvc.privileges['vizpod'] || [];
+	$scope.isPrivlageVizpod = $scope.privilegesVizpod.indexOf('Edit') == -1;
+	$scope.$on('privilegesUpdated', function (e, data) {
+    $scope.privilegesDashboard = privilegeSvc.privileges['dashboard'] || [];
+    $scope.isPrivlageDashboard = $scope.privilegesDashboard.indexOf('Edit') == -1;
+    $scope.privilegesVizpod = privilegeSvc.privileges['vizpod'] || [];
+    $scope.isPrivlageVizpod = $scope.privilegesVizpod.indexOf('Edit') == -1;
+	});
   $scope.filterSearch = function (s) {
     var data = $filter('filter')($scope.orignalData, s, undefined);
     $scope.getResults(data)
@@ -654,7 +718,27 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 			backdrop: 'static',
 			keyboard: false
 		});
-	}
+  }
+  
+  $scope.onClickEditDashboard=function(uuid,lock){
+    if(lock =='Y' || $scope.isPrivlageDashboard){
+      return false;
+    }
+    $state.go('metaListdashboard', {
+      id: uuid,
+      mode: 'false'
+    });
+  }
+  $scope.onClickEditVizpod=function(uuid,version,lock){
+    if(lock =='Y' || $scope.isPrivlageVizpod){
+      return false;
+    }
+    $state.go('dvvizpod', {
+      id: uuid,
+      version:version,
+      mode: 'false'
+    });
+  }
   $scope.onFilterChange = function (index) {
     // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
     // console.log(JSON.stringify($scope.selectedAttributeValue))
@@ -742,6 +826,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         vizpoddetailjson.version = $scope.sectionRows[i].columns[j].vizpodInfo.version
         vizpoddetailjson.name = $scope.sectionRows[i].columns[j].vizpodInfo.name;
         vizpoddetailjson.type = $scope.sectionRows[i].columns[j].vizpodInfo.type;
+        vizpoddetailjson.locked = $scope.sectionRows[i].columns[j].vizpodInfo.locked;
         vizpoddetailjson.class = "";
         vizpoddetailjson.iconclass = "fa fa-expand";
         vizpoddetailjson.showtooltiptitle = "Maximize";

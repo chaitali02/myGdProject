@@ -61,7 +61,6 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.MapIterOperator;
@@ -112,8 +111,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	protected MetadataUtil daoRegister;
 	@Autowired
 	protected MapOperator mapOperator;
-	@Autowired
-	protected FilterOperator filterOperator;
 	@Autowired
 	protected MapIterOperator mapIterOperator;
 	@Autowired

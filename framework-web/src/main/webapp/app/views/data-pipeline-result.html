@@ -19,13 +19,15 @@
                 text-overflow:ellipsis;">
           <a ng-click="showResults || showGroupGraph ? closeSubTabs() : close()">{{dagExecName}}</a>
         </li>
-        <li ng-if="daggroupExecName">
+        <li ng-if="daggroupExecName" style="overflow: hidden;white-space:nowrap;max-width:150px;margin-bottom:-4px;
+                text-overflow:ellipsis;">
           <i class="fa fa-circle"></i>
           <a ng-click="showResults || showGroupGraph ? closeSubTabs() : close()">{{daggroupExecName}}</a>
         </li>
-        <li ng-if="resultExecName">
+        <li ng-if="resultExecName" style="overflow: hidden;white-space:nowrap;max-width:150px;margin-bottom:-4px;
+                text-overflow:ellipsis;">
           <i class="fa fa-circle"></i>
-          <span>{{resultExecName}}</span>
+          <span title="{{resultExecName}}">{{resultExecName}}</span>
         </li>
       </ul>
       <div class="page-toolbar">
@@ -49,20 +51,20 @@
           <i class="fa fa-cogs"></i>Pipeline Result
         </div>
         <div class="tools">
-
-          <a style="margin:2px auto;color:white;" ng-disabled="!allowReExecution" ng-class="{'currentpage':!allowReExecution}" title="Restart Pipeline"
+          <a style="color:white;font-size:16px" href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+            tooltip ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a> 
+          <a style="color:white;" ng-disabled="!allowReExecution" ng-class="{'currentpage':!allowReExecution}" title="Restart Pipeline"
             data-toggle="tooltip" data-placement="top" tooltip ng-click="reExecute()">
             <i class="fa fa-repeat" area-hidden="true"></i>
           </a>
-          <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"
+          <!-- <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
             <i class="glyphicon glyphicon-file" area-hidden="true"></i>
-          </a>
+          </a> -->
 
-          <a style="margin:2px auto;color:white;" href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = true">
-            <i class="fa fa-sitemap" area-hidden="true"></i>
-          </a>
+         
           <a ng-show="showGrid && !showGroupDowne && !showgraphdiv" style="color:white;" ng-click="downloadPiplineFile()" tooltip-placement="{{showtooltip}}"
             uib-tooltip="Download">
             <i class=" fa fa-download" aria-hidden="true"></i>
@@ -71,7 +73,10 @@
             data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
             <i class="fa fa-download" area-hidden="true"></i>
           </a>
-
+          <a style="color:white;" href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
+          tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = true">
+            <i class="fa fa-sitemap" area-hidden="true"></i>
+          </a>
           <!-- <a style="margin:2px auto;color:white;" ng-click = "zoomOut()" title="Maximize" data-toggle="tooltip" data-placement="top" tooltip ><i class="fa fa-minus" aria-hidden="true"></i>
           </a>&nbsp; -->
           <!-- <a style="margin:2px auto;color:white;" ng-click = "requestFullscreenResult()" title="Maximize" ng-hide="fullscreen" data-toggle="tooltip" data-placement="top" tooltip ><i class="fa {{fullscreen ? 'fa-compress': 'fa-expand'}}" aria-hidden="true"></i>
@@ -84,6 +89,7 @@
           </a>
           <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="showResults || showGroupGraph ? closeSubTabs() : close()"
             style="height:14px;">
+           
             <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
           </a>
         </div>

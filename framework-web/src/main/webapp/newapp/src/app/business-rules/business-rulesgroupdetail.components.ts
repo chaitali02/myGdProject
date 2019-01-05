@@ -273,4 +273,7 @@ export class BusinessRulesGroupDetailComponent {
     };
 
   }
+  clear(){
+    this.selectedItems=[]
+  }
 }

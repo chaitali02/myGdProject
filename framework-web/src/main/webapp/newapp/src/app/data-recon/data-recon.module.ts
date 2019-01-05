@@ -55,4 +55,4 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
 
 })
 
-export class DataReconModule {debugger; }
+export class DataReconModule {; }

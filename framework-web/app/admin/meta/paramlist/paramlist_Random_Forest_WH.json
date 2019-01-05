@@ -9,9 +9,10 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Fri Jul 06 19:55:55 IST 2018",
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
 	"appInfo": [
 			{
@@ -51,6 +52,8 @@
       "paramId": "0",
       "paramName": "numTrees",
       "paramType": "list",
+   	  "paramDispName" : "Num Trees",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -62,6 +65,8 @@
       "paramId": "1",
       "paramName": "maxDepth",
       "paramType": "list",
+   	  "paramDispName" : "Max Depth",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -73,6 +78,8 @@
       "paramId": "2",
       "paramName": "minInstancesPerNode",
       "paramType": "list",
+   	  "paramDispName" : "Min Instances PerNode",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -84,6 +91,8 @@
       "paramId": "3",
       "paramName": "maxBins",
       "paramType": "list",
+   	  "paramDispName" : "Max Bins",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -95,6 +104,8 @@
       "paramId": "4",
       "paramName": "seed",
       "paramType": "list",
+   	  "paramDispName" : "Seed",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -106,6 +117,8 @@
       "paramId": "5",
       "paramName": "numFolds",
       "paramType": "integer",
+   	  "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"

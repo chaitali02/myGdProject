@@ -50,6 +50,7 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
+import { CompareResultComponent } from '../data-quality/compareresult/compareresult.component';
 // import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
 // import { SystemMonitoringComponent } from '../system-monitoring/system-monitoring.component'
 @NgModule({
@@ -93,7 +94,8 @@ import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
         OrderBy,
         OrderByJob,
         OrderByMeta,
-        FilterMetaPipe
+        FilterMetaPipe,
+        CompareResultComponent
     ],
     providers: [
         LayoutService,

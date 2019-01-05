@@ -13,9 +13,10 @@
     },
     "value": null
   },
-  "createdOn": "Tue May 22 13:18:56 IST 2018",
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -47,8 +48,8 @@
       "key": "",
       "partition": "N",
       "dispName": "id",
-      "active": "Y",
-      "expr": null
+      "active" : "Y",
+       "expr":   null
     },
     {
       "attributeId": 1,
@@ -58,8 +59,8 @@
       "key": "",
       "partition": "N",
       "dispName": "version",
-      "active": "Y",
-      "expr": null
+      "active" : "Y",
+       "expr":   null
     },
     {
       "attributeId": 2,
@@ -69,8 +70,8 @@
       "key": "",
       "partition": "N",
       "dispName": "interest_rate",
-      "active": "Y",
-      "expr": null
+      "active" : "Y",
+       "expr":   null
     },
     {
       "attributeId": 3,
@@ -80,8 +81,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_type_id",
-      "active": "Y",
-      "expr": null
+      "active" : "Y",
+       "expr":   null
     },
     {
       "attributeId": 4,
@@ -91,8 +92,8 @@
       "key": "",
       "partition": "N",
       "dispName": "account_status_id",
-      "active": "Y",
-      "expr": null
+      "active" : "Y",
+       "expr":   null
     }
   ]
 }

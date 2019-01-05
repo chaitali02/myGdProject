@@ -81,8 +81,18 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListrelation', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.relationdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListrelation', {
 			id: uuid,
@@ -139,18 +149,21 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var relationversion = {};
 				relationversion.version = response[i].version;
 				$scope.relation.versions[i] = relationversion;
-
 			}
 		}
-
-		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation').then(function (response) { onSuccess(response.data) });
+		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -169,7 +182,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			}
 
 			$scope.rhsAllAttribute = [];
-			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version)
+				.then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.rhsAllAttribute = [];
 				$scope.lhsAllAttribute = response.allattributes;
@@ -203,10 +217,16 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			// }
 		
 		} //End Onsuccess()
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}//End IF
 	else {
-		$scope.showactive = "false"
+		$scope.showactive = "false";
+		$scope.relationdata={};
+		$scope.relationdata.locked="N";
 		MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			$scope.alldatapod = response
@@ -236,7 +256,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 	 
 	$scope.onChangeJoinMetaType=function(type,index){
-	
 		MetadataRelationSerivce.getAllLatest(type).then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			console.log(response)
@@ -389,8 +408,12 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.selectVersion = function () {
 		$scope.alldatapod = null;
 		$scope.myform.$dirty = false;
-		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -420,9 +443,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 					}
 
 				}
-
-
-
 			}
 			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 			var onSuccessrelation = function (response) {
@@ -434,6 +454,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 				$scope.allJoinDatapod();
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 
@@ -448,6 +472,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		relationjson.uuid = $scope.relationdata.uuid;
 		relationjson.name = $scope.relationdata.name;
 		relationjson.active = $scope.relationdata.active;
+		relationjson.locked = $scope.relationdata.locked;
 		relationjson.desc = $scope.relationdata.desc;
 		relationjson.published = $scope.relationdata.published;
 		var tagArray = [];

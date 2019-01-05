@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS FACT_CUSTOMER_SUMMARY_MONTHLY;
-CREATE TABLE FACT_CUSTOMER_SUMMARY_MONTHLY(	
-	CUSTOMER_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	YYYY_MM VARCHAR(50) DEFAULT 0 NOT NULL,
-	TOTAL_TRANS_COUNT VARCHAR(50),
-	TOTAL_TRANS_AMOUNT_USD INTEGER(10),
-	AVG_TRANS_AMOUNT INTEGER(10),
-	MIN_AMOUNT DECIMAL(10,2),
-	MAX_AMOUNT DECIMAL(10,2),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT CUSTOMER_ID_PK  PRIMARY KEY(CUSTOMER_ID,YYYY_MM));
+drop table if exists fact_customer_summary_monthly;
+create table fact_customer_summary_monthly(	
+	customer_id varchar(50) default 0 not null,
+	yyyy_mm varchar(50) default 0 not null,
+	total_trans_count varchar(50),
+	total_trans_amount_usd integer(10),
+	avg_trans_amount integer(10),
+	min_amount decimal(10,2),
+	max_amount decimal(10,2),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id,yyyy_mm));

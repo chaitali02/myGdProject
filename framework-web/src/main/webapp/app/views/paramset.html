@@ -28,7 +28,8 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'paramset'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="paramsetdata" comment-panel-directive></div>
+  <div options="dirOptions" type="'paramset'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="paramsetdata"
+    comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
@@ -38,7 +39,15 @@
             <i class="fa fa-gift"></i>{{paramsetdata.name | strReplace:'_':' '|capitalize}}
           </div>
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(paramsetdata.uuid,paramsetdata.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || paramsetdata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              data-placement="top" tooltip ng-click="enableEdit(paramsetdata.uuid,paramsetdata.version)" ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(paramsetdata.uuid,paramsetdata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -46,7 +55,7 @@
             <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true ||  isEdit==true)? 'currentpage':'notcurrentpage'"
               ng-click="showview(paramsetdata.uuid,paramsetdata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
+            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(paramsetdata.uuid,paramsetdata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -72,150 +81,173 @@
           </div>
 
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitParamSet()" prevent-enter-submit>
-              <div class="form-group" ng-show="paramsetdata.uuid">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="paramsetdata.uuid">
-                </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramsetdata.name" required="">
-                </div>
-              </div>
-              <div class="form-group" ng-show="paramsetdata.uuid">
-                <label class="col-md-3 control-label">Version</label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 ng-disabled="{{isversionEnable}}" ng-change="selectVersion(paramset.defaultVersion.uuid,paramset.defaultVersion.version)"
-                    data-ng-model="paramset.defaultVersion.version" ng-options="c.version as c.version for c in paramset.versions">
-                  </select>
-                </div>
-              </div>
-              <div class="form-group" ng-show="paramsetdata.uuid">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="true" ng-model="paramsetdata.createdBy.ref.name">
-                </div>
-              </div>
-
-              <div class="form-group" ng-show="paramsetdata.uuid">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" ng-model="paramsetdata.createdOn" ng-disabled="true" class="form-control">
-                </div>
-              </div>
-              <div class="form-group taginput">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
-                    </auto-complete>
-                </tags-input>
-                </div>
-              </div>
-
-
-              <div class="form-group">
-                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="paramsetdata.desc" rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="paramsetdata.active='Y'">
-                    <label class="btn btn-default" ng-model="paramsetdata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="paramsetdata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uncheckable>No</label>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitParamSet()" prevent-enter-submit>
+                <div class="form-group" ng-show="paramsetdata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="paramsetdata.uuid">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="paramsetdata.published='N'">
-                    <label class="btn btn-default" ng-model="paramsetdata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="paramsetdata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
-                      uncheckable>No</label>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramsetdata.name" required="">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Parameter List
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectparamlist" ng-options="r as r.name for r in allparamlist | orderBy:'name' track by r.uuid "
-                    ng-change="onChangeParamSet()" required="">
-                  </select>
+                <div class="form-group" ng-show="paramsetdata.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 ng-disabled="{{isversionEnable}}" ng-change="selectVersion(paramset.defaultVersion.uuid,paramset.defaultVersion.version)"
+                      data-ng-model="paramset.defaultVersion.version" ng-options="c.version as c.version for c in paramset.versions">
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group" style="padding-top:10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a ui-sref="paramset" class="btn btn-primary">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty ==true)?false:true">
-                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                  </span>
+                <div class="form-group" ng-show="paramsetdata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="paramsetdata.createdBy.ref.name">
+                  </div>
                 </div>
-              </div>
 
-              <div class="x_title">
-                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeRow()"></button>
-                <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
-                <h4>
-                  <strong>Parameter Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <br/>
-              <div ng-show="isTabelShow" style="overflow-x: auto;">
-                <table class=" row-border hover table  table-striped table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="text-align:center;Vertical-align: middle;width:5%;">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/>
-                      </span>
-                      </th>
-                      <th style="width:6%;text-align:center">ID</th>
-                      <th class="text-center" ng-repeat="tablecol in paramtablecol">{{tablecol.paramName}}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="tabledata in paramtable">
-                      <td style="text-align:center;Vertical-align:middle;width:5%;">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/>
-                        </span>
-                      </td>
-                      <td>
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input type="text" ng-model="$index" ng-disabled="true" class="form-control">
-                        </span>
-                      </td>
-                      <td ng-repeat="tablecol in tabledata.paramSetVal">
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input type="text" ng-model="tablecol.value" ng-disabled="{{mode}}" class="form-control">
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
+                <div class="form-group" ng-show="paramsetdata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="paramsetdata.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="paramsetdata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="paramsetdata.active='Y'">
+                      <label class="btn btn-default" ng-model="paramsetdata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="paramsetdata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="paramsetdata.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="paramsetdata.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="paramsetdata.published='N'">
+                      <label class="btn btn-default" ng-model="paramsetdata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="paramsetdata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Parameter List
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectparamlist" ng-options="r as r.name for r in allparamlist | orderBy:'name' track by r.uuid "
+                      ng-change="onChangeParamSet()" required="">
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" style="padding-top:10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a ui-sref="paramset" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty ==true)?false:true">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="x_title">
+                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeRow()"></button>
+                  <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
+                  <h4>
+                    <strong>Parameter Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <br/>
+                <div ng-show="isTabelShow" style="overflow-x: auto;">
+                  <table class=" row-border hover table  table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="text-align:center;Vertical-align: middle;width:5%;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
+                            />
+                          </span>
+                        </th>
+                        <th style="width:6%;text-align:center">ID</th>
+                        <th class="text-center" ng-repeat="tablecol in paramtablecol">{{tablecol.paramName}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="tabledata in paramtable">
+                        <td style="text-align:center;Vertical-align:middle;width:5%;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}" />
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input type="text" ng-model="$index" ng-disabled="true" class="form-control">
+                          </span>
+                        </td>
+                        <td ng-repeat="tablecol in tabledata.paramSetVal">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input type="text" ng-model="tablecol.value" ng-disabled="{{mode}}" class="form-control">
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

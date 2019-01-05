@@ -18,6 +18,7 @@
         "DEMO"
     ],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "inputReq" : "N",
     "appInfo" : [ 

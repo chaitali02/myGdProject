@@ -70,7 +70,18 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('creaetgraphpod', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.graphpodData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('creaetgraphpod', {
 			id: uuid,
@@ -137,10 +148,14 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		GraphpodService.getOneByUuidandVersion($stateParams.id, $stateParams.version,CF_META_TYPES.graphpod).then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		GraphpodService.getOneByUuidandVersion($stateParams.id, $stateParams.version,CF_META_TYPES.graphpod)
+			.then(function (response) { onSuccessGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.graphpodData = response.graphpod
+			$scope.isEditInprogess=false;
+			$scope.graphpodData = response.graphpod;
 			var defaultversion = {};
 			defaultversion.version =$scope.graphpodData.version;
 			defaultversion.uuid = $scope.graphpodData.uuid;
@@ -156,25 +171,35 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}//End If
 	else {
+		$scope.graphpodData={};
+		$scope.graphpodData.locked="N"
 		
 	}
 
 
 	$scope.selectVersion = function (uuid, version) {
 		$scope.myform.$dirty = false;
-		GraphpodService.getOneByUuidandVersion(uuid, version,CF_META_TYPES.graphpod).then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		GraphpodService.getOneByUuidandVersion(uuid, version,CF_META_TYPES.graphpod)
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.graphpodData = response.graphpod
+			$scope.isEditInprogess=false;
+			$scope.graphpodData = response.graphpod;
 			var defaultversion = {};
 			defaultversion.version =$scope.graphpodData.version;
 			defaultversion.uuid = $scope.graphpodData.uuid;
 			$scope.graphpod.defaultVersion = defaultversion;
 			var tags = [];
-			$scope.nodeTableArray=response.nodeInfo;
-			$scope.edgeTableArray=response.edgeInfo;
+				$scope.nodeTableArray=response.nodeInfo;
+				$scope.edgeTableArray=response.edgeInfo;
 			if ($scope.graphpodData .tags != null) {
 				for (var i = 0; i < $scope.graphpodData.tags.length; i++) {
 					var tag = {};
@@ -183,6 +208,10 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					$scope.tags = tags;
 				}
 			}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	}
 
@@ -258,7 +287,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			keyboard: false
 		});	
 		if(type =='node'){
-			setTimeout(function () {debugger;
+			setTimeout(function () {;
 				$scope.selectAttr=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety];
 				if($scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]){
 	            	$scope.selectType=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type;
@@ -327,12 +356,12 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			return false;
 		};
 	};
-	$scope.getAllAttributeBySource=function(data,index,type){
+	$scope.getAllAttributeBySource=function(data,index,type){debugger
 		if(!data){
 			return null;
 		}
 		CommonService.getAllAttributeBySource(data.uuid,data.type).then(function (response) { onSuccessAttributeBySource(response.data) });
-		var onSuccessAttributeBySource = function (response) {
+		var onSuccessAttributeBySource = function (response) {debugger
 			if(type =='node'){
 		    	$scope.nodeTableArray[index].allAttributeInto=response;
 			}
@@ -498,6 +527,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		graphpodJson.name = $scope.graphpodData.name
 		graphpodJson.desc = $scope.graphpodData.desc
 		graphpodJson.active = $scope.graphpodData.active;
+		graphpodJson.locked = $scope.graphpodData.locked;
 		graphpodJson.published = $scope.graphpodData.published;
 		var tagArray = [];
 		if ($scope.tags != null) {
