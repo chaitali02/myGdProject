@@ -208,6 +208,7 @@ export class DatapodComponent {
     this.selectType(this.selectdatasourceType);
   }
   showDatapodSampleTable(data) {
+    this.showgetResults=false
     this.isDataError = false;
     this.isShowSimpleData = true;
     this.isDataInpogress = true;
@@ -347,6 +348,7 @@ export class DatapodComponent {
     this.graphDataStatus = false;
     this.showgraphdiv = false
     this.isShowDatastore=false
+    this.showgetResults=false
   }
 
   showDatapodGraph() {
@@ -356,6 +358,7 @@ export class DatapodComponent {
     this.graphDataStatus = true;
     this.showgraphdiv = true;
     this.isShowDatastore=false
+    this.showgetResults=false
   }
 
   addRow() {
