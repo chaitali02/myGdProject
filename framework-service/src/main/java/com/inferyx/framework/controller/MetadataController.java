@@ -642,7 +642,7 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType, 
-			@RequestParam(value = "resolveFlag", required = false, defaultValue = "Y") String resolveFlag)
+			@RequestParam(value = "resolveFlag", required = false, defaultValue = "N") String resolveFlag)
 			throws JsonProcessingException, JSONException {
 
 		return registerService.getFormulaByType2(uuid,formulaType, resolveFlag);
