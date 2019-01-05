@@ -67,7 +67,7 @@ export class DataIngestionService {
 	}
 
 	getTopicList(uuid: any, version: any): Observable<any[]> {
-		let url = 'ingest/getTopicList?action=view&type=datasource&uuid=' + uuid+'&version=';
+		let url = 'ingest/getTopicList?action=view&type=datasource&uuid=' + uuid + '&version=';
 		return this._sharedService.getCall(url)
 			.map((response: Response) => {
 				return <any[]>response.json();
@@ -96,7 +96,6 @@ export class DataIngestionService {
 	getOneByUuidAndVersion(uuid: any, version: any, type: String): Observable<any[]> {
 		return this._commonService.getOneByUuidAndVersion(uuid, version, type)
 			.map((response: Response) => {
-
 				if (response["filterInfo"] != null) {
 					let filterInfoArray = [];
 					for (let k = 0; k < response["filterInfo"].length; k++) {
@@ -152,7 +151,7 @@ export class DataIngestionService {
 							let rhsAttri = {}
 							rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
 							rhsAttri["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
-							rhsAttri["label"] = "app."+response["filterInfo"][k].operand[1].attributeName;
+							rhsAttri["label"] = "app." + response["filterInfo"][k].operand[1].attributeName;
 							filterInfo["rhsAttribute"] = rhsAttri;
 						}
 						else if (response["filterInfo"][k].operand[1].ref.type == 'dataset') {
@@ -187,7 +186,6 @@ export class DataIngestionService {
 							let result2 = stringValue.includes("and")
 							if (result2 == true) {
 								filterInfo["rhsType"] = 'integer';
-
 								let betweenValArray = []
 								betweenValArray = stringValue.split("and");
 								filterInfo["rhsAttribute1"] = betweenValArray[0];
@@ -200,72 +198,63 @@ export class DataIngestionService {
 					}
 				}
 
-				if(response["attributeMap"]){
+				if (response["attributeMap"] != null) {
 					let attributeTableArray = [];
 					for (let i = 0; i < response["attributeMap"].length; i++) {
 						let attributeInfo = {};
 						attributeInfo["attrMapId"] = response["attributeMap"][i].attrMapId;
 						attributeInfo["sourceType"] = response["attributeMap"][i].sourceAttr.ref.type
 
-						if(response["attributeMap"][i].sourceAttr.ref.type == "datapod" ||
-						 response["attributeMap"][i].sourceAttr.ref.type == "dataset" || 
-						 response["attributeMap"][i].sourceAttr.ref.type == "rule"){
+						if (response["attributeMap"][i].sourceAttr.ref.type == "datapod" ||
+							response["attributeMap"][i].sourceAttr.ref.type == "dataset" ||
+							response["attributeMap"][i].sourceAttr.ref.type == "rule") {
 							let sourceAttribute = {};
-							
 							sourceAttribute["attributeId"] = response["attributeMap"][i].attrMapId;
 							sourceAttribute["attrName"] = response["attributeMap"][i].sourceAttr.attrName;
 							sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
-							sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name+"."+response["attributeMap"][i].sourceAttr.attrName;
+							sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name + "." + response["attributeMap"][i].sourceAttr.attrName;
 							attributeInfo["sourceAttribute"] = sourceAttribute;
 						}
 
-						else if(response["attributeMap"][i].sourceAttr.ref.type == "simple" ){
+						else if (response["attributeMap"][i].sourceAttr.ref.type == "simple") {
 							attributeInfo["sourceAttribute"] = response["attributeMap"][i]["sourceAttr"].value;
 							attributeInfo["sourceType"] = "string";
 						}
-						else if(response["attributeMap"][i].sourceAttr.ref.type == "attribute"){
+						else if (response["attributeMap"][i].sourceAttr.ref.type == "attribute") {
 							attributeInfo["sourceAttribute"] = response["attributeMap"][i]["sourceAttr"].value;
 							attributeInfo["sourceType"] = "datapod";
-
-							// let sourceAttribute = {};
-							// sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
-							// sourceAttribute["attrMapId"] = response["attributeMap"][i].attrMapId;
-							// sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name+"."+response["attributeMap"][i].sourceAttr.attrName;
 						}
 
-						if(response["attributeMap"][i].sourceAttr.ref.type == "formula"){
+						if (response["attributeMap"][i].sourceAttr.ref.type == "formula") {
 							let sourceAttribute = {};
 							sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
 							sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name;
 							attributeInfo["sourceAttribute"] = sourceAttribute;
 						}
-						if(response["attributeMap"][i].sourceAttr.ref.type == "function"){
+						if (response["attributeMap"][i].sourceAttr.ref.type == "function") {
 							let sourceAttribute = {};
 							sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
 							sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name;
 							attributeInfo["sourceAttribute"] = sourceAttribute;
 						}
-						if(response["attributeMap"][i].targetAttr.ref.type !="simple" && response["attributeMap"][i].targetAttr.ref.type !="attribute"){
-						
+						if (response["attributeMap"][i].targetAttr.ref.type != "simple" && response["attributeMap"][i].targetAttr.ref.type != "attribute") {
 							let targetAttribute = {};
-							targetAttribute
 							targetAttribute["uuid"] = response["attributeMap"][i].targetAttr.ref.uuid;
 							//targetAttribute["name"] = response["attributeMap"][i].targetAttr.ref.name;
-							targetAttribute["label"] = response["attributeMap"][i].targetAttr.ref.name+"."+response["attributeMap"][i].targetAttr.attrName;
+							targetAttribute["label"] = response["attributeMap"][i].targetAttr.ref.name + "." + response["attributeMap"][i].targetAttr.attrName;
 							targetAttribute["type"] = response["attributeMap"][i].targetAttr.ref.type;
 							targetAttribute["attributeId"] = response["attributeMap"][i].targetAttr.attrId;
-							targetAttribute["attrName"]=response["attributeMap"][i].targetAttr.attrName;
+							targetAttribute["attrName"] = response["attributeMap"][i].targetAttr.attrName;
 							attributeInfo["IsTargetAttributeSimple"] = "false";
 							attributeInfo["targetAttribute"] = targetAttribute;
 							//attributeInfo["targetAttribute"] = [];
 						}
 						else {
-							let targetAttribute=response["attributeMap"][i].targetAttr.value;
+							let targetAttribute = response["attributeMap"][i].targetAttr.value;
 							attributeInfo["IsTargetAttributeSimple"] = "true";
 							attributeInfo["targetAttribute"] = targetAttribute;
 							//attributeInfo["targetAttribute"] = [];
 						}
-
 						attributeTableArray[i] = attributeInfo;
 					}
 					response["attributeTableArray"] = attributeTableArray;
@@ -278,5 +267,4 @@ export class DataIngestionService {
 	private handleError(error: Response) {
 		return Observable.throw(error.statusText);
 	}
-
 }

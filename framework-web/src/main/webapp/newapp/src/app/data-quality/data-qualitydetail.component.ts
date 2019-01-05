@@ -704,9 +704,13 @@ export class DataQualityDetailComponent {
     }
   }
   onChangeOperator(index) {
+    this.dqdata.filterTableArray[index].rhsAttribute = null;
     if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
       this.dqdata.filterTableArray[index].rhsType = 'dataset';
     }
+    else{
+			this.dqdata.filterTableArray[index].rhsType = 'integer';
+		}
   }
   addRow() {
     if (this.dqdata.filterTableArray == null) {

@@ -856,15 +856,23 @@ export class DataReconDetailComponent {
   }
 
   onChangeOperator(index){
+    this.filterTableArray[index].rhsAttribute = null;
     if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
       this.filterTableArray[index].rhsType = 'dataset' ;
     }
+    else{
+			this.filterTableArray[index].rhsType = 'integer';
+		}	
   }
 
   onChangeOperatorTarget(index){
+    this.filterTableArray[index].rhsAttribute = null;
     if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
       this.targetFilterTableArray[index].rhsType = 'dataset' ;
     }
+    else{
+			this.filterTableArray[index].rhsType = 'integer';
+		}	
   }
 
   searchOption(index) {

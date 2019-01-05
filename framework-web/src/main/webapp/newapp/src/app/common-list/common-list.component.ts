@@ -611,7 +611,7 @@ export class CommonListComponent {
     }
   }
 
-  okDelete() {
+  okDelete() {debugger
     this._commonListService.delete(this.deleteId, this.type)
       .subscribe(
       response => {
@@ -857,12 +857,10 @@ export class CommonListComponent {
           response[i]["status"].color = this.metaconfig.getStatusDefs(response[i]["status"].stage)['color'];
         }
       }
-
     }
     else {
       for (let i = 0; i < response.length; i++) {
         response[i]["status"] = {};
-
       }
       this.selectedType = this.type
       this.isExec = "false";
@@ -967,7 +965,6 @@ export class CommonListComponent {
         this.items[9].disabled = ['InProgress'].indexOf(data.status.stage) == -1
         this.items[10].disabled = ['Completed', 'NotStarted', 'Terminating', 'InProgress'].indexOf(data.status.stage) != -1
       }
-
     }
     
     if (this.isJobExec == true) {
