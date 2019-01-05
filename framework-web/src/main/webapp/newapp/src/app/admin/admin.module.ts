@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
-import { MessagesModule, MessageModule, MenuItem, TabMenuModule, TabViewModule, GrowlModule} from 'primeng/primeng';
+import { MessagesModule, MessageModule, TabViewModule, GrowlModule} from 'primeng/primeng';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -37,6 +37,9 @@ import { DataTableModule } from 'primeng/components/datatable/datatable';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { MigrationAssistImportComponent } from './migration-assist/migration-assist-import/migration-assist-import.component';
 import { MigrationAssistService } from '../metadata/services/migration-assist.services';
+import { SettingsDetailsComponent } from './settings/settings-details/settings-details.component';
+import { TabMenuModule } from 'primeng/components/tabmenu/tabmenu';
+import { MenuItem } from 'primeng/components/common/api';
 
 @NgModule({
     imports:[
@@ -55,9 +58,9 @@ import { MigrationAssistService } from '../metadata/services/migration-assist.se
         DropdownModule ,
         CalendarModule,
         DataTableModule,
-        MenuModule
+        MenuModule,
+        TabMenuModule        
     ],
-    
     declarations :[
         AdminComponent,
         ActivityComponent,
@@ -73,8 +76,8 @@ import { MigrationAssistService } from '../metadata/services/migration-assist.se
         SettingsComponent,
         MigrationAssistComponent,
         MigrationAssistExportComponent,
-        MigrationAssistImportComponent
-        
+        MigrationAssistImportComponent,
+        SettingsDetailsComponent
     ],
     providers:[
         MetaDataDataPodService,
