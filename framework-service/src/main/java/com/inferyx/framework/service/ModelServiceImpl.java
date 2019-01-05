@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Row;
@@ -333,13 +332,13 @@ public class ModelServiceImpl {
 			for (int i = 0; i < model.getFeatures().size(); i++) {
 				String attributeId = model.getFeatures().get(i).getFeatureId();
 				//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(model.getFeatures().get(i).getRef().getUuid());
-				if(model.getFeatures().get(i).getType().equals(MetaType.dataset)) {
+				if(model.getFeatures().get(i).getType().equals(MetaType.dataset.toString())) {
 					DataSet datasetDO = (DataSet) commonServiceImpl.getLatestByUuid(model.getFeatures().get(i).getFeatureId(), MetaType.dataset.toString());
 					String datapodName = datasetDO.getName();
 					model.getFeatures().get(i).setName(datapodName);
 					List<AttributeSource> attributeSourceList = datasetDO.getAttributeInfo();
 					model.getFeatures().get(i).setName(attributeSourceList.get(Integer.parseInt(attributeId)).getAttrSourceName());	
-				}else if(model.getFeatures().get(i).getType().equals(MetaType.datapod)) {					
+				}else if(model.getFeatures().get(i).getType().equals(MetaType.datapod.toString())) {					
 					Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(model.getFeatures().get(i).getFeatureId(), MetaType.datapod.toString());
 					String datapodName = datapodDO.getName();
 					model.getFeatures().get(i).setName(datapodName);
@@ -902,6 +901,7 @@ public class ModelServiceImpl {
 		while ((strLine = buffReader.readLine()) != null)   {
 			result = result.concat(strLine).concat("\n");
 		}
+		buffReader.close();
 		return result;
 	}
 	
@@ -1401,7 +1401,7 @@ public class ModelServiceImpl {
 	
 	public TrainExec create(Train train, Model model, ExecParams execParams, ParamMap paramMap,
 			TrainExec trainExec) throws Exception {
-		String logPath = null;
+//		String logPath = null;
 		
 		try {
 			MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
