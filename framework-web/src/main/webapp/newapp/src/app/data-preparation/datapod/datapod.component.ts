@@ -23,6 +23,14 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  length: string;
+  isDisabled: boolean;
+  resultcols: any[];
+  resultData: any;
+  showgetResults: boolean;
+  rowData1: any;
+  rowData: any;
+  isShowDatastore: boolean;
   selectdatasourceName: any;
   runMode: any;
   IsError: boolean;
@@ -200,6 +208,7 @@ export class DatapodComponent {
     this.selectType(this.selectdatasourceType);
   }
   showDatapodSampleTable(data) {
+    this.showgetResults=false
     this.isDataError = false;
     this.isShowSimpleData = true;
     this.isDataInpogress = true;
@@ -221,6 +230,7 @@ export class DatapodComponent {
 
   OnSuccesDatapodSample(response) {
     this.IsTableShow = true;
+    this.isShowDatastore=false
     this.colsdata = response
     let columns = [];
     console.log(response)
@@ -337,6 +347,8 @@ export class DatapodComponent {
     this.showgraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false
+    this.isShowDatastore=false
+    this.showgetResults=false
   }
 
   showDatapodGraph() {
@@ -345,6 +357,8 @@ export class DatapodComponent {
     this.isShowSimpleData = false;
     this.graphDataStatus = true;
     this.showgraphdiv = true;
+    this.isShowDatastore=false
+    this.showgetResults=false
   }
 
   addRow() {
@@ -398,5 +412,69 @@ export class DatapodComponent {
     const filename = parts[1];
     const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
     saveAs(blob, filename);
+  }
+  showDatastrores=function(data){
+		this.showFrom = false;
+		this.isShowSimpleData = false;
+		this.showGraphDiv = false;
+		this.isDatastoreResult=false;
+		this.isShowCompareMetaData=false;
+    this.isDownloadDatapod=true;
+    this.showdatapod=false
+    this.showgetResults=false
+    this._datapodService.getDatastoreByDatapod(data,"datapod").subscribe(
+      response => { this.OnSuccesgetDatastoreByDatapod(response) },
+      error => console.log('Error :: ' + error)
+    )
+    
+		// MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
+		// var onSuccessGetDatastoreByDatapode = function (response) {
+		// 	this.isShowDatastore=true;
+		// 	this.originalDataDatastore=response;
+		// 	this.gridOptionsDataStrore.data=response;
+		// 	console.log(response)
+		// }
+	
+  }
+  OnSuccesgetDatastoreByDatapod(response){
+    console.log(response)
+    this.isShowDatastore=true;
+    this.rowData1=response
+    this.isDisabled=false
+  }
+  onChangeRadio(data){
+  console.log(data)
+  this._datapodService.getResult(data.uuid,data.version).subscribe(
+    response => { this.OnSuccesgetResult(response) },
+    error => console.log('Error :: ' + error)
+  )
+  }
+  OnSuccesgetResult(response){
+    this.isDisabled=true
+    this.showgetResults=true
+    this.resultData = response
+    let columns = [];
+    console.log(response)
+    if (response.length && response.length > 0) {
+      Object.keys(response[0]).forEach(val => {
+        if (val != "rownum") {
+          let width = ((val.split("").length * 9) + 20) + "px"
+          columns.push({ "field": val, "header": val, colwidth: width });
+        }
+      });
+    }
+    
+    this.length=((response.length < 10 ? response.length * 50 : 435) + 193) + 'px'
+    this.resultcols = columns
+    this.columnOptions = [];
+    for (let i = 0; i < this.resultcols.length; i++) {
+      this.columnOptions.push({ label: this.resultcols[i].header, value: this.resultcols[i] });
+    }
+  }
+  onRowSelect(event) {
+    console.log(event.data);
+  }
+  downloadDatastoreResult(){
+
   }
 }

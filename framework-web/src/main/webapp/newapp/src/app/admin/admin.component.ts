@@ -20,8 +20,5 @@ import {Router,
   templateUrl: './admin.template.html',
   styleUrls: []
 })
-export class AdminComponent  {
-
-  
-
+export class AdminComponent  {debugger
 }
