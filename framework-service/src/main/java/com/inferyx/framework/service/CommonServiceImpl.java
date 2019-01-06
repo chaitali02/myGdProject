@@ -1738,6 +1738,8 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		String uuid = "";
+		String version = "";
 		if (actualDegree > requiredDegree) {
 			return null;
 		}
@@ -1747,15 +1749,31 @@ public class CommonServiceImpl <T> {
 			Class [] interfaces = null;
 			String name = null;
 			String attrId = null;
+			if (object instanceof AttributeRefHolder) {
+				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
+				object.getClass().getMethod(SET+"AttrName").invoke(object, resolveAttributeName(attrId, object));
+				return object;
+			}
+			if (object instanceof MetaIdentifierHolder) {
+				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+			}
+			if (object instanceof MetaIdentifier) {
+				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
+				name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
+				if(name != null) {
+					object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
+					name = null;							
+				}
+				return object;
+			}	
 			try{
 				for (Method method : methodList) {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
 //					logger.info(" GET method name : " + method.getName());
-					if (object instanceof MetaIdentifier) {
-						type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
-					}					
+									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
 						name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
