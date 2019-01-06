@@ -1732,8 +1732,15 @@ public class CommonServiceImpl <T> {
 		 return baseEntityListNew;		 
 	 }
 
-	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		return resolveName(object, type, 2, 0);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		if (actualDegree > requiredDegree) {
+			return null;
+		}
 		if(object != null) {
 			Method [] methodList = object.getClass().getMethods();
 			ArrayList listObj = null;
@@ -1745,7 +1752,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-					//logger.info(" GET method name : " + method.getName());
+//					logger.info(" GET method name : " + method.getName());
 					if (object instanceof MetaIdentifier) {
 						type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
 					}					
@@ -1843,11 +1850,14 @@ public class CommonServiceImpl <T> {
 						}						
 					}
 					
-					Object invokedObj = method.invoke(object);
-					if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
+					if (method.getReturnType().isPrimitive()) {
 						continue;
 					}
-					//logger.info("Class : " + invokedObj.getClass().getName());
+					Object invokedObj = method.invoke(object);
+					if (invokedObj == null /*|| invokedObj.getClass().isPrimitive()*/) {
+						continue;
+					}
+//					logger.info("Class : " + invokedObj.getClass().getName());
 					if (invokedObj.getClass().getName().startsWith("[") || invokedObj.getClass().getName().equals("java.util.ArrayList")) {
 						interfaces = invokedObj.getClass().getInterfaces();
 						if (interfaces == null || interfaces.length <= 0) {
@@ -1858,7 +1868,7 @@ public class CommonServiceImpl <T> {
 								listObj = (ArrayList)invokedObj;
 								for (Object arrayObj : listObj) {
 									if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
-										resolveName(arrayObj, null);
+										resolveName(arrayObj, null, requiredDegree, actualDegree+1);
 									}
 								}
 							} else {
@@ -1867,11 +1877,11 @@ public class CommonServiceImpl <T> {
 						}
 						continue;
 					}
-					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
+						if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
 					
-					resolveName(invokedObj, type);
+					resolveName(invokedObj, type, requiredDegree, actualDegree+1);
 				}
 			} catch (NullPointerException | NoSuchMethodException e) {
 				e.printStackTrace();
