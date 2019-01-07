@@ -7,6 +7,8 @@ import { SelectItem } from 'primeng/primeng';
 
 import { AppConfig } from '../../app.config';
 import { DataPodResource } from './datapod-resource';
+import { AppMetadata } from '../../app.metadata';
+import { AppHepler } from '../../app.helper'; 
 
 import { Version } from '../../shared/version'
 
@@ -23,6 +25,9 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  isMetaSysn: boolean;
+  metaCompareData: any;
+  isShowCompareMetaData: any;
   length: string;
   isDisabled: boolean;
   resultcols: any[];
@@ -78,7 +83,7 @@ export class DatapodComponent {
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isSubmitEnable: any;
 
-  constructor(private _config: AppConfig, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
+  constructor(private _config: AppConfig,public metaconfig: AppMetadata, public apphelper: AppHepler, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
     this.selectVersion = { "version": "" };
     this.showdatapod = true;
@@ -217,6 +222,7 @@ export class DatapodComponent {
     this.showgraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false;
+    this.isShowCompareMetaData=false
     const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
     const DatapodSampleData = this._service.getDatapodSample(api_url).subscribe(
       response => { this.OnSuccesDatapodSample(response) },
@@ -237,7 +243,7 @@ export class DatapodComponent {
     if (response.length && response.length > 0) {
       Object.keys(response[0]).forEach(val => {
         if (val != "rownum") {
-          let width = ((val.split("").length * 9) + 20) + "px"
+          let width = ((val.split("").length * 9) + 40) + "px"
           columns.push({ "field": val, "header": val, colwidth: width });
         }
       });
@@ -342,6 +348,7 @@ export class DatapodComponent {
   }
 
   showDatapodPage() {
+    this.isShowCompareMetaData=false
     this.showdatapod = true;
     this.isShowSimpleData = false;
     this.showgraph = false;
@@ -352,6 +359,7 @@ export class DatapodComponent {
   }
 
   showDatapodGraph() {
+    this.isShowCompareMetaData=false
     this.showdatapod = false;
     this.showgraph = false;
     this.isShowSimpleData = false;
@@ -414,6 +422,7 @@ export class DatapodComponent {
     saveAs(blob, filename);
   }
   showDatastrores=function(data){
+    this.isShowCompareMetaData=false
 		this.showFrom = false;
 		this.isShowSimpleData = false;
 		this.showGraphDiv = false;
@@ -474,6 +483,59 @@ export class DatapodComponent {
   onRowSelect(event) {
     console.log(event.data);
   }
+  showCompareMetaData(data){
+		if(this.isShowCompareMetaData){
+			return false
+    }
+    this.isShowCompareMetaData=true
+    this.showdatapod = false;
+    this.showgraph = false;
+    this.isShowSimpleData = false;
+    this.graphDataStatus = false;
+    this.showgraphdiv = false;
+    this.isShowDatastore=false
+    this.showgetResults=false
+    this._datapodService.compareMetadata(data.uuid,data.version,'datapod').subscribe(
+      response => { this.OnSuccescompareMetadata(response) },
+      error => console.log('Error :: ' + error)
+    )
+	
+  }
+  OnSuccescompareMetadata(response){
+    for (let i = 0; i < response.length; i++) {
+      if (response[i]["status"] != null) {      
+        let status = response[i]["status"];
+        let count
+        response[i]["status"] = {};
+        response[i]["status"].value=this.metaconfig.getStatusDefs(status)['caption']
+      //  response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+        response[i]["status"].color = this.metaconfig.getStatusDefs(status)['color'];
+        if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+      }
+    }
+    if(response.length == count){
+      this.isMetaSysn=true;
+    }else{
+      this.isMetaSysn=false;
+    }
+  this.metaCompareData=response
+
+  }
+  synchronousMetadata(data){
+		if(this.isMetaSysn || this.selectdatasourceType=='file'){
+			return false
+		}
+    this._datapodService.synchronizeMetadata(data.uuid,data.version,'datapod').subscribe(
+      response => { 
+        this.datapodjson=response;
+        this.showCompareMetaData(this.datapodjson)
+       },
+      error => console.log('Error :: ' + error)
+    )
+	
+	}
   downloadDatastoreResult(){
 
   }

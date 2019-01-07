@@ -140,7 +140,7 @@
                 <label class="col-md-3 control-label">FormulaInfo</label>
                 <div class="col-md-6">
                   <div id="formulaInfo"  contenteditable="false">
-		                  <span  [ngClass]="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')" *ngFor="let data of formulaarray">
+		                  <span  (dblclick)="onDbclcikEdit(data.type,i)" [ngClass]="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')" *ngFor="let data of formulaarray;let i=index">
                         {{data.value}}
 		                  </span>
                   </div>

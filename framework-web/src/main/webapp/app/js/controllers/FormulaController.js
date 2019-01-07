@@ -177,7 +177,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		if(['function','simple'].indexOf(type) == -1)
         $scope.formulainfoarray[index].title="dbclick to edit"
 	}
-	$scope.onDbclcikEdit=function(type,index){
+	$scope.onDbclcikEdit=function(type,index){debugger
 		if(!$scope.isEdit && !$scope.isAdd ){
 			return false;
 		}

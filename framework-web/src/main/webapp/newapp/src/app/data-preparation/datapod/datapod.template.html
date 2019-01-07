@@ -54,7 +54,7 @@
           </a>     
             
           <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip 
-          *ngIf="mode" (click)="showCompareMetaData(datapoddata)" style="height:16px;">
+          *ngIf="mode" (click)="showCompareMetaData(locations)" style="height:16px;">
           <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
         </a>
         <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip 
@@ -83,13 +83,83 @@
         </div>
 
         <div class="portlet-body form">
+            <div class="form-body" *ngIf="isShowCompareMetaData">
+                <div class="row" >
+                    <div class="col-md-12 col-sm-12">
+                      <div class="col-md-4 col-md-offset-8" style="padding-top: 4px;padding-left: 51px;border-bottom: 0 none">
+                        <!-- <i class="fa fa-search" style="margin-top: 2%;"> </i>  -->
+                        <label>Search:</label>
+                        <input #gb type="text"  pInputText placeholder="Search">
+                        <a class="btn btn-primary fa fa-random " tooltip-placement="left" uib-tooltip="Meta Sync" [attr.disabled]="isMetaSysn" 
+                        (click)="synchronousMetadata(datapoddata)" style="line-height:1;padding: 6px 5px;border: none;"></a>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+
+                <div class="row" *ngIf="isShowCompareMetaData">
+                    <div class="col-md-12" *ngIf="metaCompareData !=null">
+                <p-dataTable [globalFilter]="gb" [value]="metaCompareData" scrollable="true" scrollHeight="440px" scrollWidth="980px">
+                    <p-headerColumnGroup>
+                        <p-row>                            
+                            <p-column header="File" colspan="3"></p-column>
+                            <p-column header="Datapod" colspan="3"></p-column>
+                            <p-column header="Status"></p-column>
+                        </p-row>
+                        <p-row>
+                            <p-column header="Attributes"></p-column>
+                            <p-column header="Type"></p-column>
+                            <p-column header="Length"></p-column>
+                            <p-column header="Attributes"></p-column>
+                            <p-column header="Type"></p-column>
+                            <p-column header="Length"></p-column>
+                            <p-column ></p-column>
+                        </p-row>
+                    </p-headerColumnGroup>                   
+                        <p-column field="sourceAttribute"></p-column>
+                        <p-column field="sourceType"></p-column>
+                        <p-column field="sourceLength"></p-column>
+                        <p-column field="targetAttribute"></p-column>
+                        <p-column field="targetType"></p-column>
+                        <p-column field="targetLength"></p-column>
+                        <p-column field="status" header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+                            <ng-template let-colstatus let-statused="rowData" pTemplate="body">
+                              <div class="label-sm label-success" *ngIf="statused.status !=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.value}}</div>
+                              <!-- <div class="label-sm label-success" *ngIf="status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div> -->
+                            </ng-template>
+                          </p-column>
+                        <!-- <p-column field="status"></p-column>                       -->
+                </p-dataTable>
+               </div>
+               </div>
+              </div>
           <div class="form-body" *ngIf="isShowSimpleData">
+              <div class="row" >
+                  <div class="col-md-12 col-sm-12">
+                      <div class="col-md-3 col-md-offset-9" style="padding:4px 25px;border-bottom: 0 none">
+                          <i class="fa fa-search" style="margin-top: 2%;"></i>
+                          <input #gbs type="text" style="float:right;" pInputText placeholder="Search">
+                        </div>
+                  </div>
+                </div>
+                <br>
             <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
               <div class="col-md-12" *ngIf="cols !=null">
                 <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt exportFilename="data" selectionMode="multiple"
                   [metaKeySelection]="false" scrollable="true" scrollWidth="980px" resizableColumns="true" scrollHeight="440px"
-                  [globalFilter]="gb" sortMode="multiple" >
-                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+                  [globalFilter]="gbs" sortMode="multiple" >
+                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true">
+                      <ng-template  let-colstatus let-statused="col.header" pTemplate="header">
+                          <!-- <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':col.colDef.attrType=='date'?'fa-downcase-date':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"
+                          tooltip-placement="right" tooltip-append-to-body="true" style="font-size:11px;"></i> -->
+                        <span>{{col.header}}
+                            <i class="fa fa-bar-chart" style="color:#3EBBAE;font-size:15px;" aria-hidden="true" tooltip-placement="left" tooltip-append-to-body="true"
+                            uib-tooltip="Histogram" (click)="calculateHistrogram(col)"></i>
+                        </span>
+                          
+                        </ng-template>
+                  </p-column>
+
                 </p-dataTable>
               </div>
             </div>
@@ -338,13 +408,14 @@
                   <i class="fa fa-gift"></i>Results
                 </div>
                 <div class="tools">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatastoreResult()"
+                    >
+                   <i class="fa fa-download" area-hidden="true"></i>
+                   </a>
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                       </a>
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatastoreResult()"
-                     >
-                    <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
+                    
                 </div> 
               </div>                         
                                     
