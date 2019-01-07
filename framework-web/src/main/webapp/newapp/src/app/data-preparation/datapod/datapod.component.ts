@@ -25,6 +25,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  IsTableShow1: boolean;
   isMetaSysn: boolean;
   metaCompareData: any;
   isShowCompareMetaData: any;
@@ -222,6 +223,8 @@ export class DatapodComponent {
     this.showgraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false;
+    this.IsTableShow = false;
+    this.isShowDatastore=false
     this.isShowCompareMetaData=false
     const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
     const DatapodSampleData = this._service.getDatapodSample(api_url).subscribe(
@@ -236,7 +239,7 @@ export class DatapodComponent {
 
   OnSuccesDatapodSample(response) {
     this.IsTableShow = true;
-    this.isShowDatastore=false
+    
     this.colsdata = response
     let columns = [];
     console.log(response)
@@ -422,6 +425,7 @@ export class DatapodComponent {
     saveAs(blob, filename);
   }
   showDatastrores=function(data){
+    this.IsTableShow=false
     this.isShowCompareMetaData=false
 		this.showFrom = false;
 		this.isShowSimpleData = false;
@@ -447,18 +451,21 @@ export class DatapodComponent {
   }
   OnSuccesgetDatastoreByDatapod(response){
     console.log(response)
+    this.IsTableShow=true
     this.isShowDatastore=true;
     this.rowData1=response
     this.isDisabled=false
   }
   onChangeRadio(data){
   console.log(data)
+  this.IsTableShow1=false
   this._datapodService.getResult(data.uuid,data.version).subscribe(
     response => { this.OnSuccesgetResult(response) },
     error => console.log('Error :: ' + error)
   )
   }
   OnSuccesgetResult(response){
+    this.IsTableShow1=true
     this.isDisabled=true
     this.showgetResults=true
     this.resultData = response
@@ -487,6 +494,7 @@ export class DatapodComponent {
 		if(this.isShowCompareMetaData){
 			return false
     }
+    this.IsTableShow=false
     this.isShowCompareMetaData=true
     this.showdatapod = false;
     this.showgraph = false;
@@ -502,6 +510,7 @@ export class DatapodComponent {
 	
   }
   OnSuccescompareMetadata(response){
+    this.IsTableShow=true
     for (let i = 0; i < response.length; i++) {
       if (response[i]["status"] != null) {      
         let status = response[i]["status"];

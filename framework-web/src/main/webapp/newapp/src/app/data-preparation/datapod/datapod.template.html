@@ -54,11 +54,11 @@
           </a>     
             
           <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip 
-          *ngIf="mode" (click)="showCompareMetaData(locations)" style="height:16px;">
+          *ngIf="mode"  (click)="showCompareMetaData(locations)" style="height:16px;">
           <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
         </a>
         <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip 
-        *ngIf="mode" (click)="showDatapodSampleTable(locations)" style="height:16px;">
+        *ngIf="mode"  (click)="showDatapodSampleTable(locations)" style="height:16px;">
           <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
         </a>
         <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip 
@@ -97,7 +97,7 @@
                   </div>
                   <br>
 
-                <div class="row" *ngIf="isShowCompareMetaData">
+                <div class="row" *ngIf="isShowCompareMetaData  && IsTableShow == true;else falsyTemplate">
                     <div class="col-md-12" *ngIf="metaCompareData !=null">
                 <p-dataTable [globalFilter]="gb" [value]="metaCompareData" scrollable="true" scrollHeight="440px" scrollWidth="980px">
                     <p-headerColumnGroup>
@@ -130,8 +130,16 @@
                           </p-column>
                         <!-- <p-column field="status"></p-column>                       -->
                 </p-dataTable>
+                
                </div>
                </div>
+               <ng-template #falsyTemplate>
+                  <div class="spinner text-center">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                  </div>
+              </ng-template>
               </div>
           <div class="form-body" *ngIf="isShowSimpleData">
               <div class="row" >
@@ -163,7 +171,13 @@
                 </p-dataTable>
               </div>
             </div>
-           
+            <ng-template #falsyTemplate>
+                <div class="spinner text-center">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </ng-template>
             <div class="centercontent" *ngIf="IsError">
               <span style="font-size:14px;color:red;">Some error occur</span>
             </div>
@@ -171,7 +185,7 @@
           <div class="form-body" *ngIf="isShowDatastore">
               <div class="row" >
                 
-                  <div class="col-md-12" *ngIf="rowData1 !=null">
+                  <div class="col-md-12" *ngIf="rowData1 !=null && IsTableShow == true;else falsyTemplate">
 
               <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
           selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
@@ -192,7 +206,13 @@
         </p-dataTable>
                   </div>
                 </div>
-               
+                <ng-template #falsyTemplate>
+                    <div class="spinner text-center">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                </ng-template>
                 <div class="centercontent" *ngIf="IsError">
                   <span style="font-size:14px;color:red;">Some error occur</span>
                 </div>
@@ -420,7 +440,7 @@
               </div>                         
                                     
                 
-                  <div class="portlet-body form col-md-12" *ngIf="resultcols !=null">
+                  <div class="portlet-body form col-md-12" *ngIf="resultcols !=null && IsTableShow1 == true;else falsyTemplate">
                       <div class="row" style="padding-top: 2%;">
                           <div class="col-md-12 col-sm-12">
                             <div class="col-md-3 col-md-offset-9" style="padding:4px 25px;border-bottom: 0 none">
@@ -436,6 +456,13 @@
                       <p-column *ngFor="let col of resultcols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
                     </p-dataTable>
                   </div>
+                  <ng-template #falsyTemplate>
+                      <div class="spinner text-center">
+                          <div class="bounce1"></div>
+                          <div class="bounce2"></div>
+                          <div class="bounce3"></div>
+                      </div>
+                  </ng-template>
                 <!-- </div>                    -->
                 <div class="centercontent" *ngIf="IsError">
                   <span style="font-size:14px;color:red;">Some error occur</span>
