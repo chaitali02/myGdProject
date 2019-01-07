@@ -19,14 +19,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,17 +136,9 @@ public class SecurityController {
 	public @ResponseBody List<RolePriv> getRolePriv(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, HttpServletRequest request) throws JSONException, SQLException, IOException, ParseException {
-		//logger.info("\n\n\n\tSecurityController: getRolePriv API: sessionId= "+request.getSession(false).getId()+"\n\n\n\n");
 		MetaIdentifierHolder mih = securityServiceImpl.getRoleInfo();
 		String roleUuid = mih.getRef().getUuid();
-		List<RolePriv> rolePriveList = null;
-		if (!StringUtils.isBlank(roleUuid))
-			rolePriveList = privilegeServiceImpl.getRolePriv(roleUuid);
-		else {
-			logger.info("roleInfo not found. Using default value of analyst.");													
-			rolePriveList = privilegeServiceImpl.getRolePriv("d04716df-e96a-419f-9118-c81342b47f88");
-		}
-		return rolePriveList;
+		return privilegeServiceImpl.getRolePriv(roleUuid);
 	}
 
 	@RequestMapping(value = "/setAppRole", method = RequestMethod.GET)

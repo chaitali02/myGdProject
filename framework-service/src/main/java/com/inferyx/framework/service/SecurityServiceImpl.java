@@ -97,14 +97,9 @@ public class SecurityServiceImpl  implements Serializable{
 		Application appDO = (Application) commonServiceImpl.getLatestByUuid(appUUID, MetaType.application.toString(),
 				"N");
 		Role roleDO = (Role) commonServiceImpl.getLatestByUuid(roleUUID, MetaType.role.toString(), "N");
-		MetaIdentifier appMeta = new MetaIdentifier(MetaType.application, appDO.getUuid(), appDO.getVersion());
-		MetaIdentifier roleMeta = new MetaIdentifier(MetaType.role, roleDO.getUuid(), roleDO.getVersion());
-		MetaIdentifierHolder app = new MetaIdentifierHolder();
-		MetaIdentifierHolder role = new MetaIdentifierHolder();
-		app.setRef(appMeta);
-		role.setRef(roleMeta);
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes();
+		MetaIdentifierHolder app = new MetaIdentifierHolder(new MetaIdentifier(MetaType.application, appDO.getUuid(), appDO.getVersion()));
+		MetaIdentifierHolder role = new MetaIdentifierHolder(new MetaIdentifier(MetaType.role, roleDO.getUuid(), roleDO.getVersion()));
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpSession session = requestAttributes.getRequest().getSession(false);
 		// logger.info("setAppRole: session: " + session.toString());
 		SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
@@ -116,8 +111,9 @@ public class SecurityServiceImpl  implements Serializable{
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			// session.setAttribute("mapRolePriv", map);
 			// logger.info("setAppRole: sessionContext: " + sessionContext.toString());
-		} else
-			logger.info("sessionContext: null");
+		} else {
+			logger.info("Null Session context.");
+		}
 		session.setAttribute("sessionContext", sessionContext);
 		// String roleType = roleDO.getName();
 		// if (sessionContext != null) {
