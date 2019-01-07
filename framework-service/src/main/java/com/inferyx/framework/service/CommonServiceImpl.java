@@ -1750,9 +1750,9 @@ public class CommonServiceImpl <T> {
 			String name = null;
 			String attrId = null;
 			if (object instanceof AttributeRefHolder) {
-				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+//				object = object.getClass().getMethod(GET+"Ref").invoke(object);
 				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
-				object.getClass().getMethod(SET+"AttrName").invoke(object, resolveAttributeName(attrId, object));
+				object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
 				return object;
 			}
 			if (object instanceof MetaIdentifierHolder) {
