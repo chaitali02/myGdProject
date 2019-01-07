@@ -1757,10 +1757,11 @@ public class CommonServiceImpl <T> {
 			}
 			if (object instanceof MetaIdentifierHolder) {
 				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				// Control shall move to next if condition - MetaIdentifier
 			}
 			if (object instanceof MetaIdentifier) {
 				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
-				name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
+				name = getName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
 				if(name != null) {
 					object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
 					name = null;							
@@ -1776,7 +1777,7 @@ public class CommonServiceImpl <T> {
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
-						name = resolveName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
+						name = getName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
 						if(name != null) {
 							object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
 							name = null;							
@@ -1785,7 +1786,7 @@ public class CommonServiceImpl <T> {
 					}
 					if (method.getName().contains("UUID")) {
 						//logger.info(" Inside resolveName : " + type);
-						name = resolveName((String)object.getClass().getMethod(GET+"UUID").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
+						name = getName((String)object.getClass().getMethod(GET+"UUID").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
 						object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
 						name = null;
 						continue;
@@ -1998,7 +1999,7 @@ public class CommonServiceImpl <T> {
 			return baseEntityList.get(0).getName();
 		}*/
 
-	public String resolveName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+	public String getName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		if(type == MetaType.simple 
 				|| type == MetaType.attribute 
 				|| type == null
