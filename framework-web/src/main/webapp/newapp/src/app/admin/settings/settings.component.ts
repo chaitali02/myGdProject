@@ -602,4 +602,7 @@ export class SettingsComponent implements OnInit {
       error => console.log("Error :: " + error)
       )
   }
+  add(){
+    this.router.navigate(['app/admin/settings/settingsDetail']);
+  }
 }

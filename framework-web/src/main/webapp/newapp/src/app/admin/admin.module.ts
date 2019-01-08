@@ -40,6 +40,9 @@ import { MigrationAssistService } from '../metadata/services/migration-assist.se
 import { SettingsDetailsComponent } from './settings/settings-details/settings-details.component';
 import { TabMenuModule } from 'primeng/components/tabmenu/tabmenu';
 import { MenuItem } from 'primeng/components/common/api';
+import { FileManagerComponent } from './file-manager/file-manager.component';
+import { FileManagerService } from '../metadata/services/fileManager.service';
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 @NgModule({
     imports:[
@@ -59,7 +62,8 @@ import { MenuItem } from 'primeng/components/common/api';
         CalendarModule,
         DataTableModule,
         MenuModule,
-        TabMenuModule        
+        TabMenuModule,
+        DialogModule
     ],
     declarations :[
         AdminComponent,
@@ -77,7 +81,8 @@ import { MenuItem } from 'primeng/components/common/api';
         MigrationAssistComponent,
         MigrationAssistExportComponent,
         MigrationAssistImportComponent,
-        SettingsDetailsComponent
+        SettingsDetailsComponent,
+        FileManagerComponent
     ],
     providers:[
         MetaDataDataPodService,
@@ -87,7 +92,8 @@ import { MenuItem } from 'primeng/components/common/api';
         RegisterSourceService,
         CommonListService,
         MigrationAssistService,
-        ApplicationService
+        ApplicationService,
+        FileManagerService
     ]
 })
  
