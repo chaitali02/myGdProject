@@ -98,8 +98,8 @@ import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.dao.IGraphpodDao;
 import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
-import com.inferyx.framework.dao.IIngestDao;
 import com.inferyx.framework.dao.IImportDao;
+import com.inferyx.framework.dao.IIngestDao;
 import com.inferyx.framework.dao.IIngestExecDao;
 import com.inferyx.framework.dao.IIngestGroupDao;
 import com.inferyx.framework.dao.IIngestGroupExecDao;
@@ -195,6 +195,7 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
@@ -2035,6 +2036,32 @@ public class CommonServiceImpl <T> {
 		Object invokedObj = null;
 		String attributeName = null;
 		try{
+			if (object instanceof AttributeRefHolder || object instanceof SourceAttr) {
+				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				if (object == null) {
+					return null;
+				}
+				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
+				uuid = (String) object.getClass().getMethod(GET+"Uuid").invoke(object);
+				version = (String) object.getClass().getMethod(GET+"Version").invoke(object);
+				attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
+				if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
+					attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
+					return attributeName;
+				} else if (type.equals(MetaType.paramlist)) {
+					if(attrObj instanceof ParamList) {
+						ParamList paramList = (ParamList) attrObj;
+						for(Param param : paramList.getParams()) {
+							if(param.getParamId().equalsIgnoreCase(attributeId))
+								return param.getParamName();
+						}
+					}
+				} else {
+					return null;
+				}
+			}
+			logger.info("Not an instance of AttributeRefHolder or SourceAttr. Object is : " + object);
+			
 			for (Method method : methodList) {
 				if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 					continue;
