@@ -1739,7 +1739,7 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-//		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
+		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1757,7 +1757,12 @@ public class CommonServiceImpl <T> {
 			if (object instanceof AttributeRefHolder) {
 //				object = object.getClass().getMethod(GET+"Ref").invoke(object);
 				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
-				object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
+				if (attrId != null) {
+					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
+				}
+				else {
+					object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				}
 				return object;
 			}
 			if (object instanceof SourceAttr) {
@@ -1790,7 +1795,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-//					logger.info("Checking method : " + method.getName());
+					logger.info("Checking method : " + method.getName());
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
@@ -2053,7 +2058,8 @@ public class CommonServiceImpl <T> {
 				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
 				uuid = (String) object.getClass().getMethod(GET+"Uuid").invoke(object);
 				version = (String) object.getClass().getMethod(GET+"Version").invoke(object);
-				attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
+				//attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
+				attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");								
 				if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
 					attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
 					return attributeName;
