@@ -267,7 +267,7 @@ export class FileManagerComponent implements OnInit {
 
   submitDialogBox() {
     this._fileManagerService.uploadFile(this.fileData, this.fileName, null, null, null, "csv", this.dataSource.uuid).subscribe(
-      response => {debugger
+      response => {
         this.getBaseEntityByCriteria();
         if (response["code"] !== 404) {
           this.msgs = [];
@@ -294,7 +294,6 @@ export class FileManagerComponent implements OnInit {
   }
 
   onSucessdownloadExport(response) {
-    debugger
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     console.log(contentDispositionHeader);
     // const filename= response.headers.get('filename') + ".csv";
