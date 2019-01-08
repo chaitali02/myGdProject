@@ -17,6 +17,7 @@ import { MigrationAssistComponent } from './migration-assist/migration-assist.co
 import { MigrationAssistExportComponent } from './migration-assist/migration-assist-export/migration-assist-export.component';
 import { MigrationAssistImportComponent } from './migration-assist/migration-assist-import/migration-assist-import.component';
 import { SettingsDetailsComponent } from './settings/settings-details/settings-details.component';
+import { FileManagerComponent } from './file-manager/file-manager.component';
 
 const routes: Routes = [
     {
@@ -57,6 +58,7 @@ const routes: Routes = [
             // {path: 'settings/settings/:id/:version/:mode', component:SettingsComponent, pathMatch: 'full'},  
             { path: 'settings', component: SettingsComponent, pathMatch: 'full' },
             { path: 'settings/:id/:version/:mode', component: SettingsDetailsComponent, pathMatch: 'full' },
+            { path: 'settings/settingsDetail', component: SettingsDetailsComponent, pathMatch: 'full' },
 
             { path: 'migration-assist/type/:id/:version/:mode', component: MigrationAssistComponent, pathMatch: 'full' },
             { path: 'migration-assist/migration-assist/:id/:version/:mode', component: MigrationAssistComponent, pathMatch: 'full' },
@@ -70,6 +72,8 @@ const routes: Routes = [
             { path: 'migration-assist/migration-assist/import/:id/:version/:mode', component: MigrationAssistImportComponent, pathMatch: 'full' },
             { path: 'migration-assist/import', component: MigrationAssistImportComponent, pathMatch: 'full' },
 
+            { path: 'fileManager', component: FileManagerComponent, pathMatch: 'full' },
+            // { path: 'fileManager/:id/:version/:mode', component: FileManagerComponent, pathMatch: 'full' },
         ]
     }
 ]
