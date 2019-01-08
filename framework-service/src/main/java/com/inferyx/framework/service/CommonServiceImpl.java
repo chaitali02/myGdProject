@@ -1738,6 +1738,7 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1779,7 +1780,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-//					logger.info(" GET method name : " + method.getName());
+					logger.info("Checking method : " + method.getName());
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
