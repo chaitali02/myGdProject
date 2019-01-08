@@ -20,6 +20,8 @@ import { DependsOn } from './dependsOn'
 })
 
 export class FormulaComponent {
+  DblClcikEditDetail: {};
+  attributeinfo: {};
   lodeParamlist: any[];
   isSourceAtributeParamlist: boolean;
   sourcefunction: any;
@@ -430,7 +432,7 @@ export class FormulaComponent {
     }
   }
 
-  onChangeAttribute(type) {
+  onChangeAttribute(type) {debugger
     if (type == "string") {
       this.isSourceAtributeSimple = true;
       this.isSourceAtributeDatapod = false;
@@ -670,4 +672,49 @@ export class FormulaComponent {
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'true']);
   }
+  // onDbclcikEdit(type,index){
+	// 	// if(!this.isEdit && !this.isAdd ){
+	// 	// 	return false;
+	// 	// }
+	// 	//console.log(this.formulainfoarray[index]);
+	//  	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
+	// 		this.attributeinfo={};
+	// 		var type1={};
+	//  	    type1["text"]="datapod";
+	// 	    this.attributeTypes= type1;
+	// 		var attributeInfo={}
+	// 		 attributeInfo["uuid"]=this.formulaarray[index].uuid
+	// 		 attributeInfo["type"]=this.formulaarray[index].type
+
+	// 		attributeInfo["attributeId"]=this.formulaarray[index].attrId;
+	// 		attributeInfo["dname"]= this.formulaarray[index].value;
+	// 		setTimeout(function(){ this.attributeinfo=attributeInfo; },10);
+	// 		this.DblClcikEditDetail={};
+	// 		this.DblClcikEditDetail["isEdit"]=true;
+	// 		this.DblClcikEditDetail["index"]=index; 
+	// 	}
+	// 	else if (type == "string" || type == "simple"){
+	// 		var type1={};
+	//  	    type1["text"]="string"//this.formulainfoarray[index].type;
+	// 	    this["attributeType"]= type1;
+	// 		this.sourcesimple=this.formulaarray[index].value;
+	// 		this.DblClcikEditDetail={};
+	// 		this.DblClcikEditDetail["isEdit"]=true;
+	// 		this.DblClcikEditDetail["index"]=index; 
+	// 	}else{
+	// 		var type1={};
+	//  	    type1["text"]=this.formulaarray[index].type;
+	// 		this.attributeTypes= type1;
+	// 		this.sourcefunction={}
+	// 		this.sourcefunction.uuid=this.formulaarray[index].uuid;
+	// 		this.sourcefunction.name=this.formulaarray[index].name;
+	// 		this.DblClcikEditDetail={};
+	// 		this.DblClcikEditDetail["isEdit"]=true;
+	// 		this.DblClcikEditDetail["index"]=index; 
+	// 	}
+	// 	this.onChangeAttribute(type1["text"]);
+		
+		 
+	// };
+  
 }

@@ -1907,7 +1907,26 @@ export class AppMetadata {
         color: '#ed6b75',//'#d80029',
         iconPath: '',
       },
-
+      'NOCHANGE':{
+        name : 'NoChange',
+        caption:'No Change',
+        color :'#36c6d3',//'#9CBB62',
+      },
+      'MODIFIED':{
+        name : 'Modified',
+        caption:'Modified',
+        color :'#F1C40F',//'#5083C3',
+      },
+      'DELETED':{
+        name : 'Deleted',
+        caption:'Deleted',
+        color :'#ed6b75',//'#C34E4E',
+      },
+      'NEW':{
+        name : 'New',
+        caption:'New',
+        color :'#006df0',//'#4FACC5',
+      },
     }
     this.defaultLink = {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }

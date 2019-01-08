@@ -179,7 +179,7 @@
                 </h4>
                 <hr>
               </div>
-              <br />
+              <br />{{attributes|json}}
               <table class=" row-border hover table  table-striped table-bordered">
                 <thead>
                   <tr>
@@ -204,21 +204,34 @@
                       <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
                         class="form-control" name="name+{{i}}" (change)="onChangeName(i)">
                     </td>
+
                     <td>
                       <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
-                        [utc]="true" [disabled]="mode == 'true'" [minDate]="today" (onSelect)=updateEndDate(tabledata.startDate,i)></p-calendar>
+                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" [utc]="true" hourFormat="12"
+                        [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(tabledata.startDate,i)">
+                      </p-calendar>
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
+
                     <td>
-                      <p-calendar 
-                        [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" 
-                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" 
-                        [showTime]="true" hourFormat="12" 
-                        (onSelect)=updateEndDate(tabledata.startDate,i)
-                        [disabled]="mode == 'true'" [minDate]="startDate" format="ddd MMM D HH:mm:ss YYYY z"
-                        [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}">
+                      <!-- <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}"
+                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
+                        [disabled]="mode == 'true'" [minDate]="tabledata.endDate" format="ddd MMM D HH:mm:ss YYYY z"
+                        [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}" [readonlyInput]="true"
+                        (onSelect)="onUpdateStartDate(tabledata.startDate,i)">
+                      </p-calendar> -->
+
+                      <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                        [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" [utc]="true" hourFormat="12"
+                        [disabled]="mode == 'true'" [minDate]="tabledata.startDate" (onFocus)="onUpdateStartDate(tabledata.startDate,i)"
+                        [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}" [readonlyInput]="true">
                       </p-calendar>
+
+                      <!-- <p-calendar [(ngModel)]="tabledata.startDate"
+                        name="tabledata.endDate+{{i}}" 
+                        [readonlyInput]="true"  
+                        [minDate]="tabledata.startDate"></p-calendar> -->
+
                       <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
                     </td>
                     <td>
@@ -296,8 +309,8 @@
               <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog2" [responsive]="true"
                 [contentStyle]="{'overflow':'visible'}">
                 <p-calendar [readonlyInput]="true" [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal+{{frequencyDetail.index}}"
-                  [inline]="true" [minDate]="startDate" selectionMode="multiple" >
-                </p-calendar> 
+                  [inline]="true" [minDate]="startDate" selectionMode="multiple">
+                </p-calendar>
 
                 <br>{{frequencyDetail.index|json}}
                 <div style="height: 50px; padding:  6px 0px 0px 0px; float: right;">

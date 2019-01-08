@@ -78,5 +78,36 @@ export class DatapodService{
       })
       .catch(this.handleError);
     }
-
+    getDatastoreByDatapod(data, type): Observable<any[]> {
+        let url ="metadata/getDatastoreByDatapod?action=view&uuid=" + data.uuid + "&version=" + data.version + "&type=" + type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
+    getResult(uuid, version): Observable<any[]> {
+        let url ="datastore/getResult?action=view&uuid=" + uuid + "&version=" +version + "&limit=100"
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
+    compareMetadata(uuid, version,type): Observable<any[]> {
+        let url ="datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
+    synchronizeMetadata(uuid, version,type): Observable<any[]> {
+        let url ="datapod/synchronizeMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
 }
