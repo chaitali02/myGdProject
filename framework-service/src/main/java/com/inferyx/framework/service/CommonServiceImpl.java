@@ -1734,12 +1734,12 @@ public class CommonServiceImpl <T> {
 	 }
 
 	public Object resolveName(Object object, MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-		return resolveName(object, type, 2, 0);
+		return resolveName(object, type, 3, 0);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
+//		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1762,8 +1762,11 @@ public class CommonServiceImpl <T> {
 			}
 			if (object instanceof SourceAttr) {
 //				object = object.getClass().getMethod(GET+"Ref").invoke(object);
-				attrId = (String) object.getClass().getMethod(GET+"AttributeId").invoke(object);
-				object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
+				Object attributeId = object.getClass().getMethod(GET+"AttributeId").invoke(object);
+				if(attributeId != null) {
+					attrId = attributeId.toString();
+					object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
+				}
 				return object;
 			}
 			if (object instanceof MetaIdentifierHolder) {
@@ -1787,7 +1790,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-					logger.info("Checking method : " + method.getName());
+//					logger.info("Checking method : " + method.getName());
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
