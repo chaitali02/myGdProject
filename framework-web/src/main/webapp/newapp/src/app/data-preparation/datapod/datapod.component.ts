@@ -25,6 +25,12 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  datastoreDetail: any;
+  downloadversion: any;
+  downloaduuid: any;
+  source: any;
+  isDownloadModel: boolean;
+  download: {};
   IsTableShow1: boolean;
   isMetaSysn: boolean;
   metaCompareData: any;
@@ -90,6 +96,10 @@ export class DatapodComponent {
     this.showdatapod = true;
     this.isSubmitEnable = true;
     this.uuid = '';
+    this.download={}
+    this.download["format"]=["excel"]
+    this.download["rows"]=100
+    this.download["selectFormat"]='excel'
     this.breadcrumbDataFrom = [{
       "caption": "Data Preparation ",
       "routeurl": "/app/list/datapod"
@@ -409,20 +419,36 @@ export class DatapodComponent {
     });
   }
 
-  downloadDatapodResult() {
+  downloadDatapodResult(source) {
+    this.source=source
+    this.isDownloadModel=true
+    this.downloaduuid=this.uuid
+    this.downloadversion=this.version
+  }
+  downloadDatastoreResult(source,datastoreDetail){
+    this.resultcols
+    this.source=source
+    this.isDownloadModel=true
+    this.downloaduuid=datastoreDetail["uuid"]
+    this.downloadversion=datastoreDetail["version"]
+  }
+  SubmitDownload(source){
     const headers = new Headers();
-    this.http.get(this.baseUrl + 'datapod/download?action=view&datapodUUID=' + this.uuid + '&datapodVersion=' + this.version + '&row=100',
+    this.http.get(this.baseUrl + source+'/download?action=view&uuid=' + this.downloaduuid + '&version=' + this.downloadversion + '&row='+this.download["rows"]+'&formate='+this.download["selectFormat"],
       { headers: headers, responseType: ResponseContentType.Blob })
       .toPromise()
       .then(response => this.saveToFileSystem(response));
   }
-
   saveToFileSystem(response) {
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
     const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
     saveAs(blob, filename);
+    this.isDownloadModel=false
+  }
+  close(){
+    this.isDownloadModel=false
   }
   showDatastrores=function(data){
     this.IsTableShow=false
@@ -459,6 +485,7 @@ export class DatapodComponent {
   onChangeRadio(data){
   console.log(data)
   this.IsTableShow1=false
+  this.datastoreDetail=data
   this._datapodService.getResult(data.uuid,data.version).subscribe(
     response => { this.OnSuccesgetResult(response) },
     error => console.log('Error :: ' + error)
@@ -545,7 +572,4 @@ export class DatapodComponent {
     )
 	
 	}
-  downloadDatastoreResult(){
-
-  }
 }

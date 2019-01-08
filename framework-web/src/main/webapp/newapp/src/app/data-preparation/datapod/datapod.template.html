@@ -65,7 +65,7 @@
         *ngIf="mode" (click)="showDatastrores(locations)" style="height:16px;">
           <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
         </a>
-        <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatapodResult()"
+        <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatapodResult('datapod')"
         *ngIf="mode" >
         <i class="fa fa-download" area-hidden="true"></i>
         </a>
@@ -428,7 +428,7 @@
                   <i class="fa fa-gift"></i>Results
                 </div>
                 <div class="tools">
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatastoreResult()"
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatastoreResult('datastore',datastoreDetail)"
                     >
                    <i class="fa fa-download" area-hidden="true"></i>
                    </a>
@@ -474,3 +474,62 @@
     </div>
   </div>
 </div>
+<p-dialog header="Download" [(visible)]="isDownloadModel" [modal]="true" [responsive]="true" [minWidth]="450"
+[resizable]="true" [baseZIndex]="1000" [contentStyle]="{'min-height':'250px'}">
+
+     
+        
+        <div class="modal-body" *ngIf="isDownloadModel">
+          <!-- <div class="slimScrollDiv" style="padding-top:10px;">
+            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1"> -->
+              <form class="form-horizontal" novalidate="novalidate" name="myform1">
+                 <!-- <div class="form-group">
+                  <label class="col-md-3 control-label">Rows</label>
+                  <div class="col-md-8">
+                        <p-dropdown [dataKey]="id" [options]="allType"  [(ngModel)]="selectType" name="selectType+{{i}}" (onChange)="onChangeType()" [style]="{'width':'200px','padding':'3px'}"
+                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                        </p-dropdown>
+                    
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Format</label>
+                  <div class="col-md-8">
+                        <p-dropdown [dataKey]="id" [options]="allDatapod.options" [(ngModel)]="allDatapod.defaultoption" name="allDatapod+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                        </p-dropdown>
+                   
+                  </div>
+                </div> -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Rows</label>
+                      <div class="col-md-8">
+                        <!-- limit-to="{{download.limit_to}}" -->
+                        <input type="number" min="1" class="form-control" name="rows" [(ngModel)]="download.rows" max="100000">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Format</label>
+                      <div class="col-md-8">
+                          <select class="form-control" [(ngModel)]="download.selectFormat" name="selectFormate">
+                          <option *ngFor="let r of download.format" [value]="r">{{r}}</option>
+                        </select>
+                        <!-- <select class="form-control" [(ngModel)]="download.selectFormate" ng-options="r for r in download.formates" required>
+                        </select> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            <!-- </div>
+          </div> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" (click)="close()">Close</button>
+          <button type="button" class="btn green" (click)="SubmitDownload(source)">Submit</button>
+        </div>
+      
+    
+</p-dialog>
