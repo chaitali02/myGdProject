@@ -1760,6 +1760,12 @@ public class CommonServiceImpl <T> {
 				object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
 				return object;
 			}
+			if (object instanceof SourceAttr) {
+//				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				attrId = (String) object.getClass().getMethod(GET+"AttributeId").invoke(object);
+				object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
+				return object;
+			}
 			if (object instanceof MetaIdentifierHolder) {
 				object = object.getClass().getMethod(GET+"Ref").invoke(object);
 				if (object == null) {
