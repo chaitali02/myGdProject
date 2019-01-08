@@ -1740,6 +1740,9 @@ public class CommonServiceImpl <T> {
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		String uuid = "";
 		String version = "";
+		if (object == null) {
+			return object;
+		}
 		if (actualDegree > requiredDegree) {
 			return null;
 		}
@@ -1757,6 +1760,9 @@ public class CommonServiceImpl <T> {
 			}
 			if (object instanceof MetaIdentifierHolder) {
 				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				if (object == null) {
+					return object;
+				}
 				// Control shall move to next if condition - MetaIdentifier
 			}
 			if (object instanceof MetaIdentifier) {
