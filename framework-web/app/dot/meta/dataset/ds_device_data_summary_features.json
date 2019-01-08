@@ -1,0 +1,1143 @@
+{
+  "uuid": "7ad27074-b744-4bcb-a884-8e7019874be8",
+  "version": "1546896745",
+  "name": "ds_device_data_summary_features",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 07 16:32:25 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+      "version": null,
+      "name": "device_data_categorical_features"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": "0",
+      "attrSourceName": "deviceid",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "deviceid",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": "1",
+      "attrSourceName": "date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "date",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": "2",
+      "attrSourceName": "warn_type1_total",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "warn_type1_total",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": "3",
+      "attrSourceName": "warn_type2_total",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "warn_type2_total",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": "4",
+      "attrSourceName": "cat1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "cat1",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq": "5",
+      "attrSourceName": "cat2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "cat2",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq": "6",
+      "attrSourceName": "cat3",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "cat3",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq": "7",
+      "attrSourceName": "cat4",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "cat4",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrDisplaySeq": "8",
+      "attrSourceName": "fault_code_type_1_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "fault_code_type_1_count",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrDisplaySeq": "9",
+      "attrSourceName": "fault_code_type_1_count_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "fault_code_type_1_count_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrDisplaySeq": "10",
+      "attrSourceName": "fault_code_type_1_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "fault_code_type_1_count_per_usage1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrDisplaySeq": "11",
+      "attrSourceName": "fault_code_type_1_count_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "fault_code_type_1_count_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrDisplaySeq": "12",
+      "attrSourceName": "fault_code_type_1_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "fault_code_type_1_count_per_usage2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "13",
+      "attrDisplaySeq": "13",
+      "attrSourceName": "fault_code_type_1_count_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "13",
+        "attrName": "fault_code_type_1_count_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "14",
+      "attrDisplaySeq": "14",
+      "attrSourceName": "fault_code_type_2_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "14",
+        "attrName": "fault_code_type_2_count",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "15",
+      "attrDisplaySeq": "15",
+      "attrSourceName": "fault_code_type_2_count_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "15",
+        "attrName": "fault_code_type_2_count_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "16",
+      "attrDisplaySeq": "16",
+      "attrSourceName": "fault_code_type_2_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "16",
+        "attrName": "fault_code_type_2_count_per_usage1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "17",
+      "attrDisplaySeq": "17",
+      "attrSourceName": "fault_code_type_2_count_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "17",
+        "attrName": "fault_code_type_2_count_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "18",
+      "attrDisplaySeq": "18",
+      "attrSourceName": "fault_code_type_2_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "18",
+        "attrName": "fault_code_type_2_count_per_usage2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "19",
+      "attrDisplaySeq": "19",
+      "attrSourceName": "fault_code_type_2_count_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "19",
+        "attrName": "fault_code_type_2_count_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "20",
+      "attrDisplaySeq": "20",
+      "attrSourceName": "fault_code_type_3_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "20",
+        "attrName": "fault_code_type_3_count",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "21",
+      "attrDisplaySeq": "21",
+      "attrSourceName": "fault_code_type_3_count_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "21",
+        "attrName": "fault_code_type_3_count_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "22",
+      "attrDisplaySeq": "22",
+      "attrSourceName": "fault_code_type_3_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "22",
+        "attrName": "fault_code_type_3_count_per_usage1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "23",
+      "attrDisplaySeq": "23",
+      "attrSourceName": "fault_code_type_3_count_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "23",
+        "attrName": "fault_code_type_3_count_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "24",
+      "attrDisplaySeq": "24",
+      "attrSourceName": "fault_code_type_3_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "24",
+        "attrName": "fault_code_type_3_count_per_usage2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "25",
+      "attrDisplaySeq": "25",
+      "attrSourceName": "fault_code_type_3_count_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "25",
+        "attrName": "fault_code_type_3_count_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "26",
+      "attrDisplaySeq": "26",
+      "attrSourceName": "fault_code_type_4_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "26",
+        "attrName": "fault_code_type_4_count",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "27",
+      "attrDisplaySeq": "27",
+      "attrSourceName": "fault_code_type_4_count_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "27",
+        "attrName": "fault_code_type_4_count_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "28",
+      "attrDisplaySeq": "28",
+      "attrSourceName": "fault_code_type_4_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "28",
+        "attrName": "fault_code_type_4_count_per_usage1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "29",
+      "attrDisplaySeq": "29",
+      "attrSourceName": "fault_code_type_4_count_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "29",
+        "attrName": "fault_code_type_4_count_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "30",
+      "attrDisplaySeq": "30",
+      "attrSourceName": "fault_code_type_4_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "30",
+        "attrName": "fault_code_type_4_count_per_usage2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "31",
+      "attrDisplaySeq": "31",
+      "attrSourceName": "fault_code_type_4_count_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "31",
+        "attrName": "fault_code_type_4_count_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "32",
+      "attrDisplaySeq": "32",
+      "attrSourceName": "problem_type_1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "32",
+        "attrName": "problem_type_1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "33",
+      "attrDisplaySeq": "33",
+      "attrSourceName": "problem_type_1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "33",
+        "attrName": "problem_type_1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "34",
+      "attrDisplaySeq": "34",
+      "attrSourceName": "problem_type_1_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "34",
+        "attrName": "problem_type_1_per_usage1",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "35",
+      "attrDisplaySeq": "35",
+      "attrSourceName": "problem_type_1_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "35",
+        "attrName": "problem_type_1_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "36",
+      "attrDisplaySeq": "36",
+      "attrSourceName": "problem_type_1_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "36",
+        "attrName": "problem_type_1_per_usage2",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "37",
+      "attrDisplaySeq": "37",
+      "attrSourceName": "problem_type_1_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "37",
+        "attrName": "problem_type_1_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "38",
+      "attrDisplaySeq": "38",
+      "attrSourceName": "problem_type_2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "38",
+        "attrName": "problem_type_2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "39",
+      "attrDisplaySeq": "39",
+      "attrSourceName": "problem_type_2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "39",
+        "attrName": "problem_type_2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "40",
+      "attrDisplaySeq": "40",
+      "attrSourceName": "problem_type_2_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "40",
+        "attrName": "problem_type_2_per_usage1",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "41",
+      "attrDisplaySeq": "41",
+      "attrSourceName": "problem_type_2_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "41",
+        "attrName": "problem_type_2_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "42",
+      "attrDisplaySeq": "42",
+      "attrSourceName": "problem_type_2_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "42",
+        "attrName": "problem_type_2_per_usage2",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "43",
+      "attrDisplaySeq": "43",
+      "attrSourceName": "problem_type_2_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "43",
+        "attrName": "problem_type_2_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "44",
+      "attrDisplaySeq": "44",
+      "attrSourceName": "problem_type_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "44",
+        "attrName": "problem_type_3",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "45",
+      "attrDisplaySeq": "45",
+      "attrSourceName": "problem_type_3_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "45",
+        "attrName": "problem_type_3_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "46",
+      "attrDisplaySeq": "46",
+      "attrSourceName": "problem_type_3_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "46",
+        "attrName": "problem_type_3_per_usage1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "47",
+      "attrDisplaySeq": "47",
+      "attrSourceName": "problem_type_3_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "47",
+        "attrName": "problem_type_3_per_usage1_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "48",
+      "attrDisplaySeq": "48",
+      "attrSourceName": "problem_type_3_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "48",
+        "attrName": "problem_type_3_per_usage2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "49",
+      "attrDisplaySeq": "49",
+      "attrSourceName": "problem_type_3_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "49",
+        "attrName": "problem_type_3_per_usage2_category",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "50",
+      "attrDisplaySeq": "50",
+      "attrSourceName": "problem_type_4",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "50",
+        "attrName": "problem_type_4",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "51",
+      "attrDisplaySeq": "51",
+      "attrSourceName": "problem_type_4_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "51",
+        "attrName": "problem_type_4_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "52",
+      "attrDisplaySeq": "52",
+      "attrSourceName": "problem_type_4_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "52",
+        "attrName": "problem_type_4_per_usage1",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "53",
+      "attrDisplaySeq": "53",
+      "attrSourceName": "problem_type_4_per_usage1_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "53",
+        "attrName": "problem_type_4_per_usage1_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "54",
+      "attrDisplaySeq": "54",
+      "attrSourceName": "problem_type_4_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "54",
+        "attrName": "problem_type_4_per_usage2",
+        "attrType": "double",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "55",
+      "attrDisplaySeq": "55",
+      "attrSourceName": "problem_type_4_per_usage2_category",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "55",
+        "attrName": "problem_type_4_per_usage2_category",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "56",
+      "attrDisplaySeq": "56",
+      "attrSourceName": "warn_type1_total_rollingmean_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "034d7b8d-12f5-4e5a-8437-2abab11fd2a5",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "57",
+      "attrDisplaySeq": "57",
+      "attrSourceName": "warn_type1_total_rollingdiff_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "ed14a823-9352-40b6-ba6a-e295dabf9edb",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "58",
+      "attrDisplaySeq": "58",
+      "attrSourceName": "warn_type1_total_rollingstd_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "0873c539-7bde-4ef0-b35b-21a0e7b05844",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "59",
+      "attrDisplaySeq": "59",
+      "attrSourceName": "warn_type1_total_rollingmax_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "e4588c3e-1b5f-4b5f-b126-b045860306b6",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "60",
+      "attrDisplaySeq": "60",
+      "attrSourceName": "warn_type1_total_rollingmin_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "5b0c9fae-3b01-4c26-a481-c8f4fb469e7e",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": -1
+}

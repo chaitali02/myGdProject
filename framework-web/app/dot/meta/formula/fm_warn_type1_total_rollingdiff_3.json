@@ -1,0 +1,211 @@
+{
+  "uuid": "ed14a823-9352-40b6-ba6a-e295dabf9edb",
+  "version": "1546896111",
+  "name": "fm_warn_type1_total_rollingdiff_3",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 07 16:21:51 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+      "version": null,
+      "name": "device_data_categorical_features"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "version": null,
+        "name": "device_data_categorical_features"
+      },
+      "attributeId": 2,
+      "value": null,
+      "attributeName": "warn_type1_total",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "-",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "version": null,
+        "name": "avg(col)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "version": null,
+        "name": "device_data_categorical_features"
+      },
+      "attributeId": 2,
+      "value": null,
+      "attributeName": "warn_type1_total",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "OVER",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "PARTITION BY",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "version": null,
+        "name": "device_data_categorical_features"
+      },
+      "attributeId": 0,
+      "value": null,
+      "attributeName": "deviceid",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ORDER BY UNIX_TIMESTAMP(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "version": null,
+        "name": "device_data_categorical_features"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "date",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ",'MM/DD/YY') ROWS BETWEEN 3 PRECEDING AND CURRENT ROW",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
+}
