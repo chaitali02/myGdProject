@@ -3,16 +3,11 @@ import { DataQualityService } from './../../metadata/services/dataQuality.servic
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
-
 import { AppMetadata } from '../../app.metadata';
-import { TableRenderComponent } from '../../shared/components/resulttable/resulttable.component'
-import { JointjsGroupComponent } from '../../shared/components/jointjsgroup/jointjsgroup.component'
 import { CommonService } from '../../metadata/services/common.service';
-
-import { Http, Headers } from '@angular/http';
-import { ResponseContentType } from '@angular/http';
-import { saveAs } from 'file-saver';
+import { Http } from '@angular/http';
 import { AppConfig } from '../../app.config';
+
 @Component({
   selector: 'app-compareresult',
   templateUrl: './compareresult.template.html',
@@ -35,7 +30,11 @@ export class CompareResultComponent {
   colsTargetdata: any[];
   colsTarget: any[];
   alltargetTemp: any;
-  sourceShowProgress: boolean;
+  sourceShowProgress: boolean = false;
+  isInProgress: boolean = false;
+  isSourceTableShow:boolean
+  isTargetTableShow: boolean;
+  targetShowProgress: boolean;
 
   types = [
     {
@@ -66,31 +65,30 @@ export class CompareResultComponent {
     this.allsource = [];
     this.alltarget = [];
     this.sourceShowProgress = false;
+    this.isInProgress = false;
+    this.isSourceTableShow= false;
+    this.isTargetTableShow = false;
+    this.targetShowProgress = false;
   }
 
   onUpdateStartDate() {
     console.log("start and end date call");
-
+    this.searchForm.endDate = '';
   }
 
   onRadioBtnChange(type) {
     console.log("Radio button change");
     this.getAllLatest(type);
-
   }
 
   getAllLatest(type: any): any {
     this._commonService.getAllLatest(type).subscribe(
-      response => {
-        this.onSuccessgetAllLatest(response)
-      },
+      response => {this.onSuccessgetAllLatest(response)},
       error => console.log("Error :: " + error));
   }
 
   onSuccessgetAllLatest(response: any[]): any {
-
     this.allname = [];
-    //this.isSelect = true;
     for (const i in response) {
       let ver = {};
       ver["label"] = response[i]['name'];
@@ -102,43 +100,47 @@ export class CompareResultComponent {
   }
 
   submitSearchCriteria() {
-    console.log("submit serach crit" + this.searchForm);
-    let uuid = this.searchForm.selectedName.uuid;
+    this.isInProgress = true;
+    this.alltarget = [];
+    this.colsTargetdata = [];
+    this.colsTarget = [];
+    this.allsource = [];
+    this.colsSourcedata =[];
+    this.colsSource = [];
+
     let startDate;
     let endDate;
-
     if (this.searchForm.startDate) {
-      startDate = this.searchForm.startDate;
+      let startDateUtc = new Date(this.searchForm.startDate.getUTCFullYear(), this.searchForm.startDate.getUTCMonth(), this.searchForm.startDate.getUTCDate(), this.searchForm.startDate.getUTCHours(), this.searchForm.startDate.getUTCMinutes(), this.searchForm.startDate.getUTCSeconds())
+      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
     }
     else {
       startDate = '';
     }
 
     if (this.searchForm.endDate) {
-      endDate = this.searchForm.endDate;
+      let endDateUtc = new Date(this.searchForm.endDate.getUTCFullYear(), this.searchForm.endDate.getUTCMonth(), this.searchForm.endDate.getUTCDate(), this.searchForm.endDate.getUTCHours(), this.searchForm.endDate.getUTCMinutes(), this.searchForm.endDate.getUTCSeconds())
+      endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
     }
     else {
       endDate = '';
     }
 
     if (this.searchForm.selectedType == 'dq') {
-      this._dataQualityService.getDataQualExecByDataqual1(uuid, startDate, endDate).subscribe(
-        response => {
-          this.onSuccessgetDataQualExecByDataqual1(response)
-        },
+      this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
+        response => {this.onSuccessgetDataQualExecByDataqual1(response)},
         error => console.log("Error :: " + error));
     }
     else if (this.searchForm.selectedType == 'datapod') {
-      this._dataQualityService.getdqExecByDatapod(uuid, startDate, endDate).subscribe(
-        response => {
-          this.onSuccessgetDataQualExecByDataqual1(response)
-        },
+      this._dataQualityService.getdqExecByDatapod(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
+        response => {this.onSuccessgetDataQualExecByDataqual1(response)},
         error => console.log("Error :: " + error));
     }
-
+    
   }
 
   onSuccessgetDataQualExecByDataqual1(response: any[]): any {
+    this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
     for (const i in response) {
@@ -155,6 +157,7 @@ export class CompareResultComponent {
 
   onChangeSource(selectedSource: any) {
     this.sourceShowProgress = true;
+    this.isSourceTableShow = false;
     this.alltarget = [];
     this.colsTargetdata = [];
     this.colsTarget = [];
@@ -169,42 +172,30 @@ export class CompareResultComponent {
         this.alltarget.push(ver);
       }
     }
-    //console.log(JSON.stringify(this.alltarget));
+   
     this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "dqexec").subscribe(
-      response => {
-        this.onSuccessgetNumRowsbyExec(response, selectedSource, "source")
-      },
+      response => {this.onSuccessgetNumRowsbyExec(response, selectedSource, "source")},
       error => console.log("Error :: " + error));
   }
   onChangeTarget(selectedTarget: any) {
+    this.targetShowProgress = true;
+    this.isTargetTableShow = false
     this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "dqexec").subscribe(
-      response => {
-        this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target")
-      },
+      response => {this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target")},
       error => console.log("Error :: " + error));
   }
 
   onSuccessgetNumRowsbyExec(response: any, selectedSourceTarget: any, compareType: String): any {
-    // this.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, compareType, response.runMode);
-    this._dataQualityService.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, "dqexec", response.runMode).subscribe(
-      response => {
-        this.onSuccessGetSummary(response, compareType)
-      },
+     this._dataQualityService.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, "dqexec", response.runMode).subscribe(
+      response => {this.onSuccessGetSummary(response, compareType)},
       error => console.log("Error :: " + error));
-  }
-
-  getSummary(uuid, version, compareType, mode) {
-    // this._dataQualityService.getSummary(uuid, version, "dqexec", mode).subscribe(
-    //   response => {
-    //     this.onSuccessGetSummary(response, compareType)
-    //   },
-    //   error => console.log("Error :: " + error));
   }
 
   onSuccessGetSummary(response: any[], compareType: any): any {
     console.log(response)
-
     if (compareType == 'source') {
+      this.sourceShowProgress = false;
+      this.isSourceTableShow = true;
       this.colsSourcedata = response;
       let columns = [];
       console.log(response)
@@ -220,6 +211,8 @@ export class CompareResultComponent {
     }
 
     else if (compareType == 'target') {
+      this.targetShowProgress = false;
+      this.isTargetTableShow = true;
       this.colsTargetdata = response;
       let columns = [];
       console.log(response)

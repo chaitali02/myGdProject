@@ -26,7 +26,7 @@
 
                         <div class="row" style="padding-top:10px">
                             <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
-                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-right: 3%;">
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
@@ -77,8 +77,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
                                                 name="endDate" [showTime]="true" [utc]="true" hourFormat="12"
-                                                [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(endDate)"
-                                                [showIcon]="true">
+                                                [disabled]="mode == 'true'" [minDate]="searchForm.startDate" [showIcon]="true">
                                             </p-calendar>
                                         </div>
                                     </div>
@@ -93,18 +92,17 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <input type="submit" class="btn btn-success" value="Search" name="submit"
-                                                [disabled]="isSelect">
-                                            <!-- <sapn class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-show="isInProgress">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </span> -->
+                                                [disabled]="isSelect" />
+                                            <div class="spinner" style="float:right; padding-top:2%" *ngIf="isInProgress">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
                 <!--End portlet-body -->
@@ -134,7 +132,7 @@
                 <div class="portlet-body">
                     <div class="row form-horizontal" style="padding-top:10px">
                         <div class="col-md-12 col-lg-12">
-                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="border-right: 1px solid #d4d4d4;">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-right: 3%; border-right: 1px solid #d4d4d4;">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -151,38 +149,31 @@
 
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:300px;">
-                                        <div ng-if="isSourceTableShow">
-                                            <!-- <div ui-grid="sourceGridOptions" ui-grid-resize-columns ui-grid-auto-resize
-                                                ui-grid-exporter class="grid" ng-style="getSourceGridStyle()">
-                                                <div class="nodatawatermark_results" ng-show="!sourceGridOptions.data.length"
-                                                    style="top:52%;">No data available</div>
-                                            </div> -->
+                                        <div *ngIf="isSourceTableShow">
                                             <div class="row">
-                                                <!-- <div class="col-md-6" style="margin-top:17px">
-                                                        Showing {{sourcePagination.to}} to {{sourcePagination.from}} of
-                                                        {{sourcePagination.totalItems}} records
-                                                    </div> -->
-
-                                                <p-dataTable [value]="colsSourcedata" #dt exportFilename="data" selectionMode="multiple"
-                                                    [metaKeySelection]="false" scrollable="true" resizableColumns="true"
-                                                    scrollHeight="440px" [globalFilter]="gb" sortMode="multiple"
-                                                    [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
-                                                    <p-column *ngFor="let col of colsSource" [field]="col.field" [header]="col.header"
-                                                        [sortable]="true"></p-column>
+                                                <p-dataTable [value]="colsSourcedata" #dt exportFilename="data"
+                                                    selectionMode="multiple" [metaKeySelection]="false" scrollable="true"
+                                                    resizableColumns="true" scrollHeight="440px" [globalFilter]="gb"
+                                                    sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                                                    [rowsPerPageOptions]="[5,10,20]">
+                                                    <p-column *ngFor="let col of colsSource" [field]="col.field"
+                                                        [header]="col.header" [sortable]="true"></p-column>
                                                 </p-dataTable>
                                             </div>
-
                                         </div>
-                                        <div class="spinner centercontent" ng-show="sourceShowProgress">
-                                            <div class="bounce1"></div>
-                                            <div class="bounce2"></div>
-                                            <div class="bounce3"></div>
+
+                                        <div class="centercontent" style="padding-top: 5%" *ngIf="sourceShowProgress">
+                                            <div class="spinner centercontent">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
                                         </div>
                                         <div class="centercontent" style="color:blue;" ng-show="isSourceDataError">{{sourceDataMessage}}</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-left: 3%;">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -199,40 +190,31 @@
 
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:200px;">
-                                        <div ng-if="isTargetTableShow">
-                                            <!-- <div ui-grid="targetGridOptions" ui-grid-resize-columns ui-grid-auto-resize
-                                                ui-grid-exporter class="grid" ng-style="getTargetGridStyle()">
-                                                <div class="nodatawatermark_results" ng-show="!targetGridOptions.data.length"
-                                                    style="top:52%;">No data available</div>
-                                            </div> -->
+                                        <div *ngIf="isTargetTableShow">
                                             <div class="row">
-                                                <!-- <div class="col-md-6" style="margin-top:17px">
-                                                        Showing {{targetPagination.to}} to {{targetPagination.from}} of
-                                                        {{targetPagination.totalItems}} records
-                                                    </div> -->
-                                                <p-dataTable [value]="colsTargetdata" #dt exportFilename="data" selectionMode="multiple"
-                                                    [metaKeySelection]="false" scrollable="true" resizableColumns="true"
-                                                    scrollHeight="440px" [globalFilter]="gb" sortMode="multiple"
-                                                    [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
-                                                    <p-column *ngFor="let col of colsTarget" [field]="col.field" [header]="col.header"
-                                                        [sortable]="true"></p-column>
+                                                <p-dataTable [value]="colsTargetdata" #dt exportFilename="data"
+                                                    selectionMode="multiple" [metaKeySelection]="false" scrollable="true"
+                                                    resizableColumns="true" scrollHeight="440px" [globalFilter]="gb"
+                                                    sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                                                    [rowsPerPageOptions]="[5,10,20]">
+                                                    <p-column *ngFor="let col of colsTarget" [field]="col.field"
+                                                        [header]="col.header" [sortable]="true"></p-column>
                                                 </p-dataTable>
                                             </div>
                                         </div>
-                                        <!-- <div class="spinner centercontent" ng-show="targetShowProgress">
-                                            <div class="bounce1"></div>
-                                            <div class="bounce2"></div>
-                                            <div class="bounce3"></div>
-                                        </div> -->
+                                        <div class="centercontent" style="padding-top: 5%" *ngIf="targetShowProgress">
+                                            <div class="spinner centercontent">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                        </div>
                                         <div class="centercontent" style="color:blue;" ng-show="isTargetDataError">{{targetDataMessage}}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
                 <!--End portlet-body -->
             </div>
@@ -241,10 +223,6 @@
         <!--End Col-md-12-->
     </div>
     <!--End row-->
-
-
-
-
     <!-- </div> -->
     <!--End data-ng-controller-->
 </div>
