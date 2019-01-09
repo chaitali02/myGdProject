@@ -25,6 +25,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  iSSubmitEnable: boolean;
   histogramcols: any[];
   histogramData: any[];
   showHistogramModel: boolean;
@@ -665,4 +666,20 @@ onSuccessgetAttrHistogram(response){
   closeHistogram(){
     this.showHistogramModel=false
   }
+  onAttrRowDown(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexPlus=this.attributes[index+1];
+		this.attributes[index]=rowTempIndexPlus;
+    this.attributes[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
+
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexMines=this.attributes[index-1];
+		this.attributes[index]=rowTempIndexMines;
+    this.attributes[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+	}
 }
