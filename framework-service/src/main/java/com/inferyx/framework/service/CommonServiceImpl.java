@@ -1781,6 +1781,10 @@ public class CommonServiceImpl <T> {
 				if(attributeId != null) {
 					attrId = attributeId.toString();
 					object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
+					MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
+					if (refObject != null) {
+						resolveName(refObject, null, requiredDegree, actualDegree+1);
+					}					
 				}
 				return object;
 			}
@@ -2058,6 +2062,7 @@ public class CommonServiceImpl <T> {
 		String uuid = null;
 		String version = null;
 		Object invokedObj = null;
+		//String objName = null;
 		String attributeName = null;
 		try{
 //			logger.info("Inside resolveAttributeName - ");
@@ -2072,6 +2077,7 @@ public class CommonServiceImpl <T> {
 				//attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
 				attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");								
 				if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
+					//objName = String.class.cast(attrObj.getClass().getMethod("getName").invoke(attrObj));
 					attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
 					return attributeName;
 				} else if (type.equals(MetaType.paramlist)) {
