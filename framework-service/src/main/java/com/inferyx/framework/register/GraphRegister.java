@@ -13,7 +13,6 @@ package com.inferyx.framework.register;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.GraphInfo;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
@@ -107,10 +105,7 @@ import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Edge;
-import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Vertex;
 import com.inferyx.framework.service.AlgorithmServiceImpl;
 import com.inferyx.framework.service.ApplicationServiceImpl;
@@ -220,8 +215,8 @@ public class GraphRegister<T> {
 	@Autowired
 	GenericGraph genericGraph;
 	GraphInfo graphFlag;
-	@Autowired
-	MetadataUtil miUtil;
+//	@Autowired
+//	MetadataUtil miUtil;
 	@Autowired
 	GraphServiceImpl graphServiceImpl;
 	@Autowired
@@ -711,13 +706,13 @@ public class GraphRegister<T> {
 		this.graphFlag = graphFlag;
 	}*/
 
-	public MetadataUtil getMiUtil() {
-		return miUtil;
-	}
-
-	public void setMiUtil(MetadataUtil miUtil) {
-		this.miUtil = miUtil;
-	}
+//	public MetadataUtil getMiUtil() {
+//		return miUtil;
+//	}
+//
+//	public void setMiUtil(MetadataUtil miUtil) {
+//		this.miUtil = miUtil;
+//	}
 
 	public IDataQualExecDao getiDataQualExecDao() {
 		return iDataQualExecDao;

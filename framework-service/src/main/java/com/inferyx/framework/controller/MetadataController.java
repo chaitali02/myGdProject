@@ -60,7 +60,6 @@ import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.parser.DagParser;
 import com.inferyx.framework.parser.FormulaParser;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
@@ -90,8 +89,6 @@ public class MetadataController {
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired
 	DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	DagParser parser;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired

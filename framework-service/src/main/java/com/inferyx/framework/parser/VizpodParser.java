@@ -54,11 +54,8 @@ public class VizpodParser {
    
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;	
-
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private FormulaOperator formulaOperator;
 	@Autowired
@@ -158,7 +155,7 @@ public class VizpodParser {
 				tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
 			}
 
-			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(vizpod.getSource().getRef().getUuid(), MetaType.datapod.toString());
+			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(vizpod.getSource().getRef().getUuid(), MetaType.datapod.toString(), "N");
 			finalBuilder.append("FROM");
 			finalBuilder.append(blankSpace);
 			finalBuilder.append(tableName).append(" "+datapod.getName());
@@ -207,13 +204,14 @@ public class VizpodParser {
 				// Include only non-aggregate formulae in group by clause 
 				if (!vizpod.getValues().isEmpty()) {
 					for (AttributeDetails attrDet : vizpod.getValues()) {
-						Object object = daoRegister.getRefObject(attrDet.getRef());
+//						Object object = daoRegister.getRefObject(attrDet.getRef());
+						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(), attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
 						if ((object instanceof Formula) && (((Formula)object).getFormulaType() == FormulaType.aggr)) {
 							continue;
 						}
 						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 								attrDet.getAttributeId());
-						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString())).getName();
+						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N")).getName();
 						logger.info("datapodName : " + datapodName);
 						finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
 					}
@@ -234,9 +232,8 @@ public class VizpodParser {
 			logger.info(String.format("Final Vizpod filter %s", result));
 
 		} else if ((MetaType.relation).equals(vizpod.getSource().getRef().getType())) {
-			Relation relation = daoRegister.getRelationDao().findLatestByUuid(vizpod.getSource().getRef().getUuid(),
-					new Sort(Sort.Direction.DESC, "version"));
-			
+//			Relation relation = daoRegister.getRelationDao().findLatestByUuid(vizpod.getSource().getRef().getUuid(),new Sort(Sort.Direction.DESC, "version"));
+			Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(vizpod.getSource().getRef().getUuid(), vizpod.getSource().getRef().getVersion(), vizpod.getSource().getRef().getType().toString(), "N");
 			
 			List<AttributeDetails> attrDetList = new LinkedList<>();
 			if ( flag && vizpod.getDetailAttr().size() > 0 ) 
@@ -258,7 +255,7 @@ public class VizpodParser {
 				if ((MetaType.datapod).equals(attrDet.getRef().getType())) {
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
-					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString())).getName();
+					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N")).getName();
 					logger.info("datapodName : " + datapodName);
 					if (attrDet.getFunction() != null && !attrDet.getFunction().isEmpty()) {
 						selectBuilder.append(attrDet.getFunction() + "(" + datapodName + "." + keyAttrName + ")");
@@ -269,8 +266,8 @@ public class VizpodParser {
 					selectBuilder.append(" as ").append(keyAttrName).append(" ");
 					selectBuilder.append(comma);
 				} else if ((MetaType.expression).equals(attrDet.getRef().getType())) {
-					Expression expression = daoRegister.getExpressionDao().findLatestByUuid(attrDet.getRef().getUuid(),
-							new Sort(Sort.Direction.DESC, "version"));
+//					Expression expression = daoRegister.getExpressionDao().findLatestByUuid(attrDet.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
+					Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(), attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
 					Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 					selectBuilder.append(expressionOperator.generateSql(expression.getExpressionInfo(),expression.getDependsOn(),null,null, null, datasource)).append(" as ")
 							.append("expression_" + expression.getName());
@@ -279,8 +276,8 @@ public class VizpodParser {
 							|| (attrDet.getFunction() != null && attrDet.getFunction().isEmpty())) {
 					}
 				} else if ((MetaType.formula).equals(attrDet.getRef().getType())) {
-					Formula formula = daoRegister.getFormulaDao().findLatestByUuid(attrDet.getRef().getUuid(),
-							new Sort(Sort.Direction.DESC, "version"));
+//					Formula formula = daoRegister.getFormulaDao().findLatestByUuid(attrDet.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
+					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(), attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");				
 					Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 					String formulaSql = formulaOperator.generateSql(formula, null, null, null, datasource);
 					if (attrDet.getFunction() != null && !attrDet.getFunction().isEmpty()) {
@@ -360,13 +357,14 @@ public class VizpodParser {
 			// Include only non-aggregate formulae in group by clause 
 			if (vizpod.getValues().size() > 0 && flag==false) {
 				for (AttributeDetails attrDet : vizpod.getValues()) {
-					Object object = daoRegister.getRefObject(attrDet.getRef());
+//					Object object = daoRegister.getRefObject(attrDet.getRef());
+					Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(), attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
 					if ((object instanceof Formula) && (((Formula)object).getFormulaType() == FormulaType.aggr)) {
 						continue;
 					}
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
-					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString())).getName();
+					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N")).getName();
 					logger.info("datapodName : " + datapodName);
 					groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
 				}
@@ -391,7 +389,7 @@ public class VizpodParser {
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
 		} else if ((MetaType.dataset).equals(vizpod.getSource().getRef().getType())) {
-			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(vizpod.getSource().getRef().getUuid(), vizpod.getSource().getRef().getVersion(), vizpod.getSource().getRef().getType().toString());
+			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(vizpod.getSource().getRef().getUuid(), vizpod.getSource().getRef().getVersion(), vizpod.getSource().getRef().getType().toString(), "N");
 			List<AttributeDetails> attrDetList = new LinkedList<>();
 			if ( flag && vizpod.getDetailAttr().size() > 0 ) 
 				for (AttributeDetails attrDet : vizpod.getDetailAttr()) 

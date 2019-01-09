@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
@@ -96,8 +95,6 @@ public class DQOperator implements IParsable {
 	private String ATTRIBUTE_NAME = " attributeName";
 
 	@Autowired
-	MetadataUtil daoRegister;
-	@Autowired
 	RelationOperator relationOperator;
 	@Autowired
 	MapOperator mapOperator;
@@ -125,7 +122,8 @@ public class DQOperator implements IParsable {
 			throw new Exception("DQ on relation is not supported");
 		}
 		if (dataQual.getDependsOn().getRef().getType() == MetaType.datapod) {
-			srcDP = (Datapod) daoRegister.getRefObject(dataQual.getDependsOn().getRef());
+//			srcDP = (Datapod) daoRegister.getRefObject(dataQual.getDependsOn().getRef());
+			srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataQual.getDependsOn().getRef().getUuid(), dataQual.getDependsOn().getRef().getVersion(), dataQual.getDependsOn().getRef().getType().toString(), "N");
 			if (dataQual.getAttribute() != null) {
 				logger.info("getDataQualTableName(srcDP) : " + getTableName(srcDP, datapodList, dagExec, otherParams, runMode));
 				dataQual.getAttribute().setAttrName(
@@ -172,14 +170,15 @@ public class DQOperator implements IParsable {
 	private String generateSelect(DataQual dq, DataQualExec dataQualExec, String tableName, String attributeName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Datasource dataSource = commonServiceImpl.getDatasourceByApp();
+//		Datasource dataSource = commonServiceImpl.getDatasourceByApp();
 		Datasource dqDataSource = commonServiceImpl.getDatasourceByObject(dq);
 
 
 		if (StringUtils.isBlank(tableName)) {
 			return "";
 		}
-		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+//		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getDependsOn().getRef().getUuid(), dq.getDependsOn().getRef().getVersion(), dq.getDependsOn().getRef().getType().toString(), "N");
 		// String select = SELECT.concat("row_number() over (partition by 1) as rownum,
 		// ")
 		String select = SELECT.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
@@ -221,7 +220,9 @@ public class DQOperator implements IParsable {
 //		Relation relation = null;
 //		DataSet dataSet = null;
 		if (ref.getType() == MetaType.datapod) {
-			srcDP = (Datapod) daoRegister.getRefObject(ref);
+//			srcDP = (Datapod) daoRegister.getRefObject(ref);
+			srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+			
 			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, otherParams, runMode)).concat("  ").concat(srcDP.getName());
 		}
 		/*
@@ -278,7 +279,8 @@ public class DQOperator implements IParsable {
 				|| dq.getDuplicateKeyCheck().equalsIgnoreCase("N")) {
 			return EMPTY;
 		}
-		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+//		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getDependsOn().getRef().getUuid(), dq.getDependsOn().getRef().getVersion(), dq.getDependsOn().getRef().getType().toString(), "N");
 		usedRefKeySet.add(dq.getDependsOn().getRef());
 		boolean isKey = false;
 		String dupJoinStr = LEFT_OUTER_JOIN.concat(BRACKET_OPEN).concat(SELECT);
@@ -356,14 +358,16 @@ public class DQOperator implements IParsable {
 		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getRef() == null) {
 			return EMPTY;
 		}
-		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+//		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getDependsOn().getRef().getUuid(), dq.getDependsOn().getRef().getVersion(), dq.getDependsOn().getRef().getType().toString(), "N");
 		List<Attribute> rowKeyAttrList = null;
 		rowKeyAttrList = getRowKeyList(datapod);
 		if (rowKeyAttrList == null || rowKeyAttrList.isEmpty()) {
 			//System.out.println("Datapod doesnot have row key. Hence aborting ref integrity check. ");
 			return EMPTY;
 		}
-		Datapod datapodRef = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
+//		Datapod datapodRef = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
+		Datapod datapodRef = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getRef().getUuid(), dq.getRefIntegrityCheck().getRef().getVersion(), dq.getRefIntegrityCheck().getRef().getType().toString(), "N");
 		usedRefKeySet.add(dq.getRefIntegrityCheck().getRef());
 		refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
 				// .concat(AS)
@@ -453,7 +457,9 @@ public class DQOperator implements IParsable {
 		String dqString = null;
 		String check = null;
 		String colName = null;
-		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+//		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getDependsOn().getRef().getUuid(), dq.getDependsOn().getRef().getVersion(), dq.getDependsOn().getRef().getType().toString(), "N");
+		
 		String tableAttr = datapod.getName().concat(DOT) + attributeName;
 		if (StringUtils.isNotBlank(dq.getNullCheck()) && dq.getNullCheck().equalsIgnoreCase("Y")) {
 			check = tableAttr.concat(IS_NOT_NULL);
@@ -559,7 +565,9 @@ public class DQOperator implements IParsable {
 			dqBuilder.append("'' as ").append(LENGTH_CHECK_PASS).append(COMMA);
 		} // End lengthCheck If
 		if (dq.getRefIntegrityCheck() != null && dq.getRefIntegrityCheck().getRef() != null) {
-			Datapod refIntTab = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
+//			Datapod refIntTab = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
+			Datapod refIntTab = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getRef().getUuid(), dq.getRefIntegrityCheck().getRef().getVersion(), dq.getRefIntegrityCheck().getRef().getType().toString(), "N");
+			
 			dq.getRefIntegrityCheck().setAttrName(
 					refIntTab.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName());
 			check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getAttrName())
@@ -611,8 +619,9 @@ public class DQOperator implements IParsable {
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (dataQualExec.getUuid()) {
-				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(
-						new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+//				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
+				
 				dataQualExec1.setExec(dataQualExec.getExec());
 				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
 				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);

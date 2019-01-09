@@ -12,11 +12,7 @@ package com.inferyx.framework.domain;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 
 @Document(collection = "vizpod")
 public class Vizpod extends BaseEntity {
@@ -27,12 +23,11 @@ public class Vizpod extends BaseEntity {
 	private List<AttributeDetails> keys;
 	private List<AttributeDetails> dimension;
 	private List<AttributeDetails> detailAttr;
-	
-	
-	
-	
-
-	
+	private List<AttributeRefHolder> filterInfo;
+//	@Autowired
+//	private static Datapod datapod;
+	private List<AttributeDetails> groups;
+	private List<AttributeDetails> values;
 
 	public List<AttributeDetails> getDetailAttr() {
 		return detailAttr;
@@ -49,12 +44,6 @@ public class Vizpod extends BaseEntity {
 	public void setDimension(List<AttributeDetails> dimension) {
 		this.dimension = dimension;
 	}
-
-	private List<AttributeRefHolder> filterInfo;
-	@Autowired
-	private static Datapod datapod;
-	private List<AttributeDetails> groups;
-	private List<AttributeDetails> values;
 	
 	public List<AttributeRefHolder> getFilterInfo() {
 		return filterInfo;
@@ -62,65 +51,6 @@ public class Vizpod extends BaseEntity {
 
 	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
 		this.filterInfo = filterInfo;
-	}
-
-	public static class AttributeDetails {
-
-		private MetaIdentifier ref;
-		private Integer attributeId;
-		private String function;// not required
-		private String value;// if type is "simple"
-        private String attributeName;
-		public MetaIdentifier getRef() {
-			return ref;
-		}
-		public String getAttributeName() {
-			return attributeName;
-		}
-		public void setAttributeName(String attributeName) {
-			this.attributeName = attributeName;
-		}
-		public String getFunction() {
-			return function;
-		}
-
-		public void setFunction(String function) {
-			this.function = function;
-		}
-
-		public void setRef(MetaIdentifier ref) {
-			this.ref = ref;
-		}
-
-		public Integer getAttributeId() {
-			return attributeId;
-		}
-
-		public void setAttributeId(Integer attributeId) {
-			this.attributeId = attributeId;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-
-		public String sql(MetadataUtil daoRegister) throws JsonProcessingException {
-			String alias = null;
-			if (getRef().getType() == MetaType.datapod) {
-				datapod = (Datapod) daoRegister.getRefObject(getRef());
-				alias = datapod.getAttribute(getAttributeId()).getName();
-				if (getRef() == null) {
-					return datapod.getAttribute(getAttributeId()).getName().toString().concat(" as ").concat(alias)
-							.concat(" ");
-				}
-			}
-			return datapod.getAttribute(getAttributeId()).getName().toString().concat(" as ").concat(alias).concat(" ");
-		}
-
 	}
 
 	public String getType() {
@@ -178,6 +108,63 @@ public class Vizpod extends BaseEntity {
 	public void setKeys(List<AttributeDetails> keys) {
 		this.keys = keys;
 	}
-
 	
+	public static class AttributeDetails {
+		private MetaIdentifier ref;
+		private Integer attributeId;
+		private String function;// not required
+		private String value;// if type is "simple"
+        private String attributeName;
+        
+		public MetaIdentifier getRef() {
+			return ref;
+		}
+		public String getAttributeName() {
+			return attributeName;
+		}
+		public void setAttributeName(String attributeName) {
+			this.attributeName = attributeName;
+		}
+		public String getFunction() {
+			return function;
+		}
+
+		public void setFunction(String function) {
+			this.function = function;
+		}
+
+		public void setRef(MetaIdentifier ref) {
+			this.ref = ref;
+		}
+
+		public Integer getAttributeId() {
+			return attributeId;
+		}
+
+		public void setAttributeId(Integer attributeId) {
+			this.attributeId = attributeId;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+//		public String sql(MetadataUtil daoRegister) throws JsonProcessingException {
+//			String alias = null;
+//			if (getRef().getType() == MetaType.datapod) {
+//				datapod = (Datapod) daoRegister.getRefObject(getRef());
+//				alias = datapod.getAttribute(getAttributeId()).getName();
+//				if (getRef() == null) {
+//					return datapod.getAttribute(getAttributeId()).getName().toString().concat(" as ").concat(alias)
+//							.concat(" ");
+//				}
+//			}
+//			return datapod.getAttribute(getAttributeId()).getName().toString().concat(" as ").concat(alias).concat(" ");
+//		}
+
+	}
 }

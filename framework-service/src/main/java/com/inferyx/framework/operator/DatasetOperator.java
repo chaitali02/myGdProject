@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -49,8 +48,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		AttributeMapOperator attributeMapOperator;
 		@Autowired
 		RelationOperator relationOperator;
-		@Autowired
-		MetadataUtil daoRegister;
 		@Autowired
 		MapOperator mapOperator;
 		@Autowired
@@ -112,10 +109,14 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			logger.info("otherParams in datasetOperator : " + otherParams);
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				usedRefKeySet.add(dataset.getDependsOn().getRef());
-				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+//				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
+				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+				relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				String table = null;
 				/*if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {*/
@@ -136,7 +137,9 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				logger.info("Source table in dataset " + dataset.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
-                DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+//				DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+                MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+                DataSet innerDS = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
                 builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
             }
 			return builder.toString();

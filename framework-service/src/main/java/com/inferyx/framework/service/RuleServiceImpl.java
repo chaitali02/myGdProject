@@ -719,7 +719,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @param attributeId
 	 * @return
 	 */
-	public String getAttributeSql(MetadataUtil daoRegister, Rule rule, String attributeId) {
+	public String getAttributeSql(Rule rule, String attributeId) {
 		List<AttributeSource> sourceAttrs = rule.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null && sourceAttr.getAttrSourceId() != null

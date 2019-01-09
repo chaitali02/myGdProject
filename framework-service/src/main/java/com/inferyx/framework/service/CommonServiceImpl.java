@@ -323,8 +323,8 @@ public class CommonServiceImpl <T> {
 	IDatasourceDao iDatasourceDao;
 	@Autowired
 	IDataQualExecDao iDataQualExecDao;
-	@Autowired
-	MetadataUtil miUtil;
+//	@Autowired
+//	MetadataUtil miUtil;
 	@Autowired
 	GraphInfo graphFlag;
 	@Autowired
@@ -989,14 +989,14 @@ public class CommonServiceImpl <T> {
 	public void setGraphFlag(GraphInfo graphFlag) {
 		this.graphFlag = graphFlag;
 	}
-
-	public MetadataUtil getMiUtil() {
-		return miUtil;
-	}
-
-	public void setMiUtil(MetadataUtil miUtil) {
-		this.miUtil = miUtil;
-	}
+//
+//	public MetadataUtil getMiUtil() {
+//		return miUtil;
+//	}
+//
+//	public void setMiUtil(MetadataUtil miUtil) {
+//		this.miUtil = miUtil;
+//	}
 
 	public IDataQualExecDao getiDataQualExecDao() {
 		return iDataQualExecDao;
@@ -2103,7 +2103,8 @@ public class CommonServiceImpl <T> {
 						continue;
 					}
 					//logger.info("uuid : version : type : " + uuid + ":" + version + ":" + type);
-					attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
+					//attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
+					attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");	
 					if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
 						attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
 						return attributeName;

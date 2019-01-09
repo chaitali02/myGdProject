@@ -429,7 +429,7 @@ public class DatasetServiceImpl {
 	 * return dataset; }
 	 */
 
-	public String getAttributeSql(MetadataUtil daoRegister, DataSet dataset, String attributeId) {
+	public String getAttributeSql(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null 
@@ -443,7 +443,7 @@ public class DatasetServiceImpl {
 		return null;
 	}
 
-	public String getAttributeName(MetadataUtil daoRegister, DataSet dataset, String attributeId) {
+	public String getAttributeName(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null 

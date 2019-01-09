@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
@@ -44,7 +43,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
  */
 @Component
 public class FilterOperator2 {
-	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired protected JoinKeyOperator joinKeyOperator;
 	private final String COMMA = ", ";

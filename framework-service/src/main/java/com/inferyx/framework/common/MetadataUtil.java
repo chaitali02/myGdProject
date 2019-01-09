@@ -615,607 +615,608 @@ public class MetadataUtil {
 	}
 	
 	public Object getRefObject(MetaIdentifier ref) throws JsonProcessingException {
-		OrderKey key = new OrderKey(ref.getUuid(), ref.getVersion());
-		//Set<OrderKey> keySets = null;
-		if(ref.getType() == MetaType.datapod) {
-			if (key.getVersion() != null ) {
-				//return datapodDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datapod.toString());
-			} else {
-				//Datapod dPod = datapodDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				Datapod dPod = (Datapod) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datapod.toString());
-				//System.out.println("\n\nUUID: "+ref.getUuid());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}
-		
-		if(ref.getType() == MetaType.profile) {
-			if (key.getVersion() != null ) {
-				//return iProfileDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profile.toString());
-			} else {
-				//Profile profile = iProfileDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Profile profile = (Profile) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profile.toString());
-				ref.setVersion(profile.getVersion());
-				return profile;
-			}
-		}
-		
-		if(ref.getType() == MetaType.profilegroup) {
-			if (key.getVersion() != null ) {
-				//return iProfileGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profilegroup.toString());
-			} else {
-				//ProfileGroup profilegroup = iProfileGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				ProfileGroup profilegroup = (ProfileGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profilegroup.toString());
-				ref.setVersion(profilegroup.getVersion());
-				return profilegroup;
-			}
-		}
-		
-		if(ref.getType() == MetaType.profileExec) {
-			if (key.getVersion() != null ) {
-				//return iprofileExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profileExec.toString());
-			} else {
-				//ProfileExec profileexec = iprofileExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				ProfileExec profileexec = (ProfileExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profileExec.toString());
-				ref.setVersion(profileexec.getVersion());
-				return profileexec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.load) {
-			if (key.getVersion() != null ) {
-				//return iLoadDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.load.toString());
-			} else {
-				//Load lPod = iLoadDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Load lPod = (Load) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.load.toString());
-				ref.setVersion(lPod.getVersion());
-				return lPod;
-			}
-		}
-		
-		if(ref.getType() == MetaType.rulegroup) {
-			if (key.getVersion() != null ) {
-				//return iRuleGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rulegroup.toString());
-			} else {
-				//RuleGroup ruleGroup = iRuleGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				RuleGroup ruleGroup = (RuleGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rulegroup.toString()); 
-				ref.setVersion(ruleGroup.getVersion());
-				return ruleGroup;
-			}
-		}
-	
-		if(ref.getType() == MetaType.rule) {
-			if (key.getVersion() != null ) {
-				//return iRuleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rule.toString());
-			} else {
-				//Rule rule = iRuleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rule.toString());
-				ref.setVersion(rule.getVersion());
-				return rule;
-			} 
-		}
-		
-		if(ref.getType() == MetaType.dq) {
-			if (key.getVersion() != null ) {
-				//return iDataQualDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dq.toString());
-			} else {
-				//DataQual dataqual = iDataQualDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DataQual dataqual = (DataQual) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dq.toString());
-				ref.setVersion(dataqual.getVersion());
-				return dataqual;
-			}
-		}
-		
-		if(ref.getType() == MetaType.dqgroup) {
-			if (key.getVersion() != null ) {
-				//return iDataQualGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqgroup.toString());
-			} else {
-				//DataQualGroup dataqualgroup = iDataQualGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DataQualGroup dataqualgroup = (DataQualGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqgroup.toString());
-				ref.setVersion(dataqualgroup.getVersion());
-				return dataqualgroup;
-			}
-		}
-		
-		if(ref.getType() == MetaType.dataset) {
-			if (key.getVersion() != null ) {
-				//return iDatasetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dataset.toString());
-			} else {
-				//Dataset dataset = iDatasetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dataset.toString());
-				ref.setVersion(dataset.getVersion());
-				return dataset;
-			}
-		}
-		
-		if(ref.getType() == MetaType.session) {
-			if (key.getVersion() != null ) {
-				//return isessionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.session.toString());
-			} else {
-				//Session sessiondao = isessionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Session sessiondao = (Session) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.session.toString());
-				ref.setVersion(sessiondao.getVersion());
-				return sessiondao;
-			}
-		}
-		
-		if(ref.getType() == MetaType.meta) {
-			if (key.getVersion() != null ) {
-				//return iMetaDataDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.meta.toString());
-			} else {
-				//Meta dPod = iMetaDataDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Meta dPod = (Meta) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.meta.toString());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}		
-		
-		if(ref.getType() == MetaType.privilege) {
-			if (key.getVersion() != null ) {
-				//return iPrivilegeDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.privilege.toString());
-			} else {
-				//Privilege dPod = iPrivilegeDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Privilege dPod = (Privilege) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.privilege.toString());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}
-		
-		
-		if(ref.getType() == MetaType.user) {
-			if (key.getVersion() != null ) {
-				//return iUserDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.user.toString());
-			} else {
-				//User dPod = iUserDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				User dPod = (User) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.user.toString());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}
-		if(ref.getType() == MetaType.usergroup) {
-			if (key.getVersion() != null ) {
-				//return iUserGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.usergroup.toString());
-			} else {
-				//Group dPod = iUserGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Group dPod = (Group) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.usergroup.toString());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}
-		if(ref.getType() == MetaType.role) {
-			if (key.getVersion() != null ) {
-				//return iroleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.role.toString());
-			} else {
-				//Role dPod = iroleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Role dPod = (Role) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.role.toString());
-				ref.setVersion(dPod.getVersion());
-				return dPod;
-			}
-		}
-		
-		if(ref.getType() == MetaType.application) {
-			if (key.getVersion() != null ) {
-				//return applicationDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.application.toString());
-			} else {
-				//Application aPod = applicationDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Application aPod = (Application) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.application.toString());
-				ref.setVersion(aPod.getVersion());
-				return aPod;
-			}
-		}
-		
-		if(ref.getType() == MetaType.ruleExec) {
-			if (key.getVersion() != null ) {
-				//return iRuleExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ruleExec.toString());
-			} else {
-				//RuleExec ruleExec = iRuleExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				RuleExec ruleExec = (RuleExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ruleExec.toString());
-				ref.setVersion(ruleExec.getVersion());
-				return ruleExec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.rulegroupExec) {
-			if (key.getVersion() != null ) {
-				//return iRuleGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rulegroupExec.toString());
-			} else {
-				//RuleGroupExec ruleGroupExec = iRuleGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rulegroupExec.toString());
-				ref.setVersion(ruleGroupExec.getVersion());
-				return ruleGroupExec;
-			}
-		}
-		if(ref.getType() == MetaType.dqgroupExec) {
-			if (key.getVersion() != null ) {
-				//return iDataQualGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqgroupExec.toString());
-			} else {
-				//DataQualGroupExec dataQualGroupExec = iDataQualGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				DataQualGroupExec dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqgroupExec.toString()); 
-				ref.setVersion(dataQualGroupExec.getVersion());
-				return dataQualGroupExec;
-			}
-		}
-		if(ref.getType() == MetaType.profilegroupExec) {
-			if (key.getVersion() != null ) {
-				//return iProfileGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profilegroupExec.toString());
-			} else {
-				//ProfileGroupExec profileGroupExec = iProfileGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profilegroupExec.toString()); 
-				ref.setVersion(profileGroupExec.getVersion());
-				return profileGroupExec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.filter) {
-			if (key.getVersion() != null ) {
-				//return getFilterDao().findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.filter.toString());
-			} else {
-				//Filter filter = getFilterDao().findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Filter filter = (Filter) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.filter.toString());
-				ref.setVersion(filter.getVersion());
-				return filter;
-			}
-		}
-		
-		if(ref.getType() == MetaType.relation) {
-			if (key.getVersion() != null ) {
-				//return getRelationDao().findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.relation.toString());
-			} else {
-				//Relation relation = getRelationDao().findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Relation relation = (Relation) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.relation.toString());
-				ref.setVersion(relation.getVersion());
-				return relation;
-			}
-		}
-		
-		if(ref.getType() == MetaType.formula) {
-			if (key.getVersion() != null ) {
-				//return formulaDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.formula.toString());
-			} else {
-				//Formula formula = formulaDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				Formula formula = (Formula) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.formula.toString()); 
-				ref.setVersion(formula.getVersion());
-				return formula;
-			}
-		}
-		
-		if(ref.getType() == MetaType.condition) {
-			if (key.getVersion() != null ) {
-				//return conditionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.condition.toString());
-			} else {
-				//Condition condition = conditionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Condition condition = (Condition) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.condition.toString());
-				ref.setVersion(condition.getVersion());
-				return condition;
-			}
-		}
-		
-		if(ref.getType() == MetaType.expression) {
-			if (key.getVersion() != null ) {
-				//return expressionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.expression.toString());
-			} else {
-				//Expression expression = expressionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Expression expression = (Expression) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.expression.toString());
-				ref.setVersion(expression.getVersion());
-				return expression;
-			}
-		}
-		
-		if(ref.getType() == MetaType.dagExec) {
-			if (key.getVersion() != null ) {
-				//return dagExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dagExec.toString());
-			} else {
-				//DagExec dagExec = dagExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DagExec dagExec = (DagExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dagExec.toString());
-				ref.setVersion(dagExec.getVersion());
-				return dagExec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.rule) {
-			if (key.getVersion() != null ) {
-				//return iRuleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rule.toString());
-			} else {
-				//Rule rule = iRuleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rule.toString());
-				ref.setVersion(rule.getVersion());
-				return rule;
-			}
-		}
-		
-		
-		if(ref.getType() == MetaType.map) {
-			if (key.getVersion() != null ) {
-				//return mapDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.map.toString());
-			} else {
-				//Map map = mapDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Map map = (Map) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.map.toString());
-				ref.setVersion(map.getVersion());
-				return map;
-			}
-		}
-		if(ref.getType() == MetaType.mapExec) {
-			if (key.getVersion() != null ) {
-				//return iMapExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.mapExec.toString());
-			} else {
-				//MapExec mapExec = iMapExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				MapExec mapExec = (MapExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.mapExec.toString());
-				ref.setVersion(mapExec.getVersion());
-				return mapExec;
-			}
-		}
-		if(ref.getType() == MetaType.mapiter) {
-			if (key.getVersion() != null ) {
-				//return mapDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.mapiter.toString());
-			} else {
-				//Map map = mapDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Map map = (Map) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.mapiter.toString());
-				ref.setVersion(map.getVersion());
-				return map;
-			}
-		}
-		if(ref.getType() == MetaType.dag) {
-			if (key.getVersion() != null ) {
-				//return dagDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dag.toString());
-			} else {
-				//Dag dag = dagDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Dag dag = (Dag) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dag.toString());
-				ref.setVersion(dag.getVersion());
-				return dag;
-			}
-		}
-		if(ref.getType() == MetaType.datastore){ //datastore implementation
-			if (key.getVersion() != null ) {
-				//return dataStoreDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datastore.toString());
-			}else {
-				//DataStore dataStore = dataStoreDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DataStore dataStore = (DataStore) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datastore.toString());
-				ref.setVersion(dataStore.getVersion());
-				return dataStore;
-			}
-		}
-		if(ref.getType() == MetaType.load){ //load implementation
-			if (key.getVersion() != null ) {
-				//return loadDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.load.toString());
-			}else {
-				//Load load = loadDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Load load = (Load) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.load.toString());
-				ref.setVersion(load.getVersion());
-				return load;
-			}
-		}
-		if(ref.getType() == MetaType.loadExec) {
-			if (key.getVersion() != null ) {
-				//return iLoadExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.loadExec.toString());
-			} else {
-				//LoadExec loadExec = iLoadExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				LoadExec loadExec = (LoadExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.loadExec.toString());
-				ref.setVersion(loadExec.getVersion());
-				return loadExec;
-			}
-		}
-		/*if(ref.getType() == MetaType.group){ //group implementation
-			if (key.getVersion() != null ) {
-				return groupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-			}else {
-				Group group = groupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				ref.setVersion(group.getVersion());
-				return group;
-			}
-		}*/
-		if(ref.getType() == MetaType.dimension) {
-			if (key.getVersion() != null ) {
-				//return dimensionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dimension.toString());
-			} else {
-				//Dimension dimension = dimensionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Dimension dimension = (Dimension) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dimension.toString());
-				ref.setVersion(dimension.getVersion());
-				return dimension;
-			}
-		}
-		
-		if(ref.getType() == MetaType.measure) {
-			if (key.getVersion() != null ) {
-				//return measureDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.measure.toString());
-			} else {
-				//Measure measure = measureDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Measure measure = (Measure) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.measure.toString());
-				ref.setVersion(measure.getVersion());
-				return measure;
-			}
-		}
-		if(ref.getType() == MetaType.vizpod) {
-			if (key.getVersion() != null ) {
-				//return vizpodDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.vizpod.toString());
-			} else {
-				//Vizpod vizpod = vizpodDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.vizpod.toString());
-				ref.setVersion(vizpod.getVersion());
-				return vizpod;
-			}
-		}
-		if(ref.getType() == MetaType.datasource) {
-			if (key.getVersion() != null ) {
-				//return iDatasourceDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datasource.toString());
-			} else {
-				//Datasource datasource = iDatasourceDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datasource.toString());
-				ref.setVersion(datasource.getVersion());
-				return datasource;
-			}
-		}
-		
-		if(ref.getType() == MetaType.vizExec) {
-			if (key.getVersion() != null ) {
-				//return iVizpodExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.vizExec.toString());
-			} else {
-				//VizExec vizexec = iVizpodExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				VizExec vizexec = (VizExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.vizExec.toString());
-				ref.setVersion(vizexec.getVersion());
-				return vizexec;
-			}
-		}
-
-		if(ref.getType() == MetaType.dataset) {
-			if (key.getVersion() != null ) {
-				//return datasetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dataset.toString());
-			} else {
-				//Dataset dataset = datasetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dataset.toString());
-				ref.setVersion(dataset.getVersion());
-				return dataset;
-			}
-		}
-		
-		if(ref.getType() == MetaType.function) {
-			if (key.getVersion() != null ) {
-				//return iFunctionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.function.toString());
-			} else {
-				//Function function = iFunctionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				Function function = (Function) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.function.toString()); 
-				ref.setVersion(function.getVersion());
-				return function;
-			}
-		}
-		
-		if(ref.getType() == MetaType.loadExec) {
-			if (key.getVersion() != null ) {
-				//return iLoadExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.loadExec.toString());
-			} else {
-				//LoadExec loadExec = iLoadExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				LoadExec loadExec = (LoadExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.loadExec.toString());
-				ref.setVersion(loadExec.getVersion());
-				return loadExec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.paramset) {
-			if (key.getVersion() != null ) {
-				//return iParamSetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.paramset.toString());
-			} else {
-				//ParamSet paramSet = iParamSetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				ParamSet paramSet = (ParamSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.paramset.toString());
-				ref.setVersion(paramSet.getVersion());
-				return paramSet;
-			}
-		}
-		
-		if(ref.getType() == MetaType.paramlist) {
-			if (key.getVersion() != null ) {
-				//return iParamListDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.paramlist.toString());
-			} else {
-				//ParamList paramList = iParamListDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
-				ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.paramlist.toString());
-				ref.setVersion(paramList.getVersion());
-				return paramList;
-			}
-		}
-		
-		if(ref.getType() == MetaType.dqExec) {
-			if (key.getVersion() != null ) {
-				//return iDataQualExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqExec.toString());
-			} else {
-				//DataQualExec dataQualExec = iDataQualExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
-				DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqExec.toString());
-				ref.setVersion(dataQualExec.getVersion());
-				return dataQualExec;
-			}
-		}
-		
-		if(ref.getType() == MetaType.recon) {
-			if (key.getVersion() != null ) {
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.recon.toString());
-			} else {
-				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.recon.toString());
-				ref.setVersion(recon.getVersion());
-				return recon;
-			}
-		}
-		
-		if(ref.getType() == MetaType.reconExec) {
-			if (key.getVersion() != null ) {
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.reconExec.toString());
-			} else {
-				ReconExec reconExec = (ReconExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.reconExec.toString());
-				ref.setVersion(reconExec.getVersion());
-				return reconExec;
-			}
-		}
-		if(ref.getType() == MetaType.ingest) {
-			if (key.getVersion() != null ) {
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingest.toString());
-			} else {
-				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingest.toString());
-				ref.setVersion(ingest.getVersion());
-				return ingest;
-			}
-		}
-		
-		if(ref.getType() == MetaType.ingestExec) {
-			if (key.getVersion() != null ) {
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingestExec.toString());
-			} else {
-				IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingestExec.toString());
-				ref.setVersion(ingestExec.getVersion());
-				return ingestExec;
-			}
-		}
-		if(ref.getType() == MetaType.distribution)
-			if (key.getVersion() != null ) {
-				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.distribution.toString());
-			} else {
-				Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.distribution.toString());
-				ref.setVersion(distribution.getVersion());
-				return distribution;
-			}
-	//	logger.error("Meta not found");
-		return null;
+		return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+//		OrderKey key = new OrderKey(ref.getUuid(), ref.getVersion());
+//		//Set<OrderKey> keySets = null;
+//		if(ref.getType() == MetaType.datapod) {
+//			if (key.getVersion() != null ) {
+//				//return datapodDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datapod.toString());
+//			} else {
+//				//Datapod dPod = datapodDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				Datapod dPod = (Datapod) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datapod.toString());
+//				//System.out.println("\n\nUUID: "+ref.getUuid());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.profile) {
+//			if (key.getVersion() != null ) {
+//				//return iProfileDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profile.toString());
+//			} else {
+//				//Profile profile = iProfileDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Profile profile = (Profile) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profile.toString());
+//				ref.setVersion(profile.getVersion());
+//				return profile;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.profilegroup) {
+//			if (key.getVersion() != null ) {
+//				//return iProfileGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profilegroup.toString());
+//			} else {
+//				//ProfileGroup profilegroup = iProfileGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				ProfileGroup profilegroup = (ProfileGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profilegroup.toString());
+//				ref.setVersion(profilegroup.getVersion());
+//				return profilegroup;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.profileExec) {
+//			if (key.getVersion() != null ) {
+//				//return iprofileExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profileExec.toString());
+//			} else {
+//				//ProfileExec profileexec = iprofileExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				ProfileExec profileexec = (ProfileExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profileExec.toString());
+//				ref.setVersion(profileexec.getVersion());
+//				return profileexec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.load) {
+//			if (key.getVersion() != null ) {
+//				//return iLoadDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.load.toString());
+//			} else {
+//				//Load lPod = iLoadDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Load lPod = (Load) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.load.toString());
+//				ref.setVersion(lPod.getVersion());
+//				return lPod;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.rulegroup) {
+//			if (key.getVersion() != null ) {
+//				//return iRuleGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rulegroup.toString());
+//			} else {
+//				//RuleGroup ruleGroup = iRuleGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				RuleGroup ruleGroup = (RuleGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rulegroup.toString()); 
+//				ref.setVersion(ruleGroup.getVersion());
+//				return ruleGroup;
+//			}
+//		}
+//	
+//		if(ref.getType() == MetaType.rule) {
+//			if (key.getVersion() != null ) {
+//				//return iRuleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rule.toString());
+//			} else {
+//				//Rule rule = iRuleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rule.toString());
+//				ref.setVersion(rule.getVersion());
+//				return rule;
+//			} 
+//		}
+//		
+//		if(ref.getType() == MetaType.dq) {
+//			if (key.getVersion() != null ) {
+//				//return iDataQualDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dq.toString());
+//			} else {
+//				//DataQual dataqual = iDataQualDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DataQual dataqual = (DataQual) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dq.toString());
+//				ref.setVersion(dataqual.getVersion());
+//				return dataqual;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.dqgroup) {
+//			if (key.getVersion() != null ) {
+//				//return iDataQualGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqgroup.toString());
+//			} else {
+//				//DataQualGroup dataqualgroup = iDataQualGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DataQualGroup dataqualgroup = (DataQualGroup) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqgroup.toString());
+//				ref.setVersion(dataqualgroup.getVersion());
+//				return dataqualgroup;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.dataset) {
+//			if (key.getVersion() != null ) {
+//				//return iDatasetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dataset.toString());
+//			} else {
+//				//Dataset dataset = iDatasetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dataset.toString());
+//				ref.setVersion(dataset.getVersion());
+//				return dataset;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.session) {
+//			if (key.getVersion() != null ) {
+//				//return isessionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.session.toString());
+//			} else {
+//				//Session sessiondao = isessionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Session sessiondao = (Session) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.session.toString());
+//				ref.setVersion(sessiondao.getVersion());
+//				return sessiondao;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.meta) {
+//			if (key.getVersion() != null ) {
+//				//return iMetaDataDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.meta.toString());
+//			} else {
+//				//Meta dPod = iMetaDataDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Meta dPod = (Meta) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.meta.toString());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}		
+//		
+//		if(ref.getType() == MetaType.privilege) {
+//			if (key.getVersion() != null ) {
+//				//return iPrivilegeDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.privilege.toString());
+//			} else {
+//				//Privilege dPod = iPrivilegeDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Privilege dPod = (Privilege) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.privilege.toString());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}
+//		
+//		
+//		if(ref.getType() == MetaType.user) {
+//			if (key.getVersion() != null ) {
+//				//return iUserDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.user.toString());
+//			} else {
+//				//User dPod = iUserDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				User dPod = (User) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.user.toString());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}
+//		if(ref.getType() == MetaType.usergroup) {
+//			if (key.getVersion() != null ) {
+//				//return iUserGroupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.usergroup.toString());
+//			} else {
+//				//Group dPod = iUserGroupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Group dPod = (Group) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.usergroup.toString());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}
+//		if(ref.getType() == MetaType.role) {
+//			if (key.getVersion() != null ) {
+//				//return iroleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.role.toString());
+//			} else {
+//				//Role dPod = iroleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Role dPod = (Role) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.role.toString());
+//				ref.setVersion(dPod.getVersion());
+//				return dPod;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.application) {
+//			if (key.getVersion() != null ) {
+//				//return applicationDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.application.toString());
+//			} else {
+//				//Application aPod = applicationDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Application aPod = (Application) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.application.toString());
+//				ref.setVersion(aPod.getVersion());
+//				return aPod;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.ruleExec) {
+//			if (key.getVersion() != null ) {
+//				//return iRuleExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ruleExec.toString());
+//			} else {
+//				//RuleExec ruleExec = iRuleExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				RuleExec ruleExec = (RuleExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ruleExec.toString());
+//				ref.setVersion(ruleExec.getVersion());
+//				return ruleExec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.rulegroupExec) {
+//			if (key.getVersion() != null ) {
+//				//return iRuleGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rulegroupExec.toString());
+//			} else {
+//				//RuleGroupExec ruleGroupExec = iRuleGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rulegroupExec.toString());
+//				ref.setVersion(ruleGroupExec.getVersion());
+//				return ruleGroupExec;
+//			}
+//		}
+//		if(ref.getType() == MetaType.dqgroupExec) {
+//			if (key.getVersion() != null ) {
+//				//return iDataQualGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqgroupExec.toString());
+//			} else {
+//				//DataQualGroupExec dataQualGroupExec = iDataQualGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				DataQualGroupExec dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqgroupExec.toString()); 
+//				ref.setVersion(dataQualGroupExec.getVersion());
+//				return dataQualGroupExec;
+//			}
+//		}
+//		if(ref.getType() == MetaType.profilegroupExec) {
+//			if (key.getVersion() != null ) {
+//				//return iProfileGroupExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.profilegroupExec.toString());
+//			} else {
+//				//ProfileGroupExec profileGroupExec = iProfileGroupExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.profilegroupExec.toString()); 
+//				ref.setVersion(profileGroupExec.getVersion());
+//				return profileGroupExec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.filter) {
+//			if (key.getVersion() != null ) {
+//				//return getFilterDao().findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.filter.toString());
+//			} else {
+//				//Filter filter = getFilterDao().findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Filter filter = (Filter) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.filter.toString());
+//				ref.setVersion(filter.getVersion());
+//				return filter;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.relation) {
+//			if (key.getVersion() != null ) {
+//				//return getRelationDao().findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.relation.toString());
+//			} else {
+//				//Relation relation = getRelationDao().findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Relation relation = (Relation) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.relation.toString());
+//				ref.setVersion(relation.getVersion());
+//				return relation;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.formula) {
+//			if (key.getVersion() != null ) {
+//				//return formulaDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.formula.toString());
+//			} else {
+//				//Formula formula = formulaDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				Formula formula = (Formula) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.formula.toString()); 
+//				ref.setVersion(formula.getVersion());
+//				return formula;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.condition) {
+//			if (key.getVersion() != null ) {
+//				//return conditionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.condition.toString());
+//			} else {
+//				//Condition condition = conditionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Condition condition = (Condition) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.condition.toString());
+//				ref.setVersion(condition.getVersion());
+//				return condition;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.expression) {
+//			if (key.getVersion() != null ) {
+//				//return expressionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.expression.toString());
+//			} else {
+//				//Expression expression = expressionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Expression expression = (Expression) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.expression.toString());
+//				ref.setVersion(expression.getVersion());
+//				return expression;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.dagExec) {
+//			if (key.getVersion() != null ) {
+//				//return dagExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dagExec.toString());
+//			} else {
+//				//DagExec dagExec = dagExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DagExec dagExec = (DagExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dagExec.toString());
+//				ref.setVersion(dagExec.getVersion());
+//				return dagExec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.rule) {
+//			if (key.getVersion() != null ) {
+//				//return iRuleDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.rule.toString());
+//			} else {
+//				//Rule rule = iRuleDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Rule rule = (Rule) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.rule.toString());
+//				ref.setVersion(rule.getVersion());
+//				return rule;
+//			}
+//		}
+//		
+//		
+//		if(ref.getType() == MetaType.map) {
+//			if (key.getVersion() != null ) {
+//				//return mapDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.map.toString());
+//			} else {
+//				//Map map = mapDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Map map = (Map) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.map.toString());
+//				ref.setVersion(map.getVersion());
+//				return map;
+//			}
+//		}
+//		if(ref.getType() == MetaType.mapExec) {
+//			if (key.getVersion() != null ) {
+//				//return iMapExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.mapExec.toString());
+//			} else {
+//				//MapExec mapExec = iMapExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				MapExec mapExec = (MapExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.mapExec.toString());
+//				ref.setVersion(mapExec.getVersion());
+//				return mapExec;
+//			}
+//		}
+//		if(ref.getType() == MetaType.mapiter) {
+//			if (key.getVersion() != null ) {
+//				//return mapDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.mapiter.toString());
+//			} else {
+//				//Map map = mapDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Map map = (Map) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.mapiter.toString());
+//				ref.setVersion(map.getVersion());
+//				return map;
+//			}
+//		}
+//		if(ref.getType() == MetaType.dag) {
+//			if (key.getVersion() != null ) {
+//				//return dagDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dag.toString());
+//			} else {
+//				//Dag dag = dagDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Dag dag = (Dag) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dag.toString());
+//				ref.setVersion(dag.getVersion());
+//				return dag;
+//			}
+//		}
+//		if(ref.getType() == MetaType.datastore){ //datastore implementation
+//			if (key.getVersion() != null ) {
+//				//return dataStoreDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datastore.toString());
+//			}else {
+//				//DataStore dataStore = dataStoreDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DataStore dataStore = (DataStore) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datastore.toString());
+//				ref.setVersion(dataStore.getVersion());
+//				return dataStore;
+//			}
+//		}
+//		if(ref.getType() == MetaType.load){ //load implementation
+//			if (key.getVersion() != null ) {
+//				//return loadDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.load.toString());
+//			}else {
+//				//Load load = loadDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Load load = (Load) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.load.toString());
+//				ref.setVersion(load.getVersion());
+//				return load;
+//			}
+//		}
+//		if(ref.getType() == MetaType.loadExec) {
+//			if (key.getVersion() != null ) {
+//				//return iLoadExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.loadExec.toString());
+//			} else {
+//				//LoadExec loadExec = iLoadExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				LoadExec loadExec = (LoadExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.loadExec.toString());
+//				ref.setVersion(loadExec.getVersion());
+//				return loadExec;
+//			}
+//		}
+//		/*if(ref.getType() == MetaType.group){ //group implementation
+//			if (key.getVersion() != null ) {
+//				return groupDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//			}else {
+//				Group group = groupDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				ref.setVersion(group.getVersion());
+//				return group;
+//			}
+//		}*/
+//		if(ref.getType() == MetaType.dimension) {
+//			if (key.getVersion() != null ) {
+//				//return dimensionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dimension.toString());
+//			} else {
+//				//Dimension dimension = dimensionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Dimension dimension = (Dimension) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dimension.toString());
+//				ref.setVersion(dimension.getVersion());
+//				return dimension;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.measure) {
+//			if (key.getVersion() != null ) {
+//				//return measureDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.measure.toString());
+//			} else {
+//				//Measure measure = measureDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Measure measure = (Measure) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.measure.toString());
+//				ref.setVersion(measure.getVersion());
+//				return measure;
+//			}
+//		}
+//		if(ref.getType() == MetaType.vizpod) {
+//			if (key.getVersion() != null ) {
+//				//return vizpodDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.vizpod.toString());
+//			} else {
+//				//Vizpod vizpod = vizpodDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Vizpod vizpod = (Vizpod) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.vizpod.toString());
+//				ref.setVersion(vizpod.getVersion());
+//				return vizpod;
+//			}
+//		}
+//		if(ref.getType() == MetaType.datasource) {
+//			if (key.getVersion() != null ) {
+//				//return iDatasourceDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.datasource.toString());
+//			} else {
+//				//Datasource datasource = iDatasourceDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.datasource.toString());
+//				ref.setVersion(datasource.getVersion());
+//				return datasource;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.vizExec) {
+//			if (key.getVersion() != null ) {
+//				//return iVizpodExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.vizExec.toString());
+//			} else {
+//				//VizExec vizexec = iVizpodExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				VizExec vizexec = (VizExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.vizExec.toString());
+//				ref.setVersion(vizexec.getVersion());
+//				return vizexec;
+//			}
+//		}
+//
+//		if(ref.getType() == MetaType.dataset) {
+//			if (key.getVersion() != null ) {
+//				//return datasetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dataset.toString());
+//			} else {
+//				//Dataset dataset = datasetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dataset.toString());
+//				ref.setVersion(dataset.getVersion());
+//				return dataset;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.function) {
+//			if (key.getVersion() != null ) {
+//				//return iFunctionDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.function.toString());
+//			} else {
+//				//Function function = iFunctionDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				Function function = (Function) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.function.toString()); 
+//				ref.setVersion(function.getVersion());
+//				return function;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.loadExec) {
+//			if (key.getVersion() != null ) {
+//				//return iLoadExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.loadExec.toString());
+//			} else {
+//				//LoadExec loadExec = iLoadExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				LoadExec loadExec = (LoadExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.loadExec.toString());
+//				ref.setVersion(loadExec.getVersion());
+//				return loadExec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.paramset) {
+//			if (key.getVersion() != null ) {
+//				//return iParamSetDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.paramset.toString());
+//			} else {
+//				//ParamSet paramSet = iParamSetDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				ParamSet paramSet = (ParamSet) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.paramset.toString());
+//				ref.setVersion(paramSet.getVersion());
+//				return paramSet;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.paramlist) {
+//			if (key.getVersion() != null ) {
+//				//return iParamListDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.paramlist.toString());
+//			} else {
+//				//ParamList paramList = iParamListDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version"));  
+//				ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.paramlist.toString());
+//				ref.setVersion(paramList.getVersion());
+//				return paramList;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.dqExec) {
+//			if (key.getVersion() != null ) {
+//				//return iDataQualExecDao.findOneByUuidAndVersion(ref.getUuid(), ref.getVersion());
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.dqExec.toString());
+//			} else {
+//				//DataQualExec dataQualExec = iDataQualExecDao.findLatestByUuid(ref.getUuid(), new Sort(Sort.Direction.DESC, "version")); 
+//				DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.dqExec.toString());
+//				ref.setVersion(dataQualExec.getVersion());
+//				return dataQualExec;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.recon) {
+//			if (key.getVersion() != null ) {
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.recon.toString());
+//			} else {
+//				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.recon.toString());
+//				ref.setVersion(recon.getVersion());
+//				return recon;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.reconExec) {
+//			if (key.getVersion() != null ) {
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.reconExec.toString());
+//			} else {
+//				ReconExec reconExec = (ReconExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.reconExec.toString());
+//				ref.setVersion(reconExec.getVersion());
+//				return reconExec;
+//			}
+//		}
+//		if(ref.getType() == MetaType.ingest) {
+//			if (key.getVersion() != null ) {
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingest.toString());
+//			} else {
+//				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingest.toString());
+//				ref.setVersion(ingest.getVersion());
+//				return ingest;
+//			}
+//		}
+//		
+//		if(ref.getType() == MetaType.ingestExec) {
+//			if (key.getVersion() != null ) {
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.ingestExec.toString());
+//			} else {
+//				IngestExec ingestExec = (IngestExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.ingestExec.toString());
+//				ref.setVersion(ingestExec.getVersion());
+//				return ingestExec;
+//			}
+//		}
+//		if(ref.getType() == MetaType.distribution)
+//			if (key.getVersion() != null ) {
+//				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.distribution.toString());
+//			} else {
+//				Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.distribution.toString());
+//				ref.setVersion(distribution.getVersion());
+//				return distribution;
+//			}
+//	//	logger.error("Meta not found");
+//		return null;
 	}
 
 	public IVizpodExecDao getiVizpodExecDao() {

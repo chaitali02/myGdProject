@@ -78,6 +78,7 @@ import com.inferyx.framework.livyjob.ExecRegAndPersistJob;
 import com.inferyx.framework.livyjob.ExecuteAndRegisterJob;
 import com.inferyx.framework.livyjob.ExecuteAndResult;
 import com.inferyx.framework.livyjob.RegisterDatapodJob;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 @Component
@@ -86,14 +87,16 @@ public class LivyExecutor implements IExecutor {
 	Properties dbConfiguration;
 	@Autowired
 	LivyClientImpl livyClientImpl;
-	@Autowired
-	MetadataUtil commonActivity;
+//	@Autowired
+//	MetadataUtil commonActivity;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired 
 	protected ConnectionFactory connectionFactory;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	
 	static final Logger logger = Logger.getLogger(LivyExecutor.class);
@@ -134,7 +137,7 @@ public class LivyExecutor implements IExecutor {
 		@SuppressWarnings("unused")
 		IWriter datapodWriter = null;
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block

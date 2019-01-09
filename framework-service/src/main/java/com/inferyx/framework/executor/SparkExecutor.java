@@ -109,7 +109,6 @@ import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.HistogramUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -163,8 +162,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
-	MetadataUtil commonActivity;
-	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
@@ -176,8 +173,6 @@ public class SparkExecutor<T> implements IExecutor {
 	Engine engine;
 	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
 	@Autowired
@@ -653,7 +648,7 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		String filePath = datastore.getLocation();
 		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 		if (!filePath.contains(hdfsLocation)) {
@@ -680,7 +675,7 @@ public class SparkExecutor<T> implements IExecutor {
 		ResultSetHolder rsHolder = executeSql(sql);
 
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -731,7 +726,7 @@ public class SparkExecutor<T> implements IExecutor {
 		// Write datapod
 		IWriter datapodWriter = null;
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -772,7 +767,7 @@ public class SparkExecutor<T> implements IExecutor {
 			registerTempTable(rsHolder.getDataFrame(), tableName);
 			logger.info("temp table registered: " + tableName);
 			try {
-				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -801,7 +796,7 @@ public class SparkExecutor<T> implements IExecutor {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
 			try {
-				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -982,7 +977,7 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public String fetchAndCreatePMML(DataStore datastore, Datapod datapod, String clientContext) throws Exception {
 		Dataset<Row> df = null;
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -1011,7 +1006,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod.");
 			throw new Exception("Datastore is not available for this datapod.");
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -1118,7 +1113,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 		}
 		rsHolder2.setTableName(datapodTableName);
-		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod, daoRegister);
+		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod);
 		datapodWriter.write(rsHolder2, filePathUrl, datapod, SaveMode.Overwrite.toString());
 		return count;
 	}
@@ -1133,7 +1128,7 @@ public class SparkExecutor<T> implements IExecutor {
 			IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
 			IReader iReader;
 			try {
-				iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+				iReader = dataSourceFactory.getDatapodReader(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 					| SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -1469,11 +1464,11 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new Exception();
 		}
 //		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
-		Datasource datasource = null;
+//		Datasource datasource = null;
 //		if(datapod != null) {
 //			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 //		} else {
-			datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 //		}
 		
 		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());

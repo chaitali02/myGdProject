@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
@@ -48,6 +49,8 @@ public class MapTaskParser extends TaskParser {
 	protected MapIterOperator mapIterOperator;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	private final String WHERE_1_1 = " WHERE (1=1) ";//" WHERE \\(1=1\\) ";
 	
@@ -92,7 +95,8 @@ public class MapTaskParser extends TaskParser {
 		 * (!operatorType.equals(MetaType.map)) { // continue with next task if
 		 * not Map as we don't need to // parse further continue; }
 		 */
-		Map map = (Map) daoRegister.getRefObject(ref);
+//		Map map = (Map) daoRegister.getRefObject(ref);
+		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 
 		StringBuilder builder = new StringBuilder();
 		/*List<AttributeRefHolder> filterInfo = indvTask.getOperators().get(0).getFilterInfo();
@@ -195,8 +199,9 @@ public class MapTaskParser extends TaskParser {
 		
 		// Get all relation tables
 		// Start with main table
-		Datapod fromDatapod = (Datapod) daoRegister
-				.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+//		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+		MetaIdentifier fromDatapodRef = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
+		Datapod fromDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(fromDatapodRef.getUuid(), fromDatapodRef.getVersion(), fromDatapodRef.getType().toString(), "N");
 
 		// Derive table name on the basis of depends on value.
 		String table = getTableFromDatapod(fromDatapod, indvTask, datapodList, dagExec, otherParams);
@@ -206,8 +211,9 @@ public class MapTaskParser extends TaskParser {
 		
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
 		for (int i = 0; i < relInfoList.size(); i++) {
-
-			Datapod datapod = (Datapod) daoRegister.getRefObject(populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+//			Datapod datapod = (Datapod) daoRegister.getRefObject(populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+			MetaIdentifier ref = populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			String rightTable = getTableFromDatapod(datapod, indvTask, datapodList, dagExec, otherParams);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())), rightTable);
 		}// End for

@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.FunctionInfo;
@@ -33,9 +32,6 @@ import com.inferyx.framework.service.DatasetServiceImpl;
 
 @Component
 public class FunctionOperator {
-
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected DatasetServiceImpl datasetServiceImpl;
 	@Autowired
