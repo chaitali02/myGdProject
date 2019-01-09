@@ -376,7 +376,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let tabledata of attributes;let i =index">
+                  <tr *ngFor="let tabledata of attributes;let i =index" pDraggable="cars"
+                  (onDragStart)="dragStart($event,i)" (onDragEnd)="dragEnd($event)" pDroppable="cars" 
+                  (onDrop)="drop($event,i)">
                     <td style="text-align: center; Vertical-align: middle;width:5%;">
                       <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode"
                       />

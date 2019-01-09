@@ -25,6 +25,8 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  dropIndex: any;
+  dragIndex: any;
   iSSubmitEnable: boolean;
   histogramcols: any[];
   histogramData: any[];
@@ -681,5 +683,25 @@ onSuccessgetAttrHistogram(response){
 		this.attributes[index]=rowTempIndexMines;
     this.attributes[index-1]=rowTempIndex;
     this.iSSubmitEnable=true
-	}
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.attributes[this.dragIndex]
+      this.attributes.splice(this.dragIndex,1)
+      this.attributes.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    }
+    
+  }
 }
