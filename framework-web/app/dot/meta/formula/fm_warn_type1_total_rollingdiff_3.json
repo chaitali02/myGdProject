@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 07 16:21:51 EST 2019",
+  "createdOn": "Mon Jan 07 16:45:10 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -30,20 +30,20 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+      "type": "dataset",
+      "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
       "version": null,
-      "name": "device_data_categorical_features"
+      "name": "ds_device_data_base_features"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
         "version": null,
-        "name": "device_data_categorical_features"
+        "name": "ds_device_data_base_features"
       },
       "attributeId": 2,
       "value": null,
@@ -88,10 +88,10 @@
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
         "version": null,
-        "name": "device_data_categorical_features"
+        "name": "ds_device_data_base_features"
       },
       "attributeId": 2,
       "value": null,
@@ -148,10 +148,10 @@
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
         "version": null,
-        "name": "device_data_categorical_features"
+        "name": "ds_device_data_base_features"
       },
       "attributeId": 0,
       "value": null,
@@ -172,10 +172,10 @@
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
         "version": null,
-        "name": "device_data_categorical_features"
+        "name": "ds_device_data_base_features"
       },
       "attributeId": 1,
       "value": null,

@@ -1,7 +1,6 @@
 {
-  "id": "5c33bfd1b27d221c3a0c90fb",
-  "uuid": "414e3238-84b6-4086-9e69-185022aad498",
-  "version": "1546895313",
+  "uuid": "9de0758d-0b3f-4827-a8b5-3233b976cf88",
+  "version": "1547069509",
   "name": "device_data_categorical_features",
   "desc": "Creating datastore for device_data_categorical_features",
   "createdBy": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 07 16:08:33 EST 2019",
+  "createdOn": "Wed Jan 09 16:31:49 EST 2019",
   "tags": null,
   "active": "Y",
   "locked": "N",
@@ -32,8 +31,8 @@
   "metaId": {
     "ref": {
       "type": "datapod",
-      "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-      "version": "1546893637",
+      "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
+      "version": "1547069505",
       "name": "device_data_categorical_features"
     },
     "value": null
@@ -41,13 +40,13 @@
   "execId": {
     "ref": {
       "type": "loadExec",
-      "uuid": "17123f74-9ffb-490d-b9bb-73c384cfe9d5",
-      "version": "1546895305",
+      "uuid": "710c632c-7a88-4209-8a47-ccedd39a7a4e",
+      "version": "1547069505",
       "name": "device_data_categorical_features"
     },
     "value": null
   },
-  "location": "/1c153d11-2a61-4874-85d5-ce4c3e7019eb/1546893637/1546895305",
+  "location": "/4b6689af-aeaf-4287-8833-c029cce587e8/1547069505/1547069505",
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 4392,

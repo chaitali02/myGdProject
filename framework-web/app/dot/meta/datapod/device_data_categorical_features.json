@@ -1,6 +1,6 @@
 {
-  "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-  "version": "1546893637",
+  "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
+  "version": "1547069505",
   "name": "device_data_categorical_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 07 15:40:37 EST 2019",
+  "createdOn": "Wed Jan 09 16:31:45 EST 2019",
   "tags": null,
   "active": "Y",
   "locked": "N",
@@ -70,34 +70,6 @@
     {
       "attributeId": 2,
       "displaySeq": null,
-      "name": "warn_type1_total",
-      "type": "integer",
-      "desc": "warn_type1_total",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "warn_type1_total",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 3,
-      "displaySeq": null,
-      "name": "warn_type2_total",
-      "type": "integer",
-      "desc": "warn_type2_total",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "warn_type2_total",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 4,
-      "displaySeq": null,
       "name": "cat1",
       "type": "string",
       "desc": "cat1",
@@ -110,7 +82,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 5,
+      "attributeId": 3,
       "displaySeq": null,
       "name": "cat2",
       "type": "string",
@@ -124,7 +96,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 6,
+      "attributeId": 4,
       "displaySeq": null,
       "name": "cat3",
       "type": "string",
@@ -138,7 +110,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 7,
+      "attributeId": 5,
       "displaySeq": null,
       "name": "cat4",
       "type": "string",
@@ -152,21 +124,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 8,
-      "displaySeq": null,
-      "name": "fault_code_type_1_count",
-      "type": "integer",
-      "desc": "fault_code_type_1_count",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_1_count",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 9,
+      "attributeId": 6,
       "displaySeq": null,
       "name": "fault_code_type_1_count_category",
       "type": "integer",
@@ -180,21 +138,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 10,
-      "displaySeq": null,
-      "name": "fault_code_type_1_count_per_usage1",
-      "type": "integer",
-      "desc": "fault_code_type_1_count_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_1_count_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 11,
+      "attributeId": 7,
       "displaySeq": null,
       "name": "fault_code_type_1_count_per_usage1_category",
       "type": "string",
@@ -208,21 +152,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 12,
-      "displaySeq": null,
-      "name": "fault_code_type_1_count_per_usage2",
-      "type": "integer",
-      "desc": "fault_code_type_1_count_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_1_count_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 13,
+      "attributeId": 8,
       "displaySeq": null,
       "name": "fault_code_type_1_count_per_usage2_category",
       "type": "string",
@@ -236,21 +166,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 14,
-      "displaySeq": null,
-      "name": "fault_code_type_2_count",
-      "type": "integer",
-      "desc": "fault_code_type_2_count",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_2_count",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 15,
+      "attributeId": 9,
       "displaySeq": null,
       "name": "fault_code_type_2_count_category",
       "type": "integer",
@@ -264,21 +180,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 16,
-      "displaySeq": null,
-      "name": "fault_code_type_2_count_per_usage1",
-      "type": "integer",
-      "desc": "fault_code_type_2_count_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_2_count_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 17,
+      "attributeId": 10,
       "displaySeq": null,
       "name": "fault_code_type_2_count_per_usage1_category",
       "type": "string",
@@ -292,21 +194,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 18,
-      "displaySeq": null,
-      "name": "fault_code_type_2_count_per_usage2",
-      "type": "integer",
-      "desc": "fault_code_type_2_count_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_2_count_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 19,
+      "attributeId": 11,
       "displaySeq": null,
       "name": "fault_code_type_2_count_per_usage2_category",
       "type": "string",
@@ -320,21 +208,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 20,
-      "displaySeq": null,
-      "name": "fault_code_type_3_count",
-      "type": "integer",
-      "desc": "fault_code_type_3_count",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_3_count",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 21,
+      "attributeId": 12,
       "displaySeq": null,
       "name": "fault_code_type_3_count_category",
       "type": "integer",
@@ -348,21 +222,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 22,
-      "displaySeq": null,
-      "name": "fault_code_type_3_count_per_usage1",
-      "type": "integer",
-      "desc": "fault_code_type_3_count_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_3_count_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 23,
+      "attributeId": 13,
       "displaySeq": null,
       "name": "fault_code_type_3_count_per_usage1_category",
       "type": "string",
@@ -376,21 +236,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 24,
-      "displaySeq": null,
-      "name": "fault_code_type_3_count_per_usage2",
-      "type": "integer",
-      "desc": "fault_code_type_3_count_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_3_count_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 25,
+      "attributeId": 14,
       "displaySeq": null,
       "name": "fault_code_type_3_count_per_usage2_category",
       "type": "string",
@@ -404,21 +250,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 26,
-      "displaySeq": null,
-      "name": "fault_code_type_4_count",
-      "type": "integer",
-      "desc": "fault_code_type_4_count",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_4_count",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 27,
+      "attributeId": 15,
       "displaySeq": null,
       "name": "fault_code_type_4_count_category",
       "type": "integer",
@@ -432,21 +264,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 28,
-      "displaySeq": null,
-      "name": "fault_code_type_4_count_per_usage1",
-      "type": "integer",
-      "desc": "fault_code_type_4_count_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_4_count_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 29,
+      "attributeId": 16,
       "displaySeq": null,
       "name": "fault_code_type_4_count_per_usage1_category",
       "type": "string",
@@ -460,21 +278,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 30,
-      "displaySeq": null,
-      "name": "fault_code_type_4_count_per_usage2",
-      "type": "integer",
-      "desc": "fault_code_type_4_count_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "fault_code_type_4_count_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 31,
+      "attributeId": 17,
       "displaySeq": null,
       "name": "fault_code_type_4_count_per_usage2_category",
       "type": "string",
@@ -488,21 +292,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 32,
-      "displaySeq": null,
-      "name": "problem_type_1",
-      "type": "integer",
-      "desc": "problem_type_1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 33,
+      "attributeId": 18,
       "displaySeq": null,
       "name": "problem_type_1_category",
       "type": "string",
@@ -516,21 +306,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 34,
-      "displaySeq": null,
-      "name": "problem_type_1_per_usage1",
-      "type": "double",
-      "desc": "problem_type_1_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_1_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 35,
+      "attributeId": 19,
       "displaySeq": null,
       "name": "problem_type_1_per_usage1_category",
       "type": "string",
@@ -544,21 +320,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 36,
-      "displaySeq": null,
-      "name": "problem_type_1_per_usage2",
-      "type": "double",
-      "desc": "problem_type_1_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_1_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 37,
+      "attributeId": 20,
       "displaySeq": null,
       "name": "problem_type_1_per_usage2_category",
       "type": "string",
@@ -572,21 +334,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 38,
-      "displaySeq": null,
-      "name": "problem_type_2",
-      "type": "integer",
-      "desc": "problem_type_2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 39,
+      "attributeId": 21,
       "displaySeq": null,
       "name": "problem_type_2_category",
       "type": "string",
@@ -600,21 +348,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 40,
-      "displaySeq": null,
-      "name": "problem_type_2_per_usage1",
-      "type": "double",
-      "desc": "problem_type_2_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_2_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 41,
+      "attributeId": 22,
       "displaySeq": null,
       "name": "problem_type_2_per_usage1_category",
       "type": "string",
@@ -628,7 +362,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 42,
+      "attributeId": 23,
       "displaySeq": null,
       "name": "problem_type_2_per_usage2",
       "type": "double",
@@ -642,7 +376,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 43,
+      "attributeId": 24,
       "displaySeq": null,
       "name": "problem_type_2_per_usage2_category",
       "type": "string",
@@ -656,21 +390,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 44,
-      "displaySeq": null,
-      "name": "problem_type_3",
-      "type": "integer",
-      "desc": "problem_type_3",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_3",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 45,
+      "attributeId": 25,
       "displaySeq": null,
       "name": "problem_type_3_category",
       "type": "integer",
@@ -684,21 +404,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 46,
-      "displaySeq": null,
-      "name": "problem_type_3_per_usage1",
-      "type": "integer",
-      "desc": "problem_type_3_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_3_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 47,
+      "attributeId": 26,
       "displaySeq": null,
       "name": "problem_type_3_per_usage1_category",
       "type": "integer",
@@ -712,21 +418,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 48,
-      "displaySeq": null,
-      "name": "problem_type_3_per_usage2",
-      "type": "integer",
-      "desc": "problem_type_3_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_3_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 49,
+      "attributeId": 27,
       "displaySeq": null,
       "name": "problem_type_3_per_usage2_category",
       "type": "integer",
@@ -740,21 +432,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 50,
-      "displaySeq": null,
-      "name": "problem_type_4",
-      "type": "integer",
-      "desc": "problem_type_4",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_4",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 51,
+      "attributeId": 28,
       "displaySeq": null,
       "name": "problem_type_4_category",
       "type": "string",
@@ -768,21 +446,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 52,
-      "displaySeq": null,
-      "name": "problem_type_4_per_usage1",
-      "type": "double",
-      "desc": "problem_type_4_per_usage1",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_4_per_usage1",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 53,
+      "attributeId": 29,
       "displaySeq": null,
       "name": "problem_type_4_per_usage1_category",
       "type": "string",
@@ -796,21 +460,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 54,
-      "displaySeq": null,
-      "name": "problem_type_4_per_usage2",
-      "type": "double",
-      "desc": "problem_type_4_per_usage2",
-      "expression": null,
-      "key": null,
-      "partition": null,
-      "dispName": "problem_type_4_per_usage2",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 55,
+      "attributeId": 30,
       "displaySeq": null,
       "name": "problem_type_4_per_usage2_category",
       "type": "string",
@@ -824,7 +474,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 56,
+      "attributeId": 31,
       "displaySeq": null,
       "name": "version",
       "type": "Integer",

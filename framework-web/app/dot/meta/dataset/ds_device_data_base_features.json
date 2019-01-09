@@ -1,6 +1,6 @@
 {
   "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-  "version": "1546643600",
+  "version": "1547066312",
   "name": "ds_device_data_base_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Jan 04 18:13:20 EST 2019",
+  "createdOn": "Wed Jan 09 15:38:32 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -48,7 +48,7 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "0",
@@ -66,7 +66,7 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "1",
@@ -88,7 +88,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_warn_type1_total",
         "attrType": null,
         "attrUnitType": null
       }
@@ -106,7 +106,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_warn_type2_total",
         "attrType": null,
         "attrUnitType": null
       }
@@ -124,7 +124,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_device_data_cat1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -142,7 +142,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_device_data_cat2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -160,7 +160,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_device_data_cat3",
         "attrType": null,
         "attrUnitType": null
       }
@@ -178,7 +178,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_device_data_cat4",
         "attrType": null,
         "attrUnitType": null
       }
@@ -196,7 +196,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_1_count",
         "attrType": null,
         "attrUnitType": null
       }
@@ -214,7 +214,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_2_count",
         "attrType": null,
         "attrUnitType": null
       }
@@ -232,7 +232,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_3_count",
         "attrType": null,
         "attrUnitType": null
       }
@@ -250,7 +250,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_4_count",
         "attrType": null,
         "attrUnitType": null
       }
@@ -268,7 +268,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_1_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -286,7 +286,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_2_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -304,7 +304,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_3_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -322,7 +322,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_4_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -340,7 +340,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_1_count_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -358,7 +358,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_2_count_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -376,7 +376,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_3_count_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -394,7 +394,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_4_count_per_usage1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -412,7 +412,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_1_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -430,7 +430,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_2_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -448,7 +448,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_3_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -466,7 +466,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_problem_type_4_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -484,7 +484,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_1_count_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -502,7 +502,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_2_count_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -520,7 +520,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_3_count_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -538,7 +538,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": null,
+        "attrName": "fm_fault_code_type_4_count_per_usage2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -552,7 +552,7 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "6",
@@ -570,7 +570,7 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "9",
@@ -588,7 +588,7 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "10",
@@ -606,12 +606,30 @@
           "type": "datapod",
           "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
           "version": null,
-          "name": "device_data_fillna"
+          "name": null
         },
         "value": null,
         "attrId": "11",
         "attrName": "problem_type_4",
         "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "33",
+      "attrDisplaySeq": "32",
+      "attrSourceName": "version",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "attrId": "172",
+        "attrName": "version",
+        "attrType": "Integer",
         "attrUnitType": null
       }
     }
