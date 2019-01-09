@@ -1765,7 +1765,7 @@ public class CommonServiceImpl <T> {
 					if (refObject != null) {
 						type = (MetaType) refObject.getClass().getMethod(GET+"Type").invoke(refObject);
 						name = getName((String)refObject.getClass().getMethod(GET+"Uuid").invoke(refObject), (String)refObject.getClass().getMethod(GET+"Version").invoke(refObject), type);
-						logger.info("Name : " + name);
+//						logger.info("Name : " + name);
 						if(name != null) {
 							refObject.getClass().getMethod(SET+"Name", String.class).invoke(refObject, name);
 							object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, name);
@@ -2060,7 +2060,7 @@ public class CommonServiceImpl <T> {
 		Object invokedObj = null;
 		String attributeName = null;
 		try{
-			logger.info("Inside resolveAttributeName - ");
+//			logger.info("Inside resolveAttributeName - ");
 			if (object instanceof AttributeRefHolder || object instanceof SourceAttr) {
 				object = object.getClass().getMethod(GET+"Ref").invoke(object);
 				if (object == null) {

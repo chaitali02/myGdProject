@@ -351,6 +351,18 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * ruleExecMetaList; }
 	 */
 
+	public String getAttributeName(Rule rule, String attributeId) {
+		List<AttributeSource> sourceAttrs = rule.getAttributeInfo();
+		for (AttributeSource sourceAttr : sourceAttrs) {
+			if (sourceAttr.getSourceAttr() != null 
+					&& sourceAttr.getAttrSourceId() != null 
+					&& sourceAttr.getAttrSourceId().equals(attributeId)) {
+				return sourceAttr.getAttrSourceName();
+			}
+		}
+		return null;
+	}
+	
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
 			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws Exception {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,

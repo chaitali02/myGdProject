@@ -61,7 +61,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-			return generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
+			logger.info("Started SQL Generation");
+			String sql = generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
 					.concat(getFrom())
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
 					.concat(generateWhere())
@@ -69,6 +70,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
 					.concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 					.concat(generateLimit(dataset));
+			logger.info("Completed SQL Generation");
+			return sql;
 		}
 
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams

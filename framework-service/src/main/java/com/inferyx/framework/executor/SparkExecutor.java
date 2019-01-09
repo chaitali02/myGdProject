@@ -402,7 +402,8 @@ public class SparkExecutor<T> implements IExecutor {
 
 	@Override
 	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext) throws IOException {
-		logger.info(" Inside executeAndFetchByDatasource  for SQL : " + sql);
+		logger.info(sql);
+		logger.info("Started SQL Execution");
 		List<Map<String, Object>> data = new ArrayList<>();
 		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
 		Dataset<Row> dfSorted = rsHolder.getDataFrame();
@@ -417,6 +418,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			data.add(object);
 		}
+		logger.info("Completed SQL Execution");		
 		return data;
 	}
 	

@@ -222,7 +222,7 @@ public class AttributeMapOperator {
 //		Object object = daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 		MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
 		Object object = commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString());
+		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString(),"N");
 		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		try {
 			if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.datapod)  
@@ -237,14 +237,14 @@ public class AttributeMapOperator {
 			if (mapSource.getRef().getType() == MetaType.dataset && (object instanceof DataSet)) {
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
 				MetaIdentifier mapSourceRef = TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap);
-				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString());
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString(),"N");
 				return builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttrId())).append(" ").toString();
 				
 			}
 			if (mapSource.getRef().getType() == MetaType.rule && (object instanceof Rule)) {
 //				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
 				MetaIdentifier mapSourceRef = TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap);
-				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString());
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString(),"N");
 				return builder.append(ruleServiceImpl.getAttributeSql(rule, sourceAttr.getAttrId())).append(" ").toString();
 			}
 
@@ -365,7 +365,7 @@ public class AttributeMapOperator {
 		if (sourceAttr.getRef().getType() == MetaType.dataset && (object instanceof DataSet)) {
 //			DataSet dataset = (DataSet) daoRegister .getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
 			MetaIdentifier mapSourceRef = TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap);
-			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString());
+			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString(),"N");
 			return datasetServiceImpl.getAttributeName(dataset, sourceAttr.getAttrId());
 		}
 
@@ -408,14 +408,14 @@ public class AttributeMapOperator {
 			if (attr.getSourceAttr().getRef().getType() == MetaType.formula) {
 //				Formula formula = (Formula) daoRegister.getRefObject(attr.getSourceAttr().getRef());
 				MetaIdentifier ref = TaskParser.populateRefVersion(attr.getSourceAttr().getRef(), refKeyMap);
-				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
 				if (formulaOperator.isGroupBy(formula, refKeyMap, otherParam)) {
 					return true;
 				}
 			} else if (attr.getSourceAttr().getRef().getType() == MetaType.expression) {
 //				Expression expression = (Expression) daoRegister.getRefObject(attr.getSourceAttr().getRef());
 				MetaIdentifier ref = TaskParser.populateRefVersion(attr.getSourceAttr().getRef(), refKeyMap);
-				Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
 				if (expressionOperator.isGroupBy(expression.getExpressionInfo(), refKeyMap, otherParam)) {
 					return true;
 				}
@@ -437,7 +437,7 @@ public class AttributeMapOperator {
 		/*if (!isGroupBy(attrMapList, refKeyMap, otherParams)) {
 			return "";
 		}*/
-		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString());
+		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString(),"N");
 		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		for (AttributeMap attr : attrMapList) {
 			if (attr.getSourceAttr().getRef().getType() == MetaType.datapod 
@@ -446,12 +446,12 @@ public class AttributeMapOperator {
 				//groupByStr.append(attr.getSourceAttr().getAttrName()).append(",");
 			} else if (attr.getSourceAttr().getRef().getType() == MetaType.expression) {
 //				Expression expression = (Expression) daoRegister.getRefObject(attr.getSourceAttr().getRef());
-				Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(attr.getSourceAttr().getRef().getUuid(), attr.getSourceAttr().getRef().getVersion(), attr.getSourceAttr().getRef().getType().toString());
+				Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(attr.getSourceAttr().getRef().getUuid(), attr.getSourceAttr().getRef().getVersion(), attr.getSourceAttr().getRef().getType().toString(),"N");
 				
 				MetaIdentifierHolder exprSource = new MetaIdentifierHolder(expression.getRef(MetaType.expression));
 				if(expression.getMatch().getRef().getType() == MetaType.formula  || expression.getNoMatch().getRef().getType() == MetaType.formula) {
 //					Formula formula = (Formula) daoRegister.getRefObject(expression.getMatch().getRef());
-					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(expression.getMatch().getRef().getUuid(), expression.getMatch().getRef().getVersion(), expression.getMatch().getRef().getType().toString());
+					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(expression.getMatch().getRef().getUuid(), expression.getMatch().getRef().getVersion(), expression.getMatch().getRef().getType().toString(),"N");
 					if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 						isGroupBy = true;
 					} else {
@@ -466,7 +466,7 @@ public class AttributeMapOperator {
 				}
 			} else if (attr.getSourceAttr().getRef().getType() == MetaType.formula) {
 //				Formula formula = (Formula) daoRegister.getRefObject(attr.getSourceAttr().getRef());
-				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attr.getSourceAttr().getRef().getUuid(), attr.getSourceAttr().getRef().getVersion(), attr.getSourceAttr().getRef().getType().toString());
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attr.getSourceAttr().getRef().getUuid(), attr.getSourceAttr().getRef().getVersion(), attr.getSourceAttr().getRef().getType().toString(),"N");
 				if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 					isGroupBy = true;
 				} else {

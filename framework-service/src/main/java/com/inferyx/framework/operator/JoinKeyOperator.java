@@ -39,8 +39,10 @@ import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
+import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
 public class JoinKeyOperator {
@@ -50,6 +52,8 @@ public class JoinKeyOperator {
 	@Autowired MetadataServiceImpl metadataServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired protected DatasetServiceImpl datasetServiceImpl;
+	@Autowired protected RuleServiceImpl ruleServiceImpl;
 	@Autowired protected DatasetOperator datasetOperator;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
@@ -142,18 +146,20 @@ public class JoinKeyOperator {
 				MetaIdentifier filterSourceMI = sourceAttr.getRef();				
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSourceMI, refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(filterSourceMI, refKeyMap);
-				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
-				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
+//				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
+//				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				String attrName = datasetServiceImpl.getAttributeName(dataset,sourceAttr.getAttributeId().toString());
 				operandValue.add(dataset.sql(attrName));
 				MetaIdentifier datasetRef = new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion());
 				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
 //				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap);
-				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
-				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
+//				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
+//				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				String attrName = ruleServiceImpl.getAttributeName(rule,sourceAttr.getAttributeId().toString());
 				operandValue.add(rule.sql(attrName));
 				MetaIdentifier ruleRef = new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion());
 				usedRefKeySet.add(ruleRef);
@@ -168,7 +174,7 @@ public class JoinKeyOperator {
 			} else if (sourceAttr.getRef().getType() == MetaType.formula) {
 //				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
 				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
 					aggrCount += 1;
 				}
@@ -178,7 +184,7 @@ public class JoinKeyOperator {
 			} else if (sourceAttr.getRef().getType() == MetaType.function) {
 //					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 					MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-					Function functionRef = (Function) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+					Function functionRef = (Function) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
 					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams, datasource));
 					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
 					usedRefKeySet.add(functionRef1);
@@ -196,7 +202,7 @@ public class JoinKeyOperator {
 				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT EXISTS")) {
 			if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.dataset)) {
 				MetaIdentifier dataSetMI = filterInfo.getOperand().get(1).getRef();
-				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString());
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString(),"N");
 				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
 				return generateRHSQuery(operandValue, filterInfo, filterSource, subQuery, dataSet.getName());
 			} else {

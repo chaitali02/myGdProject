@@ -88,7 +88,7 @@ public class DatasetServiceImpl {
 	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
-		logger.info(" Start datasetSample ");
+		//logger.info(" Start datasetSample ");
 		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
@@ -100,7 +100,7 @@ public class DatasetServiceImpl {
 		}
 		
 		DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(datasetUUID, datasetVersion, MetaType.dataset.toString());
-		List<Map<String, Object>> data = new ArrayList<>();	
+		List<Map<String, Object>> data = new ArrayList<>();
 		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
