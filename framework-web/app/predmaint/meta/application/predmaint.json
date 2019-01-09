@@ -1,9 +1,8 @@
 {
-    "_id" : ObjectId("5c18983ab214ccf8421ba662"),
     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ea",
     "version" : "1521430822",
-    "name" : "Predictive Maintaince",
-    "desc" : "Predictive Maintaince",
+    "name" : "Predictive Maintenance",
+    "desc" : "Predictive Maintenance",
     "createdBy" : {
         "ref" : {
             "type" : "user",
