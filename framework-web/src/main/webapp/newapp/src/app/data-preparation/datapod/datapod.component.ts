@@ -7,6 +7,8 @@ import { SelectItem } from 'primeng/primeng';
 
 import { AppConfig } from '../../app.config';
 import { DataPodResource } from './datapod-resource';
+import { AppMetadata } from '../../app.metadata';
+import { AppHepler } from '../../app.helper'; 
 
 import { Version } from '../../shared/version'
 
@@ -23,6 +25,29 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  dropIndex: any;
+  dragIndex: any;
+  iSSubmitEnable: boolean;
+  histogramcols: any[];
+  histogramData: any[];
+  showHistogramModel: boolean;
+  originalDataHistogram: any[];
+  isHistogramError: boolean;
+  isHistogramInprogess: boolean;
+  datacol: any;
+  isShowChart: boolean;
+  isShowDataGrid: boolean;
+  histogramDetail: any;
+  datastoreDetail: any;
+  downloadversion: any;
+  downloaduuid: any;
+  source: any;
+  isDownloadModel: boolean;
+  download: {};
+  IsTableShow1: boolean;
+  isMetaSysn: boolean;
+  metaCompareData: any;
+  isShowCompareMetaData: any;
   length: string;
   isDisabled: boolean;
   resultcols: any[];
@@ -78,12 +103,16 @@ export class DatapodComponent {
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isSubmitEnable: any;
 
-  constructor(private _config: AppConfig, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
+  constructor(private _config: AppConfig,public metaconfig: AppMetadata, public apphelper: AppHepler, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
     this.selectVersion = { "version": "" };
     this.showdatapod = true;
     this.isSubmitEnable = true;
     this.uuid = '';
+    this.download={}
+    this.download["format"]=["excel"]
+    this.download["rows"]=100
+    this.download["selectFormat"]='excel'
     this.breadcrumbDataFrom = [{
       "caption": "Data Preparation ",
       "routeurl": "/app/list/datapod"
@@ -217,6 +246,9 @@ export class DatapodComponent {
     this.showgraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false;
+    this.IsTableShow = false;
+    this.isShowDatastore=false
+    this.isShowCompareMetaData=false
     const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
     const DatapodSampleData = this._service.getDatapodSample(api_url).subscribe(
       response => { this.OnSuccesDatapodSample(response) },
@@ -230,21 +262,35 @@ export class DatapodComponent {
 
   OnSuccesDatapodSample(response) {
     this.IsTableShow = true;
-    this.isShowDatastore=false
+    
     this.colsdata = response
     let columns = [];
     console.log(response)
-    if (response.length && response.length > 0) {
-      Object.keys(response[0]).forEach(val => {
-        if (val != "rownum") {
-          let width = ((val.split("").length * 9) + 20) + "px"
-          columns.push({ "field": val, "header": val, colwidth: width });
-        }
-      });
+    for (var j = 0; j <this.datapodjson.attributes.length; j++) {
+      var attribute = {};
+      attribute["field"]=this.datapodjson.attributes[j].name;
+      attribute["header"]=this.datapodjson.attributes[j].name;
+      attribute["colwidth"]=((attribute["header"].length * 9) + 40) + "px"
+      attribute["name"] =this.datapodjson.attributes[j].name;
+      attribute["dname"] =this.datapodjson.name;
+      attribute["uuid"]=this.datapodjson.uuid;
+      attribute["version"]=this.datapodjson.version;
+      attribute["attributeId"]=this.datapodjson.attributes[j].attributeId;         
+      
+      columns.push(attribute)
     }
+    // if (response.length && response.length > 0) {
+    //   Object.keys(response[0]).forEach(val => {
+    //     if (val != "rownum") {
+    //       let width = ((val.split("").length * 9) + 40) + "px"
+    //       columns.push({ "field": val, "header": val, colwidth: width });
+    //     }
+    //   });
+    // }
     this.cols = columns
     this.columnOptions = [];
     for (let i = 0; i < this.cols.length; i++) {
+      this.cols["attrId"]=i
       this.columnOptions.push({ label: this.cols[i].header, value: this.cols[i] });
     }
   }
@@ -342,6 +388,7 @@ export class DatapodComponent {
   }
 
   showDatapodPage() {
+    this.isShowCompareMetaData=false
     this.showdatapod = true;
     this.isShowSimpleData = false;
     this.showgraph = false;
@@ -352,6 +399,7 @@ export class DatapodComponent {
   }
 
   showDatapodGraph() {
+    this.isShowCompareMetaData=false
     this.showdatapod = false;
     this.showgraph = false;
     this.isShowSimpleData = false;
@@ -398,22 +446,40 @@ export class DatapodComponent {
     });
   }
 
-  downloadDatapodResult() {
+  downloadDatapodResult(source) {
+    this.source=source
+    this.isDownloadModel=true
+    this.downloaduuid=this.uuid
+    this.downloadversion=this.version
+  }
+  downloadDatastoreResult(source,datastoreDetail){
+    this.resultcols
+    this.source=source
+    this.isDownloadModel=true
+    this.downloaduuid=datastoreDetail["uuid"]
+    this.downloadversion=datastoreDetail["version"]
+  }
+  SubmitDownload(source){
     const headers = new Headers();
-    this.http.get(this.baseUrl + 'datapod/download?action=view&datapodUUID=' + this.uuid + '&datapodVersion=' + this.version + '&row=100',
+    this.http.get(this.baseUrl + source+'/download?action=view&uuid=' + this.downloaduuid + '&version=' + this.downloadversion + '&row='+this.download["rows"]+'&formate='+this.download["selectFormat"],
       { headers: headers, responseType: ResponseContentType.Blob })
       .toPromise()
       .then(response => this.saveToFileSystem(response));
   }
-
   saveToFileSystem(response) {
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
     const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
     saveAs(blob, filename);
+    this.isDownloadModel=false
+  }
+  close(){
+    this.isDownloadModel=false
   }
   showDatastrores=function(data){
+    this.IsTableShow=false
+    this.isShowCompareMetaData=false
 		this.showFrom = false;
 		this.isShowSimpleData = false;
 		this.showGraphDiv = false;
@@ -438,18 +504,22 @@ export class DatapodComponent {
   }
   OnSuccesgetDatastoreByDatapod(response){
     console.log(response)
+    this.IsTableShow=true
     this.isShowDatastore=true;
     this.rowData1=response
     this.isDisabled=false
   }
   onChangeRadio(data){
   console.log(data)
+  this.IsTableShow1=false
+  this.datastoreDetail=data
   this._datapodService.getResult(data.uuid,data.version).subscribe(
     response => { this.OnSuccesgetResult(response) },
     error => console.log('Error :: ' + error)
   )
   }
   OnSuccesgetResult(response){
+    this.IsTableShow1=true
     this.isDisabled=true
     this.showgetResults=true
     this.resultData = response
@@ -474,7 +544,164 @@ export class DatapodComponent {
   onRowSelect(event) {
     console.log(event.data);
   }
-  downloadDatastoreResult(){
+  showCompareMetaData(data){
+		if(this.isShowCompareMetaData){
+			return false
+    }
+    this.IsTableShow=false
+    this.isShowCompareMetaData=true
+    this.showdatapod = false;
+    this.showgraph = false;
+    this.isShowSimpleData = false;
+    this.graphDataStatus = false;
+    this.showgraphdiv = false;
+    this.isShowDatastore=false
+    this.showgetResults=false
+    this._datapodService.compareMetadata(data.uuid,data.version,'datapod').subscribe(
+      response => { this.OnSuccescompareMetadata(response) },
+      error => console.log('Error :: ' + error)
+    )
+	
+  }
+  OnSuccescompareMetadata(response){
+    this.IsTableShow=true
+    for (let i = 0; i < response.length; i++) {
+      if (response[i]["status"] != null) {      
+        let status = response[i]["status"];
+        let count
+        response[i]["status"] = {};
+        response[i]["status"].value=this.metaconfig.getStatusDefs(status)['caption']
+      //  response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+        response[i]["status"].color = this.metaconfig.getStatusDefs(status)['color'];
+        if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+      }
+    }
+    if(response.length == count){
+      this.isMetaSysn=true;
+    }else{
+      this.isMetaSysn=false;
+    }
+  this.metaCompareData=response
 
+  }
+  synchronousMetadata(data){
+		if(this.isMetaSysn || this.selectdatasourceType=='file'){
+			return false
+		}
+    this._datapodService.synchronizeMetadata(data.uuid,data.version,'datapod').subscribe(
+      response => { 
+        this.datapodjson=response;
+        this.showCompareMetaData(this.datapodjson)
+       },
+      error => console.log('Error :: ' + error)
+    )
+	
+  }
+  calculateHistrogram(row){
+    this.showHistogramModel=true
+		this.histogramDetail=row;
+		this.isShowDataGrid=false;
+		this.isShowChart=false;
+		console.log(row);
+		this.datacol=null;
+		this.isHistogramInprogess=true;
+    this.isHistogramError=false;
+    this._datapodService.getAttrHistogram(row["uuid"],row["version"],'datapod',row["attributeId"]).subscribe(
+      response => {this.onSuccessgetAttrHistogram(response)},
+      error => console.log('Error :: ' + error)
+    )    
+}
+onSuccessgetAttrHistogram(response){
+  console.log(response);
+  this.isShowDataGrid=false;
+    this.isShowChart=true;
+  this.ConvertTwoDisit(response, 'bucket');
+  this.isHistogramInprogess=false;
+  this.isHistogramError=false;
+  this.datacol={};
+  if(response.length >=20){
+    this.datacol.datapoints=response.slice(0,20);
+
+  }else{
+    this.datacol.datapoints=response;
+  }
+  this.originalDataHistogram=response;
+  var dataColumn={}
+  dataColumn["id"]="frequency";
+  dataColumn["name"]="frequency"
+  dataColumn["type"]="bar"
+  dataColumn["color"]="#D8A2DE";
+  this.datacol.datacolumns=[];
+  this.datacol.datacolumns[0]=dataColumn;
+  var datax={};
+  datax["id"] ="bucket";
+  this.datacol.datax=datax;
+  this.histogramData = response
+  let columns = [];
+  console.log(response)      
+  this.histogramcols = response
+}
+  ConvertTwoDisit(data, propName) {
+		// if(isNaN(data[0][propName])){
+		 if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
+		   for (var i = 0; i < data.length; i++) {
+			 let a = data[i][propName].split(' - ')[0];
+			 let  b = data[i][propName].split('-')[1]
+			 data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+			 // console.log(data[i][propName])
+		   }
+		 }
+		// }
+		// console.log(data)
+		 return data;
+  }
+  onClickGrid(){
+    this.isShowDataGrid=true;
+		this.isShowChart=false;
+  }
+  onClickChart(){
+    this.isShowDataGrid=false;
+		this.isShowChart=true;
+  }
+  closeHistogram(){
+    this.showHistogramModel=false
+  }
+  onAttrRowDown(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexPlus=this.attributes[index+1];
+		this.attributes[index]=rowTempIndexPlus;
+    this.attributes[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
+
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexMines=this.attributes[index-1];
+		this.attributes[index]=rowTempIndexMines;
+    this.attributes[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.attributes[this.dragIndex]
+      this.attributes.splice(this.dragIndex,1)
+      this.attributes.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    }
+    
   }
 }

@@ -94,4 +94,28 @@ export class DatapodService{
       })
       .catch(this.handleError);
     }
+    compareMetadata(uuid, version,type): Observable<any[]> {
+        let url ="datapod/compareMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
+    synchronizeMetadata(uuid, version,type): Observable<any[]> {
+        let url ="datapod/synchronizeMetadata?action=view&uuid=" + uuid + "&version=" + version + "&type" + type
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
+    getAttrHistogram(uuid, version,type,attributeId): Observable<any[]> {
+        let url ="datapod/getAttrHistogram?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&attributeId="+attributeId
+        return this._sharedService.getCall(url)
+        .map((response: Response) => {
+          return <any[]>response.json();
+      })
+      .catch(this.handleError);
+    }
 }

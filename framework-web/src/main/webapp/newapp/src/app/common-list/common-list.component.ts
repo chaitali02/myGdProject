@@ -552,17 +552,17 @@ export class CommonListComponent {
     fd.append('fileName', this.UploadId);
     console.log(fd);
 
-    this._commonListService.uploadFile(fd, fd["name"], "datapod")
-      .subscribe(
-      response => {
-        // alert("hii")
-        jQuery(this.fileupload.nativeElement).modal('hide');
-        this.msgs = [];
-        this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Datapod Uploaded Successfully' });
-        //       setTimeout(()=>{    //<<<---    using ()=> syntax
-        //         this.call()
-        //    },10000);
-      })
+    // this._commonListService.uploadFile(fd, fd["name"], "datapod")
+    //   .subscribe(
+    //   response => {
+    //     // alert("hii")
+    //     jQuery(this.fileupload.nativeElement).modal('hide');
+    //     this.msgs = [];
+    //     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Datapod Uploaded Successfully' });
+    //     //       setTimeout(()=>{    //<<<---    using ()=> syntax
+    //     //         this.call()
+    //     //    },10000);
+    //   })
   }
   close() {
     jQuery(this.fileupload.nativeElement).modal('hide');
