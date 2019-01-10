@@ -653,6 +653,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'jobmonitoringlist',
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistmapexec',
+      resultState:'maprestultpage',
       childMenu:[],
       allowInChildMenu : false,
     },

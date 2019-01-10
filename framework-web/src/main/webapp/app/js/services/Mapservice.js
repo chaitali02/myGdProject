@@ -140,21 +140,65 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findAttributesByRelation = function (uuid, type) {
+
+	factory.findResults = function (uuid, version,mode) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'GET',
-			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+			url: url + "map/getResults?action=view&uuid=" + uuid + "&version=" + version+ "&mode=" + mode + "&requestId="
 		}).
-			then(function (response, status, headers) {
-				return response;
-			})
+		then(function (response, status, headers) {
+			return response;
+		})
 	}
+
+	factory.findNumRowsbyExec = function (uuid, version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getNumRowsbyExec?action=view&execUuid=" + uuid + "&execVersion=" + version+ "&type=" + type
+		}).
+		then(function (response, status, headers) {
+			return response;
+		})
+	}
+	
 	return factory;
 });
 
 MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, MetadataMapFactory) {
-
+	this.getNumRowsbyExec = function (uuid, version, type) {
+		var deferred = $q.defer();
+		MetadataMapFactory.findNumRowsbyExec(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
+		return deferred.promise;
+	}
+	this.getResults = function (uuid, version, mode) {
+		var deferred = $q.defer();
+		MetadataMapFactory.findResults(uuid, version, mode)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
+		return deferred.promise;
+	}
 	this.getFormulaByType = function (uuid) {
 		var deferred = $q.defer();
 		MetadataMapFactory.findFormulaByType(uuid).then(function (response) { onSuccess(response) });

@@ -1028,7 +1028,30 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             controller: "",
 
         })
+        .state('maprestult', {
+            url: "/MapResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Preparation' },
+            params: { type: 'mapexec', isExec: true }
+        })
 
+        .state('maprestultpage', {
+            url: "/MapResults?id&version&type&name",
+            templateUrl: "views/map-result.html",
+            data: { pageTitle: 'Data Preparation' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'MapResult',
+                        files: [
+                            'js/controllers/MapResultController.js',
+                            'js/services/Mapservice.js'
+                        ]
+                    }]);
+                }]
+            }
+        })
 
         .state('datadiscovery', {
             url: "/DataDiscovery",
@@ -1126,7 +1149,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         name: 'InferyxApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                            '   js/controllers/VizpodController.js',
+                            'js/controllers/VizpodController.js',
                             'js/services/VizpodService.js'
                         ]
                     });
