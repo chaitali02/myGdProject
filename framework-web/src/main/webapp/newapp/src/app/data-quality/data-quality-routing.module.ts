@@ -17,7 +17,7 @@ const routes: Routes = [{
     { path: 'dq', component: DataQualityDetailComponent },
     { path: 'dqgroup/:id/:version/:mode', component: DataQualityGroupDetailComponent },
     { path: 'dqgroup', component: DataQualityGroupDetailComponent },
-    { path: 'compare', component: CompareResultComponent }
+    //{ path: 'compare', component: CompareResultComponent }
   ]
 }
 ];

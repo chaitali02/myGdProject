@@ -8,7 +8,7 @@ import { D3Component } from '../D3/d3.component';
 import { metadataNavigatorComponent } from '../metadata-navigator/metadataNavigator.component';
 import { jobMonitoringComponent } from '../job-monitoring/jobMonitoring.component';
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
-import { CompareResultComponent } from '../data-quality/compareresult/compareresult.component';
+import { CompareResultComponent } from '../compareresult/compareresult.component';
 
 const routes: Routes = [
     {
@@ -62,7 +62,9 @@ const routes: Routes = [
             { path: 'dataQuality', loadChildren: 'app/data-quality/data-quality.module#DataQualityModule' },
             { path: 'list/:type/dataQuality', redirectTo: 'dataQuality' },
             { path: 'dataQuality/dqgroupexec/:type/:id/:version/:mode/dataQuality', redirectTo: 'dataQuality' },
-            { path: 'dataQuality/compare', redirectTo: 'dataQuality' },
+            //{ path: 'dataQuality/compare', redirectTo: 'dataQuality' },
+
+            { path: 'compare/:type', component: CompareResultComponent },
 
             { path: 'recon', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'list/:type/recon', redirectTo: 'recon' },
