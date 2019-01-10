@@ -45,10 +45,10 @@
                                     <div class="form-group" *ngIf="type=='rule'">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Rule Group</label>
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                            <p-dropdown [options]="allNameRuleGroup" [(ngModel)]="searchForm.selectedRuleName"
-                                                name="selectedRuleName" [style]="{'width':'100%','padding':'3px'}"
+                                            <p-dropdown [options]="allNameRuleGroup" [(ngModel)]="searchForm.selectedRuleGroupName"
+                                                name="selectedRuleGroupName" [style]="{'width':'100%','padding':'3px'}"
                                                 [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
-                                                (onChange)="onChangeRuleGroup(searchForm.selectedRuleName)">
+                                                (onChange)="onChangeRuleGroup(searchForm.selectedRuleGroupName)">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -76,9 +76,9 @@
                                     <div class="form-group" *ngIf="type=='dq'">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Name</label>
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                            <p-dropdown [options]="allname" [(ngModel)]="searchForm.selectedName" name="selectedName"
-                                                [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'false'"
-                                                placeholder="-Select-">
+                                            <p-dropdown [options]="allNameDq" [(ngModel)]="searchForm.selectedName"
+                                                name="selectedName" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                                [disabled]="mode == 'false'" placeholder="-Select-">
                                             </p-dropdown>
                                         </div>
                                     </div>

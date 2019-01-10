@@ -21,7 +21,7 @@ export class CompareResultComponent {
   radioSelectedType: any;
   startDate: Date;
   endDate: Date;
-  allname: any[];
+  allNameDq: any[];
   allsource: any[];
   alltarget: any[];
   searchForm: any;
@@ -72,7 +72,7 @@ export class CompareResultComponent {
 
     // for dq
     this.searchForm = {};
-    this.allname = [];
+    this.allNameDq = [];
     this.allsource = [];
     this.alltarget = [];
     this.sourceShowProgress = false;
@@ -127,6 +127,7 @@ export class CompareResultComponent {
 
   onRadioBtnChange(type) {
     console.log("Radio button change");
+    this.allNameDq = [];
     this.getAllLatest(type);
   }
 
@@ -137,17 +138,18 @@ export class CompareResultComponent {
   }
 
   onSuccessgetAllLatest(response: any[], type: String): any {
-    if (type == 'dq') {
-      this.allname = [];
+    if (type == 'dq' || type == 'datapod') {
+      this.allNameDq = [];
       for (const i in response) {
         let ver = {};
         ver["label"] = response[i]['name'];
         ver["value"] = {};
         ver["value"]["label"] = response[i]['name'];
         ver["value"]["uuid"] = response[i]['uuid'];
-        this.allname[i] = ver;
+        this.allNameDq[i] = ver;
       }
     }
+
     else if (type == 'rulegroup') {
       this.allNameRuleGroup = [];
       for (const i in response) {
@@ -201,7 +203,7 @@ export class CompareResultComponent {
     else {
       endDate = '';
     }
-    
+
     if (this.searchForm.radioSelectedType == 'dq') {
       this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
@@ -305,7 +307,7 @@ export class CompareResultComponent {
             this.isSourceDataError = true;
             this.sourceDataMessage = 'No data available';
           }
-          else if(compareType == 'target'){
+          else if (compareType == 'target') {
             this.targetShowProgress = false;
             this.isTargetDataError = true;
             this.targetDataMessage = 'No data available';
@@ -355,13 +357,22 @@ export class CompareResultComponent {
   }
 
   onChangeRuleGroup(selectedRuleName) {
+    this.allNameRule = [];
     this._commonService.getOneByUuidAndVersion(selectedRuleName.uuid, selectedRuleName.version, "rulegroup").subscribe(
       response => { this.onSuccessgetOneByUuidAndVersion(response) },
       error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response: any): any {
     console.log("onSuccessgetOneByUuidAndVersion call...");
-    var b = response;
+    this.allNameRule = [];
+    for (const i in response.ruleInfo) {
+      let ver = {};
+      ver["label"] = response.ruleInfo[i].ref.name;
+      ver["value"] = {};
+      ver["value"]["label"] = response.ruleInfo[i].ref['name'];
+      ver["value"]["uuid"] = response.ruleInfo[i].ref['uuid'];
+      this.allNameRule[i] = ver;
+    }
   }
 
   onSuccessgetRuleExecByRule(response: any[]): any {
