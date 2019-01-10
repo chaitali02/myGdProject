@@ -107,7 +107,7 @@ public class FormulaOperator {
 			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {
 //				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
-				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getRef().getUuid(), sourceAttr.getRef().getVersion(), sourceAttr.getRef().getType().toString());
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getRef().getUuid(), sourceAttr.getRef().getVersion(), sourceAttr.getRef().getType().toString(), "N");
 						
 				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource));
 			}
@@ -116,7 +116,7 @@ public class FormulaOperator {
 				builder.append(" ");
 //				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Formula innerFormula = (Formula)  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula innerFormula = (Formula)  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				Datasource datasource2 = commonServiceImpl.getDatasourceByObject(formula);
 				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2) + ") ");
@@ -146,7 +146,7 @@ public class FormulaOperator {
 				builder.append(" ");
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
@@ -155,7 +155,7 @@ public class FormulaOperator {
 				builder.append(" ");
 //				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(ruleServiceImpl.getAttributeSql(rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
@@ -306,7 +306,7 @@ public class FormulaOperator {
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
 //				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				if (isGroupBy(innerFormula, refKeyMap, otherParam)) {
 					return true;
@@ -357,7 +357,7 @@ public class FormulaOperator {
 			if (sourceAttr.getRef().getType() == MetaType.formula && !isInAggr) {
 //				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(selectGroupBy(innerFormula, refKeyMap, otherParams));
 			}
@@ -373,7 +373,7 @@ public class FormulaOperator {
 			if (sourceAttr.getRef().getType() == MetaType.dataset && !isInAggr) {
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+"")).append(", ");
 			}

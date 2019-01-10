@@ -184,7 +184,7 @@ public class DQOperator implements IParsable {
 		String select = SELECT.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
 				.concat(ROWKEY).concat(COMMA).concat(SINGLE_QUOTE).concat(dq.getDependsOn().getRef().getUuid())
 				.concat(SINGLE_QUOTE).concat(AS).concat(DATAPODUUID).concat(COMMA).concat(SINGLE_QUOTE)
-				.concat(dq.getDependsOn().getRef().getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(DATAPODVERSION)
+				.concat(datapod.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(DATAPODVERSION)
 				.concat(COMMA).concat(SINGLE_QUOTE).concat(datapod.getName()).concat(SINGLE_QUOTE).concat(AS)
 				.concat(DATAPOD_NAME).concat(COMMA).concat(SINGLE_QUOTE);
 		if (dq.getAttribute() != null) {

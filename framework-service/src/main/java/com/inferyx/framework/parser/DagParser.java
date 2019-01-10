@@ -178,7 +178,7 @@ public class DagParser {
 				mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 //				Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
 				populateRefKeys(refKeys, mapRef, inputRefKeys);
-				Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapRef.getUuid(), mapRef.getVersion(), mapRef.getType().toString());
+				Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapRef.getUuid(), mapRef.getVersion(), mapRef.getType().toString(), "N");
 				
 				//populateRefKeys(refKeys, mapRef, inputRefKeys);
 
