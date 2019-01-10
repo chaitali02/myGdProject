@@ -139,6 +139,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		{ "type": "simple", "value": "OVER", "class": "formula_button btn " },
 		{ "type": "simple", "value": "ORDER BY", "class": "formula_button btn " },
 		{ "type": "simple", "value": "PARTITION BY", "class": "formula_button btn " },
+		{ "type": "simple", "value": "BETWEEN", "class": "formula_button btn " },
+		{ "type": "simple", "value": " != ", "class": "formula_button btn " },
 		
 		{ "type": "simple", "value": "ASC", "class": "formula_button btn " },
 		{ "type": "simple", "value": "DESC", "class": "formula_button btn  " },

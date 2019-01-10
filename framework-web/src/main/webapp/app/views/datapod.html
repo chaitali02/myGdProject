@@ -76,7 +76,7 @@
               <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="showSampleTable(datapoddata)" style="height:16px;">
+              ng-hide="isAdd" data-ng-click="isShowSimpleData ==false?showSampleTable(datapoddata):''" style="height:16px;">
               <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowDatastore==true? 'currentpage':'notcurrentpage'"
