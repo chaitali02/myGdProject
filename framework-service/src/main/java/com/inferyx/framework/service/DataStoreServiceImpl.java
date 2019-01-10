@@ -47,7 +47,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -111,8 +110,6 @@ public class DataStoreServiceImpl {
 	@Autowired
 	DataSourceFactory datasourceFactory;
 	@Autowired
-	MetadataUtil daoRegister;
-	@Autowired
 	LoadExecServiceImpl loadExecServiceImpl;
 	@Autowired
 	MapExecServiceImpl mapExecServiceImpl;
@@ -126,8 +123,6 @@ public class DataStoreServiceImpl {
 	DatapodRegister datapodRegister;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
-	@Autowired
-	MetadataUtil commonActivity;
 	@Autowired
 	ConnectionFactory connFactory;
 	@Autowired

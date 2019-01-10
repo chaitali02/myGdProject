@@ -39,9 +39,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
 public class ProfileOperator {
-
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
@@ -76,7 +73,8 @@ public class ProfileOperator {
 		if (profile == null) {
 			return null;
 		}
-		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
+//		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
+		dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), profile.getDependsOn().getRef().getType().toString(), "N");
 		if (profile.getAttributeInfo() != null) {
 			String tableName = getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode);
 			logger.info("getProfileTableName(DP) : " + tableName);

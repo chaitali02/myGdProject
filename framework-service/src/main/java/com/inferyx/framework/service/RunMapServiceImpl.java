@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -49,7 +48,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	ConnectionFactory connFactory;
 	
 	protected MapExec mapExec;
-	protected MetadataUtil daoRegister;
 	protected IMapExecDao iMapExecDao;
 	protected List<java.util.Map<String, Object>> data;
 	private HDFSInfo hdfsInfo;
@@ -188,60 +186,41 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 		this.iMapExecDao = iMapExecDao;
 	}
 
-	public MetadataUtil getDaoRegister() {
-		return daoRegister;
-	}
-
-
 	public MapExec getMapExec() {
 		return mapExec;
 	}
 
-
 	public void setMapExec(MapExec mapExec) {
 		this.mapExec = mapExec;
-	}
-
-
-	public void setDaoRegister(MetadataUtil daoRegister) {
-		this.daoRegister = daoRegister;
-	}
- 
+	} 
 	
 	public List<java.util.Map<String, Object>> getData() {
 		return data;
 	}
 
-
 	public void setData(List<java.util.Map<String, Object>> data) {
 		this.data = data;
-	}
-	
+	}	
 
 	public HDFSInfo getHdfsInfo() {
 		return hdfsInfo;
 	}
 
-
 	public void setHdfsInfo(HDFSInfo hdfsInfo) {
 		this.hdfsInfo = hdfsInfo;
 	}
-
 
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
 	}
 
-
 	public void setDataStoreServiceImpl(DataStoreServiceImpl dataStoreServiceImpl) {
 		this.dataStoreServiceImpl = dataStoreServiceImpl;
 	}
 
-
 	public Map getMap() {
 		return map;
 	}
-
 
 	public void setMap(Map map) {
 		this.map = map;
@@ -315,9 +294,10 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.InProgress);
 			
 			if (datapodKey.getVersion() == null) {
-				MetaIdentifier datapodKeyRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion());
-			    daoRegister.getRefObject(datapodKeyRef);
-			    datapodKey.setVersion(datapodKeyRef.getVersion());
+//				MetaIdentifier datapodKeyRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion());
+//			    daoRegister.getRefObject(datapodKeyRef);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString(), "N");
+			    datapodKey.setVersion(datapod.getVersion());
 			}
 			// Form file and table name
 			String filePath = String.format("/%s/%s/%s", datapodKey.getUUID(), datapodKey.getVersion(), mapExec.getVersion());
@@ -384,7 +364,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			logger.info("After map execution.");
 			// Persist dataStore
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
+//			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
+			Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapExec.getDependsOn().getRef().getUuid(), mapExec.getDependsOn().getRef().getVersion(), MetaType.map.toString(), "N");
 			logger.info("Before map persist ");
 			dataStoreServiceImpl.setRunMode(runMode);
 

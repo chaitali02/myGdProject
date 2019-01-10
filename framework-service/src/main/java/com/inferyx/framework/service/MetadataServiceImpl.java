@@ -55,7 +55,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
@@ -129,8 +128,6 @@ public class MetadataServiceImpl {
 	LoadServiceImpl loadServiceImpl;
 	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
@@ -1053,7 +1050,8 @@ public class MetadataServiceImpl {
 		
 		for(MetaIdentifierHolder refHolder : holderList) {
 			statusHolder = new StatusHolder();
-			Object object = daoRegister.getRefObject(refHolder.getRef());
+//			Object object = daoRegister.getRefObject(refHolder.getRef());
+			Object object = commonServiceImpl.getOneByUuidAndVersion(refHolder.getRef().getUuid(), refHolder.getRef().getVersion(), refHolder.getRef().getType().toString(), "N");
 			refHolder.getRef().setName((String) object.getClass().getMethod("getName").invoke(object));
 			statusHolder.setMetaRef(refHolder);
 			statusHolder.setStatusList((List<Status>) object.getClass().getMethod("getStatusList").invoke(object));
@@ -1824,9 +1822,12 @@ public class MetadataServiceImpl {
 			} else if(execParams.getParamListHolder() != null) {
 				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
 			} else if (execParams.getParamListInfo() != null){
-				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				Application application = commonServiceImpl.getApp(); 
-				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+//				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+				ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
+				
 				String paramName = null;
 				com.inferyx.framework.domain.Param param = null;
 				for (int i = 0; i < paramList.getParams().size(); i++) {
@@ -1855,7 +1856,8 @@ public class MetadataServiceImpl {
 					return param.getParamValue().getValue();
 				}
 			} else {
-				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 					if (param.getParamId().equals(attributeId+"")) {
 						return param.getParamValue().getValue();
@@ -1866,8 +1868,10 @@ public class MetadataServiceImpl {
 			String paramName = null;
 			String refParamValue = null;
 			Application application = commonServiceImpl.getApp(); 
-			ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//			ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+			ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
+//			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId.toString())) {
 					if(appParamList == null) {

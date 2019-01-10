@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -36,8 +35,6 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 	UserServiceImpl userServiceImpl;	
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;	
-	@Autowired
-	MetadataUtil daoRegister;	
 	@Autowired
 	RuleGroupServiceImpl ruleGroupServiceImpl;
 	@Autowired

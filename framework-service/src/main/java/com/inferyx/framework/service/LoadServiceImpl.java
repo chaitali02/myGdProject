@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -70,8 +69,6 @@ public class LoadServiceImpl {
 	RegisterService registerService;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -248,15 +245,17 @@ public class LoadServiceImpl {
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
-			Load load = (Load) daoRegister.getRefObject(loadExec.getDependsOn().getRef());
+//			Load load = (Load) daoRegister.getRefObject(loadExec.getDependsOn().getRef());
+			Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadExec.getDependsOn().getRef().getUuid(), loadExec.getDependsOn().getRef().getVersion(), loadExec.getDependsOn().getRef().getType().toString(), "N");
 
 			// Form file and table name
 			String filePath = String.format("/%s/%s/%s", datapodKey.getUUID(), datapodKey.getVersion(),
 					StringUtils.isNotBlank(dagExecVer) ? dagExecVer : loadExec.getVersion());
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
-			 datapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
+//			datapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
+			datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString(), "N");
+
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
 			IExecutor exec = execFactory.getExecutor(datasource.getType());

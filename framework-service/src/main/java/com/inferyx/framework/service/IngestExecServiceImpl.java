@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecStatsHolder;
@@ -28,9 +27,6 @@ import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Recon;
-import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
@@ -41,9 +37,6 @@ import com.inferyx.framework.executor.SparkStreamingExecutor;
  */
 @Service
 public class IngestExecServiceImpl extends BaseRuleExecTemplate {
-	
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
 	
@@ -93,7 +86,8 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 		List<IngestExec> ingestExecList = new ArrayList<>();
 		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(reconGroupExecUuid, reconGroupExecVersion, MetaType.ingestgroupExec.toString());
 		for (MetaIdentifierHolder ingestExecHolder : ingestGroupExec.getExecList()) {
-			ingestExecList.add((IngestExec)daoRegister.getRefObject(ingestExecHolder.getRef()));
+//			ingestExecList.add((IngestExec)daoRegister.getRefObject(ingestExecHolder.getRef()));
+			ingestExecList.add((IngestExec)commonServiceImpl.getOneByUuidAndVersion(ingestExecHolder.getRef().getUuid(), ingestExecHolder.getRef().getVersion(), ingestExecHolder.getRef().getType().toString()));
 		}
 		return resolveName(ingestExecList);
 	}
@@ -105,8 +99,9 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 			String createdByRefUuid = ingestE.getCreatedBy().getRef().getUuid();
 			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
 			ingestExecLatest.getCreatedBy().getRef().setName(user.getName());
-			Ingest recon = (Ingest)daoRegister.getRefObject(ingestExecLatest.getDependsOn().getRef());
-			ingestExecLatest.getDependsOn().getRef().setName(recon.getName());
+//			Ingest ingest = (Ingest)daoRegister.getRefObject(ingestExecLatest.getDependsOn().getRef());
+			Ingest ingest = (Ingest)commonServiceImpl.getOneByUuidAndVersion(ingestExecLatest.getDependsOn().getRef().getUuid(), ingestExecLatest.getDependsOn().getRef().getVersion(), ingestExecLatest.getDependsOn().getRef().getType().toString());
+			ingestExecLatest.getDependsOn().getRef().setName(ingest.getName());
 			ingestExecList.add(ingestExecLatest);
 		}
 		return ingestExecList;

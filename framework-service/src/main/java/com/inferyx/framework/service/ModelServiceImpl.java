@@ -78,7 +78,6 @@ import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.dao.IAlgorithmDao;
@@ -195,8 +194,6 @@ public class ModelServiceImpl {
 	private SimulateMLOperator simulateMLOperator;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
-	@Autowired
-	MetadataUtil commonActivity;
 	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired

@@ -10,609 +10,508 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-
-import org.apache.log4j.Logger;
-
-//import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.IActivityDao;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IApplicationDao;
-import com.inferyx.framework.dao.IConditionDao;
-import com.inferyx.framework.dao.IDagDao;
-import com.inferyx.framework.dao.IDagExecDao;
-import com.inferyx.framework.dao.IDashboardDao;
-import com.inferyx.framework.dao.IDataQualDao;
-import com.inferyx.framework.dao.IDataQualExecDao;
-import com.inferyx.framework.dao.IDataQualGroupDao;
-import com.inferyx.framework.dao.IDataQualGroupExecDao;
-import com.inferyx.framework.dao.IDataStoreDao;
-import com.inferyx.framework.dao.IDatapodDao;
-import com.inferyx.framework.dao.IDatasetDao;
-import com.inferyx.framework.dao.IDatasourceDao;
-import com.inferyx.framework.dao.IDimensionDao;
-import com.inferyx.framework.dao.IDistributionDao;
-import com.inferyx.framework.dao.IExpressionDao;
-import com.inferyx.framework.dao.IFilterDao;
-import com.inferyx.framework.dao.IFormulaDao;
-import com.inferyx.framework.dao.IFunctionDao;
-import com.inferyx.framework.dao.IGroupDao;
-import com.inferyx.framework.dao.ILoadDao;
-import com.inferyx.framework.dao.ILoadExecDao;
-import com.inferyx.framework.dao.IMapDao;
-import com.inferyx.framework.dao.IMapExecDao;
-import com.inferyx.framework.dao.IMeasureDao;
-import com.inferyx.framework.dao.IMetaDao;
-import com.inferyx.framework.dao.IModelDao;
-import com.inferyx.framework.dao.IParamListDao;
-import com.inferyx.framework.dao.IParamSetDao;
-import com.inferyx.framework.dao.IPrivilegeDao;
-import com.inferyx.framework.dao.IProfileDao;
-import com.inferyx.framework.dao.IProfileExecDao;
-import com.inferyx.framework.dao.IProfileGroupDao;
-import com.inferyx.framework.dao.IProfileGroupExecDao;
-import com.inferyx.framework.dao.IRelationDao;
-import com.inferyx.framework.dao.IRoleDao;
-import com.inferyx.framework.dao.IRuleDao;
-import com.inferyx.framework.dao.IRuleExecDao;
-import com.inferyx.framework.dao.IRuleGroupDao;
-import com.inferyx.framework.dao.IRuleGroupExecDao;
-import com.inferyx.framework.dao.ISessionDao;
-import com.inferyx.framework.dao.IUserDao;
-import com.inferyx.framework.dao.IVizpodDao;
-import com.inferyx.framework.dao.IVizpodExecDao;
-import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Condition;
-import com.inferyx.framework.domain.Dag;
-import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.DataQualGroup;
-import com.inferyx.framework.domain.DataQualGroupExec;
-import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Dimension;
-import com.inferyx.framework.domain.Distribution;
-import com.inferyx.framework.domain.Expression;
-import com.inferyx.framework.domain.Filter;
-import com.inferyx.framework.domain.Formula;
-import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.Group;
-import com.inferyx.framework.domain.Ingest;
-import com.inferyx.framework.domain.IngestExec;
-import com.inferyx.framework.domain.Load;
-import com.inferyx.framework.domain.LoadExec;
-import com.inferyx.framework.domain.Map;
-import com.inferyx.framework.domain.MapExec;
-import com.inferyx.framework.domain.Measure;
-import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.ParamList;
-import com.inferyx.framework.domain.ParamSet;
-import com.inferyx.framework.domain.Privilege;
-import com.inferyx.framework.domain.Profile;
-import com.inferyx.framework.domain.ProfileExec;
-import com.inferyx.framework.domain.ProfileGroup;
-import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.Recon;
-import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.Role;
-import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.RuleExec;
-import com.inferyx.framework.domain.RuleGroup;
-import com.inferyx.framework.domain.RuleGroupExec;
-import com.inferyx.framework.domain.Session;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.domain.VizExec;
-import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 
 
 public class MetadataUtil {
 		
-	Logger logger = Logger.getLogger(MetadataUtil.class);	
-	
-	@Autowired
-	IActivityDao activityDao;
-	@Autowired
-	IDagDao dagDao;
-	@Autowired
-	IDatapodDao datapodDao;
-	@Autowired
-	private
-	IFilterDao filterDao;
-	@Autowired
-	IExpressionDao expressionDao;
-	@Autowired
-	IFormulaDao formulaDao;
-	@Autowired
-	IMapDao mapDao;
-	@Autowired
-	private
-	IRelationDao relationDao;
-	@Autowired
-	IDatasetDao datasetDao;
-	@Autowired
-	IDagExecDao dagExecDao;
-	@Autowired 
-	IConditionDao conditionDao;
-	@Autowired
-	IDataStoreDao dataStoreDao; //datastore implementation
-	@Autowired
-	ILoadDao loadDao; //datastore implementation
-	@Autowired
-	IGroupDao iUserGroupDao;
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	IDimensionDao dimensionDao;
-	@Autowired
-	IMeasureDao measureDao;
-	@Autowired
-	IVizpodDao vizpodDao;
-	@Autowired
-	IApplicationDao applicationDao;
-	@Autowired
-	IGroupDao igroupDao;
-	@Autowired
-	IRuleExecDao iRuleExecDao;
-	@Autowired
-	IRuleGroupExecDao iRuleGroupExecDao;
-	@Autowired
-	IRoleDao iroleDao;
-	@Autowired
-	IRuleDao iRuleDao;
-	@Autowired
-	IUserDao iUserDao;
-	@Autowired
-	IVizpodExecDao iVizpodExecDao;
-	@Autowired
-	IPrivilegeDao iPrivilegeDao;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired 
-	IMetaDao iMetaDataDao;
-	@Autowired
-	ISessionDao isessionDao;
-	@Autowired
-	IActivityDao iactivityDao;
-	@Autowired
-	ILoadDao iLoadDao;
-	@Autowired
-	IDashboardDao iDashboardDao;
-	@Autowired
-	IDataQualDao iDataQualDao;
-	@Autowired
-	IDataQualExecDao iDataQualExecDao;
-	@Autowired
-	IDataQualGroupExecDao iDataQualGroupExecDao;
-	@Autowired
-	IRuleGroupDao iRuleGroupDao;
-	@Autowired
-	IFunctionDao iFunctionDao;
-	@Autowired
-	IMapExecDao iMapExecDao;
-	@Autowired
-	ILoadExecDao iLoadExecDao;
-	@Autowired
-	IProfileDao iProfileDao;
-	@Autowired
-	IProfileGroupDao iProfileGroupDao;
-	@Autowired 
-	IProfileExecDao iprofileExecDao;
-	@Autowired
-	IProfileGroupExecDao iProfileGroupExecDao;
-	@Autowired 
-	IAlgorithmDao iAlgorithmDao;
-	@Autowired 
-	IModelDao iModelDao;
-	@Autowired 
-	IParamListDao iParamListDao;
-	@Autowired 
-	IParamSetDao iParamSetDao;
+//	Logger logger = Logger.getLogger(MetadataUtil.class);	
+//	
+//	@Autowired
+//	IActivityDao activityDao;
+//	@Autowired
+//	IDagDao dagDao;
+//	@Autowired
+//	IDatapodDao datapodDao;
+//	@Autowired
+//	private
+//	IFilterDao filterDao;
+//	@Autowired
+//	IExpressionDao expressionDao;
+//	@Autowired
+//	IFormulaDao formulaDao;
+//	@Autowired
+//	IMapDao mapDao;
+//	@Autowired
+//	private
+//	IRelationDao relationDao;
+//	@Autowired
+//	IDatasetDao datasetDao;
+//	@Autowired
+//	IDagExecDao dagExecDao;
+//	@Autowired 
+//	IConditionDao conditionDao;
+//	@Autowired
+//	IDataStoreDao dataStoreDao; //datastore implementation
+//	@Autowired
+//	ILoadDao loadDao; //datastore implementation
+//	@Autowired
+//	IGroupDao iUserGroupDao;
+//	@Autowired
+//	DataStoreServiceImpl dataStoreServiceImpl;
+//	@Autowired
+//	IDimensionDao dimensionDao;
+//	@Autowired
+//	IMeasureDao measureDao;
+//	@Autowired
+//	IVizpodDao vizpodDao;
+//	@Autowired
+//	IApplicationDao applicationDao;
+//	@Autowired
+//	IGroupDao igroupDao;
+//	@Autowired
+//	IRuleExecDao iRuleExecDao;
+//	@Autowired
+//	IRuleGroupExecDao iRuleGroupExecDao;
+//	@Autowired
+//	IRoleDao iroleDao;
+//	@Autowired
+//	IRuleDao iRuleDao;
+//	@Autowired
+//	IUserDao iUserDao;
+//	@Autowired
+//	IVizpodExecDao iVizpodExecDao;
+//	@Autowired
+//	IPrivilegeDao iPrivilegeDao;
+//	@Autowired
+//	IDatasourceDao iDatasourceDao;
+//	@Autowired 
+//	IMetaDao iMetaDataDao;
+//	@Autowired
+//	ISessionDao isessionDao;
+//	@Autowired
+//	IActivityDao iactivityDao;
+//	@Autowired
+//	ILoadDao iLoadDao;
+//	@Autowired
+//	IDashboardDao iDashboardDao;
+//	@Autowired
+//	IDataQualDao iDataQualDao;
+//	@Autowired
+//	IDataQualExecDao iDataQualExecDao;
+//	@Autowired
+//	IDataQualGroupExecDao iDataQualGroupExecDao;
+//	@Autowired
+//	IRuleGroupDao iRuleGroupDao;
+//	@Autowired
+//	IFunctionDao iFunctionDao;
+//	@Autowired
+//	IMapExecDao iMapExecDao;
+//	@Autowired
+//	ILoadExecDao iLoadExecDao;
+//	@Autowired
+//	IProfileDao iProfileDao;
+//	@Autowired
+//	IProfileGroupDao iProfileGroupDao;
+//	@Autowired 
+//	IProfileExecDao iprofileExecDao;
+//	@Autowired
+//	IProfileGroupExecDao iProfileGroupExecDao;
+//	@Autowired 
+//	IAlgorithmDao iAlgorithmDao;
+//	@Autowired 
+//	IModelDao iModelDao;
+//	@Autowired 
+//	IParamListDao iParamListDao;
+//	@Autowired 
+//	IParamSetDao iParamSetDao;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
-    @Autowired 
-    IDistributionDao iDistributionDao;    
+//    @Autowired 
+//    IDistributionDao iDistributionDao;    
     
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iDistributionDao
-	 */
-	public IDistributionDao getiDistributionDao() {
-		return iDistributionDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iDistributionDao the iDistributionDao to set
-	 */
-	public void setiDistributionDao(IDistributionDao iDistributionDao) {
-		this.iDistributionDao = iDistributionDao;
-	}
-
-	public IAlgorithmDao getiAlgorithmDao() {
-		return iAlgorithmDao;
-	}
-
-	public void setiAlgorithmDao(IAlgorithmDao iAlgorithmDao) {
-		this.iAlgorithmDao = iAlgorithmDao;
-	}
-
-	public IModelDao getiModelDao() {
-		return iModelDao;
-	}
-
-	public void setiModelDao(IModelDao iModelDao) {
-		this.iModelDao = iModelDao;
-	}
-
-	public IParamListDao getiParamListDao() {
-		return iParamListDao;
-	}
-
-	public void setiParamListDao(IParamListDao iParamListDao) {
-		this.iParamListDao = iParamListDao;
-	}
-
-	public IParamSetDao getiParamSetDao() {
-		return iParamSetDao;
-	}
-
-	public void setiParamSetDao(IParamSetDao iParamSetDao) {
-		this.iParamSetDao = iParamSetDao;
-	}
-
-	public IProfileExecDao getIprofileExecDao() {
-		return iprofileExecDao;
-	}
-
-	public void setIprofileExecDao(IProfileExecDao iprofileExecDao) {
-		this.iprofileExecDao = iprofileExecDao;
-	}
-	
-	public IProfileGroupExecDao getiProfileGroupExecDao() {
-		return iProfileGroupExecDao;
-	}
-
-	public void setiProfileGroupExecDao(IProfileGroupExecDao iProfileGroupExecDao) {
-		this.iProfileGroupExecDao = iProfileGroupExecDao;
-	}
-
-	public IProfileDao getiProfileDao() {
-		return iProfileDao;
-	}
-
-	public void setiProfileDao(IProfileDao iProfileDao) {
-		this.iProfileDao = iProfileDao;
-	}
-
-	public IProfileGroupDao getiProfileGroupDao() {
-		return iProfileGroupDao;
-	}
-
-	public void setiProfileGroupDao(IProfileGroupDao iProfileGroupDao) {
-		this.iProfileGroupDao = iProfileGroupDao;
-	}
-
-	public IRuleExecDao getiRuleExecDao() {
-		return iRuleExecDao;
-	}
-
-	public void setiRuleExecDao(IRuleExecDao iRuleExecDao) {
-		this.iRuleExecDao = iRuleExecDao;
-	}
-	public IMapExecDao getiMapExecDao() {
-		return iMapExecDao;
-	}
-
-	public void setiMapExecDao(IMapExecDao iMapExecDao) {
-		this.iMapExecDao = iMapExecDao;
-	}
-
-	public ILoadExecDao getiLoadExecDao() {
-		return iLoadExecDao;
-	}
-
-	public void setiLoadExecDao(ILoadExecDao iLoadExecDao) {
-		this.iLoadExecDao = iLoadExecDao;
-	}
-
-	public IFunctionDao getiFunctionDao() {
-		return iFunctionDao;
-	}
-
-	public void setiFunctionDao(IFunctionDao iFunctionDao) {
-		this.iFunctionDao = iFunctionDao;
-	}
-
-	public IRuleGroupDao getiRuleGroupDao() {
-		return iRuleGroupDao;
-	}
-
-	public void setiRuleGroupDao(IRuleGroupDao iRuleGroupDao) {
-		this.iRuleGroupDao = iRuleGroupDao;
-	}
-
-	public IActivityDao getActivityDao() {
-		return activityDao;
-	}
-
-	public void setActivityDao(IActivityDao activityDao) {
-		this.activityDao = activityDao;
-	}
-	public IDataQualGroupExecDao getiDataQualGroupExecDao() {
-		return iDataQualGroupExecDao;
-	}
-
-	public void setiDataQualGroupExecDao(IDataQualGroupExecDao iDataQualGroupExecDao) {
-		this.iDataQualGroupExecDao = iDataQualGroupExecDao;
-	}
-
-	@Autowired
-	IDataQualGroupDao iDataQualGroupDao;
-	public IDataQualExecDao getiDataQualExecDao() {
-		return iDataQualExecDao;
-	}
-
-	public void setiDataQualExecDao(IDataQualExecDao iDataQualExecDao) {
-		this.iDataQualExecDao = iDataQualExecDao;
-	}
-	public IDashboardDao getiDashboardDao() {
-		return iDashboardDao;
-	}
-
-	public void setiDashboardDao(IDashboardDao iDashboardDao) {
-		this.iDashboardDao = iDashboardDao;
-	}
-	public IRuleDao getiRuleDao() {
-		return iRuleDao;
-	}
-
-	public void setiRuleDao(IRuleDao iRuleDao) {
-		this.iRuleDao = iRuleDao;
-	}
-
-	public ILoadDao getiLoadDao() {
-		return iLoadDao;
-	}
-
-	public void setiLoadDao(ILoadDao iLoadDao) {
-		this.iLoadDao = iLoadDao;
-	}
-
-	@Autowired
-	IDatasetDao iDatasetDao;
-	
-	
-	public IDatasetDao getiDatasetDao() {
-		return iDatasetDao;
-	}
-
-	public void setiDatasetDao(IDatasetDao iDatasetDao) {
-		this.iDatasetDao = iDatasetDao;
-	}
-
-	public IActivityDao getIactivityDao() {
-		return iactivityDao;
-	}
-
-	public void setIactivityDao(IActivityDao iactivityDao) {
-		this.iactivityDao = iactivityDao;
-	}
-
-	public ISessionDao getIsessionDao() {
-		return isessionDao;
-	}
-
-	public void setIsessionDao(ISessionDao isessionDao) {
-		this.isessionDao = isessionDao;
-	}
-
-	public IMetaDao getiMetaDataDao() {
-		return iMetaDataDao;
-	}
-
-	public void setiMetaDataDao(IMetaDao iMetaDataDao) {
-		this.iMetaDataDao = iMetaDataDao;
-	}
-
-	public IPrivilegeDao getiPrivilegeDao() {
-		return iPrivilegeDao;
-	}
-
-	public void setiPrivilegeDao(IPrivilegeDao iPrivilegeDao) {
-		this.iPrivilegeDao = iPrivilegeDao;
-	}
-
-	public IUserDao getiUserDao() {
-		return iUserDao;
-	}
-
-	public void setiUserDao(IUserDao iUserDao) {
-		this.iUserDao = iUserDao;
-	}
-
-	public IRoleDao getIroleDao() {
-		return iroleDao;
-	}
-
-	public void setIroleDao(IRoleDao iroleDao) {
-		this.iroleDao = iroleDao;
-	}
-
-	
-
-	public IGroupDao getIgroupDao() {
-		return igroupDao;
-	}
-
-	public void setIgroupDao(IGroupDao igroupDao) {
-		this.igroupDao = igroupDao;
-	}
-
-	@Autowired
-	IUserDao userDao;
-	
-
-	public IUserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(IUserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public IApplicationDao getApplicationDao() {
-		return applicationDao;
-	}
-
-	public void setApplicationDao(IApplicationDao applicationDao) {
-		this.applicationDao = applicationDao;
-	}
-
-	public IDataStoreDao getDatastoreDao() {
-		return dataStoreDao;
-	}
-
-	public void setDatastoreDao(IDataStoreDao datastoreDao) {
-		this.dataStoreDao = datastoreDao;
-	}
-
-	public IDagDao getDagDao() {
-		return dagDao;
-	}
-
-	public void setDagDao(IDagDao dagDao) {
-		this.dagDao = dagDao;
-	}
-
-	public IExpressionDao getExpressionDao() {
-		return expressionDao;
-	}
-
-	public void setExpressionDao(IExpressionDao expressionDao) {
-		this.expressionDao = expressionDao;
-	}
-
-	public IFormulaDao getFormulaDao() {
-		return formulaDao;
-	}
-
-	public void setFormulaDao(IFormulaDao formulaDao) {
-		this.formulaDao = formulaDao;
-	}
-
-	public IMapDao getMapDao() {
-		return mapDao;
-	}
-
-	public void setMapDao(IMapDao mapDao) {
-		this.mapDao = mapDao;
-	}
-
-	public IConditionDao getConditionDao() {
-		return conditionDao;
-	}
-
-	public void setConditionDao(IConditionDao conditionDao) {
-		this.conditionDao = conditionDao;
-	}
-
-	public IDatapodDao getDatapodDao() {
-		return datapodDao;
-	}
-
-	public void setDatapodDao(IDatapodDao datapodDao) {
-		this.datapodDao = datapodDao;
-	}
-
-	public IDagExecDao getDagExecDao() {
-		return dagExecDao;
-	}
-
-	public void setDagExecDao(IDagExecDao dagExecDao) {
-		this.dagExecDao = dagExecDao;
-	}
-	
-	
-	
-/*
-	public IGroupDao getGroupDao() {
-		return groupDao;
-	}
-
-	public void setGroupDao(IGroupDao groupDao) {
-		this.groupDao = groupDao;
-	}
-*/
-
-	
-	public IDataQualDao getiDataQualDao() {
-		return iDataQualDao;
-	}
-
-	public void setiDataQualDao(IDataQualDao iDataQualDao) {
-		this.iDataQualDao = iDataQualDao;
-	}
-
-	public IDataQualGroupDao getiDataQualGroupDao() {
-		return iDataQualGroupDao;
-	}
-
-	public void setiDataQualGroupDao(IDataQualGroupDao iDataQualGroupDao) {
-		this.iDataQualGroupDao = iDataQualGroupDao;
-	}
-
-	public IMeasureDao getMeasureDao() {
-		return measureDao;
-	}
-
-	public void setMeasureDao(IMeasureDao measureDao) {
-		this.measureDao = measureDao;
-	}
-	
-	public IDimensionDao getDimensionDao() {
-		return dimensionDao;
-	}
-
-	public void setDimensionDao(IDimensionDao dimensionDao) {
-		this.dimensionDao = dimensionDao;
-	}
-	
-
-	
-	public IVizpodDao getVizpodDao() {
-		return vizpodDao;
-	}
-
-	public void setVizpodDao(IVizpodDao vizpodDao) {
-		this.vizpodDao = vizpodDao;
-	}
-	
-	public IDatasourceDao getiDatasourceDao() {
-		return iDatasourceDao;
-	}
-
-	public void setiDatasourceDao(IDatasourceDao iDatasourceDao) {
-		this.iDatasourceDao = iDatasourceDao;
-	}
-	
-	public MetadataUtil(){
-		// private constructor to defeat instantiation
-	}
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @return the iDistributionDao
+//	 */
+//	public IDistributionDao getiDistributionDao() {
+//		return iDistributionDao;
+//	}
+//
+//	/**
+//	 * @Ganesh
+//	 *
+//	 * @param iDistributionDao the iDistributionDao to set
+//	 */
+//	public void setiDistributionDao(IDistributionDao iDistributionDao) {
+//		this.iDistributionDao = iDistributionDao;
+//	}
+//
+//	public IAlgorithmDao getiAlgorithmDao() {
+//		return iAlgorithmDao;
+//	}
+//
+//	public void setiAlgorithmDao(IAlgorithmDao iAlgorithmDao) {
+//		this.iAlgorithmDao = iAlgorithmDao;
+//	}
+//
+//	public IModelDao getiModelDao() {
+//		return iModelDao;
+//	}
+//
+//	public void setiModelDao(IModelDao iModelDao) {
+//		this.iModelDao = iModelDao;
+//	}
+//
+//	public IParamListDao getiParamListDao() {
+//		return iParamListDao;
+//	}
+//
+//	public void setiParamListDao(IParamListDao iParamListDao) {
+//		this.iParamListDao = iParamListDao;
+//	}
+//
+//	public IParamSetDao getiParamSetDao() {
+//		return iParamSetDao;
+//	}
+//
+//	public void setiParamSetDao(IParamSetDao iParamSetDao) {
+//		this.iParamSetDao = iParamSetDao;
+//	}
+//
+//	public IProfileExecDao getIprofileExecDao() {
+//		return iprofileExecDao;
+//	}
+//
+//	public void setIprofileExecDao(IProfileExecDao iprofileExecDao) {
+//		this.iprofileExecDao = iprofileExecDao;
+//	}
+//	
+//	public IProfileGroupExecDao getiProfileGroupExecDao() {
+//		return iProfileGroupExecDao;
+//	}
+//
+//	public void setiProfileGroupExecDao(IProfileGroupExecDao iProfileGroupExecDao) {
+//		this.iProfileGroupExecDao = iProfileGroupExecDao;
+//	}
+//
+//	public IProfileDao getiProfileDao() {
+//		return iProfileDao;
+//	}
+//
+//	public void setiProfileDao(IProfileDao iProfileDao) {
+//		this.iProfileDao = iProfileDao;
+//	}
+//
+//	public IProfileGroupDao getiProfileGroupDao() {
+//		return iProfileGroupDao;
+//	}
+//
+//	public void setiProfileGroupDao(IProfileGroupDao iProfileGroupDao) {
+//		this.iProfileGroupDao = iProfileGroupDao;
+//	}
+//
+//	public IRuleExecDao getiRuleExecDao() {
+//		return iRuleExecDao;
+//	}
+//
+//	public void setiRuleExecDao(IRuleExecDao iRuleExecDao) {
+//		this.iRuleExecDao = iRuleExecDao;
+//	}
+//	public IMapExecDao getiMapExecDao() {
+//		return iMapExecDao;
+//	}
+//
+//	public void setiMapExecDao(IMapExecDao iMapExecDao) {
+//		this.iMapExecDao = iMapExecDao;
+//	}
+//
+//	public ILoadExecDao getiLoadExecDao() {
+//		return iLoadExecDao;
+//	}
+//
+//	public void setiLoadExecDao(ILoadExecDao iLoadExecDao) {
+//		this.iLoadExecDao = iLoadExecDao;
+//	}
+//
+//	public IFunctionDao getiFunctionDao() {
+//		return iFunctionDao;
+//	}
+//
+//	public void setiFunctionDao(IFunctionDao iFunctionDao) {
+//		this.iFunctionDao = iFunctionDao;
+//	}
+//
+//	public IRuleGroupDao getiRuleGroupDao() {
+//		return iRuleGroupDao;
+//	}
+//
+//	public void setiRuleGroupDao(IRuleGroupDao iRuleGroupDao) {
+//		this.iRuleGroupDao = iRuleGroupDao;
+//	}
+//
+//	public IActivityDao getActivityDao() {
+//		return activityDao;
+//	}
+//
+//	public void setActivityDao(IActivityDao activityDao) {
+//		this.activityDao = activityDao;
+//	}
+//	public IDataQualGroupExecDao getiDataQualGroupExecDao() {
+//		return iDataQualGroupExecDao;
+//	}
+//
+//	public void setiDataQualGroupExecDao(IDataQualGroupExecDao iDataQualGroupExecDao) {
+//		this.iDataQualGroupExecDao = iDataQualGroupExecDao;
+//	}
+//
+//	@Autowired
+//	IDataQualGroupDao iDataQualGroupDao;
+//	public IDataQualExecDao getiDataQualExecDao() {
+//		return iDataQualExecDao;
+//	}
+//
+//	public void setiDataQualExecDao(IDataQualExecDao iDataQualExecDao) {
+//		this.iDataQualExecDao = iDataQualExecDao;
+//	}
+//	public IDashboardDao getiDashboardDao() {
+//		return iDashboardDao;
+//	}
+//
+//	public void setiDashboardDao(IDashboardDao iDashboardDao) {
+//		this.iDashboardDao = iDashboardDao;
+//	}
+//	public IRuleDao getiRuleDao() {
+//		return iRuleDao;
+//	}
+//
+//	public void setiRuleDao(IRuleDao iRuleDao) {
+//		this.iRuleDao = iRuleDao;
+//	}
+//
+//	public ILoadDao getiLoadDao() {
+//		return iLoadDao;
+//	}
+//
+//	public void setiLoadDao(ILoadDao iLoadDao) {
+//		this.iLoadDao = iLoadDao;
+//	}
+//
+//	@Autowired
+//	IDatasetDao iDatasetDao;
+//	
+//	
+//	public IDatasetDao getiDatasetDao() {
+//		return iDatasetDao;
+//	}
+//
+//	public void setiDatasetDao(IDatasetDao iDatasetDao) {
+//		this.iDatasetDao = iDatasetDao;
+//	}
+//
+//	public IActivityDao getIactivityDao() {
+//		return iactivityDao;
+//	}
+//
+//	public void setIactivityDao(IActivityDao iactivityDao) {
+//		this.iactivityDao = iactivityDao;
+//	}
+//
+//	public ISessionDao getIsessionDao() {
+//		return isessionDao;
+//	}
+//
+//	public void setIsessionDao(ISessionDao isessionDao) {
+//		this.isessionDao = isessionDao;
+//	}
+//
+//	public IMetaDao getiMetaDataDao() {
+//		return iMetaDataDao;
+//	}
+//
+//	public void setiMetaDataDao(IMetaDao iMetaDataDao) {
+//		this.iMetaDataDao = iMetaDataDao;
+//	}
+//
+//	public IPrivilegeDao getiPrivilegeDao() {
+//		return iPrivilegeDao;
+//	}
+//
+//	public void setiPrivilegeDao(IPrivilegeDao iPrivilegeDao) {
+//		this.iPrivilegeDao = iPrivilegeDao;
+//	}
+//
+//	public IUserDao getiUserDao() {
+//		return iUserDao;
+//	}
+//
+//	public void setiUserDao(IUserDao iUserDao) {
+//		this.iUserDao = iUserDao;
+//	}
+//
+//	public IRoleDao getIroleDao() {
+//		return iroleDao;
+//	}
+//
+//	public void setIroleDao(IRoleDao iroleDao) {
+//		this.iroleDao = iroleDao;
+//	}
+//
+//	
+//
+//	public IGroupDao getIgroupDao() {
+//		return igroupDao;
+//	}
+//
+//	public void setIgroupDao(IGroupDao igroupDao) {
+//		this.igroupDao = igroupDao;
+//	}
+//
+//	@Autowired
+//	IUserDao userDao;
+//	
+//
+//	public IUserDao getUserDao() {
+//		return userDao;
+//	}
+//
+//	public void setUserDao(IUserDao userDao) {
+//		this.userDao = userDao;
+//	}
+//
+//	public IApplicationDao getApplicationDao() {
+//		return applicationDao;
+//	}
+//
+//	public void setApplicationDao(IApplicationDao applicationDao) {
+//		this.applicationDao = applicationDao;
+//	}
+//
+//	public IDataStoreDao getDatastoreDao() {
+//		return dataStoreDao;
+//	}
+//
+//	public void setDatastoreDao(IDataStoreDao datastoreDao) {
+//		this.dataStoreDao = datastoreDao;
+//	}
+//
+//	public IDagDao getDagDao() {
+//		return dagDao;
+//	}
+//
+//	public void setDagDao(IDagDao dagDao) {
+//		this.dagDao = dagDao;
+//	}
+//
+//	public IExpressionDao getExpressionDao() {
+//		return expressionDao;
+//	}
+//
+//	public void setExpressionDao(IExpressionDao expressionDao) {
+//		this.expressionDao = expressionDao;
+//	}
+//
+//	public IFormulaDao getFormulaDao() {
+//		return formulaDao;
+//	}
+//
+//	public void setFormulaDao(IFormulaDao formulaDao) {
+//		this.formulaDao = formulaDao;
+//	}
+//
+//	public IMapDao getMapDao() {
+//		return mapDao;
+//	}
+//
+//	public void setMapDao(IMapDao mapDao) {
+//		this.mapDao = mapDao;
+//	}
+//
+//	public IConditionDao getConditionDao() {
+//		return conditionDao;
+//	}
+//
+//	public void setConditionDao(IConditionDao conditionDao) {
+//		this.conditionDao = conditionDao;
+//	}
+//
+//	public IDatapodDao getDatapodDao() {
+//		return datapodDao;
+//	}
+//
+//	public void setDatapodDao(IDatapodDao datapodDao) {
+//		this.datapodDao = datapodDao;
+//	}
+//
+//	public IDagExecDao getDagExecDao() {
+//		return dagExecDao;
+//	}
+//
+//	public void setDagExecDao(IDagExecDao dagExecDao) {
+//		this.dagExecDao = dagExecDao;
+//	}
+//	
+//	
+//	
+///*
+//	public IGroupDao getGroupDao() {
+//		return groupDao;
+//	}
+//
+//	public void setGroupDao(IGroupDao groupDao) {
+//		this.groupDao = groupDao;
+//	}
+//*/
+//
+//	
+//	public IDataQualDao getiDataQualDao() {
+//		return iDataQualDao;
+//	}
+//
+//	public void setiDataQualDao(IDataQualDao iDataQualDao) {
+//		this.iDataQualDao = iDataQualDao;
+//	}
+//
+//	public IDataQualGroupDao getiDataQualGroupDao() {
+//		return iDataQualGroupDao;
+//	}
+//
+//	public void setiDataQualGroupDao(IDataQualGroupDao iDataQualGroupDao) {
+//		this.iDataQualGroupDao = iDataQualGroupDao;
+//	}
+//
+//	public IMeasureDao getMeasureDao() {
+//		return measureDao;
+//	}
+//
+//	public void setMeasureDao(IMeasureDao measureDao) {
+//		this.measureDao = measureDao;
+//	}
+//	
+//	public IDimensionDao getDimensionDao() {
+//		return dimensionDao;
+//	}
+//
+//	public void setDimensionDao(IDimensionDao dimensionDao) {
+//		this.dimensionDao = dimensionDao;
+//	}
+//	
+//
+//	
+//	public IVizpodDao getVizpodDao() {
+//		return vizpodDao;
+//	}
+//
+//	public void setVizpodDao(IVizpodDao vizpodDao) {
+//		this.vizpodDao = vizpodDao;
+//	}
+//	
+//	public IDatasourceDao getiDatasourceDao() {
+//		return iDatasourceDao;
+//	}
+//
+//	public void setiDatasourceDao(IDatasourceDao iDatasourceDao) {
+//		this.iDatasourceDao = iDatasourceDao;
+//	}
+//	
+//	public MetadataUtil(){
+//		// private constructor to defeat instantiation
+//	}
 	
 	public Object getRefObject(MetaIdentifier ref) throws JsonProcessingException {
 		return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
@@ -1219,42 +1118,42 @@ public class MetadataUtil {
 //		return null;
 	}
 
-	public IVizpodExecDao getiVizpodExecDao() {
-		return iVizpodExecDao;
-	}
-
-	public void setiVizpodExecDao(IVizpodExecDao iVizpodExecDao) {
-		this.iVizpodExecDao = iVizpodExecDao;
-	}
-
-	public IRelationDao getRelationDao() {
-		return relationDao;
-	}
-
-	public void setRelationDao(IRelationDao relationDao) {
-		this.relationDao = relationDao;
-	}
-	
-	public IDatasetDao getDatasetDao() {
-		return datasetDao;
-	}
-
-	public void setDatasetDao(IDatasetDao datasetDao) {
-		this.datasetDao = datasetDao;
-	}
-
-	public IFilterDao getFilterDao() {
-		return filterDao;
-	}
-
-	public void setFilterDao(IFilterDao filterDao) {
-		this.filterDao = filterDao;
-	}
-
-	public BaseEntity resolveName(BaseEntity baseEntity) throws JsonProcessingException {
-		User user = (User)getRefObject(baseEntity.getCreatedBy().getRef());
-		baseEntity.getCreatedBy().getRef().setName(user.getName());
-		return baseEntity;
-	}
+//	public IVizpodExecDao getiVizpodExecDao() {
+//		return iVizpodExecDao;
+//	}
+//
+//	public void setiVizpodExecDao(IVizpodExecDao iVizpodExecDao) {
+//		this.iVizpodExecDao = iVizpodExecDao;
+//	}
+//
+//	public IRelationDao getRelationDao() {
+//		return relationDao;
+//	}
+//
+//	public void setRelationDao(IRelationDao relationDao) {
+//		this.relationDao = relationDao;
+//	}
+//	
+//	public IDatasetDao getDatasetDao() {
+//		return datasetDao;
+//	}
+//
+//	public void setDatasetDao(IDatasetDao datasetDao) {
+//		this.datasetDao = datasetDao;
+//	}
+//
+//	public IFilterDao getFilterDao() {
+//		return filterDao;
+//	}
+//
+//	public void setFilterDao(IFilterDao filterDao) {
+//		this.filterDao = filterDao;
+//	}
+//
+//	public BaseEntity resolveName(BaseEntity baseEntity) throws JsonProcessingException {
+//		User user = (User)getRefObject(baseEntity.getCreatedBy().getRef());
+//		baseEntity.getCreatedBy().getRef().setName(user.getName());
+//		return baseEntity;
+//	}
 	
 }

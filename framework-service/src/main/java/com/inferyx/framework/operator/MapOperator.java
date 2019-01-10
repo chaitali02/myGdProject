@@ -19,11 +19,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -44,9 +43,6 @@ import com.inferyx.framework.service.MessageStatus;
 
 @Component
 public class MapOperator implements IParsable {
-
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected AttributeMapOperator attributeMapOperator;
 	@Autowired
@@ -71,44 +67,48 @@ public class MapOperator implements IParsable {
 	
 	static final Logger logger = Logger.getLogger(MapOperator.class);
 
-	public Relation getRelationFromMap(Map map) {
-		String uuid = map.getSource().getRef().getKey().getUUID();
-		if (null == map.getSource().getRef().getKey().getVersion()) {
-			return daoRegister.getRelationDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			String version = map.getSource().getRef().getKey().getVersion();
-			return daoRegister.getRelationDao().findOneByUuidAndVersion(uuid, version);
-		}
+	public Relation getRelationFromMap(Map map) throws JsonProcessingException {
+//		String uuid = map.getSource().getRef().getKey().getUUID();
+//		if (null == map.getSource().getRef().getKey().getVersion()) {
+//			return daoRegister.getRelationDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+//		} else {
+//			String version = map.getSource().getRef().getKey().getVersion();
+//			return daoRegister.getRelationDao().findOneByUuidAndVersion(uuid, version);
+//		}
+		return (Relation) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 	}
 	
-	public Rule getRuleFromMap(Map map) {
-		String uuid = map.getSource().getRef().getKey().getUUID();
-		if (null == map.getSource().getRef().getKey().getVersion()) {
-			return daoRegister.getiRuleDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			String version = map.getSource().getRef().getKey().getVersion();
-			return daoRegister.getiRuleDao().findOneByUuidAndVersion(uuid, version);
-		}
+	public Rule getRuleFromMap(Map map) throws JsonProcessingException {
+//		String uuid = map.getSource().getRef().getKey().getUUID();
+//		if (null == map.getSource().getRef().getKey().getVersion()) {
+//			return daoRegister.getiRuleDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+//		} else {
+//			String version = map.getSource().getRef().getKey().getVersion();
+//			return daoRegister.getiRuleDao().findOneByUuidAndVersion(uuid, version);
+//		}
+		return (Rule) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 	}
 	
-	public DataSet getDatasetFromMap(Map map) {
-		String uuid = map.getSource().getRef().getKey().getUUID();
-		if (null == map.getSource().getRef().getKey().getVersion()) {
-			return daoRegister.getDatasetDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			String version = map.getSource().getRef().getKey().getVersion();
-			return daoRegister.getDatasetDao().findOneByUuidAndVersion(uuid, version);
-		}
+	public DataSet getDatasetFromMap(Map map) throws JsonProcessingException {
+//		String uuid = map.getSource().getRef().getKey().getUUID();
+//		if (null == map.getSource().getRef().getKey().getVersion()) {
+//			return daoRegister.getDatasetDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+//		} else {
+//			String version = map.getSource().getRef().getKey().getVersion();
+//			return daoRegister.getDatasetDao().findOneByUuidAndVersion(uuid, version);
+//		}
+		return (DataSet) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 	}
 	
-	public Datapod getDatapodFromMap (Map map) {
-		String uuid = map.getSource().getRef().getKey().getUUID();
-		if (null == map.getSource().getRef().getKey().getVersion()) {
-			return daoRegister.getDatapodDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			String version = map.getSource().getRef().getKey().getVersion();
-			return daoRegister.getDatapodDao().findOneByUuidAndVersion(uuid, version);
-		}
+	public Datapod getDatapodFromMap (Map map) throws JsonProcessingException {
+//		String uuid = map.getSource().getRef().getKey().getUUID();
+//		if (null == map.getSource().getRef().getKey().getVersion()) {
+//			return daoRegister.getDatapodDao().findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+//		} else {
+//			String version = map.getSource().getRef().getKey().getVersion();
+//			return daoRegister.getDatapodDao().findOneByUuidAndVersion(uuid, version);
+//		}
+		return (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 	}
 
 	public String generateSql(Map map, java.util.Map<String, MetaIdentifier> refKeyMap,
@@ -134,8 +134,9 @@ public class MapOperator implements IParsable {
 				// Append JOIN
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 			} else if (map.getSource().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(map.getSource().getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(map.getSource().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(map.getSource().getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				String table = null;
 				if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
@@ -147,10 +148,11 @@ public class MapOperator implements IParsable {
 				logger.info("Source table in map " + map.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append(" ").append(datapod.getName()).append(" ");
 			} else if (map.getSource().getRef().getType() == MetaType.dataset) {
-				DataSet dataset = (DataSet) daoRegister.getRefObject(map.getSource().getRef());
+//				DataSet dataset = (DataSet) daoRegister.getRefObject(map.getSource().getRef());
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 				builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, RunMode.BATCH)).append(")  ").append(dataset.getName());
 			} else if (map.getSource().getRef().getType() == MetaType.rule) {
-				Rule rule = (Rule) daoRegister.getRefObject(map.getSource().getRef());
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
 				builder.append(" (" + ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, null, RunMode.BATCH) + " )  " + rule.getName());
 			}
 			// Append Filter(s) - WHERE

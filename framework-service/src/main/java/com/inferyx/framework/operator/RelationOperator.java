@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -40,9 +39,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
  
 @Component
 public class RelationOperator {
-	
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -72,8 +68,9 @@ public class RelationOperator {
 		String table = "";
 		String dsVersion = null;
 		if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
-			fromDatapod = (Datapod) daoRegister
-					.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+//			fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
+			fromDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			datapodTracker.put(fromDatapod.getUuid(), new Short((short) 1));
 			MetaIdentifier fromDatapodRef = new MetaIdentifier(MetaType.datapod, fromDatapod.getUuid(), fromDatapod.getVersion());
 			usedRefKeySet.add(fromDatapodRef);
@@ -120,7 +117,9 @@ public class RelationOperator {
 			String rightTable = null;
 			String rightDsVersion = null;
 			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
-				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+//				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
+				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				if (!datapodTracker.containsKey(datapod.getUuid())) {
 					datapodTracker.put(datapod.getUuid(), new Short((short) 1));
 				} else {

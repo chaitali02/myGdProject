@@ -46,7 +46,6 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
@@ -75,10 +74,6 @@ public class ReconServiceImpl extends RuleTemplate {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*
-	 * @Autowired JavaSparkContext javaSparkContext;
-	 */
-
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -89,8 +84,6 @@ public class ReconServiceImpl extends RuleTemplate {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
@@ -145,8 +138,9 @@ public class ReconServiceImpl extends RuleTemplate {
 			reconExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (reconExec.getUuid()) {
-				ReconExec newReconExec = (ReconExec) daoRegister.getRefObject(
-						new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+//				ReconExec newReconExec = (ReconExec) daoRegister.getRefObject(
+//						new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(), reconExec.getVersion()));
+				ReconExec newReconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(reconExec.getUuid(), reconExec.getVersion(), MetaType.reconExec.toString());
 				newReconExec.setExec(reconExec.getExec());
 				newReconExec.setRefKeyList(reconExec.getRefKeyList());
 				commonServiceImpl.save(MetaType.reconExec.toString(), newReconExec);
@@ -182,8 +176,9 @@ public class ReconServiceImpl extends RuleTemplate {
 			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside reconServiceImpl.execute");
 		try {
-			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
+//			Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
+			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(reconInfo.getReconTargetUUID(), null, MetaType.datapod.toString());
+			
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
 			reconExec = (ReconExec) super.execute(MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, targetDatapodKey, taskList, execParams, runMode);

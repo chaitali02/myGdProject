@@ -10,24 +10,15 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.domain.DataStore;
@@ -54,8 +45,6 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 	SecurityServiceImpl securityServiceImpl;	
 	@Autowired
 	protected IRuleGroupExecDao iRuleGroupExecDao;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -209,12 +198,13 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 		List<RuleExec> ruleExecList = new ArrayList<>();
 		for(RuleExec ruleE : ruleExec)	{
 		//RuleExec ruleExecLatest = findOneByUuidAndVersion(ruleE.getUuid(), ruleE.getVersion());
-		RuleExec ruleExecLatest = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleE.getUuid(), ruleE.getVersion(), MetaType.ruleExec.toString());
+		RuleExec ruleExecLatest = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleE.getUuid(), ruleE.getVersion(), MetaType.ruleExec.toString(), "N");
 		String createdByRefUuid = ruleE.getCreatedBy().getRef().getUuid();
 		//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
 		User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
 		ruleExecLatest.getCreatedBy().getRef().setName(user.getName());
-		Rule rule = (Rule)daoRegister.getRefObject(ruleExecLatest.getDependsOn().getRef());
+//		Rule rule = (Rule)daoRegister.getRefObject(ruleExecLatest.getDependsOn().getRef());
+		Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleExecLatest.getDependsOn().getRef().getUuid(), ruleExecLatest.getDependsOn().getRef().getVersion(), ruleExecLatest.getDependsOn().getRef().getType().toString(), "N");
 		ruleExecLatest.getDependsOn().getRef().setName(rule.getName());
 		ruleExecList.add(ruleExecLatest);
 		}
@@ -286,9 +276,10 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 		} else {
 			ruleGroupExec = iRuleGroupExecDao.findOneByUuidAndVersion(appUuid, ruleGroupExecUuid, ruleGroupExecVersion);
 		}*/
-		RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecUuid, ruleGroupExecVersion, MetaType.rulegroupExec.toString());
+		RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecUuid, ruleGroupExecVersion, MetaType.rulegroupExec.toString(), "N");
 		for (MetaIdentifierHolder ruleExecHolder : ruleGroupExec.getExecList()) {
-			ruleExecList.add((RuleExec)daoRegister.getRefObject(ruleExecHolder.getRef()));
+//			ruleExecList.add((RuleExec)daoRegister.getRefObject(ruleExecHolder.getRef()));
+			ruleExecList.add((RuleExec)commonServiceImpl.getOneByUuidAndVersion(ruleExecHolder.getRef().getUuid(), ruleExecHolder.getRef().getVersion(), ruleExecHolder.getRef().getType().toString(), "N"));
 		}
 		return resolveName(ruleExecList);
 	}

@@ -34,7 +34,6 @@ import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.Dag;
@@ -42,7 +41,6 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
-import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
@@ -86,8 +84,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		MapServiceImpl mapServiceImpl;
 		@Autowired
 		DagServiceImpl dagServiceImpl;
-		@Autowired
-		protected MetadataUtil daoRegister;
 		@Autowired
 		protected DataSourceFactory datasourceFactory;
 		@Autowired
@@ -150,7 +146,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			FutureTask<String> futureTask = null;
 			@SuppressWarnings("unused")
 			String status = null;
-			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+			DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
+			
 			try {
 				synchronized (dagExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
@@ -178,7 +176,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					Thread.sleep(1000);
 				}
 				synchronized (dagExec.getUuid()) {
-					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
 				}
 			} catch (Exception e) {
@@ -192,7 +191,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			FutureTask futureTask = null;
 			String status = null;
 			StageExec stageExec = null;
-			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+///			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+			DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
 				status = "Thread is not running";
 				// Try to set status as killed nevertheless
@@ -212,7 +212,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 								for (Task task : stage.getTasks()) {
 									killTask(uuid, version, stageId, task.getTaskId());
 								}
-								 dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//								 dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+								 dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 								 stage=dagExec.getStages().get(count);
 								 count++;
 								 stageExec = DagExecUtil.convertToStageExec(stage);
@@ -259,7 +260,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						taskThreadMap.remove("Stage_" + uuid + "_" + stageId);
 						
 						synchronized (dagExec.getUuid()) {
-							dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//							dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+							dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 							stageExec = dagExecServiceImpl.getStageExec(dagExec, stageId);
 							logger.info("Going to set status killed for stage");
 							commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
@@ -277,7 +279,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		public String killTask(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		//	Set<String> strSet = mapTaskThread.keySet();
 			FutureTask futureTask = null;
-			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+			DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 			String status = null;
 		
 			TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
@@ -290,7 +293,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
 							commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
 						}
-						dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//						dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+						dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 						taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 						logger.info("Going to kill task : " + taskId + " : after getting taskExec");
 						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Killed, stageId, taskId);
@@ -327,7 +331,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 					synchronized (uuid) {
 					logger.info("Going to kill task : " + taskId);
-					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+//					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
+					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 					taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 					logger.info("Going to kill task : " + taskId + " : after getting taskExec");
 					commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Killed, stageId, taskId);
@@ -600,7 +605,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setDagExecUUID(dagExec.getUuid());
 			indivStageExe.setStageId(indvStg.getStageId());
 			indivStageExe.setDagExecVer(dagExec.getVersion());
-			indivStageExe.setDaoRegister(daoRegister);
+//			indivStageExe.setDaoRegister(daoRegister);
 			indivStageExe.setDatasourceFactory(datasourceFactory);
 			indivStageExe.setDataqualServiceImpl(dataqualServiceImpl);
 			indivStageExe.setDataqualGroupServiceImpl(dataqualGroupServiceImpl);
@@ -638,7 +643,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setStageExec(indvStg);
 			indivStageExe.setTaskThreadMap(taskThreadMap);
 			indivStageExe.setDqInfo(dqInfo);
-			indivStageExe.setDaoRegister(daoRegister);
+//			indivStageExe.setDaoRegister(daoRegister);
 			indivStageExe.setDagExec(dagExec);
 			indivStageExe.setStage(stage);
 			indivStageExe.setParamSetServiceImpl(paramSetServiceImpl);

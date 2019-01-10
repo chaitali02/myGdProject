@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -54,8 +53,6 @@ public class ReportOperator implements IOperator {
 	AttributeMapOperator attributeMapOperator;
 	@Autowired
 	RelationOperator relationOperator;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	MapOperator mapOperator;
 	@Autowired
@@ -138,10 +135,14 @@ public class ReportOperator implements IOperator {
 		logger.info("otherParams in reportOperator : " + otherParams);
 		if (report.getDependsOn().getRef().getType() == MetaType.relation) {
 			usedRefKeySet.add(report.getDependsOn().getRef());
-			relation = (Relation) daoRegister.getRefObject(report.getDependsOn().getRef()); 
+//			relation = (Relation) daoRegister.getRefObject(report.getDependsOn().getRef()); 
+			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(report.getDependsOn().getRef().getUuid(), report.getDependsOn().getRef().getVersion(), report.getDependsOn().getRef().getType().toString(), "N");
 			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 		} else if (report.getDependsOn().getRef().getType() == MetaType.datapod) {
-			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(report.getDependsOn().getRef(), refKeyMap));
+//			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(report.getDependsOn().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(report.getDependsOn().getRef(), refKeyMap);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+            
 			String table = null;
 			if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 				return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName") + " " + datapod.getName();
@@ -155,7 +156,8 @@ public class ReportOperator implements IOperator {
 			logger.info("Source table in report >> " + report.getName() + " : " + table);
 			builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 		} else if (report.getDependsOn().getRef().getType() == MetaType.dataset) {
-            DataSet dataset = (DataSet) daoRegister.getRefObject(report.getDependsOn().getRef()); 
+//          DataSet dataset = (DataSet) daoRegister.getRefObject(report.getDependsOn().getRef()); 
+            DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(report.getDependsOn().getRef().getUuid(), report.getDependsOn().getRef().getVersion(), report.getDependsOn().getRef().getType().toString(), "N");
             builder.append("( ").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(" ) ").append(dataset.getName());
         }
 		return builder.toString();

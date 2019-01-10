@@ -20,7 +20,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IProfileGroupDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseExec;
@@ -38,8 +37,6 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
 	@Autowired
 	IProfileGroupDao iProfileGroupDao;
 	@Autowired 
@@ -62,8 +59,6 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	ThreadPoolTaskExecutor metaGroupExecutor;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	MetadataUtil daoRegister;
 
 	static final Logger logger = Logger.getLogger(ProfileGroupServiceImpl.class);
 

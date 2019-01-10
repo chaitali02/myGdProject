@@ -42,13 +42,10 @@ import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IFilterDao;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
@@ -89,15 +86,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	MetadataUtil daoRegister;
-	@Autowired
 	DQOperator dqOperator;
 	@Autowired
 	protected DataSourceFactory datasourceFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	private DataQualExecServiceImpl dataQualExecServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
@@ -156,10 +149,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		dq.setValueCheck(dqView.getValueCheck());
 		dq.setTarget(dqView.getTarget());
 		Filter filter = null;
-		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
-		AttributeRefHolder filterMeta = new AttributeRefHolder();
-		if(dqView.getFilter() != null)
-		{
+//		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
+//		AttributeRefHolder filterMeta = new AttributeRefHolder();
+		if(dqView.getFilter() != null) {
 		filter = dqView.getFilter();
 		filter.setName(dqView.getName());
 		filter.setDesc(dqView.getDesc());
@@ -323,8 +315,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		Datapod targetDatapod = (Datapod) daoRegister
-				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
+//		Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 				targetDatapod.getVersion());		
 		try {
@@ -450,17 +442,17 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString());
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
 		try{
-		dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
-		dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-		
-		synchronized (dataQualExec.getUuid()) {
-			DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(
-					new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-			dataQualExec1.setExec(dataQualExec.getExec());
-			dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
-			commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
-			dataQualExec1 = null;
-		}
+			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
+			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			
+			synchronized (dataQualExec.getUuid()) {
+//				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
+				dataQualExec1.setExec(dataQualExec.getExec());
+				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
+				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
+				dataQualExec1 = null;
+			}
 		}catch(Exception e){
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
 			e.printStackTrace();
@@ -578,6 +570,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		@SuppressWarnings("unchecked")
 		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
 		execute(metaExecutor, (DataQualExec)baseExec, taskList, execParams, runMode);
 		return null;

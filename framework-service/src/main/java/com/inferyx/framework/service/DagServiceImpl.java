@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.domain.AttributeMap;
@@ -112,8 +111,6 @@ public class DagServiceImpl {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -876,14 +873,25 @@ public class DagServiceImpl {
 					// Setting the Version for Map Object
 					sourceRef = map.getSource().getRef();
 					targetRef = map.getTarget().getRef();
-					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
-					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
+//					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
+//					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
 
+					sourceRef = commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys);
+					targetRef = commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys);
+
+					commonServiceImpl.getOneByUuidAndVersion(sourceRef.getUuid(), sourceRef.getVersion(), sourceRef.getType().toString(), "N");
+					commonServiceImpl.getOneByUuidAndVersion(targetRef.getUuid(), targetRef.getVersion(), targetRef.getType().toString(), "N");
+					
 					for (AttributeMap attrMap : map.getAttributeMap()) {
 						targetAttrRef = attrMap.getTargetAttr().getRef();
-						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
+//						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
-						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
+//						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
+						
+						targetAttrRef = commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
+						sourceAttrRef = commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
+						commonServiceImpl.getOneByUuidAndVersion(targetAttrRef.getUuid(), targetAttrRef.getVersion(), targetAttrRef.getType().toString(), "N");
+						commonServiceImpl.getOneByUuidAndVersion(sourceAttrRef.getUuid(), sourceAttrRef.getVersion(), sourceAttrRef.getType().toString(), "N");
 					}
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load

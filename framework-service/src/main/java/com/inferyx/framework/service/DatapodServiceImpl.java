@@ -58,7 +58,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -124,8 +123,6 @@ public class DatapodServiceImpl {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ExecutorFactory execFactory;
-	@Autowired
-	MetadataUtil commonActivity;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
