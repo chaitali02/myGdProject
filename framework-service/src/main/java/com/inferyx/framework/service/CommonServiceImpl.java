@@ -1739,7 +1739,7 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-//		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
+		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1754,29 +1754,40 @@ public class CommonServiceImpl <T> {
 			Class [] interfaces = null;
 			String name = null;
 			String attrId = null;
+//			if (object instanceof AttributeRefHolder) {
+////				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+//				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
+//				if (StringUtils.isNotBlank(attrId)) {
+//					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));					
+//				}
+//				else {
+//					Object refObject = object.getClass().getMethod(GET+"Ref").invoke(object);
+//					if (refObject != null) {
+//						type = (MetaType) refObject.getClass().getMethod(GET+"Type").invoke(refObject);
+//						name = getName((String)refObject.getClass().getMethod(GET+"Uuid").invoke(refObject), (String)refObject.getClass().getMethod(GET+"Version").invoke(refObject), type);
+////						logger.info("Name : " + name);
+//						if(name != null) {
+//							refObject.getClass().getMethod(SET+"Name", String.class).invoke(refObject, name);
+//							object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, name);
+//							name = null;							
+//						}
+//					}
+//				}
+//				return object;
+//			}
 			if (object instanceof AttributeRefHolder) {
-//				object = object.getClass().getMethod(GET+"Ref").invoke(object);
-				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
-				if (StringUtils.isNotBlank(attrId)) {
+				Object attributeId = object.getClass().getMethod(GET+"AttrId").invoke(object);
+				if(attributeId != null) {
+					attrId = attributeId.toString();
 					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
-				}
-				else {
-					Object refObject = object.getClass().getMethod(GET+"Ref").invoke(object);
+					MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
 					if (refObject != null) {
-						type = (MetaType) refObject.getClass().getMethod(GET+"Type").invoke(refObject);
-						name = getName((String)refObject.getClass().getMethod(GET+"Uuid").invoke(refObject), (String)refObject.getClass().getMethod(GET+"Version").invoke(refObject), type);
-//						logger.info("Name : " + name);
-						if(name != null) {
-							refObject.getClass().getMethod(SET+"Name", String.class).invoke(refObject, name);
-							object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, name);
-							name = null;							
-						}
-					}
+						resolveName(refObject, null, requiredDegree, actualDegree+1);
+					}					
 				}
 				return object;
 			}
 			if (object instanceof SourceAttr) {
-//				object = object.getClass().getMethod(GET+"Ref").invoke(object);
 				Object attributeId = object.getClass().getMethod(GET+"AttributeId").invoke(object);
 				if(attributeId != null) {
 					attrId = attributeId.toString();
@@ -1809,7 +1820,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-//					logger.info("Checking method : " + method.getName());
+					logger.info("Checking method : " + method.getName());
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);

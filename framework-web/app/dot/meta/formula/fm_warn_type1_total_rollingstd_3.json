@@ -1,6 +1,6 @@
 {
   "uuid": "0873c539-7bde-4ef0-b35b-21a0e7b05844",
-  "version": "1546896642",
+  "version": "1547142364",
   "name": "fm_warn_type1_total_rollingstd_3",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 07 16:45:10 EST 2019",
+  "createdOn": "Thu Jan 10 12:46:04 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -43,7 +43,7 @@
         "type": "function",
         "uuid": "9e3e2fb2-02fb-11e7-93ae-92361f002671",
         "version": null,
-        "name": "stddev(col)"
+        "name": null
       },
       "attributeId": null,
       "value": null,
@@ -88,13 +88,13 @@
     },
     {
       "ref": {
-        "type": "simple",
-        "uuid": null,
+        "type": "function",
+        "uuid": "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f",
         "version": null,
         "name": null
       },
       "attributeId": null,
-      "value": "OVER",
+      "value": null,
       "attributeName": null,
       "attributeType": null
     },
