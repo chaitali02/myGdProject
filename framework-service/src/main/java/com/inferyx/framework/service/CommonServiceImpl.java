@@ -1739,7 +1739,7 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("rawtypes")
 	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
+//		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1820,7 +1820,7 @@ public class CommonServiceImpl <T> {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-					logger.info("Checking method : " + method.getName());
+//					logger.info("Checking method : " + method.getName());
 									
 					if (method.getName().contains("Uuid")) {
 						//logger.info(" Inside resolveName : " + type);
@@ -2501,7 +2501,7 @@ public class CommonServiceImpl <T> {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-	public T getOneByUuidAndVersion(String uuid, String version, String type, String resloveFlag) throws JsonProcessingException {
+	public T getOneByUuidAndVersion(String uuid, String version, String type, String resolveFlag) throws JsonProcessingException {
 		String appUuid = null;
 		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
@@ -2526,7 +2526,7 @@ public class CommonServiceImpl <T> {
 					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
 			}
 			//return (T) object;
-			if (resloveFlag.equalsIgnoreCase("Y")) {
+			if (resolveFlag.equalsIgnoreCase("Y")) {
 				return (T) resolveName(object, Helper.getMetaType(type));
 			} else {
 				return (T) object;

@@ -1,7 +1,7 @@
 {
   "uuid": "5cea15da-5aa8-48c0-911f-2b004fdfd074",
   "version": "1542671799",
-  "name": "AML Monitoring Summary",
+  "name": "AML Monitoring Rule Summary",
   "desc": null,
   "createdBy": {
     "ref": {

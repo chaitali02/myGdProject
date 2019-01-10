@@ -70,6 +70,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
 					.concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 					.concat(generateLimit(dataset));
+			logger.info("SQL Generated: "+sql);
 			logger.info("Completed SQL Generation");
 			return sql;
 		}
