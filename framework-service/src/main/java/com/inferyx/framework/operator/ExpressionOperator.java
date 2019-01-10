@@ -234,7 +234,7 @@ public class ExpressionOperator {
 					&& sourceAttr.getRef().getType() == MetaType.dataset) {
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap);
-				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
 				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
 				operandValue.add(dataset.sql(attrName));
@@ -242,12 +242,12 @@ public class ExpressionOperator {
 					&& filterSource.getRef().getType() == MetaType.relation) {
 //				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				operandValue.add(datapod.sql(sourceAttr.getAttributeId()));
 			} else if (sourceAttr.getRef().getType() == MetaType.datapod) {
 //				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				operandValue.add(datapod.sql(sourceAttr.getAttributeId()));
 			}
 
@@ -255,7 +255,7 @@ public class ExpressionOperator {
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
 //				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS));
 			}
 
@@ -288,7 +288,7 @@ public class ExpressionOperator {
 		} else if (metInfo.getRef().getType() == MetaType.formula) {
 //			Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(metInfo.getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(metInfo.getRef(), refKeyMap);
-			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
 		}
 		return operandValue;
@@ -319,7 +319,7 @@ public class ExpressionOperator {
 		} else if (notMetInfo.getRef().getType() == MetaType.formula) {
 //			Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(notMetInfo.getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(notMetInfo.getRef(), refKeyMap);
-			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
 		}
 		return operandValue;
@@ -334,7 +334,7 @@ public class ExpressionOperator {
 				if (sourceAttr.getRef().getType() == MetaType.formula) {
 //					Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 					MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-					Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+					Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 					operandValue.append(formulaOperator.selectGroupBy(formulaRef, refKeyMap, otherParams));
 				}
 			}
@@ -349,7 +349,7 @@ public class ExpressionOperator {
 				if (sourceAttr.getRef().getType() == MetaType.formula) {
 //					Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 					MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
-					Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+					Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 					if (formulaOperator.isGroupBy(formulaRef, refKeyMap, otherParams)) {
 						return true;
 					}

@@ -42,7 +42,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
 public class MapTaskParser extends TaskParser {
-
 	@Autowired
 	protected MapOperator mapOperator;
 	@Autowired
