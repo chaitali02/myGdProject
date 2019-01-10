@@ -177,7 +177,7 @@
 										<span class="required" aria-required="true"> * </span>
 									</label>
 									<div class="col-md-2 col-sm-2 col-xs-12">
-										<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory" class="form-control" ng-disabled="{{mode}}"
+										<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory  | orderBy" class="form-control" ng-disabled="{{mode}}"
 										 required="">
 										</select>
 									</div>

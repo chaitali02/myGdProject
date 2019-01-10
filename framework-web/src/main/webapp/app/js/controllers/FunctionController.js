@@ -44,10 +44,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	$scope.functiondata;
 	$scope.showForm = true;
 	$scope.funcType = ["hive", "impala", "oracle"];
-	$scope.allTypes = ["file", "hive", "impala", "mysql", "oracle"];
+	$scope.allTypes = ["file", "hive", "impala", "mysql", "oracle","postgres"];
 	$scope.allParamTypes = ["string", "function"]
 	//$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
-	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE"];
+	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE","WINDOW"];
 	$scope.isDependencyShow = false;
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'distinct', 'binary', 'number',
 		'decimal'
@@ -250,7 +250,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		var onGetLatestByUuid = function (response) {
 			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
-			$scope.selectCatogory = response.functiondata.category;
+			$scope.selectCatogory = response.functiondata.category.toUpperCase();
 			$scope.selectFunctionType = response.functiondata.funcType;
 			var defaultversion = {};
 			defaultversion.version = response.functiondata.version;
@@ -290,7 +290,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		var onGetByOneUuidandVersion = function (response) {
 			$scope.isEditInprogess=false;
 			$scope.functiondata = response.functiondata;
-			$scope.selectCatogory = response.functiondata.category;
+			$scope.selectCatogory = response.functiondata.category.toUpperCase();
 			$scope.selectFunctionType = response.functiondata.funcType;
 			var defaultversion = {};
 			defaultversion.version = response.functiondata.version;
@@ -342,7 +342,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.locked = $scope.functiondata.locked;
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
-		functionJson.category = $scope.selectCatogory;
+		functionJson.category = $scope.selectCatogory.toUpperCase();
 	// 	functionJson.funcType = $scope.selectFunctionType;
 		functionJson.inputReq = $scope.functiondata.inputReq;
 		var tagArray = [];
