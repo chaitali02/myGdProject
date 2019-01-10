@@ -105,6 +105,7 @@ public class JoinKeyOperator {
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
+//			logger.info("Filter source : " + filterSource.getRef());
 			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
@@ -155,11 +156,13 @@ public class JoinKeyOperator {
 				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
 //				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
-				MetaIdentifier ref = TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap);
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				logger.info(" Filter source : " + ref);
 				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(),"N");
 //				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
 //				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
 				String attrName = ruleServiceImpl.getAttributeName(rule,sourceAttr.getAttributeId().toString());
+//				logger.info(" Rule sql : " + rule.sql(attrName));
 				operandValue.add(rule.sql(attrName));
 				MetaIdentifier ruleRef = new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion());
 				usedRefKeySet.add(ruleRef);
