@@ -420,7 +420,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			return false;
 		}
 		$scope.myform.$dirty=true ;
-		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG"]
+		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG","OVER"]
 		var len = $scope.formulainfoarray.length;
 		if (aggrfun.indexOf(data.value) > -1) {
 			MetadataFormulaSerivce.getFunctionByFunctionInfo(data.value.toLowerCase()).then(function (response) { onSuccessGetFunctionByFunctionInfo(response.data) });

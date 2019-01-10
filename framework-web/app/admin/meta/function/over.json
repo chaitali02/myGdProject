@@ -2,27 +2,27 @@
     "inputReq" : "N",
     "functionInfo" : [ 
         {
-            "name" : "OVER",
+            "name" : "over",
             "type" : "file",
             "paramInfoHolder" : []
         }, 
         {
-            "name" : "OVER",
+            "name" : "over",
             "type" : "hive",
             "paramInfoHolder" : []
         }, 
         {
-            "name" : "OVER",
+            "name" : "over",
             "type" : "impala",
             "paramInfoHolder" : []
         }, 
         {
-            "name" : "OVER",
+            "name" : "over",
             "type" : "mysql",
             "paramInfoHolder" : []
         }, 
         {
-            "name" : "OVER",
+            "name" : "over",
             "type" : "postgres",
             "paramInfoHolder" : []
         }
