@@ -168,8 +168,10 @@
                       <input type="text" class="form-control" [(ngModel)]="sourcesimple" name="sourcesimple"  [disabled]="mode">
                   </div>
                   <div *ngIf="isSourceAtributeDatapod">
+                      {{sourceattribute|json}}
                       <p-dropdown [options]="allAttribute"          
                       [(ngModel)]="sourceattribute"
+                      [dataKey]="id"
                       name="sourceattribute"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
@@ -177,6 +179,7 @@
                       </p-dropdown>
                   </div>
                   <div *ngIf="isSourceAtributeFormula">
+                    
                       <p-dropdown [options]="allFormula"          
                       [(ngModel)]="sourceformula"
                       name="sourceformula"
@@ -210,6 +213,7 @@
                       <p-dropdown [options]="allFunction"          
                       [(ngModel)]="sourcefunction"
                       name="sourcefunction"
+                      [dataKey]="uuid"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
                       [filter]="true"

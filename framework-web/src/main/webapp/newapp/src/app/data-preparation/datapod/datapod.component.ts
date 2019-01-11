@@ -492,15 +492,6 @@ export class DatapodComponent {
       response => { this.OnSuccesgetDatastoreByDatapod(response) },
       error => console.log('Error :: ' + error)
     )
-    
-		// MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
-		// var onSuccessGetDatastoreByDatapode = function (response) {
-		// 	this.isShowDatastore=true;
-		// 	this.originalDataDatastore=response;
-		// 	this.gridOptionsDataStrore.data=response;
-		// 	console.log(response)
-		// }
-	
   }
   OnSuccesgetDatastoreByDatapod(response){
     console.log(response)

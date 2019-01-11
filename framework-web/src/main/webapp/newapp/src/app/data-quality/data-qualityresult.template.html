@@ -8,54 +8,50 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        data- (click)="showMainPage(_uuid,_version)" *ngIf="isHomeEnable">
-                        <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                   <!-- <a style="margin:2px auto;color:white;" ng-disabled="!allowReExecution" ng-class="{'currentpage':!allowReExecution}" title="Restart Pipeline" data-toggle="tooltip" data-placement="top" tooltip   ng-click="reExecute()">
+                        <i class="fa fa-repeat" area-hidden="true"></i>
                     </a>
-                    <a class="linkDisabled" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        *ngIf="!isHomeEnable">
-                        <i class="fa fa-home" style="display: block;margin: 2px auto;color:#e2dfdf;"></i>
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                        <i class="glyphicon glyphicon-file" area-hidden="true"></i>
+                    </a>-->
+                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
+                    (click)="showMainPage()" >
+                   <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                   </a>
+                   <!-- <a class="linkDisabled" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                   *ngIf="!isHomeEnable">
+                   <i class="fa fa-home" style="display: block;margin: 2px auto;"></i>
+                   </a> -->
+                   <!-- <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'"  (click="showGraph()">
+                       <i class="fa fa-sitemap" area-hidden="true"></i>
+                   </a> -->
+                   <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
+                    [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="istableShow">
+                       <i class="fa fa-download" area-hidden="true"></i>
+                   </a>
+                   <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                   data- (click)="showDagGraph()">
+                   <i class="fa fa-sitemap" style="margin:2px auto;"></i>
                     </a>
 
-                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
-                        data- (click)="showDagGraph(_uuid,_version)" *ngIf="showKnowledgeGraph">
-                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
-                    </a>
-                    <a class="linkDisabled" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
-                        data- (click)="showDagGraph(_uuid,_version)" *ngIf="!showKnowledgeGraph">
-                        <i class="fa fa-sitemap" style="margin:2px auto;color:#e2dfdf;"></i>
-                    </a>
-
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
-                        *ngIf="istableShow">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                    <a class="linkDisabled" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip *ngIf="!istableShow">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-
-                    <!--<a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="broadcastRefreshData()" ng-if="showgraphdiv || !(daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a> -->
-
-                    <a title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                   <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()" >
+                       <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                   </a> 
+                   <a title="Close"  (click)="goBack()" style="height:14px;">
+                       <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                   </a>
                 </div>
             </div>
             <div class="portlet-body">
-                <div *ngIf="isgraphShow ">
+                <div *ngIf="isgraphShow && !showKnowledgeGraph">
                     <app-jointjs-group [graphParms]="params"></app-jointjs-group>
                 </div>
-                <div *ngIf="istableShow ">
+                <div *ngIf="istableShow && !showKnowledgeGraph">
                     <app-resulttable [tableParms]="tableparms"></app-resulttable>
                 </div>
-                <!-- <div *ngIf="showKnowledgeGraph">
+                <div *ngIf="showKnowledgeGraph && !isgraphShow && !istableShow">
                     {{"Knowledge graph"}}
-                </div> -->
+                </div>
             </div>
 
             <p-dialog header="Download" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="500" [resizable]="true"
@@ -78,7 +74,7 @@
                     </div>
                 </form>
                     <p-footer>
-                        <div >
+                        <div>
                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding-bottom: 15px">
                                 <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
                                 <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">

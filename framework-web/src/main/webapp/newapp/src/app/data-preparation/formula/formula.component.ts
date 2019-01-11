@@ -162,6 +162,9 @@ export class FormulaComponent {
 
   addAttribute() {
     var len = this.formulaarray.length;
+    if(this.DblClcikEditDetail !=null){
+			len =this.DblClcikEditDetail["index"];
+		}
     var data = {}
     if (this.selectAttribute == "datapod") {
       if (this.sourceattribute != null) {
@@ -169,6 +172,7 @@ export class FormulaComponent {
         data["value"] = this.sourceattribute.label
         data["uuid"] = this.sourceattribute.uuid
         data["attrId"] = this.sourceattribute.attributeId;
+        data["id"]=this.sourceattribute.uuid+"_"+this.sourceattribute.attributeId
         this.sourceattribute = null;
       }
     }
@@ -209,6 +213,7 @@ export class FormulaComponent {
     }
     //}
     this.formulaarray[len] = data;
+    this.DblClcikEditDetail=null;
   }
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid("formula", this.formulajson.uuid).subscribe(
@@ -280,7 +285,7 @@ export class FormulaComponent {
     }
     //this.formulaarray=[]
     this.allAttribute = temp;
-    this.sourceattribute = this.allAttribute[0];
+   // this.sourceattribute = this.allAttribute[0];
   }
 
   getAllFunctions() {
@@ -399,6 +404,7 @@ export class FormulaComponent {
         formulainfo["type"] = response.formulaInfo[i].ref.type;
         formulainfo["uuid"] = response.formulaInfo[i].ref.uuid;
         formulainfo["attrId"] = response.formulaInfo[i].attributeId;
+        formulainfo["id"] = response.formulaInfo[i].ref.uuid+"_"+response.formulaInfo[i].attributeId;
         formulainfo["value"] = response.formulaInfo[i].ref.name + "." + response.formulaInfo[i].attributeName;
         //formulainfo["value"] = response.formulaInfo[i].value;
       }
@@ -432,7 +438,7 @@ export class FormulaComponent {
     }
   }
 
-  onChangeAttribute(type) {debugger
+  onChangeAttribute(type) {
     if (type == "string") {
       this.isSourceAtributeSimple = true;
       this.isSourceAtributeDatapod = false;
@@ -672,49 +678,50 @@ export class FormulaComponent {
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'true']);
   }
-  // onDbclcikEdit(type,index){
-	// 	// if(!this.isEdit && !this.isAdd ){
-	// 	// 	return false;
-	// 	// }
-	// 	//console.log(this.formulainfoarray[index]);
-	//  	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
-	// 		this.attributeinfo={};
-	// 		var type1={};
-	//  	    type1["text"]="datapod";
-	// 	    this.attributeTypes= type1;
-	// 		var attributeInfo={}
-	// 		 attributeInfo["uuid"]=this.formulaarray[index].uuid
-	// 		 attributeInfo["type"]=this.formulaarray[index].type
-
-	// 		attributeInfo["attributeId"]=this.formulaarray[index].attrId;
-	// 		attributeInfo["dname"]= this.formulaarray[index].value;
-	// 		setTimeout(function(){ this.attributeinfo=attributeInfo; },10);
-	// 		this.DblClcikEditDetail={};
-	// 		this.DblClcikEditDetail["isEdit"]=true;
-	// 		this.DblClcikEditDetail["index"]=index; 
-	// 	}
-	// 	else if (type == "string" || type == "simple"){
-	// 		var type1={};
-	//  	    type1["text"]="string"//this.formulainfoarray[index].type;
-	// 	    this["attributeType"]= type1;
-	// 		this.sourcesimple=this.formulaarray[index].value;
-	// 		this.DblClcikEditDetail={};
-	// 		this.DblClcikEditDetail["isEdit"]=true;
-	// 		this.DblClcikEditDetail["index"]=index; 
-	// 	}else{
-	// 		var type1={};
-	//  	    type1["text"]=this.formulaarray[index].type;
-	// 		this.attributeTypes= type1;
-	// 		this.sourcefunction={}
-	// 		this.sourcefunction.uuid=this.formulaarray[index].uuid;
-	// 		this.sourcefunction.name=this.formulaarray[index].name;
-	// 		this.DblClcikEditDetail={};
-	// 		this.DblClcikEditDetail["isEdit"]=true;
-	// 		this.DblClcikEditDetail["index"]=index; 
-	// 	}
-	// 	this.onChangeAttribute(type1["text"]);
+  onDbclcikEdit(type,index){
+		// if(!this.isEdit && !this.isAdd ){
+		// 	return false;
+		// }
+		//console.log(this.formulainfoarray[index]);
+	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
+			this.attributeinfo={};
+			var type1={};
+	 	    type1["text"]=type;
+		    this.selectAttribute= type;
+			var attributeInfo={}
+			 attributeInfo["uuid"]=this.formulaarray[index].uuid
+			 attributeInfo["type"]=this.formulaarray[index].type
+       attributeInfo["id"]=this.formulaarray[index].id
+			attributeInfo["attributeId"]=this.formulaarray[index].attrId;
+      attributeInfo["dname"]= this.formulaarray[index].value;
+      this.sourceattribute=attributeInfo;
+			//setTimeout(function(){ this.sourceattribute=attributeInfo; },10);
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}
+		else if (type == "string" || type == "simple"){
+			var type1={};
+	 	    type1["text"]="string"//this.formulainfoarray[index].type;
+		    this["attributeType"]= type1;
+			this.sourcesimple=this.formulaarray[index].value;
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}else{
+			var type1={};
+	 	    type1["text"]=this.formulaarray[index].type;
+			this.selectAttribute= type;
+			this.sourcefunction={}
+			this.sourcefunction.uuid=this.formulaarray[index].uuid;
+			this.sourcefunction.name=this.formulaarray[index].name;
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}
+		this.onChangeAttribute(type1["text"]);
 		
 		 
-	// };
+	};
   
 }
