@@ -39,7 +39,7 @@ export class TableRenderComponent {
     let type;
     switch (params.type) {
       case 'dq':
-        type = 'dataqual';
+        type = 'dq';
         break;
       case 'dqgroupexec':
         type = 'dataqual';
@@ -63,6 +63,9 @@ export class TableRenderComponent {
     
   }
   results(type, uuid, version,mode){
+    if(type == 'dq'){
+      type = 'dataqual';
+    }
     this._jointjsGroupService.getResults(type,uuid,version,mode)
     .subscribe(
     response => {

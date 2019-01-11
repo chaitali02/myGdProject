@@ -1205,3 +1205,7 @@ cursor: not-allowed !important;
   margin-left: 2%;
   margin-right: 8%;
 }
+
+.linkDisabled{
+  cursor: not-allowed !important;
+}
