@@ -25,6 +25,19 @@ import { saveAs } from 'file-saver';
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  dropIndex: any;
+  dragIndex: any;
+  iSSubmitEnable: boolean;
+  histogramcols: any[];
+  histogramData: any[];
+  showHistogramModel: boolean;
+  originalDataHistogram: any[];
+  isHistogramError: boolean;
+  isHistogramInprogess: boolean;
+  datacol: any;
+  isShowChart: boolean;
+  isShowDataGrid: boolean;
+  histogramDetail: any;
   datastoreDetail: any;
   downloadversion: any;
   downloaduuid: any;
@@ -253,17 +266,31 @@ export class DatapodComponent {
     this.colsdata = response
     let columns = [];
     console.log(response)
-    if (response.length && response.length > 0) {
-      Object.keys(response[0]).forEach(val => {
-        if (val != "rownum") {
-          let width = ((val.split("").length * 9) + 40) + "px"
-          columns.push({ "field": val, "header": val, colwidth: width });
-        }
-      });
+    for (var j = 0; j <this.datapodjson.attributes.length; j++) {
+      var attribute = {};
+      attribute["field"]=this.datapodjson.attributes[j].name;
+      attribute["header"]=this.datapodjson.attributes[j].name;
+      attribute["colwidth"]=((attribute["header"].length * 9) + 40) + "px"
+      attribute["name"] =this.datapodjson.attributes[j].name;
+      attribute["dname"] =this.datapodjson.name;
+      attribute["uuid"]=this.datapodjson.uuid;
+      attribute["version"]=this.datapodjson.version;
+      attribute["attributeId"]=this.datapodjson.attributes[j].attributeId;         
+      
+      columns.push(attribute)
     }
+    // if (response.length && response.length > 0) {
+    //   Object.keys(response[0]).forEach(val => {
+    //     if (val != "rownum") {
+    //       let width = ((val.split("").length * 9) + 40) + "px"
+    //       columns.push({ "field": val, "header": val, colwidth: width });
+    //     }
+    //   });
+    // }
     this.cols = columns
     this.columnOptions = [];
     for (let i = 0; i < this.cols.length; i++) {
+      this.cols["attrId"]=i
       this.columnOptions.push({ label: this.cols[i].header, value: this.cols[i] });
     }
   }
@@ -571,5 +598,110 @@ export class DatapodComponent {
       error => console.log('Error :: ' + error)
     )
 	
+  }
+  calculateHistrogram(row){
+    this.showHistogramModel=true
+		this.histogramDetail=row;
+		this.isShowDataGrid=false;
+		this.isShowChart=false;
+		console.log(row);
+		this.datacol=null;
+		this.isHistogramInprogess=true;
+    this.isHistogramError=false;
+    this._datapodService.getAttrHistogram(row["uuid"],row["version"],'datapod',row["attributeId"]).subscribe(
+      response => {this.onSuccessgetAttrHistogram(response)},
+      error => console.log('Error :: ' + error)
+    )    
+}
+onSuccessgetAttrHistogram(response){
+  console.log(response);
+  this.isShowDataGrid=false;
+    this.isShowChart=true;
+  this.ConvertTwoDisit(response, 'bucket');
+  this.isHistogramInprogess=false;
+  this.isHistogramError=false;
+  this.datacol={};
+  if(response.length >=20){
+    this.datacol.datapoints=response.slice(0,20);
+
+  }else{
+    this.datacol.datapoints=response;
+  }
+  this.originalDataHistogram=response;
+  var dataColumn={}
+  dataColumn["id"]="frequency";
+  dataColumn["name"]="frequency"
+  dataColumn["type"]="bar"
+  dataColumn["color"]="#D8A2DE";
+  this.datacol.datacolumns=[];
+  this.datacol.datacolumns[0]=dataColumn;
+  var datax={};
+  datax["id"] ="bucket";
+  this.datacol.datax=datax;
+  this.histogramData = response
+  let columns = [];
+  console.log(response)      
+  this.histogramcols = response
+}
+  ConvertTwoDisit(data, propName) {
+		// if(isNaN(data[0][propName])){
+		 if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
+		   for (var i = 0; i < data.length; i++) {
+			 let a = data[i][propName].split(' - ')[0];
+			 let  b = data[i][propName].split('-')[1]
+			 data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+			 // console.log(data[i][propName])
+		   }
+		 }
+		// }
+		// console.log(data)
+		 return data;
+  }
+  onClickGrid(){
+    this.isShowDataGrid=true;
+		this.isShowChart=false;
+  }
+  onClickChart(){
+    this.isShowDataGrid=false;
+		this.isShowChart=true;
+  }
+  closeHistogram(){
+    this.showHistogramModel=false
+  }
+  onAttrRowDown(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexPlus=this.attributes[index+1];
+		this.attributes[index]=rowTempIndexPlus;
+    this.attributes[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
+
 	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.attributes[index];
+    var rowTempIndexMines=this.attributes[index-1];
+		this.attributes[index]=rowTempIndexMines;
+    this.attributes[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.attributes[this.dragIndex]
+      this.attributes.splice(this.dragIndex,1)
+      this.attributes.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    }
+    
+  }
 }

@@ -263,7 +263,7 @@ export class ReportDetailComponent {
         for (const i in response) {
             let filterRef = {};
             filterRef["id"] = response[i]['id'];    
-            filterRef["itemName"] = response[i]['name'];
+            filterRef["itemName"] = response[i]['dname'];
             this.filterInfoArray[i] = filterRef;
         }
     }
@@ -338,7 +338,7 @@ export class ReportDetailComponent {
         let filterInfoNew = [];
         for (const i in response.filterInfo) {
             let pipelinetag = {};
-            pipelinetag["id"] = response.filterInfo[i].ref.uuid + "." + response.filterInfo[i].attrId;
+            pipelinetag["id"] = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
             pipelinetag["itemName"] = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
             filterInfoNew[i] = pipelinetag;
         }
@@ -957,17 +957,16 @@ export class ReportDetailComponent {
 
         let uuid = this.reportdata["uuid"];
         let version = this.reportdata["version"];
-
         let filterjson = {}
         let filterInfoArrayNew = [];
         if (this.filterInfoTags != null) {
             for (const c in this.filterInfoTags) {
                 let filterInfoRef = {};
                 let filterRef = {};
-                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split(".")[0];
+                filterInfoRef["uuid"] = this.filterInfoTags[c].id.split("_")[0];
                 filterInfoRef["type"] = "datapod";
                 filterRef["ref"] = filterInfoRef;
-                filterRef["attrId"] = this.filterInfoTags[c].id.split(".")[1];
+                filterRef["attrId"] = this.filterInfoTags[c].id.split("_")[1];
 
                 for (let i = 0; i < this.filterInfoTags.length; i++) {
                     let name = this.filterInfoTags[c].itemName.split(".")[1];
@@ -1000,10 +999,10 @@ export class ReportDetailComponent {
                 if (filterValuesName == otherName) {
                     let filterInfoRef = {};
                     let filterRef = {};
-                    filterInfoRef["uuid"] = this.filterInfoTags[d].id.split(".")[0];
+                    filterInfoRef["uuid"] = this.filterInfoTags[d].id.split("_")[0];
                     filterInfoRef["type"] = "datapod";
                     filterRef["ref"] = filterInfoRef;
-                    filterRef["attrId"] = this.filterInfoTags[d].id.split(".")[1];
+                    filterRef["attrId"] = this.filterInfoTags[d].id.split("_")[1];
                     filterRef["value"] = filterValues[c].display.split("-")[1];
                     filterInfoArrayNew.push(filterRef);
                     break;

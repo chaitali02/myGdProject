@@ -436,8 +436,7 @@ export class BatchSchedulerComponent implements OnInit {
             attribute["frequencyType"] = a.toUpperCase();
 
           let indexArr: any = [];
-          let frequencyDetails: any[] = []; debugger
-
+          let frequencyDetails: any[] = []; 
           if (this.attributes[i]["attrtype"] == "Once" || this.attributes[i]["attrtype"] == "Daily" || this.attributes[i]["attrtype"] == "Yearly") {
             frequencyDetails = this.attributes[i].frequencyDetail;
             console.log("asfghg");
@@ -766,7 +765,6 @@ export class BatchSchedulerComponent implements OnInit {
   }
 
   onUpdateStartDate(startdate: Date, index: any) {
-    debugger
     this.attributes[index].endDate = "";
     this.attributes[index].scheduleChg = "Y";
     this.minimumDate = startdate;

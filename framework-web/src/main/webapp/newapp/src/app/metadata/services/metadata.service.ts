@@ -9,7 +9,7 @@ import { SharedService } from '../../shared/shared.service';
 @Injectable()
 
 export class MetadataService {
-
+  
   constructor(@Inject(Http) private http: Http, private _sharedService: SharedService) { }
 
   getFile(filename: String): Observable<any[]> {
@@ -60,4 +60,14 @@ export class MetadataService {
   })
    .catch(this.handleError);
   }
+
+  getNumRowsbyExec(uuid:Number, version:String, type:String): Observable<any[]> {
+    let url ='metadata/getNumRowsbyExec?action=view&execUuid='+uuid+'&execVersion='+version+'&type='+type;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+
 }

@@ -33,6 +33,7 @@ import { RelationComponent } from './relation/relation.component';
 import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 import { StorageServiceModule } from 'angular-webstorage-service'
 import { DialogModule } from 'primeng/components/dialog/dialog';
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 
 @NgModule({
     imports: [
@@ -52,7 +53,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         GrowlModule,
         TooltipModule,
         StorageServiceModule,
-        DialogModule        
+        DialogModule,
+        DragDropModule        
     ],
     declarations: [
         DataPreparationComponent,
