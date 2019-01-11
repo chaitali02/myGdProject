@@ -1995,7 +1995,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                ingest : {name:'ingest', label: 'Ingest'},
                ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
              }
-          
+             
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};

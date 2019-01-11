@@ -15,7 +15,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
     $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType; 
   }
-  debugger
+  
   $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;

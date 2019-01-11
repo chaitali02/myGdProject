@@ -694,7 +694,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.calculateHistrogram=function(row){
-		debugger
 		$scope.histogramDetail=row.colDef;
 		$scope.isShowDataGrid=false;
 		$scope.isShowChart=false;

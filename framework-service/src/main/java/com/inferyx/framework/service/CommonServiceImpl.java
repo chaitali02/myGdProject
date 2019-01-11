@@ -1734,7 +1734,7 @@ public class CommonServiceImpl <T> {
 	 }
 
 	public Object resolveName(Object object, MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-		return resolveName(object, type, 3, 0);
+		return resolveName(object, type, 4, 0);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -1749,6 +1749,9 @@ public class CommonServiceImpl <T> {
 			return null;
 		}
 		if(object != null) {
+			if(object instanceof TaskOperator) {
+				System.out.println();
+			}
 			Method [] methodList = object.getClass().getMethods();
 			ArrayList listObj = null;
 			Class [] interfaces = null;

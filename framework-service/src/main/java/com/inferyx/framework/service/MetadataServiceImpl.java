@@ -2006,12 +2006,17 @@ public class MetadataServiceImpl {
 		if (uuid != null && !uuid.isEmpty()) {
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
 		}
-		List<DataStore> datastoreList = new ArrayList<>();
-		datastoreList = (List<DataStore>) mongoTemplate.find(query, DataStore.class);
 		
-		
-		return datastoreList;
-
+		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
+		if(datastoreList != null && !datastoreList.isEmpty()) {
+			List<DataStore> resolvedDatastoreList = new ArrayList<>();
+			for(DataStore dataStore : datastoreList) {
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStore.getUuid(), dataStore.getVersion(), MetaType.datastore.toString(), "Y");
+				resolvedDatastoreList.add(dataStore);
+			}		
+			return resolvedDatastoreList;
+		}
+		return null;
 	}
 
 	public List<ParamListHolder> getParamListByDag(String dagUuid, String dagVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
