@@ -12,7 +12,7 @@
                     <div class="caption">
                         <i class="icon-magnifier"></i>Search Criteria</div>
                     <div class="tools">
-                        <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refreshSearchCriteria(false)"
+                        <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshSearchCriteria()"
                             data-original-title="" title="">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
@@ -32,13 +32,14 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <label class="control-label" style="padding-right: 5%;">
-                                                <input type="radio" [(ngModel)]="searchForm.radioSelectedType" (change)="onRadioBtnChange(types[0].value)"
-                                                    [checked]="true" name="selectedType" [value]="types[0].value">
+                                                <input type="radio" ng-control="searchForm.selectedTypeRadio" (change)="onRadioBtnChange(types[0].value)"
+                                                    [checked]="true" name="selectedTypeRadio" [value]="types[0].value">
                                                 {{types[0].caption}}
                                             </label>
                                             <label class="control-label">
-                                                <input type="radio" [(ngModel)]="searchForm.radioSelectedType" (change)="onRadioBtnChange(types[1].value)"
-                                                    name="selectedType" [value]="types[1].value"> {{types[1].caption}}
+                                                <input type="radio" ng-control="searchForm.selectedTypeRadio" (change)="onRadioBtnChange(types[1].value)"
+                                                    name="selectedTypeRadio" [value]="types[1].value">
+                                                {{types[1].caption}}
                                             </label>
                                         </div>
                                     </div>
@@ -56,8 +57,8 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Type</label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <label class="control-label" style="padding-right: 5%;">
-                                                <input type="radio" [(ngModel)]="searchForm.radioSelectedType"
-                                                    [checked]="true" name="selectedType" [value]="types[2].value">
+                                                <input type="radio" ng-control="searchForm.radioSelectedType" [checked]="true"
+                                                    name="selectedType" [value]="types[2].value">
                                                 {{types[2].caption}}
                                             </label>
                                         </div>
@@ -88,7 +89,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <p-dropdown [options]="allNameDq" [(ngModel)]="searchForm.selectedName"
                                                 name="selectedName" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                                [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [disabled]="mode == 'false'" placeholder="-Select-" (onChange)="onDqNameChange()">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -97,7 +98,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <p-dropdown [options]="allNameRule" [(ngModel)]="searchForm.selectedRuleName"
                                                 name="selectedRuleName" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                (onChange)="onRuleNameChange()">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -106,7 +108,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <p-dropdown [options]="allNameRecon" [(ngModel)]="searchForm.selectedReconName"
                                                 name="selectedReconName" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                (onChange)="onReconNameChange()">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -118,7 +121,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
                                                 name="endDate" [showTime]="true" [utc]="true" hourFormat="12"
-                                                [disabled]="mode == 'true'" [showIcon]="true">
+                                                [disabled]="mode == 'true'" [showIcon]="true" (onSelect)="onUpdateEndDate()">
                                             </p-calendar>
                                         </div>
                                     </div>
@@ -133,7 +136,7 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <input type="submit" class="btn btn-success" value="Search" name="submit"
-                                                [disabled]="isSelect" />
+                                                [disabled]="isSubmitDisable" />
                                             <div class="spinner" style="float:right; padding-top:2%" *ngIf="isInProgress">
                                                 <div class="bounce1"></div>
                                                 <div class="bounce2"></div>
@@ -162,7 +165,7 @@
                         <i class=""></i>Compare Results
                     </div>
                     <div class="tools">
-                        <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refreshCompareResult(false)"
+                        <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshCompareResult()"
                             data-original-title="" title="">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
