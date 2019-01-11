@@ -19,6 +19,11 @@ import { AppConfig } from '../app.config';
 })
 
 export class DataQualityResultComponent {
+  showKnowledgeGraph: boolean;
+  isHomeEnable: boolean;
+  numRows: string;
+  downloadFormatArray : any[];
+  displayDialogBox : boolean;
   runMode: any;
   baseUrl: any;
   typeJointJs: any;
@@ -34,8 +39,11 @@ export class DataQualityResultComponent {
   params: any
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
-  constructor(private _config : AppConfig, private http : Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
+  constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
+    this.showKnowledgeGraph = false;
+    this.isHomeEnable = false;
+    this.displayDialogBox = false
     this.isgraphShow = false;
     this.istableShow = false;
     this.breadcrumbDataFrom = [
@@ -47,12 +55,13 @@ export class DataQualityResultComponent {
         "caption": "Result ",
         "routeurl": "/app/list/dqexec"
       },
-
       {
         "caption": "",
         "routeurl": null
       }
     ]
+    this.downloadFormatArray = [
+      {"value" : "excel", "label" : "excel"}]
     this.params = {
       "typeLabel": "RuleGroup",
       "url": "dataqual/getdqExecBydqGroupExec?",
@@ -65,7 +74,6 @@ export class DataQualityResultComponent {
       this._type = params['type'];
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
-
   }
 
   getOneByUuidAndVersion(id, version, type) {
@@ -107,6 +115,7 @@ export class DataQualityResultComponent {
       this.isgraphShow = true;
     }
   }
+
   public goBack() {
     if (this.istableShow == true) {
       this._location.back();
@@ -122,41 +131,39 @@ export class DataQualityResultComponent {
   }
 
   downloadResult(){
+    this.displayDialogBox = true;
+  }
+
+  submitDialogBox() {
     this.uuidJointJs = this.d_tableRenderComponent.uuid;
     this.versionJointJs = this.d_tableRenderComponent.version;
     this.typeJointJs = this.d_tableRenderComponent.type;
-    
-    this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'ruleexec')
-    .subscribe(
-    response => {
-        this.onSuccessgetNumRowsbyExec(response);
-    },
-    error => console.log("Error :: " + error)
-    );
-
-  }
-
-  onSuccessgetNumRowsbyExec(response){
-    this.runMode = response.runMode;
-    this.downloadResult1();
-  }
-
-  downloadResult1(){
 
     const headers = new Headers();
-    this.http.get(this.baseUrl+'/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode='+this.runMode,
-    { headers: headers, responseType: ResponseContentType.Blob })
-    .toPromise()
-    .then(response => this.saveToFileSystem(response));
+    this.http.get(this.baseUrl + '/dataqual/download?action=view&dataQualExecUUID=' + this.uuidJointJs + '&dataQualExecVersion=' + this.versionJointJs + '&rows='+this.numRows,
+      { headers: headers, responseType: ResponseContentType.Blob })
+      .toPromise()
+      .then(response => this.saveToFileSystem(response));
   }
 
-  saveToFileSystem(response){
+  saveToFileSystem(response) {
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
     const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
     saveAs(blob, filename);
-}
+  }
+
+  showMainPage(){debugger
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showKnowledgeGraph = false;
+  }
+
+  showDagGraph(uuid,version){debugger
+    this.isHomeEnable = true;
+    this.showKnowledgeGraph = true;
+  }
 }
 
 
