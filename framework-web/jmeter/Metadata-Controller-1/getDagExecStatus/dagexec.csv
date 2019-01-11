@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="344" lt="344" ts="1502345383090" s="true" lb="dagexec" rc="200" rm="OK" tn="getDagExecStatus 4-1" dt="" by="295"/>
-<httpSample t="120" lt="120" ts="1502345383618" s="true" lb="dagexec" rc="200" rm="OK" tn="getDagExecStatus 4-1" dt="" by="295"/>
-<httpSample t="40" lt="40" ts="1502345383790" s="true" lb="dagexec" rc="200" rm="OK" tn="getDagExecStatus 4-1" dt="" by="293"/>
-<httpSample t="74" lt="74" ts="1502345383835" s="true" lb="dagexec" rc="200" rm="OK" tn="getDagExecStatus 4-1" dt="" by="294"/>
-<httpSample t="48" lt="48" ts="1502345383956" s="true" lb="dagexec" rc="200" rm="OK" tn="getDagExecStatus 4-1" dt="" by="295"/>
-
-</testResults>

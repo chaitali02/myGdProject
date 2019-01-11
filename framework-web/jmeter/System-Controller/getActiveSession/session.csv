@@ -1,6 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
-1505907194892,91,getActiveSession,200,OK,getActiveSession 3-1,text,true,,1981,179,1,7,91,0,1
-1505907194986,82,getActiveSession,200,OK,getActiveSession 3-1,text,true,,1981,179,1,6,82,0,0
-1505907195068,64,getActiveSession,200,OK,getActiveSession 3-1,text,true,,1981,179,1,5,64,0,0
-1505907195133,29,getActiveSession,200,OK,getActiveSession 3-1,text,true,,1981,179,1,4,29,0,0
-1505907195166,52,getActiveSession,200,OK,getActiveSession 3-1,text,true,,1981,179,1,4,52,0,0

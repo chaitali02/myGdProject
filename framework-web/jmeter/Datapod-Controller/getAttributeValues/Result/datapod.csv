@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="955" lt="955" ts="1502188240961" s="true" lb="datapod" rc="200" rm="OK" tn="getAttributeValues 2-1" dt="text" by="1023"/>
-<httpSample t="421" lt="420" ts="1502188241917" s="true" lb="datapod" rc="200" rm="OK" tn="getAttributeValues 2-1" dt="text" by="1024"/>
-<httpSample t="451" lt="451" ts="1502188242338" s="true" lb="datapod" rc="200" rm="OK" tn="getAttributeValues 2-1" dt="text" by="1024"/>
-<httpSample t="489" lt="489" ts="1502188242790" s="true" lb="datapod" rc="200" rm="OK" tn="getAttributeValues 2-1" dt="text" by="1025"/>
-<httpSample t="485" lt="485" ts="1502188243280" s="true" lb="datapod" rc="200" rm="OK" tn="getAttributeValues 2-1" dt="text" by="1024"/>
-
-</testResults>

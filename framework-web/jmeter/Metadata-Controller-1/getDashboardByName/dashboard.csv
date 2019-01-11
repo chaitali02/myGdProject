@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="355" lt="346" ts="1502345383086" s="true" lb="dashboard" rc="200" rm="OK" tn="getDashboardByName 16-1" dt="text" by="1729"/>
-<httpSample t="83" lt="83" ts="1502345383610" s="true" lb="dashboard" rc="200" rm="OK" tn="getDashboardByName 16-1" dt="text" by="1730"/>
-<httpSample t="108" lt="108" ts="1502345383717" s="true" lb="dashboard" rc="200" rm="OK" tn="getDashboardByName 16-1" dt="text" by="1730"/>
-<httpSample t="123" lt="123" ts="1502345383830" s="true" lb="dashboard" rc="200" rm="OK" tn="getDashboardByName 16-1" dt="text" by="1729"/>
-<httpSample t="73" lt="72" ts="1502345383961" s="true" lb="dashboard" rc="200" rm="OK" tn="getDashboardByName 16-1" dt="text" by="1728"/>
-
-</testResults>
