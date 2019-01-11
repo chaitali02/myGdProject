@@ -254,7 +254,7 @@ export class DataProfileGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
   enableEdit(uuid, version) {
-    this.showProfileGroupePage()
+    //this.showProfileGroupePage()
     this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, 'false']);
     this.dropdownSettings = {
       singleSelection: false,
@@ -293,20 +293,14 @@ export class DataProfileGroupDetailComponent {
 
 	}
 
-	showHome(uuid, version, mode) {
-    this.showProfileGroupePage();
-    this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, mode]);
-		// $state.go('createprofilegroup', {
-		// 	id: uuid,
-		// 	version: version,
-		// 	mode: mode
-		// });
+	showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
   }
-  showProfileGroupGraph(uuid, version) {
-		this.showProfileGroup = false;
-		this.showgraphdiv = true;
-		this.graphDataStatus = true;
-		this.showProfileGroupForm = false;
-	}
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 	
 }

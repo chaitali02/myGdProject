@@ -17,6 +17,8 @@ import { DependsOn } from './dependsOn'
 })
 
 export class DataProfileDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -330,6 +332,15 @@ export class DataProfileDetailComponent {
     };
 
   }
+  showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
 
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 
 }
