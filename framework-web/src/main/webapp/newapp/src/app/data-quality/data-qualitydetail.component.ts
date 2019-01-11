@@ -991,7 +991,7 @@ export class DataQualityDetailComponent {
     )
   }
 
-  showMessage(msg, msgtype, msgsumary) {
+  showMessage(msg, msgtype, msgsumary){
     this.isSubmit = "false";
     this.IsProgerssShow = "false";
     this.msgs = [];
@@ -1006,13 +1006,13 @@ export class DataQualityDetailComponent {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
   }
 
-  showMainPage(){debugger
+  showMainPage(){
     this.isHomeEnable = false
    // this._location.back();
    this.showGraph = false;
   }
 
-  showDagGraph(uuid,version){debugger
+  showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
   }

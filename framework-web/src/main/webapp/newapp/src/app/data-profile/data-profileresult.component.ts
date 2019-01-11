@@ -20,8 +20,12 @@ import { AppConfig } from '../app.config';
 })
     
   export class DataProfileresultComponent {
+  showHome: boolean =true;
+  showKnowledgeGraph: boolean;
+  isHomeEnable: boolean;
+  isDownloadModel: boolean;
   runMode: any;
-
+  download: {};
   downloadType: any;
   downloadVersion: any;
   downloadUuid: any;
@@ -41,6 +45,10 @@ import { AppConfig } from '../app.config';
       this.baseUrl = _config.getBaseUrl();
       this.isgraphShow=false;
       this.istableShow=false;
+      this.download={}
+      this.download["format"]=["excel"]
+      this.download["rows"]=100
+      this.download["selectFormat"]='excel'
       this.breadcrumbDataFrom=[{
         "caption":"Data Profiling ",
         "routeurl":"/app/list/profileexec"
@@ -124,7 +132,9 @@ import { AppConfig } from '../app.config';
         }
        }
     }
-    
+    opendownloadResult(){
+      this.isDownloadModel=true
+    }
     downloadProfileResult(){
       this.downloadUuid = this.d_tableRenderComponent.uuid;
       this.downloadVersion = this.d_tableRenderComponent.version;
@@ -146,7 +156,7 @@ import { AppConfig } from '../app.config';
 
   downloadResult(){
     const headers = new Headers();
-    this.http.get(this.baseUrl+'/profile/download?action=view&profileExecUUID=' + this.downloadUuid + '&profileExecVersion=' + this.downloadVersion + '&mode='+this.runMode,
+    this.http.get(this.baseUrl+'/profile/download?action=view&profileExecUUID=' + this.downloadUuid + '&profileExecVersion=' + this.downloadVersion + '&mode='+this.runMode+ '&row='+this.download["rows"]+'&formate='+this.download["selectFormat"],
     { headers: headers, responseType: ResponseContentType.Blob })
     .toPromise()
     .then(response => this.saveToFileSystem(response));
@@ -158,6 +168,18 @@ import { AppConfig } from '../app.config';
       const filename = parts[1];
       const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
       saveAs(blob, filename);
+  }
+  showMainPage(){
+    this.showHome=true
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showKnowledgeGraph = false;
+  }
+
+  showGraph(uuid,version){
+    this.showHome=false
+    this.isHomeEnable = true;
+    this.showKnowledgeGraph = true;
   }
 }
  

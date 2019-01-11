@@ -76,8 +76,8 @@ export class DataQualityGroupDetailComponent {
       this.version = params['version'];
       this.mode = params['mode'];
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id, this.version);       
         this.getAllLatest();
         this.dropdownSettings.disabled = this.mode == "false" ? false : true
       }
@@ -297,13 +297,13 @@ export class DataQualityGroupDetailComponent {
     this.selectedItems = []
   }
   
-  showMainPage(){debugger
+  showMainPage(){
     this.isHomeEnable = false
    // this._location.back();
    this.showGraph = false;
   }
 
-  showDagGraph(uuid,version){debugger
+  showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
   }

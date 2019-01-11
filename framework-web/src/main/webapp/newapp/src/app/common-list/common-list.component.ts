@@ -393,7 +393,7 @@ export class CommonListComponent {
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl], { relativeTo: this.activeroute });
     }
   }
-  view(uuid, version) {debugger
+  view(uuid, version) {
     if (this.parentType == "rule") {
       this.router.navigate(["../../../businessRules/paramlist", this.parentType, uuid, version, 'true'], { relativeTo: this.activeroute });
     }

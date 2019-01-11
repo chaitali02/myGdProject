@@ -16,6 +16,12 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class DataProfileGroupDetailComponent {
+  showProfileGroupForm: boolean;
+  graphDataStatus: boolean;
+  showgraphdiv: boolean;
+  showProfileGroup: boolean;
+  showGraph: boolean;
+  isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -248,6 +254,7 @@ export class DataProfileGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
   enableEdit(uuid, version) {
+    //this.showProfileGroupePage()
     this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, 'false']);
     this.dropdownSettings = {
       singleSelection: false,
@@ -278,4 +285,22 @@ export class DataProfileGroupDetailComponent {
   clear(){
     this.selectedItems=[]
   }
+  showProfileGroupePage() {
+		this.showProfileGroup = true;
+		this.showgraphdiv = false;
+		this.graphDataStatus = false;
+		this.showProfileGroupForm = true;
+
+	}
+
+	showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+	
 }
