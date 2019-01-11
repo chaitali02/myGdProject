@@ -56,6 +56,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.predict.versions = [];
   $scope.isshowPredict = false;
   $scope.sourceTypes = ["datapod", "dataset","rule"];
+  $scope.encodingTypes=["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
   $scope.selectSourceType=$scope.sourceTypes[0];
   $scope.targetTypes = ["datapod","file"];
   $scope.selectTargetType=$scope.targetTypes[0]; 
@@ -420,7 +421,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       //   selectLabel.attributeId = response.labelInfo.attrId;
       //   $scope.selectLabel = selectLabel;
       // }
-
+      $scope.selectEncodingType=response.encodingType;    
       var selectTarget={};
       $scope.selectTarget=null;
       selectTarget.uuid=response.target.ref.uuid;
@@ -536,6 +537,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.allModel =[];
     $scope.allsourceLabel=null;
     $scope.selectLabel=null;
+    $scope.selectEncodingType=null;
     setTimeout(function () {
       $scope.getAllLetestModel();
       $scope.getAllLetestSource();
@@ -573,7 +575,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     predictJson.locked = $scope.predictData.locked;
     predictJson.published=$scope.predictData.published; 
     predictJson.includeFeatures=$scope.predictData.includeFeatures;
-
+    predictJson.encodingType =$scope.selectEncodingType;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
