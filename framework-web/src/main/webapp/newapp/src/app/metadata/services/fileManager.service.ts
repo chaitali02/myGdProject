@@ -26,7 +26,6 @@ export class FileManagerService {
     }
 
     uploadFile(fd, filename, type, uuid, version, fileType, dataSourceUuid) {
-        debugger
         let baseUrl = "http://localhost:8080";
         var url = baseUrl + '/common/upload?action=edit&fileName=' + filename + '&type=' + type + '&uuid=' + uuid + '&version=' + version + '&fileType=' + fileType + '&dataSourceUuid=' + dataSourceUuid;
         let body = fd;

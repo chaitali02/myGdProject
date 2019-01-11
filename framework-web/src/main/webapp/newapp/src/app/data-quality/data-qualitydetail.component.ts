@@ -16,6 +16,12 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class DataQualityDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  attributesArray: any[];
+  attributesArrayRhs: any;
+  attributesArrayLhs: any;
+  isNullArray: { 'value': string; 'label': string; }[];
   paramlistArray: any[];
   functionArray: any[];
   dialogAttributeName: any;
@@ -27,7 +33,6 @@ export class DataQualityDetailComponent {
   rhsTypeArray: { 'value': string; 'label': string; }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
   rhsFormulaArray: any[];
-  attributesArray: any[];
   lhsFormulaArray: any[];
   IsProgerssShow: string;
   checkboxModelexecution: boolean;
@@ -72,6 +77,8 @@ export class DataQualityDetailComponent {
   IsSelectSoureceAttr: any
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataQualityService: DataQualityService) {
     this.dqdata = {};
+    this.showGraph = false
+    this.isHomeEnable = false
     this.displayDialogBox = false;
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
@@ -90,6 +97,7 @@ export class DataQualityDetailComponent {
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
       { 'value': 'IN', 'label': 'IN' },
       { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' },
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -119,6 +127,10 @@ export class DataQualityDetailComponent {
       { 'value': 'Double', 'label': 'Double' },
       { 'value': 'Date', 'label': 'Date' }
     ];
+    this.isNullArray = [
+      { 'value': 'NULL', 'label': 'NULL' },
+      { 'value': 'NOT NULL', 'label': 'NOT NULL' }
+    ]
     this.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false
@@ -150,8 +162,8 @@ export class DataQualityDetailComponent {
       this.version = params['version'];
       this.mode = params['mode'];
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllLatest()
       }
       else {
@@ -163,7 +175,6 @@ export class DataQualityDetailComponent {
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dq']);
-
   }
   changeType() {
     this.selectAttribute = null;
@@ -300,7 +311,7 @@ export class DataQualityDetailComponent {
       error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.dqdata.name
+    this.breadcrumbDataFrom[2].caption = response.dqdata.name;
     this.dqdata = response.dqdata;
     this.dataqualitycompare = response.dqdata;
     this.createdBy = response.dqdata.createdBy.ref.name
@@ -359,7 +370,7 @@ export class DataQualityDetailComponent {
 
         else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'datapod') {
           this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+            .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
             error => console.log("Error ::", error))
           let lhsAttri = {}
           lhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
@@ -394,7 +405,7 @@ export class DataQualityDetailComponent {
 
         else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
           this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+            .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
             error => console.log("Error ::", error))
 
           let rhsAttri1 = {}
@@ -528,7 +539,6 @@ export class DataQualityDetailComponent {
       dialogAttriNameObj["value"]["label"] = response[i].attrName;
       dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
       dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
-
       this.dialogAttriNameArray[i] = dialogAttriNameObj;
     }
   }
@@ -580,7 +590,7 @@ export class DataQualityDetailComponent {
     }
   }
 
-  onSuccessgetAllAttributeBySourceLhs(response) {
+  onSuccessgetAllAttributeBySource(response) {
     this.attributesArray = []
     let temp1 = [];
     for (const i in response) {
@@ -606,7 +616,7 @@ export class DataQualityDetailComponent {
 
     else if (this.dqdata.filterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
         error => console.log("Error ::", error))
     }
 
@@ -623,10 +633,9 @@ export class DataQualityDetailComponent {
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
         error => console.log("Error ::", error))
     }
-
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
         error => console.log("Error ::", error))
     }
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'function') {
@@ -689,24 +698,33 @@ export class DataQualityDetailComponent {
     this.rhsFormulaArray = temp
   }
 
-  onSuccessgetAllAttributeBySourceRhs(response) {
-    this.attributesArray = []
-    let temp1 = [];
-    for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].dname;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].dname;
-      attributeObj["value"]["attributeId"] = response[i].attributeId;
-      temp1[i] = attributeObj
-      this.attributesArray = temp1;
-    }
-  }
+  // onSuccessgetAllAttributeBySource(response) {
+  //   this.attributesArray = []
+  //   let temp1 = [];
+  //   for (const i in response) {
+  //     let attributeObj = {};
+  //     attributeObj["label"] = response[i].dname;
+  //     attributeObj["value"] = {};
+  //     attributeObj["value"]["uuid"] = response[i].uuid;
+  //     attributeObj["value"]["label"] = response[i].dname;
+  //     attributeObj["value"]["attributeId"] = response[i].attributeId;
+  //     temp1[i] = attributeObj
+  //     this.attributesArray = temp1;
+  //   }
+  // }
+
   onChangeOperator(index) {
     this.dqdata.filterTableArray[index].rhsAttribute = null;
     if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
       this.dqdata.filterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.dqdata.filterTableArray[index].operator == 'IS'){
+			this.dqdata.filterTableArray[index].rhsType = 'string';
     }
     else{
 			this.dqdata.filterTableArray[index].rhsType = 'integer';
@@ -986,5 +1004,16 @@ export class DataQualityDetailComponent {
 
   showview(uuid, version) {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
+  }
+
+  showMainPage(){debugger
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){debugger
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

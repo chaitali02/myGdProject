@@ -17,6 +17,8 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class DataQualityGroupDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -38,6 +40,8 @@ export class DataQualityGroupDetailComponent {
   datadqgroup: any
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location, private _dataQualityService: DataQualityService) {
     this.datadqgroup = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.datadqgroup["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
@@ -64,8 +68,6 @@ export class DataQualityGroupDetailComponent {
       "routeurl": null
     }
     ]
-
-
   }
 
   ngOnInit() {
@@ -276,7 +278,33 @@ export class DataQualityGroupDetailComponent {
     };
 
   }
-  clear(){
-this.selectedItems=[]
+
+  // showMainPage(uuid, version) {
+  //   this.router.navigate(['/app/list/dqgroup']);
+  //   this.dropdownSettings = {
+  //     singleSelection: false,
+  //     text: "Select Attrubutes",
+  //     selectAllText: 'Select All',
+  //     unSelectAllText: 'UnSelect All',
+  //     enableSearchFilter: true,
+  //     classes: "myclass custom-class",
+  //     maxHeight: 110,
+  //     disabled: false
+  //   };
+
+  //}
+  clear() {
+    this.selectedItems = []
+  }
+  
+  showMainPage(){debugger
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){debugger
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }
