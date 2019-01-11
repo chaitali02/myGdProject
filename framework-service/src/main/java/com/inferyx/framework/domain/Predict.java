@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.EncodingType;
+
 /**
  * @author Ganesh
  *
@@ -28,6 +30,25 @@ public class Predict extends BaseEntity {
 	private MetaIdentifierHolder trainInfo;
 	private List<AttributeRefHolder> rowIdentifier;
 	private String includeFeatures = "N";
+	private EncodingType encodingType;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the encodingType
+	 */
+	public EncodingType getEncodingType() {
+		return encodingType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param encodingType the encodingType to set
+	 */
+	public void setEncodingType(EncodingType encodingType) {
+		this.encodingType = encodingType;
+	}
 
 	/**
 	 *
