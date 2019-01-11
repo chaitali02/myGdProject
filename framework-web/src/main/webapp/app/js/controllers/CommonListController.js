@@ -6,7 +6,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   if($stateParams.type.indexOf("exec") !=-1){
     $scope.select = $stateParams.type.toLowerCase();
     $scope.newType = $stateParams.type.toLowerCase();
-   }else if($stateParams.type.indexOf("Exec") !=-1){
+   }
+   else if($stateParams.type.indexOf("Exec") !=-1){
     $scope.select = $stateParams.type.toLowerCase();
     $scope.newType = $stateParams.type.toLowerCase();
    }
@@ -14,7 +15,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.select = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
     $scope.newType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType; 
   }
-  
+  debugger
   $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;
@@ -38,10 +39,16 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   if($scope.select =="ingestexec"){
     $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
   }
+  if($scope.select =="mapexec"){
+    $scope.privileges = privilegeSvc.privileges["mapExec"] || [];
+  }
   $scope.$on('privilegesUpdated', function (e, data) {
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
   if($scope.select =="ingestexec"){
     $scope.privileges = privilegeSvc.privileges["ingestExec"] || [];
+  }
+  if($scope.select =="mapexec"){
+    $scope.privileges = privilegeSvc.privileges["mapExec"] || [];
   }
   });
 
@@ -225,6 +232,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'ingestgroupexec':
         api = 'ingest';
         break;
+      case 'mapexec':
+        api = 'map';
+        break;
     }
     if (!api) {
       return
@@ -334,6 +344,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         break;
       case 'ingestgroupExec':
         api = 'ingest';
+        break;
+      case 'mapexec':
+        api = 'map';
         break;
     }
     if (!api) {

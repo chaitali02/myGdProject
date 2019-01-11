@@ -694,6 +694,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.calculateHistrogram=function(row){
+		debugger
 		$scope.histogramDetail=row.colDef;
 		$scope.isShowDataGrid=false;
 		$scope.isShowChart=false;
@@ -709,8 +710,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		var onSuccessGetAttrHistogram = function (response) {
 			console.log(response);
 			$scope.isShowDataGrid=false;
-		    $scope.isShowChart=true;
-			ConvertTwoDisit(response, 'bucket');
+			$scope.isShowChart=true;
+			if(row.colDef.attrType !="string"){
+				ConvertTwoDisit(response, 'bucket');
+			}
 			$scope.isHistogramInprogess=false;
 			$scope.isHistogramError=false;
 			$scope.datacol={};
