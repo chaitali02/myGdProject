@@ -41,7 +41,7 @@ export class DataQualityResultComponent {
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
-    this.showKnowledgeGraph = false;
+    this.showKnowledgeGraph = true;
     this.isHomeEnable = false;
     this.displayDialogBox = false
     this.isgraphShow = false;
@@ -154,15 +154,19 @@ export class DataQualityResultComponent {
     saveAs(blob, filename);
   }
 
-  showMainPage(){debugger
+  showMainPage(){
     this.isHomeEnable = false
    // this._location.back();
-   this.showKnowledgeGraph = false;
+   this.showKnowledgeGraph = true;
   }
 
-  showDagGraph(uuid,version){debugger
+  showDagGraph(uuid,version){
     this.isHomeEnable = true;
-    this.showKnowledgeGraph = true;
+    this.showKnowledgeGraph = false;
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
   }
 }
 
