@@ -875,12 +875,14 @@ public class DagServiceImpl {
 					targetRef = map.getTarget().getRef();
 //					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
 //					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
+					BaseEntity srcBase = (BaseEntity)commonServiceImpl.getOneByUuidAndVersion(sourceRef.getUuid(), sourceRef.getVersion(), sourceRef.getType().toString(), "N");
+					BaseEntity tgtBase = (BaseEntity)commonServiceImpl.getOneByUuidAndVersion(targetRef.getUuid(), targetRef.getVersion(), targetRef.getType().toString(), "N");
+					sourceRef.setVersion(srcBase.getVersion());
+					targetRef.setVersion(tgtBase.getVersion());
 
 					sourceRef = commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys);
 					targetRef = commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys);
 
-					commonServiceImpl.getOneByUuidAndVersion(sourceRef.getUuid(), sourceRef.getVersion(), sourceRef.getType().toString(), "N");
-					commonServiceImpl.getOneByUuidAndVersion(targetRef.getUuid(), targetRef.getVersion(), targetRef.getType().toString(), "N");
 					
 					for (AttributeMap attrMap : map.getAttributeMap()) {
 						targetAttrRef = attrMap.getTargetAttr().getRef();
