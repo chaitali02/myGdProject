@@ -1,3 +1,4 @@
+import { CompareResultComponent } from './../compareresult/compareresult.component';
 import { NgModule } from '@angular/core';
 import { CommonModule ,DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { DataProfileComponent } from './data-profile.component';
 import{DataProfileresultComponent} from './data-profileresult.component'
 import{DataProfileDetailComponent} from './data-profiledetail.component'
 import{DataProfileGroupDetailComponent} from './data-profilegroupdetail.components'
+import{CompareProfileResultComponent} from './compare-profile/compare-profileresult.component'
 import{CommonService}from '../metadata/services/common.service';
 import {JointjsService} from '../shared/components/jointjs/jointjsservice'//
 // import {jointjsGroupService} from '../shared/components/jointjsgroup/joinjsgroup.service'
@@ -39,7 +41,7 @@ import { routing1} from './data-profile-routing.module'
         DataProfileDetailComponent,
         DataProfileresultComponent,
         DataProfileGroupDetailComponent,
-       
+        CompareProfileResultComponent
     ],
     providers: [
         CommonService,
