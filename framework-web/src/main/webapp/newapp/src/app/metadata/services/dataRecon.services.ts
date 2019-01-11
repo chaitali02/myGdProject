@@ -12,7 +12,7 @@ import { AttributeHolder } from './../../metadata/domain/domain.attributeHolder'
 
 export class DataReconService {
 
-  constructor( @Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
+  constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
 
   getDataQualExecByDataqual(uuid: Number): Observable<any[]> {
     let url = '/dataQual/getDataQualExecByDataqual?action=view&dataQualUUID=' + uuid;
@@ -280,7 +280,7 @@ export class DataReconService {
               let result2 = stringValue.includes("and")
               if (result2 == true) {
                 filterInfo["rhsType"] = 'integer';
-                
+
                 let betweenValArray = []
                 betweenValArray = stringValue.split("and");
                 filterInfo["rhsAttribute1"] = betweenValArray[0];
@@ -298,5 +298,23 @@ export class DataReconService {
         console.log(response)
         return <any>reconJson;
       })
+  }
+
+  getReconExecByRecon(uuid: number, startDate: string, endDate: string): Observable<any[]> {
+    let url = '/recon/getReconExecByRecon?action=view&uuid=' + uuid + '&startDate=' + startDate + '&endDate=' + endDate;
+    return this._sharedService.getCall(url)
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
+  }
+
+  getResults(uuid: Number, version: String, type: String, mode: String, requestId?: Number): Observable<any[]> {
+    let url = '/recon/getResults?action=view&uuid=' + uuid + '&version=' + version + '&type=' + type + '&mode=' + mode + '&requestId=' + requestId;
+    return this._sharedService.getCall(url)
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
   }
 }
