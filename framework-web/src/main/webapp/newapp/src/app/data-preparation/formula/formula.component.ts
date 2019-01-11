@@ -160,7 +160,7 @@ export class FormulaComponent {
     this.formulaarray.splice(this.formulaarray.length - 1, 1);
   }
 
-  addAttribute() {debugger
+  addAttribute() {
     var len = this.formulaarray.length;
     if(this.DblClcikEditDetail !=null){
 			len =this.DblClcikEditDetail["index"];
@@ -678,7 +678,7 @@ export class FormulaComponent {
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'true']);
   }
-  onDbclcikEdit(type,index){debugger
+  onDbclcikEdit(type,index){
 		// if(!this.isEdit && !this.isAdd ){
 		// 	return false;
 		// }
