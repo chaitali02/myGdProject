@@ -8,6 +8,7 @@ import { CommonService } from '../metadata/services/common.service';
 import { Http } from '@angular/http';
 import { AppConfig } from '../app.config';
 import { RuleService } from '../metadata/services/rule.service';
+import { DataReconService } from '../metadata/services/dataRecon.services';
 
 @Component({
   selector: 'app-compareresult',
@@ -51,6 +52,10 @@ export class CompareResultComponent {
     {
       "value": "datapod",
       "caption": "Datapod"
+    },
+    {
+      "value": "recon",
+      "caption": "Rule"
     }
   ];
 
@@ -58,10 +63,12 @@ export class CompareResultComponent {
   allNameRuleGroup: any[];
   allNameRule: any[];
 
+  //for recon
+  allNameRecon: any[];
 
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
-    private _commonService: CommonService, private _dataQualityService: DataQualityService, private _metadataService: MetadataService, private _ruleService: RuleService, private datePipe: DatePipe) {
+    private _commonService: CommonService, private _dataQualityService: DataQualityService, private _metadataService: MetadataService, private _ruleService: RuleService, private _reconService: DataReconService, private datePipe: DatePipe) {
 
     this._activatedRoute.params.subscribe((params: Params) => {
       this.type = (params['type']).toLowerCase();
@@ -86,6 +93,11 @@ export class CompareResultComponent {
     // for rule
     this.allNameRuleGroup = [];
     this.allNameRule = [];
+
+    //for recon
+    this.allNameRecon = [];
+
+    
   }
 
   populateBreadCrumb(): any {
@@ -115,6 +127,19 @@ export class CompareResultComponent {
       ];
       this.getAllLatest(this.type);
       this.getAllLatest(this.type + "group");
+    }
+    else if (this.type == 'recon') {
+      this.breadcrumbDataFrom = [
+        {
+          "caption": "Data Reconcilliation",
+          "routeurl": "/app/list/recon"
+        },
+        {
+          "caption": "Compare Results",
+          "routeurl": "/app/list/recon"
+        }
+      ];
+      this.getAllLatest(this.type);
     }
   }
 
@@ -173,6 +198,17 @@ export class CompareResultComponent {
         this.allNameRule[i] = ver;
       }
     }
+    else if (type == 'recon') {
+      this.allNameRecon = [];
+      for (const i in response) {
+        let ver = {};
+        ver["label"] = response[i]['name'];
+        ver["value"] = {};
+        ver["value"]["label"] = response[i]['name'];
+        ver["value"]["uuid"] = response[i]['uuid'];
+        this.allNameRecon[i] = ver;
+      }
+    }
 
   }
 
@@ -184,7 +220,6 @@ export class CompareResultComponent {
     this.allsource = [];
     this.colsSourcedata = [];
     this.colsSource = [];
-
 
     let startDate;
     let endDate;
@@ -219,12 +254,27 @@ export class CompareResultComponent {
         response => { this.onSuccessgetRuleExecByRule(response) },
         error => console.log("Error :: " + error));
     }
-    // else if (this.searchForm.radioSelectedType == 'rule') {
-    //   this._ruleService.getRuleExecByRule(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
-    //     response => { this.onSuccessgetDataQualExecByDataqual1(response) },
-    //     error => console.log("Error :: " + error));
-    // }
+    else if (this.type == 'recon') {
+      this._reconService.getReconExecByRecon(this.searchForm.selectedReconName.uuid, startDate, endDate).subscribe(
+        response => { this.onSuccessgetReconExecByRecon(response) },
+        error => console.log("Error :: " + error));
+    }
 
+  }
+  onSuccessgetReconExecByRecon(response: any[]): any {
+    this.isInProgress = false;
+    this.alltargetTemp = response;
+    this.allsource = [];
+    for (const i in response) {
+      let ver = {};
+      ver["label"] = response[i]['createdOn'];
+      ver["value"] = {};
+      ver["value"]["label"] = response[i]['createdOn'];
+      ver["value"]["uuid"] = response[i]['uuid'];
+      ver["value"]["version"] = response[i]['version'];
+      this.allsource[i] = ver;
+    }
+    this.alltarget = [];
   }
 
   onSuccessgetDataQualExec(response: any[]): any {
@@ -272,6 +322,11 @@ export class CompareResultComponent {
         response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
         error => console.log("Error :: " + error));
     }
+    else if (this.type == "recon") {
+      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "reconexec").subscribe(
+        response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
+        error => console.log("Error :: " + error));
+    }
   }
 
   onChangeTarget(selectedTarget: any) {
@@ -289,6 +344,11 @@ export class CompareResultComponent {
         response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
         error => console.log("Error :: " + error));
     }
+    else if (this.type == "recon") {
+      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "reconexec").subscribe(
+        response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
+        error => console.log("Error :: " + error));
+    }
   }
 
   onSuccessgetNumRowsbyExec(response: any, selectedSourceTarget: any, compareType: String): any {
@@ -296,10 +356,41 @@ export class CompareResultComponent {
     if (this.type == "rule") {
       this._ruleService.getResults(selectedSourceTarget.version, selectedSourceTarget.uuid, 0, 100).subscribe(
         response => { this.onSuccessGetSummary(response, compareType) },
-        error => console.log("Error :: " + error));
+        error => {
+          {
+            if (compareType == 'source') {
+              this.sourceShowProgress = false;
+              this.isSourceDataError = true;
+              this.sourceDataMessage = 'No data available';
+            }
+            else if (compareType == 'target') {
+              this.targetShowProgress = false;
+              this.isTargetDataError = true;
+              this.targetDataMessage = 'No data available';
+            }
+            console.log("Error :: " + error)
+          }
+        });
     }
     else if (this.type == "dq") {
       this._dataQualityService.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, "dqexec", response.runMode).subscribe(
+        response => { this.onSuccessGetSummary(response, compareType) },
+        error => {
+          if (compareType == 'source') {
+            this.sourceShowProgress = false;
+            this.isSourceDataError = true;
+            this.sourceDataMessage = 'No data available';
+          }
+          else if (compareType == 'target') {
+            this.targetShowProgress = false;
+            this.isTargetDataError = true;
+            this.targetDataMessage = 'No data available';
+          }
+          console.log("Error :: " + error)
+        });
+    }
+    else if (this.type == "recon") {
+      this._reconService.getResults(selectedSourceTarget.uuid, selectedSourceTarget.version, "reconexec", response.runMode).subscribe(
         response => { this.onSuccessGetSummary(response, compareType) },
         error => {
           if (compareType == 'source') {

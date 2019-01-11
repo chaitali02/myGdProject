@@ -54,6 +54,7 @@ import { CompareResultComponent } from '../compareresult/compareresult.component
 import { DataQualityService } from '../metadata/services/dataQuality.services';
 import { MetadataService } from '../metadata/services/metadata.service';
 import { RuleService } from '../metadata/services/rule.service';
+import { DataReconService } from '../metadata/services/dataRecon.services';
 // import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
 // import { SystemMonitoringComponent } from '../system-monitoring/system-monitoring.component'
 @NgModule({
@@ -112,7 +113,8 @@ import { RuleService } from '../metadata/services/rule.service';
         CommonService,
         DataQualityService,
         MetadataService,
-        RuleService
+        RuleService,
+        DataReconService
     ],
     entryComponents: [],
 })
