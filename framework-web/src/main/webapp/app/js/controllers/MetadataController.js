@@ -44,6 +44,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	else {
 		$scope.isAdd = true;
 		$scope.mode="false";
+		$scope.isDragable = "true";
+
 	}
 	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
@@ -742,6 +744,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.showSampleTable = function (data) {
+		
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true

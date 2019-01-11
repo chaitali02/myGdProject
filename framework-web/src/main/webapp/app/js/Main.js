@@ -179,7 +179,7 @@ InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore'
     }
     $timeout(update, 1000);
 
-    console.log("Time until reaching run phase: ", Date.now() - $window.timerStart);
+    //console.log("Time until reaching run phase: ", Date.now() - $window.timerStart);
 }]);
 
 InferyxApp.factory('commentService', function () {
@@ -610,16 +610,26 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     AppRoleService.getLatestByUuid($rootScope.setUseruuid, "user").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
         if(response)   
-        $scope.username = response.firstName
-    }
-
+        $scope.username = response.firstName;
+        $scope.userdata=response;
+    }   
+   
     AppRoleService.getAppRole($rootScope.setUserName).then(function (response) { onAppSuccess(response.data) })
     var onAppSuccess = function (response) {
         $scope.AppData = response
        
             $scope.RoleData = response[0].roleInfo
             $scope.selectedRole = response[0].roleInfo[0]
-            $scope.selectedApp = response[0]
+            $scope.selectedApp = response[0];
+            
+            for(var i=0;i<response.length;i++){
+                if(response[i].defaultAppId !=null){
+                    console.log("Y"+response[i].appId.ref.uuid)
+                    $scope.selectedApp = response[i];
+                    break;
+                }
+            }
+            
             if(!localStorage.isAppRoleExists){
             $rootScope.appUuid = $scope.selectedApp.appId.ref.uuid;
             localStorage.appName = $scope.selectedApp.appId.ref.name;
