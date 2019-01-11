@@ -30,7 +30,6 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
 import com.inferyx.predict.domain.ModelTrainDomain;
-import com.inferyx.predict.module.TomcatStarter;
 
 /**
  * @author joy
