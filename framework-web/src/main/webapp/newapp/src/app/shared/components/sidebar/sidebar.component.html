@@ -105,7 +105,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a [routerLink]="['dataQuality/compare']">
+          <a [routerLink]="['compare/dq']">
             <span class="title">Compare Results</span>
           </a>
         </li>
@@ -160,6 +160,11 @@
           <a [routerLink]="['list',businesrulesubmenu.parentType, businesrulesubmenu.type]" class="nav-link" *ngIf="businesrulesubmenu.type == 'paramlist'">
             <span class="title">{{businesrulesubmenu.name}}</span>
             <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[businesrulesubmenu.type].count"></span> -->
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['compare/rule']">
+            <span class="title">Compare Results</span>
           </a>
         </li>
       </ul>
