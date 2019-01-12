@@ -26,7 +26,7 @@
                     <!-- <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'"  (click="showGraph()">
                         <i class="fa fa-sitemap" area-hidden="true"></i>
                     </a> -->
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="opendownloadResult()">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="opendownloadResult()" *ngIf="isResultTable==true">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
                     <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showHome==true? 'currentpage':'notcurrentpage'"
@@ -44,7 +44,7 @@
             </div>
             <div class="portlet-body">
                 <div *ngIf="isgraphShow">
-                    <app-jointjs-group [graphParms]="params"></app-jointjs-group>
+                    <app-jointjs-group [graphParms]="params" (downloadShow)="downloadShow($event)"></app-jointjs-group>
                 </div>
                 <div *ngIf="istableShow">
                     <app-resulttable [tableParms]="tableparms"  ></app-resulttable>

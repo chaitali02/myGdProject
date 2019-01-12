@@ -36,8 +36,9 @@ const routes: Routes = [
             { path: 'jobMonitoring', component: jobMonitoringComponent },
             { path: 'jobMonitoring/list/:type', redirectTo: 'list/:type' },
             { path: 'list/:type/JobMonitoring', redirectTo: 'JobMonitoring' },
+            //{ path: 'JobMonitoring/profileExec/:id/:version/:mode', loadChildren: 'app/job-monitoring/job-monitoring-details/job-monitoring-details.module#jobMonitoringDetailsModule' },
             { path: 'JobMonitoring', loadChildren: 'app/job-monitoring/job-monitoring-details/job-monitoring-details.module#jobMonitoringDetailsModule' },
-
+            { path: 'dataProfiling/JobMonitoring', redirectTo:'JobMonitoring' },
             { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' },
             { path: 'list/:type/admin', redirectTo: 'admin' },
             //    { path: 'registerSource', component: RegisterSourceComponent},

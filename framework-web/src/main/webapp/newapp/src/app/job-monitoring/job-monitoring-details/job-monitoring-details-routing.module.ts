@@ -40,7 +40,7 @@ const routes: Routes = [
             { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' },
             { path: 'uploadExec/:id/:version/:mode', component: UploadExecComponent, pathMatch: 'full' },
             { path: 'batchExec/:id/:version/:mode', component: BatchExecComponent, pathMatch: 'full' },
-            { path: 'ingestExec/:id/:version/:mode', component: IngestExecComponent, pathMatch: 'full' }
+            { path: 'ingestExec/:id/:version/:mode', component: IngestExecComponent, pathMatch: 'full' },
         ]
     }
 ]
