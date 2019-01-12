@@ -2147,7 +2147,11 @@ public class ModelServiceImpl {
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
 					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
-					
+
+					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
+					if(encodingDetails != null && !encodingDetails.isEmpty()) {
+						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
+					}
 					//assembling the data to for feature vector
 					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
 					
@@ -2159,7 +2163,6 @@ public class ModelServiceImpl {
 						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 						trainedModelMap.put(key, trainedModel);
 					}
-					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
 					//prediction operation
 					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
 
@@ -2174,13 +2177,13 @@ public class ModelServiceImpl {
 					} else {
 						targetTableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
 					}
-					
-					isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-							, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-							, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
-					
+					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
+					}
 						//generating datastore for datapod
 						count = rsHolder.getCountRows();
 						createDatastore(filePathUrl, predict.getName(), 
@@ -2190,11 +2193,13 @@ public class ModelServiceImpl {
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
 					} else {
 						//writing into file
-						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-								, null, null, null, null);
+						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+									, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+									, null, null, null, null);
+						}
 					}
 					
 					//dropping temp table(s)

@@ -1907,39 +1907,48 @@ public class SparkExecutor<T> implements IExecutor {
 		return valueList;
 	}
 	
+	public ResultSetHolder preparePredictDfForEncoding(ResultSetHolder rsHolder, Map<String, EncodingType> encodingDetails, boolean registerTempTable, String tempTableName) throws IOException {
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+			Dataset<Row> df = rsHolder.getDataFrame();
+			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+			for(String colName : encodingDetails.keySet()) {
+				encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+			}
+			
+			//fitting training dataframe
+			Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+			PipelineModel trngModel = pipelineTrng.fit(df);
+			df = trngModel.transform(df);
+			
+			for(String colName : encodingDetails.keySet()) {
+				df = df.drop(colName);
+				df = df.withColumnRenamed(colName+"_vec", colName);
+			}
+			
+			for(String colName : df.columns()) {
+				if(colName.endsWith("_category_index")) {
+					df = df.drop(colName);
+				}
+			}	
+			rsHolder.setDataFrame(df);
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+			if(registerTempTable) {
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+				sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+			}
+			return rsHolder;
+	}
+	
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		//getting data to be predicted
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 //		df = df.na().fill(0.0, df.columns());
-//*******************************************************************************************************************
-//*******************************************************************************************************************
-			
-			if(encodingDetails != null && !encodingDetails.isEmpty()) {
-				List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
-				for(String colName : encodingDetails.keySet()) {
-					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
-				}
-				
-				//fitting training dataframe
-				Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
-				PipelineModel trngModel = pipelineTrng.fit(df);
-				df = trngModel.transform(df);
-				
-				for(String colName : encodingDetails.keySet()) {
-					df = df.drop(colName);
-					df = df.withColumnRenamed(colName+"_vec", colName);
-				}
-				
-				for(String colName : df.columns()) {
-					if(colName.endsWith("_category_index")) {
-						df = df.drop(colName);
-					}
-				}				
-			}
-//*******************************************************************************************************************
-//*******************************************************************************************************************
+
 		//performing prediction
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
