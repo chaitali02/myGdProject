@@ -8,7 +8,10 @@
       <div class="portlet light bordered">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{dataprofilegroup.name}}
+            <i class=" icon-layers "></i>
+            <span class="caption-subject  bold "> Rule Group
+  
+            </span>
           </div>
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -103,6 +106,33 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.active" name="active" [checked]="active"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.locked" name="locked" [checked]="locked"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.published " name="published" [checked]="published"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <p-checkbox [(ngModel)]="dataprofilegroup.inParallel" name="inParallel" binary="true"></p-checkbox>
@@ -122,25 +152,7 @@
                       aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                   </div>
               </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.active" name="active" [checked]="active"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div>
 
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.published " name="published" [checked]="published"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">

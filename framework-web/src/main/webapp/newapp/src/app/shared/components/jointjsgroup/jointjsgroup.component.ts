@@ -396,6 +396,7 @@ export class JointjsGroupComponent {
         let type = cell.attributes.elementType;
         let isGroupExec;
         let isExec;
+        
         if (type.slice(-4) == 'Exec' || type.slice(-4) == 'exec') {
             if (type.slice(-9) == 'groupExec' || type.slice(-9) == 'groupexec') {
                 isGroupExec = true;
@@ -408,15 +409,17 @@ export class JointjsGroupComponent {
         if (isExec || isGroupExec) {
             let itemgroble = {}
             itemgroble["action"] = this.actionEvent
-            itemgroble["title"] = "Show Details"
-            itemgroble["type"] = "element"
+            itemgroble["title"] = "Show Details";
+            itemgroble["type"] = "element";
+            itemgroble["exectype"] =type;
             itemgroble["cell"] = cell;
-            menuItem.push(itemgroble);
+            menuItem.push(itemgroble);            
             let item = {}
             item["action"] = this.actionEvent;
             if (status && (status == 'Completed') && !isGroupExec) {
                 item["title"] = "Show Results"
                 item["type"] = "results"
+                itemgroble["exectype"] =type;
                 item["cell"] = cell;
                 menuItem.push(item);
             }
@@ -444,6 +447,13 @@ export class JointjsGroupComponent {
                 menuItem.push(item);
 
             }
+            let itemInfo={}
+            itemInfo["action"] = this.actionEvent
+            itemInfo["title"] = "Show Logs"
+            itemInfo["type"] = "element"
+            itemInfo["cell"] = cell;
+            itemInfo["exectype"] =type;
+            menuItem.push(itemInfo);
 
         }
 
@@ -451,7 +461,7 @@ export class JointjsGroupComponent {
         return menuItem;
     }
     contextMenu1(d_d3, menu, d_this) {
-
+       
         d_d3.select("#paper1").selectAll('.context-menu').data([1])
             .enter()
             .append('div')
@@ -548,16 +558,26 @@ export class JointjsGroupComponent {
         let uuid = modeldata.uuid;
         let version = modeldata.version;
         let d_this = this;
+        if(data.title=="Show Logs"){
+            let _moduleUrl 
+            let _routerUrl            
+            _moduleUrl = 'JobMonitoring'
+            _routerUrl = ((data["exectype"])+'Exec')
+            d_this.router.navigate(["/app/" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true']);
+        }
+        else{ 
         this._jointjsGroupService.getMetaIdByExecId(uuid, version, type)
             .subscribe(
                 response => {
-                    let _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
-                    let _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
-                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });
+                    let _moduleUrl 
+                    let _routerUrl                    
+                    _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
+                    _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
+                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });         
                 },
                 error => console.log("Error :: " + error)
             );
-
+        }
     }
 
     showResult(data) {

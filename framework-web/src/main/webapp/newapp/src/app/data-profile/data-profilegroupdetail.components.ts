@@ -133,6 +133,7 @@ export class DataProfileGroupDetailComponent {
 
     this.dataprofilegroup.published = response["published"] == 'Y' ? true : false
     this.dataprofilegroup.active = response["active"] == 'Y' ? true : false
+    this.dataprofilegroup.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
@@ -197,6 +198,7 @@ export class DataProfileGroupDetailComponent {
     profileJson['tags'] = tagArray;
     profileJson["active"] = this.dataprofilegroup.active == true ? 'Y' : "N"
     profileJson["published"] = this.dataprofilegroup.published == true ? 'Y' : "N"
+    profileJson["locked"] = this.dataprofilegroup.locked == true ? 'Y' : "N"
     let ruleInfo = [];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let rules = {}
