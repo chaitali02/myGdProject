@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc,CommonService) {
+DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc,CommonService,CF_ENCODINGTYPE) {
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
@@ -56,7 +56,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.predict.versions = [];
   $scope.isshowPredict = false;
   $scope.sourceTypes = ["datapod", "dataset","rule"];
-  $scope.encodingTypes=["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
+  $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
   $scope.selectSourceType=$scope.sourceTypes[0];
   $scope.targetTypes = ["datapod","file"];
   $scope.selectTargetType=$scope.targetTypes[0]; 
@@ -421,7 +421,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       //   selectLabel.attributeId = response.labelInfo.attrId;
       //   $scope.selectLabel = selectLabel;
       // }
-      $scope.selectEncodingType=response.encodingType;    
+     // $scope.selectEncodingType=response.encodingType;    
       var selectTarget={};
       $scope.selectTarget=null;
       selectTarget.uuid=response.target.ref.uuid;
@@ -461,6 +461,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var imputeMethod={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
         featureMap.id = response.featureAttrMap[i].featureMapId;
+        featureMap.encodingType= response.featureAttrMap[i].encodingType;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
@@ -537,7 +538,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.allModel =[];
     $scope.allsourceLabel=null;
     $scope.selectLabel=null;
-    $scope.selectEncodingType=null;
+   // $scope.selectEncodingType=null;
     setTimeout(function () {
       $scope.getAllLetestModel();
       $scope.getAllLetestSource();
@@ -575,7 +576,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     predictJson.locked = $scope.predictData.locked;
     predictJson.published=$scope.predictData.published; 
     predictJson.includeFeatures=$scope.predictData.includeFeatures;
-    predictJson.encodingType =$scope.selectEncodingType;
+  //  predictJson.encodingType =$scope.selectEncodingType;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -647,7 +648,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       for(var i=0;i<$scope.featureMapTableArray.length;i++){
         var featureMapObj={};
         featureMapObj.featureMapId =$scope.featureMapTableArray[i].id;
-        featureMapObj.featureDisplaySeq =i
+        featureMapObj.featureDisplaySeq =i;
+        featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature={};
         var sourceFeatureRef={};
         var targetFeature={};
