@@ -26,15 +26,17 @@ public class User extends BaseEntity
 	private List<MetaIdentifierHolder> groupInfo = new ArrayList<>();
 	/*private List<MetaIdentifierHolder> roleInfo = new ArrayList<>();*/
 	private MetaIdentifierHolder defaultGroup;
-	
+	private MetaIdentifierHolder orgInfo;
 	/**
 	 * @Ganesh
 	 *
 	 * @return the defaultGroup
 	 */
+	
 	public MetaIdentifierHolder getDefaultGroup() {
 		return defaultGroup;
 	}
+	
 	/**
 	 * @Ganesh
 	 *
@@ -42,6 +44,12 @@ public class User extends BaseEntity
 	 */
 	public void setDefaultGroup(MetaIdentifierHolder defaultGroup) {
 		this.defaultGroup = defaultGroup;
+	}
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
 	}
 	public List<MetaIdentifierHolder> getGroupInfo() {
 		return groupInfo;

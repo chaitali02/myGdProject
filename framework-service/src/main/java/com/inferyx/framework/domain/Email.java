@@ -3,20 +3,18 @@ package com.inferyx.framework.domain;
 public class Email {
 	
 	String type;
-	String emailid;
+	String emailId;
 	public String getType() {
 		return this.type;
 	}
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getEmailid() {
-		return this.emailid;
+	public String getEmailId() {
+		return this.emailId;
 	}
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	
-	
-
 }

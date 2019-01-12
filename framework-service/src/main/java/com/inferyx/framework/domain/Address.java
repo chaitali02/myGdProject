@@ -9,6 +9,7 @@ public class Address {
 	String state;
 	String country;
 	String zipcode;
+	
 	public String getType() {
 		return this.type;
 	}
@@ -51,8 +52,5 @@ public class Address {
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
-	
 
 }

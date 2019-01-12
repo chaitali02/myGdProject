@@ -117,6 +117,7 @@ import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.dao.IOperatorDao;
 import com.inferyx.framework.dao.IOperatorExecDao;
 import com.inferyx.framework.dao.IOperatorTypeDao;
+import com.inferyx.framework.dao.IOrganizationDao;
 import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.dao.IPredictDao;
@@ -481,6 +482,26 @@ public class CommonServiceImpl <T> {
 	IDeployExecDao iDeployExecDao;
 	@Autowired
 	IProcessExecDao iProcessExecDao;
+	@Autowired
+	IOrganizationDao iOrganizationDao;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iProcessExecDao
+	 */
+	public IOrganizationDao getiOrganizationDao() {
+		return iOrganizationDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iProcessExecDao the iProcessExecDao to set
+	 */
+	public void setiOrganizationDao(IOrganizationDao iOrganizationDao) {
+		this.iOrganizationDao = iOrganizationDao;
+	}
 	
 	/**
 	 * @Ganesh
