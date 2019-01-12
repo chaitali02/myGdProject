@@ -126,6 +126,7 @@ import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SimulationType;
@@ -2158,9 +2159,9 @@ public class ModelServiceImpl {
 						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 						trainedModelMap.put(key, trainedModel);
 					}
-					
+					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
 					//prediction operation
-					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid);
+					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
 
 					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
@@ -2244,6 +2245,20 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 	
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) {
+		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		for(FeatureAttrMap attrMap : featureAttrMap) {
+			if(attrMap.getEncodingType() != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), attrMap.getEncodingType());
+			}
+		}
+		if(!encodingDetails.isEmpty()) {
+			return encodingDetails;
+		}else {
+			return null;
+		}
+	}
+	
 	public String[] getMappedAttrs(List<FeatureAttrMap> mappedFeatures) {
 		String[] mappedAttrs = new String[mappedFeatures.size()];
 		
@@ -2318,7 +2333,7 @@ public class ModelServiceImpl {
 //		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 		
 		//prediction operation
-		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid);
+		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid, null);
 
 		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 		return rowIdentifierCols;
@@ -3221,7 +3236,15 @@ public class ModelServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			throw new RuntimeException(e);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
 		}
 	}
 	
@@ -3584,7 +3607,7 @@ public class ModelServiceImpl {
 		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
 		
 	
-		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid, null);
 		String query = "SELECT * FROM " + rsHolder.getTableName();
 
 		return exec.executeAndFetchByDatasource(query, appDS, query);

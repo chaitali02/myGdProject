@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -1907,12 +1908,38 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		//getting data to be predicted
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 //		df = df.na().fill(0.0, df.columns());
-		
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+			
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+				for(String colName : encodingDetails.keySet()) {
+					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+				}
+				
+				//fitting training dataframe
+				Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+				PipelineModel trngModel = pipelineTrng.fit(df);
+				df = trngModel.transform(df);
+				
+				for(String colName : encodingDetails.keySet()) {
+					df = df.drop(colName);
+					df = df.withColumnRenamed(colName+"_vec", colName);
+				}
+				
+				for(String colName : df.columns()) {
+					if(colName.endsWith("_category_index")) {
+						df = df.drop(colName);
+					}
+				}				
+			}
+//*******************************************************************************************************************
+//*******************************************************************************************************************
 		//performing prediction
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
@@ -2063,14 +2090,14 @@ public class SparkExecutor<T> implements IExecutor {
 			, double trainPercent, double valPercent, String tableName, String clientContext
 			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
-			, String trainingDfSql, String validationDfSql) throws IOException {
-		testEncode();
+			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException {
+//		testEncode();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
-
+		
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
@@ -2089,6 +2116,54 @@ public class SparkExecutor<T> implements IExecutor {
 			tempTableList.add("tempTrngDf");
 			tempTableList.add("tempValDf");
 			dropTempTable(tempTableList);
+
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+			
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+				for(String colName : encodingDetails.keySet()) {
+					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+				}
+				
+				//fitting training dataframe
+				Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+				PipelineModel trngModel = pipelineTrng.fit(trngDf);
+				trngDf = trngModel.transform(trngDf);
+				List<String> encoderCols = new ArrayList<>();
+				for(String col : encodingDetails.keySet()) {
+					encoderCols.add(col);
+				}
+				for(String nonStrngCol : fieldArray) {
+					if(!encodingDetails.keySet().contains(nonStrngCol)) {
+						encoderCols.add(nonStrngCol);
+					}
+				}
+
+				valDf = trngModel.transform(valDf);
+				
+				for(String colName : encodingDetails.keySet()) {
+					trngDf = trngDf.drop(colName);
+					trngDf = trngDf.withColumnRenamed(colName+"_vec", colName);
+					valDf = valDf.drop(colName);
+					valDf = valDf.withColumnRenamed(colName+"_vec", colName);
+				}
+				
+				for(String colName : valDf.columns()) {
+					if(colName.endsWith("_category_index")) {
+						trngDf = trngDf.drop(colName);
+						valDf = valDf.drop(colName);
+					}
+				}
+				
+				trngDf.printSchema();
+				valDf.printSchema();				
+				
+				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
+			}
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+						
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
@@ -2118,16 +2193,36 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setValidationSet(validateDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 			
+			Set<String> encodingCols = null;
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				encodingCols = encodingDetails.keySet();
+			}
+			
 			for(String col : trainingDf.columns()) {
-				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+				if(encodingCols != null 
+						&& !encodingCols.isEmpty() 
+						&& !encodingCols.contains(col)
+						&& !encodingDetails.keySet().contains(col)
+						&& !col.endsWith("_vec")
+						&& !col.endsWith("_category_index")) {
+					trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+				}
 			}
 //			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
 			trainingDf.show(false);
 			for(String col : validateDf.columns()) {
-				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+				if(encodingCols != null 
+						&& !encodingCols.isEmpty() 
+						&& !encodingCols.contains(col)
+						&& !encodingDetails.keySet().contains(col)
+						&& !col.endsWith("_vec")
+						&& !col.endsWith("_category_index")) {
+					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+				}
 			}
 //			validateDf = validateDf.na().fill(0.0,validateDf.columns());
 			validateDf.show(false);
+
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
 				StopWatch stopWatch = new StopWatch();
@@ -2139,6 +2234,7 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trainingDf);
 				}
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
+				trainedDataSet.show(false);
 				stopWatch.stop();
 				trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
 				
@@ -2148,7 +2244,9 @@ public class SparkExecutor<T> implements IExecutor {
 				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+				if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+					saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+				}
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2173,36 +2271,22 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 	
-	public Dataset<Row> encodeDataframe(Dataset<Row> df, Dataset<Row> validateDf, String inputCol, String outputCol, EncodingType encodingType, Object algoClass) throws IOException {
+	public List<PipelineStage> encodeDataframe(String inputCol, String outputCol, EncodingType encodingType,  List<PipelineStage> pipelineStageList) throws IOException {
 //		if(inputCols.length != outputCols.length) {
 //			throw new RuntimeException("The number of input columns "+inputCols.length+" must be the same as the number of output columns "+outputCols.length+".");
 //		}
-//		df.show(false);
+
 		if(encodingType.equals(EncodingType.ONEHOT)) {
-//			OneHotEncoder oneHotEncoder = new OneHotEncoder();	
-//			oneHotEncoder = oneHotEncoder.setInputCol(inputCol).setOutputCol(outputCol).setDropLast(false);
-//			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {oneHotEncoder, (PipelineStage) algoClass});
-//			PipelineModel trngModel = pipeline.fit(df);
-//			trngModel.transform(validateDf).show(false);
-			
-			StringIndexerModel indexer = new StringIndexer()
+			StringIndexer stringIndexer = new StringIndexer()
 					  .setInputCol(inputCol)
-					  .setOutputCol("category_index")
-					  .fit(df);
-			Dataset<Row> indexed = indexer.transform(df);
-			
-			System.out.println("showing indexed>>");
-			indexed.show(false);
-			
-			OneHotEncoder encoder = new OneHotEncoder().setInputCol("category_index").setOutputCol(outputCol);
+					  .setOutputCol(inputCol+"_category_index");
+			pipelineStageList.add(stringIndexer);
+		
+			OneHotEncoder encoder = new OneHotEncoder().setInputCol(inputCol+"_category_index").setOutputCol(outputCol);
+			pipelineStageList.add(encoder);
 
-			Dataset<Row> encoded = encoder.transform(indexed);
-
-			System.out.println("showing encoded>>");
-			encoded.show(false);
-			System.out.println();
 		}
-		return df;
+		return pipelineStageList;
 	}
 
 	public void testEncode() throws IOException {
@@ -2673,7 +2757,7 @@ public class SparkExecutor<T> implements IExecutor {
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
 			, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath
-			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2698,6 +2782,54 @@ public class SparkExecutor<T> implements IExecutor {
 			tempTableList.add("tempTrngDf");
 			tempTableList.add("tempValDf");
 			dropTempTable(tempTableList);
+			
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+			
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+				for(String colName : encodingDetails.keySet()) {
+					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+				}
+				
+				//fitting training dataframe
+				Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+				PipelineModel trngModel = pipelineTrng.fit(trngDf);
+				trngDf = trngModel.transform(trngDf);
+				List<String> encoderCols = new ArrayList<>();
+				for(String col : encodingDetails.keySet()) {
+					encoderCols.add(col);
+				}
+				for(String nonStrngCol : fieldArray) {
+					if(!encodingDetails.keySet().contains(nonStrngCol)) {
+						encoderCols.add(nonStrngCol);
+					}
+				}
+
+				valDf = trngModel.transform(valDf);
+				
+				for(String colName : encodingDetails.keySet()) {
+					trngDf = trngDf.drop(colName);
+					trngDf = trngDf.withColumnRenamed(colName+"_vec", colName);
+					valDf = valDf.drop(colName);
+					valDf = valDf.withColumnRenamed(colName+"_vec", colName);
+				}
+				
+				for(String colName : valDf.columns()) {
+					if(colName.endsWith("_category_index")) {
+						trngDf = trngDf.drop(colName);
+						valDf = valDf.drop(colName);
+					}
+				}
+				
+				trngDf.printSchema();
+				valDf.printSchema();				
+				
+				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
+			}
+//*******************************************************************************************************************
+//*******************************************************************************************************************
+									
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
@@ -2727,11 +2859,42 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setValidationSet(validateDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 			
-			for(String col : trainingDf.columns())
-				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+//			for(String col : trainingDf.columns())
+//				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+//
+//			for(String col : validateDf.columns())
+//				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 
-			for(String col : validateDf.columns())
-				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+			Set<String> encodingCols = null;
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				encodingCols = encodingDetails.keySet();
+			}
+			
+			for(String col : trainingDf.columns()) {
+				if(encodingCols != null 
+						&& !encodingCols.isEmpty() 
+						&& !encodingCols.contains(col)
+						&& !encodingDetails.keySet().contains(col)
+						&& !col.endsWith("_vec")
+						&& !col.endsWith("_category_index")) {
+					trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+				}
+			}
+			//trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
+			trainingDf.show(false);
+			for(String col : validateDf.columns()) {
+				if(encodingCols != null 
+						&& !encodingCols.isEmpty() 
+						&& !encodingCols.contains(col)
+						&& !encodingDetails.keySet().contains(col)
+						&& !col.endsWith("_vec")
+						&& !col.endsWith("_category_index")) {
+					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+				}
+			}
+			//validateDf = validateDf.na().fill(0.0,validateDf.columns());
+			validateDf.show(false);
+
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
@@ -2771,7 +2934,9 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+			if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+				saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+			}
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
