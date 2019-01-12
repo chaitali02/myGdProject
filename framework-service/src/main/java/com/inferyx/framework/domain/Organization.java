@@ -41,10 +41,4 @@ public class Organization extends BaseEntity {
 		this.address = address;
 	}
 	
-	
-	
-	
-	
-	
-
 }

@@ -4,8 +4,8 @@ public class Contact {
 	
 	private String title;
 	private String name;
-	private int phone;
-	private String emailid;
+	private String phone;
+	private String emailId;
 	
 	public String getTitle() {
 		return this.title;
@@ -19,20 +19,17 @@ public class Contact {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getPhone() {
+	public String getPhone() {
 		return this.phone;
 	}
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getEmailid() {
-		return this.emailid;
+	public String getEmailId() {
+		return this.emailId;
 	}
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	
-	
-	
-
 }
