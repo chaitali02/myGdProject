@@ -55,7 +55,10 @@ import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
+import org.apache.spark.ml.feature.OneHotEncoder;
 import org.apache.spark.ml.feature.RFormula;
+import org.apache.spark.ml.feature.StringIndexer;
+import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
@@ -134,6 +137,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.helper.SparkExecHelper;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -2060,6 +2064,7 @@ public class SparkExecutor<T> implements IExecutor {
 			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
 			, String trainingDfSql, String validationDfSql) throws IOException {
+		testEncode();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -2167,7 +2172,78 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public Dataset<Row> encodeDataframe(Dataset<Row> df, Dataset<Row> validateDf, String inputCol, String outputCol, EncodingType encodingType, Object algoClass) throws IOException {
+//		if(inputCols.length != outputCols.length) {
+//			throw new RuntimeException("The number of input columns "+inputCols.length+" must be the same as the number of output columns "+outputCols.length+".");
+//		}
+//		df.show(false);
+		if(encodingType.equals(EncodingType.ONEHOT)) {
+//			OneHotEncoder oneHotEncoder = new OneHotEncoder();	
+//			oneHotEncoder = oneHotEncoder.setInputCol(inputCol).setOutputCol(outputCol).setDropLast(false);
+//			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {oneHotEncoder, (PipelineStage) algoClass});
+//			PipelineModel trngModel = pipeline.fit(df);
+//			trngModel.transform(validateDf).show(false);
+			
+			StringIndexerModel indexer = new StringIndexer()
+					  .setInputCol(inputCol)
+					  .setOutputCol("category_index")
+					  .fit(df);
+			Dataset<Row> indexed = indexer.transform(df);
+			
+			System.out.println("showing indexed>>");
+			indexed.show(false);
+			
+			OneHotEncoder encoder = new OneHotEncoder().setInputCol("category_index").setOutputCol(outputCol);
 
+			Dataset<Row> encoded = encoder.transform(indexed);
+
+			System.out.println("showing encoded>>");
+			encoded.show(false);
+			System.out.println();
+		}
+		return df;
+	}
+
+	public void testEncode() throws IOException {
+		List<Row> data = Arrays.asList(
+				  RowFactory.create(0, "a"),
+				  RowFactory.create(1, "b"),
+				  RowFactory.create(2, "c"),
+				  RowFactory.create(3, "a"),
+				  RowFactory.create(4, "a"),
+				  RowFactory.create(5, "c")
+				);
+
+				StructType schema = new StructType(new StructField[]{
+				  new StructField("id", DataTypes.IntegerType, false, Metadata.empty()),
+				  new StructField("category", DataTypes.StringType, false, Metadata.empty())
+				});
+
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+				Dataset<Row> df = sparkSession.createDataFrame(data, schema);
+
+				StringIndexerModel indexer = new StringIndexer()
+				  .setInputCol("category")
+				  .setOutputCol("categoryIndex")
+				  .fit(df);
+				Dataset<Row> indexed = indexer.transform(df);
+				
+				System.out.println("showing indexed>>");
+				indexed.show(false);
+				
+				org.apache.spark.ml.feature.OneHotEncoder encoder = new org.apache.spark.ml.feature.OneHotEncoder()
+				  .setInputCol("categoryIndex")
+				  .setOutputCol("categoryVec");
+
+				Dataset<Row> encoded = encoder.transform(indexed);
+
+				System.out.println("showing encoded>>");
+				encoded.show(false);
+				System.out.println();
+	}
+	
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
 			, String[] fieldArray, String trainName) throws IOException {
