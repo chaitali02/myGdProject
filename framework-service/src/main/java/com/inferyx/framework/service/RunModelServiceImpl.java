@@ -739,13 +739,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				Algorithm algorithm = null;
-				if (algorithmVersion != null) {
-					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion,
-							MetaType.algorithm.toString());
-				} else {
-					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
-				}
+				Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion, MetaType.algorithm.toString(), "N");
 
 				trainResult.setAlgorithm(algorithm.getName());
 				trainResult.setAlgoType(model.getType());
@@ -753,7 +747,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
 				
-				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
+				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
 				exec = execFactory.getExecutor(datasource.getType());
 
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),

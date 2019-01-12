@@ -890,10 +890,14 @@ public class DagServiceImpl {
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
 //						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 						
+						BaseEntity targetAttrBase = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(targetAttrRef.getUuid(), targetAttrRef.getVersion(), targetAttrRef.getType().toString(), "N");
+						BaseEntity sourceAttrBase = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(sourceAttrRef.getUuid(), sourceAttrRef.getVersion(), sourceAttrRef.getType().toString(), "N");
+						
+						targetAttrRef.setVersion(targetAttrBase.getVersion());
+						sourceAttrRef.setVersion(sourceAttrBase.getVersion());
+						
 						targetAttrRef = commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
 						sourceAttrRef = commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
-						commonServiceImpl.getOneByUuidAndVersion(targetAttrRef.getUuid(), targetAttrRef.getVersion(), targetAttrRef.getType().toString(), "N");
-						commonServiceImpl.getOneByUuidAndVersion(sourceAttrRef.getUuid(), sourceAttrRef.getVersion(), sourceAttrRef.getType().toString(), "N");
 					}
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
