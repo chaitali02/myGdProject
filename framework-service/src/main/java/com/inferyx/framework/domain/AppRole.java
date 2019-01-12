@@ -13,7 +13,7 @@ package com.inferyx.framework.domain;
 import java.util.List;
 
 public class AppRole {
-
+	MetaIdentifierHolder defaultAppId ;
 	MetaIdentifierHolder appId;
 	List<MetaIdentifierHolder> roleInfo;
 	
@@ -21,10 +21,24 @@ public class AppRole {
 		super();
 	}
 
+	public MetaIdentifierHolder getDefaultAppId() {
+		return defaultAppId;
+	}
+
+	public void setDefaultAppId(MetaIdentifierHolder defaultAppId) {
+		this.defaultAppId = defaultAppId;
+	}
+
 	public AppRole(MetaIdentifierHolder appId, List<MetaIdentifierHolder> roleInfo) {
 		super();
 		this.appId = appId;
 		this.roleInfo = roleInfo;
+	}
+	public AppRole(MetaIdentifierHolder appId, List<MetaIdentifierHolder> roleInfo, MetaIdentifierHolder defaultAppId ) {
+		super();
+		this.appId = appId;
+		this.roleInfo = roleInfo;
+		this.defaultAppId=defaultAppId;
 	}
 
 	public MetaIdentifierHolder getAppId() {

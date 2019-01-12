@@ -993,12 +993,25 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return null;
 	}
 
-
+    
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		generateSql(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (MapExec) baseExec, null, 
 				null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, runMode);
 		return null;
+	}
+	
+	public void restart(String uuid,String version, RunMode runMode) {
+		try {
+			MapExec mapExec =(MapExec) commonServiceImpl.getLatestByUuid(uuid,MetaType.mapExec.toString());
+		    mapExec = generateSql(mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion(), mapExec, null, null, null, null, null, runMode);
+			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(mapExec.getDependsOn().getRef().getUuid(),MetaType.map.toString());
+			OrderKey datapodKey = map.getTarget().getRef().getKey();
+			mapExec =executeSql(mapExec, datapodKey, runMode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

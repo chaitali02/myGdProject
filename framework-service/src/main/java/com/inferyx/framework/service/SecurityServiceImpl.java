@@ -447,6 +447,8 @@ public class SecurityServiceImpl  implements Serializable{
 	public String getAppRole(String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		User user = userServiceImpl.findUserByName(userName);
+		user=(User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(),"N");
+		Group defaultGroup = (Group) commonServiceImpl.getLatestByUuidWithoutAppUuid(user.getDefaultGroup().getRef().getUuid(), user.getDefaultGroup().getRef().getType().toString());
 		if(user!= null) {
 			//List<AppRole> appRoleList = new ArrayList<>();
 			List<MetaIdentifierHolder> holderList = new ArrayList<>();
@@ -472,7 +474,7 @@ public class SecurityServiceImpl  implements Serializable{
 					}
 					holderList.add(group.getAppId());
 				}
-				return ow.writeValueAsString(resolveAppVsRole(rawList, holderList));
+				return ow.writeValueAsString(resolveAppVsRole(rawList, holderList,defaultGroup.getAppId()));
 			} else {
 				logger.info("No group informaion available, groupInfo is empty/null.");
 				throw new RuntimeException("No app role information available.");
@@ -499,16 +501,25 @@ public class SecurityServiceImpl  implements Serializable{
 		sessionContext.setPrivInfo(privInfo);
 	}
 	
-	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList){
+	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList, MetaIdentifierHolder defaultAppId){
 		List<AppRole> resolvedAppRoleList = new ArrayList<>();
 		MetaIdentifierHolder appInfo = new MetaIdentifierHolder();
 		for(Entry<String, List<MetaIdentifierHolder>> entry : rawList.entrySet()) {
+			boolean isDefault = false;
 			for(MetaIdentifierHolder ref : aholderList) {
 				if(ref.getRef().getUuid().equalsIgnoreCase(entry.getKey())) {
 					appInfo = ref;
+					if(ref.getRef().getUuid().equalsIgnoreCase(defaultAppId.getRef().getUuid())) {
+						isDefault = true;
+					}
 				}
 			}
-			AppRole appRole = new AppRole(appInfo, entry.getValue());
+			AppRole appRole = null;
+			if(isDefault) {
+				appRole = new AppRole(appInfo, entry.getValue(), defaultAppId);
+			} else {
+				appRole = new AppRole(appInfo, entry.getValue(), null);
+			}			
 			resolvedAppRoleList.add(appRole);
 		}
 		return resolvedAppRoleList;

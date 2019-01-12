@@ -1,6 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
-1505907194891,325,getActiveJobByCriteria,200,OK,getActiveJobByCriteria 4-1,text,true,,14440,185,1,4,325,0,3
-1505907195216,181,getActiveJobByCriteria,200,OK,getActiveJobByCriteria 4-1,text,true,,14440,185,1,3,181,0,0
-1505907195397,161,getActiveJobByCriteria,200,OK,getActiveJobByCriteria 4-1,text,true,,14440,185,1,3,161,0,0
-1505907195559,177,getActiveJobByCriteria,200,OK,getActiveJobByCriteria 4-1,text,true,,14440,185,1,2,177,0,0
-1505907195737,116,getActiveJobByCriteria,200,OK,getActiveJobByCriteria 4-1,text,true,,14440,185,1,1,116,0,0

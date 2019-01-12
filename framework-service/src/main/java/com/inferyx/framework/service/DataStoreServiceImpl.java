@@ -395,14 +395,14 @@ public class DataStoreServiceImpl {
 							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 			DataStore datastoreLatest = null;
 			if (appUuid != null) {
-				datastoreLatest = iDataStoreDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
+				datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
 			} else {
-				datastoreLatest = iDataStoreDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
+				datastoreLatest = datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
 			}
 			//DataStore datastore = resolveName(datastoreLatest);
 			DataStore datastore = (DataStore) commonServiceImpl.resolveName(datastoreLatest, MetaType.datastore);
 
-			result.add(datastore);
+			result.add(datastoreLatest);
 		}
 		return result;
 	}

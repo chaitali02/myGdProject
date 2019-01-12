@@ -262,6 +262,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				groupInfo[j] = grouptag
 			}
 			$scope.groupInfoTags = groupInfo;
+			$scope.selectDefaultGroup={};
+			$scope.selectDefaultGroup.uuid=response.defaultGroup.ref.uuid;
+			$scope.selectDefaultGroup.name=response.defaultGroup.ref.name;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -327,7 +330,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.middleName = $scope.userdata.middleName;
 		userJson.lastName = $scope.userdata.lastName;
 		userJson.emailId = $scope.userdata.emailId;
-
+         
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
@@ -339,20 +342,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			}
 		}
 		userJson.tags = tagArray
-
-		//        var roleInfoArray=[];
-		//        if($scope.roleInfoTags!=null){
-		//	   		for(var c=0;c<$scope.roleInfoTags.length;c++){
-		//		   		var roleinforef={};
-		//		   		var roleref={};
-		//		     	roleinforef.uuid=$scope.roleInfoTags[c].uuid;
-		//		     	roleinforef.type="role";
-		//	         	roleref.ref=roleinforef
-		//		     	roleInfoArray.push(roleref);
-		//		   }
-		//		}
-		//       	userJson.roleInfo=roleInfoArray
-
 		var groupInfoArray = [];
 		if ($scope.groupInfoTags != null) {
 			for (var c = 0; c < $scope.groupInfoTags.length; c++) {
@@ -366,7 +355,13 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			}
 		}
 		userJson.groupInfo = groupInfoArray
-		console.log(JSON.stringify(groupInfoArray))
+
+		var defaultGroup={};
+		var defaultGroupRef={};
+		defaultGroupRef.uuid=$scope.selectDefaultGroup.uuid;
+		defaultGroupRef.type="group";
+		defaultGroup.ref=defaultGroupRef
+		userJson.defaultGroup=defaultGroup
 		AdminUserService.submit(userJson, 'user',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;

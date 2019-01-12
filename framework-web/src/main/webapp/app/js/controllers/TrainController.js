@@ -64,6 +64,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   //$scope.selectTargetType = $scope.targetTypes[0];
   $scope.paramTypes = ["paramlist", "paramset"];
   $scope.imputeTypes=["custom","default","function"];
+  $scope.encodingTypes=["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -440,6 +441,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectLabel.uuid = response.labelInfo.ref.uuid;
       selectLabel.attributeId = response.labelInfo.attrId;
       $scope.selectLabel = selectLabel;
+      $scope.selectEncodingType=response.encodingType;    
       var rowIdentifierTags = [];
       if (response.rowIdentifier != null) {
         for (var i = 0; i < response.rowIdentifier.length; i++) {
@@ -555,7 +557,11 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.allModel = [];
     $scope.allsourceLabel = null;
     $scope.selectLabel = null;
+    $scope.selectEncodingType=null;
+   //$scope.encodingTypes=[];
     setTimeout(function () {
+     // $scope.selectEncodingType="";
+    //  $scope.encodingTypes=["ORDINAL", "ONEHOTt", "BINARY", "BASEN","HASHING"];
       $scope.getAllLetestModel();
       $scope.getAllLetestSource();
       $scope.getOneByUuidandVersion(uuid, version);
@@ -579,6 +585,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     //TrainJson.featureImportance=$scope.trainData.featureImportance;
+    TrainJson.encodingType =$scope.selectEncodingType;
+
     TrainJson.includeFeatures = $scope.trainData.includeFeatures;
     var tagArray = [];
     if ($scope.tags != null) {
