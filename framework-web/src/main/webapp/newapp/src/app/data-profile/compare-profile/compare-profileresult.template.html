@@ -1,0 +1,42 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+<p-growl [(value)]="msgs"></p-growl>
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+<div style="margin-top:10px">
+  <!-- <p-tabView (onChange)="onTabChange($event)">
+    <div style="border: 1px solid #ddd;">
+      <p-tabPanel *ngFor="let tab of tabs;  let i = index" header="{{tab.caption}}" [selected]="i == 0">
+        
+
+        
+        <div class="row" *ngIf="graphView && !ShowView && !statusView">
+          <div class="form-group">
+            <label class="control-label col-md-3" style="width:22%;text-align:left;">Click submit to refresh graph</label>
+            <input type="button" class="btn btn-success" value="Submit" [disabled]="isDataLodingBG" (click)="callBulidGraph()">
+            <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isDataLodingBG">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </span>
+          </div>
+        </div>
+
+       
+
+        <div *ngIf="statusView == true &&  this.graphView == false  && ShowView == false">
+          <div class="row">
+            <label class="col-md-2 control-label col-md-offset-1">Server Status</label>
+            <div class="col-md-3">
+              <input type="text" class="form-control" [(ngModel)]="serverStatus" name="serverStatus" [disabled]="true">
+            </div>
+          </div>
+          <div class="row">
+            <div class=" col-md-3 col-md-offset-3" style="padding-top : 10px ; padding-bottom :10px">
+              <input type="submit" class="btn btn-success" value="Start" name="submit">
+              <input type="submit" class="btn btn-success" value="Stop" name="submit1"> &nbsp; &nbsp;
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+    </div>
+  </p-tabView> -->
+</div>

@@ -804,6 +804,7 @@ div[joint-graph-directive]:hover .joint-graph-zoom-slider, div[render-group-dire
 }
 .currentpage{
 opacity:0.6  !important;
+cursor: not-allowed !important;
 }
 .notcurrentpage{
 opacity:1 !important;

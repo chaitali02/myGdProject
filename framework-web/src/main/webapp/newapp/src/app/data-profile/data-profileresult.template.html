@@ -15,7 +15,7 @@
                     <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
                         <i class="glyphicon glyphicon-file" area-hidden="true"></i>
                     </a>-->
-                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="showHome==true?'currentpage':'notcurrentpage'"
+                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="showHome==false?'currentpage':'notcurrentpage'"
                      (click)="showMainPage()" >
                     <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                     </a>
@@ -29,7 +29,7 @@
                     <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="opendownloadResult()">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showHome==false? 'currentpage':'notcurrentpage'"
+                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showHome==true? 'currentpage':'notcurrentpage'"
                     data- (click)="showGraph()">
                     <i class="fa fa-sitemap" style="margin:2px auto;"></i>
                      </a>

@@ -8,69 +8,80 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        data- (click)="showMainPage(dqdata.uuid,dqdata.version)" *ngIf="isHomeEnable">
-                        <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                   <!-- <a style="margin:2px auto;color:white;" ng-disabled="!allowReExecution" ng-class="{'currentpage':!allowReExecution}" title="Restart Pipeline" data-toggle="tooltip" data-placement="top" tooltip   ng-click="reExecute()">
+                        <i class="fa fa-repeat" area-hidden="true"></i>
+                    </a>
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                        <i class="glyphicon glyphicon-file" area-hidden="true"></i>
+                    </a>-->
+                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
+                    (click)="showMainPage()" >
+                   <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                   </a>
+                   <!-- <a class="linkDisabled" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                   *ngIf="!isHomeEnable">
+                   <i class="fa fa-home" style="display: block;margin: 2px auto;"></i>
+                   </a> -->
+                   <!-- <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'"  (click="showGraph()">
+                       <i class="fa fa-sitemap" area-hidden="true"></i>
+                   </a> -->
+                   <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
+                    [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="istableShow">
+                       <i class="fa fa-download" area-hidden="true"></i>
+                   </a>
+                   <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                   data- (click)="showDagGraph()">
+                   <i class="fa fa-sitemap" style="margin:2px auto;"></i>
                     </a>
 
-                    <a class="linkDisabled" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        *ngIf="!isHomeEnable">
-                        <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                    </a>
-                    <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
-                        data- (click)="showDagGraph(dqdata.uuid,dqdata.version)">
-                        <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-                    </a>
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
-                        *ngIf="istableShow">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                    <!--<a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="broadcastRefreshData()" ng-if="showgraphdiv || !(daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a> -->
-                    <a title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                   <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()" >
+                       <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                   </a> 
+                   <a title="Close"  (click)="goBack()" style="height:14px;">
+                       <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                   </a>
                 </div>
             </div>
             <div class="portlet-body">
-                <div *ngIf="isgraphShow">
+                <div *ngIf="isgraphShow && !showKnowledgeGraph">
                     <app-jointjs-group [graphParms]="params"></app-jointjs-group>
                 </div>
-                <div *ngIf="istableShow">
+                <div *ngIf="istableShow && !showKnowledgeGraph">
                     <app-resulttable [tableParms]="tableparms"></app-resulttable>
                 </div>
+                <div *ngIf="showKnowledgeGraph && !isgraphShow && !istableShow">
+                    {{"Knowledge graph"}}
+                </div>
             </div>
-            <p-dialog header="Download" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
+
+            <p-dialog header="Download" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="500" [resizable]="true"
                 [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
-
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Rows</label>
-                    <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" [(ngModel)]="numRows" name="numRows" />
-                    </div>
-                </div>
-
-                <div class="form-group" style="padding-top : 10px">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
-                    <div class="col-md-9 col-sm-9 col-xs-12">
-                        <p-dropdown [options]="downloadFormatArray" [(ngModel)]="downloadFormat" name="downloadFormat+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                            [filter]="true" placeholder="-Select-">
-                        </p-dropdown>
-                    </div>
-                </div>
-
-                <p-footer>
-                    <div style="padding-top: 10px;">
-                        <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                            <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                            <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox()">
+                <form class="form-horizontal" name="myform" novalidate="novalidate">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Rows</label>
+                        <div class="col-md-7 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control" [(ngModel)]="numRows" name="numRows" />
                         </div>
                     </div>
-                </p-footer>
+
+                    <div class="form-group" style="padding-top : 10px">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <p-dropdown [options]="downloadFormatArray" [(ngModel)]="downloadFormat" name="downloadFormat+{{i}}" [style]="{'width':'250px','padding':'3px'}"
+                                [filter]="true" placeholder="-Select-">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </form>
+                    <p-footer>
+                        <div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding-bottom: 15px">
+                                <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+                                <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
+                            </div>
+                        </div>
+                    </p-footer>
+
             </p-dialog>
         </div>
         <!-- END SAMPLE TABLE PORTLET-->

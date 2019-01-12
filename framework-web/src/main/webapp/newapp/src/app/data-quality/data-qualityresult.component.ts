@@ -19,6 +19,7 @@ import { AppConfig } from '../app.config';
 })
 
 export class DataQualityResultComponent {
+  //showHome: boolean;
   showKnowledgeGraph: boolean;
   isHomeEnable: boolean;
   numRows: string;
@@ -131,7 +132,9 @@ export class DataQualityResultComponent {
   }
 
   downloadResult(){
-    this.displayDialogBox = true;
+    if(this.isHomeEnable == false){
+      this.displayDialogBox = true;
+    }
   }
 
   submitDialogBox() {
@@ -154,15 +157,19 @@ export class DataQualityResultComponent {
     saveAs(blob, filename);
   }
 
-  showMainPage(){debugger
-    this.isHomeEnable = false
+  showMainPage(){
+    this.isHomeEnable = false;
    // this._location.back();
    this.showKnowledgeGraph = false;
   }
 
-  showDagGraph(uuid,version){debugger
+  showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
   }
 }
 

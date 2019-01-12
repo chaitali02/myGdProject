@@ -991,7 +991,7 @@ export class DataQualityDetailComponent {
     )
   }
 
-  showMessage(msg, msgtype, msgsumary) {
+  showMessage(msg, msgtype, msgsumary){
     this.isSubmit = "false";
     this.IsProgerssShow = "false";
     this.msgs = [];

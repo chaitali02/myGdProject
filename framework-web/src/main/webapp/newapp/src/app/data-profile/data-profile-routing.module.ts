@@ -7,6 +7,7 @@ import{DataProfileresultComponent} from './data-profileresult.component'
 import{DataProfileDetailComponent} from './data-profiledetail.component'
 import{DataProfileGroupDetailComponent} from './data-profilegroupdetail.components'
 //import { ProfileExecComponent } from '../job-monitoring/job-monitoring-details/profileExec/profileExec.component';
+import{CompareProfileResultComponent} from './compare-profile/compare-profileresult.component'
 
 const routes: Routes = [{ 
 	  path: '',
@@ -23,6 +24,8 @@ const routes: Routes = [{
     { path: 'JobMonitoring', loadChildren: 'app/job-monitoring/job-monitoring-details/job-monitoring-details.module#jobMonitoringDetailsModule'},
     // { path: 'profileExec/:id/:version/:mode', component: ProfileExecComponent, pathMatch: 'full'},
     
+    { path: 'profilegroup', component: DataProfileGroupDetailComponent},        
+    { path: 'compareprofile/:type', component: CompareProfileResultComponent}
   ]
    }
 ];

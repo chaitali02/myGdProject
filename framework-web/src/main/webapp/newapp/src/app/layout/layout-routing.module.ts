@@ -66,6 +66,7 @@ const routes: Routes = [
             //{ path: 'dataQuality/compare', redirectTo: 'dataQuality' },
 
             { path: 'compare/:type', component: CompareResultComponent },
+            { path: 'dataProfiling/compareprofile/:type/dataProfiling', redirectTo: 'dataProfiling'},
 
             { path: 'recon', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'list/:type/recon', redirectTo: 'recon' },
