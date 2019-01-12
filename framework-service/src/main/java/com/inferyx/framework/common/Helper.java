@@ -56,6 +56,7 @@ import org.deeplearning4j.nn.conf.layers.variational.VariationalAutoencoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
@@ -331,6 +332,7 @@ public class Helper {
 				case trainresult : return "iTrainResultDao";
 				case deployExec : return "iDeployExecDao";
 				case processExec : return "iProcessExecDao";
+				case organization : return "iOrganizationDao";
 				default:
 					return null;
 			}
@@ -460,6 +462,7 @@ public class Helper {
 		case trainresult : return TrainResult.class;
 		case deployExec : return DeployExec.class;
 		case processExec : return ProcessExec.class;
+		case organization : return Organization.class;
 		default: return null;
 		}
 	}
@@ -557,6 +560,7 @@ public class Helper {
 				case "trainresult" : return MetaType.trainresult; 
 				case "deployexec" : return MetaType.deployExec;
 				case "processexec" : return MetaType.processExec;
+				case "organization" : return MetaType.organization;
 				default : return null;
 			}
 		}

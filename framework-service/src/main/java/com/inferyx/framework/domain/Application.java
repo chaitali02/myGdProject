@@ -17,6 +17,8 @@ public class Application extends BaseEntity{
 	private MetaIdentifierHolder dataSource;
 	private MetaIdentifierHolder paramList;
 	private String deployPort;
+	private MetaIdentifierHolder orgInfo;
+
 	
 	/**
 	 * @Ganesh 
@@ -34,6 +36,12 @@ public class Application extends BaseEntity{
 	 */
 	public void setDeployPort(String deployPort) {
 		this.deployPort = deployPort;
+	}
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
 	}
 
 	public MetaIdentifierHolder getDataSource() {

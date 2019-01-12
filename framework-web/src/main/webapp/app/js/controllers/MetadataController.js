@@ -744,7 +744,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.showSampleTable = function (data) {
-		
+		if($scope.isDataInpogress){
+			return false;
+		};
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
