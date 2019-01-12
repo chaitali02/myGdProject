@@ -488,6 +488,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.id = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
         targetFeature.dname = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
         featureAttrMap.targetFeature = targetFeature;
+        featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
        // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
        if(response.featureAttrMap[i].imputeMethod !=null){
           if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
@@ -640,6 +641,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var featureMapObj = {};
         featureMapObj.featureMapId = $scope.featureMapTableArray[i].id;
         featureMapObj.featureDisplaySeq = i;
+        featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};
