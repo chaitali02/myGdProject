@@ -20,6 +20,7 @@ import { AppConfig } from '../app.config';
 })
     
   export class DataProfileresultComponent {
+  isResultTable: boolean;
   showHome: boolean =true;
   showKnowledgeGraph: boolean;
   isHomeEnable: boolean;
@@ -120,6 +121,7 @@ import { AppConfig } from '../app.config';
       }
     }
     public goBack() {
+      this.isResultTable=false
       if(this.istableShow ==true){
         this._location.back();
       }
@@ -181,6 +183,12 @@ import { AppConfig } from '../app.config';
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
   }
+  downloadShow(download: boolean) {
+    this.isResultTable=true
+  }
+  // ngAfterViewChecked(){
+  //   debugger
+  // }
 }
  
       

@@ -181,6 +181,7 @@ export class DataProfileDetailComponent {
       dependOnTemp.label = response1[0]["name"];
       dependOnTemp.uuid = response1[0]["uuid"];
       this.sourcedata = dependOnTemp
+      this.getAllAttributeBySource();
     }
     for (const n in response1) {
       let allname = {};
@@ -192,9 +193,9 @@ export class DataProfileDetailComponent {
     }
     this.allNames = temp
     
-    if (this.mode != 'true') {
-      this.getAllAttributeBySource();
-    }
+    // if (this.mode != 'true') {
+    //   this.getAllAttributeBySource();
+    // }
   }
   countContinue = function () {
     this.continueCount = this.continueCount + 1;
