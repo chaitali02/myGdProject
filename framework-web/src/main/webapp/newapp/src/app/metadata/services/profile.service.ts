@@ -30,6 +30,15 @@ export class ProfileService {
       .catch(this.handleError);
   }
 
+  getProfileResults(type: string, uuid: number, version: string, attributeId: number, numDays: number, profileAttrType: string): Observable<any[]> {
+    let url = 'profile/getProfileResults?action=view&type=' + type + '&datapodUuid=' + uuid + '&datapodVersion=' + version + '&attributeId=' + attributeId + '&numDays=' + numDays + '&profileAttrType=' + profileAttrType;
+    return this._sharedService.getCall(url)
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
+  }
+
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
