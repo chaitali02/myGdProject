@@ -88,6 +88,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -2283,6 +2284,11 @@ public class MetadataServiceImpl {
 					Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
 			return dp;
 		}
+		return null;
+	}
+
+	public Organization getGroupsByOrg(String string) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	

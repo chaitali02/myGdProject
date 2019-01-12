@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
@@ -1088,4 +1089,16 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
 		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
 	}
+	
+	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)
+	public @ResponseBody Organization getGroupsByOrg(
+			@RequestParam(value = "uuid") String uuid, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getGroupsByOrg(MetaType.dq.toString());
+	}
+			
+			
+			
+	
 }
