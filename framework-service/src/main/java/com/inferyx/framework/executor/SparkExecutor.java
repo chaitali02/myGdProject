@@ -43,6 +43,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -61,6 +62,7 @@ import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.linalg.DenseMatrix;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.BooleanParam;
@@ -1911,6 +1913,8 @@ public class SparkExecutor<T> implements IExecutor {
 //*******************************************************************************************************************
 //*******************************************************************************************************************
 			Dataset<Row> df = rsHolder.getDataFrame();
+			logger.info("df 1");
+			df.printSchema();
 			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 			for(String colName : encodingDetails.keySet()) {
 				encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
@@ -1920,9 +1924,15 @@ public class SparkExecutor<T> implements IExecutor {
 			Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 			PipelineModel trngModel = pipelineTrng.fit(df);
 			df = trngModel.transform(df);
+			logger.info("df 2");
+			df.printSchema();
+			
+			List<String> columnNames = new ArrayList(Arrays.asList(df.columns()));
 			
 			for(String colName : encodingDetails.keySet()) {
-				df = df.drop(colName);
+				logger.info("colName : " + colName);
+//				df = df.drop(colName);
+				df = columnNames.contains(colName+"_vec")?df.withColumnRenamed(colName, colName+"_raw"):df;
 				df = df.withColumnRenamed(colName+"_vec", colName);
 			}
 			
@@ -1931,6 +1941,8 @@ public class SparkExecutor<T> implements IExecutor {
 					df = df.drop(colName);
 				}
 			}	
+			logger.info("df 3");
+			df.printSchema();
 			rsHolder.setDataFrame(df);
 //*******************************************************************************************************************
 //*******************************************************************************************************************
@@ -2225,6 +2237,8 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setValidationSet(validateDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 			
+//			trainResult.setFeatureImportance(featureImportance(trainedModel, clientContext));
+			
 			Set<String> encodingCols = null;
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
 				encodingCols = encodingDetails.keySet();
@@ -2240,7 +2254,7 @@ public class SparkExecutor<T> implements IExecutor {
 					trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 				}
 			}
-//			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
+			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
 			
 			trainingDf.show(false);
 			for(String col : validateDf.columns()) {
@@ -2253,7 +2267,7 @@ public class SparkExecutor<T> implements IExecutor {
 					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 				}
 			}
-//			validateDf = validateDf.na().fill(0.0,validateDf.columns());
+			validateDf = validateDf.na().fill(0.0,validateDf.columns());
 			validateDf.show(false);
 			logger.info("Printing trained training and validation dataset schema 3");
 			trainingDf.printSchema();
@@ -2276,8 +2290,10 @@ public class SparkExecutor<T> implements IExecutor {
 				logger.info("Printing trained training and validation dataset schema 4");
 				trainedDataSet.printSchema();
 				validateDf.printSchema();
-				for(String colName : encodingDetails.keySet()) {
-					trainedDataSet = trainedDataSet.drop(colName+"_vec");
+				if(encodingDetails != null && !encodingDetails.isEmpty()) {
+					for(String colName : encodingDetails.keySet()) {
+						trainedDataSet = trainedDataSet.drop(colName+"_vec");
+					}
 				}
 				/**************************************************************************************************************
 				 * ************************************************************************************************************
@@ -2293,7 +2309,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+				if(encodingDetails == null || (encodingDetails != null && !encodingDetails.isEmpty())) {
 					saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
 				}
 				return trngModel;
@@ -2328,7 +2344,8 @@ public class SparkExecutor<T> implements IExecutor {
 		if(encodingType.equals(EncodingType.ONEHOT)) {
 			StringIndexer stringIndexer = new StringIndexer()
 					  .setInputCol(inputCol)
-					  .setOutputCol(inputCol+"_category_index");
+					  .setOutputCol(inputCol+"_category_index")
+					  .setHandleInvalid("keep");
 			pipelineStageList.add(stringIndexer);
 		
 			OneHotEncoder encoder = new OneHotEncoder().setInputCol(inputCol+"_category_index").setOutputCol(outputCol);
@@ -2360,6 +2377,7 @@ public class SparkExecutor<T> implements IExecutor {
 				StringIndexerModel indexer = new StringIndexer()
 				  .setInputCol("category")
 				  .setOutputCol("categoryIndex")
+				  .setHandleInvalid("keep")
 				  .fit(df);
 				Dataset<Row> indexed = indexer.transform(df);
 				
@@ -2387,7 +2405,9 @@ public class SparkExecutor<T> implements IExecutor {
 			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
 			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
 		}		
+		logger.info("trainedDataSet show 0");
 		trainedDataSet.printSchema();
+		trainedDataSet.show();
 		
 		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
 		
@@ -2409,6 +2429,9 @@ public class SparkExecutor<T> implements IExecutor {
 			colNameList.add("probability");
 		}
 
+		logger.info("trainedDataset >>>>>>>>>>> ");
+		trainedDataSet.printSchema();
+		trainedDataSet.show();
 		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
 		//creating column prediction_status
 		Dataset<Row> predictionStatusDF = null;
@@ -2429,6 +2452,7 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		joinedDF = joinedDF.drop("rowNum");
 		joinedDF.printSchema();
+		joinedDF.show();
 		joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
 	}
 
@@ -3252,6 +3276,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}
 		}		
+		logger.info("outPutMap : " + outPutMap);
 		return outPutMap;
 	}
 
@@ -3388,10 +3413,12 @@ public class SparkExecutor<T> implements IExecutor {
 		if(result instanceof KMeansSummary) {
 			outPutMap = kmeansClusteringModelSummay(outPutMap, result);
 		} else if(result instanceof LogisticRegressionTrainingSummary) {
+			logger.info("Inside LogisticRegressionTrainingSummary >>>>");
 			outPutMap = logisticRegressionSummay(outPutMap, result);
 		} else if(result instanceof LinearRegressionTrainingSummary) {
 			outPutMap = linearRegressionSummay(outPutMap, result);
 		}
+		logger.info("outPutMap : " + outPutMap);
 		return outPutMap;
 	}
 	
@@ -3963,6 +3990,7 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext) throws IOException{
+		logger.info("Calculating confusion metrics and roc");
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
@@ -3972,20 +4000,30 @@ public class SparkExecutor<T> implements IExecutor {
 		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
 		if(predDFCols.contains("prediction")) {
 			MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
-			RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
-					Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+			RowFactory.create( 
+					Double.parseDouble(""+row.get(row.fieldIndex("prediction"))),
+					Double.parseDouble(""+row.get(row.fieldIndex("label")))), 
 					Encoders.kryo(Row.class)));
 
 			Matrix confusion = metrics.confusionMatrix();	
 			
+			
 			int size = metrics.confusionMatrix().numCols();
+			if (size < 2) {
+				size = 2;
+			}
 			double[] matrixArray = metrics.confusionMatrix().toArray();
+			int matArrLen = matrixArray.length;
 			double[][] matrix = new double[size][size];
 			// set values of matrix into a 2D array
 			for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-			matrix[i][j] = matrixArray[(j * size) + i];
-			}
+				for (int j = 0; j < size; j++) {
+					if (((j * size) + i) > matArrLen-1) {
+						matrix[i][j] = 0.0;
+					} else {
+						matrix[i][j] = matrixArray[(j * size) + i];
+					}
+				}
 			}
 			System.out.println("Confusion matrix: \n" + confusion);
 			summary.put("confusionMatrix", matrix);
@@ -4006,6 +4044,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			}
 			
+			
 			//Weighted stats
 			System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
 			System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
@@ -4014,16 +4053,35 @@ public class SparkExecutor<T> implements IExecutor {
 		} 
 		
 	    //For Roc
-	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
+	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
+				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+				Encoders.kryo(Row.class)));
+	    
+	    
 		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
 		
+		double TP = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction > 0").count();
+		double TN = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction = 0").count();
+		double FP = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction > 0").count();
+		double FN = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction = 0").count();
+		
+		double[] confMat = {TP, FN, FP, TN};
+		double[][] confusionMatrix = {{TP, FN}, {FP, TN}};
+		System.out.println("Confusion matrix: \n" + confusionMatrix);
+		summary.put("confusionMatrix", confusionMatrix);
+		
 		List<Object> rocList = new ArrayList<>();
+//		List<Map<String, Object>> rocList = new ArrayList<>();
+//		rocList = sparkExecHelper.getRoc(binaryClassificationMetrics.roc().toJavaRDD());
 		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
+			logger.info("("+tuple2._1()+","+tuple2._2()+")");
 			rocList.add("("+tuple2._1()+","+tuple2._2()+")");
 		}
 		if(!rocList.isEmpty()) {
 			summary.put("roc", rocList);
 		}
+		
 		// AUPRC
 	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;

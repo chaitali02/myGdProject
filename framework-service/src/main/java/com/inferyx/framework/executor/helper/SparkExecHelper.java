@@ -5,22 +5,23 @@ package com.inferyx.framework.executor.helper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+
+import scala.Tuple2;
 
 
 /**
@@ -111,5 +112,18 @@ public class SparkExecHelper implements Serializable {
 				}	
 			}
 		}), new StructType(structFields));
+	}
+	
+	public List<Map<String, Object>> getRoc(JavaRDD<Tuple2<Object, Object>> rocRDD) {
+		return rocRDD.map(new Function<Tuple2<Object,Object>, Map<String, Object>>() {
+
+			@Override
+			public Map<String, Object> call(Tuple2<Object, Object> v1) throws Exception {
+				Map<String, Object> returnMap = new HashMap<>();
+				returnMap.put((String)v1._1, v1._2);
+				return returnMap;
+			}
+			
+		}).collect();
 	}
 }

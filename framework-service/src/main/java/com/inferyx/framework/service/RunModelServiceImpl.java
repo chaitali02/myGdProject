@@ -26,10 +26,9 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -881,6 +880,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					}					
 				}
 				if (isModelSved) {	
+					logger.info("Inside isModelSaved : trainOtherParam : " + trainOtherParam);
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
@@ -890,6 +890,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						}
+						
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
 						
 						if(summary != null && !summary.isEmpty()) {
 							double[] featureimportancesArr = (double[])summary.get("featureimportances");						
@@ -901,7 +903,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trainResult.setRecall((double) summary.get("recall"));
 							trainResult.setF1Score((double) summary.get("f1Score"));
 							trainResult.setPrecision((double) summary.get("precision"));
-//							trainResult.setRocAUC((List<Double>) summary.get("roc"));
+//							trainResult.setRocAUC(summary.get("roc"));
+//							trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
 							
 							writeSummaryToFile(summary, defaultDir, fileName);
 						}
@@ -910,6 +913,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 												
 						String fileName = tableName+".result";
+						
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
 
 						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
@@ -934,7 +939,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						if(summary.get("confusionMatrix") != null) {
 							trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
 						}
-//						trainResult.setRocAUC((List<Double>) summary.get("roc"));
+//						trainResult.setRocAUC((summary.get("roc") == null)?null:(List<Double>) summary.get("roc"));
+//						trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
 						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
