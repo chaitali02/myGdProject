@@ -163,7 +163,16 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			$scope.applicationHasChanged = false;
 		}
 	}
+	
+	
 
+	$scope.getAllLatestOrgnization = function () {
+		CommonService.getAllLatest('organization').then(function (response) { onGetAllLatest(response.data) });
+		var onGetAllLatest = function (response) {
+			$scope.allOrgnization = response;
+		}
+	}
+	
 	$scope.selectType = function () {
 		MetadataApplicationSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
@@ -353,6 +362,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+
+			$scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			if($scope.applicationdata.orgInfo !=null){
+				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
+
+			}
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -408,6 +425,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.isTemplageInfoRequired=false;
 				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
 			}
+
+			$scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			if($scope.applicationdata.orgInfo !=null){
+				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
+
+			}
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -415,6 +440,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}//End IF
 	else{
+		$scope.getAllLatestOrgnization();
 		$scope.applicationdata={};
 		$scope.applicationdata.locked="N";
 	}
@@ -460,6 +486,13 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			}
 		}
 		applicationJson.tags = tagArray;
+        
+		var orgInfo={};
+		var refOrgInfo={};
+		refOrgInfo.uuid=$scope.selectOrgInfo.uuid;
+		refOrgInfo.type="organization";	
+		orgInfo.ref=refOrgInfo;
+		applicationJson.orgInfo=orgInfo;
 
 		var datasource = {};
 		var ref = {};
