@@ -107,7 +107,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					MetaIdentifier formulaMeta = attributeSource.getSourceAttr().getRef();
 					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMeta.getUuid(), formulaMeta.getVersion(), formulaMeta.getType().toString(), "N");
 					for (SourceAttr sourceAttr :formula.getFormulaInfo()) {
-//						logger.info("Formula attribute type : " + sourceAttr.getRef().getType());
+						//logger.info("Formula attribute type : "+ formula.getUuid()+""+ sourceAttr.getRef().getType());
 						if (sourceAttr.getRef().getType().equals(MetaType.function)) {
 //							logger.info(" Inside formula attribute type function" );
 							// Extract function

@@ -4029,6 +4029,7 @@ public class SparkExecutor<T> implements IExecutor {
 			summary.put("confusionMatrix", matrix);
 			summary.put("accuracy",metrics.accuracy());
 			
+			
 			// Stats by labels
 			for (int i = 0; i < metrics.labels().length; i++) {
 			summary.put("precision",metrics.precision(metrics.labels()[i]));
@@ -4043,6 +4044,7 @@ public class SparkExecutor<T> implements IExecutor {
 			summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
 			
 			}
+			
 			
 			
 			//Weighted stats
@@ -4060,6 +4062,7 @@ public class SparkExecutor<T> implements IExecutor {
 	    
 	    
 		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
+		System.out.println("Area Roc: \n" + binaryClassificationMetrics.areaUnderROC());
 		
 		double TP = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction > 0").count();
 		double TN = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction = 0").count();

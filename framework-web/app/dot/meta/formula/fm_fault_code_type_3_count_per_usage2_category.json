@@ -103,11 +103,6 @@
 				"type" : "simple"
 			},
 			"value" : "END"
-		},
-		{
-			"ref" : {
-				
-			}
 		}
 	],
 	"formulaType" : "simple",
