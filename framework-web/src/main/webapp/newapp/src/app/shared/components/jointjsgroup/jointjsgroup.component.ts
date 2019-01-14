@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, ViewChild,Output,EventEmitter } from '@angular/core';
+import { Component, Input, Output,OnInit, ViewChild,EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import * as $ from 'jquery';
@@ -34,6 +34,7 @@ export class JointjsGroupComponent {
     IsGraphShow: any;
     @Output() downloadShow = new EventEmitter<any>();
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
+
     constructor(private _location: Location, d3Service: D3Service, private activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _jointjsService: JointjsService, private _jointjsGroupService: jointjsGroupService) {
         this.d3 = d3Service.getD3();
         this.IsGraphShow = true;

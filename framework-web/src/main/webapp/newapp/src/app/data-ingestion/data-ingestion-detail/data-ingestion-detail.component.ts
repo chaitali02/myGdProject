@@ -11,6 +11,9 @@ import { DataIngestionService } from '../../metadata/services/dataIngestion.serv
   templateUrl: './data-ingestion-detail.component.html'
 })
 export class DataIngestionDetailComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  isNullArray: { 'value': string; 'label': string; }[];
 
   dialogAttributeName: any;
   dialogAttriNameArray: any[];
@@ -89,6 +92,8 @@ export class DataIngestionDetailComponent implements OnInit {
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
     this.isSubmit = "false"
     this.ingestData = {};
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.ingestData["active"] = true;
     this.sourceDs = {};
     this.targetDs = {};
@@ -119,7 +124,7 @@ export class DataIngestionDetailComponent implements OnInit {
       { "value": "TABLE-TABLE", "label": "Table - Table" },
       { "value": "TABLE-FILE", "label": "Table - File" },
       { "value": "STREAM-FILE", "label": "Stream - File" },
-      { "value": "STREAM-TABLE", "label": "Stream - Table" },
+      { "value": "STREAM-TABLE", "label": "Stream - Table" }
     ]
     this.FormatTypes = [
       { "value": "CSV", "label": "CSV" },
@@ -154,6 +159,7 @@ export class DataIngestionDetailComponent implements OnInit {
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
       { 'value': 'IN', 'label': 'IN' },
       { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' }
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -190,6 +196,10 @@ export class DataIngestionDetailComponent implements OnInit {
       { value: '', label: '-Select-' },
       { value: 'FromSource', label: 'From Source' },
       { value: 'FromTarget', label: 'From Target' }
+    ]
+    this.isNullArray = [
+      { 'value': 'NULL', 'label': 'NULL' },
+      { 'value': 'NOT NULL', 'label': 'NOT NULL' }
     ]
   }
 
@@ -965,13 +975,28 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeOperator(index){
+    // this.filterTableArray[index].rhsAttribute = null;
+    // if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
+    //   this.filterTableArray[index].rhsType = 'dataset' ;
+    // }
+    // else{
+		// 	this.filterTableArray[index].rhsType = 'integer';
+    // }
     this.filterTableArray[index].rhsAttribute = null;
-    if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
-      this.filterTableArray[index].rhsType = 'dataset' ;
+    if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
+      this.filterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.filterTableArray[index].operator == 'IS'){
+			this.filterTableArray[index].rhsType = 'string';
     }
     else{
 			this.filterTableArray[index].rhsType = 'integer';
-		}
+    }
   }
   
   onChangeAutoMode() {
@@ -1455,7 +1480,7 @@ export class DataIngestionDetailComponent implements OnInit {
           operatorObj["attributeId"] = this.filterTableArray[i].lhsAttribute.attributeId;
           filterInfo["operand"][0] = operatorObj;
         }
-        else if (this.filterTableArray[i].lhsType == 'attribute' && this.selectedSourceType == 'FILE') {
+        else if (this.filterTableArray[i].lhsType == 'datapod' && this.selectedSourceType == 'FILE') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "attribute";
@@ -1541,56 +1566,59 @@ export class DataIngestionDetailComponent implements OnInit {
     ingestJson["filterInfo"] = filterInfoArray;
 
     let attributeTableArray = [];
-    for (let i = 0; i < this.attributeTableArray.length; i++) {
-      let attributeInfo = {};
-      attributeInfo["attrMapId"] = this.attributeTableArray[i].attrMapId;
-
-      let sourceAttrObj = {};
-      let refObj = {};
-      if (this.attributeTableArray[i].sourceType == 'string') {
-        refObj["type"] = "simple";
-        sourceAttrObj["ref"] = refObj;
-        sourceAttrObj["value"] = this.attributeTableArray[i].sourceAttribute;
+    if(this.attributeTableArray != null){
+      for (let i = 0; i < this.attributeTableArray.length; i++) {
+        let attributeInfo = {};
+        attributeInfo["attrMapId"] = this.attributeTableArray[i].attrMapId;
+  
+        let sourceAttrObj = {};
+        let refObj = {};
+        if (this.attributeTableArray[i].sourceType == 'string') {
+          refObj["type"] = "simple";
+          sourceAttrObj["ref"] = refObj;
+          sourceAttrObj["value"] = this.attributeTableArray[i].sourceAttribute;
+        }
+        if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
+          refObj["type"] = "attribute";
+          sourceAttrObj["ref"] = refObj;
+          sourceAttrObj["value"] = this.attributeTableArray[i].sourceAttribute;
+        }
+        else if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
+          refObj["type"] = this.attributeTableArray[i].sourceType = "datapod";
+          refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
+          sourceAttrObj["ref"] = refObj;
+          sourceAttrObj["attrId"] = this.attributeTableArray[i].sourceAttribute.attributeId;
+        }
+        else if (this.attributeTableArray[i].sourceType == 'formula') {
+          refObj["type"] = this.attributeTableArray[i].sourceType = "formula";
+          refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
+          sourceAttrObj["ref"] = refObj;
+        }
+        else if (this.attributeTableArray[i].sourceType == 'function') {
+          refObj["type"] = this.attributeTableArray[i].sourceType = "function";
+          refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
+          sourceAttrObj["ref"] = refObj;
+        }
+        attributeInfo["sourceAttr"] = sourceAttrObj;
+  
+        let targetAttr = {};
+        let targetref = {};
+        if (this.selectedTargetType != "FILE") {
+          targetref["uuid"] = this.attributeTableArray[i].targetAttribute.uuid;
+          targetref["type"] = this.attributeTableArray[i].targetAttribute.type;
+          targetAttr["ref"] = targetref;
+          targetAttr["attrId"] = this.attributeTableArray[i].targetAttribute.attributeId;
+        }
+        else {
+          targetref["type"] = "attribute";
+          targetAttr["ref"] = targetref;
+          targetAttr["value"] = this.attributeTableArray[i].targetAttribute;
+        }
+        attributeInfo["targetAttr"] = targetAttr;
+        attributeTableArray[i] = attributeInfo;
       }
-      if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-        refObj["type"] = "attribute";
-        sourceAttrObj["ref"] = refObj;
-        sourceAttrObj["value"] = this.attributeTableArray[i].sourceAttribute;
-      }
-      else if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-        refObj["type"] = this.attributeTableArray[i].sourceType = "datapod";
-        refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
-        sourceAttrObj["ref"] = refObj;
-        sourceAttrObj["attrId"] = this.attributeTableArray[i].sourceAttribute.attributeId;
-      }
-      else if (this.attributeTableArray[i].sourceType == 'formula') {
-        refObj["type"] = this.attributeTableArray[i].sourceType = "formula";
-        refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
-        sourceAttrObj["ref"] = refObj;
-      }
-      else if (this.attributeTableArray[i].sourceType == 'function') {
-        refObj["type"] = this.attributeTableArray[i].sourceType = "function";
-        refObj["uuid"] = this.attributeTableArray[i].sourceAttribute.uuid;
-        sourceAttrObj["ref"] = refObj;
-      }
-      attributeInfo["sourceAttr"] = sourceAttrObj;
-
-      let targetAttr = {};
-      let targetref = {};
-      if (this.selectedTargetType != "FILE") {
-        targetref["uuid"] = this.attributeTableArray[i].targetAttribute.uuid;
-        targetref["type"] = this.attributeTableArray[i].targetAttribute.type;
-        targetAttr["ref"] = targetref;
-        targetAttr["attrId"] = this.attributeTableArray[i].targetAttribute.attributeId;
-      }
-      else {
-        targetref["type"] = "attribute";
-        targetAttr["ref"] = targetref;
-        targetAttr["value"] = this.attributeTableArray[i].targetAttribute;
-      }
-      attributeInfo["targetAttr"] = targetAttr;
-      attributeTableArray[i] = attributeInfo;
     }
+    
     ingestJson["attributeMap"] = attributeTableArray;
 
     console.log(JSON.stringify(ingestJson));
@@ -1642,5 +1670,16 @@ export class DataIngestionDetailComponent implements OnInit {
   }
   showview(uuid, version) {
     this.router.navigate(['app/dataIngestion/ingest', uuid, version, 'true']);
+  }
+
+  showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

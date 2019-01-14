@@ -41,7 +41,7 @@ export class TableRenderComponent {
       case 'dq':
         type = 'dq';
         break;
-      case 'dqgroupexec':
+      case 'dqgroup':
         type = 'dataqual';
         break;
       case 'profile':
@@ -54,9 +54,7 @@ export class TableRenderComponent {
         type = 'recon';
         break
     }
-    this.uuid = params.uuid;
-    this.version =params.version;
-    this.type = type;
+    
     this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
     .subscribe(
     response => {
@@ -64,7 +62,6 @@ export class TableRenderComponent {
       this.results(type, params.uuid, params.version,this.modeOfExec)
      
     })   
-    
   }
   results(type, uuid, version,mode){
     if(type == 'dq'){

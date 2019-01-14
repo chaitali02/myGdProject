@@ -262,42 +262,13 @@ export class DataQualityGroupDetailComponent {
       maxHeight: 110,
       disabled: true
     };
-
-  }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataQuality/dqgroup', uuid, version, 'true']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: false
-    };
-
   }
 
-  // showMainPage(uuid, version) {
-  //   this.router.navigate(['/app/list/dqgroup']);
-  //   this.dropdownSettings = {
-  //     singleSelection: false,
-  //     text: "Select Attrubutes",
-  //     selectAllText: 'Select All',
-  //     unSelectAllText: 'UnSelect All',
-  //     enableSearchFilter: true,
-  //     classes: "myclass custom-class",
-  //     maxHeight: 110,
-  //     disabled: false
-  //   };
-
-  //}
   clear() {
     this.selectedItems = []
   }
   
-  showMainPage(){
+  showMainPage(uuid,version){
     this.isHomeEnable = false
    // this._location.back();
    this.showGraph = false;

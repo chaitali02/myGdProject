@@ -13,22 +13,21 @@
         </div>
 
         <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data- (click)="enableEdit(ingestData.uuid,ingestData.version)"
-            *ngIf="mode">
+          <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+            data- (click)="showMainPage(ingestData.uuid,ingestData.version)">
+            <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+
+          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+            tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(ingestData.uuid,ingestData.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data- (click)="showview(ingestData.uuid,ingestData.version)"
-            *ngIf="mode">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" disabled="true" data-toggle="tooltip"
-            data-placement="top" tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
-            data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
+          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+            [ngClass]= "isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
+
           <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
             data-original-title="" title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
@@ -38,7 +37,7 @@
           </a>
         </div>
       </div>
-      <div class="portlet-body form">
+      <div class="portlet-body form" *ngIf="!showGraph">
         <div>
           <div class="form-wizard">
             <div class="form-body" style="padding-top: 20px;">
@@ -102,7 +101,7 @@
                       <label class="col-md-3 control-label">Version </label>
                       <div class="col-md-6">
                         <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" (onChange)="onVersionChange()">
+                          [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                         </p-dropdown>
                       </div>
                     </div>
@@ -189,7 +188,7 @@
                       <label class="col-md-1 control-label col-sm-1 col-lg-1 col-xs-2">Format</label>
                       <div class="col-md-2">
                         <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedSourceFormat" name="selectedSourceFormat" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="selectedSourceType !== 'FILE'" placeholder="--Select--" (onChange)="onChangeSourceFormat()">
+                          [filter]="true" [disabled]="selectedSourceType !== 'FILE' || mode == 'true'" placeholder="--Select--" (onChange)="onChangeSourceFormat()">
                         </p-dropdown>
                       </div>
                     </div>
@@ -199,12 +198,12 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3">
-                        <input type="text" class="form-control" [disabled]="" [(ngModel)]="sourceName" name="sourceName" placeholder="--Select--">
+                        <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="sourceName" name="sourceName" placeholder="--Select--">
                       </div>
 
                       <label class="col-md-1 control-label">Extension</label>
                       <div class="col-md-2">
-                        <input type="text" class="form-control" [disabled]="selectedSourceFormat == 'PARQUET'" [(ngModel)]="sourceExtn" name="sourceExtn">
+                        <input type="text" class="form-control" [disabled]="selectedSourceFormat == 'PARQUET' || mode == 'true'" [(ngModel)]="sourceExtn" name="sourceExtn">
                       </div>
                     </div>
 
@@ -212,14 +211,14 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Source Header</label>
                       <div class="col-md-2 col-sm-3 col-xs-6">
                         <div class="btn-group">
-                          <ui-switch [disabled]="mode == 'true'" [(ngModel)]="ingestData.sourceHeader " name="sourceHeader" [checked]="sourceHeader"
+                          <ui-switch [disabled]="mode == 'true'"   [(ngModel)]="ingestData.sourceHeader " name="sourceHeader" [checked]="sourceHeader"
                             color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
 
                       <label class="col-md-2 control-label">Ignore Case</label>
                       <div class="col-md-1">
-                        <input type="checkbox" style="width:16px;height:16px;" [(ngModel)]="ingestData.ignoreCase" name="ignoreCase" [disabled]=""/>
+                        <input type="checkbox" style="width:16px;height:16px;" [(ngModel)]="ingestData.ignoreCase" name="ignoreCase" [disabled]="mode == 'true'"/>
                       </div>
                     </div>
 
@@ -229,14 +228,14 @@
                       </label>
                       <div class="col-md-2">
                         <p-dropdown [options]="sourceTypeArray" [(ngModel)]="sourceType" name="sourceType" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--" (onChange)="onChangeSourceType()">
+                          [filter]="true" [disabled]="mode == 'true'" placeholder="-Select-" (onChange)="onChangeSourceType()">
                         </p-dropdown>
                       </div>
 
                       <label class="col-md-1 control-label">Name</label>
                       <div class="col-md-3">
                         <p-dropdown [options]="sourceTypeNameArray" [(ngModel)]="sourceTypeName" name="sourceTypeName" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="false" placeholder="--Select--" (onChange)="onChangeSourceTypeName()"
+                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--" (onChange)="onChangeSourceTypeName()"
                           dataKey="uuid">
                         </p-dropdown>
                       </div>
@@ -288,7 +287,7 @@
                       <label class="col-md-1 control-label">Format</label>
                       <div class="col-md-2">
                         <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedTargetFormat" name="selectedTargetFormat" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="selectedTargetType !== 'FILE'" placeholder="--Select--" (onChange)="onChangeTargetFormat()">
+                          [filter]="true" [disabled]="selectedTargetType !== 'FILE' || mode == 'true'" placeholder="--Select--" (onChange)="onChangeTargetFormat()">
                         </p-dropdown>
                       </div>
                     </div>
@@ -298,12 +297,12 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3">
-                        <input type="text" class="form-control" [disabled]="" [(ngModel)]="targetName" name="targetName">
+                        <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="targetName" name="targetName">
                       </div>
 
                       <label class="col-md-1 control-label">Extension</label>
                       <div class="col-md-2">
-                        <input type="text" class="form-control" [disabled]="selectedTargetFormat == 'PARQUET'" [(ngModel)]="targetExtn" name="targetExtn">
+                        <input type="text" class="form-control" [disabled]="selectedTargetFormat == 'PARQUET' || mode == 'true'" [(ngModel)]="targetExtn" name="targetExtn">
                       </div>
                     </div>
 
@@ -378,7 +377,7 @@
                               <tr>
                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
                                   <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
-                                    (click)="checkAllFilterRow()"/>
+                                    (click)="checkAllFilterRow()" />
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
                                 <th style="text-align: center;width:15%;">LHS Type</th>
@@ -429,13 +428,13 @@
                                 </td>
                                 <td>
                                   <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)= "onChangeOperator(i)">
+                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeOperator(i)">
                                   </p-dropdown>
                                 </td>
                                 <td>
                                   <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsType(i)"
                                     [disabled]="mode == 'true'" placeholder="--Select--">
-                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
+                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' && data.operator !== 'IS' ">
                                       <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
                                       <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
                                       <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
@@ -466,22 +465,31 @@
                                     </ng-container>
 
                                     <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">
-                                      <option [ngValue]="rhsTypeArray[0].value" >{{rhsTypeArray[0].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[1].value" >{{rhsTypeArray[1].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[2].value" >{{rhsTypeArray[2].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[3].value" >{{rhsTypeArray[3].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[4].value" >{{rhsTypeArray[4].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[5].value" >{{rhsTypeArray[5].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[6].value" >{{rhsTypeArray[6].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="data.operator == 'IS' ">
+                                      <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
                                   </select>
                                 </td>
                                 <td>
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
-                                    placeholder="--Enter integer value--">
+                                    *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'" placeholder="--Enter integer value--">
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'"
+                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator != 'IS'"
                                     placeholder="--Enter String--">
                                   <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
@@ -503,7 +511,8 @@
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'">
                                   </div>
                                   <div *ngIf="data.rhsType == 'dataset' ">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}" [disabled]="'true'"
+                                      style="width:80%;display: inline-block">
                                     <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block" pTooltip="Search"></i>
                                   </div>
                                   <div *ngIf="data.rhsType == 'function'">
@@ -516,7 +525,11 @@
                                       [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                                     </p-dropdown>
                                   </div>
-
+                                  <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
+                                    <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                    </p-dropdown>
+                                  </div>
                                   <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
                                     [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
 
@@ -737,6 +750,10 @@
             <!--End form-wizard-->
           </div>
         </div>
+      </div>
+
+      <div *ngIf="showGraph">
+        {{"Knowledge Graph"}}
       </div>
     </div>
   </div>
