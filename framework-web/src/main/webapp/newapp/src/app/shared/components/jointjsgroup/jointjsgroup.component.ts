@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 import { Component, Input, Output,OnInit, ViewChild } from '@angular/core';
+=======
+import { Component, Input, OnInit, ViewChild,Output,EventEmitter } from '@angular/core';
+>>>>>>> b6425d3f45a4e65ee93cb996419ba9ad557f7d27
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import * as $ from 'jquery';
@@ -32,8 +36,12 @@ export class JointjsGroupComponent {
     @Input()
     graphParms: any
     IsGraphShow: any;
+<<<<<<< HEAD
     @Output()
     parentFunction:any="test";
+=======
+    @Output() downloadShow = new EventEmitter<boolean>();
+>>>>>>> b6425d3f45a4e65ee93cb996419ba9ad557f7d27
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
     constructor(private _location: Location, d3Service: D3Service, private activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _jointjsService: JointjsService, private _jointjsGroupService: jointjsGroupService) {
         this.d3 = d3Service.getD3();
@@ -398,6 +406,7 @@ export class JointjsGroupComponent {
         let type = cell.attributes.elementType;
         let isGroupExec;
         let isExec;
+        
         if (type.slice(-4) == 'Exec' || type.slice(-4) == 'exec') {
             if (type.slice(-9) == 'groupExec' || type.slice(-9) == 'groupexec') {
                 isGroupExec = true;
@@ -410,15 +419,17 @@ export class JointjsGroupComponent {
         if (isExec || isGroupExec) {
             let itemgroble = {}
             itemgroble["action"] = this.actionEvent
-            itemgroble["title"] = "Show Details"
-            itemgroble["type"] = "element"
+            itemgroble["title"] = "Show Details";
+            itemgroble["type"] = "element";
+            itemgroble["exectype"] =type;
             itemgroble["cell"] = cell;
-            menuItem.push(itemgroble);
+            menuItem.push(itemgroble);            
             let item = {}
             item["action"] = this.actionEvent;
             if (status && (status == 'Completed') && !isGroupExec) {
                 item["title"] = "Show Results"
                 item["type"] = "results"
+                itemgroble["exectype"] =type;
                 item["cell"] = cell;
                 menuItem.push(item);
             }
@@ -446,6 +457,13 @@ export class JointjsGroupComponent {
                 menuItem.push(item);
 
             }
+            let itemInfo={}
+            itemInfo["action"] = this.actionEvent
+            itemInfo["title"] = "Show Logs"
+            itemInfo["type"] = "element"
+            itemInfo["cell"] = cell;
+            itemInfo["exectype"] =type;
+            menuItem.push(itemInfo);
 
         }
 
@@ -453,7 +471,7 @@ export class JointjsGroupComponent {
         return menuItem;
     }
     contextMenu1(d_d3, menu, d_this) {
-
+       
         d_d3.select("#paper1").selectAll('.context-menu').data([1])
             .enter()
             .append('div')
@@ -550,16 +568,26 @@ export class JointjsGroupComponent {
         let uuid = modeldata.uuid;
         let version = modeldata.version;
         let d_this = this;
+        if(data.title=="Show Logs"){
+            let _moduleUrl 
+            let _routerUrl            
+            _moduleUrl = 'JobMonitoring'
+            _routerUrl = ((data["exectype"])+'Exec')
+            d_this.router.navigate(["/app/" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true']);
+        }
+        else{ 
         this._jointjsGroupService.getMetaIdByExecId(uuid, version, type)
             .subscribe(
                 response => {
-                    let _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
-                    let _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
-                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });
+                    let _moduleUrl 
+                    let _routerUrl                    
+                    _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
+                    _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
+                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });         
                 },
                 error => console.log("Error :: " + error)
             );
-
+        }
     }
 
     showResult(data) {
@@ -577,6 +605,7 @@ export class JointjsGroupComponent {
         this.tableparms["version"] = version
         this.tableparms["type"] = type;
         setTimeout(() => {
+            this.downloadShow.emit(true);
             this.d_tableRenderComponent.renderTable(this.tableparms);
         }, 1000);
 

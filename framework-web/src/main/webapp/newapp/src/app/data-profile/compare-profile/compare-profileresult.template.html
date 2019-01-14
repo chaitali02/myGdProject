@@ -1,0 +1,18 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+<br>
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)">
+  <div *ngFor="let tab of tabs; let i = index">
+    <p-tabPanel [header]="tab.caption" class="customTabview" [selected]="i == 1">
+
+      <div *ngIf="tab.caption=='Results'">
+        <app-resultstab></app-resultstab>
+      </div>
+
+      <div *ngIf="tab.caption=='Atttributes'">        
+        <app-attributetab></app-attributetab>
+      </div>
+      
+    </p-tabPanel>
+  </div>
+</p-tabView>

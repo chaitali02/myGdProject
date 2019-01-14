@@ -19,7 +19,6 @@ import { DataReconService } from '../metadata/services/dataRecon.services';
 export class CompareResultComponent {
 
   breadcrumbDataFrom: any;
-  radioSelectedType: any;
   startDate: Date;
   endDate: Date;
   allNameDq: any[];
@@ -38,11 +37,13 @@ export class CompareResultComponent {
   isTargetTableShow: boolean;
   targetShowProgress: boolean;
   type;
-  parentType;
   sourceDataMessage: string;
   targetDataMessage: string;
   isSourceDataError: boolean;
   isTargetDataError: boolean;
+  isSubmitDisable: boolean;
+  selectedSource: any;
+  selectedTypeRadio: any;
 
   types = [
     {
@@ -72,10 +73,11 @@ export class CompareResultComponent {
 
     this._activatedRoute.params.subscribe((params: Params) => {
       this.type = (params['type']).toLowerCase();
-      this.parentType = (params['parentType']);
       this.populateBreadCrumb();
-      console.log(this.parentType);
+      this.isSubmitDisable = true;
     });
+
+
 
     // for dq
     this.searchForm = {};
@@ -89,6 +91,7 @@ export class CompareResultComponent {
     this.targetShowProgress = false;
     this.isSourceDataError = false;
     this.isTargetDataError = false;
+    this.selectedSource = '';
 
     // for rule
     this.allNameRuleGroup = [];
@@ -97,7 +100,7 @@ export class CompareResultComponent {
     //for recon
     this.allNameRecon = [];
 
-    
+
   }
 
   populateBreadCrumb(): any {
@@ -105,13 +108,14 @@ export class CompareResultComponent {
       this.breadcrumbDataFrom = [
         {
           "caption": "Data Quality",
-          "routeurl": "/app/list/batch"
+          "routeurl": "/app/list/dq"
         },
         {
           "caption": "Compare Results",
-          "routeurl": "/app/list/batch"
+          "routeurl": "/app/list/dq"
         }
       ];
+      this.searchForm.selectedTypeRadio = this.type;
       this.getAllLatest(this.type);
     }
     else if (this.type == 'rule') {
@@ -144,14 +148,27 @@ export class CompareResultComponent {
   }
 
   onUpdateStartDate() {
-    console.log("start and end date call");
     this.searchForm.endDate = '';
+    this.isSubmitDisable = false;
     this.allsource = [];
     this.alltarget = [];
+    this.isSourceTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
+  }
+  onUpdateEndDate() {
+    this.isSubmitDisable = false;
+    this.allsource = [];
+    this.alltarget = [];
+    this.isSourceTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
   }
 
   onRadioBtnChange(type) {
-    console.log("Radio button change");
+    this.searchForm.selectedTypeRadio = type;
     this.allNameDq = [];
     this.getAllLatest(type);
   }
@@ -220,6 +237,7 @@ export class CompareResultComponent {
     this.allsource = [];
     this.colsSourcedata = [];
     this.colsSource = [];
+    this.isSubmitDisable = true;
 
     let startDate;
     let endDate;
@@ -239,12 +257,12 @@ export class CompareResultComponent {
       endDate = '';
     }
 
-    if (this.searchForm.radioSelectedType == 'dq') {
+    if (this.searchForm.selectedTypeRadio == 'dq') {
       this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
     }
-    else if (this.searchForm.radioSelectedType == 'datapod') {
+    else if (this.searchForm.selectedTypeRadio == 'datapod') {
       this._dataQualityService.getdqExecByDatapod(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
@@ -297,9 +315,10 @@ export class CompareResultComponent {
 
     this.sourceShowProgress = true;
     this.isSourceTableShow = false;
-    this.alltarget = [];
-    this.colsTargetdata = [];
-    this.colsTarget = [];
+    this.selectedTarget = ''
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
+
     for (const i in this.alltargetTemp) {
       if (this.alltargetTemp[i]['uuid'] !== selectedSource.uuid) {
         let ver = {};
@@ -409,14 +428,13 @@ export class CompareResultComponent {
   }
 
   onSuccessGetSummary(response: any[], compareType: any): any {
-    console.log(response)
     if (compareType == 'source') {
       this.sourceShowProgress = false;
       this.isSourceDataError = false;
       this.isSourceTableShow = true;
       this.colsSourcedata = response;
       let columns = [];
-      console.log(response)
+
       if (response.length && response.length > 0) {
         Object.keys(response[0]).forEach(val => {
           if (val != "rownum") {
@@ -434,7 +452,7 @@ export class CompareResultComponent {
       this.isTargetDataError = false;
       this.colsTargetdata = response;
       let columns = [];
-      console.log(response)
+
       if (response.length && response.length > 0) {
         Object.keys(response[0]).forEach(val => {
           if (val != "rownum") {
@@ -454,7 +472,6 @@ export class CompareResultComponent {
       error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response: any): any {
-    console.log("onSuccessgetOneByUuidAndVersion call...");
     this.allNameRule = [];
     for (const i in response.ruleInfo) {
       let ver = {};
@@ -482,4 +499,57 @@ export class CompareResultComponent {
     this.alltarget = [];
   }
 
+  refreshSearchCriteria() {
+    this.searchForm = {};
+    this.searchForm.type = this.types[0].value;
+    this.allsource = [];
+
+    if (this.type == 'dq') {
+      this.allNameDq = [];
+      this.getAllLatest(this.searchForm.type);
+    }
+    else if (this.type == 'rule') {
+      this.searchForm.selectedRuleName = '';
+      this.getAllLatest(this.type);
+      this.getAllLatest(this.type + "group");
+    }
+    else if (this.type == 'recon') {
+      this.searchForm.selectedReconName = [];
+      this.getAllLatest(this.type);
+    }
+
+    this.isSubmitDisable = true;
+    this.refreshCompareResult();
+  }
+
+  refreshCompareResult() {
+    this.alltarget = [];
+    this.selectedSource = '';
+    this.isSourceTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
+  }
+
+  onDqNameChange() {
+    this.isSubmitDisable = false;
+    this.isSourceTableShow = false;
+    this.isTargetTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetDataError = false;
+  }
+  onRuleNameChange() {
+    this.isSubmitDisable = false;
+    this.isSourceTableShow = false;
+    this.isTargetTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetDataError = false;
+  }
+  onReconNameChange() {
+    this.isSubmitDisable = false;
+    this.isSourceTableShow = false;
+    this.isTargetTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetDataError = false;
+  }
 }

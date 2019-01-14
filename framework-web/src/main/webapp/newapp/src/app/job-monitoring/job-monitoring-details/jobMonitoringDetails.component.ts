@@ -8,5 +8,7 @@ import {Router,ActivatedRoute} from '@angular/router';
   templateUrl: './jobMonitoringDetails.template.html'
 })
 export class jobMonitoringDetailsComponent {
-
+  constructor(public router: Router){
+    console.log(router)
+  }
 }
