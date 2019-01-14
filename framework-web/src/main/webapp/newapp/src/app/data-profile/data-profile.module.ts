@@ -39,9 +39,7 @@ import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.com
         ResultModule,
         ProjectSharedModule,
         DialogModule,
-        DragDropModule
-        
-       
+        DragDropModule,     
         TabViewModule,
         CalendarModule
     ],
