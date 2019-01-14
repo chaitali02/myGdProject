@@ -4031,7 +4031,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			
 			// Stats by labels
-			for (int i = 0; i < metrics.labels().length; i++) {
+			/*for (int i = 0; i < metrics.labels().length; i++) {
 			summary.put("precision",metrics.precision(metrics.labels()[i]));
 			System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
 			metrics.labels()[i]));
@@ -4043,8 +4043,7 @@ public class SparkExecutor<T> implements IExecutor {
 			metrics.labels()[i]));
 			summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
 			
-			}
-			
+			}*/
 			
 			
 			//Weighted stats
@@ -4085,6 +4084,10 @@ public class SparkExecutor<T> implements IExecutor {
 			summary.put("roc", rocList);
 		}
 		
+		// AUROC 
+		List<Double> auRoc = new ArrayList<>();
+		auRoc.add(binaryClassificationMetrics.areaUnderROC());
+		summary.put("auroc", auRoc);		
 		// AUPRC
 	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;
