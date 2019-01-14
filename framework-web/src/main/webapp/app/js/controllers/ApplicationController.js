@@ -356,13 +356,6 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				}
 			}
 			$scope.paramtable=response.paramInfo;
-			
-			if($scope.applicationdata.paramList.templateFlg =='Y'){
-				$scope.isUseTemlate=false;
-				$scope.isTemplageInfoRequired=false;
-				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
-			}
-
 			$scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
 			if($scope.applicationdata.orgInfo !=null){
@@ -370,6 +363,13 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
 
 			}
+			if($scope.applicationdata.paramList.templateFlg =='Y'){
+				$scope.isUseTemlate=false;
+				$scope.isTemplageInfoRequired=false;
+				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
+			}
+
+		
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -419,13 +419,6 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-			$scope.paramtable=response.paramInfo;
-			if($scope.applicationdata.paramList.templateFlg =='Y'){
-				$scope.isUseTemlate=false;
-				$scope.isTemplageInfoRequired=false;
-				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
-			}
-
 			$scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
 			if($scope.applicationdata.orgInfo !=null){
@@ -433,6 +426,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
 
 			}
+			$scope.paramtable=response.paramInfo;
+			if($scope.applicationdata.paramList !=null && $scope.applicationdata.paramList.templateFlg =='Y'){
+				$scope.isUseTemlate=false;
+				$scope.isTemplageInfoRequired=false;
+				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
+			}
+
+			
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -501,7 +502,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		datasource.ref = ref;
 		applicationJson.dataSource = datasource;
 		applicationJson.paramList={};
-        if($scope.applicationCompare != null){
+        if($scope.applicationCompare != null & $scope.applicationCompare.paramList !=null ){
 			applicationJson.paramList.uuid=$scope.applicationCompare.paramList.uuid;
 			applicationJson.paramList.paramListType=$scope.applicationCompare.paramList.paramListType;
 			applicationJson.paramList.templateFlg=$scope.applicationCompare.paramList.templateFlg;

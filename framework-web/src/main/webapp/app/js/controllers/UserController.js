@@ -143,36 +143,61 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	}
 	
 
-	AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
-	var onSuccessGetAllLatestRole = function (response) {
-		var roleInfoArray = [];
-		for (var i = 0; i < response.data.length; i++) {
-			var roleref = {};
-			roleref.uuid = response.data[i].uuid;
-			roleref.type = response.data[i].type;
-			roleref.id = response.data[i].uuid
-			roleref.name = response.data[i].name;
-			roleref.version = response.data[i].version;
-			roleInfoArray[i] = roleref;
-		}
-		$scope.roleall = roleInfoArray;
+	// AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
+	// var onSuccessGetAllLatestRole = function (response) {
+	// 	var roleInfoArray = [];
+	// 	for (var i = 0; i < response.data.length; i++) {
+	// 		var roleref = {};
+	// 		roleref.uuid = response.data[i].uuid;
+	// 		roleref.type = response.data[i].type;
+	// 		roleref.id = response.data[i].uuid
+	// 		roleref.name = response.data[i].name;
+	// 		roleref.version = response.data[i].version;
+	// 		roleInfoArray[i] = roleref;
+	// 	}
+	// 	$scope.roleall = roleInfoArray;
+	// }
+
+	// AdminUserService.getAllLatest('group').then(function (response) { onSuccessGetAllLatestGroup(response.data) });
+	// var onSuccessGetAllLatestGroup = function (response) {
+	// 	var groupInfoArray = [];
+	// 	for (var i = 0; i < response.data.length; i++) {
+	// 		var groupref = {};
+	// 		groupref.uuid = response.data[i].uuid;
+	// 		groupref.type = response.data[i].type;
+	// 		groupref.id = response.data[i].uuid
+	// 		groupref.name = response.data[i].name;
+	// 		groupref.version = response.data[i].version;
+	// 		groupInfoArray[i] = groupref;
+	// 	}
+	// 	$scope.groupall = groupInfoArray;
+	// }
+
+	$scope.getGroupsByOrg=function(uuid){
+		AdminUserService.getGroupsByOrg(uuid,'organization').then(function (response) { onSuccessGetGroupsByOrg(response.data) });
+		var onSuccessGetGroupsByOrg = function (response) {
+			var groupInfoArray = [];
+			for (var i = 0; i < response.length; i++) {
+				var groupref = {};
+				groupref.uuid = response[i].uuid;
+				groupref.type = response[i].type;
+				groupref.id = response[i].uuid
+				groupref.name = response[i].name;
+				groupref.version = response[i].version;
+				groupInfoArray[i] = groupref;
+			}
+			$scope.groupall = groupInfoArray;
+	   }
 	}
 
-	AdminUserService.getAllLatest('group').then(function (response) { onSuccessGetAllLatestGroup(response.data) });
-	var onSuccessGetAllLatestGroup = function (response) {
-		var groupInfoArray = [];
-		for (var i = 0; i < response.data.length; i++) {
-			var groupref = {};
-			groupref.uuid = response.data[i].uuid;
-			groupref.type = response.data[i].type;
-			groupref.id = response.data[i].uuid
-			groupref.name = response.data[i].name;
-			groupref.version = response.data[i].version;
-			groupInfoArray[i] = groupref;
+    $scope.onChangeOrg=function(){
+		if($scope.selectOrgInfo){
+			$scope.groupInfoTags=null;
+			$scope.groupall=null;	
+			$scope.getGroupsByOrg($scope.selectOrgInfo.uuid);
+			
 		}
-		$scope.groupall = groupInfoArray;
 	}
-
 
 
 	/*start showGraph*/
@@ -232,11 +257,13 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			}//End Innter If
             $scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
+			
 			if(response.orgInfo !=null){
+				$scope.getGroupsByOrg(response.orgInfo.ref.uuid);
 				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
 				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
-
 			}
+			
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -291,6 +318,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			$scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
 			if(response.orgInfo !=null){
+				$scope.getGroupsByOrg(response.orgInfo.ref.uuid);	
 				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
 				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
 

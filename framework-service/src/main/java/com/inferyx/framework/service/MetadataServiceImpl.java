@@ -2294,27 +2294,41 @@ public class MetadataServiceImpl {
 		List<Group> groupList = new ArrayList<>();
 		List<Application> appList = getApplicationByOrg(orgUuid);
 			for(Application app : appList) {
-				groupList=getGroupByApplication(app.getUuid());
+				if(groupList.size() == 0) {
+					groupList=getGroupByApplication(app.getUuid());
+				}else {
+					groupList.addAll(getGroupByApplication(app.getUuid()));
+				}
 			}
 			
 		return groupList;
 	}
 
 	private List<Application> getApplicationByOrg(String orgUuid)throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<Application> latestApplicationList = new ArrayList<>();
+//		Query query = new Query();
+//		query.fields().include("uuid");
+//		query.addCriteria(Criteria.where("orgInfo.ref.uuid").is(orgUuid));
 		
-		List<Application> appList = new ArrayList<>();
-		Query query = new Query();
-		query.fields().include("uuid");
+		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Application> applicationAggrResults = mongoTemplate.aggregate(appAggr, MetaType.application.toString().toLowerCase(), Application.class);
+		List<Application> sortedApplicationList = applicationAggrResults.getMappedResults();
+		for(Application application : sortedApplicationList) {
+			Application appTemp=(Application) commonServiceImpl.getLatestByUuid(application.getId(), MetaType.application.toString(),"N");
+			if(appTemp.getOrgInfo().getRef().getUuid().equals(orgUuid)) {
+				latestApplicationList.add(appTemp);
+			}	
+		}
 		
-		query.addCriteria(Criteria.where("orgInfo.ref.uuid").is(orgUuid));
-		appList = mongoTemplate.find(query, Application.class, MetaType.application.toString().toLowerCase());
-		
-		return appList;
+		return latestApplicationList;
 	}
 	
-	private List<Group> getGroupByApplication(String appUuid) {
+	private List<Group> getGroupByApplication(String appUuid) throws JsonProcessingException {
 		List<Group> groupList= new ArrayList<>();
-		Query query = new Query();
+		/*Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
 		query.fields().include("name");
@@ -2322,12 +2336,22 @@ public class MetadataServiceImpl {
 		query.fields().include("active");
 		query.fields().include("appInfo");
 		query.fields().include("createdBy");
-		
 		query.addCriteria(Criteria.where("appId.ref.uuid").is(appUuid));
 		groupList=mongoTemplate.find(query, Group.class);
-		return groupList;
+		return groupList;*/
 		
+		MatchOperation filter = match(new Criteria("appId.ref.uuid").is(appUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Group> groupAggrResults = mongoTemplate.aggregate(appAggr, MetaType.group.toString().toLowerCase(), Group.class);
+		List<Group> sortedGroupList = groupAggrResults.getMappedResults();
+		for(Group group : sortedGroupList) {
+			Group appTemp=(Group) commonServiceImpl.getLatestByUuid(group.getId(), MetaType.group.toString(),"N");			
+			groupList.add(appTemp);
 	
+		}
+		return groupList;
 	}
 	
 }

@@ -208,9 +208,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Organization</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Organization
+                                            <span class="required" aria-required="true"> * </span>
+                                    </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectOrgInfo" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
+                                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeOrg()" data-ng-model="selectOrgInfo" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
                                         required>
                                         </select>
                                     </div>

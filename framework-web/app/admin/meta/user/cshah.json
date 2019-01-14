@@ -64,5 +64,11 @@
             "type" : "group",
             "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
         }
+    },
+    "orgInfo" : {
+        "ref" : {
+            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+            "type" : "organization"
+        }
     }
 }

@@ -107,5 +107,11 @@
             "type" : "group",
             "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
         }
+    },
+    "orgInfo" : {
+        "ref" : {
+            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+            "type" : "organization"
+        }
     }
 }

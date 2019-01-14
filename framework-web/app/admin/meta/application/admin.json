@@ -15,5 +15,11 @@
         }
     },
      "paramList" : null,
-     "deployPort" : "5001"
+     "deployPort" : "5001",
+    "orgInfo" : {
+        "ref" : {
+            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+            "type" : "organization"
+        }
+    }
 }
