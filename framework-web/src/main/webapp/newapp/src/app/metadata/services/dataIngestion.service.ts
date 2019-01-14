@@ -119,7 +119,7 @@ export class DataIngestionService {
 							filterInfo["lhsAttribute"] = lhsAttri;
 						}
 						else if (response["filterInfo"][k].operand[0].ref.type == 'attribute') {
-							filterInfo["lhsType"] = 'attribute';
+							filterInfo["lhsType"] = 'datapod';
 							filterInfo["lhsAttribute"] = response["filterInfo"][k].operand[0].value;
 						}
 
