@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
 import { Component, Input, Output,OnInit, ViewChild } from '@angular/core';
-=======
-import { Component, Input, OnInit, ViewChild,Output,EventEmitter } from '@angular/core';
->>>>>>> b6425d3f45a4e65ee93cb996419ba9ad557f7d27
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import * as $ from 'jquery';
