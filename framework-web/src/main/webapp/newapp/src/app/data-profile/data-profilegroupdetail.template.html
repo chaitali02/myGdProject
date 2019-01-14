@@ -36,7 +36,7 @@
             </a>
 
             <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-              [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(uuid,version)">
+            *ngIf="mode" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(uuid,version)">
               <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
             </a>
 

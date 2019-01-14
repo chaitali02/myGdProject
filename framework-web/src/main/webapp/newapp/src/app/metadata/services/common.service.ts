@@ -352,8 +352,13 @@ execute(uuid,version,type,action): Observable<any> {
     }
   if(type=="batch"){
     url = '/batch/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
-}
-
+  }
+  if(type=="recongroup"){
+    url = '/recon/executeGroup?action='+ action +'&uuid=' + uuid + '&version=' + version ;
+    }
+  if(type=="recon"){
+    url = '/recon/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
+  }
   let body=null
   return this._sharedService.postCall(url,body)
   .map((response: Response) => {

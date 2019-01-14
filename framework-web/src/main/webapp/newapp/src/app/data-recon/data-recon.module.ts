@@ -22,7 +22,7 @@ import { DataReconService}from '../metadata/services/dataRecon.services';
 import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-recon-routing.module'
 import { DialogModule } from 'primeng/components/dialog/dialog';
-
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 
 @NgModule({
     imports: [
@@ -35,7 +35,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         routing1,
         ResultModule,
         ProjectSharedModule,
-        DialogModule
+        DialogModule,
+        DragDropModule
     ],
     declarations: [
         DataReconComponent,

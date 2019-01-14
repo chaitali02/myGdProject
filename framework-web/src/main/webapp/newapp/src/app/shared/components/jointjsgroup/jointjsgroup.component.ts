@@ -32,7 +32,7 @@ export class JointjsGroupComponent {
     @Input()
     graphParms: any
     IsGraphShow: any;
-    @Output() downloadShow = new EventEmitter<boolean>();
+    @Output() downloadShow = new EventEmitter<any>();
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
     constructor(private _location: Location, d3Service: D3Service, private activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _jointjsService: JointjsService, private _jointjsGroupService: jointjsGroupService) {
         this.d3 = d3Service.getD3();
@@ -596,7 +596,7 @@ export class JointjsGroupComponent {
         this.tableparms["version"] = version
         this.tableparms["type"] = type;
         setTimeout(() => {
-            this.downloadShow.emit(true);
+            this.downloadShow.emit(this.tableparms);
             this.d_tableRenderComponent.renderTable(this.tableparms);
         }, 1000);
 

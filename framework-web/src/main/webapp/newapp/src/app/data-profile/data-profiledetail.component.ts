@@ -212,6 +212,12 @@ export class DataProfileDetailComponent {
   changeType() {
     this.selectedItems = [];
     this.getAllAttributeBySource();
+    if(this.dataprofile.filterTableArray){
+      for(let i=0;i<this.dataprofile.filterTableArray.length;i++){
+        this.onChangeLhsType(i)
+      }
+    }
+    
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source).subscribe(

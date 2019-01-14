@@ -34,7 +34,7 @@ export class TableRenderComponent {
 
   }
 
-  renderTable(params) {
+  renderTable(params) {    
     this.IsTableShow = false;
     let type;
     switch (params.type) {
@@ -54,11 +54,15 @@ export class TableRenderComponent {
         type = 'recon';
         break
     }
+    this.uuid = params.uuid;
+    this.version =params.version;
+    this.type = type;
     this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
     .subscribe(
     response => {
       this.modeOfExec=response["runMode"]
       this.results(type, params.uuid, params.version,this.modeOfExec)
+     
     })   
     
   }
@@ -95,6 +99,7 @@ export class TableRenderComponent {
 
     }
     );
+    
     this.uuid = uuid;
     this.version =version;
     this.type = type;
