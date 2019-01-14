@@ -4044,7 +4044,10 @@ public class SparkExecutor<T> implements IExecutor {
 			summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
 			
 			}*/
-			
+			summary.put("precision",metrics.precision());
+			summary.put("accuracy",metrics.accuracy());
+			summary.put("recall",metrics.recall());
+			summary.put("f1Score",metrics.fMeasure());
 			
 			//Weighted stats
 			System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
