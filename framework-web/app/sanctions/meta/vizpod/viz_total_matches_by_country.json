@@ -1,0 +1,75 @@
+{
+  "uuid": "0af6129d-8f73-46c4-a33e-51d88030a32e",
+  "version": "1547508713",
+  "name": "viz_total_matches_by_country",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 18:31:53 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+      "version": null,
+      "name": "ds_sanctions_screening_base"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": null,
+  "keys": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "version": null,
+        "name": "ds_sanctions_screening_base"
+      },
+      "attributeId": 5,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_country"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "ad7319e5-983b-421a-bf8e-cf80c3fd3baa",
+        "version": null,
+        "name": "fm_reciever_address_name_match"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ]
+}

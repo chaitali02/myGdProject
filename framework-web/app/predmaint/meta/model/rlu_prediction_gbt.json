@@ -1,0 +1,68 @@
+{
+  "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
+  "version": "1547439398",
+  "name": "RLU Prediction - GBT",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1547227046",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Jan 13 23:16:38 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "type": "SPARK",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "b1061392-5ef7-454c-8280-cf8180fc0035",
+      "version": null,
+      "name": "Gradient Boosted Trees"
+    },
+    "value": null
+  },
+  "label": "problem_reported",
+  "features": [
+    {
+      "featureId": "0",
+      "featureDisplaySeq": "0",
+      "name": "warn_type1_total",
+      "type": "integer",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "defaultValue": 0,
+      "paramListInfo": null
+    },
+    {
+      "featureId": "1",
+      "featureDisplaySeq": "1",
+      "name": "cat1",
+      "type": "integer",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "defaultValue": 0,
+      "paramListInfo": null
+    }
+  ],
+  "scriptName": null,
+  "customFlag": "N"
+}

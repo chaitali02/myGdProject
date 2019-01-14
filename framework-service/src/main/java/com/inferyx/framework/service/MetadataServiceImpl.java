@@ -164,7 +164,7 @@ public class MetadataServiceImpl {
 		//Resolve appname
 		if (baseEntity.getAppInfo() != null) {
 			for (int i = 0; i < baseEntity.getAppInfo().size(); i++) {
-				//logger.info(" Baseentity : " + baseEntity.getName() + " : " + baseEntity.getUuid() + " : " + baseEntity.getAppInfo().size());
+//				logger.info(" Baseentity : " + baseEntity.getName() + " : " + baseEntity.getUuid() + " : " + baseEntity.getAppInfo().size());
 				String appUuid = baseEntity.getAppInfo().get(i).getRef().getUuid();
 				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString(),"N");
 				//Object iDao = commonServiceImpl.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(commonServiceImpl);

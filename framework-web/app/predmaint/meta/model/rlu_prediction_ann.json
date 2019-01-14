@@ -1,0 +1,68 @@
+{
+  "uuid": "b6571479-c9a4-45aa-996a-33384d086f0e",
+  "version": "1547439449",
+  "name": "RLU Prediction - ANN",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1547227046",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Jan 13 23:17:29 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "type": "PYTHON",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "1f91c98a-faf6-42c0-ac16-d7309d041bd9",
+      "version": null,
+      "name": "Artificial Neural Net - Classfication"
+    },
+    "value": null
+  },
+  "label": "problem_reported",
+  "features": [
+    {
+      "featureId": "0",
+      "featureDisplaySeq": "0",
+      "name": "warn_type1_total",
+      "type": "integer",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "defaultValue": 0,
+      "paramListInfo": null
+    },
+    {
+      "featureId": "1",
+      "featureDisplaySeq": "1",
+      "name": "cat1",
+      "type": "integer",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "defaultValue": 0,
+      "paramListInfo": null
+    }
+  ],
+  "scriptName": null,
+  "customFlag": "N"
+}

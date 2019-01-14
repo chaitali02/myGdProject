@@ -205,7 +205,7 @@ public class SecurityServiceImpl  implements Serializable{
 				appInfo = sessionContext.getAppInfo();
 			} else {
 				logger.info("Null Session context. Unable to get appInfo.");
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1464977196");
+				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
 				appInfo.setRef(appMeta);
 			}
 			//e.printStackTrace();

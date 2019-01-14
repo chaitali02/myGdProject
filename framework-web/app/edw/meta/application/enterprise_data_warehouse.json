@@ -1,0 +1,59 @@
+{
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+  "version": "1547482049",
+  "name": "Enterprise Data Warehouse",
+  "desc": "Enterprise Data Warehouse Application",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 11:07:30 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "dataSource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6b",
+      "version": null,
+      "name": "paramlist_Enterprise Data Warehouse"
+    },
+    "value": null
+  },
+  "deployPort": "5001",
+  "orgInfo": {
+    "ref": {
+      "type": "organization",
+      "uuid": "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+      "version": null,
+      "name": "Inferyx Inc"
+    },
+    "value": null
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "uuid": "a67a627d-12a0-403a-a13d-858b5a1c4c6b",
+  "version": "1547439518",
+  "name": "RLU Prediction - GBT",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1547227046",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Jan 13 23:18:38 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
+      "version": null,
+      "name": "RLU Prediction - GBT"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+      "version": null,
+      "name": "ds_device_data_base_features"
+    },
+    "value": null
+  },
+  "featureAttrMap": [
+    {
+      "featureMapId": "0",
+      "featureDisplaySeq": "0",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
+          "version": null,
+          "name": "RLU Prediction - GBT"
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": "warn_type1_total",
+        "featureDefaultValue": 0
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+          "version": null,
+          "name": "ds_device_data_base_features"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "warn_type1_total",
+        "attrType": null,
+        "attrUnitType": null
+      },
+      "imputeMethod": {
+        "ref": {
+          "type": "model",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "featureId": "0",
+        "featureName": null,
+        "featureDefaultValue": 0
+      },
+      "encodingType": null
+    },
+    {
+      "featureMapId": "1",
+      "featureDisplaySeq": "1",
+      "feature": {
+        "ref": {
+          "type": "model",
+          "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
+          "version": null,
+          "name": "RLU Prediction - GBT"
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": "cat1",
+        "featureDefaultValue": 0
+      },
+      "attribute": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+          "version": null,
+          "name": "ds_device_data_base_features"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "cat1",
+        "attrType": null,
+        "attrUnitType": null
+      },
+      "imputeMethod": {
+        "ref": {
+          "type": "model",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": null,
+        "featureId": "1",
+        "featureName": null,
+        "featureDefaultValue": 0
+      },
+      "encodingType": "ONEHOT"
+    }
+  ],
+  "trainPercent": 80,
+  "valPercent": 20,
+  "labelInfo": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+      "version": null,
+      "name": "ds_device_data_base_features"
+    },
+    "value": null,
+    "attrId": "33",
+    "attrName": "problemreported",
+    "attrType": null,
+    "attrUnitType": null
+  },
+  "useHyperParams": "N",
+  "featureImportance": null,
+  "rowIdentifier": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+        "version": null,
+        "name": "ds_device_data_base_features"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "deviceid",
+      "attrType": null,
+      "attrUnitType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+        "version": null,
+        "name": "ds_device_data_base_features"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "date",
+      "attrType": null,
+      "attrUnitType": null
+    }
+  ],
+  "includeFeatures": "Y"
+}

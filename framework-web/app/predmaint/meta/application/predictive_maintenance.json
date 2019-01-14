@@ -1,0 +1,59 @@
+{
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+  "version": "1547482153",
+  "name": "Predictive Maintenance",
+  "desc": "Predictive Maintenance",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 11:09:13 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "dataSource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "20e34834-fe0f-4e12-b89b-030b7b3690f8",
+      "version": null,
+      "name": "paramlist_Predictive Maintenance"
+    },
+    "value": null
+  },
+  "deployPort": "5001",
+  "orgInfo": {
+    "ref": {
+      "type": "organization",
+      "uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9",
+      "version": null,
+      "name": "Department of Transportation - FL"
+    },
+    "value": null
+  }
+}
