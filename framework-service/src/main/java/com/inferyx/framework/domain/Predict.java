@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.inferyx.framework.enums.EncodingType;
-
 /**
  * @author Ganesh
  *

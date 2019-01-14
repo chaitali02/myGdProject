@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc) {
+DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc,CF_ENCODINGTYPE) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -64,7 +64,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   //$scope.selectTargetType = $scope.targetTypes[0];
   $scope.paramTypes = ["paramlist", "paramset"];
   $scope.imputeTypes=["custom","default","function"];
-  $scope.encodingTypes=["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
+  $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -441,7 +441,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectLabel.uuid = response.labelInfo.ref.uuid;
       selectLabel.attributeId = response.labelInfo.attrId;
       $scope.selectLabel = selectLabel;
-      $scope.selectEncodingType=response.encodingType;    
+      //$scope.selectEncodingType=response.encodingType;    
       var rowIdentifierTags = [];
       if (response.rowIdentifier != null) {
         for (var i = 0; i < response.rowIdentifier.length; i++) {
@@ -488,6 +488,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.id = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
         targetFeature.dname = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
         featureAttrMap.targetFeature = targetFeature;
+        featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
        // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
        if(response.featureAttrMap[i].imputeMethod !=null){
           if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
@@ -557,7 +558,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.allModel = [];
     $scope.allsourceLabel = null;
     $scope.selectLabel = null;
-    $scope.selectEncodingType=null;
+   // $scope.selectEncodingType=null;
    //$scope.encodingTypes=[];
     setTimeout(function () {
      // $scope.selectEncodingType="";
@@ -585,7 +586,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     //TrainJson.featureImportance=$scope.trainData.featureImportance;
-    TrainJson.encodingType =$scope.selectEncodingType;
+  //  TrainJson.encodingType =$scope.selectEncodingType;
 
     TrainJson.includeFeatures = $scope.trainData.includeFeatures;
     var tagArray = [];
@@ -640,6 +641,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var featureMapObj = {};
         featureMapObj.featureMapId = $scope.featureMapTableArray[i].id;
         featureMapObj.featureDisplaySeq = i;
+        featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};

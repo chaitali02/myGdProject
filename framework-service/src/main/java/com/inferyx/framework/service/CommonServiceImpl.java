@@ -3835,52 +3835,55 @@ public class CommonServiceImpl <T> {
 		}
 		
 		private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object) throws JsonProcessingException {
-			try {
-				for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
-					FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
-					AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
-					
-					MetaIdentifier featureIdentifier = featureHolder.getRef();
-					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
-					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString(), "N");
-					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString(), "N");
-					
-					for(Feature feature : model.getFeatures()) {
-						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
-							featureHolder.setFeatureName(feature.getName());
-							featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
-							featureAttrMap.setFeature(featureHolder);
+			if(featureAttrMapList != null && !featureAttrMapList.isEmpty() && object != null) {
+				try {
+					for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+						FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
+						AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
+						
+						MetaIdentifier featureIdentifier = featureHolder.getRef();
+						MetaIdentifier attributeIdentifier = attributeHolder.getRef();
+						Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString(), "N");
+						Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString(), "N");
+						
+						for(Feature feature : model.getFeatures()) {
+							if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+								featureHolder.setFeatureName(feature.getName());
+								featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
+								featureAttrMap.setFeature(featureHolder);
+							}
 						}
+						if(source instanceof Datapod)
+							for(Attribute attribute : ((Datapod)source).getAttributes()) {
+								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+									attributeHolder.setAttrName(attribute.getName());
+									featureAttrMap.setAttribute(attributeHolder);
+								}
+							}
+						else if(source instanceof DataSet)
+							for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
+								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+									attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+									featureAttrMap.setAttribute(attributeHolder);
+								}
+							}
+						else if(source instanceof Rule)
+							for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
+								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+									attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+									featureAttrMap.setAttribute(attributeHolder);
+								}
+							}
 					}
-					if(source instanceof Datapod)
-						for(Attribute attribute : ((Datapod)source).getAttributes()) {
-							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
-								attributeHolder.setAttrName(attribute.getName());
-								featureAttrMap.setAttribute(attributeHolder);
-							}
-						}
-					else if(source instanceof DataSet)
-						for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
-							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
-								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
-								featureAttrMap.setAttribute(attributeHolder);
-							}
-						}
-					else if(source instanceof Rule)
-						for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
-							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
-								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
-								featureAttrMap.setAttribute(attributeHolder);
-							}
-						}
+					Train train = (Train) object;
+					train.setFeatureAttrMap(featureAttrMapList);
+					object = train;
+					return object;				
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				Train train = (Train) object;
-				train.setFeatureAttrMap(featureAttrMapList);
-				object = train;
-				return object;				
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			
 			return object;
 		}
 		

@@ -210,6 +210,7 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         $scope.execDetail=row;
         $scope.execDetail.setStatus=status;
         $scope.msg =status;
+        
         $('#confModal').modal({
           backdrop: 'static',
           keyboard: false

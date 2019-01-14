@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -346,14 +347,14 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -496,7 +497,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

@@ -26,10 +26,9 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -57,6 +56,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
@@ -736,7 +736,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			String filePath = String.format("/%s/%s/%s", train.getUuid(), train.getVersion(), trainExec.getVersion());
 			String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
 			String appUuid = commonServiceImpl.getApp().getUuid();
-			
+
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion, MetaType.algorithm.toString(), "N");
@@ -746,6 +746,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
+				
+				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap());
 				
 				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
 				exec = execFactory.getExecutor(datasource.getType());
@@ -758,8 +760,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
-				
-				
 				
 				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 				sourceRsHolder.setTableName((tableName+"_train_source_data"));
@@ -793,7 +793,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
 							, train.getValPercent(), (tableName+"_train_source_data"), tempTrngDfSql
 							, algoclass, trainOtherParam, trainResult, testSetPath
-							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql);
+							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -807,7 +807,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql);
+											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -819,7 +819,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql);
+										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
 							}
 						}
 					} else {
@@ -835,7 +835,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql);
+									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
 						}
 					}
 				} else {
@@ -853,57 +853,72 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl+"/model");
 				String defaultDir = null;
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
-					try {
-						String filePathUrl_2 = null;
-						if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
-							filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
-						defaultDir = filePathUrl_2;
-						String pmmlLocation = filePathUrl_2 + "/" + train.getUuid() + "_" + train.getVersion() + "_"
-								+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
-						
-						File pmmlFile = new File(pmmlLocation);
-						if(pmmlFile.exists()) {
-						FileUtils.forceDelete(pmmlFile);
-						} 
-						boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
-						if(isSaved) {
-							logger.info("PMML saved at location: "+pmmlLocation);
-						} else {
-							logger.info("PMML not saved.");
+					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						try {
+							String filePathUrl_2 = null;
+							if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
+								filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
+							defaultDir = filePathUrl_2;
+							String pmmlLocation = filePathUrl_2 + "/" + train.getUuid() + "_" + train.getVersion() + "_"
+									+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
+							
+							File pmmlFile = new File(pmmlLocation);
+							if(pmmlFile.exists()) {
+							FileUtils.forceDelete(pmmlFile);
+							} 
+							boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
+							if(isSaved) {
+								logger.info("PMML saved at location: "+pmmlLocation);
+							} else {
+								logger.info("PMML not saved.");
+							}
+						 }catch (JAXBException e) {
+							e.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 }catch (JAXBException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					}					
 				}
 				if (isModelSved) {	
+					logger.info("Inside isModelSaved : trainOtherParam : " + trainOtherParam);
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
-						
-						double[] featureimportancesArr = (double[])summary.get("featureimportances");						
-						if(featureimportancesArr != null) {
-							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
-							trainResult.setFeatureImportance(featureImportance);
+						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
 						}
-						trainResult.setAccuracy((double) summary.get("accuracy"));
-						trainResult.setRecall((double) summary.get("recall"));
-						trainResult.setF1Score((double) summary.get("f1Score"));
-						trainResult.setPrecision((double) summary.get("precision"));
-//						trainResult.setRocAUC((List<Double>) summary.get("roc"));
 						
-						writeSummaryToFile(summary, defaultDir, fileName);
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
+						
+						if(summary != null && !summary.isEmpty()) {
+							double[] featureimportancesArr = (double[])summary.get("featureimportances");						
+							if(featureimportancesArr != null) {
+								List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+								trainResult.setFeatureImportance(featureImportance);
+							}
+							trainResult.setAccuracy((double) summary.get("accuracy"));
+							trainResult.setRecall((double) summary.get("recall"));
+							trainResult.setF1Score((double) summary.get("f1Score"));
+							trainResult.setPrecision((double) summary.get("precision"));
+//							trainResult.setRocAUC(summary.get("roc"));
+//							trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
+							
+							writeSummaryToFile(summary, defaultDir, fileName);
+						}
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 												
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
+
+						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						}
 						double[] featureimportancesArr = (double[])summary.get("featureimportances");	
 						if(featureimportancesArr != null) {
 							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
@@ -924,7 +939,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						if(summary.get("confusionMatrix") != null) {
 							trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
 						}
-//						trainResult.setRocAUC((List<Double>) summary.get("roc"));
+//						trainResult.setRocAUC((summary.get("roc") == null)?null:(List<Double>) summary.get("roc"));
+//						trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
 						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
@@ -1000,6 +1016,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		}		
 	}
 	
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) {
+		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		for(FeatureAttrMap attrMap : featureAttrMap) {
+			if(attrMap.getEncodingType() != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), attrMap.getEncodingType());
+			}
+		}
+		if(!encodingDetails.isEmpty()) {
+			return encodingDetails;
+		}else {
+			return null;
+		}
+	}
+
 	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
 		String filePath = directory + "/" + fileName;		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);

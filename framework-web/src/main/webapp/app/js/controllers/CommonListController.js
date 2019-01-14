@@ -186,7 +186,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.selectDetail=row;
     $scope.selectDetail.setStatus=status;
     var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
-    $scope.confMsg=tempCaption.split("Exec")[0]
+    $scope.confMsg=tempCaption.split("Exec")[0];
+    var objJson = {}
+    objJson.uuid = row.uuid;
+    objJson.version = row.version;
+    objJson.name=row.name;
+    $scope.objDetail=objJson;
     $('#killmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -255,7 +260,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.selectDetail=row;
     var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
     $scope.confMsg=tempCaption.split("Exec")[0]
-
+    var objJson = {}
+    objJson.uuid = row.uuid;
+    objJson.version = row.version;
+    objJson.name=row.name;
+    $scope.objDetail=objJson;
     $('#restartmodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -390,7 +399,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.getDetail = function (data) {
     $scope.setActivity(data.uuid, data.version, $scope.select, "export");
     var uuid = data.uuid;
-    $scope.selectuuid = uuid
+    $scope.selectuuid = uuid;
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.objDetail=objJson;
     $('#filemodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -402,6 +416,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
     $scope.selectuuid = uuid;
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.objDetail=objJson;
     $scope.deleteModalMsg = restore ? 'Restore' : 'Delete';
     $scope.onSuccessDelete = function (response) {
       data.active = restore ? 'Y' : 'N';
@@ -431,6 +450,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
     $scope.selectuuid = uuid;
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.objDetail=objJson;
     $scope.publishModalMsg = unpublish ? 'Unpublish' : 'Publish';
     $scope.onSuccessPublish = function (response) {
       data.published = unpublish ? 'N' : 'Y';
@@ -459,6 +483,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
     $scope.selectuuid = uuid;
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.objDetail=objJson;
     $scope.lockModalMsg = unLock ? 'UnLock' : 'Lock';
     $scope.onSuccessLockOrUnLock = function (response) {
       data.locked = unLock ? 'N' : 'Y';
@@ -507,6 +536,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.clone = {};
     $scope.clone.uuid = uuid;
     $scope.clone.version = version;
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.objDetail=objJson;
     $('#clonemodal').modal({
       backdrop: 'static',
       keyboard: false
@@ -855,10 +889,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       backdrop: 'static',
       keyboard: false
     });
-    var ruleJson = {}
-    ruleJson.uuid = data.uuid;
-    ruleJson.version = data.version;
-    $scope.exeDetail = ruleJson
+    var objJson = {}
+    objJson.uuid = data.uuid;
+    objJson.version = data.version;
+    objJson.name=data.name;
+    $scope.exeDetail = objJson
+    $scope.objDetail=$scope.exeDetail;
 
   } //End excutionDag
 

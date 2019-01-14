@@ -126,6 +126,7 @@ import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SimulationType;
@@ -2146,7 +2147,11 @@ public class ModelServiceImpl {
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
 					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
-					
+
+					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
+					if(encodingDetails != null && !encodingDetails.isEmpty()) {
+						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
+					}
 					//assembling the data to for feature vector
 					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
 					
@@ -2158,9 +2163,8 @@ public class ModelServiceImpl {
 						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 						trainedModelMap.put(key, trainedModel);
 					}
-					
 					//prediction operation
-					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid);
+					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
 
 					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
@@ -2173,13 +2177,13 @@ public class ModelServiceImpl {
 					} else {
 						targetTableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
 					}
-					
-					isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-							, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-							, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
-					
+					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
+					}
 						//generating datastore for datapod
 						count = rsHolder.getCountRows();
 						createDatastore(filePathUrl, predict.getName(), 
@@ -2189,11 +2193,13 @@ public class ModelServiceImpl {
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
 					} else {
 						//writing into file
-						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-								, null, null, null, null);
+						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+									, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+									, null, null, null, null);
+						}
 					}
 					
 					//dropping temp table(s)
@@ -2242,6 +2248,20 @@ public class ModelServiceImpl {
 			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
+	}
+	
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) {
+		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		for(FeatureAttrMap attrMap : featureAttrMap) {
+			if(attrMap.getEncodingType() != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), attrMap.getEncodingType());
+			}
+		}
+		if(!encodingDetails.isEmpty()) {
+			return encodingDetails;
+		}else {
+			return null;
+		}
 	}
 	
 	public String[] getMappedAttrs(List<FeatureAttrMap> mappedFeatures) {
@@ -2318,7 +2338,7 @@ public class ModelServiceImpl {
 //		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 		
 		//prediction operation
-		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid);
+		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid, null);
 
 		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 		return rowIdentifierCols;
@@ -3221,7 +3241,15 @@ public class ModelServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			throw new RuntimeException(e);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
 		}
 	}
 	
@@ -3584,7 +3612,7 @@ public class ModelServiceImpl {
 		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
 		
 	
-		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid, null);
 		String query = "SELECT * FROM " + rsHolder.getTableName();
 
 		return exec.executeAndFetchByDatasource(query, appDS, query);

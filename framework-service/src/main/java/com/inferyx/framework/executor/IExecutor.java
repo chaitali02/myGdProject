@@ -50,6 +50,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 
 public interface IExecutor {
@@ -332,14 +333,15 @@ public interface IExecutor {
 	
 	/**
 	 * 
-	 * @param fieldArray
 	 * @param tableName
+	 * @param clientContext
+	 * @param encodingDetails TODO
+	 * @param fieldArray
 	 * @param trainName
 	 * @param label
-	 * @param clientContext
 	 * @return
 	 */
-	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
 	
 	/**
 	 * 
@@ -358,9 +360,10 @@ public interface IExecutor {
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
+	 * @param encodingDetails TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException;
 	
 	/**
 	 * 
@@ -579,11 +582,12 @@ public interface IExecutor {
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
+	 * @param enodingDetails TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails)
 			throws IOException;
 	
 	/**
