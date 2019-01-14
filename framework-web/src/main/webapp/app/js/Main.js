@@ -3497,6 +3497,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+
+        .state('organizationdetail',{
+            url: "/Admin/OrganizationDetail?id&mode&version&type&name",
+            templateUrl:"views/organization.html",
+            data:{pageTitle:'Admin'},
+            resolve:{
+                depe:['$ocLazyLoad',function($ocLazyLoad){
+                    return  $ocLazyLoad.load({
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/OrganizationController.js',
+                            'js/services/OrganizationService.js'
+                        ]
+                    });
+            
+               }]
+           }
+        })
         
         
 }]);

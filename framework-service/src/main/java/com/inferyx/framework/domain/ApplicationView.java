@@ -20,6 +20,7 @@ public class ApplicationView extends BaseEntity {
 	private String applicationChg;
 	private MetaIdentifierHolder dataSource;
 	private String deployPort;
+	private MetaIdentifierHolder orgInfo;
 
 	/**
 	 *
@@ -110,4 +111,12 @@ public class ApplicationView extends BaseEntity {
 	public void setDeployPort(String deployPort) {
 		this.deployPort = deployPort;
 	}
+	
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
+	}
+
 }

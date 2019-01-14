@@ -2115,7 +2115,19 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         childMenu:[],
         allowInChildMenu : false,
       },
-
+      'organization':{
+        name : 'organization',
+        caption : 'Organization',
+        execType:'',
+        metaType:'organization',
+        color : '#f794e0',
+        parentIconCaption:'',
+        allowInMenu : false,
+        listState : 'admin',
+        detailState:'organizationdetail',
+        childMenu:[],
+        allowInChildMenu : false,
+      },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];

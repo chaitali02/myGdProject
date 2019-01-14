@@ -101,7 +101,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   //  $scope.deferred = $q.defer();
   //  $scope.deferred.reject();
   });
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator','organization'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
