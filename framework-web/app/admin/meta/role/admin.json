@@ -7092,7 +7092,89 @@
                 "type" : "privilege",
                 "uuid" : "b374936e-af8d-4665-8b5d-4e6d081c2b6a"
             }
+        },{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02f398-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02f65e-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02fa0a-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02fb68-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02fc9e-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02fdca-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e02feec-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e030234-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e030392-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e030702-1663-11e9-ab14-d663bd873d93"
+            }
+        },
+
+{
+            "ref" : {
+                "type" : "privilege",
+                "uuid" : "9e030838-1663-11e9-ab14-d663bd873d93"
+            }
         }
+
+        
 		
     ]
 }

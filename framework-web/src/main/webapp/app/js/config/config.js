@@ -102,6 +102,13 @@ InferyxApp.constant('CF_ENCODINGTYPE',{
 });
 
 
+InferyxApp.constant("CF_ORGANIZATION",{
+    contactTitle:["Owner","Partner","Manager","Director","President","Vice-President","Associate","Other"],
+    phoneType:["home","business","mobile","fax","other","number"],
+    emailType:["personal","business","other"],
+    addressType:["home","business","other"]
+});
+
 InferyxApp.constant("CF_FILTER",{
 	operator :[{"caption":"EQUAL (=)","value":"="},{"caption":" NOT EQUAL (!=)","value":"!="},
 	{"caption":"LESS THAN (<)","value":"<"},
