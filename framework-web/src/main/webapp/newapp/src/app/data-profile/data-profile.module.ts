@@ -21,7 +21,7 @@ import {JointjsService} from '../shared/components/jointjs/jointjsservice'//
 import { routing1} from './data-profile-routing.module'
 //import { ProfileExecComponent } from '../job-monitoring/job-monitoring-details/profileExec/profileExec.component';
 import { DialogModule } from 'primeng/components/dialog/dialog';
-
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +33,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         routing1,
         ResultModule,
         ProjectSharedModule,
-        DialogModule
+        DialogModule,
+        DragDropModule
         
        
     ],

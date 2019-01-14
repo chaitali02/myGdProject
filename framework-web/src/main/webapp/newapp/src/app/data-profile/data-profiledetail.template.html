@@ -406,11 +406,11 @@
                               [settings]="dropdownSettings" name="attributeInfo">
                             </angular2-multiselect>
                            </div>
-                           <div class="col-md-1">
+                           <div class="col-md-1" style="padding-left:0px">
                             <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
-                              aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                              aria-hidden="true" (click)=" clear()" style="top:3px;cursor: pointer;"></span>
                               <span *ngIf="mode != 'true'" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
-                              (click)="addAll()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                              (click)="addAll()" style="top:3px;cursor: pointer;"></span>
                             </div>
                           
                       </div>
@@ -438,12 +438,16 @@
                                   <th style="text-align: center;width:15%;">LHS Type</th>
                                   <th style="text-align: center;width:20%;">LHS Attribute</th>
                                   <th style="text-align: center;width:15%;">Operator</th>
-                                  <th style="text-align: center;width:25%;">RHS Type</th>
-                                  <th style="text-align: center;width:20%;">RHS Attribute</th>
+                                  <th style="text-align: center;width:15%;">RHS Type</th>
+                                  <th style="text-align: center;width:18%;">RHS Attribute</th>
+                                  <th class="text-center" style="width:12%;">Move</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr *ngFor="let data of dataprofile.filterTableArray ;let i=index">
+                                <tr *ngFor="let data of dataprofile.filterTableArray ;let i=index"
+                                pDraggable="cars"
+                                (onDragStart)="dragStart($event,i)" (onDragEnd)="dragEnd($event)" pDroppable="cars" 
+                                (onDrop)="drop($event,i)">
   
                                   <td style="text-align:center;Vertical-align:middle;">
                                     <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"
@@ -612,6 +616,20 @@
                                         </div>
                                       </p-footer>
                                     </p-dialog>
+                                  </td>
+                                  <td>
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <div style="text-align: center;">
+                                        <a class="move-column" [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" (click)="onAttrRowUp(i)">
+                                          <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                          <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                                        </a>
+                                        <a class="move-column" [attr.disabled]="(i == dataprofile.filterTableArray.length-1 ||mode == 'true') ? 'disabled' : null" (click)="onAttrRowDown(i)">
+                                          <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                          <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                        </a>
+                                      </div>
+                                    </span>
                                   </td>
                                 </tr>
                               </tbody>
