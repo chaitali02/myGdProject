@@ -135,6 +135,14 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		}
 	}
 
+	$scope.getAllLatestOrgnization = function () {
+		CommonService.getAllLatest('organization').then(function (response) { onGetAllLatest(response.data) });
+		var onGetAllLatest = function (response) {
+			$scope.allOrgnization = response;
+		}
+	}
+	
+
 	AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
 	var onSuccessGetAllLatestRole = function (response) {
 		var roleInfoArray = [];
@@ -222,7 +230,13 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
+            $scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			if(response.orgInfo !=null){
+				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
 
+			}
 		};
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -274,6 +288,13 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
+			$scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			if(response.orgInfo !=null){
+				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
+
+			}
 		};//End getLatestByUuid
 		var onError=function(){
 			$scope.isEditInprogess=false;
@@ -330,7 +351,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.middleName = $scope.userdata.middleName;
 		userJson.lastName = $scope.userdata.lastName;
 		userJson.emailId = $scope.userdata.emailId;
-         
+        
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
@@ -341,7 +362,16 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				upd_tag="Y"	
 			}
 		}
-		userJson.tags = tagArray
+		userJson.tags = tagArray;
+
+		var orgInfo={};
+		var refOrgInfo={};
+		refOrgInfo.uuid=$scope.selectOrgInfo.uuid;
+		refOrgInfo.type="organization";	
+		orgInfo.ref=refOrgInfo;
+		userJson.orgInfo=orgInfo;
+
+
 		var groupInfoArray = [];
 		if ($scope.groupInfoTags != null) {
 			for (var c = 0; c < $scope.groupInfoTags.length; c++) {

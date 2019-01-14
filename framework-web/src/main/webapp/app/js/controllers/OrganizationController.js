@@ -151,6 +151,15 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 			defaultVersion.version = response.version;
 			defaultVersion.uuid = response.uuid;
 			$scope.organization.defaultVersion = defaultVersion;
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}//End Innter If
 			$scope.isEditInprogess = false;
 			$scope.isEditVeiwError = false;
 			$scope.contactTableInfo = response.contact;
@@ -165,16 +174,17 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 	}
 
 
-	if (typeof $stateParams.id != 'undifined') {
+	if (typeof $stateParams.id != 'undefined') {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
 		$scope.showactive = "true";
 		var id;
 		id = $stateParams.id;
+		var version=$stateParams.version
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
 		$scope.isEditInprogess = true;
 		$scope.isEditVeiwError = false;
-		$scope.getOneByUuidAndVersion($stateParams.id, $stateParams.version);
+		$scope.getOneByUuidAndVersion(id,version);
 		
 	}
 	else {
@@ -337,6 +347,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		orgJson.published = $scope.organizationData.published;
 		var tagArray = [];
 		var upd_tag = "N";
+		debugger
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;

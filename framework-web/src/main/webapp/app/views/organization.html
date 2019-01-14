@@ -225,7 +225,7 @@
                         <div class="row">
                           <div class="x_title">
                             <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowContact()" ng-disabled="{{mode}}"></button>
-                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowContact()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowContact()" ng-disabled="{{mode}}||contactTableInfo.length >=3"></button>
                           </div>
                           <br>
                           <hr>
@@ -282,7 +282,7 @@
                         <div class="row">
                           <div class="x_title">
                             <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowPhone()" ng-disabled="{{mode}}"></button>
-                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowPhone()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowPhone()" ng-disabled="{{mode}} ||phoneTableInfo.length >=3"></button>
                           </div>
                           <br>
                           <hr>
@@ -326,7 +326,7 @@
                         <div class="row">
                           <div class="x_title">
                             <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowEmail()" ng-disabled="{{mode}}"></button>
-                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowEmail()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowEmail()" ng-disabled="{{mode}}||emailTableInfo.length >=3"></button>
                           </div>
                           <br>
                           <hr>
@@ -371,7 +371,7 @@
                         <div class="row">
                           <div class="x_title">
                             <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowAddress()" ng-disabled="{{mode}}"></button>
-                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowAddress()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowAddress()" ng-disabled="{{mode}} ||addressTableInfo.length >=3"></button>
                           </div>
                           <br>
                           <hr>
@@ -451,3 +451,6 @@
     </div>
   </div>
 </div>
+<br>
+<br>
+<br>
