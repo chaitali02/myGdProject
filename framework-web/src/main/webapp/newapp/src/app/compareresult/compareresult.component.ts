@@ -108,11 +108,11 @@ export class CompareResultComponent {
       this.breadcrumbDataFrom = [
         {
           "caption": "Data Quality",
-          "routeurl": "/app/list/batch"
+          "routeurl": "/app/list/dq"
         },
         {
           "caption": "Compare Results",
-          "routeurl": "/app/list/batch"
+          "routeurl": "/app/list/dq"
         }
       ];
       this.searchForm.selectedTypeRadio = this.type;
@@ -152,9 +152,19 @@ export class CompareResultComponent {
     this.isSubmitDisable = false;
     this.allsource = [];
     this.alltarget = [];
+    this.isSourceTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
   }
   onUpdateEndDate() {
     this.isSubmitDisable = false;
+    this.allsource = [];
+    this.alltarget = [];
+    this.isSourceTableShow = false;
+    this.isSourceDataError = false;
+    this.isTargetTableShow = false;
+    this.isTargetDataError = false;
   }
 
   onRadioBtnChange(type) {

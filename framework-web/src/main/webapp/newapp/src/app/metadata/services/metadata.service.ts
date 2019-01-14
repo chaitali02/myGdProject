@@ -9,7 +9,7 @@ import { SharedService } from '../../shared/shared.service';
 @Injectable()
 
 export class MetadataService {
-  
+
   constructor(@Inject(Http) private http: Http, private _sharedService: SharedService) { }
 
   getFile(filename: String): Observable<any[]> {
@@ -52,22 +52,31 @@ export class MetadataService {
     return Observable.throw(error.statusText);
   }
 
-  getExecListByBatchExec(uuid:Number, version:String, type:String): Observable<any[]> {
-    let url ='metadata/getExecListByBatchExec?action=view&uuid='+uuid+'&version='+version+'&type='+type;
+  getExecListByBatchExec(uuid: Number, version: String, type: String): Observable<any[]> {
+    let url = 'metadata/getExecListByBatchExec?action=view&uuid=' + uuid + '&version=' + version + '&type=' + type;
     return this._sharedService.getCall(url)
-    .map((response: Response) => {
-      return <any[]>response.json();
-  })
-   .catch(this.handleError);
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
   }
 
-  getNumRowsbyExec(uuid:Number, version:String, type:String): Observable<any[]> {
-    let url ='metadata/getNumRowsbyExec?action=view&execUuid='+uuid+'&execVersion='+version+'&type='+type;
+  getNumRowsbyExec(uuid: Number, version: String, type: String): Observable<any[]> {
+    let url = 'metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + '&execVersion=' + version + '&type=' + type;
     return this._sharedService.getCall(url)
-    .map((response: Response) => {
-      return <any[]>response.json();
-  })
-   .catch(this.handleError);
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
+  }
+
+  getAttributesByDatapod(uuid: number, type: string): Observable<any[]> {
+    let url = 'metadata/getAttributesByDatapod?action=view&uuid=' + uuid + '&type=' + type;
+    return this._sharedService.getCall(url)
+      .map((response: Response) => {
+        return <any[]>response.json();
+      })
+      .catch(this.handleError);
   }
 
 }
