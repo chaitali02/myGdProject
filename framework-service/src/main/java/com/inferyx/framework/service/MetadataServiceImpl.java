@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +76,7 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
@@ -2287,9 +2289,45 @@ public class MetadataServiceImpl {
 		return null;
 	}
 
-	public Organization getGroupsByOrg(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Group> getGroupsByOrg(String orgUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
+		
+		List<Group> groupList = new ArrayList<>();
+		List<Application> appList = getApplicationByOrg(orgUuid);
+			for(Application app : appList) {
+				groupList=getGroupByApplication(app.getUuid());
+			}
+			
+		return groupList;
+	}
+
+	private List<Application> getApplicationByOrg(String orgUuid)throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		
+		List<Application> appList = new ArrayList<>();
+		Query query = new Query();
+		query.fields().include("uuid");
+		
+		query.addCriteria(Criteria.where("orgInfo.ref.uuid").is(orgUuid));
+		appList = mongoTemplate.find(query, Application.class, MetaType.application.toString().toLowerCase());
+		
+		return appList;
+	}
+	
+	private List<Group> getGroupByApplication(String appUuid) {
+		List<Group> groupList= new ArrayList<>();
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		
+		query.addCriteria(Criteria.where("appId.ref.uuid").is(appUuid));
+		groupList=mongoTemplate.find(query, Group.class);
+		return groupList;
+		
+	
 	}
 	
 }

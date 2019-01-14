@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
@@ -1091,11 +1092,11 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)
-	public @ResponseBody Organization getGroupsByOrg(
-			@RequestParam(value = "uuid") String uuid, 
+	public @ResponseBody List<Group> getGroupsByOrg(
+			@RequestParam(value = "uuid") String orgUuid, 
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
-		return metadataServiceImpl.getGroupsByOrg(MetaType.dq.toString());
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+		return  metadataServiceImpl.getGroupsByOrg(orgUuid);
 	}
 			
 			
