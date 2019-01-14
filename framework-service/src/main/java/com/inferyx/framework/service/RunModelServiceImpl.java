@@ -887,9 +887,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
-						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
-						}
+//						}
 						
 //						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
 						
@@ -916,9 +916,9 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						
 //						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
 
-						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
-						}
+//						}
 						double[] featureimportancesArr = (double[])summary.get("featureimportances");	
 						if(featureimportancesArr != null) {
 							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
