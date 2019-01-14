@@ -11,6 +11,8 @@ import { Location } from '@angular/common';
   templateUrl: './data-ingestion-rule-group.component.html'
 })
 export class DataIngestionRuleGroupComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   isSubmit: string;
   msgs: any[];
   checkboxModelexecution: boolean;
@@ -32,6 +34,8 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
     this.isSubmit = "false"
     this.ingestGroupData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.ruleInfo = [];
     this.ruleInfoArray = [];
     this.breadcrumbDataFrom = [{
@@ -63,8 +67,8 @@ export class DataIngestionRuleGroupComponent implements OnInit {
       this.version = params['version'];
       this.mode = params['mode'];
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllLatest();
       }
       else {
@@ -74,18 +78,18 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     });
   }
 
-  onItemSelect(item:any){
+  onItemSelect(item: any) {
     console.log(item);
-   // console.log(this.selectedItems);
+    // console.log(this.selectedItems);
   }
-  OnItemDeSelect(item:any){
+  OnItemDeSelect(item: any) {
     console.log(item);
-   // console.log(this.selectedItems);
+    // console.log(this.selectedItems);
   }
-  onSelectAll(items: any){
+  onSelectAll(items: any) {
     console.log(items);
   }
-  onDeSelectAll(items: any){
+  onDeSelectAll(items: any) {
     console.log(items);
   }
 
@@ -160,8 +164,8 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     this.ingestGroupData.active = response["active"] == 'Y' ? true : false;
     let ruleInfo = [];
     for (const i in response.ruleInfo) {
-     {
-      let ruleInfotag = {};
+      {
+        let ruleInfotag = {};
         ruleInfotag["id"] = response.ruleInfo[i].ref.uuid;
         ruleInfotag["itemName"] = response.ruleInfo[i].ref.name;
         ruleInfo[i] = ruleInfotag;
@@ -187,7 +191,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     ingestGroupJson['tags'] = tagArray
     ingestGroupJson["active"] = this.ingestGroupData.active == true ? 'Y' : "N"
     ingestGroupJson["published"] = this.ingestGroupData.published == true ? 'Y' : "N";
-    let ruleInfo =[];  
+    let ruleInfo = [];
     for (const i in this.ruleInfo) {
       let ruleInfoObj = {}
       let ref = {};
@@ -195,10 +199,10 @@ export class DataIngestionRuleGroupComponent implements OnInit {
       ref["type"] = "ingest";
       ruleInfoObj["ref"] = ref;
       ruleInfo[i] = ruleInfoObj
-    } 
+    }
     ingestGroupJson["ruleInfo"] = ruleInfo;
 
-    ingestGroupJson["inParallel"] = this.runInParallel== true ? 'Y' : "N";
+    ingestGroupJson["inParallel"] = this.runInParallel == true ? 'Y' : "N";
 
     console.log(JSON.stringify(ingestGroupJson));
     this._commonService.submit("ingestgroup", ingestGroupJson).subscribe(
@@ -209,20 +213,20 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
       this._commonService.getOneById("ingestgroup", response).subscribe(
-        response => {this.onSuccessgetOneById(response)},
+        response => { this.onSuccessgetOneById(response) },
         error => console.log('Error :: ' + error))
     }
     else {
       this.msgs = [];
       this.isSubmit = "true"
       this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ingest Rule Group Saved Successfully' });
-      setTimeout(() => {this.goBack()}, 1000);
+      setTimeout(() => { this.goBack() }, 1000);
     }
   }
 
   onSuccessgetOneById(response) {
     this._commonService.execute(response.uuid, response.version, "ingestgroup", "execute").subscribe(
-      response => {this.onSuccessExecute(response)},
+      response => { this.onSuccessExecute(response) },
       error => this.showError(error))
   }
 
@@ -230,14 +234,14 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     this.msgs = [];
     this.isSubmit = "true"
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Group Saved and Submited Successfully' });
-    setTimeout(() => { this.goBack()}, 1000);
+    setTimeout(() => { this.goBack() }, 1000);
   }
 
   showError(error) {
     console.log('Error::', + error);
     this.msgs = [];
     this.msgs.push({ severity: 'Failed', summary: 'Failed Message', detail: 'Rule Group Saved and failed' });
-    setTimeout(() => {this.goBack()}, 1000);
+    setTimeout(() => { this.goBack() }, 1000);
   }
 
   public goBack() {
@@ -247,10 +251,21 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataIngestion/ingestgroup', this.ingestGroupData.uuid, this.ingestGroupData.version, 'false']);
   }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataIngestion/ingestgroup', this.ingestGroupData.uuid, this.ingestGroupData.version, 'true']);
+  // showview(uuid, version) {
+  //   this.router.navigate(['app/dataIngestion/ingestgroup', this.ingestGroupData.uuid, this.ingestGroupData.version, 'true']);
+  // }
+  clear() {
+    this.ruleInfo = []
   }
-  clear(){
-    this.ruleInfo=[]
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }
