@@ -331,7 +331,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			$scope.isEditInprogess=false;
 			$scope.applicationdata = response.application;
 			var defaultversion = {};
-			defaultversion.version = response.application;
+			defaultversion.version = response.application.version;
 			defaultversion.uuid = response.application.uuid;
 			$scope.application.defaultVersion = defaultversion;
 			var tags = [];
