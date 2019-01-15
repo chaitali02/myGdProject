@@ -11,6 +11,7 @@
 package com.inferyx.framework.parser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -21,11 +22,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -434,8 +433,9 @@ public class VizpodParser {
 						whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
 				}
 			//}			
+				
 			groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet, null, null, null));
-			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, null, null, null));
+			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, usedRefKeySet, null, null));
 			
 			queryBuilder.append(selectBuilder);
 			queryBuilder.append(fromBuilder);
