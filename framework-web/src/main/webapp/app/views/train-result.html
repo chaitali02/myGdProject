@@ -147,13 +147,13 @@
                             </div>
                         </div>
                         <div ng-if="!isGraphShow">
-                            <!-- <div class="form-body text-center" id="errorMsg" style="color:blue;"></div> -->
+                            <div class="form-body text-center" id="errorMsg" ng-if="isPmmlError" style="color:red;">Some Error Occured</div>
                             <div class="spinner text-center" id="graphloader" ng-if="isPmmlInprogess">
                                 <div class="bounce1"></div>
                                 <div class="bounce2"></div>
                                 <div class="bounce3"></div>
                             </div>
-                            <div ng-show="!isPmmlInprogess">
+                            <div ng-show="!isPmmlInprogess && !isPmmlError">
                             <div class="showClips">
                                 <div id="" style="height:500px;overflow: auto;">
                                     <div class="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
