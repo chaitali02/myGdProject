@@ -16,6 +16,8 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class DataQualityDetailComponent {
+  dropIndex: any;
+  dragIndex: any;
   showGraph: boolean;
   isHomeEnable: boolean;
   attributesArray: any[];
@@ -1015,5 +1017,41 @@ export class DataQualityDetailComponent {
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
+  }
+
+  onAttrRowDown(index){
+		var rowTempIndex=this.dqdata.filterTableArray[index];
+    var rowTempIndexPlus=this.dqdata.filterTableArray[index+1];
+		this.dqdata.filterTableArray[index]=rowTempIndexPlus;
+    this.dqdata.filterTableArray[index+1]=rowTempIndex;
+    this.isSubmit=true
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.dqdata.filterTableArray[index];
+    var rowTempIndexMines=this.dqdata.filterTableArray[index-1];
+		this.dqdata.filterTableArray[index]=rowTempIndexMines;
+    this.dqdata.filterTableArray[index-1]=rowTempIndex;
+    this.isSubmit=true
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.dqdata.filterTableArray[this.dragIndex]
+      this.dqdata.filterTableArray.splice(this.dragIndex,1)
+      this.dqdata.filterTableArray.splice(this.dropIndex,0,item)
+      this.isSubmit=true
+    }
+    
   }
 }
