@@ -19,9 +19,19 @@ import { AppConfig } from '../app.config';
   styleUrls: []
 })
 export class BusinessRulesResultComponent {
+  download: {};
+  downloadType: any;
+  downloadVersion: any;
+  downloadUuid: any;
+  isResultTable: boolean;
+  showKnowledgeGraph: boolean;
+  isHomeEnable: boolean;
+  showHome: boolean;
+  isDownloadModel: boolean;
   typeJointJs: any;
   versionJointJs: any;
   uuidJointJs: any;
+  runMode: any;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
     _type: any;
     _uuid: any;
@@ -37,6 +47,10 @@ export class BusinessRulesResultComponent {
       this.baseUrl = _config.getBaseUrl();
       this.isgraphShow=false;
       this.istableShow=false;
+      this.download={}
+      this.download["format"]=["excel"]
+      this.download["rows"]=100
+      this.download["selectFormat"]='excel'
       this.breadcrumbDataFrom=[{
           "caption":"Business Rules",
           "routeurl":"/app/list/ruleexec"
@@ -93,20 +107,26 @@ export class BusinessRulesResultComponent {
         }
         else {
           this.istableShow= true;
+          this.isResultTable=true
         }
       }
       if( this.istableShow== true){ 
         setTimeout(() => {
           this.params["type"]=this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
           this.d_tableRenderComponent.renderTable(this.params);
+          this.downloadUuid = this.params.uuid;
+          this.downloadVersion = this.params.version;
+          this.downloadType = this.params.type;
         }, 1000);
       }
       else{
         this.params["type"]=this._type;
       this.isgraphShow=true;
+      
       }
     }
     public goBack() {
+      this.isResultTable=false
       if(this.istableShow ==true){
         this._location.back();
       }
@@ -118,27 +138,56 @@ export class BusinessRulesResultComponent {
             this.d_JointjsGroupComponent.IsGraphShow=true;
         }
        }
-    }    
-
-  downloadRule() {
-    this.uuidJointJs = this.d_tableRenderComponent.uuid;
-    this.versionJointJs = this.d_tableRenderComponent.version;
-    this.typeJointJs = this.d_tableRenderComponent.type;
-    
-    const headers = new Headers();
-    this.http.get(this.baseUrl+'/rule/download?action=view&ruleExecUUID=' + this.uuidJointJs + '&ruleExecVersion=' + this.versionJointJs + '&mode=BATCH',
-    { headers: headers, responseType: ResponseContentType.Blob })
-    .toPromise()
-    .then(response => this.saveToFileSystem(response));
-}
-
-  saveToFileSystem(response){
-      const contentDispositionHeader: string = response.headers.get('Content-Type');
-      const parts: string[] = contentDispositionHeader.split(';');
-      const filename = parts[1];
-      const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
-      saveAs(blob, filename);
+    }
+    opendownloadResult(){
+      this.isDownloadModel=true
+    }
+    downloadProfileResult(){
+      this.downloadResult()
+  }    
+  onSuccessgetNumRowsbyExec(response){
+    this.runMode = response.runMode;
+    this.downloadResult();
   }
+    downloadResult(){
+      const headers = new Headers();
+      this.http.get(this.baseUrl+'/rule/download?action=view&ruleExecUUID=' + this.downloadUuid + '&ruleExecVersion=' + this.downloadVersion + '&mode='+this.runMode+ '&row='+this.download["rows"]+'&formate='+this.download["selectFormat"],
+      { headers: headers, responseType: ResponseContentType.Blob })
+      .toPromise()
+      .then(response => this.saveToFileSystem(response));
+    }
+  
+    saveToFileSystem(response){
+        const contentDispositionHeader: string = response.headers.get('Content-Type');
+        const parts: string[] = contentDispositionHeader.split(';');
+        const filename = parts[1];
+        const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+        saveAs(blob, filename);
+        this.isDownloadModel=false
+    }
+    showMainPage(){
+      this.showHome=true
+      this.isHomeEnable = false
+     // this._location.back();
+     this.showKnowledgeGraph = false;
+    }
+  
+    showGraph(uuid,version){
+      this.showHome=false
+      this.isHomeEnable = true;
+      this.showKnowledgeGraph = true;
+    }
+    downloadShow(param:any) {
+      
+      this.isResultTable=true;;
+      console.log(param)
+      this.downloadUuid = param.uuid;
+      this.downloadVersion = param.version;
+      this.downloadType = param.type;
+    }
+    close(){
+      this.isDownloadModel=false
+    }
   }
       
      

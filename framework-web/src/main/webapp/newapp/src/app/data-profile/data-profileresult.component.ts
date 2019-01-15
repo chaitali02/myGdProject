@@ -180,7 +180,7 @@ import { AppConfig } from '../app.config';
     this.showKnowledgeGraph = true;
   }
   downloadShow(param:any) {
-    debugger
+    
     this.isResultTable=true;;
     console.log(param)
     this.downloadUuid = param.uuid;

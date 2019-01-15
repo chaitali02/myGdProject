@@ -13,7 +13,7 @@
             <i class="fa fa-gift"></i>{{paramlist.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
+            <!-- <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
               *ngIf="mode">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
@@ -31,7 +31,41 @@
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-            </a>
+            </a> -->
+            <a title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            data- (click)="showMainPage(uuid,version)" *ngIf="mode && isHomeEnable">
+           <i class="fa fa-home" style="display: block;margin: 2px auto;color:white"></i>
+         </a>
+     
+         <a class="linkDisabled " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            *ngIf="mode && !isHomeEnable">
+           <i class="fa fa-home" style="display: block;margin: 2px auto;color:white"></i>
+         </a>
+     
+         <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+           tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data- (click)="enableEdit(uuid,version)"
+           *ngIf="mode == 'true'">
+           <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
+         </a>
+     
+         <a class="linkDisabled" title="Edit" data-toggle="tooltip" data-placement="top"
+           tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" 
+           *ngIf="mode == 'false'">
+           <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
+         </a>
+     
+         <a  href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+         *ngIf="mode" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(uuid,version)">
+           <i class="fa fa-sitemap" style="margin:2px auto;color:white"></i>
+         </a>
+     
+         <a href="javascript:;" disabled="true" (click)="broadcastRefreshData()"
+           data-original-title="" title="Refresh">
+           <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
+         </a>
+         <a (click)="goBack()" title="Close">
+           <i class="fa fa-times" style="margin: 2px auto;color:white"></i>
+         </a>
           </div>
         </div>
 
@@ -179,6 +213,8 @@
                             </th>
                             <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
                             <th style="text-align: center;width:15%;">Name</th>
+                            <th class="text-center" style="width:20%;">Display Name</th>
+                            <th class="text-center" style="width:20%;">Desc</th>
                             <th style="text-align: center;width:35%;">Type</th>
                             <th style="text-align: center;width:35%;">Default Value</th>
                           </tr>
@@ -194,6 +230,12 @@
                             <td>
                               <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="mode == 'true'" class="form-control">
                             </td>
+                            <td>
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramDispName" name="paramDispName+{{i}}" [disabled]="mode == 'true'" class="form-control">
+                              </td>
+                              <td>
+                                  <input type="text" class="form-control" [(ngModel)]="data1.paramDesc" name="paramDesc+{{i}}" [disabled]="mode == 'true'" class="form-control">
+                                </td>
                             <td>
                               <p-dropdown [options]="types" 
                               [(ngModel)]="data1.paramType" 

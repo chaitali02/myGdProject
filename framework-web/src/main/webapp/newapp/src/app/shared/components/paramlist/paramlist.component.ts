@@ -15,6 +15,8 @@ import { ParamlistService } from '../../../metadata/services/paramlist.service';
   styleUrls: []
 })
 export class ParamlistComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   parentType: any;
   allTemplateList: any[];
   isTemplateInfoRequired: boolean = false;
@@ -233,6 +235,10 @@ export class ParamlistComponent implements OnInit {
       let paramtableObj = {};
       paramtableObj["paramName"] = response.params[i].paramName;
       paramtableObj["paramType"] = response.params[i].paramType;
+      paramtableObj["paramDispName"] = response.params[i].paramDispName;
+      paramtableObj["paramDesc"] = response.params[i].paramDesc;
+      
+      
 
       if (this.typeSimple.indexOf(response.params[i].paramType) != -1) {
         paramtableObj["paramValue"] = response.params[i].paramValue.value;
@@ -400,6 +406,8 @@ export class ParamlistComponent implements OnInit {
       attributemap["paramId"] = i;
       attributemap["paramName"] = this.paramtableArray[i].paramName
       attributemap["paramType"] = this.paramtableArray[i].paramType
+      attributemap["paramDispName"] = this.paramtableArray[i].paramDispName
+      attributemap["paramDesc"] = this.paramtableArray[i].paramDesc
       let paramValue = {};
       if (this.typeSimple.indexOf(this.paramtableArray[i].paramType) != -1) {
         let paramRef = {};
@@ -454,4 +462,14 @@ export class ParamlistComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/dataScience/paramlist',this.parentType, uuid, version, 'true']);
   }
+  showMainPage(){
+		this.isHomeEnable = false
+	   // this._location.back();
+	   this.showGraph = false;
+	  }
+	
+	  showDagGraph(uuid,version){
+		this.isHomeEnable = true;
+		this.showGraph = true;
+	  }
 }

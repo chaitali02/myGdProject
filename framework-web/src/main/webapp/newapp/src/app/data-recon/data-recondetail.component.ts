@@ -405,8 +405,8 @@ export class DataReconDetailComponent {
     this.sourceTableArray = response.filterInfo
     this.createdBy = response.recondata.createdBy.ref.name
     this.recondata.published = response.recondata["published"] == 'Y' ? true : false
-    
-    this.recondata.active = response.recondata["locked"] == 'Y' ? true : false
+    this.recondata.locked = response.recondata["locked"] == 'Y' ? true : false
+    this.recondata.active = response.recondata["active"] == 'Y' ? true : false
     this.recondata.sourceDistinct = response.recondata["sourceDistinct"] == 'Y' ? true : false
     this.recondata.targetDistinct = response.recondata["targetDistinct"] == 'Y' ? true : false
     this.tags = response.recondata['tags'];
@@ -913,22 +913,52 @@ export class DataReconDetailComponent {
 
   onChangeOperator(index){
     this.filterTableArray[index].rhsAttribute = null;
-    if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
-      this.filterTableArray[index].rhsType = 'dataset' ;
+    if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
+      this.filterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.filterTableArray[index].operator == 'IS'){
+			this.filterTableArray[index].rhsType = 'string';
     }
     else{
 			this.filterTableArray[index].rhsType = 'integer';
-		}	
+		}
+    // this.filterTableArray[index].rhsAttribute = null;
+    // if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
+    //   this.filterTableArray[index].rhsType = 'dataset' ;
+    // }
+    // else{
+		// 	this.filterTableArray[index].rhsType = 'integer';
+		// }	
   }
 
   onChangeOperatorTarget(index){
-    this.filterTableArray[index].rhsAttribute = null;
-    if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
-      this.targetFilterTableArray[index].rhsType = 'dataset' ;
+    this.targetFilterTableArray[index].rhsAttribute = null;
+    if (this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS') {
+      this.targetFilterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.targetFilterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.targetFilterTableArray[index].operator == 'IS'){
+			this.targetFilterTableArray[index].rhsType = 'string';
     }
     else{
 			this.filterTableArray[index].rhsType = 'integer';
-		}	
+		}
+    // this.filterTableArray[index].rhsAttribute = null;
+    // if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
+    //   this.targetFilterTableArray[index].rhsType = 'dataset' ;
+    // }
+    // else{
+		// 	this.filterTableArray[index].rhsType = 'integer';
+		// }	
   }
 
   searchOption(index) {
@@ -1058,7 +1088,7 @@ export class DataReconDetailComponent {
     dqJson["tags"] = tagArray;
     dqJson["active"] = this.recondata.active == true ? 'Y' : "N"
     dqJson["published"] = this.recondata.published == true ? 'Y' : "N"
-    dqJson["locked"] = this.recondata.published == true ? 'Y' : "N"
+    dqJson["locked"] = this.recondata.locked == true ? 'Y' : "N"
     dqJson["sourceDistinct"] = this.recondata.sourceDistinct == true ? 'Y' : "N"
     dqJson["targetDistinct"] = this.recondata.targetDistinct == true ? 'Y' : "N"
     
