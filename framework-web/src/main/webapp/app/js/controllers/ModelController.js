@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc,CommonService) {
+DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService, $http, $location, $anchorScroll, privilegeSvc, CommonService, CommonFactory) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -206,7 +206,12 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     var len = $scope.featureTableArray.length + 1
     var feature= {};
     feature.featureId="1";
-    feature.id = len - 1;
+    if($scope.featureTableArray.length ==0){
+      feature.id = $scope.featureTableArray.length ;//len - 1;
+		}else{
+      feature.id =CommonFactory.getMaxSourceSeqId($scope.featureTableArray,"id")+1;
+		}
+   
     feature.name = "";
     feature.type =  $scope.featuureType[0];
     feature.desc = "";
@@ -476,7 +481,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
           featureObj.featureId=$scope.modeldata.features[i].featureId;
-          featureObj.id=$scope.modeldata.features[i].featureId;
+          featureObj.id=parseInt($scope.modeldata.features[i].featureId);
           featureObj.name=$scope.modeldata.features[i].name
           featureObj.type=$scope.modeldata.features[i].type
           featureObj.desc=$scope.modeldata.features[i].desc
@@ -562,7 +567,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
-          featureObj.featureId=$scope.modeldata.features[i].featureId
+          featureObj.featureId=$scope.modeldata.features[i].featureId;
+          featureObj.id=parseInt($scope.modeldata.features[i].featureId);
           featureObj.name=$scope.modeldata.features[i].name
           featureObj.type=$scope.modeldata.features[i].type
           featureObj.desc=$scope.modeldata.features[i].desc

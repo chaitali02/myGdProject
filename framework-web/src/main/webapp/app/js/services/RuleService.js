@@ -813,7 +813,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
           var obj = {}
           obj.text = "string"
-          obj.caption = "string"
+          obj.caption = "string";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.isSourceAtributeSimple = true;
           attributeInfo.sourcesimple = response.attributeInfo[n].sourceAttr.value
@@ -832,7 +833,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           sourcedatapod.name = "";
           var obj = {}
           obj.text = "datapod"
-          obj.caption = "attribute"
+          obj.caption = "attribute";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourcedatapod = sourcedatapod;
           attributeInfo.isSourceAtributeSimple = false;
@@ -849,7 +851,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           sourceexpression.name = "";
           var obj = {}
           obj.text = "expression"
-          obj.caption = "expression"
+          obj.caption = "expression";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceexpression = sourceexpression;
           attributeInfo.isSourceAtributeSimple = false;
@@ -865,7 +868,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           sourceformula.name = "";
           var obj = {}
           obj.text = "formula"
-          obj.caption = "formula"
+          obj.caption = "formula";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId)
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceformula = sourceformula;
           attributeInfo.isSourceAtributeSimple = false;
@@ -881,7 +885,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           sourcefunction.name = "";
           var obj = {}
           obj.text = "function"
-          obj.caption = "function"
+          obj.caption = "function";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourcefunction = sourcefunction;
           attributeInfo.isSourceAtributeSimple = false;
@@ -899,7 +904,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           sourceparamlist.name = "";
           var obj = {}
           obj.text = "paramlist"
-          obj.caption = "paramlist"
+          obj.caption = "paramlist";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceparamlist = sourceparamlist;
           attributeInfo.isSourceAtributeSimple = false;
@@ -911,6 +917,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         }
         sourceAttributesArray[n] = attributeInfo
       }
+      console.log(sourceAttributesArray);
       ruleJSOn.sourceAttributes = sourceAttributesArray
       deferred.resolve({
         data: ruleJSOn

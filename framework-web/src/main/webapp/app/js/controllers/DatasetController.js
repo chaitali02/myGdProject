@@ -3,7 +3,7 @@
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
 
-MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER,$location,$anchorScroll) {
+MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CommonFactory, CF_FILTER,$location,$anchorScroll) {
 	$rootScope.isCommentVeiwPrivlage = true;
 
 	if ($stateParams.mode == 'true') {
@@ -990,17 +990,20 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.onChangeRhsParamList = function () {
 		
 	}
-
+	
 	$scope.addAttribute = function () {
-		
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
+	
 		var len = $scope.attributeTableArray.length + 1
 		var attributeinfo = {};
-
+		if($scope.attributeTableArray.length ==0){
+			attributeinfo.id=$scope.attributeTableArray.length;
+		}else{
+			attributeinfo.id =CommonFactory.getMaxSourceSeqId($scope.attributeTableArray,"id")+1;
+		}
 		attributeinfo.name = "attribute" + len;
-		attributeinfo.id = len - 1;
 		attributeinfo.index = len;
 		attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
 		attributeinfo.isSourceAtributeSimple = true;

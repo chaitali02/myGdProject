@@ -753,7 +753,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
-					obj.caption = "string"
+					obj.caption = "string";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.isSourceAtributeSimple = true;
 					attributeInfo.sourcesimple = response.attributeInfo[n].sourceAttr.value
@@ -773,7 +774,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourcedatapod.name = "";
 					var obj = {}
 					obj.text = "datapod"
-					obj.caption = "attribute"
+					obj.caption = "attribute";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourcedatapod = sourcedatapod;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -792,7 +794,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceparamlist.name = "";
 					var obj = {}
 					obj.text = "paramlist"
-					obj.caption = "paramlist"
+					obj.caption = "paramlist";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceparamlist = sourceparamlist;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -808,7 +811,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceexpression.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "expression"
-					obj.caption = "expression"
+					obj.caption = "expression";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceexpression = sourceexpression;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -825,7 +829,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceformula.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "formula"
-					obj.caption = "formula"
+					obj.caption = "formula";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceformula = sourceformula;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -842,7 +847,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourcefunction.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "function"
-					obj.caption = "function"
+					obj.caption = "function";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourcefunction = sourcefunction;
 					attributeInfo.isSourceAtributeSimple = false;
