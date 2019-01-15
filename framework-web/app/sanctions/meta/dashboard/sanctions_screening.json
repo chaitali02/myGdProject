@@ -1,6 +1,6 @@
 {
   "uuid": "51bbce9e-6468-4462-bfa5-e5ecd51dd144",
-  "version": "1547508743",
+  "version": "1547586315",
   "name": "Sanctions Screening",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 14 18:32:23 EST 2019",
+  "createdOn": "Tue Jan 15 16:05:15 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -31,6 +31,36 @@
   "sectionInfo": [
     {
       "sectionId": null,
+      "name": "Sender Match Score",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "3e4190b8-1730-42d0-823a-a26ba0507207",
+          "version": null,
+          "name": "viz_sender_match_score"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Receiver Match Score",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "da56fedd-21fa-4a24-98ac-e8e747e293b3",
+          "version": null,
+          "name": "viz_reciever_match_score"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
       "name": "Total Matches By Country",
       "vizpodInfo": {
         "ref": {
@@ -41,23 +71,8 @@
         },
         "value": null
       },
-      "rowNo": 1,
+      "rowNo": 2,
       "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Sender Name Match Score",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "3e4190b8-1730-42d0-823a-a26ba0507207",
-          "version": null,
-          "name": "viz_sender_name_match_score"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
     }
   ],
   "dependsOn": {

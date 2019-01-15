@@ -1,7 +1,7 @@
 {
   "uuid": "3e4190b8-1730-42d0-823a-a26ba0507207",
-  "version": "1547508610",
-  "name": "viz_sender_name_match_score",
+  "version": "1547585888",
+  "name": "viz_sender_match_score",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 14 18:30:10 EST 2019",
+  "createdOn": "Tue Jan 15 15:58:08 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -39,7 +39,7 @@
     "value": null
   },
   "type": "bar-chart",
-  "limit": null,
+  "limit": "10",
   "keys": [
     {
       "ref": {
@@ -48,10 +48,10 @@
         "version": null,
         "name": "ds_sanctions_screening_matches"
       },
-      "attributeId": 5,
+      "attributeId": 2,
       "function": null,
       "value": null,
-      "attributeName": "transaction_country"
+      "attributeName": "customer_id"
     }
   ],
   "dimension": [],
@@ -82,6 +82,18 @@
       "function": null,
       "value": null,
       "attributeName": "sender_name_alt_name_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 39,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_addr_sdn_addr_lev_score"
     }
   ]
 }
