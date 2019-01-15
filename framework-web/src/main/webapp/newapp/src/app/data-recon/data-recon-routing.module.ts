@@ -17,6 +17,7 @@ const routes: Routes = [{
       { path: 'createreconerule', component: DataReconDetailComponent}, 
       { path: 'createreconerulegroup/:id/:version/:mode', component: DataReconGroupDetailComponent},    
       { path: 'createreconerulegroup', component: DataReconGroupDetailComponent},  
+      { path: 'viewdrresultspage/:id/:version/:type/:mode/recon/createreconerule/:id/:version/:mode', redirectTo: 'createreconerule/:id/:version/:mode'},
       //{ path: 'dqgroup/:id/:version/:mode', component: DataQualityGroupDetailComponent},    
       //{ path: 'dqgroup', component: DataQualityGroupDetailComponent},     
             

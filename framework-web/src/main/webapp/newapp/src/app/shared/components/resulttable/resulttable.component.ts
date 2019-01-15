@@ -34,7 +34,7 @@ export class TableRenderComponent {
 
   }
 
-  renderTable(params) {
+  renderTable(params) {    
     this.IsTableShow = false;
     let type;
     switch (params.type) {
@@ -60,6 +60,7 @@ export class TableRenderComponent {
     response => {
       this.modeOfExec=response["runMode"]
       this.results(type, params.uuid, params.version,this.modeOfExec)
+     
     })   
   }
   results(type, uuid, version,mode){
@@ -95,6 +96,7 @@ export class TableRenderComponent {
 
     }
     );
+    
     this.uuid = uuid;
     this.version =version;
     this.type = type;

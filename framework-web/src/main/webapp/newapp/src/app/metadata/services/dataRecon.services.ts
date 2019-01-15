@@ -104,6 +104,7 @@ export class DataReconService {
               lhsAttri["uuid"] = response["sourceFilter"][k].operand[0].ref.uuid;
               lhsAttri["label"] = response["sourceFilter"][k].operand[0].ref.name + "." + response["sourceFilter"][k].operand[0].attributeName;
               lhsAttri["attributeId"] = response["sourceFilter"][k].operand[0].attributeId;
+              lhsAttri["id"] = response["sourceFilter"][k].operand[0].ref.uuid + "_" + response["sourceFilter"][k].operand[0].attributeId;
               filterInfo["lhsAttribute"] = lhsAttri;
             }
             else if (response["sourceFilter"][k].operand[0].ref.type == 'attribute') {
@@ -154,6 +155,7 @@ export class DataReconService {
               rhsAttri1["uuid"] = response["sourceFilter"][k].operand[1].ref.uuid;
               rhsAttri1["label"] = response["sourceFilter"][k].operand[1].ref.name + "." + response["sourceFilter"][k].operand[1].attributeName;
               rhsAttri1["attributeId"] = response["sourceFilter"][k].operand[1].attributeId;
+              rhsAttri1["id"] = response["sourceFilter"][k].operand[1].ref.uuid + "_" + response["sourceFilter"][k].operand[1].attributeId;
               filterInfo["rhsAttribute"] = rhsAttri1;
             }
             else if (response["sourceFilter"][k].operand[1].ref.type == 'attribute') {
@@ -210,6 +212,7 @@ export class DataReconService {
               lhsAttri["uuid"] = response["targetFilter"][k].operand[0].ref.uuid;
               lhsAttri["label"] = response["targetFilter"][k].operand[0].ref.name + "." + response["targetFilter"][k].operand[0].attributeName;
               lhsAttri["attributeId"] = response["targetFilter"][k].operand[0].attributeId;
+              lhsAttri["id"] = response["targetFilter"][k].operand[0].ref.uuid + "_" + response["targetFilter"][k].operand[0].attributeId;
               filterInfo["lhsAttribute"] = lhsAttri;
             }
             else if (response["targetFilter"][k].operand[0].ref.type == 'attribute') {
@@ -260,6 +263,7 @@ export class DataReconService {
               rhsAttri1["uuid"] = response["targetFilter"][k].operand[1].ref.uuid;
               rhsAttri1["label"] = response["targetFilter"][k].operand[1].ref.name + "." + response["targetFilter"][k].operand[1].attributeName;
               rhsAttri1["attributeId"] = response["targetFilter"][k].operand[1].attributeId;
+              rhsAttri1["id"] = response["targetFilter"][k].operand[1].ref.uuid + "_" + response["targetFilter"][k].operand[1].attributeId;
               filterInfo["rhsAttribute"] = rhsAttri1;
             }
             else if (response["targetFilter"][k].operand[1].ref.type == 'attribute') {

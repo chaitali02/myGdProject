@@ -13,30 +13,6 @@
             <span class="caption-subject  bold "> Rule Group</span>
           </div>
           <!-- <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-              data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a>
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
-              data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
-              data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-              <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
-            </a>
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
-              title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a>
-            <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()"title="Close" data-toggle="tooltip" data-placement="top"
-              tooltip>
-              <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a>
-          </div> -->
-          <div class="actions">
 
             <a title="Edit" class="btn btn-circle btn-icon-only btn-default" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip 
               *ngIf="mode">
@@ -55,6 +31,42 @@
             </a>
             <a title="Close" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" data-placement="top" tooltip (click)="goBack()">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+            </a>
+          </div> -->
+          <div class="actions">
+            <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+              data- (click)="showMainPage(uuid,version)" *ngIf="mode && isHomeEnable">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a class="btn btn-circle btn-icon-only btn-default linkDisabled " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+              *ngIf="mode && !isHomeEnable">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data- (click)="enableEdit(uuid,version)"
+              *ngIf="mode == 'true'">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a class="btn btn-circle btn-icon-only btn-default linkDisabled" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" *ngIf="mode == 'false'">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+            *ngIf="mode" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(uuid,version)">
+              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
+              data-original-title="" title="Refresh">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+
+            <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
+              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
             </a>
           </div>
         </div>

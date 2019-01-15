@@ -16,6 +16,12 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
   templateUrl: './data-recondetail.template.html',
 })
 export class DataReconDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  dropIndex: any;
+  dragIndex: any;
+  iSSubmitEnable: boolean;
+  allNamesTarget: any[];
   dialogAttributeNameTarget: any;
   dialogAttriNameArrayTarget: any[];
   dialogSelectNameTarget: any;
@@ -110,7 +116,7 @@ export class DataReconDetailComponent {
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false;
     this.isSubmit = "false"
-    this.sources = ["datapod"];
+    this.sources = ["datapod","dataset"];
     this.source = this.sources[0];
     this.target = this.sources[0];
     this.progressbarWidth = 25 * this.continueCount + "%";
@@ -177,7 +183,8 @@ export class DataReconDetailComponent {
         this.getOneByUuidAndVersion(this.id, this.version);
       }
       else {
-        this.getAllLatest();
+        this.getAllLatestSource();
+        this.getAllLatestTarget();
       }
       this.getAllVersionByUuid();
     });
@@ -225,13 +232,13 @@ export class DataReconDetailComponent {
   //     filter.selected = this.selectedAllFitlerRow;
   //   });
   // }
-  getAllLatest() {
+  getAllLatestSource() {
     this._commonService.getAllLatest(this.source).subscribe(
-      response => { this.OnSuccesgetAllLatest(response) },
+      response => { this.OnSuccesgetAllLatestSource(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllLatest(response1) {
+  OnSuccesgetAllLatestSource(response1) {
     let temp = []
     if (this.mode == undefined) {
       let dependOnTemp: DependsOn = new DependsOn();
@@ -250,13 +257,42 @@ export class DataReconDetailComponent {
     this.allNames = temp
     if (this.mode !== undefined) {
       this.getAllAttributeBySource();
-      this.getAllAttributeByTarget();
+     // this.getAllAttributeByTarget();
     }
     // if(this.mode != undefined  && this.IsSelectSoureceAttr) {
     //   this.allRefIntegrity=this.allNames;
     //   this.changeRefIntegrity();
 
     // }
+  }
+  getAllLatestTarget() {
+    this._commonService.getAllLatest(this.target).subscribe(
+      response => { this.OnSuccesgetAllLatestTarget(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+  OnSuccesgetAllLatestTarget(response1) {
+    let temp = []
+    if (this.mode == undefined) {
+      let dependOnTemp: DependsOn = new DependsOn();
+      dependOnTemp.label = response1[0]["name"];
+      dependOnTemp.uuid = response1[0]["uuid"];
+      this.sourcedata = dependOnTemp
+    }
+    for (const n in response1) {
+      let allname = {};
+      allname["label"] = response1[n]['name'];
+      allname["value"] = {};
+      allname["value"]["label"] = response1[n]['name'];
+      allname["value"]["uuid"] = response1[n]['uuid'];
+      temp[n] = allname;
+    }
+    this.allNamesTarget = temp
+    if (this.mode !== undefined) {
+      
+      this.getAllAttributeByTarget();
+    }
+
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source).subscribe(
@@ -367,7 +403,10 @@ export class DataReconDetailComponent {
     this.sourceTableArray = response.filterInfo
     this.createdBy = response.recondata.createdBy.ref.name
     this.recondata.published = response.recondata["published"] == 'Y' ? true : false
-    this.recondata.active = response.recondata["active"] == 'Y' ? true : false
+    
+    this.recondata.active = response.recondata["locked"] == 'Y' ? true : false
+    this.recondata.sourceDistinct = response.recondata["sourceDistinct"] == 'Y' ? true : false
+    this.recondata.targetDistinct = response.recondata["targetDistinct"] == 'Y' ? true : false
     this.tags = response.recondata['tags'];
     const version: Version = new Version();
     this.uuid = response.uuid;
@@ -402,9 +441,12 @@ export class DataReconDetailComponent {
     let targetAttr: DependsOn = new DependsOn();
     targetAttr.label = response.recondata["targetAttr"]["attrName"];
     targetAttr["attrId"] = response.recondata["targetAttr"]["attrId"];
+    this.source=response.recondata["sourceAttr"]["ref"]["type"];
+    this.target=response.recondata["targetAttr"]["ref"]["type"];
     //this.sourcedata=dependOnTemp;
     // this.getAllVersionByUuid();
-    this.getAllLatest()
+    this.getAllLatestSource();
+    this.getAllLatestTarget();
     this.selectTargetAtrribute = targetAttr;
 
     //this.selectTargetType=this.reconruledata.targetAttr.ref.type; 
@@ -568,6 +610,7 @@ export class DataReconDetailComponent {
       attributeObj["value"]["uuid"] = response[i].uuid;
       attributeObj["value"]["label"] = response[i].dname;
       attributeObj["value"]["attributeId"] = response[i].attributeId;
+      attributeObj["value"]["id"] = response[i].uuid+"_"+response[i].attributeId;
       temp1[i] = attributeObj
       this.attributesArray = temp1;
     }
@@ -596,9 +639,9 @@ export class DataReconDetailComponent {
   }
 
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "dq", "execute").subscribe(
+    this._commonService.execute(response.uuid, response.version, "recon", "execute").subscribe(
       response => {
-        this.showMassage('DQ Save and Submit Successfully', 'success', 'Success Message')
+        this.showMassage('Recon Rule Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
           this.goBack()
         }, 1000);
@@ -626,6 +669,17 @@ export class DataReconDetailComponent {
       response => { this.OnSuccesgetAllAttributeBySourceDrop(response, defaultValue, index, type) },
       error => console.log('Error :: ' + error)
     )
+  }
+  changeSourceType(){
+    this.getAllLatestSource()
+  }
+  changeTargetType(){
+    
+    this.getAllLatestTarget();
+    // this._commonService.getAllLatest(this.target).subscribe(
+    //   response => { this.OnSuccesgetAllLatest(response) },
+    //   error => console.log('Error :: ' + error)
+    // )
   }
   OnSuccesgetAllAttributeBySourceDrop(response2, defaultValue, index, type) {
     let temp = []
@@ -1002,6 +1056,10 @@ export class DataReconDetailComponent {
     dqJson["tags"] = tagArray;
     dqJson["active"] = this.recondata.active == true ? 'Y' : "N"
     dqJson["published"] = this.recondata.published == true ? 'Y' : "N"
+    dqJson["locked"] = this.recondata.published == true ? 'Y' : "N"
+    dqJson["sourceDistinct"] = this.recondata.sourceDistinct == true ? 'Y' : "N"
+    dqJson["targetDistinct"] = this.recondata.targetDistinct == true ? 'Y' : "N"
+    
     var sourceattribute = {}
     var ref = {}
     //sourceattribute["attrName"]=this.selectSourceAtrribute["attrName"]
@@ -1307,6 +1365,79 @@ export class DataReconDetailComponent {
       }, 1000);
     }
   }
+  onAttrRowDown(index){
+		var rowTempIndex=this.filterTableArray[index];
+    var rowTempIndexPlus=this.filterTableArray[index+1];
+		this.filterTableArray[index]=rowTempIndexPlus;
+    this.filterTableArray[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
 
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.filterTableArray[index];
+    var rowTempIndexMines=this.filterTableArray[index-1];
+		this.filterTableArray[index]=rowTempIndexMines;
+    this.filterTableArray[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.filterTableArray[this.dragIndex]
+      this.filterTableArray.splice(this.dragIndex,1)
+      this.filterTableArray.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    }
+    
+  }
+  dropTrgt(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.targetFilterTableArray[this.dragIndex]
+      this.targetFilterTableArray.splice(this.dragIndex,1)
+      this.targetFilterTableArray.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    } 
+    
+  }
+  onTrgtRowDown(index){
+    var rowTempIndex=this.targetFilterTableArray[index];
+    var rowTempIndexPlus=this.targetFilterTableArray[index+1];
+    this.targetFilterTableArray[index]=rowTempIndexPlus;
+    this.targetFilterTableArray[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
+
+  }
+  
+  onTrgtRowUp(index){
+    var rowTempIndex=this.targetFilterTableArray[index];
+    var rowTempIndexMines=this.targetFilterTableArray[index-1];
+    this.targetFilterTableArray[index]=rowTempIndexMines;
+    this.targetFilterTableArray[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+  }
+  showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 }
 

@@ -20,6 +20,12 @@ import { AppConfig } from '../app.config';
 })
     
   export class DataReconresultComponent {
+  isResultTable: boolean;
+  download: {};
+  isDownloadModel: boolean;
+  showKnowledgeGraph: boolean;
+  isHomeEnable: boolean;
+  showHome: boolean;
   runMode: any;
 
   downloadType: any;
@@ -41,6 +47,10 @@ import { AppConfig } from '../app.config';
       this.baseUrl = _config.getBaseUrl();
       this.isgraphShow=false;
       this.istableShow=false;
+      this.download={}
+      this.download["format"]=["excel"]
+      this.download["rows"]=100
+      this.download["selectFormat"]='excel'
       this.breadcrumbDataFrom=[{
         "caption": " Data Reconciliation",
         "routeurl": "/app/list/recon"
@@ -99,12 +109,16 @@ import { AppConfig } from '../app.config';
         }
         else {
           this.istableShow= true;
+          this.isResultTable=true
         }
       }
       if( this.istableShow== true){ 
         setTimeout(() => {
           this.params["type"]=this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
           this.d_tableRenderComponent.renderTable(this.params);
+          this.downloadUuid = this.params.uuid;
+          this.downloadVersion = this.params.version;
+          this.downloadType = this.params.type;
         }, 1000);
       }
       else{
@@ -113,6 +127,7 @@ import { AppConfig } from '../app.config';
       }
     }
     public goBack() {
+      this.isResultTable=false
       if(this.istableShow ==true){
         this._location.back();
       }
@@ -126,18 +141,11 @@ import { AppConfig } from '../app.config';
        }
     }
     
+    opendownloadResult(){
+      this.isDownloadModel=true
+    }
     downloadProfileResult(){
-      this.downloadUuid = this.d_tableRenderComponent.uuid;
-      this.downloadVersion = this.d_tableRenderComponent.version;
-      this.downloadType = this.d_tableRenderComponent.type;
-
-      this._commonService.getNumRowsbyExec(this.downloadUuid, this.downloadVersion, 'profileexec')
-      .subscribe(
-      response => {
-          this.onSuccessgetNumRowsbyExec(response);
-      },
-      error => console.log("Error :: " + error)
-      );
+      this.downloadResult()
   }
 
   onSuccessgetNumRowsbyExec(response){
@@ -147,7 +155,7 @@ import { AppConfig } from '../app.config';
 
   downloadResult(){
     const headers = new Headers();
-    this.http.get(this.baseUrl+'/profile/download?action=view&profileExecUUID=' + this.downloadUuid + '&profileExecVersion=' + this.downloadVersion + '&mode='+this.runMode,
+    this.http.get(this.baseUrl+'/recon/download?action=view&reconExecUUID=' + this.downloadUuid + '&reconExecVersion=' + this.downloadVersion + '&mode='+this.runMode+ '&row='+this.download["rows"]+'&formate='+this.download["selectFormat"],
     { headers: headers, responseType: ResponseContentType.Blob })
     .toPromise()
     .then(response => this.saveToFileSystem(response));
@@ -159,6 +167,30 @@ import { AppConfig } from '../app.config';
       const filename = parts[1];
       const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
       saveAs(blob, filename);
+      this.isDownloadModel=false
+  }
+  showMainPage(){
+    this.showHome=true
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showKnowledgeGraph = false;
+  }
+
+  showGraph(uuid,version){
+    this.showHome=false
+    this.isHomeEnable = true;
+    this.showKnowledgeGraph = true;
+  }
+  downloadShow(param:any) {
+    
+    this.isResultTable=true;
+    console.log(param)
+    this.downloadUuid = param.uuid;
+    this.downloadVersion = param.version;
+    this.downloadType = param.type;
+  }
+  close(){
+    this.isDownloadModel=false
   }
 }
  
