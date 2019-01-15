@@ -25,6 +25,7 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { AttributeTabComponent } from './compare-profile/attributeTab/attributetab.component';
 import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.component';
+import { DatapodService } from '../metadata/services/datapod.service';
 
 @NgModule({
     imports: [
@@ -53,7 +54,8 @@ import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.com
     providers: [
         CommonService,
         JointjsService,
-        ProfileService
+        ProfileService,
+        DatapodService
       //  jointjsGroupService
     ],
 
