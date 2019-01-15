@@ -16,6 +16,12 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class DataReconGroupDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  graphDataStatus: boolean;
+  showProfileGroupForm: boolean;
+  showgraphdiv: boolean;
+  showProfileGroup: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -277,5 +283,22 @@ export class DataReconGroupDetailComponent {
   }
   clear(){
     this.selectedItems=[]
+  }
+  showProfileGroupePage() {
+		this.showProfileGroup = true;
+		this.showgraphdiv = false;
+		this.graphDataStatus = false;
+		this.showProfileGroupForm = true;
+
+	}
+
+	showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

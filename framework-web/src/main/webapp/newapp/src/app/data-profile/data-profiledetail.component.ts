@@ -18,6 +18,9 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class DataProfileDetailComponent {
+  dropIndex: any;
+  dragIndex: any;
+  iSSubmitEnable: boolean;
   filterTableArray: any;
   isNullArray: { 'value': string; 'label': string; }[];
   datatype: { 'value': string; 'label': string; }[];
@@ -209,6 +212,12 @@ export class DataProfileDetailComponent {
   changeType() {
     this.selectedItems = [];
     this.getAllAttributeBySource();
+    if(this.dataprofile.filterTableArray){
+      for(let i=0;i<this.dataprofile.filterTableArray.length;i++){
+        this.onChangeLhsType(i)
+      }
+    }
+    
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source).subscribe(
@@ -912,5 +921,41 @@ export class DataProfileDetailComponent {
   }
   addAll() {
 		this.selectedItems = this.dropdownList;
+  }
+  onAttrRowDown(index){
+		var rowTempIndex=this.dataprofile.filterTableArray[index];
+    var rowTempIndexPlus=this.dataprofile.filterTableArray[index+1];
+		this.dataprofile.filterTableArray[index]=rowTempIndexPlus;
+    this.dataprofile.filterTableArray[index+1]=rowTempIndex;
+    this.iSSubmitEnable=true
+
 	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.dataprofile.filterTableArray[index];
+    var rowTempIndexMines=this.dataprofile.filterTableArray[index-1];
+		this.dataprofile.filterTableArray[index]=rowTempIndexMines;
+    this.dataprofile.filterTableArray[index-1]=rowTempIndex;
+    this.iSSubmitEnable=true
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.dataprofile.filterTableArray[this.dragIndex]
+      this.dataprofile.filterTableArray.splice(this.dragIndex,1)
+      this.dataprofile.filterTableArray.splice(this.dropIndex,0,item)
+      this.iSSubmitEnable=true
+    }
+    
+  }
 }

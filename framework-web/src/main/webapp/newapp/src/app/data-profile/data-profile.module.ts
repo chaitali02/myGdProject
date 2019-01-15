@@ -23,6 +23,7 @@ import { routing1} from './data-profile-routing.module'
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 //import { ProfileExecComponent } from '../job-monitoring/job-monitoring-details/profileExec/profileExec.component';
 import { DialogModule } from 'primeng/components/dialog/dialog';
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 import { AttributeTabComponent } from './compare-profile/attributeTab/attributetab.component';
 import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.component';
 import { DatapodService } from '../metadata/services/datapod.service';
@@ -39,6 +40,7 @@ import { DatapodService } from '../metadata/services/datapod.service';
         ResultModule,
         ProjectSharedModule,
         DialogModule,
+        DragDropModule,     
         TabViewModule,
         CalendarModule
     ],

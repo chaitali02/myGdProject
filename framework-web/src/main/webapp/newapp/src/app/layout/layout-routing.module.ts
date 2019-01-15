@@ -38,7 +38,7 @@ const routes: Routes = [
             { path: 'list/:type/JobMonitoring', redirectTo: 'JobMonitoring' },
             //{ path: 'JobMonitoring/profileExec/:id/:version/:mode', loadChildren: 'app/job-monitoring/job-monitoring-details/job-monitoring-details.module#jobMonitoringDetailsModule' },
             { path: 'JobMonitoring', loadChildren: 'app/job-monitoring/job-monitoring-details/job-monitoring-details.module#jobMonitoringDetailsModule' },
-            { path: 'dataProfiling/JobMonitoring', redirectTo:'JobMonitoring' },
+            { path: 'dataProfiling/JobMonitoring', redirectTo: 'JobMonitoring' },
             { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' },
             { path: 'list/:type/admin', redirectTo: 'admin' },
             //    { path: 'registerSource', component: RegisterSourceComponent},
@@ -66,7 +66,7 @@ const routes: Routes = [
             //{ path: 'dataQuality/compare', redirectTo: 'dataQuality' },
 
             { path: 'compare/:type', component: CompareResultComponent },
-            { path: 'dataProfiling/compareprofile/:type/dataProfiling', redirectTo: 'dataProfiling'},
+            { path: 'dataProfiling/compareprofile/:type/dataProfiling', redirectTo: 'dataProfiling' },
 
             { path: 'recon', loadChildren: 'app/data-recon/data-recon.module#DataReconModule' },
             { path: 'list/:type/recon', redirectTo: 'recon' },
@@ -80,8 +80,8 @@ const routes: Routes = [
 
             { path: 'dataIngestion', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule' },
             { path: 'list/:type/dataIngestion', redirectTo: 'dataIngestion' },
-            { path: 'ingestexec', loadChildren: 'app/data-ingestion/data-ingestion.module#DataIngestionModule' },
-
+            { path: 'dataIngestion/ingestgroupexec/:type/:id/:version/:mode/dataIngestion', redirectTo: 'dataIngestion' },
+         
             { path: 'batchScheduler', loadChildren: 'app/batch-scheduler/batch-scheduler.module#BatchSchedulerModule' },
             //  { path: 'batchScheduler/rulegroupexec/:type/:id/:version/:mode/batchScheduler',redirectTo :'batchScheduler'},
             { path: 'list/:type/batchScheduler', redirectTo: 'batchScheduler' },

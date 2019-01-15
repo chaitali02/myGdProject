@@ -107,12 +107,17 @@ import { AppConfig } from '../app.config';
         }
         else {
           this.istableShow= true;
+          this.isResultTable=true
         }
       }
       if( this.istableShow== true){ 
         setTimeout(() => {
           this.params["type"]=this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
+          
           this.d_tableRenderComponent.renderTable(this.params);
+          this.downloadUuid = this.params.uuid;
+          this.downloadVersion = this.params.version;
+          this.downloadType = this.params.type;
         }, 1000);
       }
       else{
@@ -138,17 +143,7 @@ import { AppConfig } from '../app.config';
       this.isDownloadModel=true
     }
     downloadProfileResult(){
-      this.downloadUuid = this.d_tableRenderComponent.uuid;
-      this.downloadVersion = this.d_tableRenderComponent.version;
-      this.downloadType = this.d_tableRenderComponent.type;
-
-      this._commonService.getNumRowsbyExec(this.downloadUuid, this.downloadVersion, 'profileexec')
-      .subscribe(
-      response => {
-          this.onSuccessgetNumRowsbyExec(response);
-      },
-      error => console.log("Error :: " + error)
-      );
+      this.downloadResult()
   }
 
   onSuccessgetNumRowsbyExec(response){
@@ -170,6 +165,7 @@ import { AppConfig } from '../app.config';
       const filename = parts[1];
       const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
       saveAs(blob, filename);
+      this.isDownloadModel=false
   }
   showMainPage(){
     this.showHome=true
@@ -183,8 +179,16 @@ import { AppConfig } from '../app.config';
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
   }
-  downloadShow(download: boolean) {
-    this.isResultTable=true
+  downloadShow(param:any) {
+    debugger
+    this.isResultTable=true;;
+    console.log(param)
+    this.downloadUuid = param.uuid;
+    this.downloadVersion = param.version;
+    this.downloadType = param.type;
+  }
+  close(){
+    this.isDownloadModel=false
   }
   // ngAfterViewChecked(){
   //   debugger

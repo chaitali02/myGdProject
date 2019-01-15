@@ -22,7 +22,7 @@ export class DataQualityResultComponent {
   //showHome: boolean;
   showKnowledgeGraph: boolean;
   isHomeEnable: boolean;
-  numRows: string;
+  numRows: any;
   downloadFormatArray : any[];
   displayDialogBox : boolean;
   runMode: any;
@@ -43,6 +43,7 @@ export class DataQualityResultComponent {
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
+    this.numRows = 100;
     this.isHomeEnable = false;
     this.displayDialogBox = false
     this.isgraphShow = false;
@@ -138,6 +139,7 @@ export class DataQualityResultComponent {
   }
 
   submitDialogBox() {
+    this.displayDialogBox = false;
     this.uuidJointJs = this.d_tableRenderComponent.uuid;
     this.versionJointJs = this.d_tableRenderComponent.version;
     this.typeJointJs = this.d_tableRenderComponent.type;
@@ -159,7 +161,6 @@ export class DataQualityResultComponent {
 
   showMainPage(){
     this.isHomeEnable = false;
-   // this._location.back();
    this.showKnowledgeGraph = false;
   }
 
@@ -171,6 +172,7 @@ export class DataQualityResultComponent {
   cancelDialogBox(){
     this.displayDialogBox = false;
   }
+
 }
 
 

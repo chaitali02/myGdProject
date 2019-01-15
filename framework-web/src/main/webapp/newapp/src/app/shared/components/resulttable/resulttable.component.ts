@@ -34,14 +34,14 @@ export class TableRenderComponent {
 
   }
 
-  renderTable(params) {
+  renderTable(params) {    
     this.IsTableShow = false;
     let type;
     switch (params.type) {
       case 'dq':
         type = 'dq';
         break;
-      case 'dqgroupexec':
+      case 'dqgroup':
         type = 'dataqual';
         break;
       case 'profile':
@@ -54,13 +54,14 @@ export class TableRenderComponent {
         type = 'recon';
         break
     }
+    
     this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
     .subscribe(
     response => {
       this.modeOfExec=response["runMode"]
       this.results(type, params.uuid, params.version,this.modeOfExec)
+     
     })   
-    
   }
   results(type, uuid, version,mode){
     if(type == 'dq'){
@@ -95,6 +96,7 @@ export class TableRenderComponent {
 
     }
     );
+    
     this.uuid = uuid;
     this.version =version;
     this.type = type;
