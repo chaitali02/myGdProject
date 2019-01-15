@@ -104,6 +104,15 @@
         return response
       })
     }
+
+    factory.getMaxSourceSeqId=function(attrArray,propertyName){
+      //console.log(attrArray);
+    	var max = attrArray.reduce(function (prev, current) {
+        return (prev[propertyName] > current[propertyName]) ? prev : current
+       });
+       console.log("factory"+JSON.stringify(max));
+       return max[propertyName];
+    }
     return factory;
   });
 

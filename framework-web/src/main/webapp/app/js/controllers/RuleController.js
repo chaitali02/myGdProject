@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER,$location,$anchorScroll,CF_SUCCESS_MSG) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, CommonFactory, dagMetaDataService, CommonService, CF_FILTER, $location, $anchorScroll, CF_SUCCESS_MSG) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -1304,7 +1304,11 @@ var confirmDialog = function(newVal, yes, no) {
     var len = $scope.attributeTableArray.length + 1
     var attributeinfo = {};
     attributeinfo.name = "attribute" + len;
-    attributeinfo.id = len - 1;
+    if($scope.attributeTableArray.length ==0){
+			attributeinfo.id=$scope.attributeTableArray.length;
+		}else{
+			attributeinfo.id =CommonFactory.getMaxSourceSeqId($scope.attributeTableArray,"id")+1;
+		}
 		attributeinfo.index = len;
     attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
     attributeinfo.isSourceAtributeSimple = true;

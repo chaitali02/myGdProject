@@ -311,3 +311,5 @@ InferyxApp.factory('sortFactory', function () {
       }
    }
 });
+
+
