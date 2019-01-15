@@ -380,11 +380,12 @@
                                     (click)="checkAllFilterRow()" />
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
-                                <th style="text-align: center;width:15%;">LHS Type</th>
+                                <th style="text-align: center;width:13%;">LHS Type</th>
                                 <th style="text-align: center;width:20%;">LHS Attribute</th>
-                                <th style="text-align: center;width:20%;">Operator</th>
+                                <th style="text-align: center;width:15%;">Operator</th>
                                 <th style="text-align: center;width:15%;">RHS Type</th>
-                                <th style="text-align: center;width:25%;">RHS Attribute</th>
+                                <th style="text-align: center;width:20%;">RHS Attribute</th>
+                                <th class="text-center" style="width:12%;">Move</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -562,7 +563,21 @@
                                       </div>
                                     </p-footer>
                                   </p-dialog>
+                                </td>
 
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <div style="text-align: center;">
+                                      <a class="move-column" [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" (click)="onAttrRowUp(i)">
+                                        <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                                        <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                                      </a>
+                                      <a class="move-column" [attr.disabled]="(i == filterTableArray.length-1 ||mode == 'true') ? 'disabled' : null" (click)="onAttrRowDown(i)">
+                                        <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                                        <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                      </a>
+                                    </div>
+                                  </span>
                                 </td>
                               </tr>
                             </tbody>
@@ -686,7 +701,7 @@
 
                                 <td>
                                   <div *ngIf="data.IsTargetAttributeSimple == 'true'">
-                                    <input type="text" class="form-control" [(ngModel)]="data.targetAttribute" name="targetAttribute+{{i}}" [disabled]="mode && selectedTargetType == 'TABLE'">
+                                    <input type="text" class="form-control" [(ngModel)]="data.targetAttribute" name="targetAttribute+{{i}}" [disabled]="mode || selectedTargetType == 'TABLE'">
                                   </div>
                                   <div *ngIf="(data.IsTargetAttributeSimple == 'false') && (selectedSourceType !== 'STREAM' || selectedTargetType !== 'TABLE')">
                                     <input type="text" class="form-control" [(ngModel)]="data.targetAttribute.label" name="targetAttribute+{{i}}" [disabled]="true || selectedTargetType !== 'TABLE'">

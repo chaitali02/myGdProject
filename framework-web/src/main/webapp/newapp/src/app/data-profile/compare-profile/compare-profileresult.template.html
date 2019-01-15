@@ -3,7 +3,7 @@
 <p-growl [(value)]="msgs"></p-growl>
 <p-tabView (onChange)="onTabChange($event)">
   <div *ngFor="let tab of tabs; let i = index">
-    <p-tabPanel [header]="tab.caption" class="customTabview" [selected]="i == 1">
+    <p-tabPanel [header]="tab.caption" class="customTabview" [selected]="i == 0">
 
       <div *ngIf="tab.caption=='Results'">
         <app-resultstab></app-resultstab>

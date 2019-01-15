@@ -5,7 +5,7 @@ export class AppMetadata {
   defaultElement: any
   validElementTypes: string[];
   defaultLink: { attrs: { '.connection': { stroke: string; }; '.marker-target': { d: string; fill: string; stroke: string; }; }; };
-  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; 'recon': any, 'recongroup': any };
+  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; 'recon': any, 'recongroup': any,'ingest':any,'ingestgroup':any};
   obj: any;
   constructor() {
     this.obj = {};
@@ -1675,7 +1675,7 @@ export class AppMetadata {
         icon: 'dataIngestgroup.svg',
         execType: 'dataIngestgroupExec',
         metaType: 'dataIngestgroup',
-        iconPath: 'assets/img/dataIngestgroup.svg',
+        iconPath: 'assets/img/ingest.svg',
         allowInMenu: true,
         state: 'createingestgroup',
         detailState: 'ingestgroup',
@@ -1683,7 +1683,6 @@ export class AppMetadata {
         moduleState: 'dataIngestion',
         class: 'fa fa-users'
       },
-
       'ingestexec': {
         name: 'ingestexec',
         caption: 'Ingest Exec',
@@ -1701,7 +1700,6 @@ export class AppMetadata {
         allowInChildMenu: false,
         class: 'fa fa-flask'
       },
-
       'ingestExec': {
         name: 'ingest',
         caption: 'Ingest Exec',
@@ -1719,7 +1717,34 @@ export class AppMetadata {
         allowInChildMenu: false,
         class: 'fa fa-flask'
       },
-
+      'ingestgroupexec': {
+        name: 'ingestgroup',
+        caption: 'Ingest Group Exec',
+        execType: 'ingestgroupExec',
+        metaType: 'ingestgroupExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestgroupExec',
+        resultState: 'ingestgroupexec',
+        moduleState: 'dataIngestion',
+        moduleCaption: 'Data Ingestion',
+        class: 'fa fa-users'
+      },
+      'ingestgroupExec': {
+        name: 'ingestgroup',
+        caption: 'Ingest Group',
+        execType: 'ingestgroupExec',
+        metaType: 'ingestgroupExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestgroupExec',
+        resultState: 'ingestgroupExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-users'
+      },
       'batch': {
         name: 'batch',
         caption: 'batch',
@@ -1777,6 +1802,7 @@ export class AppMetadata {
         moduleState: 'graphAnalysis',
         moduleCaption: 'Graph Analysis',
         allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
       },
       'graphexec': {
         name: 'graphexec',
@@ -1794,6 +1820,7 @@ export class AppMetadata {
         moduleCaption: 'Graph Analysis',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
       },
       'report': {
         name: 'report',
@@ -1932,8 +1959,8 @@ export class AppMetadata {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }
     };
 
-    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup'];
-    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup'];
+    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup'];
+    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup'];
     this.defaultElement = {
       markup: '<g class="rotatable"><g class="scalable"><image class="body" /></g><image class="remove" title="Remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
       size: { width: 50, height: 50 },
@@ -2098,12 +2125,40 @@ export class AppMetadata {
         }
       }),
 
+  
+
       'profilegroup': Object.assign({}, this.defaultElement, {
         elementType: 'profilegroup',
         attrs: {
           '.body': {
             elementType: 'profilegroup',
             "xlink:href": this.obj.metadataDefs['profilegroup'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
+      'ingestgroup': Object.assign({}, this.defaultElement, {
+        elementType: 'ingestgroup',
+        attrs: {
+          '.body': {
+            elementType: 'ingestgroup',
+            "xlink:href": this.obj.metadataDefs['ingestgroup'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
+      'ingest': Object.assign({}, this.defaultElement, {
+        elementType: 'ingest',
+        attrs: {
+          '.body': {
+            elementType: 'ingest',
+            "xlink:href": this.obj.metadataDefs['ingest'].iconPath
           },
           '.statusImg': {
             x: "55", y: "-20", height: "25px", width: "25px",
@@ -2138,6 +2193,7 @@ export class AppMetadata {
           },
         }
       }),
+
       'model': Object.assign({}, this.defaultElement, {
         elementType: 'model',
         attrs: {

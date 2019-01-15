@@ -11,6 +11,8 @@ import { DataIngestionService } from '../../metadata/services/dataIngestion.serv
   templateUrl: './data-ingestion-detail.component.html'
 })
 export class DataIngestionDetailComponent implements OnInit {
+  dropIndex: any;
+  dragIndex: any;
   showGraph: boolean;
   isHomeEnable: boolean;
   isNullArray: { 'value': string; 'label': string; }[];
@@ -975,13 +977,6 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeOperator(index){
-    // this.filterTableArray[index].rhsAttribute = null;
-    // if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
-    //   this.filterTableArray[index].rhsType = 'dataset' ;
-    // }
-    // else{
-		// 	this.filterTableArray[index].rhsType = 'integer';
-    // }
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
       this.filterTableArray[index].rhsType = 'dataset';
@@ -1681,5 +1676,42 @@ export class DataIngestionDetailComponent implements OnInit {
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
+  }
+
+  onAttrRowDown(index){
+		var rowTempIndex=this.filterTableArray[index];
+    var rowTempIndexPlus=this.filterTableArray[index+1];
+		this.filterTableArray[index]=rowTempIndexPlus;
+    this.filterTableArray[index+1]=rowTempIndex;
+    this.isSubmit="true"
+
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.filterTableArray[index];
+    var rowTempIndexMines=this.filterTableArray[index-1];
+		this.filterTableArray[index]=rowTempIndexMines;
+    this.filterTableArray[index-1]=rowTempIndex;
+    this.isSubmit="true"
+  }
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data
+  }
+  dragEnd(event){
+    console.log(event)
+  }
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data
+      // console.log(event)
+      // console.log(data)
+      var item=this.filterTableArray[this.dragIndex]
+      this.filterTableArray.splice(this.dragIndex,1)
+      this.filterTableArray.splice(this.dropIndex,0,item)
+      this.isSubmit="true"
+    }
+    
   }
 }

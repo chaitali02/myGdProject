@@ -26,6 +26,7 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
 import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 import { AttributeTabComponent } from './compare-profile/attributeTab/attributetab.component';
 import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.component';
+import { DatapodService } from '../metadata/services/datapod.service';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import { ResultsTabComponent } from './compare-profile/resultsTab/resultstab.com
     providers: [
         CommonService,
         JointjsService,
-        ProfileService
+        ProfileService,
+        DatapodService
       //  jointjsGroupService
     ],
 

@@ -14,6 +14,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/multisel
 import { DataIngestionService } from './../metadata/services/dataIngestion.service';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { DataIngestionRuleGroupComponent } from './data-ingestion-rule-group/data-ingestion-rule-group.component';
+import { DataIngestionResultsComponent } from './data-ingestion-results/data-ingestion-results.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -35,6 +36,7 @@ import { DataIngestionRuleGroupComponent } from './data-ingestion-rule-group/dat
     DataIngestionComponent,
     DataIngestionDetailComponent,
     DataIngestionRuleGroupComponent,
+    DataIngestionResultsComponent,
   ],
   providers: [
     DataIngestionService

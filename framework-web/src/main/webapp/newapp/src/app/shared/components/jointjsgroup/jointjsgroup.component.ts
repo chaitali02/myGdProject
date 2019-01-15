@@ -1,5 +1,5 @@
 
-import { Component, Input, Output,OnInit, ViewChild,EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import * as $ from 'jquery';
@@ -203,17 +203,17 @@ export class JointjsGroupComponent {
         let apiuri = params.url + actualType + "GroupExecUuid=" + params.id + "&" + actualType + "GroupExecVersion=" + params.version + "&action=view"
         this._jointjsGroupService.getExecByGroupExec(apiuri)
             .subscribe(
-                response => {
-                    this.drawChildGraph(response)
-                    setTimeout(() => {
-                        this.startStatusUpdate(params);
-                    }, 1000);
-                    this.intervalId = setInterval(() => {
-                        this.startStatusUpdate(params);
-                    }, 5000);
+            response => {
+                this.drawChildGraph(response)
+                setTimeout(() => {
+                    this.startStatusUpdate(params);
+                }, 1000);
+                this.intervalId = setInterval(() => {
+                    this.startStatusUpdate(params);
+                }, 5000);
 
-                },
-                error => console.log("Error :: " + error));
+            },
+            error => console.log("Error :: " + error));
     }
 
     drawChildGraph(data) {
@@ -345,10 +345,10 @@ export class JointjsGroupComponent {
         this.groupExecUuid = params.id;
         this._jointjsGroupService.getGroupExecStatus(params.id, params.version, type)
             .subscribe(
-                response => {
-                    this.onSuccessGetStatusByDagExec(response)
-                },
-                error => console.log("Error :: " + error)
+            response => {
+                this.onSuccessGetStatusByDagExec(response)
+            },
+            error => console.log("Error :: " + error)
             );
 
     }
@@ -398,7 +398,7 @@ export class JointjsGroupComponent {
         let type = cell.attributes.elementType;
         let isGroupExec;
         let isExec;
-        
+
         if (type.slice(-4) == 'Exec' || type.slice(-4) == 'exec') {
             if (type.slice(-9) == 'groupExec' || type.slice(-9) == 'groupexec') {
                 isGroupExec = true;
@@ -413,15 +413,15 @@ export class JointjsGroupComponent {
             itemgroble["action"] = this.actionEvent
             itemgroble["title"] = "Show Details";
             itemgroble["type"] = "element";
-            itemgroble["exectype"] =type;
+            itemgroble["exectype"] = type;
             itemgroble["cell"] = cell;
-            menuItem.push(itemgroble);            
+            menuItem.push(itemgroble);
             let item = {}
             item["action"] = this.actionEvent;
             if (status && (status == 'Completed') && !isGroupExec) {
                 item["title"] = "Show Results"
                 item["type"] = "results"
-                itemgroble["exectype"] =type;
+                itemgroble["exectype"] = type;
                 item["cell"] = cell;
                 menuItem.push(item);
             }
@@ -449,12 +449,12 @@ export class JointjsGroupComponent {
                 menuItem.push(item);
 
             }
-            let itemInfo={}
+            let itemInfo = {}
             itemInfo["action"] = this.actionEvent
             itemInfo["title"] = "Show Logs"
             itemInfo["type"] = "element"
             itemInfo["cell"] = cell;
-            itemInfo["exectype"] =type;
+            itemInfo["exectype"] = type;
             menuItem.push(itemInfo);
 
         }
@@ -463,7 +463,7 @@ export class JointjsGroupComponent {
         return menuItem;
     }
     contextMenu1(d_d3, menu, d_this) {
-       
+
         d_d3.select("#paper1").selectAll('.context-menu').data([1])
             .enter()
             .append('div')
@@ -542,15 +542,20 @@ export class JointjsGroupComponent {
             case 'reconexec':
                 api = 'recon';
                 break;
+            case 'ingestgroupexec':
+                api = 'ingest';
+                break;
+            case 'ingestexec':
+                api = 'ingest';
+                break;
         }
         this._jointjsGroupService.setStatus(api, uuid, version, execType, status)
             .subscribe(
-                response => {
-                    console.log(response)
-                },
-                error => console.log("Error :: " + error)
+            response => {
+                console.log(response)
+            },
+            error => console.log("Error :: " + error)
             );
-
     }
 
     navigateTo(data) {
@@ -560,25 +565,25 @@ export class JointjsGroupComponent {
         let uuid = modeldata.uuid;
         let version = modeldata.version;
         let d_this = this;
-        if(data.title=="Show Logs"){
-            let _moduleUrl 
-            let _routerUrl            
+        if (data.title == "Show Logs") {
+            let _moduleUrl
+            let _routerUrl
             _moduleUrl = 'JobMonitoring'
-            _routerUrl = ((data["exectype"])+'Exec')
+            _routerUrl = ((data["exectype"]) + 'Exec')
             d_this.router.navigate(["/app/" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true']);
         }
-        else{ 
-        this._jointjsGroupService.getMetaIdByExecId(uuid, version, type)
-            .subscribe(
+        else {
+            this._jointjsGroupService.getMetaIdByExecId(uuid, version, type)
+                .subscribe(
                 response => {
-                    let _moduleUrl 
-                    let _routerUrl                    
+                    let _moduleUrl
+                    let _routerUrl
                     _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
                     _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
-                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });         
+                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });
                 },
                 error => console.log("Error :: " + error)
-            );
+                );
         }
     }
 
@@ -600,9 +605,7 @@ export class JointjsGroupComponent {
             this.downloadShow.emit(this.tableparms);
             this.d_tableRenderComponent.renderTable(this.tableparms);
         }, 1000);
-
     }
-
 }
 
 

@@ -768,8 +768,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 				try {
 					data = exec.executeAndFetch(profileExec.getExec(), appUuid);
 					for(Map<String, Object> object : data ) {
-						if(object.containsKey("AttributeId")) {
-							Object value = object.get("AttributeId");
+						if(object.containsKey("attributeid")) {
+							Object value = object.get("attributeid");
 							if(value.toString().equalsIgnoreCase(attributeId)) {
 								object.put("createdOn", profileExec.getCreatedOn());
 								dataList.add(object);								

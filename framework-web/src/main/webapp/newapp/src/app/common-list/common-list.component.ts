@@ -405,7 +405,7 @@ export class CommonListComponent {
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
-    else if (this.type == "ingestexec" || this.type == "batchexec" || this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
+    else if (this.type == "ingestexec" ||this.type == "ingestgroupexec" || this.type == "batchexec" || this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
