@@ -197,10 +197,12 @@ export class DataReconDetailComponent {
   onChangeSource() {
     this.selectAttribute = null;
     this.getAllAttributeBySource();
+    this.filterTableArray=null
   }
   onChangeTarget() {
     this.selectAttribute = null;
     this.getAllAttributeByTarget();
+    this.targetFilterTableArray=null
   }
   OnselectType = function () {
     if (this.selectDataType == "Date") {
