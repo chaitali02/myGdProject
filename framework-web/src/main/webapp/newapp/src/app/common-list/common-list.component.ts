@@ -591,7 +591,19 @@ export class CommonListComponent {
     if (data == "okExecute()") {
 
       if (this.type == "rule") {
-        this.getParams()
+        this._commonService.getOneByUuidAndVersion(this.executeId,this.executeVersion,'rule').subscribe
+        (
+          response => {
+            if(response["paramlist"]==null){
+              this.okExecute();
+            }
+            else{
+              this.getParams()
+            }
+          },
+          error => console.log("Error :: " + error)
+          )
+
       } else if (this.type == "train") {
         this.getParamListORParamset();
       }

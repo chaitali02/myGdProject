@@ -212,11 +212,12 @@ export class DataProfileDetailComponent {
   changeType() {
     this.selectedItems = [];
     this.getAllAttributeBySource();
-    if(this.dataprofile.filterTableArray){
-      for(let i=0;i<this.dataprofile.filterTableArray.length;i++){
-        this.onChangeLhsType(i)
-      }
-    }
+    this.dataprofile.filterTableArray=[]
+    // if(this.dataprofile.filterTableArray){
+    //   for(let i=0;i<this.dataprofile.filterTableArray.length;i++){
+    //     this.onChangeLhsType(i)
+    //   }
+    // }
     
   }
   getAllAttributeBySource() {
@@ -728,6 +729,7 @@ export class DataProfileDetailComponent {
     }
     profileJson["attributeInfo"] = attributeInfo;
     let filterInfoArray = [];
+    if(this.dataprofile.filterTableArray!=null){
     if (this.dataprofile.filterTableArray.length > 0) {
       for (let i = 0; i < this.dataprofile.filterTableArray.length; i++) {
 
@@ -831,6 +833,7 @@ export class DataProfileDetailComponent {
       profileJson["filterInfo"] = filterInfoArray;
       console.log(JSON.stringify(filterInfoArray));
     }
+  }
     console.log(profileJson);
     this._commonService.submit("profile", profileJson).subscribe(
       response => { this.OnSuccessubmit(response) },

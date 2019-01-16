@@ -13,6 +13,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { ParamlistService } from '../../metadata/services/paramlist.service';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
 //import { DataPiplineResultComponent } from '../components/data-pipelineresult/data-pipelineresult.component';
 //import { JointjsComponent } from './../../data-pipeline/jointjs.component';
 //import { ShContextMenuModule } from 'ng2-right-click-menu';
@@ -25,7 +26,8 @@ import {MultiSelectModule, DataTableModule} from 'primeng/primeng';
     imports: [CommonModule,RouterModule,FormsModule, UiSwitchModule,TagInputModule,
         DropdownModule,
        // ShContextMenuModule,
-        MultiSelectModule
+        MultiSelectModule,
+        CalendarModule
         //DataTableModule
     ],
     exports: [CommonModule,ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,

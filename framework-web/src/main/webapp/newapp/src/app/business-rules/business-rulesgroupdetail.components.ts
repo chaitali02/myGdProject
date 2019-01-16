@@ -16,6 +16,12 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class BusinessRulesGroupDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  graphDataStatus: boolean;
+  showProfileGroupForm: boolean;
+  showgraphdiv: boolean;
+  showProfileGroup: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -114,6 +120,7 @@ export class BusinessRulesGroupDetailComponent {
     this.createdBy = response.createdBy.ref.name
     this.datarulegroup.published = response["published"] == 'Y' ? true : false
     this.datarulegroup.active = response["active"] == 'Y' ? true : false
+    this.datarulegroup.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
@@ -186,6 +193,7 @@ export class BusinessRulesGroupDetailComponent {
     rulegroupJson['tags'] = tagArray
     rulegroupJson["active"] = this.datarulegroup.active == true ? 'Y' : "N"
     rulegroupJson["published"] = this.datarulegroup.published == true ? 'Y' : "N"
+    rulegroupJson["locked"] = this.datarulegroup.locked == true ? 'Y' : "N"
     let ruleInfo = [];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let rules = {}
@@ -275,5 +283,22 @@ export class BusinessRulesGroupDetailComponent {
   }
   clear(){
     this.selectedItems=[]
+  }
+  showProfileGroupePage() {
+		this.showProfileGroup = true;
+		this.showgraphdiv = false;
+		this.graphDataStatus = false;
+		this.showProfileGroupForm = true;
+
+	}
+
+	showMainPage(){
+    this.isHomeEnable = false
+   // this._location.back();
+   this.showGraph = false;
+  }
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

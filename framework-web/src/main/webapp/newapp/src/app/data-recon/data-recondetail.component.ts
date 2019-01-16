@@ -81,7 +81,9 @@ export class DataReconDetailComponent {
   selectIntegrityAttribute: any;
   selectRefIntegrity: any;
   datefromate: string[];
-  datatype: string[];
+  isNullArray: { 'value': string; 'label': string; }[];
+  datatype: { 'value': string; 'label': string; }[];
+
   selectAttribute: any;
   allAttribute: any[];
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
@@ -111,7 +113,7 @@ export class DataReconDetailComponent {
     this.displayDialogBoxTarget = false;
     this.dialogAttributeName = {};
     this.dialogAttributeNameTarget = {};
-    this.datatype = ["", "String", "Int", "Float", "Double", "Date"];
+    // this.datatype = ["", "String", "Int", "Float", "Double", "Date"];
     this.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false;
@@ -153,12 +155,13 @@ export class DataReconDetailComponent {
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
       { 'value': 'IN', 'label': 'IN' },
       { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' },
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
       { 'value': 'AND', 'label': 'AND' },
-      { 'value': 'OR', 'label': 'OR' }]
-
+      { 'value': 'OR', 'label': 'OR' }
+    ];
     this.lhsTypeArray = [
       { 'value': 'string', 'label': 'string' },
       { 'value': 'integer', 'label': 'integer' },
@@ -166,13 +169,25 @@ export class DataReconDetailComponent {
       { 'value': 'formula', 'label': 'formula' }
     ];
     this.rhsTypeArray = [
-      { value: 'string', label: 'string' },
-      { value: 'integer', label: 'integer' },
-      { value: 'datapod', label: 'attribute' },
-      { value: 'formula', label: 'formula' },
-      { value: 'dataset', label: 'dataset' },
-      { value: 'function', label: 'function' },
-      { value: 'paramlist', label: 'paramlist' }
+      { 'value': 'string', 'label': 'string' },
+      { 'value': 'integer', 'label': 'integer' },
+      { 'value': 'datapod', 'label': 'attribute' },
+      { 'value': 'formula', 'label': 'formula' },
+      { 'value': 'dataset', 'label': 'dataset' },
+      { 'value': 'paramlist', 'label': 'paramlist' },
+      { 'value': 'function', 'label': 'function' }
+    ];
+    this.datatype = [
+      { 'value': '', 'label': '' },
+      { 'value': 'String', 'label': 'String' },
+      { 'value': 'Int', 'label': 'Int' },
+      { 'value': 'Float', 'label': 'Float' },
+      { 'value': 'Double', 'label': 'Double' },
+      { 'value': 'Date', 'label': 'Date' }
+    ];
+    this.isNullArray = [
+      { 'value': 'NULL', 'label': 'NULL' },
+      { 'value': 'NOT NULL', 'label': 'NOT NULL' }
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
@@ -197,10 +212,12 @@ export class DataReconDetailComponent {
   onChangeSource() {
     this.selectAttribute = null;
     this.getAllAttributeBySource();
+    this.filterTableArray=null
   }
   onChangeTarget() {
     this.selectAttribute = null;
     this.getAllAttributeByTarget();
+    this.targetFilterTableArray=null
   }
   OnselectType = function () {
     if (this.selectDataType == "Date") {
@@ -403,8 +420,8 @@ export class DataReconDetailComponent {
     this.sourceTableArray = response.filterInfo
     this.createdBy = response.recondata.createdBy.ref.name
     this.recondata.published = response.recondata["published"] == 'Y' ? true : false
-    
-    this.recondata.active = response.recondata["locked"] == 'Y' ? true : false
+    this.recondata.locked = response.recondata["locked"] == 'Y' ? true : false
+    this.recondata.active = response.recondata["active"] == 'Y' ? true : false
     this.recondata.sourceDistinct = response.recondata["sourceDistinct"] == 'Y' ? true : false
     this.recondata.targetDistinct = response.recondata["targetDistinct"] == 'Y' ? true : false
     this.tags = response.recondata['tags'];
@@ -672,6 +689,7 @@ export class DataReconDetailComponent {
   }
   changeSourceType(){
     this.getAllLatestSource()
+    this.filterTableArray=[]
   }
   changeTargetType(){
     
@@ -680,6 +698,7 @@ export class DataReconDetailComponent {
     //   response => { this.OnSuccesgetAllLatest(response) },
     //   error => console.log('Error :: ' + error)
     // )
+    this.targetFilterTableArray=[]
   }
   OnSuccesgetAllAttributeBySourceDrop(response2, defaultValue, index, type) {
     let temp = []
@@ -911,22 +930,52 @@ export class DataReconDetailComponent {
 
   onChangeOperator(index){
     this.filterTableArray[index].rhsAttribute = null;
-    if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
-      this.filterTableArray[index].rhsType = 'dataset' ;
+    if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
+      this.filterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.filterTableArray[index].operator == 'IS'){
+			this.filterTableArray[index].rhsType = 'string';
     }
     else{
 			this.filterTableArray[index].rhsType = 'integer';
-		}	
+		}
+    // this.filterTableArray[index].rhsAttribute = null;
+    // if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
+    //   this.filterTableArray[index].rhsType = 'dataset' ;
+    // }
+    // else{
+		// 	this.filterTableArray[index].rhsType = 'integer';
+		// }	
   }
 
   onChangeOperatorTarget(index){
-    this.filterTableArray[index].rhsAttribute = null;
-    if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
-      this.targetFilterTableArray[index].rhsType = 'dataset' ;
+    this.targetFilterTableArray[index].rhsAttribute = null;
+    if (this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS') {
+      this.targetFilterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.targetFilterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.targetFilterTableArray[index].operator == 'IS'){
+			this.targetFilterTableArray[index].rhsType = 'string';
     }
     else{
 			this.filterTableArray[index].rhsType = 'integer';
-		}	
+		}
+    // this.filterTableArray[index].rhsAttribute = null;
+    // if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
+    //   this.targetFilterTableArray[index].rhsType = 'dataset' ;
+    // }
+    // else{
+		// 	this.filterTableArray[index].rhsType = 'integer';
+		// }	
   }
 
   searchOption(index) {
@@ -1056,7 +1105,7 @@ export class DataReconDetailComponent {
     dqJson["tags"] = tagArray;
     dqJson["active"] = this.recondata.active == true ? 'Y' : "N"
     dqJson["published"] = this.recondata.published == true ? 'Y' : "N"
-    dqJson["locked"] = this.recondata.published == true ? 'Y' : "N"
+    dqJson["locked"] = this.recondata.locked == true ? 'Y' : "N"
     dqJson["sourceDistinct"] = this.recondata.sourceDistinct == true ? 'Y' : "N"
     dqJson["targetDistinct"] = this.recondata.targetDistinct == true ? 'Y' : "N"
     
