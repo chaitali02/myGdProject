@@ -69,7 +69,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 	}
 	$scope.addSectionColumn = function (row) {
-		row.columns.push({ edit: true });
+		var len=row.columns.length-1;
+		row.columns.push({ edit: true,rowNo:row.columns[len].rowNo, colNo: row.columns[len].colNo+1});
 	}
 	$scope.removeSectionColumn = function (columns, i) {
 		columns.splice(i, 1);
@@ -134,6 +135,14 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		if (row.columns.length == 0) {
 			$scope.sectionRows.splice($scope.sectionRows.indexOf(row), 1);
 		}
+		if($scope.sectionRows && $scope.sectionRows.length >0){
+			for(var i=0;i<$scope.sectionRows.length;i++){
+				for(var j=0;j<$scope.sectionRows[i].columns.length;j++){
+					$scope.sectionRows[i].columns[j].rowNo=i+1;
+					$scope.sectionRows[i].columns[j].colNo=j+1;
+				}
+			}
+		}
 		// if($scope.tempDragRowIndex && $scope.tempDragColIndex){
 		// 		$scope.sectionRows[$scope.tempDragRowIndex].columns.splice($scope.tempDragColIndex,1);
 		// 		$scope.tempDragRowIndex = undefined;
@@ -142,6 +151,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}
 	var dragDisableTimeOut = {};
 	$scope.dragoverCallback = function (index, external, type, rowIndex, row) {
+		
 		var ColWidth = $scope.getColWidth(row);
 		if (ColWidth <= 4) {
 			$('.sectionRow#sectionRowNo_' + rowIndex).css('opacity', '0.3');
