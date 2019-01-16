@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+
 import { ActivatedRoute, Router, Params } from '@angular/router';
 
 import { Component, OnInit } from '@angular/core';
@@ -8,13 +8,15 @@ import { Version } from '../../version';
 import { CommonService } from '../../../metadata/services/common.service';
 import { DependsOn } from '../../../data-science/dependsOn';
 import { ParamlistService } from '../../../metadata/services/paramlist.service';
-
+import { Location, DatePipe } from '@angular/common';
 @Component({
   selector: 'app-paramlist',
   templateUrl: './paramlist.component.html',
   styleUrls: []
 })
 export class ParamlistComponent implements OnInit {
+  isUseTemlateText: boolean;
+  functnListOptions: any[];
   showGraph: boolean;
   isHomeEnable: boolean;
   parentType: any;
@@ -59,7 +61,7 @@ export class ParamlistComponent implements OnInit {
   templateFlg: any;
   template: any;
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _paramlistService: ParamlistService) {
+  constructor(private datePipe: DatePipe,private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _paramlistService: ParamlistService) {
     this.showParamlist = true;
     this.paramlist = {};
     this.paramlist["active"] = true;
@@ -67,17 +69,29 @@ export class ParamlistComponent implements OnInit {
     this.template = {};
     this.isSubmitEnable = true;
     this.paramtableArray = null;
-    this.types = [{ 'value': 'date', 'label': 'date' },
-    { 'value': 'double', 'label': 'double' },
-    { 'value': 'integer', 'label': 'integer' },
-    { 'value': 'string', 'label': 'string' },
-    { 'value': 'list', 'label': 'list' },
-    { 'value': 'distribution', 'label': 'distribution' },
-    { 'value': 'attribute', 'label': 'attribute' },
-    { 'value': 'attributes', 'label': 'attribute[s]' },
-    { 'value': 'datapod', 'label': 'datapod' }
-    ]
-    this.typeSimple = ["string", "double", "date", "integer", "list"];
+    this.types=[{"value":"string","label":"string"},
+		{"value":"double","label":"double"},
+	 	{"value":"date","label":"date"}, 
+		{"value":"integer","label":"integer"},
+		{"value":"decimal","label":"decimal"},
+		{"value":"attribute","label":"attribute"},
+		{"value":"attributes","label":"attribute[s]"},
+		{"value":"distribution","label":"distribution"},
+		{"value":"datapod","label":"datapod"},
+		{"value":"function","label":"function"},
+		{"value":"list","label":"list"},
+		{"value":"array","label":"array"}]
+    // this.types = [{ 'value': 'date', 'label': 'date' },
+    // { 'value': 'double', 'label': 'double' },
+    // { 'value': 'integer', 'label': 'integer' },
+    // { 'value': 'string', 'label': 'string' },
+    // { 'value': 'list', 'label': 'list' },
+    // { 'value': 'distribution', 'label': 'distribution' },
+    // { 'value': 'attribute', 'label': 'attribute' },
+    // { 'value': 'attributes', 'label': 'attribute[s]' },
+    // { 'value': 'datapod', 'label': 'datapod' }
+    // ]
+    this.typeSimple = ["string", "double", "integer", "list"];
   }
 
   ngOnInit() {
@@ -123,24 +137,25 @@ export class ParamlistComponent implements OnInit {
     }
     else {
       this.getAllLatest1();
+      this.getAllLatest();
     }
   }
 
-  onChangeIsTemplate(event) {
+  onChangeIsTemplate(event,flag?) {
     if (event === false) {
       this.paramlist.templateFlg = false;
-
+      
       this._paramlistService.getAllLatestParamListByTemplate('Y', "paramlist", "")
-        .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response) },
+        .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response,flag) },
         error => console.log("Error :: " + error));
     }
     else {
       this.paramlist.templateFlg = true;
-      this.template = {};
+      this.template = {}; 
     }
   }
 
-  onSuccessgetAllLatestParamListByTemplate(response) {
+  onSuccessgetAllLatestParamListByTemplate(response,flag?) {
     console.log(response)
     var temp = []
     for (const i in response) {
@@ -155,7 +170,15 @@ export class ParamlistComponent implements OnInit {
     }
     this.allTemplateList = temp;
     console.log(JSON.stringify(this.template.params));
+  if(flag){
 
+  }
+  else{
+    this.changeParamValue()
+  }
+    
+  }
+  changeParamValue(){
     var arrayTemp = [];
     for (const i in this.template.params) {
       let paramtableObj = {};
@@ -180,7 +203,6 @@ export class ParamlistComponent implements OnInit {
     }
     this.paramtableArray = arrayTemp;
   }
-
   onChangeTemplate() {
     // this.paramlist.templateFlg = 'Y';
 
@@ -211,7 +233,12 @@ export class ParamlistComponent implements OnInit {
     this.active = response['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
 
-    this.paramlist.templateFlg = response['templateFlg'];
+    this.paramlist.templateFlg = response['templateFlg' ]== 'Y' ? true : false;
+    if(this.paramlist.templateFlg==false){
+      this.template["uuid"]=response['templateInfo']['ref']['uuid']
+      this.template["label"]=response['templateInfo']['ref']['name']
+      this.onChangeIsTemplate(false,true)
+    }
     this.paramlist.parentType = response['paramListType'];
     this.parentType = this.paramlist.parentType;
     var tags = [];
@@ -228,7 +255,7 @@ export class ParamlistComponent implements OnInit {
 
     this.paramlist.published = response["published"] == 'Y' ? true : false
     this.paramlist.active = response["active"] == 'Y' ? true : false
-
+    this.paramlist.locked = response["locked"] == 'Y' ? true : false
     this.breadcrumbDataFrom[2].caption = response.name;
     var arrayTemp = [];
     for (const i in response.params) {
@@ -239,7 +266,7 @@ export class ParamlistComponent implements OnInit {
       paramtableObj["paramDesc"] = response.params[i].paramDesc;
       
       
-
+      
       if (this.typeSimple.indexOf(response.params[i].paramType) != -1) {
         paramtableObj["paramValue"] = response.params[i].paramValue.value;
       }
@@ -250,6 +277,29 @@ export class ParamlistComponent implements OnInit {
 
         paramtableObj["paramValue"] = value1Temp;
       }
+      else if (response.params[i].paramType == "function") {
+        let value1Temp: DependsOn = new DependsOn();
+        value1Temp.label = response.params[i].paramValue.ref.name;
+        value1Temp.uuid = response.params[i].paramValue.ref.uuid;
+
+        paramtableObj["paramValue"] = value1Temp;
+      }
+      else if (response.params[i].paramType == "array") {
+        var temp=response.params[i].paramValue.value.split(",");
+        let tempParamArray=[]
+        for (let i = 0; i < temp.length; i++) {
+          let tempParam = {};
+          tempParam['value'] = temp[i];
+          tempParam['display'] = temp[i];
+          tempParamArray[i] = tempParam  
+        }
+        paramtableObj["paramValue"]=tempParamArray;
+      }
+      else if (response.params[i].paramType == "date") {
+        let tempDate=new Date(response.params[i].paramValue.value)
+        paramtableObj["paramValue"] = tempDate;
+      }
+      
       else if (response.params[i].paramValue == null) {
         paramtableObj["paramValue"] = "";
       }
@@ -258,8 +308,22 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray = arrayTemp;
 
     this.getAllLatest1();
+    this.getAllLatest();
+    this.checkIsTemplateUsed()
   }
-
+  checkIsTemplateUsed(){
+    this._commonService.getParamListChilds( this.id,this.version,"paramlist").subscribe(
+      response => { 
+        if(response.length >0){
+          //$scope.isTableDisable=true;
+          this.isUseTemlateText=true;
+        }else{
+          this.isUseTemlateText=false;
+        }
+       },
+      error => console.log('Error :: ' + error)
+    )
+  }
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid("paramlist", this.id).subscribe(
       response => { this.OnSuccesgetAllVersionByUuid(response) },
@@ -302,7 +366,27 @@ export class ParamlistComponent implements OnInit {
     this.distributionListOptions = distributionListOptions;
     console.log(this.distributionListOptions);
   }
+  getAllLatest() {
+    this._commonService.getAllLatest("function").subscribe(
+      response => { this.onSuccessgetAllLatest(response) },
+      error => console.log("Error ::" + error)
+    )
+  }
 
+  onSuccessgetAllLatest(response) {
+    let functnListOptions = [];
+
+    for (const i in response) {
+      let distributionObj = {};
+      distributionObj["label"] = response[i]['name'];
+      distributionObj["value"] = {};
+      distributionObj["value"]["label"] = response[i]['name'];
+      distributionObj["value"]["uuid"] = response[i]['uuid'];
+      functnListOptions[i] = distributionObj;
+    }
+    this.functnListOptions = functnListOptions;
+    console.log(this.distributionListOptions);
+  }
   onChangeActive(event) {
     if (event === true) {
       this.paramlist.active = 'Y';
@@ -384,9 +468,9 @@ export class ParamlistComponent implements OnInit {
     paramlistJson["active"] = this.paramlist.active == true ? 'Y' : "N"
     paramlistJson["published"] = this.paramlist.published == true ? 'Y' : "N"
     paramlistJson["templateFlg"] = this.paramlist.templateFlg == true ? 'Y' : "N"
-
+    paramlistJson["locked"] = this.paramlist.locked == true ? 'Y' : "N"
     let templateInfo = {};
-    if (this.paramlist.templateFlg == 'N') {
+    if (this.paramlist.templateFlg == false) {
       let templateInfoRef = {};
       templateInfoRef["type"] = "paramlist"
       templateInfoRef["uuid"] = this.template["uuid"];
@@ -426,6 +510,42 @@ export class ParamlistComponent implements OnInit {
         paramValue["ref"] = paramRef;
         attributemap["paramValue"] = paramValue;
         paramInfoArray[i] = attributemap;
+      }
+      else if (this.paramtableArray[i].paramType == 'function') {
+        var paramRef = {};
+        paramRef["type"] = this.paramtableArray[i].paramType;
+        if (this.paramtableArray[i].paramValue != null) {
+          paramRef["uuid"] = this.paramtableArray[i].paramValue.uuid;
+        }
+        paramValue["ref"] = paramRef;
+        attributemap["paramValue"] = paramValue;
+        paramInfoArray[i] = attributemap;
+      }
+      else if (this.paramtableArray[i].paramType == 'array') {
+        var paramArray = [];
+        if (this.paramtableArray[i].paramValue != null) {
+          for (var counttag = 0; counttag < this.paramtableArray[i].paramValue.length; counttag++) {
+            paramArray[counttag] = this.paramtableArray[i].paramValue[counttag].value;
+          }
+        }
+       // paramlistJson['tags'] = paramArray
+        var paramRef={}	 
+        paramRef["type"]="simple";
+        paramValue["ref"]=paramRef;
+        paramValue["value"]=paramArray.toString();;
+        attributemap["paramValue"]=paramValue
+        paramInfoArray[i] = attributemap; 
+      }
+      else if (this.paramtableArray[i].paramType == 'date') {
+        var paramRef={}	 
+        paramRef["type"]="simple";
+        paramValue["ref"]=paramRef;
+        
+        let tempDate=new Date(this.paramtableArray[i].paramValue)
+        let date=this.datePipe.transform(tempDate, "MM/dd/yyyy");
+        paramValue["value"]=this.paramtableArray[i].paramValue;
+        attributemap["paramValue"]=paramValue
+        paramInfoArray[i] = attributemap; 
       }
       else {
         paramValue = null;
@@ -471,5 +591,13 @@ export class ParamlistComponent implements OnInit {
 	  showDagGraph(uuid,version){
 		this.isHomeEnable = true;
 		this.showGraph = true;
-	  }
+    }
+    onChangeType(index){
+      if(this.paramtableArray[index]["paramType"]=="array"){
+        this.paramtableArray[index]["paramValue"]=[]
+      }
+      if(this.paramtableArray[index]["paramType"]=="date"){
+        this.paramtableArray[index]["paramValue"]=""
+      }
+    }
 }

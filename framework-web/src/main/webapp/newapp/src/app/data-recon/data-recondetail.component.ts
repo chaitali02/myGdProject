@@ -81,7 +81,9 @@ export class DataReconDetailComponent {
   selectIntegrityAttribute: any;
   selectRefIntegrity: any;
   datefromate: string[];
-  datatype: string[];
+  isNullArray: { 'value': string; 'label': string; }[];
+  datatype: { 'value': string; 'label': string; }[];
+
   selectAttribute: any;
   allAttribute: any[];
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
@@ -111,7 +113,7 @@ export class DataReconDetailComponent {
     this.displayDialogBoxTarget = false;
     this.dialogAttributeName = {};
     this.dialogAttributeNameTarget = {};
-    this.datatype = ["", "String", "Int", "Float", "Double", "Date"];
+    // this.datatype = ["", "String", "Int", "Float", "Double", "Date"];
     this.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false;
@@ -153,12 +155,13 @@ export class DataReconDetailComponent {
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
       { 'value': 'IN', 'label': 'IN' },
       { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' },
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
       { 'value': 'AND', 'label': 'AND' },
-      { 'value': 'OR', 'label': 'OR' }]
-
+      { 'value': 'OR', 'label': 'OR' }
+    ];
     this.lhsTypeArray = [
       { 'value': 'string', 'label': 'string' },
       { 'value': 'integer', 'label': 'integer' },
@@ -166,13 +169,25 @@ export class DataReconDetailComponent {
       { 'value': 'formula', 'label': 'formula' }
     ];
     this.rhsTypeArray = [
-      { value: 'string', label: 'string' },
-      { value: 'integer', label: 'integer' },
-      { value: 'datapod', label: 'attribute' },
-      { value: 'formula', label: 'formula' },
-      { value: 'dataset', label: 'dataset' },
-      { value: 'function', label: 'function' },
-      { value: 'paramlist', label: 'paramlist' }
+      { 'value': 'string', 'label': 'string' },
+      { 'value': 'integer', 'label': 'integer' },
+      { 'value': 'datapod', 'label': 'attribute' },
+      { 'value': 'formula', 'label': 'formula' },
+      { 'value': 'dataset', 'label': 'dataset' },
+      { 'value': 'paramlist', 'label': 'paramlist' },
+      { 'value': 'function', 'label': 'function' }
+    ];
+    this.datatype = [
+      { 'value': '', 'label': '' },
+      { 'value': 'String', 'label': 'String' },
+      { 'value': 'Int', 'label': 'Int' },
+      { 'value': 'Float', 'label': 'Float' },
+      { 'value': 'Double', 'label': 'Double' },
+      { 'value': 'Date', 'label': 'Date' }
+    ];
+    this.isNullArray = [
+      { 'value': 'NULL', 'label': 'NULL' },
+      { 'value': 'NOT NULL', 'label': 'NOT NULL' }
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
@@ -674,6 +689,7 @@ export class DataReconDetailComponent {
   }
   changeSourceType(){
     this.getAllLatestSource()
+    this.filterTableArray=[]
   }
   changeTargetType(){
     
@@ -682,6 +698,7 @@ export class DataReconDetailComponent {
     //   response => { this.OnSuccesgetAllLatest(response) },
     //   error => console.log('Error :: ' + error)
     // )
+    this.targetFilterTableArray=[]
   }
   OnSuccesgetAllAttributeBySourceDrop(response2, defaultValue, index, type) {
     let temp = []

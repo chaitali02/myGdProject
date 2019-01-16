@@ -154,7 +154,8 @@ export class BusinessRulesDetailComponent {
 			{ 'value': 'EXISTS', 'label': 'EXISTS' },
 			{ 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
 			{ 'value': 'IN', 'label': 'IN' },
-			{ 'value': 'NOT IN', 'label': 'NOT IN' }
+			{ 'value': 'NOT IN', 'label': 'NOT IN' },
+			{ 'value': 'IS', 'label': 'IS' },
 		];
 		this.logicalOperators = [
 			{ 'value': '', 'label': '' },
@@ -404,11 +405,26 @@ export class BusinessRulesDetailComponent {
 	onChangeOperator(index) {
 		this.dqdata.filterTableArray[index].rhsAttribute = null;
 		if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
-			this.dqdata.filterTableArray[index].rhsType = 'dataset';
+		  this.dqdata.filterTableArray[index].rhsType = 'dataset';
+		  let rhsAttribute = {};
+		  rhsAttribute["label"] = "-Select-";
+		  rhsAttribute["uuid"] = "";
+		  rhsAttribute["attributeId"] = "";
+		  this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+		}
+		else if(this.dqdata.filterTableArray[index].operator == 'IS'){
+				this.dqdata.filterTableArray[index].rhsType = 'string';
 		}
 		else{
-			this.dqdata.filterTableArray[index].rhsType = 'integer';
-		}	
+				this.dqdata.filterTableArray[index].rhsType = 'integer';
+			}
+		// this.dqdata.filterTableArray[index].rhsAttribute = null;
+		// if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
+		// 	this.dqdata.filterTableArray[index].rhsType = 'dataset';
+		// }
+		// else{
+		// 	this.dqdata.filterTableArray[index].rhsType = 'integer';
+		// }	
 	}
 
 	getAllFunctions() {
