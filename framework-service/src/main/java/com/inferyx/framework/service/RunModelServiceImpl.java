@@ -28,7 +28,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -71,7 +70,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private String algorithmUUID;
 	private String algorithmVersion;
 	private AlgorithmServiceImpl algorithmServiceImpl;
-	/*private ModelExec modelExec;*/
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	private Model model;
 	private ModelExecServiceImpl modelExecServiceImpl;
@@ -702,7 +700,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		return taskHolder;
 	}
 	
-	@SuppressWarnings({ "unused"})
+	@SuppressWarnings({ "unused", "unchecked"})
 	public void execute() throws Exception {
 		try {
 			
