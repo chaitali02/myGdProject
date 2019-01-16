@@ -1,6 +1,6 @@
 {
   "uuid": "0af6129d-8f73-46c4-a33e-51d88030a32e",
-  "version": "1547508713",
+  "version": "1547586537",
   "name": "viz_total_matches_by_country",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jan 14 18:31:53 EST 2019",
+  "createdOn": "Tue Jan 15 16:08:57 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,9 +32,9 @@
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+      "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
       "version": null,
-      "name": "ds_sanctions_screening_base"
+      "name": "ds_sanctions_screening_matches"
     },
     "value": null
   },
@@ -44,9 +44,9 @@
     {
       "ref": {
         "type": "dataset",
-        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
         "version": null,
-        "name": "ds_sanctions_screening_base"
+        "name": "ds_sanctions_screening_matches"
       },
       "attributeId": 5,
       "function": null,
@@ -62,9 +62,9 @@
     {
       "ref": {
         "type": "formula",
-        "uuid": "ad7319e5-983b-421a-bf8e-cf80c3fd3baa",
+        "uuid": "4e788d2b-2e89-4257-83c0-a33ab134daaa",
         "version": null,
-        "name": "fm_reciever_address_name_match"
+        "name": "fm_match_count_by_country"
       },
       "attributeId": null,
       "function": null,

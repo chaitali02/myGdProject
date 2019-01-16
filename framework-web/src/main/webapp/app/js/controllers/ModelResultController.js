@@ -352,6 +352,7 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         $scope.isShowPMML = true;
         $scope.isPmmlInprogess=true;
         $scope.isGraphShow=false;
+        $scope.isPmmlError=false;
         var url = $location.absUrl().split("app")[0]
         $http({
             method: 'GET',
@@ -385,6 +386,8 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
                 // })
             }).error(function (data) {
                 console.log();
+                $scope.isPmmlInprogess=false;
+                $scope.isPmmlError=true;
             });
     }
     $scope.downloadPMMLResult = function () {

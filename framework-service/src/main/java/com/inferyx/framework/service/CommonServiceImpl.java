@@ -1804,11 +1804,12 @@ public class CommonServiceImpl <T> {
 				if(attributeId != null) {
 					attrId = attributeId.toString();
 					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
-					MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
-					if (refObject != null) {
-						resolveName(refObject, null, requiredDegree, actualDegree+1);
-					}					
+									
 				}
+				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
+				if (refObject != null) {
+					resolveName(refObject, null, requiredDegree, actualDegree+1);
+				}	
 				return object;
 			}
 			if (object instanceof SourceAttr) {
@@ -1816,11 +1817,12 @@ public class CommonServiceImpl <T> {
 				if(attributeId != null) {
 					attrId = attributeId.toString();
 					object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
-					MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
-					if (refObject != null) {
-						resolveName(refObject, null, requiredDegree, actualDegree+1);
-					}					
+									
 				}
+				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
+				if (refObject != null) {
+					resolveName(refObject, null, requiredDegree, actualDegree+1);
+				}	
 				return object;
 			}
 			if (object instanceof MetaIdentifierHolder) {
