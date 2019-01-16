@@ -1163,6 +1163,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.refreshVizpod=function(rowNo,colNo){
     var parentIndex=rowNo-1;
     var index=colNo-1;
+    $scope.sectionRows[parentIndex].columns[index].isDataGridShow=false;
     $scope.sectionRows[parentIndex].columns[index].isDataError = false;
     $scope.sectionRows[parentIndex].columns[index].isInprogess = true;
     $scope.sectionRows[parentIndex].columns[index].vizpodDetails.datapoints = [];
