@@ -180,7 +180,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		$scope.showactive = "true";
 		var id;
 		id = $stateParams.id;
-		var version=$stateParams.version
+		var version=$stateParams.version || ""; 
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
 		$scope.isEditInprogess = true;
 		$scope.isEditVeiwError = false;

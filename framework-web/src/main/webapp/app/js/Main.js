@@ -611,7 +611,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     var onSuccessGetLatestByUuid = function (response) {
         if(response)   
         $scope.username = response.firstName;
-        $scope.userdata=response;
+        $rootScope.userdata=response;
     }   
    
     AppRoleService.getAppRole($rootScope.setUserName).then(function (response) { onAppSuccess(response.data) })
