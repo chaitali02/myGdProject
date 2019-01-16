@@ -138,11 +138,42 @@
             return response;
           })
       }
+      factory.findVizpodResults = function (uuid,version,data) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+          headers: {
+            'Accept': '*/*',
+            'content-Type': "application/json",
+          },
+          method: "POST",
+          data: JSON.stringify(data),
+          url: url + "vizpod/getVizpodResults/"+uuid+"/"+version,
+        }).
+          then(function (response, status, headers) {
+            return response;
+          })
+      }
       return factory;
     });
 
     DatavisualizationModule.service('VizpodSerivce', function($q, sortFactory, VizpodFactory) {
-
+      this.getVizpodResults = function(uuid,version,data) {
+        var deferred = $q.defer();
+        VizpodFactory.findVizpodResults(uuid,version,data).then(function(response) {
+          onSuccess(response.data)
+        },function(response){onError(response.data)});
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          })
+        }
+        var onError = function (response) {
+          deferred.reject({
+            data: response
+          })
+        }
+        return deferred.promise;
+      }
       this.getFormulaByType = function(uuid,type) {
         var deferred = $q.defer();
         VizpodFactory.findFormulaByType(uuid,type).then(function(response) {
