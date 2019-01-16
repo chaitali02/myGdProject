@@ -589,7 +589,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
     }//End updateMetaData Method
 });
 
-InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
+InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService, $stateParams) {
     $rootScope.reOpen=localStorage.reOpen;
     
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
@@ -698,7 +698,6 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
                     });
                 }
                 setTimeout(function(){$rootScope.isWelcomenOpen=false; }, 3000);
-               
                 privilegeSvc.getUpdated();
               //  $('#myModal').modal('hide');
                 $rootScope.$emit("callsetapp", {});
@@ -711,6 +710,14 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         $rootScope.reOpen=false;
         localStorage.reOpen=false;
         $state.go('datadiscovery',{}, {reload: true});
+        console.log($state.current)
+        if($state.current.url !=''){
+        $state.transitionTo('datadiscovery',{}, {
+            reload: true,
+            inherit: false,
+            notify: true
+        });
+        }
     };
 
     $scope.cancelLogut = function () {
