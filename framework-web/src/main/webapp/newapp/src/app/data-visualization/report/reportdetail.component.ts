@@ -1,3 +1,4 @@
+import { version } from './../../../../bower_components/moment/moment.d';
 
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
@@ -12,6 +13,8 @@ import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { DatasetService } from '../../metadata/services/dataset.service';
 import { ReportService } from '../../metadata/services/report.service';
 import { SelectItem } from 'primeng/primeng';
+import { Http } from '@angular/http';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
     selector: 'app-report-detail',
@@ -76,11 +79,26 @@ export class ReportDetailComponent {
     displayDialog: boolean = false;
     filterAttribureIdData: any;
     sourcedata1: any;
-    filterDropdownValue: any[] = [{ label: null, u_id: null }];
+    filterDropdownValue: any[] = [];
     filterDropdownName: any;
     filterValue: any;
+    displayDialogBox: boolean = false;
+    downloadFormatArray: any[];
+    downloadFormat: any;
+    reportExecUuid: any;
+    reportExecVersion: any;
+    numRows: any = 100;
+    isHomeEnable: boolean = false
+    showGraph: boolean = false;
+    isRunReportEnable: boolean = true;
+    isRefreshEnable: boolean = true;
+    isDownloadEnable: boolean = false;
+    isEditEnable: boolean = false;
+    isDependencyGraphEnable: boolean = true;
+    dragIndex: any;
+    dropIndex: any;
 
-    constructor(private activatedRoute: ActivatedRoute, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService, private _reportService: ReportService) {
+    constructor(private activatedRoute: ActivatedRoute, private http: Http, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService, private _reportService: ReportService) {
         this.reportdata = {};
         this.IsDisable = "false";
         this.isSubmitEnable = true;
@@ -143,6 +161,10 @@ export class ReportDetailComponent {
             { "value": "function", "label": "function" },
             { "value": "paramlist", "label": "paramlist" }
         ]
+
+        this.downloadFormatArray = [
+            { "value": "excel", "label": "excel" }];
+        this.downloadFormat = this.downloadFormatArray[0];
     }
 
     ngOnInit() {
@@ -197,7 +219,6 @@ export class ReportDetailComponent {
     }
 
     getAllLatest(IsDefault) {
-        //let type = this.source;
         this._commonService.getAllLatest(this.source).subscribe(
             response => { this.OnSuccesgetAllLatest(response, IsDefault) },
             error => console.log('Error :: ' + error)
@@ -212,9 +233,6 @@ export class ReportDetailComponent {
         this.getAllAttributeBySource();
     }
     selectType() {
-        // this.keylist = [];
-        // this.valuelist = [];
-        // this.grouplist = [];
         this.getAllLatest(true);
     }
 
@@ -258,11 +276,11 @@ export class ReportDetailComponent {
             temp[n] = allname;
         }
         this.allMapSourceAttribute = temp
-        
+
         this.filterInfoArray = [];
         for (const i in response) {
             let filterRef = {};
-            filterRef["id"] = response[i]['id'];    
+            filterRef["id"] = response[i]['id'];
             filterRef["itemName"] = response[i]['dname'];
             this.filterInfoArray[i] = filterRef;
         }
@@ -300,7 +318,6 @@ export class ReportDetailComponent {
     onSuccessGetOneByUuidAndVersion(response) {
         this.breadcrumbDataFrom[2].caption = response.name;
         this.reportdata = response;
-
         this.uuid = response.uuid;
 
         const version: Version = new Version();
@@ -324,7 +341,6 @@ export class ReportDetailComponent {
         }
 
         this.source = response["dependsOn"]["ref"].type
-
         let dependOnTemp: DependsOn = new DependsOn();
         dependOnTemp.label = response["dependsOn"]["ref"]["name"];
         dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
@@ -516,14 +532,11 @@ export class ReportDetailComponent {
         }
 
         reportjson["filterInfo"] = filterInfoArrayNew;
-
-        //reportjson['filterInfo'] = [],
         var sourceAttributesArray = [];
         for (var i = 0; i < this.attributeTableArray.length; i++) {
             var attributemap = {};
             attributemap["attrSourceId"] = i;
             attributemap["attrSourceName"] = this.attributeTableArray[i].name
-            //attributeinfo.attrSourceName=dataset.attributeTableArray[l].name
             var sourceAttr = {};
             var sourceref = {};
             if (this.attributeTableArray[i].sourceAttributeType.value == "string") {
@@ -695,7 +708,6 @@ export class ReportDetailComponent {
         )
     }
     onSuccessgetAllFormula(response, defaulfMode, index) {
-        //this.allMapFormula = response
         let temp = []
         if (response.length > 0) {
             for (const n in response) {
@@ -848,34 +860,32 @@ export class ReportDetailComponent {
     }
 
     runReport(uuid, version) {
-
+        this.isRunReportEnable = false;
+        this.isHomeEnable = true;
         this.isShowReportData = false;
-        //isDataError = false;
-        //tableclass = "centercontent";
-        //showForm = false;
-        //showGraphDiv = false;
-
+        this.isDownloadEnable = true;
+        this.isRefreshEnable = true;
+        this.isEditEnable = true;
         this.reportExecute(uuid, version, null);
     }
 
     reportExecute(uuid, version, data) {
-        //spinner = true;
         this.isShowSpinner = true;
         this.isShowSimpleData = false;
         this._reportService.reportExecute(uuid, version, data)
             .subscribe(response => { this.onSuccessReportExecute(response) },
                 error => console.log("Error ::", error)
             )
-
     }
     onSuccessReportExecute(response: any): any {
-        //spinner = false;
         this.isShowSpinner = false
         this.isShowSimpleData = true;
         this.getSample(response);
     }
 
     getSample(data: any): any {
+        this.reportExecUuid = data["uuid"];
+        this.reportExecVersion = data["version"];
         this._reportService.getReportSample(data["uuid"], data["version"])
             .subscribe(response => { this.onSuccessGetSample(response) },
                 error => console.log("Error ::", error)
@@ -933,30 +943,32 @@ export class ReportDetailComponent {
         filterAttribure["attrValue"] = allNameArray;
         filterAttribure["attrName"] = attrName;
         this.filterAttribureIdValues.push(filterAttribure);
-
+        this.filterDropdownValue.push({});
         this.showDialogSpinner = false;
     }
 
     cancelFilterDialog() {
+        this.displayDialog = false;
+        this.filterDropdownValue = [];
         console.log("Cancel call....");
     }
 
     submitFilterDialog(filterValue: any[], filterName: any) {
         this.isShowSimpleData = false;
         this.isShowSpinner = true;
-        var tags = [];
-        for (var i = 0; i < filterValue.length; i++) {
+        let tags = [];
+        for (let i = 0; i < filterValue.length; i++) {
             let attrName = filterName[i]["attrName"];
             var tag = {};
-            //tag['value'] = filterValue[i]["label"];
-            tag['display'] = attrName + "-" + filterValue[i]["label"];
-            tags[i] = tag
-
+            if (filterValue[i] && filterValue[i].hasOwnProperty('label')) {
+                tag['display'] = attrName + "-" + filterValue[i]["label"];
+                tags.push(tag);
+            }
         }
         this.filterValue = tags;
 
-        let uuid = this.reportdata["uuid"];
-        let version = this.reportdata["version"];
+        //let uuid = this.reportdata["uuid"];
+        //let version = this.reportdata["version"];
         let filterjson = {}
         let filterInfoArrayNew = [];
         if (this.filterInfoTags != null) {
@@ -972,24 +984,27 @@ export class ReportDetailComponent {
                     let name = this.filterInfoTags[c].itemName.split(".")[1];
                     let name2 = filterName[i]["attrName"];
                     if (name == filterName[i]["attrName"]) {
-                        filterRef["value"] = filterValue[i]["label"];
+                        if (filterValue[i]) {
+                            if (filterValue[i] && filterValue[i].hasOwnProperty('label')) {
+                                filterRef["value"] = filterValue[i]["label"];
+                                filterInfoArrayNew.push(filterRef);
+                            }
+                            else {
+                                filterRef["value"] = "";
+                            }
+                        }
                         break;
                     }
                 }
-                //filterRef["value"] = filterName[c]["attrName"];
-                filterInfoArrayNew.push(filterRef);
             }
         }
         filterjson["filterInfo"] = filterInfoArrayNew;
-
         this.reportExecute(this.reportdata["uuid"], this.reportdata["version"], filterjson);
         this.displayDialog = false;
     }
-    changeAttrValue() {
 
-    }
     onChipsRemove(filterValues) {
-        
+        this.filterDropdownValue = [];
         let filterjson = {}
         let filterInfoArrayNew = [];
         for (const c in filterValues) {
@@ -1012,7 +1027,58 @@ export class ReportDetailComponent {
         filterjson["filterInfo"] = filterInfoArrayNew;
         this.reportExecute(this.reportdata["uuid"], this.reportdata["version"], filterjson);
     }
-    onClickChips(){
+    onClickChips() {
         console.log("on Change chips");
+    }
+
+    downloadResult() {
+        this.displayDialogBox = true;
+    }
+
+    submitDialogBox(numRows, downloadFormat) {
+        this.displayDialogBox = false;
+        this._reportService.download(this.reportExecUuid, this.reportExecVersion, numRows)
+            .toPromise()
+            .then(response => this.onSucessDownload(response));
+    }
+    onSucessDownload(response) {
+        const contentDispositionHeader: string = response.headers.get('Content-Type');
+        const parts: string[] = contentDispositionHeader.split(';');
+        const filename = this.reportExecUuid + "-" + this.reportExecVersion + ".xls";
+        const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+        saveAs(blob, filename);
+    }
+
+    cancelDialogBox() {
+        this.displayDialogBox = false;
+    }
+    showMainPage(uuid, version) {
+        this.isHomeEnable = false
+        this.showGraph = false;
+        this.isShowReportData = true;
+        this.isShowSimpleData = false;
+        this.isRunReportEnable = true;
+    }
+    showDependencyGraph(uuid, version) {
+        console.log("showDependencyGraph call.....");
+    }
+    dragStart(event, data) {
+        console.log(event)
+        console.log(data)
+        this.dragIndex = data
+    }
+    dragEnd(event) {
+        console.log(event)
+    }
+    drop(event, data) {
+        if (this.mode == 'false') {
+            this.dropIndex = data
+            // console.log(event)
+            // console.log(data)
+            var item = this.attributeTableArray[this.dragIndex]
+            this.attributeTableArray.splice(this.dragIndex, 1)
+            this.attributeTableArray.splice(this.dropIndex, 0, item)
+            this.isSubmitEnable = true
+        }
     }
 }
