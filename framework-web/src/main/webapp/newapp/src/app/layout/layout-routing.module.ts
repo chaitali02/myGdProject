@@ -9,7 +9,7 @@ import { metadataNavigatorComponent } from '../metadata-navigator/metadataNaviga
 import { jobMonitoringComponent } from '../job-monitoring/jobMonitoring.component';
 import { RegisterSourceComponent } from '../admin/registerSource/registerSource.component';
 import { CompareResultComponent } from '../compareresult/compareresult.component';
-
+  
 const routes: Routes = [
     {
         path: '', component: LayoutComponent,

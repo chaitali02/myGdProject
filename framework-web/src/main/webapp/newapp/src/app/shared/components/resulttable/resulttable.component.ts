@@ -20,10 +20,9 @@ export class TableRenderComponent {
   cols: any[];
   colsdata: any;
   @Input()
-  tableParms: any
+  tableParms: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _jointjsGroupService: jointjsGroupService) {
-   
     console.log(this.tableParms)
     //this.renderTable();
     this.cols = null
@@ -42,7 +41,7 @@ export class TableRenderComponent {
         type = 'dq';
         break;
       case 'dqgroup':
-        type = 'dataqual';
+        type = 'dataqual'
         break;
       case 'profile':
         type = 'profile';
@@ -52,7 +51,10 @@ export class TableRenderComponent {
         break;
       case 'recon':
         type = 'recon';
-        break
+        break;
+      case 'map':
+        type = 'map';
+        break;
     }
     
     this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
@@ -60,10 +62,9 @@ export class TableRenderComponent {
     response => {
       this.modeOfExec=response["runMode"]
       this.results(type, params.uuid, params.version,this.modeOfExec)
-     
     })   
   }
-  results(type, uuid, version,mode){
+  results(type, uuid, version,mode){debugger
     if(type == 'dq'){
       type = 'dataqual';
     }
@@ -93,7 +94,6 @@ export class TableRenderComponent {
       this.IsTableShow = true;
       console.log("Error :: " + error)
       this.IsError = true;
-
     }
     );
     
