@@ -308,6 +308,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		if (data !=null && typeof data != "undefined") {
 			MetadataRelationSerivce.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
+				console.log($scope.rhsAllAttribute)
+				$scope.rhsAllAttribute.splice([index+1],1);
 			    $scope.rhsAllAttribute.splice([index+1],0,response);
 				$scope.joinRHS();
 			}	
