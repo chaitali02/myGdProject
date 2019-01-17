@@ -100,7 +100,7 @@ public class DatapodController {
 				@RequestParam(value = "action", required = false) String action,	    
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);		 
-	    	return datastoreServiceImpl.getAttributeValues(datapodUUID,attributeID,runMode);   	
+	    	return datastoreServiceImpl.getAttributeValues(datapodUUID, attributeID,runMode);   	
 	   }
 	 
 	 @RequestMapping(value="/getAttributeName", method=RequestMethod.GET)
@@ -169,5 +169,15 @@ public class DatapodController {
 					@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.getAttrHistogram(datapodUuid, datapodVersion, attributeId, 10, runMode);
+	}
+	
+	@RequestMapping(value = "/getFormulaValues", method = RequestMethod.GET)
+	public List<Map<String, Object>> getFormulaValues(@RequestParam(value = "uuid") String formulaUuid,
+					@RequestParam(value = "version", required = false) String formulaVersion,
+					@RequestParam(value = "type", required = false) String type,
+					@RequestParam(value = "action", required = false) String action,	    
+					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return datapodServiceImpl.getFormulaValues(formulaUuid, formulaVersion, runMode);
 	}
 }

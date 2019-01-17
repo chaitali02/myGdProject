@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -66,10 +67,13 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Message;
@@ -79,6 +83,8 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.enums.Compare;
@@ -87,7 +93,11 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.HistogramOperator;
+import com.inferyx.framework.operator.RelationOperator;
+import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -141,6 +151,14 @@ public class DatapodServiceImpl {
 	private HistogramOperator histogramOperator;
 	@Autowired
 	private IDatapodDao iDatapodDao;
+	@Autowired
+	private FormulaOperator formulaOperator;
+	@Autowired
+	private DatasetOperator datasetOperator;
+	@Autowired
+	private RuleOperator ruleOperator;
+	@Autowired
+	private RelationOperator relationOperator;
 	
 	public DatapodServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -1356,5 +1374,65 @@ public class DatapodServiceImpl {
 		String resultLimitValue = Helper.getPropertyValue("framework.histogram.result.size");
 		int resultLimit = Integer.parseInt(resultLimitValue);
 		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode);
+	}
+
+	public List<Map<String, Object>> getFormulaValues(String formulaUuid, String formulaVersion, RunMode runMode) throws Exception {
+		Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaUuid, formulaVersion, MetaType.formula.toString());
+		Datasource formulaDs = commonServiceImpl.getDatasourceByObject(formula);
+		String formulaQuery = formulaOperator.generateSql(formula, null, null, null, formulaDs);
+		
+		MetaIdentifier dependsOn = formula.getDependsOn().getRef();
+		Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
+		String dependsOnSql = generateSqlByObject(dependsOnObj, runMode);
+		
+		StringBuilder builder = new StringBuilder("SELECT").append(" ");
+		builder.append(formulaQuery).append(" AS ").append(formula.getName()).append(" ");
+		builder.append("FROM").append(" ").append("(");
+		builder.append(dependsOnSql).append(" ").append(" tab");
+		builder.append(")").append(dependsOn.getName());
+		
+		logger.info("SQL gnerated for formula values: "+builder.toString());
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		Datasource appDs = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDs.getType());
+		return exec.executeAndFetchByDatasource(builder.toString(), formulaDs, appUuid);
+	}
+	
+	public String generateSqlByObject(Object object, RunMode runMode) throws Exception {
+		if(object instanceof Datapod) {
+			return generateSqlByDatapod((Datapod)object, runMode);
+		} else if(object instanceof DataSet) {
+			return datasetOperator.generateSql((DataSet)object, null, null, new HashSet<>(), null, runMode);
+		} else if(object instanceof Rule) {
+			return ruleOperator.generateSql((Rule) object, null, null, new HashSet<>(), null, runMode);
+		} else if(object instanceof Relation) {
+			MetaIdentifier dependsOn = ((Relation)object).getDependsOn().getRef();
+			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
+			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
+			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode);
+		}
+		
+		return null;
+	}
+	
+	public String generateSqlByDatapod(Datapod datapod, RunMode runMode) throws Exception {
+		String tableName = datastoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
+		StringBuilder builder = new StringBuilder("SELECT ");
+		
+		int i = 0;
+		for(Attribute attribute : datapod.getAttributes()) {
+			builder.append(attribute.getName()).append(" ");
+			builder.append(" AS ").append(attribute.getName());
+			if(i<(datapod.getAttributes().size()-1)) {
+				builder.append(", ");
+			}
+			i++;
+		}
+		
+		builder.append(" FROM ");
+		builder.append(tableName);
+		
+		return builder.toString();
 	}
 }
