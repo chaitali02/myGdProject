@@ -1,3 +1,4 @@
+import { DragDropModule } from 'primeng/components/dragdrop/dragdrop';
 import { NgModule } from '@angular/core';
 import { CommonModule ,DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -47,8 +48,8 @@ import { ReportService } from '../metadata/services/report.service';
         routing1,
         ProjectSharedModule,
         DialogModule,
-        ChipsModule
-        
+        ChipsModule,
+        DragDropModule  
     ],
     declarations: [
         DataVisualizationComponent,

@@ -8,6 +8,7 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { Http } from '@angular/http';
 import { AppConfig } from '../../../app.config';
 import { ProfileService } from '../../../metadata/services/profile.service';
+import { DatapodService } from '../../../metadata/services/datapod.service';
 
 @Component({
   selector: 'app-attributetab',
@@ -19,7 +20,6 @@ export class AttributeTabComponent {
 
   type: any;
   searchForm: any;
-
   allNameSourceDatapod: any[];
   allNameTargetDatapod: any[];
   allNameSourceProfileAttribute: any[];
@@ -28,11 +28,23 @@ export class AttributeTabComponent {
   allNameTargetPeriod: any[];
   allNameSourceDatapodAttribute: any[];
   allNameTargetDatapodAttribute: any[];
-
-  isSubmitDisable: boolean;
+  //isSubmitDisable: boolean;
+  originalDataHistogram: any[];
+  isHistogramInprogess: boolean;
+  isHistogramError: boolean;
+  sdatacol: any;
+  tdatacol: any;
+  histogramData: any[];
+  histogramcols: any[];
+  sourceHistrogramSpinner: boolean = false;
+  targetHistrogramSpinner: boolean = false;
+  sourceHistrogramError: boolean = false;
+  targetHistrogramError: boolean = false;
+  showSourceGraph: boolean = false;
+  showTargetGraph: boolean = false;
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
-    private _commonService: CommonService, private _profileService: ProfileService, private _dataQualityService: DataQualityService, private _metadataService: MetadataService, private datePipe: DatePipe) {
+    private _commonService: CommonService, private _profileService: ProfileService, private _datapodService: DatapodService, private _metadataService: MetadataService, private datePipe: DatePipe) {
 
     this._activatedRoute.params.subscribe((params: Params) => {
       this.type = (params['type']).toLowerCase();
@@ -42,28 +54,28 @@ export class AttributeTabComponent {
     this.searchForm = {};
 
     this.allNameSourceProfileAttribute = [
-      { label: "minVal", value: "minVal" },
-      { label: "maxVal", value: "maxVal" },
-      { label: "avgVal", value: "avgVal" },
-      { label: "medianVal", value: "medianVal" },
-      { label: "stdDev", value: "stdDev" },
-      { label: "numDistinct", value: "numDistinct" },
-      { label: "perDistinct", value: "perDistinct" },
-      { label: "numNull", value: "numNull" },
-      { label: "perNull", value: "perNull" },
-      { label: "sixSigma", value: "sixSigma" }];
+      { label: "minVal", value: "minval" },
+      { label: "maxVal", value: "maxval" },
+      { label: "avgVal", value: "avgval" },
+      { label: "medianVal", value: "medianval" },
+      { label: "stdDev", value: "stddev" },
+      { label: "numDistinct", value: "numdistinct" },
+      { label: "perDistinct", value: "perdistinct" },
+      { label: "numNull", value: "numnull" },
+      { label: "perNull", value: "pernull" },
+      { label: "sixSigma", value: "sixsigma" }];
 
     this.allNameTargetProfileAttribute = [
-      { label: "minVal", value: "minVal" },
-      { label: "maxVal", value: "maxVal" },
-      { label: "avgVal", value: "avgVal" },
-      { label: "medianVal", value: "medianVal" },
-      { label: "stdDev", value: "stdDev" },
-      { label: "numDistinct", value: "numDistinct" },
-      { label: "perDistinct", value: "perDistinct" },
-      { label: "numNull", value: "numNull" },
-      { label: "perNull", value: "perNull" },
-      { label: "sixSigma", value: "sixSigma" }];
+      { label: "minVal", value: "minval" },
+      { label: "maxVal", value: "maxval" },
+      { label: "avgVal", value: "avgval" },
+      { label: "medianVal", value: "medianval" },
+      { label: "stdDev", value: "stddev" },
+      { label: "numDistinct", value: "numdistinct" },
+      { label: "perDistinct", value: "perdistinct" },
+      { label: "numNull", value: "numdull" },
+      { label: "perNull", value: "perdull" },
+      { label: "sixSigma", value: "sixsigma" }];
 
     this.allNameSourcePeriod = [
       { label: "1 week", value: "7" },
@@ -153,46 +165,98 @@ export class AttributeTabComponent {
   }
 
   submitSearchCriteria() {
+    this.showSourceGraph = true;
+    this.showTargetGraph = true;
+    this.sourceHistrogramSpinner = true;
+    this.targetHistrogramSpinner = true;
+
     let suuid = this.searchForm.selectedSourceDatapodName.uuid;
     let sversion = this.searchForm.selectedSourceDatapodName.version;
-    let sprofileAttrId = this.searchForm.selectedSourceDatapodAttribute.id;
+    let sDatapodAttrId = this.searchForm.selectedSourceDatapodAttribute.id;
     let speriod = this.searchForm.selectedSourcePeriod.value;
-    let sminval = this.searchForm.selectedSourceProfileAttribute.value;
+    let sprofileAttr = this.searchForm.selectedSourceProfileAttribute.value;
 
-    this._profileService.getProfileResults('profileexec', suuid, sversion, sprofileAttrId, speriod, sminval).subscribe(
-      response => { this.onSuccessgetProfileResultse(response) },
-      error => console.log("Error : " + error));
+    this._profileService.getProfileResults('profileexec', suuid, sversion, sDatapodAttrId, speriod, sprofileAttr).subscribe(
+      response => { this.onSuccessgetProfileResults(response, 'source') },
+      error => {
+        this.sourceHistrogramError = true;
+        this.sourceHistrogramSpinner = false;
+        console.log("Error : " + error)
+      });
 
     let tuuid = this.searchForm.selectedTargetDatapodName.uuid;
     let tversion = this.searchForm.selectedTargetDatapodName.version;
-    let tprofileAttrId = this.searchForm.selectedTargetDatapodAttribute.id;
+    let tDatapodAttrId = this.searchForm.selectedTargetDatapodAttribute.id;
     let tperiod = this.searchForm.selectedTargetPeriod.value;
-    let tminval = this.searchForm.selectedTargetProfileAttribute.value;
+    let tprofileAttr = this.searchForm.selectedTargetProfileAttribute.value;
 
-    this._profileService.getProfileResults('profileexec', tuuid, tversion, tprofileAttrId, tperiod, tminval).subscribe(
-      response => { this.onSuccessgetProfileResultse(response) },
-      error => console.log("Error : " + error));
+    this._profileService.getProfileResults('profileexec', tuuid, tversion, tDatapodAttrId, tperiod, tprofileAttr).subscribe(
+      response => { this.onSuccessgetProfileResults(response, 'target') },
+      error => {
+      this.targetHistrogramError = true;
+      this.targetHistrogramSpinner = false;
+      console.log("Error : " + error);
+      });
+
 
   }
 
-  onSuccessgetProfileResultse(response: any[]): any {
-    debugger
-    let resp = response;
-    console.log("responce : "+response);
+  onSuccessgetProfileResults(response: any[], sourceOrTarget): any {
+
+    if (sourceOrTarget == 'source') {
+      this.sdatacol = {};
+      if (response.length >= 20) {
+        this.sdatacol.datapoints = response.slice(0, 20);
+      } else {
+        this.sdatacol.datapoints = response;
+      }
+      var dataColumn = {};
+      dataColumn["id"] = this.searchForm.selectedSourceProfileAttribute.value;
+      dataColumn["name"] = this.searchForm.selectedSourceProfileAttribute.value;
+      dataColumn["type"] = "bar"
+      dataColumn["color"] = "#D8A2DE";
+      this.sdatacol.datacolumns = [];
+      this.sdatacol.datacolumns[0] = dataColumn;
+      var datax = {};
+      datax["id"] = "createdOn";
+      this.sdatacol.datax = datax;
+      this.sourceHistrogramSpinner = false;
+    }
+
+    else if (sourceOrTarget == 'target') {
+      this.tdatacol = {};
+      if (response.length >= 20) {
+        this.tdatacol.datapoints = response.slice(0, 20);
+      } else {
+        this.tdatacol.datapoints = response;
+      }
+      var dataColumn = {}
+      dataColumn["id"] = this.searchForm.selectedTargetProfileAttribute.value;
+      dataColumn["name"] = this.searchForm.selectedTargetProfileAttribute.value;
+      dataColumn["type"] = "bar"
+      dataColumn["color"] = "#D8A2DE";
+      this.tdatacol.datacolumns = [];
+      this.tdatacol.datacolumns[0] = dataColumn;
+      var datax = {};
+      datax["id"] = "createdOn";
+      this.tdatacol.datax = datax;      
+      this.targetHistrogramSpinner = false;
+    }
   }
 
-  refreshSearchCriteria(){
+  refreshSearchCriteria() {
     this.searchForm = {};
     this.searchForm.selectedSourceProfileAttribute = this.allNameSourceProfileAttribute[0];
     this.searchForm.selectedSourcePeriod = this.allNameSourcePeriod[0];
     this.searchForm.selectedTargetProfileAttribute = this.allNameTargetProfileAttribute[0];
     this.searchForm.selectedTargetPeriod = this.allNameTargetPeriod[0];
-    
-    this.isSubmitDisable = true;
+
+    //this.isSubmitDisable = true;
     this.refreshTrendAnalysis();
   }
 
-  refreshTrendAnalysis(){
-
+  refreshTrendAnalysis() {
+    this.showSourceGraph = false;
+    this.showTargetGraph = false;
   }
 }

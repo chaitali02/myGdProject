@@ -20,6 +20,7 @@ import { CommonService}from '../metadata/services/common.service';
 import { JointjsService} from '../shared/components/jointjs/jointjsservice';
 import { routing1} from './business-rules-routing.module';
 import { DialogModule } from 'primeng/components/dialog/dialog';
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         routing1,
         ResultModule,
         ProjectSharedModule,
-        DialogModule       
+        DialogModule,
+        DragDropModule       
     ],
     declarations: [
         BusinessRulesComponent,

@@ -1,5 +1,5 @@
 import { Injectable, Inject, Input } from "@angular/core";
-import { Http, Response } from "@angular/http";
+import { Http, Response, Headers, ResponseContentType } from "@angular/http";
 import { SharedService } from "../../shared/shared.service";
 import { Observable } from "rxjs/Observable";
 import { CommonService } from "./common.service";
@@ -37,6 +37,12 @@ export class ReportService {
 				return <any[]>response.json();
 			})
 			.catch(this.handleError);
+	}
+
+	download(uuid: string, version: string, rows: number) {
+		let baseUrl = "http://localhost:8080";
+		let url = baseUrl + '/report/download?action=view&uuid=' + uuid + '&version=' + version + '&rows=' + rows;
+		return this.http.get(url, { headers: this.headers, responseType: ResponseContentType.Blob })
 	}
 
 	getAttributeValues(uuid: any, attributeId: any, type: any): Observable<any[]> {

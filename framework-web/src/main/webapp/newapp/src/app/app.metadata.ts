@@ -1831,6 +1831,7 @@ export class AppMetadata {
         moduleState: 'graphAnalysis',
         moduleCaption: 'Graph Analysis',
         allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
       },
       'graphexec': {
         name: 'graphexec',
@@ -1848,6 +1849,7 @@ export class AppMetadata {
         moduleCaption: 'Graph Analysis',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
       },
       'report': {
         name: 'report',

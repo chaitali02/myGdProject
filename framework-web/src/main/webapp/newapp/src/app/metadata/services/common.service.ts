@@ -317,6 +317,14 @@ getNumRowsbyExec(uuid, version, type): Observable<any>{
 })
  .catch(this.handleError);
 }
+getParamListChilds(uuid, version, type): Observable<any>{
+  let url ="metadata/getParamListChilds?action=view&uuid=" +uuid+"&version="+version+"&type="+type
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 
 execute(uuid,version,type,action): Observable<any> {
   let url;
