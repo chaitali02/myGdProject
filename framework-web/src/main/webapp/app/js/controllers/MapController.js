@@ -279,15 +279,21 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	
 		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
 			for (var i = 0; i < $scope.mapTableArray.length; i++) {
-				var temp= $scope.allMapTargetAttribute[i].name;
-			  $scope.mapTableArray[i].sourceattribute = allMapSourceAttribute[temp]//$scope.allTargetAttribute[i];
+				$scope.mapTableArray[i].sourceattribute=null;
+				setTimeout(function(index){
+					var temp= $scope.allMapTargetAttribute[index].name;
+					$scope.mapTableArray[index].sourceattribute = allMapSourceAttribute[temp]
+				},10,i);
 			}
 		  }
 		}
 		if ($scope.selectedAutoMode == "By Order") {
 		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
 			for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
-			  $scope.mapTableArray[i].sourceattribute = $scope.allMapSourceAttribute[i];
+				$scope.mapTableArray[i].sourceattribute=null;
+				setTimeout(function(index){
+					$scope.mapTableArray[index].sourceattribute = $scope.allMapSourceAttribute[index];
+				},10,i);
 			}
 		  }
 	
