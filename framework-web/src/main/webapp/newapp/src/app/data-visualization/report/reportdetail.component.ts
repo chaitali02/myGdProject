@@ -1062,9 +1062,8 @@ export class ReportDetailComponent {
     showDependencyGraph(uuid, version) {
         console.log("showDependencyGraph call.....");
     }
+
     dragStart(event, data) {
-        console.log(event)
-        console.log(data)
         this.dragIndex = data
     }
     dragEnd(event) {
@@ -1073,12 +1072,33 @@ export class ReportDetailComponent {
     drop(event, data) {
         if (this.mode == 'false') {
             this.dropIndex = data
-            // console.log(event)
-            // console.log(data)
             var item = this.attributeTableArray[this.dragIndex]
             this.attributeTableArray.splice(this.dragIndex, 1)
             this.attributeTableArray.splice(this.dropIndex, 0, item)
             this.isSubmitEnable = true
+        }
+    }
+
+    autoPopulate() {
+        this.attributeTableArray = [];
+        for (var i = 0; i < this.allMapSourceAttribute.length; i++) {
+            var attributeinfo = {};
+            attributeinfo["id"] = i;
+            attributeinfo["sourceattribute"] = {};
+            attributeinfo["name"] = this.allMapSourceAttribute[i].label.split(".")[1];
+            attributeinfo["sourceattribute"]["id"] = this.allMapSourceAttribute[i].value.id;
+            attributeinfo["sourceattribute"]["label"] = this.allMapSourceAttribute[i].label;
+            let obj = {}
+            obj["value"] = "datapod"
+            obj["label"] = "attribute"
+            attributeinfo["sourceAttributeType"] = obj;
+            attributeinfo["isSourceAtributeSimple"] = false;
+            attributeinfo["isSourceAtributeDatapod"] = true;
+            attributeinfo["isSourceAtributeFormula"] = false;
+            attributeinfo["isSourceAtributeExpression"] = false;
+            attributeinfo["isSourceAtributeFunction"] = false;
+            attributeinfo["isSourceAtributeParamList"] = false;
+            this.attributeTableArray.push(attributeinfo);
         }
     }
 }

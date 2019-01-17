@@ -252,7 +252,13 @@
                 <div class="caption">
                   <i class="fa fa-gift"></i>Source Attribute
                 </div>
+                <div class="actions">
+                  <a class="btn pull-right" (click)="autoPopulate()" tooltip-placement="top" uib-tooltip="Auto Populate">
+                    <span class="fa fa-map-signs" aria-hidden="true" style="color:#ffffff;"></span>
+                  </a>
+                </div>
               </div>
+
               <div class="portlet-body form">
                 <div class="x_title" style="padding:10px;">
                   <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()"
