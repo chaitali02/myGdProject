@@ -13,7 +13,6 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 			url = url + "datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
 		}
 		else if(type == "formula"){
-			debugger
 			url = url + "datapod/getFormulaValues?action=view&uuid=" + uuid+"&type="+type
 		}
 		else {
